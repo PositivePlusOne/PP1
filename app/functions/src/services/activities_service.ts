@@ -1,10 +1,13 @@
 import * as functions from "firebase-functions";
 
+import { v1 as uuidv1 } from "uuid";
+
 import { DefaultGenerics, NewActivity } from "getstream";
-import { Activity, ActivityJSON } from "../dto/activities";
+import { Activity, ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
+import { TagsService } from "./tags_service";
 
 export namespace ActivitiesService {
   /**
@@ -62,32 +65,85 @@ export namespace ActivitiesService {
   }
 
   /**
-   * Posts an activity to GetStream.
+   * Posts an activity to the users feed and all the tags feeds.
    * @param {StreamClient<DefaultGenerics>} client the GetStream client.
+   * @param {string} feedName the name of the feed to post to.
+   * @param {string} actorId the id of the actor.
+   * @param {any} activityData the activity data.
+   * @return {Promise<ActivityJSON>} a promise that resolves when the activity is posted.
+   */
+  export async function postActivity(userID: string, activity: ActivityJSON): Promise<ActivityJSON> {
+    functions.logger.info("Adding activity", {
+      userID,
+      activity,
+    });
+
+    const activityObjectForeignId = uuidv1();
+    const targets = [] as string[];
+    activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
+      await TagsService.createTagIfNonexistant(tag);
+      targets.push(`tag:${tag}`);
+    });
+
+    const getStreamActivity: NewActivity<DefaultGenerics> = {
+      actor: userID,
+      verb: ActivityActionVerb.Post,
+      object: activityObjectForeignId,
+      foreign_id: activityObjectForeignId,
+      to: targets,
+    };
+
+    const feed = (await FeedService.getFeedsClient()).feed("user", userID);
+    await feed.addActivity(getStreamActivity);
+
+    const activityResponse = await DataService.updateDocument({
+      schemaKey: "activities",
+      data: activity,
+      entryId: activityObjectForeignId,
+    }) as ActivityJSON;
+
+    
+    return activityResponse;
+  }
+
+  /**
+   * Posts an activity to a specific feed.
    * @param {string} feedName the name of the feed to post to.
    * @param {string} actorId the id of the actor.
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is posted.
    */
-  export async function addActivity(feedSlug: string, userID: string, activityData: NewActivity<DefaultGenerics>): Promise<NewActivity> {
-    functions.logger.info("Adding activity", {
-      feedSlug,
-      userID,
-      activityData,
+  export async function postActivityToFeed(feedName: string, actorId: string, activityId: string): Promise<void> {
+    functions.logger.info("Unposting activity", {
+      feedName,
+      actorId,
     });
 
-    const feed = (await FeedService.getFeedsClient()).feed(feedSlug, userID);
-    return feed.addActivity(activityData);
+    const feed = (await FeedService.getFeedsClient()).feed(feedName, actorId);
+
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
+    }
+
+    const getStreamActivity: NewActivity<DefaultGenerics> = {
+      actor: actorId,
+      verb: ActivityActionVerb.Post,
+      object: activityId,
+      foreign_id: activityId,
+    };
+
+
+    await feed.addActivity(getStreamActivity);
   }
 
   /**
-   * Unposts an activity from GetStream.
+   * Unposts an activity from a GetStream feed.
    * @param {string} feedName the name of the feed to post to.
    * @param {string} actorId the id of the actor.
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is unposted.
    */
-  export async function removeActivity(feedName: any, actorId: any, activityId: string): Promise<void> {
+  export async function removeActivityFromFeed(feedName: any, actorId: any, activityId: string): Promise<void> {
     functions.logger.info("Unposting activity", {
       feedName,
       actorId,

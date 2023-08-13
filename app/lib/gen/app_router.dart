@@ -10,6 +10,7 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/chat_create_page.dart';
@@ -169,7 +170,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: CreateConversationRoute.page, path: '/chat/connections_list', guards: [...kCommonGuards, signedInGuard]),
         AutoRoute(page: ChatMembersRoute.page, path: '/chat/members', guards: kCommonGuards),
         AutoRoute(page: ChatRoute.page, path: '/chat/current', guards: kCommonGuards),
-        AutoRoute(page: PostRoute.page, path: '/post', guards: [...kCommonGuards, signedInGuard]),
         //* Account
         AutoRoute(page: AccountRoute.page, path: '/account', guards: kCommonGuards),
         AutoRoute(page: AccountDetailsRoute.page, path: '/account/details', guards: kCommonGuards),
@@ -191,6 +191,7 @@ class AppRouter extends _$AppRouter {
         //* Content
         AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
         AutoRoute(page: PostRoute.page, path: '/post', guards: kCommonGuards),
+        AutoRoute(page: CreatePostRoute.page, path: '/post/create', guards: [...kCommonGuards, signedInGuard]),
         //* Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),
         AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),

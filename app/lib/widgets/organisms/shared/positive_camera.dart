@@ -21,6 +21,7 @@ import 'package:universal_platform/universal_platform.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/services/third_party.dart';
@@ -266,6 +267,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final AppRouter appRouter = ref.watch(appRouterProvider);
 
     useLifecycleHook(this);
 
@@ -306,7 +308,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             ? Container(
                 padding: const EdgeInsets.only(left: kPaddingMedium),
                 alignment: Alignment.centerLeft,
-                child: CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
+                child: CameraFloatingButton.close(
+                  active: true,
+                  onTap: widget.onTapClose ?? () => appRouter.removeLast(),
+                ),
               )
             : const SizedBox.shrink(),
         actions: <Widget>[
@@ -378,7 +383,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             }
 
             libraryPermissionStatus = await basePermission.status;
-            final bool isGranted = libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
+            final bool isGranted = libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
             if (!isGranted) {
               final SystemController systemController = ref.read(systemControllerProvider.notifier);
               await systemController.openPermissionSettings();

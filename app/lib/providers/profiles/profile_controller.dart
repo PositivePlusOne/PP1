@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
@@ -23,6 +24,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/activities/gallery_controller.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
@@ -460,6 +462,7 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
     final File picture = File(imagePath);
 
     final Uint8List imageData = await Isolate.run(() async {
@@ -478,9 +481,22 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
+    final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
     final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.profile);
+    final List<String> keys = Media.getKeys(media);
+
+    for (final String key in keys) {
+      try {
+        await cacheManager.removeFile(key);
+      } catch (e) {
+        logger.e('[Profile Service] - Failed to clear cache for old profile image: $e');
+      }
+    }
+
     final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
     final Profile profile = Profile.fromJson(profileJson);
+
+    eventBus.fire(ForceMediaFetchEvent(media: media));
     state = state.copyWith(currentProfile: profile);
   }
 

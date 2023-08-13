@@ -4,12 +4,10 @@ import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 
 import { DataService } from "../services/data_service";
 
-import { DefaultGenerics, NewActivity } from "getstream";
-import { v4 as uuidv4 } from "uuid";
 import { ActivitiesService } from "../services/activities_service";
 import { UserService } from "../services/user_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
-import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
+import { ActivityJSON } from "../dto/activities";
 import { MediaJSON } from "../dto/media";
 import { TagsService } from "../services/tags_service";
 import { StorageService } from "../services/storage_service";
@@ -85,9 +83,7 @@ export namespace PostEndpoints {
     const type = request.data.type;
     const style = request.data.style;
 
-    const activityForeignId = uuidv4();
-
-    functions.logger.info(`Posting activity`, { uid, content, media, userTags, activityForeignId });
+    functions.logger.info(`Posting activity`, { uid, content, media, userTags });
     const hasContentOrMedia = content || media.length > 0;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
@@ -118,30 +114,12 @@ export namespace PostEndpoints {
       media: media,
     } as ActivityJSON;
 
-    const activityResponse = await DataService.updateDocument({
-      schemaKey: "activities",
-      entryId: activityForeignId,
-      data: activityRequest,
-    }) as ActivityJSON;
-
-    const getStreamActivity: NewActivity<DefaultGenerics> = {
-      actor: uid,
-      verb: ActivityActionVerb.Post,
-      object: activityForeignId,
-    };
-
-    const userActivity = await ActivitiesService.addActivity("user", uid, getStreamActivity);
-
-    activityResponse.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-      TagsService.createTagIfNonexistant(tag);
-      const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
-      functions.logger.info("Posted tag activity", { tagActivity });
-    });
-
+    const userActivity = await ActivitiesService.postActivity(uid, activityRequest);
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
+
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [activityResponse],
+      data: [userActivity],
     });
   });
 
@@ -169,11 +147,11 @@ export namespace PostEndpoints {
     functions.logger.info(`Deleting activity`, { uid, activityId });
 
     activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-      await ActivitiesService.removeActivity("tags", tag, activityId);
+      await ActivitiesService.removeActivityFromFeed("tags", tag, activityId);
       functions.logger.info("Removed tag activity", { tag });
     });
 
-    await ActivitiesService.removeActivity("user", uid, activityId);
+    await ActivitiesService.removeActivityFromFeed("user", uid, activityId);
 
     await DataService.deleteDocument({
       schemaKey: "activities",
@@ -270,23 +248,16 @@ export namespace PostEndpoints {
       }
     }
 
-    const activityForeignId = uuidv4();
-    const getStreamActivity: NewActivity<DefaultGenerics> = {
-      actor: uid,
-      verb: ActivityActionVerb.Post,
-      object: activityForeignId,
-    };
-
     // add missing tags to activity
     newValidatedTags.forEach(async (tag) => {
       TagsService.createTagIfNonexistant(tag);
-      const tagActivity = await ActivitiesService.addActivity("tags", tag, getStreamActivity);
+      const tagActivity = await ActivitiesService.postActivityToFeed("tags", tag, activity);
       functions.logger.info("Posted tag activity", { tagActivity });
     });
 
     // remove tags that are no longer needed from the activity
     tagsToRemove.forEach(async (tag: string) => {
-      await ActivitiesService.removeActivity("tags", tag, activityId);
+      await ActivitiesService.removeActivityFromFeed("tags", tag, activityId);
       functions.logger.info("Removed tag activity", { tag });
     });
 

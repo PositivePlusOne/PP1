@@ -7,6 +7,9 @@ part of 'comments.dart';
 // **************************************************************************
 
 _$_Comment _$$_CommentFromJson(Map<String, dynamic> json) => _$_Comment(
+      flMeta: json['_fl_meta_'] == null
+          ? null
+          : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       content: json['content'] as String? ?? '',
       reactionId: json['reactionId'] as String? ?? '',
       activityId: json['activityId'] as String? ?? '',
@@ -21,6 +24,7 @@ _$_Comment _$$_CommentFromJson(Map<String, dynamic> json) => _$_Comment(
 
 Map<String, dynamic> _$$_CommentToJson(_$_Comment instance) =>
     <String, dynamic>{
+      '_fl_meta_': instance.flMeta?.toJson(),
       'content': instance.content,
       'reactionId': instance.reactionId,
       'activityId': instance.activityId,

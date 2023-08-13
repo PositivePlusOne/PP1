@@ -13,6 +13,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
@@ -42,17 +43,24 @@ import 'activity_post_heading_widget.dart';
 class PositiveActivityWidget extends StatefulHookConsumerWidget {
   const PositiveActivityWidget({
     required this.activity,
+    this.targetFeed,
     this.index = -1,
     this.isEnabled = true,
-    this.onTap,
+    this.isFullscreen = false,
+    this.onHeaderTapped,
+    this.onImageTapped,
     super.key,
   });
 
   final Activity activity;
+  final TargetFeed? targetFeed;
   final int index;
 
   final bool isEnabled;
-  final VoidCallback? onTap;
+  final void Function()? onHeaderTapped;
+  final void Function(Media media)? onImageTapped;
+
+  final bool isFullscreen;
 
   @override
   ConsumerState<PositiveActivityWidget> createState() => _PositiveActivityWidgetState();
@@ -225,8 +233,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     try {
       await activityController.deleteActivity(widget.activity.flMeta!.id!);
       final List<TargetFeed> targetFeeds = [
-        TargetFeed('user', profileController.currentProfileId!),
-        TargetFeed('timeline', profileController.currentProfileId!),
+        TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+        TargetFeed('timeline', profileController.currentProfileId ?? ''),
         ...widget.activity.tagTargetFeeds,
       ];
 
@@ -288,9 +296,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     );
   }
 
-  Future<void> _onInternalTap() async {
-    if (widget.onTap != null) {
-      widget.onTap!();
+  Future<void> onInternalHeaderTap() async {
+    if (widget.onHeaderTapped != null) {
+      widget.onHeaderTapped!();
       return;
     }
 
@@ -298,6 +306,24 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
       activity: widget.activity,
+      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+    );
+
+    logger.i('Navigating to post ${widget.activity.flMeta?.id}');
+    await router.push(postRoute);
+  }
+
+  Future<void> onInternalMediaTap(Media media) async {
+    if (widget.onImageTapped != null) {
+      widget.onImageTapped!(media);
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter router = ref.read(appRouterProvider);
+    final PostRoute postRoute = PostRoute(
+      activity: widget.activity,
+      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
     );
 
     logger.i('Navigating to post ${widget.activity.flMeta?.id}');
@@ -306,25 +332,26 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
-    return PositiveTapBehaviour(
-      isEnabled: widget.isEnabled,
-      onTap: _onInternalTap,
-      child: Material(
-        type: MaterialType.transparency,
-        child: Column(
-          children: <Widget>[
-            ActivityPostHeadingWidget(
+    return IgnorePointer(
+      ignoring: !widget.isEnabled,
+      child: Column(
+        children: <Widget>[
+          PositiveTapBehaviour(
+            onTap: onInternalHeaderTap,
+            child: ActivityPostHeadingWidget(
               activity: widget.activity,
               publisher: publisher,
               onOptions: onPostOptionsSelected,
             ),
-            const SizedBox(height: kPaddingExtraSmall),
-            PositivePostLayoutWidget(
-              postContent: widget.activity,
-              publisher: publisher,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: kPaddingExtraSmall),
+          PositivePostLayoutWidget(
+            postContent: widget.activity,
+            publisher: publisher,
+            sidePadding: widget.isFullscreen ? kPaddingNone : kPaddingSmall,
+            onImageTap: onInternalMediaTap,
+          ),
+        ],
       ),
     );
   }

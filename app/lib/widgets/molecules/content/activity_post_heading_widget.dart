@@ -59,65 +59,69 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       if (activity.flMeta!.updatedDate!.isNotEmpty && activity.flMeta!.createdDate! != activity.flMeta!.updatedDate!) createdDate = createdDate + localisations.post_last_edited;
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          PositiveProfileCircularIndicator(profile: publisher),
-          const SizedBox(width: kPaddingSmall),
-          Flexible(
-            fit: FlexFit.loose,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        displayName,
-                        style: typeography.styleTitle,
-                        overflow: TextOverflow.ellipsis,
+    return Material(
+      type: MaterialType.canvas,
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            PositiveProfileCircularIndicator(profile: publisher),
+            const SizedBox(width: kPaddingSmall),
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          displayName,
+                          style: typeography.styleTitle,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: kPaddingSmall),
-                    Container(
-                      width: kIconSmall,
-                      height: kIconSmall,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-                        color: accentColor,
+                      const SizedBox(width: kPaddingSmall),
+                      Container(
+                        width: kIconSmall,
+                        height: kIconSmall,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+                          color: accentColor,
+                        ),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          UniconsLine.check,
+                          size: kIconExtraSmall,
+                          color: complementaryColor,
+                        ),
                       ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                        UniconsLine.check,
-                        size: kIconExtraSmall,
-                        color: complementaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kPaddingExtraSmall),
-                Text(
-                  createdDate,
-                  style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: kPaddingExtraSmall),
+                  Text(
+                    createdDate,
+                    style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Spacer(),
-          if (userController.currentUser!.uid == publisher!.flMeta!.id)
-            PositiveButton.appBarIcon(
-              colors: colours,
-              icon: UniconsLine.ellipsis_h,
-              style: PositiveButtonStyle.text,
-              size: PositiveButtonSize.medium,
-              onTapped: () => onOptions(context),
-            ),
-        ],
+            const Spacer(),
+            if (userController.currentUser!.uid == publisher!.flMeta!.id)
+              PositiveButton.appBarIcon(
+                colors: colours,
+                icon: UniconsLine.ellipsis_h,
+                style: PositiveButtonStyle.text,
+                size: PositiveButtonSize.medium,
+                onTapped: () => onOptions(context),
+              ),
+          ],
+        ),
       ),
     );
   }

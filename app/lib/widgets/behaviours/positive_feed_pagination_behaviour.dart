@@ -15,6 +15,7 @@ import 'package:logger/logger.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -31,15 +32,18 @@ import '../atoms/indicators/positive_post_loading_indicator.dart';
 class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveFeedPaginationBehaviour({
     required this.feed,
-    required this.slug,
     this.onPageLoaded,
-    this.windowSize = 10,
+    this.windowSize = 20,
+    this.onHeaderTap,
+    this.onMediaTap,
     super.key,
   });
 
-  final String feed;
-  final String slug;
+  final TargetFeed feed;
   final int windowSize;
+
+  final void Function(Activity activity)? onHeaderTap;
+  final void Function(Activity activity, Media media)? onMediaTap;
 
   final Function(Map<String, dynamic>)? onPageLoaded;
 
@@ -56,7 +60,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
   StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
 
-  String get expectedCacheKey => 'feeds:${widget.feed}-${widget.slug}';
+  String get expectedCacheKey => 'feeds:${widget.feed.feed}-${widget.feed.slug}';
 
   @override
   void initState() {
@@ -75,7 +79,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   @override
   void didUpdateWidget(PositiveFeedPaginationBehaviour oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.feed != widget.feed || oldWidget.slug != widget.slug) {
+    if (oldWidget.feed.feed != widget.feed.feed || oldWidget.feed.slug != widget.feed.slug) {
       disposeFeedState();
       setupFeedState();
     }
@@ -107,22 +111,22 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-    logger.d('setupFeedState() - Loading state for ${widget.feed} - ${widget.slug}');
+    logger.d('setupFeedState() - Loading state for ${widget.feed}');
     final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
     if (cachedFeedState != null) {
-      logger.d('setupFeedState() - Found cached state for ${widget.feed} - ${widget.slug}');
+      logger.d('setupFeedState() - Found cached state for ${widget.feed}');
       feedState = cachedFeedState;
       feedState.pagingController.addPageRequestListener(requestNextPage);
       return;
     }
 
-    logger.d('setupFeedState() - No cached state for ${widget.feed} - ${widget.slug}. Creating new state.');
+    logger.d('setupFeedState() - No cached state for ${widget.feed}. Creating new state.');
     final PagingController<String, Activity> pagingController = PagingController<String, Activity>(firstPageKey: '');
     pagingController.addPageRequestListener(requestNextPage);
 
     feedState = PositiveFeedState(
-      feed: widget.feed,
-      slug: widget.slug,
+      feed: widget.feed.feed,
+      slug: widget.feed.slug,
       pagingController: pagingController,
       currentPaginationKey: '',
     );
@@ -132,7 +136,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-    logger.d('saveState() - Saving state for ${widget.feed} - ${widget.slug}');
+    logger.d('saveState() - Saving state for ${widget.feed}');
     cacheController.addToCache(key: expectedCacheKey, value: feedState);
   }
 
@@ -142,8 +146,8 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
     try {
       final EndpointResponse endpointResponse = await postApiService.listActivities(
-        widget.feed,
-        widget.slug,
+        widget.feed.feed,
+        widget.feed.slug,
         pagination: Pagination(
           cursor: feedState.currentPaginationKey,
         ),
@@ -208,11 +212,11 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   void onActivityCreated(ActivityCreatedEvent event) {
     final Logger logger = providerContainer.read(loggerProvider);
     final Activity activity = event.activity;
-    if (event.targets.any((element) => element.feed == widget.feed && element.slug == widget.slug)) {
+    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
       feedState.pagingController.itemList?.insert(0, activity);
       feedState.pagingController.itemList = feedState.pagingController.itemList;
 
-      logger.d('onActivityCreated() - Added activity to feed: ${widget.feed} - ${widget.slug} - activity: $activity');
+      logger.d('onActivityCreated() - Added activity to feed: ${widget.feed} - activity: $activity');
       setStateIfMounted();
     }
   }
@@ -220,13 +224,13 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   void onActivityUpdated(ActivityUpdatedEvent event) {
     final Logger logger = providerContainer.read(loggerProvider);
     final Activity activity = event.activity;
-    if (event.targets.any((element) => element.feed == widget.feed && element.slug == widget.slug)) {
+    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
       final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == activity.flMeta?.id) ?? -1;
       if (index >= 0) {
         feedState.pagingController.itemList?[index] = activity;
         feedState.pagingController.itemList = feedState.pagingController.itemList;
 
-        logger.d('onActivityUpdated() - Updated activity in feed: ${widget.feed} - ${widget.slug} - activity: $activity');
+        logger.d('onActivityUpdated() - Updated activity in feed: ${widget.feed} - activity: $activity');
         setStateIfMounted();
       }
     }
@@ -234,13 +238,13 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
   void onActivityDeleted(ActivityDeletedEvent event) {
     final Logger logger = providerContainer.read(loggerProvider);
-    if (event.targets.any((element) => element.feed == widget.feed && element.slug == widget.slug)) {
+    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
       final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == event.activityId) ?? -1;
       if (index >= 0) {
         feedState.pagingController.itemList?.removeAt(index);
         feedState.pagingController.itemList = feedState.pagingController.itemList;
 
-        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - ${widget.slug} - activityId: ${event.activityId}');
+        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - activityId: ${event.activityId}');
         setStateIfMounted();
       }
     }
@@ -258,9 +262,12 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         transitionDuration: kAnimationDurationRegular,
         itemBuilder: (_, item, index) {
           return PositiveActivityWidget(
-            activity: item,
-            index: index,
             key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
+            onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
+            onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
+            activity: item,
+            targetFeed: widget.feed,
+            index: index,
           );
         },
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,

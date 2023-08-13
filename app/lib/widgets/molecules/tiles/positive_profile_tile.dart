@@ -11,6 +11,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../providers/system/design_controller.dart';
@@ -45,6 +46,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
@@ -90,6 +92,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                   size: kIconHeader,
                   isApplyingOnAccentColor: true,
                   imageOverridePath: imageOverridePath,
+                  onTap: () => profile.profileImage != null ? appRouter.push(MediaRoute(media: profile.profileImage!)) : () {},
                 ),
                 const SizedBox(width: kPaddingMedium),
                 Expanded(

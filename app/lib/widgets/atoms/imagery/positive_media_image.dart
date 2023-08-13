@@ -20,6 +20,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
@@ -55,7 +56,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
   @override
   ImageStreamCompleter load(PositiveMediaImageProvider key, DecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key, decode),
+      codec: loadAsync(key, decode),
       scale: 1.0,
       informationCollector: () sync* {
         yield ErrorDescription('Path: ${media.url}');
@@ -63,9 +64,9 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     );
   }
 
-  Future<Codec> _loadAsync(PositiveMediaImageProvider key, DecoderCallback decode) async {
+  Future<Codec> loadAsync(PositiveMediaImageProvider key, DecoderCallback decode) async {
     assert(key == this);
-    final Uint8List bytes = await _loadBytes();
+    final Uint8List bytes = await loadBytes();
     if (bytes.lengthInBytes == 0) {
       throw StateError('Unable to load image');
     }
@@ -78,15 +79,15 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     }
   }
 
-  FutureOr<Uint8List> _loadBytes() async {
-    Uint8List? bytes = await _loadFromFileCache();
+  FutureOr<Uint8List> loadBytes() async {
+    Uint8List? bytes = await loadFromFileCache();
 
     if (media.bucketPath.isNotEmpty) {
-      bytes ??= await _loadFromFirebase();
+      bytes ??= await loadFromFirebase();
     }
 
     if (media.url.isNotEmpty) {
-      bytes ??= await _loadFromUrl();
+      bytes ??= await loadFromUrl();
     }
 
     bytes ??= Uint8List(0);
@@ -98,7 +99,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     return bytes;
   }
 
-  Future<Uint8List?> _loadFromFileCache() async {
+  Future<Uint8List?> loadFromFileCache() async {
     if (media.name.isEmpty) {
       return null;
     }
@@ -111,7 +112,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
       }
 
       final String key = Media.getKey(media, keyThumbnailSize);
-      final File file = await cacheManager.getSingleFile(key);
+      final File file = await cacheManager.getSingleFile(media.bucketPath, key: key);
       if (file.existsSync() == false) {
         return null;
       }
@@ -122,7 +123,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     }
   }
 
-  Future<Uint8List> _loadFromUrl() async {
+  Future<Uint8List> loadFromUrl() async {
     final HttpClientRequest request = await HttpClient().getUrl(Uri.parse(media.url));
     final HttpClientResponse response = await request.close();
     if (response.statusCode != HttpStatus.ok) {
@@ -147,7 +148,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     return bytes;
   }
 
-  Future<Uint8List> _loadFromFirebase() async {
+  Future<Uint8List> loadFromFirebase() async {
     final Logger logger = providerContainer.read(loggerProvider);
     Reference ref = FirebaseStorage.instance.ref(media.bucketPath);
 
@@ -265,6 +266,8 @@ class PositiveMediaImage extends StatefulWidget {
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
   PositiveMediaImageProvider? _imageProvider;
   final ValueNotifier<Uint8List> bytesNotifier = ValueNotifier<Uint8List>(Uint8List(0));
+  late final StreamSubscription<ForceMediaFetchEvent> _forceMediaFetchSubscription;
+
   bool isSvg = false;
 
   @override
@@ -277,7 +280,14 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    _imageProvider?._loadBytes();
+    _imageProvider?.loadBytes();
+    _forceMediaFetchSubscription = providerContainer.read(eventBusProvider).on<ForceMediaFetchEvent>().listen(onForceMediaFetchCalled);
+  }
+
+  @override
+  void dispose() {
+    _forceMediaFetchSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -285,15 +295,25 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
     super.didUpdateWidget(oldWidget);
 
     if (Media.getKey(widget.media, widget.thumbnailTargetSize) != Media.getKey(oldWidget.media, widget.thumbnailTargetSize)) {
-      _imageProvider = PositiveMediaImageProvider(
-        media: widget.media,
-        useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
-        thumbnailTargetSize: widget.thumbnailTargetSize,
-        onBytesLoaded: onBytesLoaded,
-      );
-
-      _imageProvider?._loadBytes();
+      onForceMediaFetchCalled(ForceMediaFetchEvent(media: widget.media));
     }
+  }
+
+  void onForceMediaFetchCalled(ForceMediaFetchEvent event) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (event.media.bucketPath.isEmpty || event.media.bucketPath != widget.media.bucketPath) {
+      return;
+    }
+
+    logger.d('Forcing media fetch for ${widget.media.name}');
+    _imageProvider = PositiveMediaImageProvider(
+      media: widget.media,
+      useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
+      thumbnailTargetSize: widget.thumbnailTargetSize,
+      onBytesLoaded: onBytesLoaded,
+    );
+
+    _imageProvider?.loadBytes();
   }
 
   void onBytesLoaded(String mimeType, Uint8List bytes) {

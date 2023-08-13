@@ -225,7 +225,7 @@ class GalleryController extends _$GalleryController {
     await localFile.writeAsBytes(imageBytes);
 
     final GalleryEntry galleryEntry = GalleryEntry(
-      reference: child,
+      reference: uploadImmediately ? child : null,
       mimeType: mimeType,
       file: XFile(localFile.path),
       data: imageBytes,

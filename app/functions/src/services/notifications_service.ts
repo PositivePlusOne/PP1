@@ -70,6 +70,20 @@ export namespace NotificationsService {
   export async function storeNotification(notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
 
+    // Ryan: Look at this
+    // if (notification.receiver && notification) {
+    //   const feedsClient = await FeedService.getFeedsClient();
+    //   const feed = feedsClient.feed("notification", notification.receiver);
+    //   const activityData = {
+    //     actor: notification.sender,
+    //     verb: notification.topic,
+    //     object: notification.key,
+    //     foreign_id: notification.key,
+    //   } as NewActivity;
+
+    //   await feed.addActivity(activityData);
+    // }
+
     await resetNotificationListCache(notification.receiver);
     await DataService.updateDocument({
       schemaKey: "notifications",

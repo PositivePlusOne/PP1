@@ -72,7 +72,7 @@ dependencies:
   fluent_validation: ^2.1.1
   pull_to_refresh: ^2.0.0
   calendar_date_picker2: ^0.5.2
-  image_picker: ^1.0.0
+  image_picker: ^1.0.2
   shimmer: ^3.0.0
   expandable: ^5.0.1
   banner_carousel: ^1.2.1
