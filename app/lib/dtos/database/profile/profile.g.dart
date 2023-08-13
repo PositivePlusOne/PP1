@@ -40,6 +40,10 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
               ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      statistics: json['statistics'] == null
+          ? const ProfileStatistics()
+          : ProfileStatistics.fromJson(
+              json['statistics'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
@@ -62,4 +66,18 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'place': instance.place?.toJson(),
       'biography': instance.biography,
       'media': instance.media.map((e) => e.toJson()).toList(),
+      'statistics': instance.statistics.toJson(),
+    };
+
+_$_ProfileStatistics _$$_ProfileStatisticsFromJson(Map<String, dynamic> json) =>
+    _$_ProfileStatistics(
+      followers: json['followers'] as int? ?? 0,
+      following: json['following'] as int? ?? 0,
+    );
+
+Map<String, dynamic> _$$_ProfileStatisticsToJson(
+        _$_ProfileStatistics instance) =>
+    <String, dynamic>{
+      'followers': instance.followers,
+      'following': instance.following,
     };

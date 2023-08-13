@@ -67,10 +67,9 @@ class ProfilePage extends HookConsumerWidget {
           PositiveProfileTile(
             profile: state.profile ?? Profile.empty(),
             brightness: viewModel.appBarColor.impliedBrightness,
-            metadata: const {
-              'Followers': '1.2M',
-              'Likes': '42k',
-              'Posts': '120',
+            metadata: {
+              'Followers': '${state.profile?.statistics.followers ?? 0}',
+              'Following': '${state.profile?.statistics.following ?? 0}',
             },
           ),
           PositiveProfileActionsList(

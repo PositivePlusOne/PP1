@@ -43,6 +43,7 @@ mixin _$Profile {
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
   List<Media> get media => throw _privateConstructorUsedError;
+  ProfileStatistics get statistics => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -72,10 +73,12 @@ abstract class $ProfileCopyWith<$Res> {
       bool placeSkipped,
       PositivePlace? place,
       String biography,
-      List<Media> media});
+      List<Media> media,
+      ProfileStatistics statistics});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $PositivePlaceCopyWith<$Res>? get place;
+  $ProfileStatisticsCopyWith<$Res> get statistics;
 }
 
 /// @nodoc
@@ -109,6 +112,7 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
+    Object? statistics = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -183,6 +187,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.media
           : media // ignore: cast_nullable_to_non_nullable
               as List<Media>,
+      statistics: null == statistics
+          ? _value.statistics
+          : statistics // ignore: cast_nullable_to_non_nullable
+              as ProfileStatistics,
     ) as $Val);
   }
 
@@ -207,6 +215,14 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
 
     return $PositivePlaceCopyWith<$Res>(_value.place!, (value) {
       return _then(_value.copyWith(place: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileStatisticsCopyWith<$Res> get statistics {
+    return $ProfileStatisticsCopyWith<$Res>(_value.statistics, (value) {
+      return _then(_value.copyWith(statistics: value) as $Val);
     });
   }
 }
@@ -236,12 +252,15 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       bool placeSkipped,
       PositivePlace? place,
       String biography,
-      List<Media> media});
+      List<Media> media,
+      ProfileStatistics statistics});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
   @override
   $PositivePlaceCopyWith<$Res>? get place;
+  @override
+  $ProfileStatisticsCopyWith<$Res> get statistics;
 }
 
 /// @nodoc
@@ -272,6 +291,7 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
+    Object? statistics = null,
   }) {
     return _then(_$_Profile(
       flMeta: freezed == flMeta
@@ -346,6 +366,10 @@ class __$$_ProfileCopyWithImpl<$Res>
           ? _value._media
           : media // ignore: cast_nullable_to_non_nullable
               as List<Media>,
+      statistics: null == statistics
+          ? _value.statistics
+          : statistics // ignore: cast_nullable_to_non_nullable
+              as ProfileStatistics,
     ));
   }
 }
@@ -375,7 +399,8 @@ class _$_Profile implements _Profile {
       this.placeSkipped = false,
       this.place,
       this.biography = '',
-      final List<Media> media = const []})
+      final List<Media> media = const [],
+      this.statistics = const ProfileStatistics()})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -469,8 +494,12 @@ class _$_Profile implements _Profile {
   }
 
   @override
+  @JsonKey()
+  final ProfileStatistics statistics;
+
+  @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, statistics: $statistics)';
   }
 
   @override
@@ -506,31 +535,35 @@ class _$_Profile implements _Profile {
             (identical(other.place, place) || other.place == place) &&
             (identical(other.biography, biography) ||
                 other.biography == biography) &&
-            const DeepCollectionEquality().equals(other._media, _media));
+            const DeepCollectionEquality().equals(other._media, _media) &&
+            (identical(other.statistics, statistics) ||
+                other.statistics == statistics));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      flMeta,
-      email,
-      phoneNumber,
-      locale,
-      fcmToken,
-      name,
-      displayName,
-      birthday,
-      accentColor,
-      hivStatus,
-      const DeepCollectionEquality().hash(_genders),
-      const DeepCollectionEquality().hash(_interests),
-      const DeepCollectionEquality().hash(_visibilityFlags),
-      const DeepCollectionEquality().hash(_featureFlags),
-      placeSkipped,
-      place,
-      biography,
-      const DeepCollectionEquality().hash(_media));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        flMeta,
+        email,
+        phoneNumber,
+        locale,
+        fcmToken,
+        name,
+        displayName,
+        birthday,
+        accentColor,
+        hivStatus,
+        const DeepCollectionEquality().hash(_genders),
+        const DeepCollectionEquality().hash(_interests),
+        const DeepCollectionEquality().hash(_visibilityFlags),
+        const DeepCollectionEquality().hash(_featureFlags),
+        placeSkipped,
+        place,
+        biography,
+        const DeepCollectionEquality().hash(_media),
+        statistics
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -565,7 +598,8 @@ abstract class _Profile implements Profile {
       final bool placeSkipped,
       final PositivePlace? place,
       final String biography,
-      final List<Media> media}) = _$_Profile;
+      final List<Media> media,
+      final ProfileStatistics statistics}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
@@ -611,7 +645,167 @@ abstract class _Profile implements Profile {
   @override
   List<Media> get media;
   @override
+  ProfileStatistics get statistics;
+  @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+ProfileStatistics _$ProfileStatisticsFromJson(Map<String, dynamic> json) {
+  return _ProfileStatistics.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ProfileStatistics {
+  int get followers => throw _privateConstructorUsedError;
+  int get following => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ProfileStatisticsCopyWith<ProfileStatistics> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ProfileStatisticsCopyWith<$Res> {
+  factory $ProfileStatisticsCopyWith(
+          ProfileStatistics value, $Res Function(ProfileStatistics) then) =
+      _$ProfileStatisticsCopyWithImpl<$Res, ProfileStatistics>;
+  @useResult
+  $Res call({int followers, int following});
+}
+
+/// @nodoc
+class _$ProfileStatisticsCopyWithImpl<$Res, $Val extends ProfileStatistics>
+    implements $ProfileStatisticsCopyWith<$Res> {
+  _$ProfileStatisticsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? followers = null,
+    Object? following = null,
+  }) {
+    return _then(_value.copyWith(
+      followers: null == followers
+          ? _value.followers
+          : followers // ignore: cast_nullable_to_non_nullable
+              as int,
+      following: null == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_ProfileStatisticsCopyWith<$Res>
+    implements $ProfileStatisticsCopyWith<$Res> {
+  factory _$$_ProfileStatisticsCopyWith(_$_ProfileStatistics value,
+          $Res Function(_$_ProfileStatistics) then) =
+      __$$_ProfileStatisticsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int followers, int following});
+}
+
+/// @nodoc
+class __$$_ProfileStatisticsCopyWithImpl<$Res>
+    extends _$ProfileStatisticsCopyWithImpl<$Res, _$_ProfileStatistics>
+    implements _$$_ProfileStatisticsCopyWith<$Res> {
+  __$$_ProfileStatisticsCopyWithImpl(
+      _$_ProfileStatistics _value, $Res Function(_$_ProfileStatistics) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? followers = null,
+    Object? following = null,
+  }) {
+    return _then(_$_ProfileStatistics(
+      followers: null == followers
+          ? _value.followers
+          : followers // ignore: cast_nullable_to_non_nullable
+              as int,
+      following: null == following
+          ? _value.following
+          : following // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_ProfileStatistics implements _ProfileStatistics {
+  const _$_ProfileStatistics({this.followers = 0, this.following = 0});
+
+  factory _$_ProfileStatistics.fromJson(Map<String, dynamic> json) =>
+      _$$_ProfileStatisticsFromJson(json);
+
+  @override
+  @JsonKey()
+  final int followers;
+  @override
+  @JsonKey()
+  final int following;
+
+  @override
+  String toString() {
+    return 'ProfileStatistics(followers: $followers, following: $following)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ProfileStatistics &&
+            (identical(other.followers, followers) ||
+                other.followers == followers) &&
+            (identical(other.following, following) ||
+                other.following == following));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, followers, following);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ProfileStatisticsCopyWith<_$_ProfileStatistics> get copyWith =>
+      __$$_ProfileStatisticsCopyWithImpl<_$_ProfileStatistics>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_ProfileStatisticsToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ProfileStatistics implements ProfileStatistics {
+  const factory _ProfileStatistics({final int followers, final int following}) =
+      _$_ProfileStatistics;
+
+  factory _ProfileStatistics.fromJson(Map<String, dynamic> json) =
+      _$_ProfileStatistics.fromJson;
+
+  @override
+  int get followers;
+  @override
+  int get following;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ProfileStatisticsCopyWith<_$_ProfileStatistics> get copyWith =>
       throw _privateConstructorUsedError;
 }

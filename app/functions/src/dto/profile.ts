@@ -2,6 +2,8 @@ import { StringSetFromJson } from "./generic";
 import { FlMeta, FlMetaJSON } from "./meta";
 import { Place, PlaceJSON } from "./location";
 import { Media, MediaJSON } from "./media";
+import { FeedService } from "../services/feed_service";
+import { CacheService } from "../services/cache_service";
 
 export const profileSchemaKey = 'users';
 
@@ -29,6 +31,21 @@ export class ProfileOrganisationConfiguration {
     }
 }
 
+export interface ProfileStatisicsJSON {
+    followers: number;
+    following: number;
+}
+
+export class ProfileStatisics {
+    followers: number;
+    following: number;
+
+    constructor(json: ProfileStatisicsJSON) {
+        this.followers = json.followers;
+        this.following = json.following;
+    }
+}
+
 export interface ProfileJSON {
     _fl_meta_?: FlMetaJSON;
     _tags?: string[];
@@ -53,6 +70,7 @@ export interface ProfileJSON {
     biography?: string;
     organisationConfiguration?: ProfileOrganisationConfigurationJSON;
     media?: MediaJSON[];
+    statistics?: ProfileStatisicsJSON;
 }
 
 export class Profile {
@@ -76,6 +94,7 @@ export class Profile {
     biography: string;
     organisationConfiguration?: ProfileOrganisationConfiguration;
     media: Media[];
+    statistics?: ProfileStatisics;
 
     constructor(json: ProfileJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -98,6 +117,7 @@ export class Profile {
         this.biography = json.biography || '';
         this.organisationConfiguration = json.organisationConfiguration && new ProfileOrganisationConfiguration(json.organisationConfiguration);
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
+        this.statistics = json.statistics && new ProfileStatisics(json.statistics);
     }
 
     isIncognito(): boolean {
@@ -164,5 +184,30 @@ export class Profile {
             this.displayName.length > 0 ? 'hasDisplayName' : '',
             this.media.filter((media) => !media.isPrivate).length > 0 ? 'hasPublicMedia' : '',
         ];
+    }
+
+    async appendFollowersAndFollowingData(): Promise<void> {
+        if (!this._fl_meta_?.fl_id) {
+            return;
+        }
+
+        const cacheKey = `profile-stats-${this._fl_meta_.fl_id}`;
+        const cachedStats = await CacheService.getFromCache(cacheKey) as ProfileStatisicsJSON | undefined;
+        if (cachedStats) {
+            this.statistics = new ProfileStatisics(cachedStats);
+            return;
+        }
+
+        const client = await FeedService.getFeedsClient();
+        const feed = client.feed("user", this._fl_meta_!.fl_id!);
+        const followStats = await feed.followStats();
+
+        const stats = {
+            followers: followStats.results.followers.count,
+            following: followStats.results.following.count,
+        } as ProfileStatisicsJSON;
+
+        this.statistics = new ProfileStatisics(stats);
+        await CacheService.setInCache(cacheKey, stats, 300); // Expires every 5 minutes
     }
 }
