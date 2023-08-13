@@ -74,7 +74,7 @@ export namespace NotificationsService {
 
     if (notification.receiver && notification) {
       const feedsClient = await FeedService.getFeedsClient();
-      const feed = feedsClient.feed("notifications", notification.receiver);
+      const feed = feedsClient.feed("notification", notification.receiver);
       const activityData = {
         actor: notification.sender,
         verb: notification.topic,
