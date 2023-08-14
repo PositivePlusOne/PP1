@@ -31,8 +31,8 @@ export namespace CommentsService {
 
         const response = await client.reactions.add("comment", comment.activityId,
             {...comment},
-            // Future me, you need to add an "originFeed" property to the comment, and use that for enrichment.
-            { userId: comment.senderId, targetFeeds // Probably what future me is looking for tomorrow?},
+            // Future me, you need to add an "originFeed" or "targetFeeds" property to the comment, and use that for enrichment.
+            { userId: comment.senderId, targetFeeds: c
         );
 
         return await DataService.updateDocument({

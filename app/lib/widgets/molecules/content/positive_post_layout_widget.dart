@@ -266,7 +266,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
                 fit: BoxFit.cover,
                 media: media,
                 onTap: () => onImageTap?.call(media),
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(
@@ -312,7 +312,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
                 height: kPaddingExtraLarge,
                 fit: BoxFit.cover,
                 media: media,
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(
