@@ -12,8 +12,6 @@ export namespace FlamelinkHelpers {
     return object != null && object._fl_meta_ != null && object._fl_meta_.fl_id != null && typeof object._fl_meta_.fl_id === "string" && object._fl_meta_.fl_id.length > 0 && object._fl_meta_.schema != null && typeof object._fl_meta_.schema === "string" && object._fl_meta_.schema.length > 0;
   }
 
-  export function getTargetFeedsFromOriginFeed(str: string)
-
   /**
    * Gets the flamelink id from a flamelink object.
    * @param {any} object the object to get the flamelink id from.

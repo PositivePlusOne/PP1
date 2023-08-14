@@ -13,6 +13,7 @@ import { TagsService } from "../services/tags_service";
 import { StorageService } from "../services/storage_service";
 import { FeedService } from "../services/feed_service";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { FeedName } from "../constants/default_feeds";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -82,6 +83,7 @@ export namespace PostEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
+    const feed = request.data.feed || FeedName.User;
     const type = request.data.type;
     const style = request.data.style;
 
@@ -104,6 +106,7 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         foreignKey: uid,
+        originFeed: `${feed}:${uid}`,
       },
       generalConfiguration: {
         content: content,
@@ -116,7 +119,7 @@ export namespace PostEndpoints {
       media: media,
     } as ActivityJSON;
 
-    const userActivity = await ActivitiesService.postActivity(uid, activityRequest);
+    const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
 
     return buildEndpointResponse(context, {

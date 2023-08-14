@@ -3632,6 +3632,7 @@ ActivityPublisherInformation _$ActivityPublisherInformationFromJson(
 /// @nodoc
 mixin _$ActivityPublisherInformation {
   String get foreignKey => throw _privateConstructorUsedError;
+  String get originFeed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -3647,7 +3648,7 @@ abstract class $ActivityPublisherInformationCopyWith<$Res> {
       _$ActivityPublisherInformationCopyWithImpl<$Res,
           ActivityPublisherInformation>;
   @useResult
-  $Res call({String foreignKey});
+  $Res call({String foreignKey, String originFeed});
 }
 
 /// @nodoc
@@ -3665,11 +3666,16 @@ class _$ActivityPublisherInformationCopyWithImpl<$Res,
   @override
   $Res call({
     Object? foreignKey = null,
+    Object? originFeed = null,
   }) {
     return _then(_value.copyWith(
       foreignKey: null == foreignKey
           ? _value.foreignKey
           : foreignKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      originFeed: null == originFeed
+          ? _value.originFeed
+          : originFeed // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -3684,7 +3690,7 @@ abstract class _$$_ActivityPublisherInformationCopyWith<$Res>
       __$$_ActivityPublisherInformationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String foreignKey});
+  $Res call({String foreignKey, String originFeed});
 }
 
 /// @nodoc
@@ -3701,11 +3707,16 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
   @override
   $Res call({
     Object? foreignKey = null,
+    Object? originFeed = null,
   }) {
     return _then(_$_ActivityPublisherInformation(
       foreignKey: null == foreignKey
           ? _value.foreignKey
           : foreignKey // ignore: cast_nullable_to_non_nullable
+              as String,
+      originFeed: null == originFeed
+          ? _value.originFeed
+          : originFeed // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -3714,7 +3725,8 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
-  const _$_ActivityPublisherInformation({this.foreignKey = ''});
+  const _$_ActivityPublisherInformation(
+      {this.foreignKey = '', this.originFeed = ''});
 
   factory _$_ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityPublisherInformationFromJson(json);
@@ -3722,10 +3734,13 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
   @override
   @JsonKey()
   final String foreignKey;
+  @override
+  @JsonKey()
+  final String originFeed;
 
   @override
   String toString() {
-    return 'ActivityPublisherInformation(foreignKey: $foreignKey)';
+    return 'ActivityPublisherInformation(foreignKey: $foreignKey, originFeed: $originFeed)';
   }
 
   @override
@@ -3734,12 +3749,14 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
         (other.runtimeType == runtimeType &&
             other is _$_ActivityPublisherInformation &&
             (identical(other.foreignKey, foreignKey) ||
-                other.foreignKey == foreignKey));
+                other.foreignKey == foreignKey) &&
+            (identical(other.originFeed, originFeed) ||
+                other.originFeed == originFeed));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, foreignKey);
+  int get hashCode => Object.hash(runtimeType, foreignKey, originFeed);
 
   @JsonKey(ignore: true)
   @override
@@ -3758,14 +3775,17 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
 
 abstract class _ActivityPublisherInformation
     implements ActivityPublisherInformation {
-  const factory _ActivityPublisherInformation({final String foreignKey}) =
-      _$_ActivityPublisherInformation;
+  const factory _ActivityPublisherInformation(
+      {final String foreignKey,
+      final String originFeed}) = _$_ActivityPublisherInformation;
 
   factory _ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =
       _$_ActivityPublisherInformation.fromJson;
 
   @override
   String get foreignKey;
+  @override
+  String get originFeed;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation>

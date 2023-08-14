@@ -8,6 +8,7 @@ import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 import { TagsService } from "./tags_service";
+import { FeedName } from "../constants/default_feeds";
 
 export namespace ActivitiesService {
   /**
@@ -72,7 +73,7 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<ActivityJSON>} a promise that resolves when the activity is posted.
    */
-  export async function postActivity(userID: string, activity: ActivityJSON): Promise<ActivityJSON> {
+  export async function postActivity(userID: string, feedName: string, activity: ActivityJSON): Promise<ActivityJSON> {
     functions.logger.info("Adding activity", {
       userID,
       activity,
@@ -82,7 +83,7 @@ export namespace ActivitiesService {
     const targets = [] as string[];
     activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
       await TagsService.createTagIfNonexistant(tag);
-      targets.push(`tag:${tag}`);
+      targets.push(`${FeedName.Tags}:${tag}`);
     });
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
@@ -93,7 +94,7 @@ export namespace ActivitiesService {
       to: targets,
     };
 
-    const feed = (await FeedService.getFeedsClient()).feed("user", userID);
+    const feed = (await FeedService.getFeedsClient()).feed(feedName, userID);
     await feed.addActivity(getStreamActivity);
 
     const activityResponse = await DataService.updateDocument({

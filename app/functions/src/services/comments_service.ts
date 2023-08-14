@@ -25,14 +25,17 @@ export namespace CommentsService {
     * @returns {Promise<any>} The new comment.
     */
     export async function addComment(comment: CommentJSON, client: StreamClient<DefaultGenerics>): Promise<any> {
-        if (!comment.activityId) {
+        if (!comment.activityId || !comment.originFeed) {
             throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
         }
 
+        functions.logger.log("Adding comment", {
+            comment,
+        });
+
         const response = await client.reactions.add("comment", comment.activityId,
             {...comment},
-            // Future me, you need to add an "originFeed" or "targetFeeds" property to the comment, and use that for enrichment.
-            { userId: comment.senderId, targetFeeds: c
+            { userId: comment.senderId, targetFeeds: [comment.originFeed] },
         );
 
         return await DataService.updateDocument({

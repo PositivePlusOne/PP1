@@ -1,5 +1,6 @@
 import * as functions from "firebase-functions";
 
+import { FeedName } from "../constants/default_feeds";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { UserService } from "../services/user_service";
@@ -17,6 +18,7 @@ export namespace CommentEndpoints {
     export const postComment = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
+        const feed = request.data.feed || FeedName.User;
         // const reactionId = request.data.reactionId;
         const comtent = request.data.content || "";
         const mentions = request.data.mentions || [] as MentionJSON[];
@@ -42,12 +44,14 @@ export namespace CommentEndpoints {
             activityId: activityId,
             senderId: uid,
             mentions: mentions,
+            originFeed: `${feed}:${uid}`,
             media: media,
         } as CommentJSON;
 
         // Create and response
         const streamClient = await FeedService.getFeedsClient();
         const responseComment = await CommentsService.addComment(commentJSON, streamClient);
+        
         return buildEndpointResponse(context, {
             sender: uid,
             data: [responseComment],

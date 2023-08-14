@@ -193,6 +193,11 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
+  - flutter_image_compress_common (1.0.0):
+    - Flutter
+    - Mantle
+    - SDWebImage
+    - SDWebImageWebPCoder
   - flutter_local_notifications (0.0.1):
     - Flutter
   - flutter_native_splash (0.0.1):
@@ -294,6 +299,9 @@ PODS:
     - libwebp/sharpyuv
   - local_auth_ios (0.0.1):
     - Flutter
+  - Mantle (2.2.0):
+    - Mantle/extobjc (= 2.2.0)
+  - Mantle/extobjc (2.2.0)
   - Mixpanel-swift (4.1.0):
     - Mixpanel-swift/Complete (= 4.1.0)
   - Mixpanel-swift/Complete (4.1.0)
@@ -342,6 +350,9 @@ PODS:
   - SDWebImage (5.17.0):
     - SDWebImage/Core (= 5.17.0)
   - SDWebImage/Core (5.17.0)
+  - SDWebImageWebPCoder (0.13.0):
+    - libwebp (~> 1.0)
+    - SDWebImage/Core (~> 5.17)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -392,6 +403,7 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.10.0`)
   - Flutter (from `Flutter`)
+  - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
@@ -454,6 +466,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - JPSVolumeButtonHandler
     - libwebp
+    - Mantle
     - Mixpanel-swift
     - MLImage
     - MLKitCommon
@@ -464,6 +477,7 @@ SPEC REPOS:
     - PromisesSwift
     - ReachabilitySwift
     - SDWebImage
+    - SDWebImageWebPCoder
     - sqlite3
     - SwiftyGif
 
@@ -499,6 +513,8 @@ EXTERNAL SOURCES:
     :tag: 10.10.0
   Flutter:
     :path: Flutter
+  flutter_image_compress_common:
+    :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_splash:
@@ -594,6 +610,7 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: 5c4906ecf0441ed23efff399454dc791eff8ad54
   FirebaseStorage: a12297f786e81e653864d87723ec30381eb90220
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
@@ -618,6 +635,7 @@ SPEC CHECKSUMS:
   JPSVolumeButtonHandler: 53110330c9168ed325def93eabff39f0fe3e8082
   libwebp: 33dc822fbbf4503668d09f7885bbfedc76c45e96
   local_auth_ios: c6cf091ded637a88f24f86a8875d8b0f526e2605
+  Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   Mixpanel-swift: 7b46c63259dec8398a7df9f8a1298fd00b6b3cb3
   mixpanel_flutter: a530f9f27534f3c96a074e483ee425387f524e1c
   MLImage: 7bb7c4264164ade9bf64f679b40fb29c8f33ee9b
@@ -634,6 +652,7 @@ SPEC CHECKSUMS:
   PromisesSwift: 28dca69a9c40779916ac2d6985a0192a5cb4a265
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   SDWebImage: 750adf017a315a280c60fde706ab1e552a3ae4e9
+  SDWebImageWebPCoder: af09429398d99d524cae2fe00f6f0f6e491ed102
   share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a

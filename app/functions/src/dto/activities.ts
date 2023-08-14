@@ -354,6 +354,7 @@ export class ActivityPricingInformation {
  */
 export interface ActivityPublisherInformationJSON {
   foreignKey?: string;
+  originFeed?: string;
 }
 
 /**
@@ -364,9 +365,11 @@ export interface ActivityPublisherInformationJSON {
  */
 export class ActivityPublisherInformation {
   foreignKey: string;
+  originFeed: string;
 
   constructor(json: ActivityPublisherInformationJSON) {
     this.foreignKey = json.foreignKey || '';
+    this.originFeed = json.originFeed || '';
   }
 }
 
