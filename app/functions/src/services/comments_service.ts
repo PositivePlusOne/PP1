@@ -29,7 +29,11 @@ export namespace CommentsService {
             throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
         }
 
-        const response = await client.reactions.add("comment", comment.activityId, {...comment}, {userId: comment.senderId});
+        const response = await client.reactions.add("comment", comment.activityId,
+            {...comment},
+            // Future me, you need to add an "originFeed" property to the comment, and use that for enrichment.
+            { userId: comment.senderId, targetFeeds // Probably what future me is looking for tomorrow?},
+        );
 
         return await DataService.updateDocument({
             schemaKey: "comments",
@@ -91,8 +95,6 @@ export namespace CommentsService {
         if (lastCommentId) {
             params.id_lt = lastCommentId; // fetch comments with IDs less than the provided lastCommentId
         }
-
-        functions.logger.log("params", params);
 
         const response = await client.reactions.filter(params);
         const responseData = response.results.map((reaction) => {

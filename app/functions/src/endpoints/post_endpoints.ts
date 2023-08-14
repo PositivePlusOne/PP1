@@ -29,8 +29,10 @@ export namespace PostEndpoints {
         }
     
         const feedsClient = await FeedService.getFeedsClient();
+        feedsClient.enrichByDefault = true;
+
         const feed = feedsClient.feed(feedId, slugId);
-        const window = await FeedService.getFeedWindow(feed, limit, cursor);
+        const window = await FeedService.getFeedWindow(feedsClient, feed, limit, cursor);
         const reactionCounts = window.results.map((item) => item.reaction_counts || {});
     
         // Convert window results to a list of IDs

@@ -1,24 +1,11 @@
 import * as functions from "firebase-functions";
 
 import { DefaultGenerics, EnrichedActivity, StreamClient, StreamFeed, connect } from "getstream";
-import { FeedBatchedClientResponse, FeedEntry, GetFeedWindowResult } from "../dto/stream";
-import { RelationshipService } from "./relationship_service";
-import { ProfileService } from "./profile_service";
-import { StreamActorType } from "./enumerations/actors";
+import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequest } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 
 export namespace FeedService {
-  type ActorFetchResolver = {
-    [StreamActorType.user]: typeof ProfileService.getProfile;
-    [StreamActorType.organisation]: typeof ProfileService.getProfile;
-  };
-
-  const actorTypeToServiceMap: ActorFetchResolver = {
-    [StreamActorType.user]: ProfileService.getProfile,
-    [StreamActorType.organisation]: ProfileService.getProfile,
-  };
-
   /**
    * Returns a StreamClient instance with the API key and secret.
    * @return {StreamClient<DefaultGenerics>} instance of StreamClient
@@ -33,7 +20,14 @@ export namespace FeedService {
       throw new Error("Missing Stream Feeds API key or secret");
     }
 
-    return connect(apiKey, apiSecret);
+    const client = connect(apiKey, apiSecret, undefined, {
+      browser: false,
+    });
+
+    client.enrichByDefault = true;
+    client.replaceReactionOptions({ withOwnChildren: true, withOwnReactions: true, withRecentReactions: true, withReactionCounts: true });
+
+    return client;
   }
 
   /**
@@ -89,7 +83,7 @@ export namespace FeedService {
    * @param {string} next the next token.
    * @return {Promise<GetFeedWindowResult>} a promise that resolves to the feed window.
    */
-  export async function getFeedWindow(feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
+  export async function getFeedWindow(client: StreamClient<DefaultGenerics>, feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
     functions.logger.info("Getting feed window", { feed, windowSize, next });
 
     const response = await feed.get({
@@ -98,20 +92,55 @@ export namespace FeedService {
       id_lt: next,
       withOwnChildren: true,
       withOwnReactions: true,
-      withReactionCounts: true,
       withRecentReactions: true,
+      withReactionCounts: true,
+      ownReactions: true,
     });
 
-    functions.logger.info("Got feed window", { response });
+    functions.logger.info("Got feed window", { feed, windowSize, next, response });
 
+    const originMap = new Map<string, string>();
     const results = (response.results as EnrichedActivity<DefaultGenerics>[]).map((activity) => {
+      originMap.set(activity.id, activity.origin ?? "");
       return {
         id: activity?.id ?? "",
+        foreign_id: activity?.foreign_id ?? "",
         object: activity?.object ?? "",
         actor: activity?.actor ?? "",
         reaction_counts: activity.reaction_counts,
       };
     }) as FeedEntry[];
+
+    // Add activity detail for each activity if not from the source feed
+    for (const result of results) {
+      const originFeedStr = originMap.get(result.id);
+      const originFeed = originFeedStr?.split(":") ?? [];
+      if (originFeed.length !== 2) {
+        continue;
+      }
+
+      const originFeedSlug = originFeed[0];
+      const originFeedUserId = originFeed[1];
+      const originFeedInstance = client.feed(originFeedSlug, originFeedUserId);
+
+      const activityDetailResponse = await originFeedInstance.getActivityDetail(result.object, {
+        enrich: true,
+        withOwnChildren: true,
+        withOwnReactions: true,
+        withRecentReactions: true,
+        withReactionCounts: true,
+        ownReactions: true,
+        recentReactionsLimit: 3,
+      });
+
+      const activityCommentsResponse = await client.reactions.filter({
+        activity_id: result.id,
+        kind: "comment",
+        limit: 3,
+      });
+
+      functions.logger.info("Got activity detail", { result, activityDetailResponse, originFeedSlug, originFeedUserId, activityCommentsResponse });
+    }
 
     return {
       results,
@@ -161,55 +190,5 @@ export namespace FeedService {
     // Follow the target feed
     await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);
     functions.logger.info("Feed unfollowed", { source, target });
-  }
-
-  /**
-   * Processes feed entries for a user.
-   * @param {string} uid the user's ID.
-   * @param {FeedEntry[]} entries the feed entries.
-   * @return {Promise<FeedBatchedClientResponse>} a promise that resolves to the feed entries.
-   */
-  export async function processFeedEntriesForUser(uid: string, entries: FeedEntry[]): Promise<FeedBatchedClientResponse> {
-    functions.logger.info("Processing feed entries for user", { entries });
-
-    const unique = (value: any, index: number, self: any[]) => self.indexOf(value) === index;
-
-    const foreignKeys = entries.map((entry) => entry.foreign_id).filter(unique);
-    const actors = entries.map((entry) => entry.actor).filter(unique);
-    const foreignKeysAndActors = foreignKeys.concat(actors).filter((value) => value !== uid);
-
-    const sanitizedForeignKeysAndActors = await RelationshipService.sanitizeRelationships(uid, foreignKeysAndActors);
-
-    const profiles: any[] = [];
-    const organisations: any[] = [];
-
-    const fetchProfileOrOrganisation = async (foreignKey: string) => {
-      const actorType = entries.find((entry) => entry.foreign_id === foreignKey)?.actorType;
-
-      if (!actorType) return;
-
-      try {
-        const result = await actorTypeToServiceMap[actorType](foreignKey);
-
-        if (result) {
-          functions.logger.info(`${actorType} found`, { [actorType]: result });
-
-          if (actorType === StreamActorType.user) {
-            profiles.push(result);
-          } else {
-            organisations.push(result);
-          }
-        }
-      } catch (error) {
-        functions.logger.error("Error getting data from firestore for foreign key", {
-          foreignKey,
-          error,
-        });
-      }
-    };
-
-    await Promise.all(sanitizedForeignKeysAndActors.map(fetchProfileOrOrganisation));
-
-    return { profiles, organisations, activities: [] };
   }
 }

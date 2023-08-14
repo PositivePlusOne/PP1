@@ -71,14 +71,14 @@ export class Activity {
   media: Media[];
 
   constructor(json: ActivityJSON) {
-      this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
-      this.generalConfiguration = json.generalConfiguration && new ActivityGeneralConfiguration(json.generalConfiguration);
-      this.securityConfiguration = json.securityConfiguration && new ActivitySecurityConfiguration(json.securityConfiguration);
-      this.eventConfiguration = json.eventConfiguration && new ActivityEventConfiguration(json.eventConfiguration);
-      this.pricingInformation = json.pricingInformation && new ActivityPricingInformation(json.pricingInformation);
-      this.publisherInformation = json.publisherInformation && new ActivityPublisherInformation(json.publisherInformation);
-      this.enrichmentConfiguration = json.enrichmentConfiguration && new ActivityEnrichmentConfiguration(json.enrichmentConfiguration);
-      this.media = json.media ? json.media.map((item) => new Media(item)) : [];
+    this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
+    this.generalConfiguration = json.generalConfiguration && new ActivityGeneralConfiguration(json.generalConfiguration);
+    this.securityConfiguration = json.securityConfiguration && new ActivitySecurityConfiguration(json.securityConfiguration);
+    this.eventConfiguration = json.eventConfiguration && new ActivityEventConfiguration(json.eventConfiguration);
+    this.pricingInformation = json.pricingInformation && new ActivityPricingInformation(json.pricingInformation);
+    this.publisherInformation = json.publisherInformation && new ActivityPublisherInformation(json.publisherInformation);
+    this.enrichmentConfiguration = json.enrichmentConfiguration && new ActivityEnrichmentConfiguration(json.enrichmentConfiguration);
+    this.media = json.media ? json.media.map((item) => new Media(item)) : [];
   }
 }
 

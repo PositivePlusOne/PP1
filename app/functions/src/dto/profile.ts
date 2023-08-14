@@ -187,7 +187,7 @@ export class Profile {
     }
 
     async appendFollowersAndFollowingData(): Promise<void> {
-        if (!this._fl_meta_?.fl_id) {
+        if (!this._fl_meta_?.fl_id || this.statistics) {
             return;
         }
 
