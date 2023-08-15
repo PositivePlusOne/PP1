@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/content/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,10 +39,14 @@ class CreatePostTagDialogue extends StatefulHookConsumerWidget {
 }
 
 class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
+  //? List of tags that have been selected by the user to add to the post
   final List<Tag> selectedTags = [];
+
+  //? List of tags that have been filtered by the user's search query (may contain tags that have already been selected)
   final List<Tag> filteredTags = [];
-  final TextEditingController searchController = TextEditingController();
+
   Tag? lastSearchedTag;
+  final TextEditingController searchController = TextEditingController();
   static int maxTagsPerPage = 20;
 
   void onPageExit() {
@@ -104,21 +109,30 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
 
     final List<Widget> tagWidgets = [];
+
     //? add the currently searched for tag as an optional tag to the top of the list
-    if (lastSearchedTag != null && !selectedTags.contains(lastSearchedTag) && !filteredTags.contains(lastSearchedTag)) {
-      tagWidgets.add(
-        TagLabel(
-          tag: lastSearchedTag!,
-          onTap: () => onTagTapped(lastSearchedTag!),
-          isAddKeyword: true,
-          isSelected: false,
-        ),
-      );
+    final bool isSearchedTagValidForSearch = lastSearchedTag != null && lastSearchedTag!.key.isNotEmpty;
+
+    if (isSearchedTagValidForSearch) {
+      //todo this may need to become a more complex getter in tag extentions
+      final bool isSearchedTagInSearchResults = filteredTags.where((element) => element.key == lastSearchedTag!.key).isNotEmpty;
+      final bool isSearchedTagSelected = selectedTags.where((element) => element.key == lastSearchedTag!.key).isNotEmpty;
+      if (!isSearchedTagInSearchResults && !isSearchedTagSelected) {
+        tagWidgets.add(
+          TagLabel(
+            tag: lastSearchedTag!,
+            onTap: () => onTagTapped(lastSearchedTag!),
+            isAddKeyword: true,
+            isSelected: false,
+          ),
+        );
+      }
     }
 
     //? Add currently selected tags to the top of the list
@@ -127,6 +141,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
         TagLabel(
           tag: tag,
           onTap: () => onTagTapped(tag),
+          isRemoveKeyword: !tagsController.tagExists(tag.key),
           isSelected: true,
         ),
       );
@@ -198,6 +213,7 @@ class TagLabel extends HookConsumerWidget {
     required this.isSelected,
     required this.onTap,
     this.isAddKeyword = false,
+    this.isRemoveKeyword = false,
     super.key,
   });
 
@@ -205,12 +221,41 @@ class TagLabel extends HookConsumerWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final bool isAddKeyword;
+  final bool isRemoveKeyword;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    late double leftPadding;
+    late double rightPadding;
+
+    if (isAddKeyword) {
+      if (isRemoveKeyword) {
+        leftPadding = kPaddingMedium;
+        rightPadding = kPaddingMedium;
+      } else {
+        leftPadding = kPaddingSmall;
+        rightPadding = kPaddingExtraSmall;
+      }
+    } else {
+      if (isRemoveKeyword) {
+        leftPadding = kPaddingExtraSmall;
+        rightPadding = kPaddingSmall;
+      } else {
+        leftPadding = kPaddingMedium;
+        rightPadding = kPaddingMedium;
+      }
+    }
+
+    final EdgeInsetsGeometry padding = EdgeInsets.only(
+      left: leftPadding,
+      right: rightPadding,
+      top: kPaddingNone,
+      bottom: kPaddingNone,
+    );
 
     return PositiveTapBehaviour(
       onTap: onTap,
@@ -221,7 +266,7 @@ class TagLabel extends HookConsumerWidget {
           color: isSelected ? colours.black : colours.colorGray1,
           borderRadius: BorderRadius.circular(kBorderRadiusLarge),
         ),
-        padding: isAddKeyword ? const EdgeInsets.only(left: kPaddingSmall, right: kPaddingExtraSmall, top: 0) : const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        padding: padding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -231,10 +276,17 @@ class TagLabel extends HookConsumerWidget {
                 "${localisations.shared_actions_add} ",
                 style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
               ),
-            Text(
-              localisations.shared_hashtag,
-              style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
-            ),
+            if (!isRemoveKeyword)
+              Text(
+                localisations.shared_hashtag,
+                style: typography.styleTopic.copyWith(color: isSelected ? colours.colorGray7 : colours.colorGray6),
+              ),
+            if (isRemoveKeyword)
+              SizedBox(
+                height: kPaddingLarge,
+                child: Icon(UniconsLine.times_circle, color: colours.white, size: kIconMedium),
+              ),
+            if (!isAddKeyword) const SizedBox(width: kPaddingVerySmall),
             Expanded(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
@@ -251,14 +303,14 @@ class TagLabel extends HookConsumerWidget {
             const SizedBox(width: kPaddingSmall),
             if (!isAddKeyword)
               Text(
-                tag.popularity.toString(),
+                localisations.shared_hashtag + tag.popularity.toString(),
                 style: typography.styleNotification.copyWith(color: colours.colorGray6),
               ),
             if (isAddKeyword)
               SizedBox(
                 height: kPaddingLarge,
                 child: Icon(UniconsLine.plus_circle, color: colours.black, size: kIconMedium),
-              )
+              ),
           ],
         ),
       ),
