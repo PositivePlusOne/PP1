@@ -49,7 +49,6 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
     return Column(
       children: [
-        const SizedBox(height: kPaddingSmall), //TODO: add the indicators
         const SizedBox(height: kPaddingSmall),
         if (activities.isNotEmpty) ...{
           const SizedBox(height: kPaddingMedium),

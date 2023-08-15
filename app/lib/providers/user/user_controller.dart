@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_public_notifier_properties
+
 // Dart imports:
 import 'dart:async';
 
@@ -19,15 +21,18 @@ import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../analytics/analytic_events.dart';
 import '../analytics/analytics_controller.dart';
 
-// Flutter imports:
-
 part 'user_controller.freezed.dart';
 part 'user_controller.g.dart';
 
 @freezed
 class UserControllerState with _$UserControllerState {
-  const factory UserControllerState() = _UserControllerState;
-  factory UserControllerState.initialState() => const UserControllerState();
+  const factory UserControllerState({
+    required DateTime last2FACheck,
+  }) = _UserControllerState;
+
+  factory UserControllerState.initialState() => UserControllerState(
+        last2FACheck: DateTime.now(),
+      );
 }
 
 enum PositiveSocialProvider {
@@ -116,6 +121,38 @@ class UserController extends _$UserController {
 
     log.i('[UserController] loginWithEmailAndPassword() userCredential.user: ${userCredential.user}');
     await analyticsController.trackEvent(AnalyticEvents.signInWithEmail);
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    final Logger log = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] sendPasswordResetEmail()');
+    await firebaseAuth.sendPasswordResetEmail(email: email);
+    await analyticsController.trackEvent(AnalyticEvents.accountPasswordForgotten);
+  }
+
+  Future<void> confirmPassword(String password) async {
+    final Logger log = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    log.d('[UserController] confirmPassword()');
+    if (!isUserLoggedIn) {
+      log.d('[UserController] confirmPassword() user is not logged in');
+      return;
+    }
+
+    final User user = firebaseAuth.currentUser!;
+    final AuthCredential emailAuthCredential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: password,
+    );
+
+    log.i('[UserController] confirmPassword() reauthenticateWithCredential');
+    await user.reauthenticateWithCredential(emailAuthCredential);
+    await analyticsController.trackEvent(AnalyticEvents.account2FASuccess);
   }
 
   Future<void> linkEmailPasswordProvider(String email, String password) async {
@@ -336,29 +373,34 @@ class UserController extends _$UserController {
       return;
     }
 
-    await perform2FACheck(phoneNumber: newPhoneNumber);
+    await perform2FACheck();
 
     log.i('[UserController] updatePhoneNumber() updated users phone number');
     analyticsController.trackEvent(AnalyticEvents.accountPhoneNumberUpdated);
   }
 
-  Future<void> perform2FACheck({String? phoneNumber}) async {
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+  Future<void> perform2FACheck() async {
     final Logger log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final User user = firebaseAuth.currentUser!;
+    final User? user = firebaseAuth.currentUser;
 
-    // Set the phone number to the user's phone number if it is not provided
-    phoneNumber ??= user.phoneNumber;
-    if (phoneNumber == null) {
-      throw Exception('[UserController] perform2FACheck() phoneNumber is null');
+    // Check if last 2FA check was within the last 5 minutes.
+    if (state.last2FACheck.isAfter(DateTime.now().subtract(const Duration(minutes: 5)))) {
+      log.d('[UserController] perform2FACheck() last 2FA check was within the last 5 minutes');
+      return;
+    }
+
+    final UserInfo? emailProvider = user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'password');
+    if (emailProvider?.email == null) {
+      log.e('[UserController] perform2FACheck() emailProvider is null');
+      return;
     }
 
     log.i('[UserController] perform2FACheck()');
     bool isVerified = false;
     await appRouter.push(VerificationDialogRoute(
-      phoneNumber: phoneNumber,
+      emailAddress: emailProvider!.email!,
       onVerified: () async {
         log.i('[UserController] perform2FACheck() onVerified()');
         isVerified = true;
@@ -368,11 +410,10 @@ class UserController extends _$UserController {
     log.d('isVerified: $isVerified');
     if (!isVerified) {
       log.d('Failed to verify phone number');
-      await analyticsController.trackEvent(AnalyticEvents.account2FAFailed);
       throw Exception('Failed to verify phone number');
     }
 
-    await analyticsController.trackEvent(AnalyticEvents.account2FASuccess);
+    state = state.copyWith(last2FACheck: DateTime.now());
   }
 
   Future<void> signOut({bool shouldNavigate = true}) async {

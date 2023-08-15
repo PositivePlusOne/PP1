@@ -87,6 +87,7 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
         backgroundColor: colors.black,
         safeAreaQueryData: mediaQueryData,
       ),
+      visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
       headingWidgets: <Widget>[
         SliverFillRemaining(
           child: Column(

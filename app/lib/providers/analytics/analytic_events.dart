@@ -25,6 +25,7 @@ enum AnalyticEvents {
   account2FAFailed, // A user has failed to authenticate with 2FA
   accountEmailAddressUpdated, // A users email address has been updated
   accountPasswordUpdated, // A users password has been updated
+  accountPasswordForgotten, // A users password has been forgotten
   accountPhoneNumberUpdated, // A users phone number has been updated
   phoneLoginTokenSent, // The user has been sent a phone verification code
   phoneLoginTokenTimeout, // The users phone verification code has been timed out

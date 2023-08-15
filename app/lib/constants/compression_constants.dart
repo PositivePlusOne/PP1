@@ -1,3 +1,4 @@
+// Package imports:
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 const int kImageCompressMaxWidth = 2000;

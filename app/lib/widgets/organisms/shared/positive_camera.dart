@@ -460,33 +460,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
   Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
     final List<Widget> children = <Widget>[];
-    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-
-    // Add a shade to the top and bottom of the screen, leaving a square in the middle
-    final Size screenSize = MediaQuery.of(context).size;
-    final double smallestSide = screenSize.width < screenSize.height ? screenSize.width : screenSize.height;
-
-    children.add(Column(
-      children: <Widget>[
-        Expanded(
-          flex: 4,
-          child: Container(color: colours.black.withOpacity(0.75)),
-        ),
-        SizedBox(
-          height: smallestSide,
-          width: smallestSide,
-        ),
-        Expanded(
-          flex: 6,
-          child: Container(color: colours.black.withOpacity(0.75)),
-        ),
-      ],
-    ));
-
-    for (final Widget widget in widget.overlayWidgets) {
-      children.add(Positioned.fill(child: widget));
-    }
-
     final InputImageRotation inputRotation = faceDetectionModel?.imageRotation ?? InputImageRotation.rotation0deg;
     final Size absoluteImageSize = faceDetectionModel?.absoluteImageSize ?? Size.zero;
     final Size croppedSize = faceDetectionModel?.croppedSize ?? Size.zero;
@@ -514,53 +487,60 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   Widget cameraOverlay(CameraState state) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final bool hasBottomActions = widget.cameraNavigation != null;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (widget.takePictureCaption != null)
-          Text(
-            widget.takePictureCaption!,
-            textAlign: TextAlign.center,
-            style: typography.styleTitle.copyWith(color: colours.white),
-            overflow: TextOverflow.clip,
-          ),
-        const SizedBox(height: kPaddingMedium),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+    return SafeArea(
+      bottom: !hasBottomActions,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: hasBottomActions ? kPaddingNone : kPaddingSmall),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
-
-            const SizedBox(width: kPaddingSmall),
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            CameraButton(
-              active: canTakePictureOrVideo,
-              onTap: () => state.when(
-                onPhotoMode: onImageTaken,
-                onVideoMode: (videoState) {},
-                onVideoRecordingMode: (videoState) {},
+            if (widget.takePictureCaption != null)
+              Text(
+                widget.takePictureCaption!,
+                textAlign: TextAlign.center,
+                style: typography.styleTitle.copyWith(color: colours.white),
+                overflow: TextOverflow.clip,
               ),
-            ),
+            const SizedBox(height: kPaddingMedium),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
 
-            const SizedBox(width: kPaddingSmall),
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            CameraFloatingButton.changeCamera(
-              active: canTakePictureOrVideo,
-              onTap: () {
-                state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9);
-              },
+                const SizedBox(width: kPaddingSmall),
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                CameraButton(
+                  active: canTakePictureOrVideo,
+                  onTap: () => state.when(
+                    onPhotoMode: onImageTaken,
+                    onVideoMode: (videoState) {},
+                    onVideoRecordingMode: (videoState) {},
+                  ),
+                ),
+
+                const SizedBox(width: kPaddingSmall),
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                CameraFloatingButton.changeCamera(
+                  active: canTakePictureOrVideo,
+                  onTap: () {
+                    state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9);
+                  },
+                ),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

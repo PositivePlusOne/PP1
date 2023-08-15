@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
@@ -17,6 +18,7 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
@@ -65,28 +67,31 @@ class HomePage extends HookConsumerWidget {
         index: NavigationBarIndex.hub,
       ),
       headingWidgets: <Widget>[
-        StickyPositiveAppBar(
+        PositiveBasicSliverList(
           foregroundColor: colors.black,
           backgroundColor: colors.pink,
-          decorationColor: colors.colorGray1,
-          bottom: HubAppBarContent(shouldDisplayActivateAccountBanner: isLoggedOut),
-          floating: PositiveHubFloatingBar(
-            activities: [
-              for (int i = 0; i < 10; i++) ...<Activity>[
-                Activity(generalConfiguration: ActivityGeneralConfiguration(content: 'Tag ${i + 1}')),
+          appBarTrailing: actions,
+          appBarTrailType: PositiveAppBarTrailType.convex,
+          appBarBottom: HubAppBarContent(shouldDisplayActivateAccountBanner: isLoggedOut),
+          appBarSpacing: kPaddingNone,
+          horizontalPadding: kPaddingNone,
+          children: <Widget>[
+            PositiveHubFloatingBar(
+              activities: [
+                for (int i = 0; i < 10; i++) ...<Activity>[
+                  Activity(generalConfiguration: ActivityGeneralConfiguration(content: 'Tag ${i + 1}')),
+                ],
               ],
-            ],
-            index: state.currentTabIndex,
-            onTapped: viewModel.onTabSelected,
-            tabs: const <String>[
-              'All',
-              'Clips',
-              'Events',
-              'Posts',
-            ],
-          ),
-          trailType: PositiveAppBarTrailType.convex,
-          actions: actions,
+              index: state.currentTabIndex,
+              onTapped: viewModel.onTabSelected,
+              tabs: const <String>[
+                'All',
+                'Clips',
+                'Events',
+                'Posts',
+              ],
+            ),
+          ],
         ),
         if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
