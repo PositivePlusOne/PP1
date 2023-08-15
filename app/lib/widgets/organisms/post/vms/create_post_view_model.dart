@@ -2,7 +2,7 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -228,13 +228,40 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> onTagsPressed(BuildContext context) async {
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
 
-    List<String> newTags = await showCupertinoDialog(
+    List<String>? newTags = await showGeneralDialog<List<String>>(
       context: context,
-      builder: (_) => CreatePostTagDialogue(
+      transitionDuration: kAnimationDurationExtended,
+      transitionBuilder: (context, anim1, anim2, child) {
+        final bool isExiting = anim1.status == AnimationStatus.reverse;
+
+        // Slide transition for entrance
+        final Offset slideBegin = isExiting ? const Offset(0.0, 0.0) : const Offset(0.0, 1.0);
+        const Offset slideEnd = Offset.zero;
+        const Curve slideCurve = Curves.easeInOutSine;
+
+        final Animatable<Offset> slideTween = Tween(begin: slideBegin, end: slideEnd).chain(CurveTween(curve: slideCurve));
+        final Animation<Offset> slideAnimation = anim1.drive(slideTween);
+
+        // Fade transition for exit
+        final Tween<double> fadeTween = Tween(begin: 0.0, end: 1.0);
+        final Animation<double> fadeAnimation = isExiting ? anim1.drive(fadeTween) : const AlwaysStoppedAnimation(1.0);
+
+        return SlideTransition(
+          position: slideAnimation,
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: child,
+          ),
+        );
+      },
+      pageBuilder: (_, anim1, anim2) => CreatePostTagDialogue(
         currentTags: tagsController.getTagsFromString(state.tags),
       ),
     );
-    state = state.copyWith(tags: newTags);
+
+    if (newTags != null) {
+      state = state.copyWith(tags: newTags);
+    }
   }
 
   void onUpdateSaveToGallery() {
