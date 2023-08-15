@@ -140,9 +140,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    try {
-      state = state.copyWith(isBusy: true);
+    state = state.copyWith(isBusy: true);
 
+    try {
       // Update gallery entries with share flag
       for (final GalleryEntry entry in state.galleryEntries) {
         entry.saveToGallery = state.saveToGallery;
@@ -196,7 +196,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    state = state.copyWith(isBusy: false);
     logger.i("Attempted to ${state.isEditing ? "edit" : "create"} post, Pop Create Post page, push Home page");
 
     final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
@@ -221,8 +220,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
     }
 
+    state = state.copyWith(isBusy: false);
+
     router.removeWhere((route) => true);
-    await router.push(const HomeRoute());
+    router.push(const HomeRoute());
   }
 
   Future<void> onTagsPressed(BuildContext context) async {

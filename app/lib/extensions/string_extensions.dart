@@ -50,6 +50,7 @@ extension StringExt on String {
     string = string.replaceAll(RegExp('[^a-zA-Z0-9 ]+'), '');
     string = string.replaceAll(RegExp('\\s+'), '_');
     string = string.substring(0, min(string.length, maxTagLength));
+    string = string.toLowerCase();
     return string;
   }
 

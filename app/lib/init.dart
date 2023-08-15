@@ -97,7 +97,6 @@ Future<void> setupApplication() async {
   await notificationsController.setupListeners();
   await profileController.setupListeners();
   await galleryController.setupListeners();
-  await tagsController.setupListeners();
   await cacheController.setupListeners();
 
   await systemController.preloadPackageInformation();

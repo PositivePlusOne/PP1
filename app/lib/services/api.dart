@@ -44,9 +44,9 @@ Map<String, dynamic> buildRequestPayload({
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
+  Map<String, bool> overwriteCache = const {"users": true, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
-  bool overwriteCache = true,
   T Function(EndpointResponse response)? selector,
 }) async {
   final Logger logger = providerContainer.read(loggerProvider);
@@ -617,7 +617,7 @@ class SearchApiService {
       name: 'search-search',
       pagination: pagination,
       selector: (response) => response.data[index] as List<dynamic>,
-      overwriteCache: false,
+      overwriteCache: const {"users": false, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
       parameters: {
         'query': query,
         'index': index,
