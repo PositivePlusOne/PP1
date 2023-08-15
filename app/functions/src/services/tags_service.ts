@@ -84,9 +84,10 @@ export namespace TagsService {
     const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
     const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
     const snakeCased = singleSpaces.replace(/ /g, "_");
+    const lowerCased = snakeCased.toLowerCase();
 
     // 30 characters max
-    return snakeCased.substring(0, 30);
+    return lowerCased.substring(0, 30);
   }
 
   /**

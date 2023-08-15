@@ -6,7 +6,7 @@ part of 'tags_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tagsControllerHash() => r'1053aa27d193db7d4ccf991fad3e9992202b343a';
+String _$tagsControllerHash() => r'0bb703f882b01b08da65932836749ab3571a04bb';
 
 /// See also [TagsController].
 @ProviderFor(TagsController)

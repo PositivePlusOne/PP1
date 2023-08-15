@@ -17,12 +17,12 @@ import '../dtos/database/activities/tags.dart';
 import '../dtos/database/relationships/relationship.dart';
 
 extension ProviderContainerExt on ProviderContainer {
-  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
-    cacheProfileData(data, overwriteCache);
-    cacheActivityData(data, overwriteCache);
-    cacheRelationshipData(data, overwriteCache);
-    cacheTagData(data, overwriteCache);
-    cacheGuidanceDirectoryEntries(data, overwriteCache);
+  void cacheResponseData(Map<String, dynamic> data, Map<String, bool> overwriteCache) {
+    cacheProfileData(data, overwriteCache["users"] ?? false);
+    cacheActivityData(data, overwriteCache["activities"] ?? false);
+    cacheRelationshipData(data, overwriteCache["relationships"] ?? false);
+    cacheTagData(data, overwriteCache["tags"] ?? false);
+    cacheGuidanceDirectoryEntries(data, overwriteCache["guidanceDirectoryEntries"] ?? false);
   }
 }
 
@@ -61,7 +61,6 @@ void cacheProfileData(Map<String, dynamic> data, bool overwriteCache) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
   final List<dynamic> profiles = (data.containsKey('users') ? data['users'] : []).map((dynamic profile) => json.decodeSafe(profile)).toList();
-  final List<Profile> newProfiles = [];
 
   for (final dynamic profile in profiles) {
     try {
@@ -73,7 +72,6 @@ void cacheProfileData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      newProfiles.add(newProfile);
       cacheController.addToCache(key: profileId, value: newProfile, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
@@ -85,7 +83,6 @@ void cacheActivityData(Map<String, dynamic> data, bool overwriteCache) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-  final List<Activity> newActivities = [];
   final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
   for (final dynamic activity in activities) {
@@ -98,14 +95,11 @@ void cacheActivityData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      newActivities.add(newActivity);
       cacheController.addToCache(key: activityId, value: newActivity, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
     }
   }
-
-  logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 }
 
 void cacheRelationshipData(Map<String, dynamic> data, bool overwriteCache) {
@@ -113,7 +107,6 @@ void cacheRelationshipData(Map<String, dynamic> data, bool overwriteCache) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
   final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => json.decodeSafe(relationship)).toList();
-  final List<Relationship> newRelationships = [];
 
   for (final dynamic relationship in relationships) {
     try {
@@ -125,7 +118,6 @@ void cacheRelationshipData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      newRelationships.add(newRelationship);
       cacheController.addToCache(key: relationshipId, value: newRelationship, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
@@ -138,20 +130,18 @@ void cacheTagData(Map<String, dynamic> data, bool overwriteCache) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
   final List<dynamic> tags = (data.containsKey('tags') ? data['tags'] : []).map((dynamic tag) => json.decodeSafe(tag)).toList();
-  final List<Tag> newTags = [];
 
   for (final dynamic tag in tags) {
     try {
       logger.d('requestNextTimelinePage() - parsing tag: $tag');
       final Tag newTag = Tag.fromJson(tag);
-      final String tagId = newTag.flMeta?.id ?? '';
-      if (tagId.isEmpty) {
+
+      if (newTag.key.isEmpty) {
         logger.e('requestNextTimelinePage() - Failed to cache tag: $tag');
         continue;
       }
 
-      newTags.add(newTag);
-      cacheController.addToCache(key: tagId, value: newTag, overwrite: overwriteCache);
+      cacheController.addToCache(key: newTag.key, value: newTag, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
     }
@@ -163,7 +153,6 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCach
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
   final List<dynamic> entries = (data.containsKey('guidanceDirectoryEntries') ? data['guidanceDirectoryEntries'] : []).map((dynamic entry) => json.decodeSafe(entry)).toList();
-  final List<GuidanceDirectoryEntry> newEntries = [];
 
   for (final dynamic entry in entries) {
     try {
@@ -175,7 +164,6 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCach
         continue;
       }
 
-      newEntries.add(newEntry);
       cacheController.addToCache(key: entryId, value: newEntry, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');

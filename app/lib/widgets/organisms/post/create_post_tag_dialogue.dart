@@ -53,13 +53,14 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     Navigator.pop(context, selectedTags.map((e) => e.key).toList());
   }
 
-  void onTagTapped(Tag tag) {
+  void onTagTapped(Tag tag, {bool insert = false}) {
     if (selectedTags.contains(tag)) {
       selectedTags.remove(tag);
     } else {
       //? We only want to allow a maximum of 6 tags, for the server validation refer to tags_service.ts under the function removeRestrictedTagsFromStringArray
       if (selectedTags.length < 6) {
-        selectedTags.add(tag);
+        selectedTags.insert(insert ? 0 : selectedTags.length, tag);
+        // selectedTags.add(tag);
       }
     }
 
@@ -109,7 +110,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+    final TagsController tagsController = ref.watch(tagsControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
@@ -127,7 +128,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
         tagWidgets.add(
           TagLabel(
             tag: lastSearchedTag!,
-            onTap: () => onTagTapped(lastSearchedTag!),
+            onTap: () => onTagTapped(lastSearchedTag!, insert: true),
             isAddKeyword: true,
             isSelected: false,
           ),
