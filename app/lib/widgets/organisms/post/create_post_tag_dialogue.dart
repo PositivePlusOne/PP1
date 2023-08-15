@@ -229,6 +229,34 @@ class TagLabel extends HookConsumerWidget {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
+    late double leftPadding;
+    late double rightPadding;
+
+    if (isAddKeyword) {
+      if (isRemoveKeyword) {
+        leftPadding = kPaddingMedium;
+        rightPadding = kPaddingMedium;
+      } else {
+        leftPadding = kPaddingSmall;
+        rightPadding = kPaddingExtraSmall;
+      }
+    } else {
+      if (isRemoveKeyword) {
+        leftPadding = kPaddingExtraSmall;
+        rightPadding = kPaddingSmall;
+      } else {
+        leftPadding = kPaddingMedium;
+        rightPadding = kPaddingMedium;
+      }
+    }
+
+    final EdgeInsetsGeometry padding = EdgeInsets.only(
+      left: leftPadding,
+      right: rightPadding,
+      top: kPaddingNone,
+      bottom: kPaddingNone,
+    );
+
     return PositiveTapBehaviour(
       onTap: onTap,
       child: Container(
@@ -238,7 +266,7 @@ class TagLabel extends HookConsumerWidget {
           color: isSelected ? colours.black : colours.colorGray1,
           borderRadius: BorderRadius.circular(kBorderRadiusLarge),
         ),
-        padding: isAddKeyword ? const EdgeInsets.only(left: kPaddingSmall, right: kPaddingExtraSmall, top: 0) : const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        padding: padding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -258,6 +286,7 @@ class TagLabel extends HookConsumerWidget {
                 height: kPaddingLarge,
                 child: Icon(UniconsLine.times_circle, color: colours.white, size: kIconMedium),
               ),
+            if (!isAddKeyword) const SizedBox(width: kPaddingVerySmall),
             Expanded(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
@@ -274,7 +303,7 @@ class TagLabel extends HookConsumerWidget {
             const SizedBox(width: kPaddingSmall),
             if (!isAddKeyword)
               Text(
-                tag.popularity.toString(),
+                localisations.shared_hashtag + tag.popularity.toString(),
                 style: typography.styleNotification.copyWith(color: colours.colorGray6),
               ),
             if (isAddKeyword)
