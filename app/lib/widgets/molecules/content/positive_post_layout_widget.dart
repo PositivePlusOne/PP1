@@ -28,29 +28,41 @@ import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 
-class PositivePostLayoutWidget extends HookConsumerWidget {
+class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
-    this.truncatePostText = true,
-    this.sidePadding = kPaddingNone,
+    this.isShortformPost = true,
+    this.sidePadding = kPaddingSmall,
     this.onImageTap,
     super.key,
   });
 
   final Activity postContent;
   final Profile? publisher;
-  final bool truncatePostText;
+  final bool isShortformPost;
   final double sidePadding;
 
   final void Function(Media media)? onImageTap;
 
+  @override
+  ConsumerState<PositivePostLayoutWidget> createState() => _PositivePostLayoutWidgetState();
+}
+
+class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWidget> {
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
 
+  late double sidePadding;
+
+  void initState() {
+    super.initState();
+    sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ActivityGeneralConfigurationType? postType = postContent.generalConfiguration?.type;
+  Widget build(BuildContext context) {
+    final ActivityGeneralConfigurationType? postType = widget.postContent.generalConfiguration?.type;
     if (postType == null) {
       return const SizedBox.shrink();
     }
@@ -69,7 +81,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   Widget _eventBuilder(BuildContext context, WidgetRef ref) {
     final Logger logger = ref.read(loggerProvider);
 
-    if (postContent.eventConfiguration == null || postContent.enrichmentConfiguration == null) {
+    if (widget.postContent.eventConfiguration == null || widget.postContent.enrichmentConfiguration == null) {
       logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
@@ -80,12 +92,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (postContent.media.length == 1) ...[
+        if (widget.postContent.media.length == 1) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (postContent.media.length == 1) ..._postListAttachedImages(),
+        if (widget.postContent.media.length == 1) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (postContent.media.isNotEmpty)
+        if (widget.postContent.media.isNotEmpty)
           LayoutBuilder(
             builder: (context, constraints) {
               return _postCarouselAttachedImages(context, constraints);
@@ -99,13 +111,13 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         _postTitle(),
 
         //* -=-=-=- Tags -=-=-=- *\\
-        if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+        if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
           const SizedBox(height: kPaddingSmall),
           _tags(),
         ],
 
         //* -=-=-=- Location -=-=-=- *\\
-        if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+        if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
           const SizedBox(height: kPaddingSmall),
           _location(),
         ],
@@ -120,12 +132,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (postContent.media.length == 1) ...[
+        if (widget.postContent.media.length == 1) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (postContent.media.length == 1) ..._postListAttachedImages(),
+        if (widget.postContent.media.length == 1) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (postContent.media.length > 1) ...[
+        if (widget.postContent.media.length > 1) ...[
           const SizedBox(height: kPaddingSmall),
           LayoutBuilder(
             builder: (context, constraints) {
@@ -145,7 +157,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   Widget _clipBuilder(BuildContext context, WidgetRef ref) {
     final Logger logger = ref.read(loggerProvider);
 
-    if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
+    if (widget.postContent.eventConfiguration != null && widget.postContent.enrichmentConfiguration != null) {
       logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
@@ -158,12 +170,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //* -=-=-=- Single attached image -=-=-=- *\\
-          if (postContent.media.length == 1) ...[
+          if (widget.postContent.media.length == 1) ...[
             const SizedBox(height: kPaddingSmall),
           ],
-          if (postContent.media.length == 1) ..._postListAttachedImages(),
+          if (widget.postContent.media.length == 1) ..._postListAttachedImages(),
           //* -=-=-=- attached video -=-=-=- *\\
-          if (postContent.media.isNotEmpty) ...[
+          if (widget.postContent.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
             LayoutBuilder(
               builder: (context, constraints) {
@@ -177,12 +189,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
           //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
             _tags(),
           ],
           //* -=-=-=- Location -=-=-=- *\\
-          if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
             _location(),
           ],
@@ -248,9 +260,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   // ignore: unused_element
   List<Widget> _postListAttachedImages() {
     final List<Widget> imageWidgetList = [];
-    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
+    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
 
-    for (Media media in postContent.media) {
+    for (Media media in widget.postContent.media) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         imageWidgetList.add(
           Container(
@@ -265,7 +277,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               child: PositiveMediaImage(
                 fit: BoxFit.cover,
                 media: media,
-                onTap: () => onImageTap?.call(media),
+                onTap: () => widget.onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.large,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
@@ -293,7 +305,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postCarouselAttachedImages(BuildContext context, BoxConstraints constraints) {
     final List<Widget> listBanners = [];
-    final Color publisherColour = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
+    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
     final double height = min(kCarouselMaxHeight, constraints.maxWidth);
 
     //! For a dynamically sized carousel we would need to convert this to a custom widget
@@ -301,7 +313,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     //? Calculations for image size are provided in the async function commented out below
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
-    for (Media media in postContent.media) {
+    for (Media media in widget.postContent.media) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         listBanners.add(
           Padding(
@@ -370,7 +382,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
-    if (postContent.media.first.type == MediaType.video_link) {
+    if (widget.postContent.media.first.type == MediaType.video_link) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: const SizedBox(),
@@ -428,7 +440,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: Text(
-        postContent.eventConfiguration!.name,
+        widget.postContent.eventConfiguration!.name,
         //TODO(S): this needs to be updated for non-left-to-right languages
         textAlign: TextAlign.left,
         style: typeography.styleTitle,
@@ -445,7 +457,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: PositivePostHorizontalTags(
-        tags: postContent.enrichmentConfiguration!.tags,
+        tags: widget.postContent.enrichmentConfiguration!.tags,
         typeography: typeography,
         colours: colours,
       ),
@@ -458,7 +470,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       child: Row(
         children: [
           PositivePostIconTag(
-            text: postContent.eventConfiguration!.location,
+            text: widget.postContent.eventConfiguration!.location,
             forwardIcon: UniconsLine.map_marker,
             typeography: typeography,
             colours: colours,
@@ -472,8 +484,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _markdownBody() {
-    String parsedMarkdown = html2md.convert(postContent.generalConfiguration?.content ?? '');
-    if (truncatePostText && parsedMarkdown.length > kMaxLengthTruncatedPost) {
+    String parsedMarkdown = html2md.convert(widget.postContent.generalConfiguration?.content ?? '');
+    if (widget.isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
       //? Truncate string to max length
       parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
       //? remove until last instance of space to get rid of whole words, remove carrage returns, new lines, and tabs to condense the string

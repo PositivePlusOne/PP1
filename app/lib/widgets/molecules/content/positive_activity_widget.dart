@@ -348,7 +348,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           PositivePostLayoutWidget(
             postContent: widget.activity,
             publisher: publisher,
-            sidePadding: widget.isFullscreen ? kPaddingNone : kPaddingSmall,
+            isShortformPost: !widget.isFullscreen,
             onImageTap: onInternalMediaTap,
           ),
         ],

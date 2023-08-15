@@ -302,7 +302,7 @@ class TagLabel extends HookConsumerWidget {
               ),
             ),
             const SizedBox(width: kPaddingSmall),
-            if (!isAddKeyword)
+            if (!isAddKeyword && tag.popularity >= 0)
               Text(
                 localisations.shared_hashtag + tag.popularity.toString(),
                 style: typography.styleNotification.copyWith(color: colours.colorGray6),
