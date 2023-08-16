@@ -87,6 +87,9 @@ a) Redeploy firebase functions to rebuild permissions/secrets
 q) Redis is failing to be contacted
 a) Verify your Serverless VPC connector is attached to the same subnet, and that the Cloud Functions Service IAM account has the following roles:  
 
+q) Apple sign in does not work on my new environment
+a) Verify the sign in configuration and redirect URLs are correct; you can copy from the other environments for Firebase but you will need to update the Apple account by hand.
+
 * Compute Network User
 * Serverless VPC Access User
 
