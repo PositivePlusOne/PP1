@@ -86,6 +86,12 @@ class SearchPage extends ConsumerWidget {
                   index: currentTab.index,
                   onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
                   margin: EdgeInsets.zero,
+                  tabColours: <Color>[
+                    colors.green,
+                    colors.yellow,
+                    colors.teal,
+                    colors.purple,
+                  ],
                   tabs: const <String>[
                     'Posts',
                     'People',

@@ -15,6 +15,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
     required this.tabs,
     required this.onTapped,
     required this.activities,
+    required this.tabColours,
     this.margin = const EdgeInsets.all(kPaddingMedium),
     this.index = -1,
     super.key,
@@ -24,6 +25,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   final int index;
   final Future<void> Function(int index) onTapped;
   final List<Activity> activities;
+  final List<Color> tabColours;
 
   final EdgeInsets? margin;
 
@@ -58,6 +60,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
         PositiveTabBar(
           index: index,
           onTapped: onTapped,
+          tabColours: tabColours,
           tabs: const <String>[
             'All',
             'Clips',
