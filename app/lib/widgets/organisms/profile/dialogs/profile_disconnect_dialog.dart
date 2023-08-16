@@ -35,7 +35,7 @@ class ProfileDisconnectDialog extends ConsumerWidget {
     return Column(
       children: [
         Text(
-          'Removing ${displayName.asHandle} as a connection will mean you can  no longer message each other.',
+          localizations.profile_disconnect_dialog_remove_confirmation(displayName.asHandle),
           style: typography.styleBody.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
@@ -43,7 +43,7 @@ class ProfileDisconnectDialog extends ConsumerWidget {
           colors: colors,
           onTapped: viewModel.onDisconnectSelected,
           icon: UniconsLine.user_times,
-          label: 'Remove Connection',
+          label: localizations.shared_profile_remove_connection,
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
           isDisabled: state.isBusy,
