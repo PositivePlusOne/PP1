@@ -347,10 +347,6 @@ export namespace ProfileEndpoints {
       biography,
     });
 
-    if (biography.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid biography");
-    }
-
     const newProfile = await ProfileService.updateBiography(uid, biography);
     functions.logger.info("Profile biography updated");
 

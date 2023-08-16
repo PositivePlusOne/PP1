@@ -44,7 +44,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       }
 
       router.removeWhere((route) => true);
-      router.push(const ProfileNameEntryRoute());
+      router.push(const RegistrationAccountSetupRoute());
       resolver.next(false);
       return;
     }

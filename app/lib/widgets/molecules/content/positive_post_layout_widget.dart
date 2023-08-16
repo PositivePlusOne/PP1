@@ -55,6 +55,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
 
   late double sidePadding;
 
+  @override
   void initState() {
     super.initState();
     sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
