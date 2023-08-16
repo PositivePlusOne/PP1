@@ -23,7 +23,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.onTextChanged,
     this.onTextSubmitted,
     this.onFocusedChanged,
-    this.textInputAction = TextInputAction.done,
+    this.textInputAction,
     this.textInputType = TextInputType.text,
     this.prefixIcon,
     this.label,
@@ -72,7 +72,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final Color tintColor;
   final Color? fillColor;
 
-  final TextInputAction textInputAction;
+  final TextInputAction? textInputAction;
   final TextInputType textInputType;
   final TextEditingController? textEditingController;
 
