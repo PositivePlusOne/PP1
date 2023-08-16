@@ -702,7 +702,7 @@ class PositiveButtonState extends State<PositiveButton> {
               child: Padding(
                 padding: EdgeInsets.all(paddingWidth ?? kPaddingNone),
                 child: AnimatedContainer(
-                  padding: widget.padding ?? (calculatedPadding - EdgeInsets.all(widget.borderWidth ?? borderWidth)),
+                  padding: widget.padding ?? (calculatedPadding - EdgeInsets.all(widget.borderWidth ?? borderWidth)).clamp(EdgeInsets.zero, const EdgeInsets.all(double.infinity)),
                   duration: kAnimationDurationRegular,
                   height: widgetHeight,
                   decoration: BoxDecoration(
