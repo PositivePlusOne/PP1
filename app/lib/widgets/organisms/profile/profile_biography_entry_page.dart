@@ -172,6 +172,7 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
                       padding: const EdgeInsets.all(kPaddingSmall),
                       child: PositiveTextField(
                         textStyle: typography.styleButtonRegular.copyWith(color: colors.white),
+                        textInputType: TextInputType.multiline,
                         minLines: 5,
                         maxLines: 5,
                         maxLengthEnforcement: state.biography.trim().isEmpty ? MaxLengthEnforcement.none : MaxLengthEnforcement.enforced,

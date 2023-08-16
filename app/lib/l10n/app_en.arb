@@ -292,6 +292,8 @@
     "post_dialogue_update_post": "Confirm Changes",
     "post_dialogue_delete_post_confirm": "The post will be removed from your feed, along with any comments.\n \n Any media associated with this post will also be deleted from your gallery.",
 
+    "profile_disconnect_dialog_remove_confirmation": "'Removing {displayName} as a connection will mean you can no longer message each other.'",
+
     "page_create_post_caption": "Caption",
     "page_create_post_message": "Message",
     "page_create_post_caption_remaining_characters": " ({characters} Remaining)",
@@ -385,6 +387,7 @@
     "shared_profile_modal_action_unmute": "Unmute {displayName}",
     "shared_profile_modal_action_hide_posts": "Hide Posts from {displayName}",
     "shared_profile_modal_action_unhide_posts": "{displayName} Posts hidden",
+    "shared_profile_remove_connection": "Remove Connection",
 
     "shared_profile_edit_confirmation_body": "Your profile has been changed",
 

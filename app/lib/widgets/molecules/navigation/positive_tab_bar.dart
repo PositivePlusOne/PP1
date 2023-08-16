@@ -16,14 +16,17 @@ class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveTabBar({
     required this.tabs,
     required this.onTapped,
+    required this.tabColours,
     this.margin = const EdgeInsets.all(kPaddingMedium),
     this.index = -1,
     super.key,
-  });
+  }) : assert(tabColours.length == tabs.length);
 
   final List<String> tabs;
   final int index;
   final Future<void> Function(int index) onTapped;
+
+  final List<Color> tabColours;
 
   final EdgeInsets? margin;
 
@@ -53,6 +56,7 @@ class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
             Expanded(
               child: PositiveTabItem(
                 label: tab,
+                primaryColour: tabColours[tabs.indexOf(tab)],
                 isSelected: tabs.indexOf(tab) == index,
                 onTapped: () => onTapped(tabs.indexOf(tab)),
               ),
@@ -68,6 +72,7 @@ class PositiveTabItem extends ConsumerWidget {
   const PositiveTabItem({
     required this.label,
     required this.onTapped,
+    required this.primaryColour,
     this.isSelected = false,
     super.key,
   });
@@ -75,6 +80,7 @@ class PositiveTabItem extends ConsumerWidget {
   final String label;
   final Future<void> Function() onTapped;
   final bool isSelected;
+  final Color primaryColour;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,7 +88,7 @@ class PositiveTabItem extends ConsumerWidget {
     return PositiveButton(
       colors: colors,
       label: label,
-      primaryColor: isSelected ? colors.green : colors.white,
+      primaryColor: isSelected ? primaryColour : colors.white,
       style: PositiveButtonStyle.tab,
       size: PositiveButtonSize.small,
       onTapped: onTapped,

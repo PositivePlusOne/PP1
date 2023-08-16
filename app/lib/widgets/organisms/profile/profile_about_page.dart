@@ -87,6 +87,7 @@ class ProfileAboutPage extends ConsumerWidget {
               initialText: state.biography,
               minLines: 5,
               maxLines: 10,
+              textInputType: TextInputType.multiline,
               maxLengthEnforcement: MaxLengthEnforcement.enforced,
               maxLength: kBiographyMaxLength,
               labelText: locale.page_profile_edit_about_you,

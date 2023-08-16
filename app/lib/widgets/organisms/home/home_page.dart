@@ -78,6 +78,12 @@ class HomePage extends HookConsumerWidget {
             ],
             index: state.currentTabIndex,
             onTapped: viewModel.onTabSelected,
+            tabColours: <Color>[
+              colors.green,
+              colors.yellow,
+              colors.teal,
+              colors.purple,
+            ],
             tabs: const <String>[
               'All',
               'Clips',

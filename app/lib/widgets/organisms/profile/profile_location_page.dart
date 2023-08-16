@@ -146,7 +146,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
               children: [
                 Expanded(
                   child: PositiveTextField(
-                    hintText: 'Search',
+                    hintText: localizations.shared_search_hint,
                     initialText: ref.read(profileFormControllerProvider.select((value) => value.place?.description ?? '')),
                     isEnabled: !ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
                     textInputAction: TextInputAction.search,
@@ -288,7 +288,7 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
               collapsedChild: PositiveButton(
                 colors: colors,
                 primaryColor: colors.black,
-                label: 'Remove Location',
+                label: localizations.page_profile_location_remove,
                 layout: PositiveButtonLayout.textOnly,
                 style: PositiveButtonStyle.primary,
                 onTapped: controller.onRemoveLocation,
@@ -297,7 +297,7 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
               expandedChild: PositiveButton(
                 colors: colors,
                 primaryColor: colors.black,
-                label: 'Continue with Location',
+                label: localizations.shared_actions_continue_with_location,
                 layout: PositiveButtonLayout.textOnly,
                 style: PositiveButtonStyle.primary,
                 onTapped: controller.onLocationConfirmed,
@@ -370,7 +370,7 @@ class _ProfileLocationProfileFailedShade extends StatelessWidget {
                   PositiveButton(
                     colors: colors,
                     primaryColor: colors.black,
-                    label: 'Continue Without Location',
+                    label: localizations.shared_actions_continue_without_location,
                     layout: PositiveButtonLayout.textOnly,
                     style: PositiveButtonStyle.primary,
                     onTapped: ref.read(profileFormControllerProvider.notifier).onLocationSkipped,
@@ -444,7 +444,7 @@ class _ProfileLocationProfilePendingShade extends StatelessWidget {
               PositiveButton(
                 colors: colors,
                 primaryColor: colors.black,
-                label: 'Continue Without Location',
+                label: localizations.shared_actions_continue_without_location,
                 layout: PositiveButtonLayout.textOnly,
                 style: PositiveButtonStyle.primary,
                 onTapped: ref.read(profileFormControllerProvider.notifier).onLocationSkipped,
