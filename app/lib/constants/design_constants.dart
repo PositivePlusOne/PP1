@@ -12,6 +12,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
@@ -120,6 +121,12 @@ SystemUiOverlayStyle buildSystemUiOverlayStyle({
   if (appBarColor != null) {
     statusBarBrightness = appBarColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
     statusBarIconBrightness = appBarColor.computedSystemBrightness;
+  }
+
+  // If iOS, reverse the brightnesses (Dunno why, but it works)
+  if (UniversalPlatform.isIOS) {
+    statusBarBrightness = statusBarBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+    statusBarIconBrightness = statusBarIconBrightness == Brightness.light ? Brightness.dark : Brightness.light;
   }
 
   return SystemUiOverlayStyle(
