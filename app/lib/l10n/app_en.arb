@@ -160,7 +160,7 @@
     "page_profile_location_instruction": "Search for your location, or press the find me button",
     "page_profile_location_not_set": "Location not provided",
     "page_profile_location_dialog_title": "Results",
-    "page_profile_location_errors_search_failed": "We could not find anything with your search, please try again.",
+    "page_profile_location_errors_search_failed": "We couldn’t find that location. Please try again or use the Find Me button above.",
     "page_profile_location_errors_location_failed": "We could not find you, please try again.",
 
     "page_profile_biometrics_title": "Biometrics",
