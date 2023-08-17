@@ -42,24 +42,6 @@ export namespace PostEndpoints {
         // Loop over window IDs in parallel and get the activity data
         const payloadData = await Promise.all([...activityObjectIds.map((id) => ActivitiesService.getActivity(id))]);
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
-
-        for (const activityId of activityIds) {
-          if (!activityId) {
-            continue;
-          }
-
-          const activityDetail = await feed.getActivityDetail(activityId, {
-            enrich: true,
-            withReactionCounts: true,
-            ownReactions: true,
-            reactionKindsFilter: "comment",
-            withOwnChildren: true,
-            withOwnReactions: true,
-            withRecentReactions: true,
-          });
-
-          functions.logger.info("Got activity detail", { activityDetail });
-        }
     
         return buildEndpointResponse(context, {
           sender: uid,
