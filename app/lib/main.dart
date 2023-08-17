@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,9 +39,7 @@ class App extends ConsumerWidget {
 
     return MaterialApp.router(
       builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
-      theme: ThemeData(
-        useMaterial3: false,
-      ),
+      theme: ThemeData(useMaterial3: false),
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           RouteAnalyticsObserver(),

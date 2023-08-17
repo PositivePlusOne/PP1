@@ -261,7 +261,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   // ignore: unused_element
   List<Widget> _postListAttachedImages() {
     final List<Widget> imageWidgetList = [];
-    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
+    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
 
     for (Media media in widget.postContent.media) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
@@ -306,7 +306,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postCarouselAttachedImages(BuildContext context, BoxConstraints constraints) {
     final List<Widget> listBanners = [];
-    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defualtUserColour) ?? colours.defualtUserColour;
+    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
     final double height = min(kCarouselMaxHeight, constraints.maxWidth);
 
     //! For a dynamically sized carousel we would need to convert this to a custom widget

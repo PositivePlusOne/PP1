@@ -41,6 +41,7 @@ class PositiveDialog extends ConsumerWidget {
   static const double kMargin = 10.0;
   static const double kBackgroundOpacity = 0.15;
   static const double kBarrierOpacity = 0.85;
+  static const double kCalandarOpacity = 0.95;
   static const double kSigmaBlur = 2.0;
 
   static PositiveDialog buildDialog({

@@ -677,11 +677,6 @@ class PositiveButtonState extends State<PositiveButton> {
       );
     }
 
-    //* Verify buttons are always consistent sizes.
-    if (calculatedPadding != EdgeInsets.zero) {
-      calculatedPadding = calculatedPadding - EdgeInsets.all(borderWidth);
-    }
-
     final double? widgetHeight = widget.height == null ? null : widget.height! - (paddingWidth ?? kPaddingNone);
 
     return IgnorePointer(

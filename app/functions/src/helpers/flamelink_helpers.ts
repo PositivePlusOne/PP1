@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { isEqual } from "lodash";
 
 export namespace FlamelinkHelpers {
   /**
@@ -59,16 +60,7 @@ export namespace FlamelinkHelpers {
    */
   export function arePayloadsEqual(d1: any, d2: any): boolean {
     functions.logger.log("Checking if payloads are equal.", { d1, d2 });
-
-    if (d1 == null && d2 == null) {
-      return true;
-    }
-
-    if (d1 == null || d2 == null) {
-      return false;
-    }
-
-    return JSON.stringify(d1) === JSON.stringify(d2);
+    return isEqual(d1, d2);
   }
 
   /**

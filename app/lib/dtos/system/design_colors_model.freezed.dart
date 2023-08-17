@@ -11,8 +11,7 @@ part of 'design_colors_model.dart';
 
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+final _privateConstructorUsedError = UnsupportedError('It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 DesignColorsModel _$DesignColorsModelFromJson(Map<String, dynamic> json) {
   return _DesignColorsModel.fromJson(json);
@@ -57,19 +56,16 @@ mixin _$DesignColorsModel {
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
   Color get transparent => throw _privateConstructorUsedError;
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get defualtUserColour => throw _privateConstructorUsedError;
+  Color get defaultUserColour => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DesignColorsModelCopyWith<DesignColorsModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  $DesignColorsModelCopyWith<DesignColorsModel> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DesignColorsModelCopyWith<$Res> {
-  factory $DesignColorsModelCopyWith(
-          DesignColorsModel value, $Res Function(DesignColorsModel) then) =
-      _$DesignColorsModelCopyWithImpl<$Res, DesignColorsModel>;
+  factory $DesignColorsModelCopyWith(DesignColorsModel value, $Res Function(DesignColorsModel) then) = _$DesignColorsModelCopyWithImpl<$Res, DesignColorsModel>;
   @useResult
   $Res call(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color teal,
@@ -90,13 +86,11 @@ abstract class $DesignColorsModelCopyWith<$Res> {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray7,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray8,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color defualtUserColour});
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color defaultUserColour});
 }
 
 /// @nodoc
-class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
-    implements $DesignColorsModelCopyWith<$Res> {
+class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel> implements $DesignColorsModelCopyWith<$Res> {
   _$DesignColorsModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -125,7 +119,7 @@ class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
     Object? colorGray7 = null,
     Object? colorGray8 = null,
     Object? transparent = null,
-    Object? defualtUserColour = null,
+    Object? defaultUserColour = null,
   }) {
     return _then(_value.copyWith(
       teal: null == teal
@@ -200,20 +194,17 @@ class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
           ? _value.transparent
           : transparent // ignore: cast_nullable_to_non_nullable
               as Color,
-      defualtUserColour: null == defualtUserColour
-          ? _value.defualtUserColour
-          : defualtUserColour // ignore: cast_nullable_to_non_nullable
+      defaultUserColour: null == defaultUserColour
+          ? _value.defaultUserColour
+          : defaultUserColour // ignore: cast_nullable_to_non_nullable
               as Color,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$_DesignColorsModelCopyWith<$Res>
-    implements $DesignColorsModelCopyWith<$Res> {
-  factory _$$_DesignColorsModelCopyWith(_$_DesignColorsModel value,
-          $Res Function(_$_DesignColorsModel) then) =
-      __$$_DesignColorsModelCopyWithImpl<$Res>;
+abstract class _$$_DesignColorsModelCopyWith<$Res> implements $DesignColorsModelCopyWith<$Res> {
+  factory _$$_DesignColorsModelCopyWith(_$_DesignColorsModel value, $Res Function(_$_DesignColorsModel) then) = __$$_DesignColorsModelCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -235,17 +226,12 @@ abstract class _$$_DesignColorsModelCopyWith<$Res>
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray7,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color colorGray8,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      Color defualtUserColour});
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) Color defaultUserColour});
 }
 
 /// @nodoc
-class __$$_DesignColorsModelCopyWithImpl<$Res>
-    extends _$DesignColorsModelCopyWithImpl<$Res, _$_DesignColorsModel>
-    implements _$$_DesignColorsModelCopyWith<$Res> {
-  __$$_DesignColorsModelCopyWithImpl(
-      _$_DesignColorsModel _value, $Res Function(_$_DesignColorsModel) _then)
-      : super(_value, _then);
+class __$$_DesignColorsModelCopyWithImpl<$Res> extends _$DesignColorsModelCopyWithImpl<$Res, _$_DesignColorsModel> implements _$$_DesignColorsModelCopyWith<$Res> {
+  __$$_DesignColorsModelCopyWithImpl(_$_DesignColorsModel _value, $Res Function(_$_DesignColorsModel) _then) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -268,7 +254,7 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
     Object? colorGray7 = null,
     Object? colorGray8 = null,
     Object? transparent = null,
-    Object? defualtUserColour = null,
+    Object? defaultUserColour = null,
   }) {
     return _then(_$_DesignColorsModel(
       teal: null == teal
@@ -343,9 +329,9 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
           ? _value.transparent
           : transparent // ignore: cast_nullable_to_non_nullable
               as Color,
-      defualtUserColour: null == defualtUserColour
-          ? _value.defualtUserColour
-          : defualtUserColour // ignore: cast_nullable_to_non_nullable
+      defaultUserColour: null == defaultUserColour
+          ? _value.defaultUserColour
+          : defaultUserColour // ignore: cast_nullable_to_non_nullable
               as Color,
     ));
   }
@@ -355,45 +341,27 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_DesignColorsModel implements _DesignColorsModel {
   const _$_DesignColorsModel(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.teal,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.purple,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.green,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.yellow,
+      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.teal,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.purple,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.green,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.yellow,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.red,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.white,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.black,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.linkBlue,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray1,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray2,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray3,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray4,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray5,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray6,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray7,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.colorGray8,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required this.defualtUserColour});
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.white,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.black,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.linkBlue,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray1,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray2,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray3,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray4,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray5,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray6,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray7,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.colorGray8,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.transparent,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required this.defaultUserColour});
 
-  factory _$_DesignColorsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DesignColorsModelFromJson(json);
+  factory _$_DesignColorsModel.fromJson(Map<String, dynamic> json) => _$$_DesignColorsModelFromJson(json);
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -451,11 +419,11 @@ class _$_DesignColorsModel implements _DesignColorsModel {
   final Color transparent;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  final Color defualtUserColour;
+  final Color defaultUserColour;
 
   @override
   String toString() {
-    return 'DesignColorsModel(teal: $teal, purple: $purple, green: $green, yellow: $yellow, red: $red, pink: $pink, white: $white, black: $black, linkBlue: $linkBlue, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray5: $colorGray5, colorGray6: $colorGray6, colorGray7: $colorGray7, colorGray8: $colorGray8, transparent: $transparent, defualtUserColour: $defualtUserColour)';
+    return 'DesignColorsModel(teal: $teal, purple: $purple, green: $green, yellow: $yellow, red: $red, pink: $pink, white: $white, black: $black, linkBlue: $linkBlue, colorGray1: $colorGray1, colorGray2: $colorGray2, colorGray3: $colorGray3, colorGray4: $colorGray4, colorGray5: $colorGray5, colorGray6: $colorGray6, colorGray7: $colorGray7, colorGray8: $colorGray8, transparent: $transparent, defaultUserColour: $defaultUserColour)';
   }
 
   @override
@@ -471,61 +439,27 @@ class _$_DesignColorsModel implements _DesignColorsModel {
             (identical(other.pink, pink) || other.pink == pink) &&
             (identical(other.white, white) || other.white == white) &&
             (identical(other.black, black) || other.black == black) &&
-            (identical(other.linkBlue, linkBlue) ||
-                other.linkBlue == linkBlue) &&
-            (identical(other.colorGray1, colorGray1) ||
-                other.colorGray1 == colorGray1) &&
-            (identical(other.colorGray2, colorGray2) ||
-                other.colorGray2 == colorGray2) &&
-            (identical(other.colorGray3, colorGray3) ||
-                other.colorGray3 == colorGray3) &&
-            (identical(other.colorGray4, colorGray4) ||
-                other.colorGray4 == colorGray4) &&
-            (identical(other.colorGray5, colorGray5) ||
-                other.colorGray5 == colorGray5) &&
-            (identical(other.colorGray6, colorGray6) ||
-                other.colorGray6 == colorGray6) &&
-            (identical(other.colorGray7, colorGray7) ||
-                other.colorGray7 == colorGray7) &&
-            (identical(other.colorGray8, colorGray8) ||
-                other.colorGray8 == colorGray8) &&
-            (identical(other.transparent, transparent) ||
-                other.transparent == transparent) &&
-            (identical(other.defualtUserColour, defualtUserColour) ||
-                other.defualtUserColour == defualtUserColour));
+            (identical(other.linkBlue, linkBlue) || other.linkBlue == linkBlue) &&
+            (identical(other.colorGray1, colorGray1) || other.colorGray1 == colorGray1) &&
+            (identical(other.colorGray2, colorGray2) || other.colorGray2 == colorGray2) &&
+            (identical(other.colorGray3, colorGray3) || other.colorGray3 == colorGray3) &&
+            (identical(other.colorGray4, colorGray4) || other.colorGray4 == colorGray4) &&
+            (identical(other.colorGray5, colorGray5) || other.colorGray5 == colorGray5) &&
+            (identical(other.colorGray6, colorGray6) || other.colorGray6 == colorGray6) &&
+            (identical(other.colorGray7, colorGray7) || other.colorGray7 == colorGray7) &&
+            (identical(other.colorGray8, colorGray8) || other.colorGray8 == colorGray8) &&
+            (identical(other.transparent, transparent) || other.transparent == transparent) &&
+            (identical(other.defaultUserColour, defaultUserColour) || other.defaultUserColour == defaultUserColour));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        teal,
-        purple,
-        green,
-        yellow,
-        red,
-        pink,
-        white,
-        black,
-        linkBlue,
-        colorGray1,
-        colorGray2,
-        colorGray3,
-        colorGray4,
-        colorGray5,
-        colorGray6,
-        colorGray7,
-        colorGray8,
-        transparent,
-        defualtUserColour
-      ]);
+  int get hashCode => Object.hashAll([runtimeType, teal, purple, green, yellow, red, pink, white, black, linkBlue, colorGray1, colorGray2, colorGray3, colorGray4, colorGray5, colorGray6, colorGray7, colorGray8, transparent, defaultUserColour]);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DesignColorsModelCopyWith<_$_DesignColorsModel> get copyWith =>
-      __$$_DesignColorsModelCopyWithImpl<_$_DesignColorsModel>(
-          this, _$identity);
+  _$$_DesignColorsModelCopyWith<_$_DesignColorsModel> get copyWith => __$$_DesignColorsModelCopyWithImpl<_$_DesignColorsModel>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -537,47 +471,27 @@ class _$_DesignColorsModel implements _DesignColorsModel {
 
 abstract class _DesignColorsModel implements DesignColorsModel {
   const factory _DesignColorsModel(
-      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color teal,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color purple,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color green,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color yellow,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color red,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color pink,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color white,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color black,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color linkBlue,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray1,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray2,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray3,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray4,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray5,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray6,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray7,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color colorGray8,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color transparent,
-      @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color defualtUserColour}) = _$_DesignColorsModel;
+      {@JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color teal,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color purple,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color green,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color yellow,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color red,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color pink,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color white,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color black,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color linkBlue,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray1,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray2,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray3,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray4,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray5,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray6,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray7,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color colorGray8,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color transparent,
+      @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required final Color defaultUserColour}) = _$_DesignColorsModel;
 
-  factory _DesignColorsModel.fromJson(Map<String, dynamic> json) =
-      _$_DesignColorsModel.fromJson;
+  factory _DesignColorsModel.fromJson(Map<String, dynamic> json) = _$_DesignColorsModel.fromJson;
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -635,9 +549,8 @@ abstract class _DesignColorsModel implements DesignColorsModel {
   Color get transparent;
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-  Color get defualtUserColour;
+  Color get defaultUserColour;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignColorsModelCopyWith<_$_DesignColorsModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$_DesignColorsModelCopyWith<_$_DesignColorsModel> get copyWith => throw _privateConstructorUsedError;
 }
