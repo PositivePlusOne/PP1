@@ -79,7 +79,10 @@ enum PositivePostNavigationActiveButton {
 
 enum CreatePostCurrentPage {
   camera,
+  editPhoto,
   createPostText,
   createPostImage,
-  createPostMultiImage,
+  createPostMultiImage;
+
+  bool get isCreationDialog => this == CreatePostCurrentPage.createPostText || this == CreatePostCurrentPage.createPostImage || this == CreatePostCurrentPage.createPostMultiImage;
 }

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -88,6 +89,11 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     ),
                   ),
                 ],
+                if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
+                  PositiveImageEditor(
+                    galleryEntry: state.galleryEntries.firstOrNull,
+                  ),
+                ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -102,7 +108,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-              Create Post Dialog              -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
+                if (state.currentCreatePostPage.isCreationDialog) ...<Widget>[
                   Positioned.fill(
                     child: CreatePostDialogue(
                       isBusy: state.isBusy,
@@ -120,6 +126,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       tags: state.tags,
                     ),
                   ),
+                ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

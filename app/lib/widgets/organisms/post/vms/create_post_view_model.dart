@@ -322,12 +322,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       entries.add(entry);
     }
 
+    if (entries.isEmpty) {
+      return;
+    }
+
     state = state.copyWith(
       galleryEntries: entries,
-      currentCreatePostPage: CreatePostCurrentPage.createPostImage,
+      currentCreatePostPage: CreatePostCurrentPage.editPhoto,
       currentPostType: PostType.image,
       activeButton: PositivePostNavigationActiveButton.flex,
-      activeButtonFlexText: localisations.page_create_post_create,
+      activeButtonFlexText: localisations.shared_actions_next,
     );
 
     return;
