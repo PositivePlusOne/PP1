@@ -99,7 +99,7 @@ class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget
           ),
           if (actionWidget != actions.last) const SizedBox(width: kPaddingSmall),
         ],
-        const SizedBox(width: kPaddingLarge),
+        const SizedBox(width: kPaddingMedium),
       ],
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,

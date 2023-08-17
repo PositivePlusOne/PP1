@@ -135,9 +135,9 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         if (widget.postContent.media.length == 1) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (widget.postContent.media.length == 1) ..._postListAttachedImages(),
+        if (widget.postContent.media.length == 1 || widget.isShortformPost) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (widget.postContent.media.length > 1) ...[
+        if (widget.postContent.media.length > 1 && !widget.isShortformPost) ...[
           const SizedBox(height: kPaddingSmall),
           LayoutBuilder(
             builder: (context, constraints) {

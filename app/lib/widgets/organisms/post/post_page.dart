@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,6 +22,8 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
 
+import '../../../providers/profiles/profile_controller.dart';
+
 @RoutePage()
 class PostPage extends ConsumerWidget {
   const PostPage({
@@ -42,6 +45,13 @@ class PostPage extends ConsumerWidget {
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
 
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final List<Widget> actions = [];
+
+    if (profileControllerState.currentProfile != null) {
+      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
+    }
+
     return PositiveScaffold(
       isBusy: state.isBusy,
       onRefresh: viewModel.onRefresh,
@@ -62,6 +72,14 @@ class PostPage extends ConsumerWidget {
             icon: UniconsLine.angle_left_b,
             onTapped: () => router.removeLast(),
           ),
+          appBarTrailing: [
+            for (final Widget actionWidget in actions) ...<Widget>[
+              Align(
+                alignment: Alignment.center,
+                child: actionWidget,
+              ),
+            ],
+          ],
           children: <Widget>[
             PositiveActivityWidget(
               activity: activity,
