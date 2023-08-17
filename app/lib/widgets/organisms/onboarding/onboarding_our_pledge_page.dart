@@ -44,8 +44,6 @@ class OnboardingOurPledgePage extends ConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final bool canDisplayBackButton = style == OnboardingStyle.registration;
-
     return PositiveScaffold(
       footerWidgets: <Widget>[
         PositiveButton(
@@ -69,18 +67,14 @@ class OnboardingOurPledgePage extends ConsumerWidget {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               <Widget>[
-                PositiveAppBar(
-                  foregroundColor: colors.black,
-                ),
+                PositiveAppBar(foregroundColor: colors.black),
                 const SizedBox(height: kPaddingMassive),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    if (canDisplayBackButton) ...<Widget>[
-                      PositiveBackButton(onBackSelected: viewModel.onBackSelected),
-                      const SizedBox(width: kPaddingSmall),
-                    ],
+                    PositiveBackButton(onBackSelected: viewModel.onBackSelected),
+                    const SizedBox(width: kPaddingSmall),
                     PositivePageIndicator(
                       color: colors.black,
                       pagesNum: 2,
