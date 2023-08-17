@@ -34,7 +34,6 @@ class BiometricsPreferencesPage extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    // TODO(any): Localize
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
       footerWidgets: <Widget>[
@@ -53,25 +52,21 @@ class BiometricsPreferencesPage extends ConsumerWidget {
               pagesNum: 6,
               currentPage: 5,
             ),
-            const SizedBox(height: kPaddingMedium),
+            const SizedBox(height: kPaddingLarge),
             Align(
               alignment: Alignment.centerLeft,
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
                   localizations.page_profile_biometrics_title,
-                  style: typography.styleHero.copyWith(
-                    color: colors.black,
-                  ),
+                  style: typography.styleHero.copyWith(color: colors.black),
                 ),
               ),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
               localizations.page_profile_biometrics_instruction,
-              style: typography.styleBody.copyWith(
-                color: colors.black,
-              ),
+              style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
             Row(
