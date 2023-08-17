@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -24,13 +23,11 @@ class CreatePostPage extends ConsumerStatefulWidget {
   const CreatePostPage({
     this.isEditPage = false,
     this.activityData,
-    this.localisations,
     super.key,
-  }) : assert(isEditPage == false || (activityData != null && localisations != null));
+  }) : assert(isEditPage == false || (activityData != null));
 
   final bool isEditPage;
   final ActivityData? activityData;
-  final AppLocalizations? localisations;
 
   @override
   ConsumerState<CreatePostPage> createState() => _CreatePostPageState();

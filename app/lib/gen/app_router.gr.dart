@@ -126,7 +126,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CreatePostPage(
           isEditPage: args.isEditPage,
           activityData: args.activityData,
-          localisations: args.localisations,
           key: args.key,
         ),
       );
@@ -744,7 +743,6 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
   CreatePostRoute({
     bool isEditPage = false,
     ActivityData? activityData,
-    dynamic localisations,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -752,7 +750,6 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
           args: CreatePostRouteArgs(
             isEditPage: isEditPage,
             activityData: activityData,
-            localisations: localisations,
             key: key,
           ),
           initialChildren: children,
@@ -768,7 +765,6 @@ class CreatePostRouteArgs {
   const CreatePostRouteArgs({
     this.isEditPage = false,
     this.activityData,
-    this.localisations,
     this.key,
   });
 
@@ -776,13 +772,11 @@ class CreatePostRouteArgs {
 
   final ActivityData? activityData;
 
-  final dynamic localisations;
-
   final Key? key;
 
   @override
   String toString() {
-    return 'CreatePostRouteArgs{isEditPage: $isEditPage, activityData: $activityData, localisations: $localisations, key: $key}';
+    return 'CreatePostRouteArgs{isEditPage: $isEditPage, activityData: $activityData, key: $key}';
   }
 }
 

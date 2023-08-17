@@ -291,7 +291,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           // visibleTo: widget.activity.visibleTo,
         ),
         isEditPage: true,
-        localisations: AppLocalizations.of(context)!,
       ),
     );
   }
