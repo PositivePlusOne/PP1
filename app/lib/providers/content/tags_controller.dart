@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Package imports:
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -9,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/system/cache_controller.dart';
 
 part 'tags_controller.freezed.dart';
 part 'tags_controller.g.dart';

@@ -386,12 +386,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfilePhotoSelectionPage(),
       );
     },
-    ProfileReferenceImageRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImagePage(),
-      );
-    },
     ProfileReferenceImageSuccessRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1533,20 +1527,6 @@ class ProfilePhotoSelectionRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfilePhotoSelectionRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileReferenceImagePage]
-class ProfileReferenceImageRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

@@ -2,7 +2,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -147,6 +147,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       for (final GalleryEntry entry in state.galleryEntries) {
         entry.saveToGallery = state.saveToGallery;
       }
+
+      // Wait a tiny bit to allow the UI to update
+      // The next operation is expensive and blocks the UI
+      await Future<void>.delayed(kAnimationDurationRegular);
 
       // Upload gallery entries
       final List<Media> media = await Future.wait(state.galleryEntries.map((e) => e.createMedia()));

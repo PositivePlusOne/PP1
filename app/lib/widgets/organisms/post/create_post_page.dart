@@ -63,6 +63,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
         onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
         child: Scaffold(
           backgroundColor: colours.black,
+          resizeToAvoidBottomInset: false,
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Stack(
@@ -75,9 +76,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     child: PositiveCamera(
                       onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
                       cameraNavigation: (_) {
-                        return SizedBox(
-                          //? Navigation bar height, safe area at bottom, padding below navigation, and padding above navigatio. In that order
-                          height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom + kPaddingMedium + kPaddingExtraLarge,
+                        return const SizedBox(
+                          height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
                         );
                       },
                       leftActionWidget: CameraFloatingButton.postWithoutImage(

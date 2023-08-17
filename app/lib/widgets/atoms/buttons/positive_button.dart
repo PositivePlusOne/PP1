@@ -164,8 +164,8 @@ class PositiveButton extends StatefulWidget {
 
   /// The button padding for most buttons in the design system.
   static const EdgeInsets kButtonPaddingLarge = EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0);
-  static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0);
-  static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0);
+  static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0);
+  static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingTiny = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingNavigation = EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0);
 
@@ -640,8 +640,8 @@ class PositiveButtonState extends State<PositiveButton> {
           ],
           Padding(
             padding: EdgeInsets.only(
-              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingSmall : 0.0,
-              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingSmall : 0.0,
+              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingExtraSmall : 0.0,
+              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingExtraSmall : 0.0,
             ),
             child: SizedBox(
               height: iconRadius,

@@ -1,10 +1,8 @@
 // Flutter imports:
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
-import "package:image/image.dart" as img;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 
