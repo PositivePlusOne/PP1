@@ -55,6 +55,7 @@ class HomePage extends HookConsumerWidget {
       onRefresh: viewModel.onRefresh,
       refreshController: viewModel.refreshController,
       refreshBackgroundColor: colors.white,
+      appBarColor: colors.pink,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,

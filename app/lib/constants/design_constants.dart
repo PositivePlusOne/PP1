@@ -6,7 +6,12 @@
 // <https://material.io/go/design-theming#color-color-palette>.
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
@@ -99,3 +104,30 @@ const String kObscuringTextCharacter = '*';
 const int kMaxLengthTruncatedPost = 75;
 const int kMaxLengthCaption = 320;
 const int kMaxLengthAltText = 120;
+
+// System
+SystemUiOverlayStyle buildSystemUiOverlayStyle({
+  required Color backgroundColor,
+  Color? appBarColor,
+}) {
+  Color statusColor = Colors.transparent;
+  Color navigationColor = backgroundColor;
+  Color dividerColor = backgroundColor.complimentDividerColor;
+  Brightness statusBarBrightness = backgroundColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+  Brightness statusBarIconBrightness = backgroundColor.computedSystemBrightness;
+  Brightness navigationBarBrightness = backgroundColor.computedSystemBrightness;
+
+  if (appBarColor != null) {
+    statusBarBrightness = appBarColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+    statusBarIconBrightness = appBarColor.computedSystemBrightness;
+  }
+
+  return SystemUiOverlayStyle(
+    statusBarColor: statusColor,
+    statusBarIconBrightness: statusBarIconBrightness,
+    systemNavigationBarColor: navigationColor,
+    systemNavigationBarIconBrightness: navigationBarBrightness,
+    statusBarBrightness: statusBarBrightness,
+    systemNavigationBarDividerColor: dividerColor,
+  );
+}

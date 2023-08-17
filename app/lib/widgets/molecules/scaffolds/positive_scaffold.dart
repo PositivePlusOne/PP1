@@ -122,7 +122,7 @@ class PositiveScaffold extends ConsumerWidget {
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: appBarColor?.systemUiOverlayStyle ?? actualBackgroundColor.systemUiOverlayStyle,
+        value: buildSystemUiOverlayStyle(appBarColor: appBarColor, backgroundColor: actualBackgroundColor),
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: Scaffold(
