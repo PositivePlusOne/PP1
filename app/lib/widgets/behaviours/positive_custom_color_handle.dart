@@ -3,6 +3,7 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CustomColorSelectionHandle extends TextSelectionControls {
@@ -11,13 +12,7 @@ class CustomColorSelectionHandle extends TextSelectionControls {
   final Color handleColor;
   final TextSelectionControls _controls;
 
-  /// Wrap the given handle builder with the needed theme data for
-  /// each platform to modify the color.
-  Widget _wrapWithThemeData(Widget Function(BuildContext) builder) => Platform.isIOS
-      // ios handle uses the CupertinoTheme primary color, so override that.
-      ? CupertinoTheme(data: CupertinoThemeData(primaryColor: handleColor), child: Builder(builder: builder))
-      // material handle uses the selection handle color, so override that.
-      : TextSelectionTheme(data: TextSelectionThemeData(selectionHandleColor: handleColor), child: Builder(builder: builder));
+  Widget _wrapWithThemeData(Widget Function(BuildContext) builder) => Platform.isIOS ? CupertinoTheme(data: CupertinoThemeData(primaryColor: handleColor), child: Builder(builder: builder)) : TextSelectionTheme(data: TextSelectionThemeData(selectionHandleColor: handleColor), child: Builder(builder: builder));
 
   @override
   Widget buildHandle(BuildContext context, TextSelectionHandleType type, double textLineHeight, [VoidCallback? onTap]) => _wrapWithThemeData((BuildContext context) => _controls.buildHandle(context, type, textLineHeight, onTap));
@@ -33,8 +28,7 @@ class CustomColorSelectionHandle extends TextSelectionControls {
   }
 
   @override
-  Widget buildToolbar(BuildContext context, Rect globalEditableRegion, double textLineHeight, Offset selectionMidpoint, List<TextSelectionPoint> endpoints, TextSelectionDelegate delegate, ClipboardStatusNotifier? clipboardStatus, Offset? lastSecondaryTapDownPosition) {
-    // ignore: deprecated_member_use
-    return _controls.buildToolbar(context, globalEditableRegion, textLineHeight, selectionMidpoint, endpoints, delegate, clipboardStatus, lastSecondaryTapDownPosition);
+  Widget buildToolbar(BuildContext context, Rect globalEditableRegion, double textLineHeight, Offset selectionMidpoint, List<TextSelectionPoint> endpoints, TextSelectionDelegate delegate, ValueListenable<ClipboardStatus>? clipboardStatus, Offset? lastSecondaryTapDownPosition) {
+    return _wrapWithThemeData((BuildContext context) => _controls.buildToolbar(context, globalEditableRegion, textLineHeight, selectionMidpoint, endpoints, delegate, null, lastSecondaryTapDownPosition));
   }
 }
