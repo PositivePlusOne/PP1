@@ -36,7 +36,9 @@ import '../../atoms/input/positive_text_field.dart';
 
 @RoutePage()
 class ProfileLocationPage extends ConsumerStatefulWidget {
-  const ProfileLocationPage({super.key});
+  const ProfileLocationPage({
+    super.key,
+  });
 
   @override
   ConsumerState<ProfileLocationPage> createState() => _ProfileLocationPageState();
@@ -106,12 +108,24 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                         );
                       },
                     ),
-                    if (formMode == FormMode.create)
+                    if (formMode == FormMode.create) ...<Widget>[
                       PositivePageIndicator(
                         color: colors.black,
                         pagesNum: 9,
                         currentPage: 6,
                       ),
+                    ],
+                    const Spacer(),
+                    PositiveButton(
+                      colors: colors,
+                      primaryColor: colors.black,
+                      label: localizations.shared_actions_skip,
+                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onLocationSkipped(removeLocation: false),
+                      isDisabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
+                      style: PositiveButtonStyle.text,
+                      layout: PositiveButtonLayout.textOnly,
+                      size: PositiveButtonSize.small,
+                    ),
                   ],
                 );
               },
@@ -373,7 +387,7 @@ class _ProfileLocationProfileFailedShade extends StatelessWidget {
                     label: localizations.shared_actions_continue_without_location,
                     layout: PositiveButtonLayout.textOnly,
                     style: PositiveButtonStyle.primary,
-                    onTapped: ref.read(profileFormControllerProvider.notifier).onLocationSkipped,
+                    onTapped: () => ref.read(profileFormControllerProvider.notifier).onLocationSkipped(removeLocation: true),
                     isDisabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
                   ),
                 ],
@@ -447,7 +461,7 @@ class _ProfileLocationProfilePendingShade extends StatelessWidget {
                 label: localizations.shared_actions_continue_without_location,
                 layout: PositiveButtonLayout.textOnly,
                 style: PositiveButtonStyle.primary,
-                onTapped: ref.read(profileFormControllerProvider.notifier).onLocationSkipped,
+                onTapped: () => ref.read(profileFormControllerProvider.notifier).onLocationSkipped(removeLocation: true),
                 isDisabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
               ),
             ],

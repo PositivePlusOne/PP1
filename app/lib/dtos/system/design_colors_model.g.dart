@@ -6,7 +6,8 @@ part of 'design_colors_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_DesignColorsModel _$$_DesignColorsModelFromJson(Map<String, dynamic> json) => _$_DesignColorsModel(
+_$_DesignColorsModel _$$_DesignColorsModelFromJson(Map<String, dynamic> json) =>
+    _$_DesignColorsModel(
       teal: colorFromJson(json['teal'] as String),
       purple: colorFromJson(json['purple'] as String),
       green: colorFromJson(json['green'] as String),
@@ -28,7 +29,9 @@ _$_DesignColorsModel _$$_DesignColorsModelFromJson(Map<String, dynamic> json) =>
       defaultUserColour: colorFromJson(json['defaultUserColour'] as String),
     );
 
-Map<String, dynamic> _$$_DesignColorsModelToJson(_$_DesignColorsModel instance) => <String, dynamic>{
+Map<String, dynamic> _$$_DesignColorsModelToJson(
+        _$_DesignColorsModel instance) =>
+    <String, dynamic>{
       'teal': colorToJson(instance.teal),
       'purple': colorToJson(instance.purple),
       'green': colorToJson(instance.green),
