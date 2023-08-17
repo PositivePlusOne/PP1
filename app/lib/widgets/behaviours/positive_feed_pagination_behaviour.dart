@@ -36,6 +36,7 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
     this.windowSize = 20,
     this.onHeaderTap,
     this.onMediaTap,
+    this.isSliver = true,
     super.key,
   });
 
@@ -46,6 +47,8 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   final void Function(Activity activity, Media media)? onMediaTap;
 
   final Function(Map<String, dynamic>)? onPageLoaded;
+
+  final bool isSliver;
 
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
 
@@ -253,26 +256,49 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   @override
   Widget build(BuildContext context) {
     const Widget loadingIndicator = PositivePostLoadingIndicator();
-    return PagedSliverList.separated(
-      shrinkWrapFirstPageIndicators: true,
+    if (widget.isSliver) {
+      return buildSliverFeed(context, loadingIndicator);
+    } else {
+      return buildFeed(context, loadingIndicator);
+    }
+  }
+
+  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
+    return PagedListView.separated(
       pagingController: feedState.pagingController,
       separatorBuilder: (_, __) => const SizedBox(height: kPaddingLarge),
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
-        itemBuilder: (_, item, index) {
-          return PositiveActivityWidget(
-            key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
-            onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
-            onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
-            activity: item,
-            targetFeed: widget.feed,
-            index: index,
-          );
-        },
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
       ),
+    );
+  }
+
+  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
+    return PagedSliverList.separated(
+      pagingController: feedState.pagingController,
+      separatorBuilder: (_, __) => const SizedBox(height: kPaddingLarge),
+      builderDelegate: PagedChildBuilderDelegate<Activity>(
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+      ),
+    );
+  }
+
+  Widget buildItem(BuildContext context, Activity item, int index) {
+    return PositiveActivityWidget(
+      key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
+      onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
+      onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
+      activity: item,
+      targetFeed: widget.feed,
+      index: index,
     );
   }
 }

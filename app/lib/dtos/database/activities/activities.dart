@@ -216,6 +216,7 @@ class ActivityPricingExternalStoreInformationPricingStrategy with _$ActivityPric
 class ActivityPublisherInformation with _$ActivityPublisherInformation {
   const factory ActivityPublisherInformation({
     @Default('') String foreignKey,
+    @Default('') String originFeed,
   }) = _ActivityPublisherInformation;
 
   factory ActivityPublisherInformation.fromJson(Map<String, dynamic> json) => _$ActivityPublisherInformationFromJson(json);

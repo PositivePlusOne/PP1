@@ -3,19 +3,23 @@
 // Package imports:
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/third_party.dart';
 
 part 'tags_controller.freezed.dart';
 part 'tags_controller.g.dart';
 
 @freezed
 class TagsControllerState with _$TagsControllerState {
-  const factory TagsControllerState() = _TagsControllerState;
+  const factory TagsControllerState({
+    @Default(<Tag>[]) List<Tag> recommendedTags,
+  }) = _TagsControllerState;
 
   factory TagsControllerState.initialState() => const TagsControllerState();
 }
@@ -38,6 +42,14 @@ class TagsController extends _$TagsController {
 
   bool tagExists(String key) {
     return allTags.any((Tag tag) => tag.key == key);
+  }
+
+  void updateRecommendedTags(List<dynamic> rawStatuses) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<Tag> tags = Tag.fromJsonList(rawStatuses);
+
+    logger.d('Updating recommended tags with $tags');
+    state = state.copyWith(recommendedTags: tags);
   }
 
 //? get Tags From Tags Controller, else return a new tag

@@ -70,7 +70,7 @@
     "page_registration_email_entry_title": "Your Email",
     "page_registration_email_entry_body": "Let's get started!",
 
-    "page_registration_password": "Password",
+    "page_registration_password_label": "Password",
     "page_registration_create_password": "Create Password",
     "page_registration_create_password_tooltip": "Create a secure, non-repetitive password.",
 
@@ -81,6 +81,7 @@
 
     "page_login_password_enter": "Please enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",
+    "page_login_password_forgotten_body": "We have sent reset instructions to your email address!",
     
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",
@@ -221,9 +222,8 @@
     "page_account_actions_change_delete_account": "Delete Account",
 
     "page_account_verify_account_title": "Verify Account",
-    "page_account_verify_account_body": "Enter the code we have sent to you",
-    "page_account_verify_account_resend_code": "Resend verification code",
-
+    "page_account_verify_account_body": "You have not logged on recently. Can we confirm your password so we know that it is you!",
+    "page_account_verify_account_password_forgotten": "Forgotten Password",
 
     "page_chat_action_start_conversation": "Start Conversation",
 

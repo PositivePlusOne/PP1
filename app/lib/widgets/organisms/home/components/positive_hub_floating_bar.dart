@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/widgets/molecules/content/positive_recommended_topics.dart';
 import '../../../molecules/navigation/positive_tab_bar.dart';
 
@@ -14,8 +15,8 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   const PositiveHubFloatingBar({
     required this.tabs,
     required this.onTapped,
-    required this.activities,
     required this.tabColours,
+    this.tags = const <Tag>[],
     this.margin = const EdgeInsets.all(kPaddingMedium),
     this.index = -1,
     super.key,
@@ -24,7 +25,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   final List<String> tabs;
   final int index;
   final Future<void> Function(int index) onTapped;
-  final List<Activity> activities;
+  final List<Tag> tags;
   final List<Color> tabColours;
 
   final EdgeInsets? margin;
@@ -35,7 +36,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
   double get totalHeight => kTabBarHeight + kRecommendedTopicHeight + kRecommendedPostIndicatorHeight + kPaddingSmall + (margin?.vertical ?? 0);
   double get kRecommendedTopicHeight {
-    if (activities.isNotEmpty) {
+    if (tags.isNotEmpty) {
       return kSizeRecommendedTopic + kPaddingMedium;
     } else {
       return 0;
@@ -51,11 +52,10 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
     return Column(
       children: [
-        const SizedBox(height: kPaddingSmall), //TODO: add the indicators
         const SizedBox(height: kPaddingSmall),
-        if (activities.isNotEmpty) ...{
+        if (tags.isNotEmpty) ...{
           const SizedBox(height: kPaddingMedium),
-          PositiveRecommendedTopics(activities: activities),
+          PositiveRecommendedTopics(tags: tags),
         },
         PositiveTabBar(
           index: index,

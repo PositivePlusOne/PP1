@@ -212,7 +212,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     break;
                 }
 
-                responseData.data[schema].push(new Activity(obj));
+                const activity = new Activity(obj);
+                responseData.data[activitySchemaKey].push(activity);
                 break;
             case profileSchemaKey:
                 const profile = new Profile(obj);

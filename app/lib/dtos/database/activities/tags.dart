@@ -25,6 +25,7 @@ class Tag with _$Tag {
   }) = _Tag;
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
+  static List<Tag> fromJsonList(List<dynamic> json) => json.map((e) => Tag.fromJson(e)).toList();
 }
 
 @freezed

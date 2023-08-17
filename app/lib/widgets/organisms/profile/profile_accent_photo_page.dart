@@ -25,7 +25,7 @@ import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_tile.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart';
@@ -68,7 +68,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
       visibleComponents: const {PositiveScaffoldComponent.headingWidgets},
       onWillPopScope: () async => controller.onBackSelected(ProfileBiographyEntryRoute),
       headingWidgets: <Widget>[
-        StickyPositiveAppBar(
+        PositiveBasicSliverList(
           foregroundColor: colors.white,
           backgroundColor: colors.black,
         ),

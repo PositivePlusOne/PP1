@@ -27,7 +27,8 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 enum PositiveThumbnailTargetSize {
   small(128),
   medium(256),
-  large(512);
+  large(512),
+  extraLarge(1280);
 
   String get fileSuffix => '${value}x$value';
 

@@ -279,7 +279,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
                 fit: BoxFit.cover,
                 media: media,
                 onTap: () => widget.onImageTap?.call(media),
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(
@@ -325,7 +325,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
                 height: kPaddingExtraLarge,
                 fit: BoxFit.cover,
                 media: media,
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
                   child: PositiveLoadingIndicator(

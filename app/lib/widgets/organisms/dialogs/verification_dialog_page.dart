@@ -6,29 +6,24 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/constants/auth_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
-import 'package:app/widgets/atoms/input/positive_pin_entry.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/system/design_controller.dart';
@@ -37,12 +32,12 @@ import '../../../providers/system/design_controller.dart';
 class VerificationDialogPage extends StatefulHookConsumerWidget {
   const VerificationDialogPage({
     required this.onVerified,
-    required this.phoneNumber,
+    required this.emailAddress,
     super.key,
   });
 
   final Future<void> Function() onVerified;
-  final String phoneNumber;
+  final String emailAddress;
 
   @override
   ConsumerState<VerificationDialogPage> createState() => _VerificationDialogPageState();
@@ -50,267 +45,98 @@ class VerificationDialogPage extends StatefulHookConsumerWidget {
 
 class VerificationDialogPageValidator extends AbstractValidator<_VerificationDialogPageState> {
   VerificationDialogPageValidator() {
-    ruleFor((e) => e.currentPin, key: 'pin').length(6, 6);
+    ruleFor((e) => e.currentPassword, key: 'password').meetsPasswordComplexity();
   }
-}
-
-enum VerificationDialogType {
-  linkPhone,
-  changePhone,
-  verifyPhone,
 }
 
 class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage> {
   final VerificationDialogPageValidator validator = VerificationDialogPageValidator();
 
-  List<ValidationError> get pinValidationResults => validator.validate(this).getErrorList('pin');
-  bool get isPinValid => pinValidationResults.isEmpty;
+  List<ValidationError> get passwordValidationResults => validator.validate(this).getErrorList('password');
+  bool get isPasswordValid => passwordValidationResults.isEmpty;
 
-  String currentPin = '';
+  String currentPassword = '';
   bool isBusy = false;
-  bool isPinCorrect = false;
-  int? forceResendingToken;
-  String verificationId = '';
-  TextEditingController? pinController;
-  FocusNode? pinFocusNode;
+  TextEditingController? passwordController;
+  FocusNode? passwordFocusNode;
 
-  late final VerificationDialogType type;
-
-  String get cacheKey => 'verification_${widget.phoneNumber}';
-
-  double get currentStepIndex {
-    switch (type) {
-      case VerificationDialogType.linkPhone:
-        return 3;
-      default:
-        return 1;
-    }
-  }
-
-  int get totalStepIndex {
-    switch (type) {
-      case VerificationDialogType.linkPhone:
-        return 6;
-      default:
-        return 2;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (!providerContainer.read(userControllerProvider.notifier).isPhoneProviderLinked) {
-      type = VerificationDialogType.linkPhone;
-    } else if (providerContainer.read(firebaseAuthProvider).currentUser?.phoneNumber != widget.phoneNumber) {
-      type = VerificationDialogType.changePhone;
-    } else {
-      type = VerificationDialogType.verifyPhone;
-    }
-
-    // Wait until the first frame to load any data
-    WidgetsBinding.instance.addPostFrameCallbackWithAnimationDelay(callback: onFirstRender);
-  }
-
-  Future<void> onFirstRender() async {
-    restoreVerificationData();
-
-    if (verificationId.isEmpty) {
-      onResendCodeRequested();
-    } else {
-      pinFocusNode?.requestFocus();
-    }
-  }
+  String get cacheKey => 'verification_${widget.emailAddress}';
 
   Color getTextFieldTintColor(DesignColorsModel colors) {
-    if (currentPin.isEmpty) {
+    if (currentPassword.isEmpty) {
       return colors.purple;
     }
 
-    return isPinCorrect ? colors.green : colors.red;
+    return isPasswordValid ? colors.green : colors.red;
   }
 
-  void restoreVerificationData() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Map<String, dynamic>? verificationData = cacheController.getFromCache(cacheKey);
-
-    if (verificationData != null) {
-      verificationId = verificationData['verificationId'] as String;
-      forceResendingToken = verificationData['forceResendingToken'] as int?;
-    }
+  void onPasswordChanged(String password) {
+    currentPassword = password;
+    setStateIfMounted();
   }
 
-  void persistVerificationData(String verificationId, int? forceResendingToken) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-
-    // Make a new map using the phone number, verification id, and force resending token
-    final Map<String, dynamic> verificationData = <String, dynamic>{
-      'phoneNumber': widget.phoneNumber,
-      'verificationId': verificationId,
-      'forceResendingToken': forceResendingToken,
-    };
-
-    cacheController.addToCache(key: cacheKey, value: verificationData);
-    verificationId = verificationId;
-    forceResendingToken = forceResendingToken;
-  }
-
-  void clearVerificationData() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    cacheController.removeFromCache(cacheKey);
-
-    verificationId = '';
-    forceResendingToken = null;
-  }
-
-  Future<void> onResendCodeRequested() async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
-
-    setState(() => isBusy = true);
-
-    try {
-      logger.i('Resending verification code to ${widget.phoneNumber}');
-      await auth.verifyPhoneNumber(
-        phoneNumber: widget.phoneNumber,
-        codeSent: onPhoneVerificationCodeSent,
-        codeAutoRetrievalTimeout: onPhoneVerificationCodeTimeout,
-        verificationCompleted: onPhoneVerificationConfirmed,
-        verificationFailed: onPhoneVerificationFailed,
-        forceResendingToken: forceResendingToken,
-      );
-    } catch (ex) {
-      onPhoneVerificationFailed(null);
-    }
-  }
-
-  void onPinChanged(String pin) {
-    currentPin = pin;
-    isPinCorrect = false;
-
-    if (mounted) {
-      setState(() {});
-    }
-
-    if (pin.length == kVerificationCodeLength) {
-      onPinConfirmed();
-    }
-  }
-
-  Future<void> onPinConfirmed() async {
-    if (!isPinValid) {
+  Future<void> onPasswordConfirmed() async {
+    if (!isPasswordValid) {
       return;
     }
 
     await PositiveScaffold.dismissKeyboardIfPresent(context);
-
-    final PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: currentPin,
-    );
-
-    await onPhoneVerificationConfirmed(phoneAuthCredential);
-  }
-
-  void onPhoneVerificationCodeTimeout(String verificationId) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final AppRouter router = providerContainer.read(appRouterProvider);
-
-    clearVerificationData();
-
-    if (!mounted) {
-      return;
-    }
-
-    logger.i('Verification code timeout, returning to previous page');
-    router.removeLast();
-  }
-
-  Future<void> onPhoneVerificationConfirmed(PhoneAuthCredential phoneAuthCredential) async {
-    final User user = providerContainer.read(firebaseAuthProvider).currentUser!;
-
-    if (mounted) {
-      setState(() => isBusy = true);
-    }
+    isBusy = true;
+    setStateIfMounted();
 
     try {
-      switch (type) {
-        case VerificationDialogType.linkPhone:
-          await user.linkWithCredential(phoneAuthCredential);
-          break;
-        case VerificationDialogType.changePhone:
-          await user.updatePhoneNumber(phoneAuthCredential);
-          break;
-        case VerificationDialogType.verifyPhone:
-          await user.reauthenticateWithCredential(phoneAuthCredential);
-          break;
-      }
-
-      isPinCorrect = true;
-      clearVerificationData();
-    } catch (e) {
-      isPinCorrect = false;
+      final UserController userController = ref.read(userControllerProvider.notifier);
+      await userController.confirmPassword(currentPassword);
+      await widget.onVerified();
     } finally {
-      if (mounted) {
-        setState(() => isBusy = false);
-      }
+      isBusy = false;
+      setStateIfMounted();
     }
   }
 
-  Future<void> onContinuePressed() async {
-    final AppRouter router = providerContainer.read(appRouterProvider);
-    final Logger logger = providerContainer.read(loggerProvider);
+  Future<void> onPasswordResetSelected(BuildContext context) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    final String snackbarBody = appLocalizations.page_login_password_forgotten_body;
 
-    if (!isPinCorrect) {
-      logger.e('PIN not confirmed, ignoring continue press');
-      return;
-    }
+    isBusy = true;
+    setStateIfMounted();
 
-    logger.i('User confirmed PIN, returning to previous page');
-    await widget.onVerified();
-
-    router.removeLast();
-  }
-
-  Future<void> onPhoneVerificationFailed(FirebaseAuthException? error) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final AppRouter router = providerContainer.read(appRouterProvider);
-
-    logger.e('Verification failed, returning to previous page: ${error?.message}');
-
-    clearVerificationData();
-    router.removeLast();
-
-    await Future<void>.delayed(kAnimationDurationRegular);
-    throw error ?? Exception('Unknown error');
-  }
-
-  void onPhoneVerificationCodeSent(String verificationId, int? forceResendingToken) {
-    final Logger logger = providerContainer.read(loggerProvider);
-
-    logger.d('Verification code sent: $verificationId to ${widget.phoneNumber} with token $forceResendingToken');
-    this.verificationId = verificationId;
-    this.forceResendingToken = forceResendingToken;
-
-    if (mounted) {
-      setState(() => isBusy = false);
-      WidgetsBinding.instance.addPostFrameCallback((_) => pinFocusNode?.requestFocus());
+    try {
+      await userController.sendPasswordResetEmail(widget.emailAddress);
+      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: Text(snackbarBody)));
+    } finally {
+      isBusy = false;
+      setStateIfMounted();
     }
   }
 
   void onControllerCreated(TextEditingController controller) {
-    pinController = controller;
+    passwordController = controller;
   }
 
   void onFocusNodeCreated(FocusNode focusNode) {
-    pinFocusNode = focusNode;
+    passwordFocusNode = focusNode;
+  }
+
+  PositiveTextFieldIcon? getTextFieldSuffixIcon(DesignColorsModel colors) {
+    if (currentPassword.isEmpty) {
+      return null;
+    }
+
+    return passwordValidationResults.isNotEmpty
+        ? PositiveTextFieldIcon.error(
+            backgroundColor: colors.red,
+          )
+        : PositiveTextFieldIcon.success(backgroundColor: colors.green);
   }
 
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(colors);
 
     final Color tintColor = getTextFieldTintColor(colors);
 
@@ -320,35 +146,23 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: onContinuePressed,
-          isDisabled: !isPinCorrect || isBusy,
-          label: type == VerificationDialogType.verifyPhone ? localisations.shared_actions_update : localisations.shared_actions_continue,
+          onTapped: onPasswordConfirmed,
+          isDisabled: !isPasswordValid || isBusy,
+          label: localizations.shared_actions_continue,
         ),
       ],
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                const PositiveBackButton(),
-                const SizedBox(width: kPaddingSmall),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: totalStepIndex,
-                  currentPage: currentStepIndex,
-                ),
-              ],
-            ),
+            PositiveBackButton(isDisabled: isBusy),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localisations.page_account_verify_account_title,
+              localizations.page_account_verify_account_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
             Text(
-              localisations.page_account_verify_account_body,
+              localizations.page_account_verify_account_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmallMedium),
@@ -358,23 +172,26 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
                 child: PositiveButton(
                   colors: colors,
                   primaryColor: colors.black,
-                  label: localisations.page_account_verify_account_resend_code,
+                  label: localizations.page_account_verify_account_password_forgotten,
                   style: PositiveButtonStyle.text,
                   size: PositiveButtonSize.small,
                   isDisabled: isBusy,
-                  onTapped: onResendCodeRequested,
+                  onTapped: () => onPasswordResetSelected(context),
                 ),
               ),
             ),
             const SizedBox(height: kPaddingLarge),
-            PositivePinEntry(
-              pinLength: kVerificationCodeLength,
+            PositiveTextField(
+              labelText: localizations.page_registration_password_label,
+              initialText: currentPassword,
+              onTextChanged: onPasswordChanged,
+              onTextSubmitted: (str) => onPasswordConfirmed(),
               tintColor: tintColor,
-              isEnabled: !isBusy && !isPinCorrect,
-              onPinChanged: onPinChanged,
-              onControllerCreated: onControllerCreated,
-              onFocusNodeCreated: onFocusNodeCreated,
-              autofocus: false,
+              suffixIcon: suffixIcon,
+              isEnabled: !isBusy,
+              obscureText: true,
+              autofocus: true,
+              autocorrect: false,
             ),
           ],
         ),

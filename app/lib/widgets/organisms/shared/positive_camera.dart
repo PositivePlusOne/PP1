@@ -317,6 +317,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               )
             : const SizedBox.shrink(),
         actions: <Widget>[
+          if (viewMode != PositiveCameraViewMode.camera && widget.leftActionWidget != null) ...<Widget>[
+            Container(
+              padding: const EdgeInsets.only(right: kPaddingMedium),
+              alignment: Alignment.centerRight,
+              child: widget.leftActionWidget!,
+            ),
+          ],
           if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) ...<Widget>[
             Container(
               padding: const EdgeInsets.only(right: kPaddingMedium),

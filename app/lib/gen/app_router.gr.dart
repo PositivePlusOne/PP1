@@ -467,7 +467,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: VerificationDialogPage(
           onVerified: args.onVerified,
-          phoneNumber: args.phoneNumber,
+          emailAddress: args.emailAddress,
           key: args.key,
         ),
       );
@@ -1739,14 +1739,14 @@ class VerificationDialogRoute
     extends PageRouteInfo<VerificationDialogRouteArgs> {
   VerificationDialogRoute({
     required Future<void> Function() onVerified,
-    required String phoneNumber,
+    required String emailAddress,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           VerificationDialogRoute.name,
           args: VerificationDialogRouteArgs(
             onVerified: onVerified,
-            phoneNumber: phoneNumber,
+            emailAddress: emailAddress,
             key: key,
           ),
           initialChildren: children,
@@ -1761,18 +1761,18 @@ class VerificationDialogRoute
 class VerificationDialogRouteArgs {
   const VerificationDialogRouteArgs({
     required this.onVerified,
-    required this.phoneNumber,
+    required this.emailAddress,
     this.key,
   });
 
   final Future<void> Function() onVerified;
 
-  final String phoneNumber;
+  final String emailAddress;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
+    return 'VerificationDialogRouteArgs{onVerified: $onVerified, emailAddress: $emailAddress, key: $key}';
   }
 }

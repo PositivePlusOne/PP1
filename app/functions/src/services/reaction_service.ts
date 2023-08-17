@@ -28,9 +28,13 @@ export namespace ReactionService {
     }
 
     export async function addReaction(reaction: ReactionJSON): Promise<any> {
+        if (!reaction.activityId || !reaction.originFeed) {
+            throw new Error("Reaction must have an activityId and originFeed");
+        }
+
         const client: StreamClient<DefaultGenerics> = await FeedService.getFeedsClient();
-        const response = await client.reactions.add(reaction.reactionType!, reaction.activityId!, {
-            ...reaction,
+        const response = await client.reactions.add(reaction.reactionType!, reaction.activityId!, { ...reaction }, {
+            userId: reaction.senderId,
         });
 
         return await DataService.updateDocument({
@@ -79,6 +83,6 @@ export namespace ReactionService {
 
         const response = await client.reactions.filter(params);
 
-        return response.results.map((reaction) => reaction.data as ReactionJSON);
+        return response.results.map((reaction: any) => reaction.data as ReactionJSON);
     }
 }

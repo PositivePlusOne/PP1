@@ -25,11 +25,18 @@ export namespace CommentsService {
     * @returns {Promise<any>} The new comment.
     */
     export async function addComment(comment: CommentJSON, client: StreamClient<DefaultGenerics>): Promise<any> {
-        if (!comment.activityId) {
+        if (!comment.activityId || !comment.originFeed) {
             throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
         }
 
-        const response = await client.reactions.add("comment", comment.activityId, {...comment}, {userId: comment.senderId});
+        functions.logger.log("Adding comment", {
+            comment,
+        });
+
+        const response = await client.reactions.add("comment", comment.activityId,
+            {...comment},
+            { userId: comment.senderId },
+        );
 
         return await DataService.updateDocument({
             schemaKey: "comments",
@@ -91,8 +98,6 @@ export namespace CommentsService {
         if (lastCommentId) {
             params.id_lt = lastCommentId; // fetch comments with IDs less than the provided lastCommentId
         }
-
-        functions.logger.log("params", params);
 
         const response = await client.reactions.filter(params);
         const responseData = response.results.map((reaction) => {
