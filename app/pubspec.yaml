@@ -46,8 +46,8 @@ dependencies:
   mixpanel_flutter: ^2.1.1
   freerasp: ^6.1.0
 
-  stream_chat_flutter: ^7.0.0-beta.1
-  stream_chat_persistence: ^7.0.0-beta.1
+  stream_chat_flutter: ^6.9.0
+  stream_chat_persistence: ^6.8.0
   algolia: ^1.1.2
 
   google_mlkit_face_detection: 0.6.0
@@ -55,7 +55,7 @@ dependencies:
 
   # Routing and View Management
   auto_route: ^7.7.0
-  share_plus: ^7.0.2
+  share_plus: ^7.1.0
 
   # Logging and Tracing
   logger: ^2.0.1
