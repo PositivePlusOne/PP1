@@ -339,7 +339,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           PositiveTapBehaviour(
             onTap: onInternalHeaderTap,
             child: ActivityPostHeadingWidget(
-              activity: widget.activity,
+              flMetaData: widget.activity.flMeta,
               publisher: publisher,
               onOptions: onPostOptionsSelected,
             ),

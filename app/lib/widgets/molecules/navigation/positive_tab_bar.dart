@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -84,11 +85,13 @@ class PositiveTabItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    final Color selectedTextColour = primaryColour.exceedsBrightnessUpperRestriction ? colours.colorGray7 : colours.white;
     return PositiveButton(
-      colors: colors,
+      colors: colours,
+      iconColorOverride: isSelected ? selectedTextColour : colours.colorGray6,
       label: label,
-      primaryColor: isSelected ? primaryColour : colors.white,
+      primaryColor: isSelected ? primaryColour : colours.white,
       style: PositiveButtonStyle.tab,
       size: PositiveButtonSize.small,
       onTapped: onTapped,
