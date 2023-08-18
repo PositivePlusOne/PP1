@@ -311,7 +311,12 @@
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",
-    "shared_user_type_generic_me": "Only Me",
+    "shared_user_type_generic_me": "P{rivate}",
+    
+    "shared_comment_type_generic_everyone": "All Users",
+    "shared_comment_type_generic_connections": "Connections Only",
+    "shared_comment_type_generic_followers": "Followers Only",
+    "shared_comment_type_generic_me": "Only Poster",
 
     "shared_time_just_now": "Just Now",
     "shared_time_minutes_ago": "{minutes} Minutes Ago",
@@ -428,6 +433,8 @@
 
     "shared_navigation_tooltips_notifications": "Notifications",
     "shared_navigation_tooltips_account": "Account Settings",
+
+    "shared_comments": "Comments",
 
     "shared_report_placeholder_label": "Select Reason",
     "shared_report_types_unknown": "Unknown",

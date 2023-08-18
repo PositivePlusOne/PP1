@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/widgets/organisms/post/post_comment_box.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,7 +16,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/behaviours/positive_comment_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
@@ -61,7 +61,16 @@ class PostPage extends ConsumerWidget {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
         PositiveScaffoldComponent.footerPadding,
+        PositiveScaffoldComponent.footerWidgets,
       },
+      bottomNavigationBar: PostCommentBox(
+        mediaQuery: MediaQuery.of(context),
+        commentTextController: viewModel.commentTextController,
+        onCommentChanged: viewModel.onCommentChanged,
+        onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
+        colours: colors,
+        isBusy: state.isBusy,
+      ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           horizontalPadding: kPaddingNone,
@@ -89,20 +98,32 @@ class PostPage extends ConsumerWidget {
               onHeaderTapped: () {},
               onImageTapped: (media) => router.push(MediaRoute(media: media)),
             ),
-            Padding(
-              padding: const EdgeInsets.all(kPaddingMedium),
-              child: PositiveTextField(
-                hintText: 'Write a comment...',
-                textEditingController: viewModel.commentTextController,
-                onTextChanged: viewModel.onCommentChanged,
-                onTextSubmitted: (_) => viewModel.onPostCommentRequested(),
-                isEnabled: !state.isBusy,
-              ),
-            ),
           ],
         ),
         if (activity.flMeta?.id?.isNotEmpty ?? false) ...<Widget>[
+          const SliverToBoxAdapter(
+            child: SizedBox(height: kPaddingSmall),
+          ),
+          SliverToBoxAdapter(
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colors.white,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(kBorderRadiusMassive),
+                  ),
+                ),
+                width: kPaddingMassive,
+                height: kPaddingExtraSmall,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: kPaddingExtraSmall),
+          ),
           PositiveCommentPaginationBehaviour(
+            reactionMode: activity.securityConfiguration?.reactionMode,
             activityId: activity.flMeta!.id!,
             refreshController: viewModel.refreshController,
             feed: feed,

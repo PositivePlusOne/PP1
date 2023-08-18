@@ -3,7 +3,15 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/molecules/content/positive_comment.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
@@ -23,6 +31,8 @@ import 'package:app/providers/events/content/comments.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/comment_api_service.dart';
 import 'package:app/widgets/state/positive_comments_state.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:unicons/unicons.dart';
 import '../../dtos/database/activities/comments.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
@@ -32,6 +42,7 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
     required this.activityId,
     required this.feed,
     required this.refreshController,
+    this.reactionMode,
     this.onPageLoaded,
     this.windowSize = 10,
     super.key,
@@ -39,6 +50,8 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
 
   final String activityId;
   final TargetFeed feed;
+
+  final ActivitySecurityConfigurationMode? reactionMode;
 
   final int windowSize;
   final RefreshController refreshController;
@@ -250,20 +263,110 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
 
   @override
   Widget build(BuildContext context) {
-    const Widget loadingIndicator = PositivePostLoadingIndicator();
-    return PagedSliverList.separated(
-      shrinkWrapFirstPageIndicators: true,
-      pagingController: commentState.pagingController,
-      separatorBuilder: (_, __) => const SizedBox(height: kPaddingLarge),
-      builderDelegate: PagedChildBuilderDelegate<Comment>(
-        animateTransitions: true,
-        transitionDuration: kAnimationDurationRegular,
-        itemBuilder: (_, item, index) {
-          return Text('item: $item - index: $index');
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    String commentShareType = "";
+
+    if (widget.reactionMode != null) {
+      widget.reactionMode!.when(
+        public: () {
+          commentShareType = localisations.shared_comment_type_generic_everyone;
         },
-        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-      ),
+        followersAndConnections: () {
+          commentShareType = localisations.shared_comment_type_generic_followers;
+        },
+        connections: () {
+          commentShareType = localisations.shared_comment_type_generic_connections;
+        },
+        private: () {
+          commentShareType = localisations.shared_comment_type_generic_me;
+        },
+      );
+    }
+
+    const Widget loadingIndicator = PositivePostLoadingIndicator();
+
+    return MultiSliver(
+      children: [
+        //? Comments header
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
+            ),
+            padding: const EdgeInsets.all(kPaddingMedium),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  localisations.shared_comments,
+                  style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
+                ),
+                if (widget.reactionMode != null)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colours.colorGray1,
+                      borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: kPaddingSmall,
+                      vertical: kPaddingExtraSmall,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          UniconsLine.comment_alt_notes,
+                          size: kIconExtraSmall,
+                          color: colours.colorGray6,
+                        ),
+                        const SizedBox(width: kPaddingExtraSmall),
+                        Text(
+                          commentShareType,
+                          style: typography.styleButtonBold.copyWith(color: colours.colorGray6),
+                        ),
+                      ],
+                    ),
+                  )
+              ],
+            ),
+          ),
+        ),
+        //? comments listed
+        PagedSliverList.separated(
+          shrinkWrapFirstPageIndicators: true,
+          pagingController: commentState.pagingController,
+          separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
+          builderDelegate: PagedChildBuilderDelegate<Comment>(
+            animateTransitions: true,
+            transitionDuration: kAnimationDurationRegular,
+            itemBuilder: (_, comment, index) {
+              return PositiveComment(comment: comment, isFirst: index == 0);
+            },
+            firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+            newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+          ),
+        ),
+        //? Load additional comments?
+        const SizedBox(
+          height: kBorderThicknessMedium,
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: colours.white,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(kBorderRadiusLarge),
+            ),
+          ),
+          height: kCommentFooter,
+          alignment: Alignment.center,
+          child: const PositiveLoadingIndicator(
+            circleRadius: 5,
+            width: 40,
+          ),
+        ),
+      ],
     );
   }
 }
