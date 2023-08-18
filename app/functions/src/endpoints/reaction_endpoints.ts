@@ -5,12 +5,13 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { UserService } from "../services/user_service";
 import { ActivitiesService } from "../services/activities_service";
 import { ReactionService } from "../services/reaction_service";
+import { FeedName } from "../constants/default_feeds";
+import { ReactionJSON } from "../dto/reactions";
 
 export namespace ReactionEndpoints {
-    
-    // Post Reaction
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
+        const feed = request.data.feed || FeedName.User;
         const activityId = request.data.activityId;
         const reactionType = request.data.reactionType;
 
@@ -25,18 +26,12 @@ export namespace ReactionEndpoints {
             activityId: activityId,
             senderId: uid,
             reactionType: reactionType,
-        };
-
-        // Check if reaction exists
-        if (ReactionService.UNIQUE_REACTIONS.includes(reactionType)) {
-            const exists = await ReactionService.checkReactionExistsForSenderAndActivity(uid, activityId, reactionType);
-            if (exists) {
-                throw new Error(`Reaction already exists for activity: ${activityId} and reaction type: ${reactionType}`);
-            }
-        }
+            originFeed: `${feed}:${uid}`,
+        } as ReactionJSON;
 
         // Create and response
         const responseReaction = await ReactionService.addReaction(reactionJSON);
+
         return buildEndpointResponse(context, {
             sender: uid,
             data: [responseReaction],

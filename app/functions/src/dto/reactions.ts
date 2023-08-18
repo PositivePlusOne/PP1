@@ -8,6 +8,7 @@ export interface ReactionJSON {
     reactionId?: string;
     senderId?: string;
     reactionType?: string;
+    originFeed?: string;
 }
 
 export class Reaction {
@@ -16,6 +17,7 @@ export class Reaction {
     reactionId?: string;
     senderId?: string;
     reactionType?: string;
+    originFeed?: string;
 
     constructor(json: ReactionJSON) {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
@@ -23,6 +25,7 @@ export class Reaction {
         this.reactionId = json.reactionId;
         this.senderId = json.senderId;
         this.reactionType = json.reactionType;
+        this.originFeed = json.originFeed;
     }
 
     public toJSON(): ReactionJSON {
@@ -32,6 +35,7 @@ export class Reaction {
             reactionId: this.reactionId,
             senderId: this.senderId,
             reactionType: this.reactionType,
+            originFeed: this.originFeed,
         };
     }
 

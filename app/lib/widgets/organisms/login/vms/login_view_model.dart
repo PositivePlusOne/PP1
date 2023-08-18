@@ -1,11 +1,14 @@
+// ignore_for_file: avoid_public_notifier_properties
+
 // Dart imports:
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:fluent_validation/fluent_validation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,6 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../providers/user/user_controller.dart';
@@ -205,7 +209,20 @@ class LoginViewModel extends _$LoginViewModel {
     await appRouter.push(const RegistrationAccountRoute());
   }
 
-  Future<void> onPasswordResetSelected() async {}
+  Future<void> onPasswordResetSelected(BuildContext context) async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    final String snackbarBody = appLocalizations.page_login_password_forgotten_body;
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      await userController.sendPasswordResetEmail(state.email);
+      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: Text(snackbarBody)));
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
 
   Future<void> onWelcomeBackContinueSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);

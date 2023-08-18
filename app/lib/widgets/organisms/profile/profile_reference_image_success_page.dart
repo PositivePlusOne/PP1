@@ -34,7 +34,7 @@ class ProfileReferenceImageSuccessPage extends ConsumerWidget {
     final ProfileReferenceImageViewModel viewModel = ref.watch(profileReferenceImageViewModelProvider.notifier);
 
     return PositiveScaffold(
-      decorations: buildType3ScaffoldDecorations(colors),
+      decorations: buildType4ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[

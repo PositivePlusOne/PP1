@@ -1,0 +1,31 @@
+// Package imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
+
+List<AwesomeFilter> allSupportedFilters = [
+  AwesomeFilter.AddictiveBlue,
+  AwesomeFilter.Amaro,
+  AwesomeFilter.Ashby,
+  AwesomeFilter.Brannan,
+  AwesomeFilter.Brooklyn,
+  AwesomeFilter.Clarendon,
+  AwesomeFilter.Crema,
+  AwesomeFilter.Dogpatch,
+  AwesomeFilter.Gingham,
+  AwesomeFilter.Ginza,
+  AwesomeFilter.Hefe,
+  AwesomeFilter.Hudson,
+  AwesomeFilter.Inkwell,
+  AwesomeFilter.Juno,
+  AwesomeFilter.Lark,
+  AwesomeFilter.Ludwig,
+  AwesomeFilter.Moon,
+  AwesomeFilter.Perpetua,
+  AwesomeFilter.Reyes,
+  AwesomeFilter.Slumber,
+  AwesomeFilter.Stinson,
+  AwesomeFilter.Sutro,
+  AwesomeFilter.Walden,
+  AwesomeFilter.Willow,
+  AwesomeFilter.XProII,
+  AwesomeFilter.None,
+];

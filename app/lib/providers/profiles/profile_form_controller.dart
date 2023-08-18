@@ -800,12 +800,37 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
-  Future<void> onLocationSkipped() async {
+  Future<void> onLocationSkipped({bool removeLocation = true}) async {
     final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     logger.i('Skipping location');
 
-    state = state.copyWith(place: null);
-    await onLocationConfirmed();
+    if (removeLocation) {
+      state = state.copyWith(place: null);
+    }
+
+    final bool hasSamePlace = profileController.state.currentProfile?.place?.placeId == state.place?.placeId;
+    final bool hasSameDescription = profileController.state.currentProfile?.place?.description == state.locationSearchQuery;
+
+    final bool isNullLocation = (hasSamePlace && hasSameDescription) && profileController.state.currentProfile?.place?.placeId == null;
+    final bool isDifferentLocation = (!hasSamePlace || !hasSameDescription) && removeLocation;
+    final bool shouldNotifyBackend = isNullLocation || isDifferentLocation;
+
+    if (shouldNotifyBackend) {
+      await onLocationConfirmed();
+      return;
+    }
+
+    switch (state.formMode) {
+      case FormMode.create:
+        appRouter.removeUntil((route) => true);
+        await appRouter.push(const HomeRoute());
+        break;
+      case FormMode.edit:
+        appRouter.removeLast();
+        break;
+    }
   }
 
   Future<void> onLocationConfirmed() async {
@@ -820,20 +845,6 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      final String description = state.locationSearchQuery;
-
-      if (state.place != null) {
-        final bool hasSamePlace = profileController.state.currentProfile?.place?.placeId == state.place?.placeId;
-        final bool hasSameDescription = profileController.state.currentProfile?.place?.description == description;
-
-        if (hasSamePlace && hasSameDescription) {
-          logger.i('Location is already set to ${state.place?.placeId}');
-          return;
-        }
-
-        state = state.copyWith(place: state.place!.copyWith(description: description));
-      }
-
       final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updatePlace(state.place, visibilityFlags);
 

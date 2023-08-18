@@ -184,6 +184,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     }
 
     await Promise.all(joinPromises);
+    const populatePromises = [] as Promise<any>[];
 
     // Populate
     for (const obj of data) {
@@ -211,7 +212,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     break;
                 }
 
-                responseData.data[schema].push(new Activity(obj));
+                const activity = new Activity(obj);
+                responseData.data[activitySchemaKey].push(activity);
                 break;
             case profileSchemaKey:
                 const profile = new Profile(obj);
@@ -220,14 +222,14 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
                     const relationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
                     const isConnected = relationshipMember?.hasConnected || false;
-                    
-                    functions.logger.debug(`Relationship Filter`, { flid, relationship, sender, profile, isConnected, relationshipMember});
 
                     profile.removeFlaggedData(isConnected);
                     profile.removePrivateData();
                 }
 
-                responseData.data[schema].push(profile);
+                populatePromises.push(profile.appendFollowersAndFollowingData().finally(() => {
+                    responseData.data[profileSchemaKey].push(profile);
+                }));
                 break;
             case relationshipSchemaKey:
                 responseData.data[schema].push(new Relationship(obj));
@@ -248,6 +250,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
         }
     }
+
+    await Promise.all(populatePromises);
 
     functions.logger.debug(`Built endpoint response.`, { sender, responseData });
     return safeJsonStringify(responseData);

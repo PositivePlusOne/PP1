@@ -46,6 +46,7 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
   bool _isFocused = false;
 
   Color getTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
+    // ignore: invalid_use_of_visible_for_testing_member
     if (controller.state.biography.isEmpty) {
       return colors.purple;
     }
@@ -87,6 +88,7 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
         backgroundColor: colors.black,
         safeAreaQueryData: mediaQueryData,
       ),
+      visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
       headingWidgets: <Widget>[
         SliverFillRemaining(
           child: Column(

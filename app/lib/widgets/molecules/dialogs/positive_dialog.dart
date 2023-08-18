@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +26,7 @@ class PositiveDialog extends ConsumerWidget {
     this.backgroundOpacity = kBackgroundOpacity,
     this.isDisabled = false,
     this.heroTag = '',
+    this.barrierOpacity = kBarrierOpacity,
     super.key,
   });
 
@@ -34,6 +36,7 @@ class PositiveDialog extends ConsumerWidget {
   final bool isDisabled;
   final String heroTag;
 
+  final double barrierOpacity;
   final double backgroundOpacity;
 
   static const double kBorderRadius = 40.0;
@@ -41,6 +44,7 @@ class PositiveDialog extends ConsumerWidget {
   static const double kMargin = 10.0;
   static const double kBackgroundOpacity = 0.15;
   static const double kBarrierOpacity = 0.85;
+  static const double kCalandarOpacity = 0.95;
   static const double kSigmaBlur = 2.0;
 
   static PositiveDialog buildDialog({
@@ -61,19 +65,14 @@ class PositiveDialog extends ConsumerWidget {
   }) async {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    return await showDialog(
+    return await showCupertinoDialog(
       context: context,
       barrierDismissible: barrierDismissible,
       useRootNavigator: true,
-      useSafeArea: useSafeArea,
-      traversalEdgeBehavior: TraversalEdgeBehavior.leaveFlutterView,
-      builder: (_) => Material(
-        color: colors.black.withOpacity(barrierOpacity),
-        child: PositiveDialog(
-          title: title,
-          backgroundOpacity: backgroundOpacity,
-          child: child,
-        ),
+      builder: (_) => PositiveDialog(
+        title: title,
+        backgroundOpacity: backgroundOpacity,
+        child: child,
       ),
     );
   }
@@ -92,51 +91,53 @@ class PositiveDialog extends ConsumerWidget {
       child: ScaffoldMessenger(
         child: Builder(builder: (context) {
           return Scaffold(
-            backgroundColor: Colors.transparent,
+            backgroundColor: colors.black.withOpacity(barrierOpacity),
             body: CustomScrollView(
               slivers: <Widget>[
                 SliverPadding(
                   padding: EdgeInsets.only(bottom: bottomViewInsets),
                   sliver: SliverFillRemaining(
-                    child: Center(
-                      child: SingleChildScrollView(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(kBorderRadius),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
-                            child: Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.all(kMargin),
-                              padding: const EdgeInsets.all(kPadding),
-                              decoration: BoxDecoration(
-                                color: colors.colorGray3.withOpacity(backgroundOpacity),
-                                borderRadius: BorderRadius.circular(kBorderRadius),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Text(
-                                          title,
-                                          style: typography.styleTitle.copyWith(color: colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(kMargin),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(kBorderRadius),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(kPadding),
+                                decoration: BoxDecoration(
+                                  color: colors.colorGray3.withOpacity(backgroundOpacity),
+                                  borderRadius: BorderRadius.circular(kBorderRadius),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            title,
+                                            style: typography.styleTitle.copyWith(color: colors.white),
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: kPaddingMedium),
-                                      PositiveButton.appBarIcon(
-                                        colors: colors,
-                                        icon: UniconsLine.multiply,
-                                        primaryColor: title.isNotEmpty ? colors.white : colors.black,
-                                        size: PositiveButtonSize.small,
-                                        style: PositiveButtonStyle.text,
-                                        isDisabled: isDisabled,
-                                        onTapped: () => Navigator.of(context).pop(),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: kPaddingMedium),
-                                  child,
-                                ],
+                                        const SizedBox(width: kPaddingMedium),
+                                        PositiveButton.appBarIcon(
+                                          colors: colors,
+                                          icon: UniconsLine.multiply,
+                                          primaryColor: title.isNotEmpty ? colors.white : colors.black,
+                                          size: PositiveButtonSize.small,
+                                          style: PositiveButtonStyle.text,
+                                          isDisabled: isDisabled,
+                                          onTapped: () => Navigator.of(context).pop(),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: kPaddingMedium),
+                                    child,
+                                  ],
+                                ),
                               ),
                             ),
                           ),

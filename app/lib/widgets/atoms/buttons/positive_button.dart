@@ -164,8 +164,8 @@ class PositiveButton extends StatefulWidget {
 
   /// The button padding for most buttons in the design system.
   static const EdgeInsets kButtonPaddingLarge = EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0);
-  static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0);
-  static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0);
+  static const EdgeInsets kButtonPaddingMedium = EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0);
+  static const EdgeInsets kButtonPaddingSmall = EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingTiny = EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0);
   static const EdgeInsets kButtonPaddingNavigation = EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0);
 
@@ -189,6 +189,8 @@ class PositiveButton extends StatefulWidget {
   // Opacities used in the buttons
   static const double kButtonOpacityFull = 1.0;
   static const double kButtonOpacityGhostEnabled = 0.65;
+  static const double kButtonOpacityOutlineBorder = 0.5;
+  static const double kButtonOpacityOutlineBackground = 0.1;
   static const double kButtonOpacityGhost = 0.25;
   static const double kButtonOpacityMedium = 0.3;
   static const double kButtonOpacityLow = 0.2;
@@ -389,13 +391,13 @@ class PositiveButtonState extends State<PositiveButton> {
         break;
 
       case PositiveButtonStyle.outline:
-        materialColor = Colors.transparent;
-        backgroundColor = Colors.transparent;
+        materialColor = widget.colors.white.withOpacity(PositiveButton.kButtonOpacityOutlineBackground);
+        backgroundColor = widget.colors.white.withOpacity(PositiveButton.kButtonOpacityOutlineBackground);
         iconColor = primaryColor;
         textColor = primaryColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidth;
-        borderColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityMedium);
+        borderColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityOutlineBorder);
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
 
         if (widget.isFocused) {
@@ -640,8 +642,8 @@ class PositiveButtonState extends State<PositiveButton> {
           ],
           Padding(
             padding: EdgeInsets.only(
-              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingSmall : 0.0,
-              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingSmall : 0.0,
+              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingExtraSmall : 0.0,
+              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingExtraSmall : 0.0,
             ),
             child: SizedBox(
               height: iconRadius,
@@ -675,11 +677,6 @@ class PositiveButtonState extends State<PositiveButton> {
           ],
         ],
       );
-    }
-
-    //* Verify buttons are always consistent sizes.
-    if (calculatedPadding != EdgeInsets.zero) {
-      calculatedPadding = calculatedPadding - EdgeInsets.all(borderWidth);
     }
 
     final double? widgetHeight = widget.height == null ? null : widget.height! - (paddingWidth ?? kPaddingNone);

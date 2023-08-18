@@ -7,6 +7,13 @@
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:universal_platform/universal_platform.dart';
+
+// Project imports:
+import 'package:app/extensions/color_extensions.dart';
 
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
@@ -19,6 +26,7 @@ const Duration kAnimationDurationExtended = Duration(milliseconds: 450);
 const Duration kAnimationDurationDebounce = Duration(milliseconds: 500);
 const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
+const Duration kAnimationDurationHintPreview = Duration(milliseconds: 3000);
 
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 
@@ -79,7 +87,7 @@ const double kIconHeader = 70.0;
 const double kIconDirectoryHeader = 100.0;
 
 // Dialogs
-const Size kDefaultDatePickerDialogSize = Size(325, 400);
+const Size kDefaultDatePickerDialogSize = Size(375, 400);
 
 // Maps
 const double kDefaultZoomLevel = 12;
@@ -99,3 +107,36 @@ const String kObscuringTextCharacter = '*';
 const int kMaxLengthTruncatedPost = 75;
 const int kMaxLengthCaption = 320;
 const int kMaxLengthAltText = 120;
+
+// System
+SystemUiOverlayStyle buildSystemUiOverlayStyle({
+  required Color backgroundColor,
+  Color? appBarColor,
+}) {
+  Color statusColor = Colors.transparent;
+  Color navigationColor = backgroundColor;
+  Color dividerColor = backgroundColor.complimentDividerColor;
+  Brightness statusBarBrightness = backgroundColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+  Brightness statusBarIconBrightness = backgroundColor.computedSystemBrightness;
+  Brightness navigationBarBrightness = backgroundColor.computedSystemBrightness;
+
+  if (appBarColor != null) {
+    statusBarBrightness = appBarColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+    statusBarIconBrightness = appBarColor.computedSystemBrightness;
+  }
+
+  // If iOS, reverse the brightnesses (Dunno why, but it works)
+  if (UniversalPlatform.isIOS) {
+    statusBarBrightness = statusBarBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+    statusBarIconBrightness = statusBarIconBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+  }
+
+  return SystemUiOverlayStyle(
+    statusBarColor: statusColor,
+    statusBarIconBrightness: statusBarIconBrightness,
+    systemNavigationBarColor: navigationColor,
+    systemNavigationBarIconBrightness: navigationBarBrightness,
+    statusBarBrightness: statusBarBrightness,
+    systemNavigationBarDividerColor: dividerColor,
+  );
+}

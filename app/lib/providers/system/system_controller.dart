@@ -23,6 +23,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/gender_controller.dart';
 import 'package:app/providers/content/hiv_status_controller.dart';
 import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/providers/content/tags_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
@@ -142,6 +143,7 @@ class SystemController extends _$SystemController {
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
 
     //* Data is assumed to be correct, if not the app cannot be used
     final EndpointResponse endpointResponse = await systemApiService.getSystemConfiguration();
@@ -156,6 +158,7 @@ class SystemController extends _$SystemController {
     interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
     genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
     hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
+    tagsController.updateRecommendedTags(payload['tags'] as List<dynamic>);
 
     if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
       final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();

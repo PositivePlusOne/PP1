@@ -2,7 +2,6 @@
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:universal_platform/universal_platform.dart';
@@ -65,15 +64,6 @@ extension ColorExtensions on Color {
     return exceedsBrightnessUpperRestriction ? Brightness.dark : Brightness.light;
   }
 
-  SystemUiOverlayStyle get systemUiOverlayStyle => SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: computedSystemBrightness,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: computedSystemBrightness,
-        statusBarBrightness: computedSystemBrightness,
-        systemNavigationBarDividerColor: Colors.transparent,
-      );
-
   Color getNextSelectableProfileColor() {
     final List<Color> colors = DesignColorsModel.selectableProfileColors;
     int currentIndex = colors.indexOf(this);
@@ -88,5 +78,10 @@ extension ColorExtensions on Color {
   Color get complimentTextColor {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return exceedsBrightnessUpperRestriction ? colors.black : colors.white;
+  }
+
+  Color get complimentDividerColor {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    return exceedsBrightnessUpperRestriction ? colors.colorGray2 : colors.colorGray2;
   }
 }

@@ -31,7 +31,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
-    final ProfileFormState profileFormState = ref.watch(profileFormControllerProvider);
+    final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
@@ -40,7 +40,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
     final ProfileReferenceImageViewModel viewModel = ref.watch(profileReferenceImageViewModelProvider.notifier);
 
     return PositiveScaffold(
-      decorations: buildType3ScaffoldDecorations(colors),
+      decorations: buildType4ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
@@ -50,7 +50,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
                   colors: colors,
                   primaryColor: colors.black,
                   onTapped: () => controller.onBackSelected(ProfileReferenceImageWelcomeRoute),
-                  isDisabled: profileFormState.isBusy,
+                  isDisabled: state.isBusy,
                   label: localizations.shared_actions_back,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
@@ -99,8 +99,9 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: viewModel.onRequestCamera,
-          label: localizations.shared_actions_continue,
+          isDisabled: state.isBusy,
+          onTapped: () => viewModel.onRequestCamera(context),
+          label: state.isBusy ? localizations.shared_actions_uploading : localizations.shared_actions_continue,
         ),
       ],
     );

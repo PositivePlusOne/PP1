@@ -172,3 +172,44 @@ List<PositiveScaffoldDecoration> buildType3ScaffoldDecorations(DesignColorsModel
     ),
   ].map((e) => PositiveScaffoldDecoration.fromPageDecoration(e)).toList();
 }
+
+List<PositiveScaffoldDecoration> buildType4ScaffoldDecorations(DesignColorsModel colors) {
+  return <PositiveScaffoldDecorationModel>[
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationStampCertified,
+      alignment: Alignment.topLeft,
+      color: colors.teal,
+      scale: 1.4,
+      offsetX: -25.0,
+      offsetY: 0,
+      rotationDegrees: 0.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationFace,
+      alignment: Alignment.topRight,
+      color: colors.pink,
+      scale: 1,
+      offsetX: 0.0,
+      offsetY: -50.0,
+      rotationDegrees: 20.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationEye,
+      alignment: Alignment.bottomLeft,
+      color: colors.purple,
+      scale: 0.9,
+      offsetX: -50.0,
+      offsetY: -30.0,
+      rotationDegrees: -10.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationArrowHollowRight,
+      alignment: Alignment.bottomRight,
+      color: colors.yellow,
+      scale: 1,
+      offsetX: 0.0,
+      offsetY: -110.0,
+      rotationDegrees: 20.0,
+    ),
+  ].map((e) => PositiveScaffoldDecoration.fromPageDecoration(e)).toList();
+}

@@ -15,6 +15,16 @@ extension StateExtensions on State {
 }
 
 extension WidgetListExtensions on List<Widget> {
+  Widget padded(EdgeInsetsGeometry padding) {
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: this,
+      ),
+    );
+  }
+
   List<Widget> spaceWithVertical(double space) {
     final List<Widget> result = <Widget>[];
     for (int i = 0; i < length; i++) {

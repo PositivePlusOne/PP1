@@ -38,9 +38,7 @@ class App extends ConsumerWidget {
 
     return MaterialApp.router(
       builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
-      theme: ThemeData(
-        useMaterial3: false,
-      ),
+      theme: ThemeData(useMaterial3: false),
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           RouteAnalyticsObserver(),
@@ -50,6 +48,7 @@ class App extends ConsumerWidget {
       routeInformationProvider: appRouter.routeInfoProvider(),
       scrollBehavior: PositiveScrollBehaviour(),
       showSemanticsDebugger: systemControllerState.showingSemanticsDebugger,
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         RefreshLocalizations.delegate,

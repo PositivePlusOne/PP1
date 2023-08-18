@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
@@ -24,13 +24,11 @@ class CreatePostPage extends ConsumerStatefulWidget {
   const CreatePostPage({
     this.isEditPage = false,
     this.activityData,
-    this.localisations,
     super.key,
-  }) : assert(isEditPage == false || (activityData != null && localisations != null));
+  }) : assert(isEditPage == false || (activityData != null));
 
   final bool isEditPage;
   final ActivityData? activityData;
-  final AppLocalizations? localisations;
 
   @override
   ConsumerState<CreatePostPage> createState() => _CreatePostPageState();
@@ -63,6 +61,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
         onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
         child: Scaffold(
           backgroundColor: colours.black,
+          resizeToAvoidBottomInset: false,
           body: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
             child: Stack(
@@ -75,9 +74,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     child: PositiveCamera(
                       onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
                       cameraNavigation: (_) {
-                        return SizedBox(
-                          //? Navigation bar height, safe area at bottom, padding below navigation, and padding above navigatio. In that order
-                          height: kCreatePostNavigationHeight + mediaQueryData.padding.bottom + kPaddingMedium + kPaddingExtraLarge,
+                        return const SizedBox(
+                          height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
                         );
                       },
                       leftActionWidget: CameraFloatingButton.postWithoutImage(
@@ -91,21 +89,32 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     ),
                   ),
                 ],
+                if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
+                  PositiveImageEditor(
+                    galleryEntry: state.galleryEntries.firstOrNull,
+                    currentFilter: state.currentFilter,
+                    onFilterSelected: viewModel.onFilterSelected,
+                    onBackButtonPressed: viewModel.onWillPopScope,
+                  ),
+                ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.galleryEntries.length == 1) ...[
                   Positioned.fill(
-                    child: Image.memory(
-                      state.galleryEntries.first.data ?? Uint8List(0),
-                      fit: BoxFit.cover,
+                    child: ColorFiltered(
+                      colorFilter: ColorFilter.matrix(state.currentFilter.matrix),
+                      child: Image.memory(
+                        state.galleryEntries.first.data ?? Uint8List(0),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-              Create Post Dialog              -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage != CreatePostCurrentPage.camera)
+                if (state.currentCreatePostPage.isCreationDialog) ...<Widget>[
                   Positioned.fill(
                     child: CreatePostDialogue(
                       isBusy: state.isBusy,
@@ -123,6 +132,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       tags: state.tags,
                     ),
                   ),
+                ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -135,7 +145,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTapPost: () {},
                     onTapClip: () {},
                     onTapEvent: () {},
-                    onTapFlex: () => viewModel.onPostFinished(context),
+                    onTapFlex: () => viewModel.onFlexButtonPressed(context),
                     activeButton: state.activeButton,
                     flexCaption: state.activeButtonFlexText,
                     isEnabled: viewModel.isNavigationEnabled && !state.isBusy,

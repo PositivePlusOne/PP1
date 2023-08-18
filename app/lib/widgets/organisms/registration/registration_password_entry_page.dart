@@ -120,7 +120,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingLarge),
                 PositiveTextField(
-                  labelText: localizations.page_registration_password,
+                  labelText: localizations.page_registration_password_label,
                   initialText: state.password,
                   onTextChanged: controller.onPasswordChanged,
                   tintColor: tintColor,

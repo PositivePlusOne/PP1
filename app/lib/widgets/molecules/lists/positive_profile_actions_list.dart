@@ -282,10 +282,12 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
           context: context,
           child: const ProfileDisconnectDialog(),
         ),
-        icon: UniconsLine.user_check,
+        label: localizations.shared_actions_connect,
+        icon: UniconsLine.hourglass,
         tooltip: hasPendingConnectionToTargetUser ? localizations.shared_actions_connection_pending : localizations.shared_actions_disconnect,
-        layout: PositiveButtonLayout.iconOnly,
+        layout: PositiveButtonLayout.iconRight,
         size: PositiveButtonSize.medium,
+        forceIconPadding: true,
         isDisabled: true,
       );
 
@@ -344,7 +346,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser) {
       final Widget moreActionsButton = PositiveButton(
         colors: colors,
-        primaryColor: colors.black,
+        primaryColor: targetProfileColor.complimentTextColor,
         onTapped: onMoreActionsTapped,
         icon: UniconsLine.ellipsis_h,
         tooltip: localizations.shared_actions_more,

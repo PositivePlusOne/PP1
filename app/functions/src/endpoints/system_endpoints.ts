@@ -15,6 +15,7 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
 import { TagsService } from "../services/tags_service";
+import { ProfileJSON } from "../dto/profile";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -98,7 +99,9 @@ export namespace SystemEndpoints {
         userProfile = await ProfileService.createProfile(uid, email, phone, locale);
       }
 
-      profile = userProfile;
+      functions.logger.info("Getting profile", { uid, userProfile });
+
+      profile = userProfile as ProfileJSON;
     }
 
     return buildEndpointResponse(context, {

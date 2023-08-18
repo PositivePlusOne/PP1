@@ -57,7 +57,8 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.leftActionWidget,
     this.onTapClose,
     this.onTapAddImage,
-    this.enableFlashControlls = false,
+    this.enableFlashControls = false,
+    this.displayCameraShade = true,
     super.key,
   });
 
@@ -74,9 +75,10 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final VoidCallback? onTapClose;
   final VoidCallback? onTapAddImage;
-  final bool enableFlashControlls;
+  final bool enableFlashControls;
 
   final bool isBusy;
+  final bool displayCameraShade;
 
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
@@ -315,6 +317,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               )
             : const SizedBox.shrink(),
         actions: <Widget>[
+          if (viewMode != PositiveCameraViewMode.camera && widget.leftActionWidget != null) ...<Widget>[
+            Container(
+              padding: const EdgeInsets.only(right: kPaddingMedium),
+              alignment: Alignment.centerRight,
+              child: widget.leftActionWidget!,
+            ),
+          ],
           if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) ...<Widget>[
             Container(
               padding: const EdgeInsets.only(right: kPaddingMedium),
@@ -425,7 +434,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     return [
       if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
       const Spacer(),
-      if (widget.enableFlashControlls && hasCameraPermission)
+      if (widget.enableFlashControls && hasCameraPermission)
         CameraFloatingButton.flash(
           active: true,
           flashMode: flashMode,
@@ -459,22 +468,24 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     final Size screenSize = MediaQuery.of(context).size;
     final double smallestSide = screenSize.width < screenSize.height ? screenSize.width : screenSize.height;
 
-    children.add(Column(
-      children: <Widget>[
-        Expanded(
-          flex: 4,
-          child: Container(color: colours.black.withOpacity(0.75)),
-        ),
-        SizedBox(
-          height: smallestSide,
-          width: smallestSide,
-        ),
-        Expanded(
-          flex: 6,
-          child: Container(color: colours.black.withOpacity(0.75)),
-        ),
-      ],
-    ));
+    if (widget.displayCameraShade) {
+      children.add(Column(
+        children: <Widget>[
+          Expanded(
+            flex: 4,
+            child: Container(color: colours.black.withOpacity(0.75)),
+          ),
+          SizedBox(
+            height: smallestSide,
+            width: smallestSide,
+          ),
+          Expanded(
+            flex: 6,
+            child: Container(color: colours.black.withOpacity(0.75)),
+          ),
+        ],
+      ));
+    }
 
     for (final Widget widget in widget.overlayWidgets) {
       children.add(Positioned.fill(child: widget));
@@ -507,53 +518,57 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   Widget cameraOverlay(CameraState state) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        if (widget.takePictureCaption != null)
-          Text(
-            widget.takePictureCaption!,
-            textAlign: TextAlign.center,
-            style: typography.styleTitle.copyWith(color: colours.white),
-            overflow: TextOverflow.clip,
-          ),
-        const SizedBox(height: kPaddingMedium),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
+    return Padding(
+      padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (widget.takePictureCaption != null)
+            Text(
+              widget.takePictureCaption!,
+              textAlign: TextAlign.center,
+              style: typography.styleTitle.copyWith(color: colours.white),
+              overflow: TextOverflow.clip,
+            ),
+          const SizedBox(height: kPaddingMedium),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
 
-            const SizedBox(width: kPaddingSmall),
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            CameraButton(
-              active: canTakePictureOrVideo,
-              onTap: () => state.when(
-                onPhotoMode: onImageTaken,
-                onVideoMode: (videoState) {},
-                onVideoRecordingMode: (videoState) {},
+              const SizedBox(width: kPaddingSmall),
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              CameraButton(
+                active: canTakePictureOrVideo,
+                onTap: () => state.when(
+                  onPhotoMode: onImageTaken,
+                  onVideoMode: (videoState) {},
+                  onVideoRecordingMode: (videoState) {},
+                ),
               ),
-            ),
 
-            const SizedBox(width: kPaddingSmall),
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
-            //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-            CameraFloatingButton.changeCamera(
-              active: canTakePictureOrVideo,
-              onTap: () {
-                state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9);
-              },
-            ),
-          ],
-        ),
-      ],
+              const SizedBox(width: kPaddingSmall),
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              CameraFloatingButton.changeCamera(
+                active: canTakePictureOrVideo,
+                onTap: () {
+                  state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

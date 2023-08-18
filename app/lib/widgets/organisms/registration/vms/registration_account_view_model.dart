@@ -62,12 +62,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       }
 
       appRouter.removeWhere((route) => true);
-
-      if (credentials.additionalUserInfo?.isNewUser == true) {
-        await appRouter.push(const RegistrationAccountSetupRoute());
-      } else {
-        await appRouter.push(const HomeRoute());
-      }
+      await appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -90,12 +85,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
       }
 
       appRouter.removeWhere((route) => true);
-
-      if (credentials.additionalUserInfo?.isNewUser == true) {
-        await appRouter.push(const RegistrationAccountSetupRoute());
-      } else {
-        await appRouter.push(const HomeRoute());
-      }
+      await appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -141,7 +131,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
       logger.i('Profile created, navigating to home screen');
       appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
+      await appRouter.push(const ProfileNameEntryRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }

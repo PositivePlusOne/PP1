@@ -158,7 +158,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     final Relationship? relationship = cacheController.getFromCache(members.asGUID);
     if (relationship == null) {
-      logger.e('Relationship not found in cache for $relationship');
+      logger.d('Relationship not found in cache for $relationship');
       return;
     }
 
@@ -291,7 +291,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           // visibleTo: widget.activity.visibleTo,
         ),
         isEditPage: true,
-        localisations: AppLocalizations.of(context)!,
       ),
     );
   }

@@ -77,7 +77,6 @@ import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_interests_entry_page.dart';
 import '../widgets/organisms/profile/profile_name_entry_page.dart';
 import '../widgets/organisms/profile/profile_photo_selection_page.dart';
-import '../widgets/organisms/profile/profile_reference_image_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_success_page.dart';
 import '../widgets/organisms/profile/profile_reference_image_welcome_page.dart';
 import '../widgets/organisms/profile/profile_welcome_back_page.dart';
@@ -154,8 +153,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
         AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard]),
-        AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/location', guards: [signedInGuard]),
-        AutoRoute(page: ProfileReferenceImageRoute.page, path: '/profile/setup/images/references', guards: [signedInGuard]),
+        AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/references/start', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
         AutoRoute(page: ProfileAccentPhotoRoute.page, path: '/profile/setup/accent', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),

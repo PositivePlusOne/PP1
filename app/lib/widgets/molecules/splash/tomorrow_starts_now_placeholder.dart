@@ -27,7 +27,8 @@ class TomorrowStartsNowPlaceholder extends ConsumerWidget {
     final Size screenSize = mediaQueryData.size;
 
     final Size kTextSize = localizations.page_splash_section_tomorrow_starts_now_third_line.getTextSize(typography.styleHero);
-    double badgePaddingLeft = kTextSize.width * 0.65;
+    const double badgePaddingTop = 325.0;
+    double badgePaddingLeft = kTextSize.width * 1.05;
 
     //* Layout sanity check
     if ((screenSize.width - kPaddingMedium) < (badgePaddingLeft + kBadgeSmallSize)) {
@@ -52,7 +53,7 @@ class TomorrowStartsNowPlaceholder extends ConsumerWidget {
         ),
         Positioned(
           left: badgePaddingLeft,
-          top: 310.0,
+          top: badgePaddingTop,
           child: PositiveBadgeEntryAnimation(
             child: PositiveStamp.onePlus(
               colors: colors,

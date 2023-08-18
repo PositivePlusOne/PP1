@@ -2,12 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
-import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -15,6 +14,7 @@ import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/profile/components/profile_reference_image_dialog.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 
 // Project imports:
@@ -56,36 +56,25 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
     await appRouter.push(route);
   }
 
-  Future<void> onRequestCamera() async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    logger.i("Continue pressed, attempting to get camera permissions");
-    final PermissionStatus permissionStatus = await ref.read(cameraPermissionsProvider.future);
-    if (permissionStatus != PermissionStatus.granted && permissionStatus != PermissionStatus.limited) {
-      logger.w("Camera permissions not granted: $permissionStatus");
-      appRouter.push(ErrorRoute(errorMessage: "Please enable camera permissions in your phone settings and restart the app to use this feature."));
-    }
-
-    logger.i("Camera permissions granted, attempting to get image");
-    await appRouter.push(const ProfileReferenceImageRoute());
-  }
-
-  void onBackSelected() async {
-    final AppRouter appRouter = ref.watch(appRouterProvider);
-    appRouter.pop();
-  }
-
-  Future<void> onImageTaken(String path) async {
+  Future<void> onRequestCamera(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    logger.i("Image taken, saving reference image");
+    final dynamic result = await showCupertinoDialog(
+      context: context,
+      builder: (context) => const ProfileReferenceImageDialog(),
+    );
+
+    if (result == null || result is! String || result.isEmpty) {
+      logger.d("onSelectCamera: result is null or not a string");
+      return;
+    }
+
     state = state.copyWith(isBusy: true);
 
     try {
-      await profileController.updateReferenceImage(path);
+      await profileController.updateReferenceImage(result);
       logger.i("Reference image saved, navigating to profile");
 
       appRouter.removeWhere((route) => true);
@@ -93,6 +82,11 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  void onBackSelected() async {
+    final AppRouter appRouter = ref.watch(appRouterProvider);
+    appRouter.pop();
   }
 
   Future<void> onCompletion() async {

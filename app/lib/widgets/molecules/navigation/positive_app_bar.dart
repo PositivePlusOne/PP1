@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../../../resources/resources.dart';
@@ -19,125 +18,6 @@ enum PositiveAppBarTrailType {
   none,
   convex,
   concave,
-}
-
-class StickyPositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  const StickyPositiveAppBar({
-    this.actions = const <Widget>[],
-    this.bottom,
-    this.floating,
-    this.foregroundColor = Colors.black,
-    this.backgroundColor = Colors.transparent,
-    this.decorationColor = Colors.white,
-    this.trailType = PositiveAppBarTrailType.none,
-    this.leading,
-    super.key,
-  });
-
-  final Color foregroundColor;
-  final Color backgroundColor;
-  final Color decorationColor;
-
-  final List<Widget> actions;
-  final Widget? leading;
-  final PreferredSizeWidget? floating;
-  final PreferredSizeWidget? bottom;
-  final PositiveAppBarTrailType trailType;
-
-  double get decorationHeight {
-    //* The decoration height is the height of the concave or convex trail
-    return trailType == PositiveAppBarTrailType.concave
-        ? PositiveAppBar.kPositiveAppBarRadius * 2
-        : trailType == PositiveAppBarTrailType.convex
-            ? PositiveAppBar.kPositiveAppBarRadius
-            : 0;
-  }
-
-  @override
-  Size get preferredSize {
-    final double baseHeight = PositiveButton.kButtonIconRadiusRegular + PositiveButton.kButtonPaddingMedium.vertical + kPaddingSmall;
-    final double bottomHeight = bottom == null ? 0 : bottom!.preferredSize.height + kPaddingSmall;
-    final double floatingHeight = (floating?.preferredSize.height ?? 0);
-
-    const double width = double.infinity;
-    final double height = baseHeight + bottomHeight + decorationHeight + floatingHeight;
-
-    return Size(width, height);
-  }
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return SliverAppBar(
-      floating: false,
-      expandedHeight: preferredSize.height,
-      backgroundColor: decorationColor,
-      systemOverlayStyle: backgroundColor.systemUiOverlayStyle,
-      title: Padding(
-        padding: const EdgeInsets.only(top: 8.0, left: 14.0), //! Best effort guess to some weird internal padding from sliver app bars
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: GestureDetector(
-            onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
-            child: SvgPicture.asset(
-              SvgImages.logosFooter,
-              width: kLogoMaximumWidth,
-              colorFilter: ColorFilter.mode(foregroundColor, BlendMode.srcIn),
-            ),
-          ),
-        ),
-      ),
-      stretch: true,
-      actions: <Widget>[
-        const SizedBox.shrink(), // Weird bug, but if you remove this; it will misalign the actions
-        for (final Widget actionWidget in actions) ...<Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0), //! Best effort guess to some weird internal padding from sliver app bars
-            child: Align(
-              alignment: Alignment.center,
-              child: actionWidget,
-            ),
-          ),
-          if (actionWidget != actions.last) const SizedBox(width: kPaddingSmall),
-        ],
-        const SizedBox(width: kPaddingLarge),
-      ],
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        background: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Expanded(
-              child: AnimatedContainer(
-                color: backgroundColor,
-                duration: kAnimationDurationRegular,
-              ),
-            ),
-            if (bottom != null) ...<Widget>[
-              AnimatedContainer(
-                color: backgroundColor,
-                duration: kAnimationDurationRegular,
-                child: bottom,
-              ),
-            ],
-            if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
-              _PositiveAppBarTrailConcave(
-                backgroundColor: backgroundColor,
-                decorationColor: decorationColor,
-                trailType: trailType,
-              ),
-            ],
-            if (trailType == PositiveAppBarTrailType.convex) ...<Widget>[
-              _PositiveAppBarTrailConvex(
-                backgroundColor: backgroundColor,
-                trailType: trailType,
-              ),
-            ],
-            if (floating != null) floating!,
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {

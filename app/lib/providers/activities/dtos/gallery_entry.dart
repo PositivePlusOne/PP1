@@ -3,11 +3,12 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
+import 'package:app/constants/compression_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/gallery_controller.dart';
@@ -71,7 +72,7 @@ class GalleryEntry {
       return;
     }
 
-    final Uint8List data = await file?.readAsBytes() ?? Uint8List(0);
+    Uint8List data = await file?.readAsBytes() ?? Uint8List(0);
     if (data.isEmpty) {
       throw Exception('GalleryEntry.upload() data is empty');
     }
@@ -83,6 +84,21 @@ class GalleryEntry {
       reference = galleryController.rootProfileGalleryReference.child(fileName);
     } else {
       reference = galleryController.rootProfilePublicReference.child(fileName);
+    }
+
+    // Check if in image
+    if (mimeType.startsWith('image/')) {
+      logger.d('upload() mimeType.startsWith(image/)');
+      data = await FlutterImageCompress.compressWithList(
+        data,
+        autoCorrectionAngle: true,
+        keepExif: kImageCompressKeepExif,
+        minHeight: kImageCompressMaxHeight,
+        minWidth: kImageCompressMaxWidth,
+        quality: kImageCompressMaxQuality,
+        format: kImageCompressFormat,
+        rotate: kImageCompressRotation,
+      );
     }
 
     storageUploadTask = reference?.putData(data, SettableMetadata(contentType: mimeType));

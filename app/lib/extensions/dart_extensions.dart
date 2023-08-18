@@ -27,6 +27,20 @@ extension StringExtensions on String? {
     return '@$this';
   }
 
+  String get pascalToSpaced {
+    String str = this ?? '';
+
+    if (str.isEmpty) {
+      return str;
+    }
+
+    str = str.replaceAllMapped(RegExp(r'[A-Z]'), (Match match) => ' ${match.group(0)}');
+    str = str.replaceAll(RegExp(r'\s+'), ' ');
+    str = str.trim();
+
+    return str;
+  }
+
   Size getTextSize(TextStyle style) {
     final TextPainter textPainter = TextPainter(text: TextSpan(text: this, style: style), maxLines: 1, textDirection: TextDirection.ltr);
     textPainter.layout(minWidth: 0, maxWidth: double.infinity);

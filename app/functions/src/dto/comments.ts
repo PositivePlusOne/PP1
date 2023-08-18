@@ -10,6 +10,7 @@ export interface CommentJSON {
     reactionId?: string;
     activityId?: string;
     senderId?: string;
+    originFeed?: string;
     mentions?: MentionJSON[];
     media?: MediaJSON[];
 }
@@ -20,6 +21,7 @@ export class Comment {
     reactionId?: string;
     activityId?: string;
     senderId?: string;
+    originFeed?: string;
     mentions?: MentionJSON[];
     media?: MediaJSON[];
 
@@ -29,6 +31,7 @@ export class Comment {
         this.reactionId = json.reactionId;
         this.activityId = json.activityId;
         this.senderId = json.senderId;
+        this.originFeed = json.originFeed;
         this.mentions = json.mentions;
         this.media = json.media;
     }
@@ -40,6 +43,7 @@ export class Comment {
             reactionId: this.reactionId,
             activityId: this.activityId,
             senderId: this.senderId,
+            originFeed: this.originFeed,
             mentions: this.mentions,
             media: this.media,
         };

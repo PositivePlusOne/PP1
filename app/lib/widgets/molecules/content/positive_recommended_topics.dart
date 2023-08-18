@@ -6,21 +6,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveRecommendedTopics extends ConsumerWidget {
   const PositiveRecommendedTopics({
-    required this.activities,
+    required this.tags,
     super.key,
   });
 
-  final List<Activity> activities;
+  final List<Tag> tags;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,12 +35,11 @@ class PositiveRecommendedTopics extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          for (Activity activity in activities.where((element) => element.generalConfiguration?.content.isNotEmpty ?? false)) ...<Widget>[
+          for (Tag tag in tags) ...<Widget>[
             PositiveTileEntryAnimation(
-              index: activities.indexOf(activity),
               direction: AxisDirection.right,
               child: PositiveRecomemendedTopic(
-                postContent: activity,
+                tag: tag,
                 typeography: typeography,
                 colours: colours,
               ),
@@ -54,21 +53,19 @@ class PositiveRecommendedTopics extends ConsumerWidget {
 
 class PositiveRecomemendedTopic extends ConsumerWidget {
   const PositiveRecomemendedTopic({
-    required this.postContent,
+    required this.tag,
     required this.typeography,
     required this.colours,
     super.key,
   });
 
-  final Activity postContent;
+  final Tag tag;
   final DesignTypographyModel typeography;
   final DesignColorsModel colours;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PositiveTapBehaviour(
-      //TODO(S): Hook up on tap for selcted Topic
-      // onTap: (){//?push topic page/action here using postContent},
       child: Container(
         width: kSizeRecommendedTopic,
         height: kSizeRecommendedTopic,
@@ -88,7 +85,7 @@ class PositiveRecomemendedTopic extends ConsumerWidget {
               ),
             ),
             Text(
-              postContent.generalConfiguration!.content,
+              tag.fallback,
               style: typeography.styleTopic,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,

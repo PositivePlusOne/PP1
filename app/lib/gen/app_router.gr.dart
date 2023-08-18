@@ -126,7 +126,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CreatePostPage(
           isEditPage: args.isEditPage,
           activityData: args.activityData,
-          localisations: args.localisations,
           key: args.key,
         ),
       );
@@ -386,12 +385,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfilePhotoSelectionPage(),
       );
     },
-    ProfileReferenceImageRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileReferenceImagePage(),
-      );
-    },
     ProfileReferenceImageSuccessRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -473,7 +466,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: VerificationDialogPage(
           onVerified: args.onVerified,
-          phoneNumber: args.phoneNumber,
+          emailAddress: args.emailAddress,
           key: args.key,
         ),
       );
@@ -750,7 +743,6 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
   CreatePostRoute({
     bool isEditPage = false,
     ActivityData? activityData,
-    dynamic localisations,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -758,7 +750,6 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
           args: CreatePostRouteArgs(
             isEditPage: isEditPage,
             activityData: activityData,
-            localisations: localisations,
             key: key,
           ),
           initialChildren: children,
@@ -774,7 +765,6 @@ class CreatePostRouteArgs {
   const CreatePostRouteArgs({
     this.isEditPage = false,
     this.activityData,
-    this.localisations,
     this.key,
   });
 
@@ -782,13 +772,11 @@ class CreatePostRouteArgs {
 
   final ActivityData? activityData;
 
-  final dynamic localisations;
-
   final Key? key;
 
   @override
   String toString() {
-    return 'CreatePostRouteArgs{isEditPage: $isEditPage, activityData: $activityData, localisations: $localisations, key: $key}';
+    return 'CreatePostRouteArgs{isEditPage: $isEditPage, activityData: $activityData, key: $key}';
   }
 }
 
@@ -1538,20 +1526,6 @@ class ProfilePhotoSelectionRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [ProfileReferenceImagePage]
-class ProfileReferenceImageRoute extends PageRouteInfo<void> {
-  const ProfileReferenceImageRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileReferenceImageRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileReferenceImageRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [ProfileReferenceImageSuccessPage]
 class ProfileReferenceImageSuccessRoute extends PageRouteInfo<void> {
   const ProfileReferenceImageSuccessRoute({List<PageRouteInfo>? children})
@@ -1759,14 +1733,14 @@ class VerificationDialogRoute
     extends PageRouteInfo<VerificationDialogRouteArgs> {
   VerificationDialogRoute({
     required Future<void> Function() onVerified,
-    required String phoneNumber,
+    required String emailAddress,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           VerificationDialogRoute.name,
           args: VerificationDialogRouteArgs(
             onVerified: onVerified,
-            phoneNumber: phoneNumber,
+            emailAddress: emailAddress,
             key: key,
           ),
           initialChildren: children,
@@ -1781,18 +1755,18 @@ class VerificationDialogRoute
 class VerificationDialogRouteArgs {
   const VerificationDialogRouteArgs({
     required this.onVerified,
-    required this.phoneNumber,
+    required this.emailAddress,
     this.key,
   });
 
   final Future<void> Function() onVerified;
 
-  final String phoneNumber;
+  final String emailAddress;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'VerificationDialogRouteArgs{onVerified: $onVerified, phoneNumber: $phoneNumber, key: $key}';
+    return 'VerificationDialogRouteArgs{onVerified: $onVerified, emailAddress: $emailAddress, key: $key}';
   }
 }

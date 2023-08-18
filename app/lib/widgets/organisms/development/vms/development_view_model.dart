@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +15,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -41,6 +45,13 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     logger.d('Restarting app');
     appRouter.removeWhere((route) => true);
     await appRouter.push(SplashRoute());
+  }
+
+  Future<void> testSnackBar(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Testing snackbar');
+
+    ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("This is a test")));
   }
 
   Future<void> deleteProfile() async {

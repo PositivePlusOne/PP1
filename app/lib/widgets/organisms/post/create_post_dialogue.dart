@@ -11,12 +11,14 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/activities/dtos/gallery_entry.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -92,153 +94,154 @@ class CreatePostDialogue extends HookConsumerWidget {
 
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
-    final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
     return Container(
       color: colours.black.withAlpha(230),
       child: ListView(
-        padding: EdgeInsets.only(top: marginHeight, left: kPaddingMedium, right: kPaddingMedium, bottom: mediaQueryData.padding.bottom),
-        children: [
+        padding: EdgeInsets.only(bottom: mediaQueryData.padding.bottom + kPaddingMedium),
+        children: <Widget>[
           //* -=-=-=-=- Back Button -=-=-=-=- *\\
-          Align(
-            alignment: Alignment.centerLeft,
-            child: PositiveButton.appBarIcon(
+          PositiveAppBar(
+            backgroundColor: colours.transparent,
+            foregroundColor: colours.white,
+            includeLogoWherePossible: false,
+            safeAreaQueryData: mediaQueryData,
+            applyLeadingandTrailingPadding: true,
+            leading: PositiveButton.appBarIcon(
               colors: colours,
-              primaryColor: colours.colorGray7,
               icon: UniconsLine.angle_left,
-              size: PositiveButtonSize.medium,
-              style: PositiveButtonStyle.primaryBorder,
-              onTapped: router.pop,
+              primaryColor: colours.white,
+              style: PositiveButtonStyle.outline,
+              onTapped: () => router.pop(),
             ),
           ),
-          const SizedBox(height: kPaddingMedium),
-
           //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
-          if (postType == PostType.multiImage && galleryEntries.isNotEmpty)
-            CreatePostMultiImageThumbnailList(
-              images: galleryEntries,
-              colours: colours,
-            ),
-          const SizedBox(height: kPaddingLarge),
-          //* -=-=-=-=- Caption -=-=-=-=- *\\
-          CreatePostTextField(
-            text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
-            controller: captionController,
-            colours: colours,
-            textStyle: textStyle,
-            maxLength: kMaxLengthCaption,
-            maxLines: 15,
-            minLines: 8,
-            isBusy: isBusy,
-          ),
-          const SizedBox(height: kPaddingSmall),
-
-          //* -=-=-=-=- Tags -=-=-=-=- *\\
-          CreatePostTagsContainer(
-            text: localisations.page_create_post_tags,
-            colours: colours,
-            textStyle: textStyle,
-            localisations: localisations,
-            tags: tags,
-            typography: typography,
-            isBusy: isBusy,
-            onTap: onTagsPressed,
-          ),
-
-          //* -=-=-=-=- Alt Text -=-=-=-=- *\\
-          if (postType == PostType.image) ...[
-            const SizedBox(height: kPaddingSmall),
+          [
+            if (postType == PostType.multiImage && galleryEntries.isNotEmpty)
+              CreatePostMultiImageThumbnailList(
+                images: galleryEntries,
+                colours: colours,
+              ),
+            const SizedBox(height: kPaddingLarge),
+            //* -=-=-=-=- Caption -=-=-=-=- *\\
             CreatePostTextField(
-              text: localisations.page_create_post_alt_text,
-              controller: altTextController,
+              text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
+              controller: captionController,
               colours: colours,
               textStyle: textStyle,
-              maxLength: kMaxLengthAltText,
-              maxLines: 3,
-              minLines: 1,
+              maxLength: kMaxLengthCaption,
+              maxLines: 15,
+              minLines: 8,
               isBusy: isBusy,
             ),
-          ],
-
-          //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
-          if ((postType == PostType.image || postType == PostType.multiImage) && onUpdateSaveToGallery != null) ...[
             const SizedBox(height: kPaddingSmall),
-            CreatePostToggleContainer(
-              value: valueSaveToGallery,
+
+            //* -=-=-=-=- Tags -=-=-=-=- *\\
+            CreatePostTagsContainer(
+              text: localisations.page_create_post_tags,
               colours: colours,
-              onTap: isBusy ? () {} : onUpdateSaveToGallery,
               textStyle: textStyle,
-              text: localisations.page_create_post_save,
+              localisations: localisations,
+              tags: tags,
+              typography: typography,
+              isBusy: isBusy,
+              onTap: onTagsPressed,
             ),
-          ],
-          const SizedBox(height: kPaddingSmall),
 
-          //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
-          CreatePostToggleContainer(
-            value: valueAllowSharing,
-            colours: colours,
-            onTap: isBusy ? () {} : onUpdateAllowSharing,
-            textStyle: textStyle,
-            text: localisations.page_create_post_allow_sharing,
-          ),
-          const SizedBox(height: kPaddingSmall),
+            //* -=-=-=-=- Alt Text -=-=-=-=- *\\
+            if (postType == PostType.image) ...[
+              const SizedBox(height: kPaddingSmall),
+              CreatePostTextField(
+                text: localisations.page_create_post_alt_text,
+                controller: altTextController,
+                colours: colours,
+                textStyle: textStyle,
+                maxLength: kMaxLengthAltText,
+                maxLines: 3,
+                minLines: 1,
+                isBusy: isBusy,
+              ),
+            ],
 
-          //* -=-=-=-=- Sharing Visibility -=-=-=-=- *\\
-          CreatePostBox(
-            colours: colours,
-            forceBorder: true,
-            child: PositiveTextFieldDropdown(
-              initialValue: localisations.shared_user_type_generic_everyone,
-              labelText: localisations.page_create_post_visibility,
-              labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-              onValueChanged: (type) {
-                if (onUpdateVisibleTo != null) {
-                  onUpdateVisibleTo!(type.toString());
-                }
-              },
-              values: [
-                localisations.shared_user_type_generic_everyone,
-                localisations.shared_user_type_generic_connections,
-                localisations.shared_user_type_generic_followers,
-                localisations.shared_user_type_generic_me,
-              ],
+            //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
+            if ((postType == PostType.image || postType == PostType.multiImage) && onUpdateSaveToGallery != null) ...[
+              const SizedBox(height: kPaddingSmall),
+              CreatePostToggleContainer(
+                value: valueSaveToGallery,
+                colours: colours,
+                onTap: isBusy ? () {} : onUpdateSaveToGallery,
+                textStyle: textStyle,
+                text: localisations.page_create_post_save,
+              ),
+            ],
+            const SizedBox(height: kPaddingSmall),
+
+            //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
+            CreatePostToggleContainer(
+              value: valueAllowSharing,
+              colours: colours,
+              onTap: isBusy ? () {} : onUpdateAllowSharing,
               textStyle: textStyle,
-              backgroundColour: colours.transparent,
-              iconColour: colours.black,
-              iconBackgroundColour: colours.white,
-              isEnabled: !isBusy,
+              text: localisations.page_create_post_allow_sharing,
             ),
-          ),
+            const SizedBox(height: kPaddingSmall),
 
-          //* -=-=-=-=- Allow Comments -=-=-=-=- *\\
-          const SizedBox(height: kPaddingSmall),
-          CreatePostBox(
-            colours: colours,
-            forceBorder: true,
-            child: PositiveTextFieldDropdown(
-              initialValue: localisations.shared_user_type_generic_everyone,
-              labelText: localisations.page_create_post_comments,
-              labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-              onValueChanged: (type) {
-                if (onUpdateAllowComments != null) {
-                  onUpdateVisibleTo!(type.toString());
-                }
-              },
-              values: [
-                localisations.shared_user_type_generic_everyone,
-                localisations.shared_user_type_generic_connections,
-                localisations.shared_user_type_generic_followers,
-                localisations.shared_user_type_generic_me,
-              ],
-              textStyle: textStyle,
-              backgroundColour: colours.transparent,
-              iconColour: colours.black,
-              iconBackgroundColour: colours.white,
-              isEnabled: !isBusy,
+            //* -=-=-=-=- Sharing Visibility -=-=-=-=- *\\
+            CreatePostBox(
+              colours: colours,
+              forceBorder: true,
+              child: PositiveTextFieldDropdown(
+                initialValue: localisations.shared_user_type_generic_everyone,
+                labelText: localisations.page_create_post_visibility,
+                labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
+                onValueChanged: (type) {
+                  if (onUpdateVisibleTo != null) {
+                    onUpdateVisibleTo!(type.toString());
+                  }
+                },
+                values: [
+                  localisations.shared_user_type_generic_everyone,
+                  localisations.shared_user_type_generic_connections,
+                  localisations.shared_user_type_generic_followers,
+                  localisations.shared_user_type_generic_me,
+                ],
+                textStyle: textStyle,
+                backgroundColour: colours.transparent,
+                iconColour: colours.black,
+                iconBackgroundColour: colours.white,
+                isEnabled: !isBusy,
+              ),
             ),
-          ),
-          const SizedBox(height: kPaddingSmall),
-          trailingWidget ?? const SizedBox(),
-          SizedBox(height: MediaQuery.of(context).padding.bottom + kPaddingMassive),
+
+            //* -=-=-=-=- Allow Comments -=-=-=-=- *\\
+            const SizedBox(height: kPaddingSmall),
+            CreatePostBox(
+              colours: colours,
+              forceBorder: true,
+              child: PositiveTextFieldDropdown(
+                initialValue: localisations.shared_user_type_generic_everyone,
+                labelText: localisations.page_create_post_comments,
+                labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
+                onValueChanged: (type) {
+                  if (onUpdateAllowComments != null) {
+                    onUpdateVisibleTo!(type.toString());
+                  }
+                },
+                values: [
+                  localisations.shared_user_type_generic_everyone,
+                  localisations.shared_user_type_generic_connections,
+                  localisations.shared_user_type_generic_followers,
+                  localisations.shared_user_type_generic_me,
+                ],
+                textStyle: textStyle,
+                backgroundColour: colours.transparent,
+                iconColour: colours.black,
+                iconBackgroundColour: colours.white,
+                isEnabled: !isBusy,
+              ),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            trailingWidget ?? const SizedBox(),
+          ].padded(const EdgeInsets.symmetric(horizontal: kPaddingMedium)),
         ],
       ),
     );

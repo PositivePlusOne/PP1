@@ -2,10 +2,10 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -15,11 +15,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/filter_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/activities/activities_controller.dart';
 import 'package:app/providers/activities/dtos/gallery_entry.dart';
@@ -53,10 +55,13 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default("") String activeButtonFlexText,
     @Default(false) bool allowSharing,
     @Default(false) bool saveToGallery,
+    required AwesomeFilter currentFilter,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
   }) = _CreatePostViewModelState;
 
-  factory CreatePostViewModelState.initialState() => const CreatePostViewModelState();
+  factory CreatePostViewModelState.initialState() => CreatePostViewModelState(
+        currentFilter: AwesomeFilter.None,
+      );
 }
 
 @riverpod
@@ -143,10 +148,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(isBusy: true);
 
     try {
-      // Update gallery entries with share flag
+      // Update gallery entries with share flag and apply filters
+      final List<Future> filterFutures = [];
       for (final GalleryEntry entry in state.galleryEntries) {
         entry.saveToGallery = state.saveToGallery;
+        filterFutures.addAll(state.galleryEntries.map((entry) async {
+          final newData = await FilterHelpers.applyFilter(data: entry.data!, filter: state.currentFilter);
+          entry.data = newData;
+        }).toList());
       }
+
+      // Wait a tiny bit to allow the UI to update
+      // The next operation is expensive and blocks the UI
+      await Future.wait(filterFutures);
 
       // Upload gallery entries
       final List<Media> media = await Future.wait(state.galleryEntries.map((e) => e.createMedia()));
@@ -318,12 +332,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       entries.add(entry);
     }
 
+    if (entries.isEmpty) {
+      return;
+    }
+
     state = state.copyWith(
       galleryEntries: entries,
-      currentCreatePostPage: CreatePostCurrentPage.createPostImage,
+      currentCreatePostPage: CreatePostCurrentPage.editPhoto,
       currentPostType: PostType.image,
       activeButton: PositivePostNavigationActiveButton.flex,
-      activeButtonFlexText: localisations.page_create_post_create,
+      activeButtonFlexText: localisations.shared_actions_next,
     );
 
     return;
@@ -371,22 +389,54 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final AppLocalizations localizations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
 
     if (state.isEditing) {
       router.removeLast();
     }
 
-    if (state.currentCreatePostPage == CreatePostCurrentPage.camera) {
-      logger.i("Pop Create Post page, push Home page");
-      router.removeWhere((route) => true);
-      router.push(const HomeRoute());
-    } else {
-      state = state.copyWith(
-        currentCreatePostPage: CreatePostCurrentPage.camera,
-        currentPostType: PostType.text,
-        activeButton: PositivePostNavigationActiveButton.post,
-      );
+    switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.camera:
+        logger.i("Pop Create Post page, push Home page");
+        router.removeWhere((route) => true);
+        router.push(const HomeRoute());
+        break;
+      case CreatePostCurrentPage.createPostImage:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+          activeButtonFlexText: localizations.shared_actions_next,
+        );
+        break;
+      default:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.camera,
+          currentPostType: PostType.text,
+          activeButton: PositivePostNavigationActiveButton.post,
+        );
+        break;
     }
+
     return false;
+  }
+
+  void onFilterSelected(AwesomeFilter filter) {
+    state = state.copyWith(currentFilter: filter);
+  }
+
+  Future<void> onFlexButtonPressed(BuildContext context) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.camera:
+        throw Exception("Cannot press flex button on camera page");
+      case CreatePostCurrentPage.editPhoto:
+        state = state.copyWith(currentCreatePostPage: CreatePostCurrentPage.createPostImage, activeButtonFlexText: localisations.page_create_post_create);
+        break;
+      case CreatePostCurrentPage.createPostText:
+      case CreatePostCurrentPage.createPostImage:
+      case CreatePostCurrentPage.createPostMultiImage:
+        await onPostFinished(context);
+        break;
+    }
   }
 }

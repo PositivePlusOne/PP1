@@ -34,7 +34,7 @@ class DesignColorsModel with _$DesignColorsModel {
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray7,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color colorGray8,
     @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color transparent,
-    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color defualtUserColour,
+    @JsonKey(fromJson: colorFromJson, toJson: colorToJson) required Color defaultUserColour,
   }) = _DesignColorsModel;
 
   static List<String> get selectableProfileColorStrings {
@@ -71,7 +71,29 @@ class DesignColorsModel with _$DesignColorsModel {
         colorGray7: '#4A4A47'.toColorFromHex(),
         colorGray8: '#2f2f2f'.toColorFromHex(),
         transparent: '#00000000'.toColorFromHex(),
-        defualtUserColour: '#D3D3D3'.toColorFromHex(),
+        defaultUserColour: '#D3D3D3'.toColorFromHex(),
+      );
+
+  factory DesignColorsModel.darkMode() => DesignColorsModel(
+        teal: '#2BEDE1'.toColorFromHex(),
+        purple: '#8E3AE2'.toColorFromHex(),
+        green: '#29E774'.toColorFromHex(),
+        yellow: '#EDB72B'.toColorFromHex(),
+        red: '#ED2B2B'.toColorFromHex(),
+        pink: '#ECACD0'.toColorFromHex(),
+        white: '#FFFFFF'.toColorFromHex(),
+        black: '#0C0C0B'.toColorFromHex(),
+        linkBlue: '#3769EA'.toColorFromHex(),
+        colorGray1: '#090903'.toColorFromHex(), // Inverted light gray
+        colorGray2: '#25252C'.toColorFromHex(), // Inverted gray
+        colorGray3: '#2C2C2C'.toColorFromHex(), // Inverted gray
+        colorGray4: '#5B5B62'.toColorFromHex(), // Inverted gray
+        colorGray5: '#787878'.toColorFromHex(), // Inverted gray
+        colorGray6: '#949493'.toColorFromHex(), // Inverted gray
+        colorGray7: '#B5B5B8'.toColorFromHex(), // Inverted gray
+        colorGray8: '#D0D0D0'.toColorFromHex(), // Inverted dark gray
+        transparent: '#00000000'.toColorFromHex(), // Remains transparent
+        defaultUserColour: '#D3D3D3'.toColorFromHex(),
       );
 
   factory DesignColorsModel.fromJson(Map<String, Object?> json) => _$DesignColorsModelFromJson(json);

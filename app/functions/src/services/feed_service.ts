@@ -1,24 +1,11 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, EnrichedActivity, StreamClient, StreamFeed, connect } from "getstream";
-import { FeedBatchedClientResponse, FeedEntry, GetFeedWindowResult } from "../dto/stream";
-import { RelationshipService } from "./relationship_service";
-import { ProfileService } from "./profile_service";
-import { StreamActorType } from "./enumerations/actors";
+import { DefaultGenerics, FlatActivityEnriched, StreamClient, StreamFeed, connect } from "getstream";
+import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequest } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 
 export namespace FeedService {
-  type ActorFetchResolver = {
-    [StreamActorType.user]: typeof ProfileService.getProfile;
-    [StreamActorType.organisation]: typeof ProfileService.getProfile;
-  };
-
-  const actorTypeToServiceMap: ActorFetchResolver = {
-    [StreamActorType.user]: ProfileService.getProfile,
-    [StreamActorType.organisation]: ProfileService.getProfile,
-  };
-
   /**
    * Returns a StreamClient instance with the API key and secret.
    * @return {StreamClient<DefaultGenerics>} instance of StreamClient
@@ -33,7 +20,11 @@ export namespace FeedService {
       throw new Error("Missing Stream Feeds API key or secret");
     }
 
-    return connect(apiKey, apiSecret);
+    const client = connect(apiKey, apiSecret, undefined, {
+      browser: false,
+    });
+
+    return client;
   }
 
   /**
@@ -92,10 +83,20 @@ export namespace FeedService {
   export async function getFeedWindow(feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
     functions.logger.info("Getting feed window", { feed, windowSize, next });
 
-    const response = await feed.get({ withOwnChildren: true, withOwnReactions: true, limit: windowSize, id_lt: next, enrich: true });
-    const results = (response.results as EnrichedActivity<DefaultGenerics>[]).map((activity) => {
+    const response = await feed.get({
+      limit: windowSize,
+      id_lt: next,
+      enrich: true,
+      withReactionCounts: true,
+    });
+
+    functions.logger.info("Got feed window", { feed, windowSize, next, response });
+
+    const results = (response.results as FlatActivityEnriched<DefaultGenerics>[]).map((activity) => {
+      functions.logger.info("Origin map", { activity, origin: activity.origin });
       return {
         id: activity?.id ?? "",
+        foreign_id: activity?.foreign_id ?? "",
         object: activity?.object ?? "",
         actor: activity?.actor ?? "",
         reaction_counts: activity.reaction_counts,
@@ -150,55 +151,5 @@ export namespace FeedService {
     // Follow the target feed
     await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);
     functions.logger.info("Feed unfollowed", { source, target });
-  }
-
-  /**
-   * Processes feed entries for a user.
-   * @param {string} uid the user's ID.
-   * @param {FeedEntry[]} entries the feed entries.
-   * @return {Promise<FeedBatchedClientResponse>} a promise that resolves to the feed entries.
-   */
-  export async function processFeedEntriesForUser(uid: string, entries: FeedEntry[]): Promise<FeedBatchedClientResponse> {
-    functions.logger.info("Processing feed entries for user", { entries });
-
-    const unique = (value: any, index: number, self: any[]) => self.indexOf(value) === index;
-
-    const foreignKeys = entries.map((entry) => entry.foreign_id).filter(unique);
-    const actors = entries.map((entry) => entry.actor).filter(unique);
-    const foreignKeysAndActors = foreignKeys.concat(actors).filter((value) => value !== uid);
-
-    const sanitizedForeignKeysAndActors = await RelationshipService.sanitizeRelationships(uid, foreignKeysAndActors);
-
-    const profiles: any[] = [];
-    const organisations: any[] = [];
-
-    const fetchProfileOrOrganisation = async (foreignKey: string) => {
-      const actorType = entries.find((entry) => entry.foreign_id === foreignKey)?.actorType;
-
-      if (!actorType) return;
-
-      try {
-        const result = await actorTypeToServiceMap[actorType](foreignKey);
-
-        if (result) {
-          functions.logger.info(`${actorType} found`, { [actorType]: result });
-
-          if (actorType === StreamActorType.user) {
-            profiles.push(result);
-          } else {
-            organisations.push(result);
-          }
-        }
-      } catch (error) {
-        functions.logger.error("Error getting data from firestore for foreign key", {
-          foreignKey,
-          error,
-        });
-      }
-    };
-
-    await Promise.all(sanitizedForeignKeysAndActors.map(fetchProfileOrOrganisation));
-
-    return { profiles, organisations, activities: [] };
   }
 }

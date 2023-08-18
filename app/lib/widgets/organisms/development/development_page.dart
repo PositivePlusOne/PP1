@@ -80,6 +80,18 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               ListTile(
+                onTap: () => developmentViewModel.testSnackBar(context),
+                dense: true,
+                title: Text(
+                  'Test snackbar',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Displays a test snackbar',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
+              ListTile(
                 onTap: developmentViewModel.resetSharedPreferences,
                 dense: true,
                 title: Text(

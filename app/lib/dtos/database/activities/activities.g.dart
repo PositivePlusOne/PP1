@@ -185,12 +185,14 @@ _$_ActivityPublisherInformation _$$_ActivityPublisherInformationFromJson(
         Map<String, dynamic> json) =>
     _$_ActivityPublisherInformation(
       foreignKey: json['foreignKey'] as String? ?? '',
+      originFeed: json['originFeed'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityPublisherInformationToJson(
         _$_ActivityPublisherInformation instance) =>
     <String, dynamic>{
       'foreignKey': instance.foreignKey,
+      'originFeed': instance.originFeed,
     };
 
 _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(

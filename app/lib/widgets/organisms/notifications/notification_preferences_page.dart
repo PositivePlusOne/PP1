@@ -49,7 +49,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
               pagesNum: 6,
               currentPage: 4,
             ),
-            const SizedBox(height: kPaddingMedium),
+            const SizedBox(height: kPaddingLarge),
             Align(
               alignment: Alignment.centerLeft,
               child: FittedBox(
