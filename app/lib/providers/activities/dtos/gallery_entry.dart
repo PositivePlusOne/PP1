@@ -92,6 +92,7 @@ class GalleryEntry {
       logger.d('upload() mimeType.startsWith(image/)');
       data = await FlutterImageCompress.compressWithList(
         data,
+        autoCorrectionAngle: true,
         keepExif: kImageCompressKeepExif,
         minHeight: kImageCompressMaxHeight,
         minWidth: kImageCompressMaxWidth,

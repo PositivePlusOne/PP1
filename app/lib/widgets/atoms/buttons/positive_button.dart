@@ -189,6 +189,8 @@ class PositiveButton extends StatefulWidget {
   // Opacities used in the buttons
   static const double kButtonOpacityFull = 1.0;
   static const double kButtonOpacityGhostEnabled = 0.65;
+  static const double kButtonOpacityOutlineBorder = 0.5;
+  static const double kButtonOpacityOutlineBackground = 0.1;
   static const double kButtonOpacityGhost = 0.25;
   static const double kButtonOpacityMedium = 0.3;
   static const double kButtonOpacityLow = 0.2;
@@ -389,13 +391,13 @@ class PositiveButtonState extends State<PositiveButton> {
         break;
 
       case PositiveButtonStyle.outline:
-        materialColor = Colors.transparent;
-        backgroundColor = Colors.transparent;
+        materialColor = widget.colors.white.withOpacity(PositiveButton.kButtonOpacityOutlineBackground);
+        backgroundColor = widget.colors.white.withOpacity(PositiveButton.kButtonOpacityOutlineBackground);
         iconColor = primaryColor;
         textColor = primaryColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidth;
-        borderColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityMedium);
+        borderColor = primaryColor.withOpacity(PositiveButton.kButtonOpacityOutlineBorder);
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
 
         if (widget.isFocused) {

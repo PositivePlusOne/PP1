@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
@@ -92,6 +92,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
                   PositiveImageEditor(
                     galleryEntry: state.galleryEntries.firstOrNull,
+                    currentFilter: state.currentFilter,
+                    onFilterSelected: viewModel.onFilterSelected,
+                    onBackButtonPressed: viewModel.onWillPopScope,
                   ),
                 ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -99,9 +102,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.galleryEntries.length == 1) ...[
                   Positioned.fill(
-                    child: Image.memory(
-                      state.galleryEntries.first.data ?? Uint8List(0),
-                      fit: BoxFit.cover,
+                    child: ColorFiltered(
+                      colorFilter: ColorFilter.matrix(state.currentFilter.matrix),
+                      child: Image.memory(
+                        state.galleryEntries.first.data ?? Uint8List(0),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
@@ -139,7 +145,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTapPost: () {},
                     onTapClip: () {},
                     onTapEvent: () {},
-                    onTapFlex: () => viewModel.onPostFinished(context),
+                    onTapFlex: () => viewModel.onFlexButtonPressed(context),
                     activeButton: state.activeButton,
                     flexCaption: state.activeButtonFlexText,
                     isEnabled: viewModel.isNavigationEnabled && !state.isBusy,

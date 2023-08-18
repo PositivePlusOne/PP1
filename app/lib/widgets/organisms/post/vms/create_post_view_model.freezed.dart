@@ -29,6 +29,7 @@ mixin _$CreatePostViewModelState {
   String get activeButtonFlexText => throw _privateConstructorUsedError;
   bool get allowSharing => throw _privateConstructorUsedError;
   bool get saveToGallery => throw _privateConstructorUsedError;
+  AwesomeFilter get currentFilter => throw _privateConstructorUsedError;
   PositivePostNavigationActiveButton get activeButton =>
       throw _privateConstructorUsedError;
 
@@ -56,6 +57,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       String activeButtonFlexText,
       bool allowSharing,
       bool saveToGallery,
+      AwesomeFilter currentFilter,
       PositivePostNavigationActiveButton activeButton});
 }
 
@@ -85,6 +87,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? activeButtonFlexText = null,
     Object? allowSharing = null,
     Object? saveToGallery = null,
+    Object? currentFilter = null,
     Object? activeButton = null,
   }) {
     return _then(_value.copyWith(
@@ -136,6 +139,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentFilter: null == currentFilter
+          ? _value.currentFilter
+          : currentFilter // ignore: cast_nullable_to_non_nullable
+              as AwesomeFilter,
       activeButton: null == activeButton
           ? _value.activeButton
           : activeButton // ignore: cast_nullable_to_non_nullable
@@ -166,6 +173,7 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       String activeButtonFlexText,
       bool allowSharing,
       bool saveToGallery,
+      AwesomeFilter currentFilter,
       PositivePostNavigationActiveButton activeButton});
 }
 
@@ -193,6 +201,7 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? activeButtonFlexText = null,
     Object? allowSharing = null,
     Object? saveToGallery = null,
+    Object? currentFilter = null,
     Object? activeButton = null,
   }) {
     return _then(_$_CreatePostViewModelState(
@@ -244,6 +253,10 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
+      currentFilter: null == currentFilter
+          ? _value.currentFilter
+          : currentFilter // ignore: cast_nullable_to_non_nullable
+              as AwesomeFilter,
       activeButton: null == activeButton
           ? _value.activeButton
           : activeButton // ignore: cast_nullable_to_non_nullable
@@ -268,6 +281,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       this.activeButtonFlexText = "",
       this.allowSharing = false,
       this.saveToGallery = false,
+      required this.currentFilter,
       this.activeButton = PositivePostNavigationActiveButton.post})
       : _galleryEntries = galleryEntries,
         _tags = tags;
@@ -321,12 +335,14 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
   @JsonKey()
   final bool saveToGallery;
   @override
+  final AwesomeFilter currentFilter;
+  @override
   @JsonKey()
   final PositivePostNavigationActiveButton activeButton;
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, tags: $tags, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery, activeButton: $activeButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, tags: $tags, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery, currentFilter: $currentFilter, activeButton: $activeButton)';
   }
 
   @override
@@ -356,6 +372,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
                 other.allowSharing == allowSharing) &&
             (identical(other.saveToGallery, saveToGallery) ||
                 other.saveToGallery == saveToGallery) &&
+            (identical(other.currentFilter, currentFilter) ||
+                other.currentFilter == currentFilter) &&
             (identical(other.activeButton, activeButton) ||
                 other.activeButton == activeButton));
   }
@@ -375,6 +393,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       activeButtonFlexText,
       allowSharing,
       saveToGallery,
+      currentFilter,
       activeButton);
 
   @JsonKey(ignore: true)
@@ -399,6 +418,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final String activeButtonFlexText,
           final bool allowSharing,
           final bool saveToGallery,
+          required final AwesomeFilter currentFilter,
           final PositivePostNavigationActiveButton activeButton}) =
       _$_CreatePostViewModelState;
 
@@ -426,6 +446,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   bool get allowSharing;
   @override
   bool get saveToGallery;
+  @override
+  AwesomeFilter get currentFilter;
   @override
   PositivePostNavigationActiveButton get activeButton;
   @override

@@ -6,13 +6,17 @@
 // <https://material.io/go/design-theming#color-color-palette>.
 
 // Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:universal_platform/universal_platform.dart';
+
+// Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:universal_platform/universal_platform.dart';
 
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
@@ -25,6 +29,7 @@ const Duration kAnimationDurationExtended = Duration(milliseconds: 450);
 const Duration kAnimationDurationDebounce = Duration(milliseconds: 500);
 const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
+const Duration kAnimationDurationHintPreview = Duration(milliseconds: 3000);
 
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 
