@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:camerawesome/src/photofilters/filters/filters.dart';
-import 'package:camerawesome/src/photofilters/filters/preset_filters.dart';
-import 'package:camerawesome/src/photofilters/rgba_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';

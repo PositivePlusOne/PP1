@@ -13,10 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/system/design_controller.dart';
 
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;

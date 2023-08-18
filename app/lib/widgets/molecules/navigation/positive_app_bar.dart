@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../../../resources/resources.dart';

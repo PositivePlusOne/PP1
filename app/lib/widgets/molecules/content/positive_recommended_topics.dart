@@ -10,7 +10,6 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';

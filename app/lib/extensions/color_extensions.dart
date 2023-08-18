@@ -2,7 +2,6 @@
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:universal_platform/universal_platform.dart';

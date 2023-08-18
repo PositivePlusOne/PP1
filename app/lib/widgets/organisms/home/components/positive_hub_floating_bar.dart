@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/widgets/molecules/content/positive_recommended_topics.dart';
 import '../../../molecules/navigation/positive_tab_bar.dart';

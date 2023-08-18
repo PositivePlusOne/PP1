@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:camerawesome/src/photofilters/filters/filters.dart';
-import 'package:camerawesome/src/photofilters/filters/preset_filters.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
