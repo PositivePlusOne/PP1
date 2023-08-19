@@ -120,6 +120,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
         }
     }
+    
     // Prepare Join
     const joinPromises = [] as Promise<any>[];
     const allFlamelinkIds = [];

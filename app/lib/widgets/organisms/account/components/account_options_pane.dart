@@ -35,7 +35,7 @@ class AccountOptionsPane extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           icon: UniconsLine.user_square,
-          style: PositiveButtonStyle.primary,
+          style: PositiveButtonStyle.ghost,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_details,
           onTapped: viewModel.onAccountDetailsButtonSelected,
@@ -44,7 +44,7 @@ class AccountOptionsPane extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           icon: UniconsLine.bookmark,
-          style: PositiveButtonStyle.primary,
+          style: PositiveButtonStyle.ghost,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_bookmarks,
           onTapped: () {},
@@ -54,17 +54,16 @@ class AccountOptionsPane extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           icon: UniconsLine.users_alt,
-          style: PositiveButtonStyle.primary,
+          style: PositiveButtonStyle.ghost,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_following,
-          onTapped: () {},
-          isDisabled: true,
+          onTapped: viewModel.onMyCommunitiesButtonPressed,
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
           icon: UniconsLine.sliders_v_alt,
-          style: PositiveButtonStyle.primary,
+          style: PositiveButtonStyle.ghost,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_preferences,
           onTapped: () => viewModel.onAccountPreferencesRequested(context),
@@ -73,7 +72,7 @@ class AccountOptionsPane extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           icon: UniconsLine.sign_out_alt,
-          style: PositiveButtonStyle.primary,
+          style: PositiveButtonStyle.ghost,
           primaryColor: colors.colorGray1,
           label: localizations.page_account_actions_logout,
           onTapped: () => viewModel.onSignOutRequested(context),

@@ -44,7 +44,7 @@ Map<String, dynamic> buildRequestPayload({
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
-  Map<String, bool> overwriteCache = const {"users": true, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
+  Map<String, bool> cacheOverwriteSchemaKeys = const {"users": true, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
   T Function(EndpointResponse response)? selector,
@@ -82,7 +82,7 @@ FutureOr<T> getHttpsCallableResult<T>({
     final EndpointResponse responsePayload = EndpointResponse.fromJson(json.decodeSafe(response.data));
 
     if (responsePayload.data.isNotEmpty) {
-      providerContainer.cacheResponseData(responsePayload.data, overwriteCache);
+      providerContainer.cacheResponseData(responsePayload.data, cacheOverwriteSchemaKeys);
     }
 
     if (selector == null) {
@@ -617,7 +617,7 @@ class SearchApiService {
       name: 'search-search',
       pagination: pagination,
       selector: (response) => response.data[index] as List<dynamic>,
-      overwriteCache: const {"users": false, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
+      cacheOverwriteSchemaKeys: const {"users": false},
       parameters: {
         'query': query,
         'index': index,

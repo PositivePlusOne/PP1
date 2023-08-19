@@ -37,7 +37,6 @@ export namespace PostEndpoints {
     
         // Convert window results to a list of IDs
         const activityObjectIds = window.results.map((item) => item.object);
-        const activityIds = window.results.map((item) => item.id);
     
         // Loop over window IDs in parallel and get the activity data
         const payloadData = await Promise.all([...activityObjectIds.map((id) => ActivitiesService.getActivity(id))]);

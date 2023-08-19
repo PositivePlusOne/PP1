@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    AccountCommunitiesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountCommunitiesPage(),
+      );
+    },
     AccountConnectSocialRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -472,6 +478,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [AccountCommunitiesPage]
+class AccountCommunitiesRoute extends PageRouteInfo<void> {
+  const AccountCommunitiesRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountCommunitiesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountCommunitiesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

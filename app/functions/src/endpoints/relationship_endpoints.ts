@@ -381,4 +381,120 @@ export namespace RelationshipEndpoints {
       data: [newRelationship],
     });
   });
+
+  export const listConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+
+    const cursor = request.cursor || "";
+    const limit = request.limit || 10;
+
+    const paginationResult = await RelationshipService.getConnectedRelationships(uid, { cursor, limit });
+    const profileIds = [] as string[];
+
+    for (const relationship of paginationResult.data) {
+      for (const member of relationship.members || []) {
+        if (member.memberId && member.memberId !== uid) {
+          profileIds.push(member.memberId);
+        }
+      }
+    }
+
+    const profiles = await ProfileService.getMultipleProfiles(profileIds);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+      cursor: paginationResult.pagination.cursor,
+      limit: paginationResult.pagination.limit,
+      seedData: {
+        relationships: paginationResult.data,
+      },
+    });
+  });
+
+  export const listFollowRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+
+    const cursor = request.cursor || "";
+    const limit = request.limit || 10;
+
+    const paginationResult = await RelationshipService.getFollowRelationships(uid, { cursor, limit });
+    const profileIds = [] as string[];
+
+    for (const relationship of paginationResult.data) {
+      for (const member of relationship.members || []) {
+        if (member.memberId && member.memberId !== uid) {
+          profileIds.push(member.memberId);
+        }
+      }
+    }
+
+    const profiles = await ProfileService.getMultipleProfiles(profileIds);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+      cursor: paginationResult.pagination.cursor,
+      limit: paginationResult.pagination.limit,
+      seedData: {
+        relationships: paginationResult.data,
+      },
+    });
+  });
+
+  export const listFollowingRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+
+    const cursor = request.cursor || "";
+    const limit = request.limit || 10;
+
+    const paginationResult = await RelationshipService.getFollowedRelationships(uid, { cursor, limit });
+    const profileIds = [] as string[];
+
+    for (const relationship of paginationResult.data) {
+      for (const member of relationship.members || []) {
+        if (member.memberId && member.memberId !== uid) {
+          profileIds.push(member.memberId);
+        }
+      }
+    }
+
+    const profiles = await ProfileService.getMultipleProfiles(profileIds);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+      cursor: paginationResult.pagination.cursor,
+      limit: paginationResult.pagination.limit,
+      seedData: {
+        relationships: paginationResult.data,
+      },
+    });
+  });
+
+  export const listBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context);
+
+    const cursor = request.cursor || "";
+    const limit = request.limit || 10;
+
+    const paginationResult = await RelationshipService.getBlockedRelationships(uid, { cursor, limit });
+    const profileIds = [] as string[];
+
+    for (const relationship of paginationResult.data) {
+      for (const member of relationship.members || []) {
+        if (member.memberId && member.memberId !== uid) {
+          profileIds.push(member.memberId);
+        }
+      }
+    }
+
+    const profiles = await ProfileService.getMultipleProfiles(profileIds);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+      cursor: paginationResult.pagination.cursor,
+      limit: paginationResult.pagination.limit,
+      seedData: {
+        relationships: paginationResult.data,
+      },
+    });
+  });
 }

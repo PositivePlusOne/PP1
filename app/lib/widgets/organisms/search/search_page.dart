@@ -24,7 +24,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../molecules/navigation/positive_tab_bar.dart';
-import '../../molecules/tiles/positive_search_profile_tile.dart';
+import '../../molecules/tiles/positive_profile_list_tile.dart';
 import '../../molecules/tiles/positive_topic_tile.dart';
 
 @RoutePage()
@@ -113,12 +113,7 @@ class SearchPage extends ConsumerWidget {
                 if (canDisplaySearchResults && currentTab == SearchTab.users)
                   ...<Widget>[
                     for (final Profile profile in searchUserResults) ...<Widget>[
-                      PositiveSearchProfileTile(
-                        profile: profile,
-                        onTap: () => profileController.viewProfile(profile),
-                        onOptionsTapped: () => viewModel.onUserProfileModalRequested(context, profile.flMeta?.id ?? ''),
-                        isEnabled: !isBusy,
-                      ),
+                      PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
                 if (canDisplaySearchResults && currentTab == SearchTab.events)
