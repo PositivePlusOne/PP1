@@ -1,6 +1,8 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_post_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,11 +41,15 @@ class AccountCommunitiesPage extends StatefulHookConsumerWidget {
 }
 
 class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> {
-  late final RefreshController _refreshController;
   late final PagingController<String, String> _followingPagingController;
   late final PagingController<String, String> _followersPagingController;
   late final PagingController<String, String> _connectionsPagingController;
   late final PagingController<String, String> _blockedPagingController;
+
+  late final RefreshController _followingRefreshController;
+  late final RefreshController _followersRefreshController;
+  late final RefreshController _connectionsRefreshController;
+  late final RefreshController _blockedRefreshController;
 
   @override
   void initState() {
@@ -71,7 +77,15 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
     _blockedPagingController.addPageRequestListener((cursor) => requestNextPage(cursor, CommunityType.blocked));
 
     if (setupRefreshController) {
-      _refreshController = RefreshController(initialRefresh: false);
+      _followingRefreshController = RefreshController(initialRefresh: false);
+      _followersRefreshController = RefreshController(initialRefresh: false);
+      _connectionsRefreshController = RefreshController(initialRefresh: false);
+      _blockedRefreshController = RefreshController(initialRefresh: false);
+
+      _followingRefreshController.refreshCompleted();
+      _followersRefreshController.refreshCompleted();
+      _connectionsRefreshController.refreshCompleted();
+      _blockedRefreshController.refreshCompleted();
     }
   }
 
@@ -84,12 +98,16 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
       logger.d('AccountCommunitiesPage - requestRefresh - Loading next community data: $communityType');
       controller.resetCommunityDataForType(type: communityType);
       await controller.loadNextCommunityData(type: communityType);
-      setupControllers(setupRefreshController: true);
 
-      _refreshController.refreshCompleted();
+      setupControllers(setupRefreshController: false);
     } catch (ex) {
       logger.e('CommunitiesController - requestRefresh - Failed to load next community data - ex: $ex');
-      _refreshController.refreshFailed();
+      () => switch (communityType) {
+            CommunityType.following => _followingRefreshController.refreshFailed(),
+            CommunityType.followers => _followersRefreshController.refreshFailed(),
+            CommunityType.connected => _connectionsRefreshController.refreshFailed(),
+            CommunityType.blocked => _blockedRefreshController.refreshFailed(),
+          };
     }
   }
 
@@ -113,7 +131,7 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
       return;
     }
 
-    controller.loadNextCommunityData(type: communityType).then(
+    await controller.loadNextCommunityData(type: communityType).then(
       (_) {
         return switch (communityType) {
           CommunityType.following => _followingPagingController.appendSafePage(controller.state.followingProfileIds.toList(), controller.state.followingPaginationCursor),
@@ -146,6 +164,29 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
     }
   }
 
+  void onCommunityTypeChanged(CommunityType value) {
+    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
+    communitiesController.setSelectedCommunityType(value);
+
+    final bool hasMoreData = switch (value) {
+      CommunityType.following => communitiesController.state.hasMoreFollowing,
+      CommunityType.followers => communitiesController.state.hasMoreFollowers,
+      CommunityType.connected => communitiesController.state.hasMoreConnected,
+      CommunityType.blocked => communitiesController.state.hasMoreBlocked,
+    };
+
+    final String cursor = switch (value) {
+      CommunityType.following => communitiesController.state.followingPaginationCursor,
+      CommunityType.followers => communitiesController.state.followerPaginationCursor,
+      CommunityType.connected => communitiesController.state.connectedPaginationCursor,
+      CommunityType.blocked => communitiesController.state.blockedPaginationCursor,
+    };
+
+    if (hasMoreData) {
+      requestNextPage(cursor, value);
+    }
+  }
+
   @override
   void dispose() {
     _followingPagingController.dispose();
@@ -158,13 +199,16 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
-    final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
 
     return PositiveScaffold(
-      isBusy: communitiesControllerState.isBusy,
+      isBusy: ref.watch(communitiesControllerProvider).isBusy,
       visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
-      refreshController: _refreshController,
+      refreshController: switch (ref.watch(communitiesControllerProvider).selectedCommunityType) {
+        CommunityType.following => _followingRefreshController,
+        CommunityType.followers => _followersRefreshController,
+        CommunityType.connected => _connectionsRefreshController,
+        CommunityType.blocked => _blockedRefreshController,
+      },
       onRefresh: requestRefresh,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
@@ -174,8 +218,8 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
             const SizedBox(height: kPaddingSmall),
             PositiveTextFieldDropdown<CommunityType>(
               values: CommunityType.values,
-              initialValue: communitiesControllerState.selectedCommunityType,
-              onValueChanged: (value) => communitiesController.setSelectedCommunityType(value),
+              initialValue: ref.watch(communitiesControllerProvider).selectedCommunityType,
+              onValueChanged: (value) => onCommunityTypeChanged(value),
               backgroundColour: colors.white,
               labelText: 'User Type',
               valueStringBuilder: (value) => (value as CommunityType).toLocale,
@@ -184,7 +228,7 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
             const SizedBox(height: kPaddingSmall),
             AnimatedSwitcher(
               duration: kAnimationDurationRegular,
-              child: switch (communitiesControllerState.selectedCommunityType) {
+              child: switch (ref.watch(communitiesControllerProvider).selectedCommunityType) {
                 CommunityType.following => buildRelationshipList(context, colors, _followingPagingController),
                 CommunityType.followers => buildRelationshipList(context, colors, _followersPagingController),
                 CommunityType.connected => buildRelationshipList(context, colors, _connectionsPagingController),
@@ -198,14 +242,17 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
   }
 
   Widget buildRelationshipList(BuildContext context, DesignColorsModel colors, PagingController<String, String> controller) {
+    const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedListView.separated(
       shrinkWrap: true,
       pagingController: controller,
       separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
       padding: EdgeInsets.zero,
       builderDelegate: PagedChildBuilderDelegate<String>(
-        newPageErrorIndicatorBuilder: (_) => const SizedBox(),
-        noItemsFoundIndicatorBuilder: (_) => const SizedBox(),
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         itemBuilder: (context, item, index) => buildProfileTile(context, colors, item, index),
       ),
     );

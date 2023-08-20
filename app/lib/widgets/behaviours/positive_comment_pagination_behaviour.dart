@@ -258,11 +258,11 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
       builderDelegate: PagedChildBuilderDelegate<Comment>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         itemBuilder: (_, item, index) {
           return Text('item: $item - index: $index');
         },
-        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
       ),
     );
   }

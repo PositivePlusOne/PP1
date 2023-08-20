@@ -90,9 +90,10 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
       separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
       builderDelegate: PagedChildBuilderDelegate<GuidanceDirectoryEntry>(
         animateTransitions: true,
-        itemBuilder: buildItem,
+        transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        itemBuilder: buildItem,
       ),
     );
   }

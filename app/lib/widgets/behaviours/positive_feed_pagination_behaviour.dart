@@ -270,9 +270,9 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
       ),
     );
   }
@@ -284,9 +284,9 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
       ),
     );
   }
