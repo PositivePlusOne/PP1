@@ -1,8 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
-import 'package:app/widgets/atoms/indicators/positive_post_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +12,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -41,15 +40,15 @@ class AccountCommunitiesPage extends StatefulHookConsumerWidget {
 }
 
 class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> {
-  late final PagingController<String, String> _followingPagingController;
-  late final PagingController<String, String> _followersPagingController;
-  late final PagingController<String, String> _connectionsPagingController;
-  late final PagingController<String, String> _blockedPagingController;
+  late PagingController<String, String> _followingPagingController;
+  late PagingController<String, String> _followersPagingController;
+  late PagingController<String, String> _connectionsPagingController;
+  late PagingController<String, String> _blockedPagingController;
 
-  late final RefreshController _followingRefreshController;
-  late final RefreshController _followersRefreshController;
-  late final RefreshController _connectionsRefreshController;
-  late final RefreshController _blockedRefreshController;
+  late RefreshController _followingRefreshController;
+  late RefreshController _followersRefreshController;
+  late RefreshController _connectionsRefreshController;
+  late RefreshController _blockedRefreshController;
 
   @override
   void initState() {
@@ -65,16 +64,31 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
     _connectionsPagingController = PagingController<String, String>(firstPageKey: controller.state.connectedPaginationCursor);
     _blockedPagingController = PagingController<String, String>(firstPageKey: controller.state.blockedPaginationCursor);
 
-    _followingPagingController.itemList = controller.state.followingProfileIds.toList();
-    _followersPagingController.itemList = controller.state.followerProfileIds.toList();
-    _connectionsPagingController.itemList = controller.state.connectedProfileIds.toList();
-    _blockedPagingController.itemList = controller.state.blockedProfileIds.toList();
+    _followingPagingController.value = PagingState<String, String>(
+      nextPageKey: controller.state.followingPaginationCursor,
+      itemList: controller.state.followingProfileIds.toList(),
+    );
+
+    _followersPagingController.value = PagingState<String, String>(
+      nextPageKey: controller.state.followerPaginationCursor,
+      itemList: controller.state.followerProfileIds.toList(),
+    );
+
+    _connectionsPagingController.value = PagingState<String, String>(
+      nextPageKey: controller.state.connectedPaginationCursor,
+      itemList: controller.state.connectedProfileIds.toList(),
+    );
+
+    _blockedPagingController.value = PagingState<String, String>(
+      nextPageKey: controller.state.blockedPaginationCursor,
+      itemList: controller.state.blockedProfileIds.toList(),
+    );
 
     // Add listeners
-    _followingPagingController.addPageRequestListener((cursor) => requestNextPage(cursor, CommunityType.following));
-    _followersPagingController.addPageRequestListener((cursor) => requestNextPage(cursor, CommunityType.followers));
-    _connectionsPagingController.addPageRequestListener((cursor) => requestNextPage(cursor, CommunityType.connected));
-    _blockedPagingController.addPageRequestListener((cursor) => requestNextPage(cursor, CommunityType.blocked));
+    _followingPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.following));
+    _followersPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.followers));
+    _connectionsPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.connected));
+    _blockedPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.blocked));
 
     if (setupRefreshController) {
       _followingRefreshController = RefreshController(initialRefresh: false);
@@ -98,7 +112,6 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
       logger.d('AccountCommunitiesPage - requestRefresh - Loading next community data: $communityType');
       controller.resetCommunityDataForType(type: communityType);
       await controller.loadNextCommunityData(type: communityType);
-
       setupControllers(setupRefreshController: false);
     } catch (ex) {
       logger.e('CommunitiesController - requestRefresh - Failed to load next community data - ex: $ex');
@@ -113,10 +126,6 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
 
   Future<void> requestNextPage(String cursor, CommunityType communityType) async {
     final CommunitiesController controller = ref.read(communitiesControllerProvider.notifier);
-    if (controller.state.isBusy) {
-      return;
-    }
-
     final Logger logger = ref.read(loggerProvider);
 
     final bool canLoadNext = switch (communityType) {
@@ -126,25 +135,44 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
       CommunityType.blocked => !controller.state.hasMoreBlocked,
     };
 
-    if (canLoadNext) {
+    if (!canLoadNext) {
       logger.d('No more pages to load: $communityType');
+      switch (communityType) {
+        case CommunityType.following:
+          _followingPagingController.appendLastPage([]);
+          break;
+        case CommunityType.followers:
+          _followersPagingController.appendLastPage([]);
+          break;
+        case CommunityType.connected:
+          _connectionsPagingController.appendLastPage([]);
+          break;
+        case CommunityType.blocked:
+          _blockedPagingController.appendLastPage([]);
+          break;
+      }
+
       return;
     }
 
-    await controller.loadNextCommunityData(type: communityType).then(
-      (_) {
-        return switch (communityType) {
-          CommunityType.following => _followingPagingController.appendSafePage(controller.state.followingProfileIds.toList(), controller.state.followingPaginationCursor),
-          CommunityType.followers => _followersPagingController.appendSafePage(controller.state.followerProfileIds.toList(), controller.state.followerPaginationCursor),
-          CommunityType.connected => _connectionsPagingController.appendSafePage(controller.state.connectedProfileIds.toList(), controller.state.connectedPaginationCursor),
-          CommunityType.blocked => _blockedPagingController.appendSafePage(controller.state.blockedProfileIds.toList(), controller.state.blockedPaginationCursor),
-        };
-      },
-      onError: (error) {
-        logger.e('Error loading next page: $error');
-        appendPagingError(error, communityType);
-      },
-    );
+    try {
+      await controller.loadNextCommunityData(type: communityType);
+      () => switch (communityType) {
+            CommunityType.following => _followersRefreshController.refreshCompleted(),
+            CommunityType.followers => _followersRefreshController.refreshCompleted(),
+            CommunityType.connected => _connectionsRefreshController.refreshCompleted(),
+            CommunityType.blocked => _blockedRefreshController.refreshCompleted(),
+          };
+      () => switch (communityType) {
+            CommunityType.following => _followingPagingController.appendSafePage(controller.state.followingProfileIds.toList(), controller.state.followingPaginationCursor),
+            CommunityType.followers => _followersPagingController.appendSafePage(controller.state.followerProfileIds.toList(), controller.state.followerPaginationCursor),
+            CommunityType.connected => _connectionsPagingController.appendSafePage(controller.state.connectedProfileIds.toList(), controller.state.connectedPaginationCursor),
+            CommunityType.blocked => _blockedPagingController.appendSafePage(controller.state.blockedProfileIds.toList(), controller.state.blockedPaginationCursor),
+          };
+    } catch (ex) {
+      logger.e('Error loading next page: $ex');
+      appendPagingError(ex, communityType);
+    }
   }
 
   void appendPagingError(Object error, CommunityType communityType) {
@@ -199,11 +227,12 @@ class AccountCommunitiesPageState extends ConsumerState<AccountCommunitiesPage> 
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final CommunityType currentCommunityType = ref.watch(communitiesControllerProvider).selectedCommunityType;
 
     return PositiveScaffold(
       isBusy: ref.watch(communitiesControllerProvider).isBusy,
       visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
-      refreshController: switch (ref.watch(communitiesControllerProvider).selectedCommunityType) {
+      refreshController: switch (currentCommunityType) {
         CommunityType.following => _followingRefreshController,
         CommunityType.followers => _followersRefreshController,
         CommunityType.connected => _connectionsRefreshController,
