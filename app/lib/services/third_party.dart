@@ -3,6 +3,7 @@ import 'dart:math';
 
 // Package imports:
 import 'package:algolia/algolia.dart';
+import 'package:app_links/app_links.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cron/cron.dart';
@@ -27,6 +28,7 @@ import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:stream_chat_persistence/stream_chat_persistence.dart';
@@ -62,6 +64,11 @@ FutureOr<DefaultCacheManager> defaultCacheManager(DefaultCacheManagerRef ref) as
 @Riverpod(keepAlive: true)
 Random random(RandomRef ref) {
   return Random();
+}
+
+@Riverpod(keepAlive: true)
+AppLinks appLinks(AppLinksRef ref) {
+  return AppLinks();
 }
 
 @Riverpod(keepAlive: true)

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -50,6 +51,7 @@ Future<void> setupApplication() async {
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+  final UniversalLinksController universalLinksController = providerContainer.read(universalLinksControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -99,6 +101,7 @@ Future<void> setupApplication() async {
   await profileController.setupListeners();
   await galleryController.setupListeners();
   await cacheController.setupListeners();
+  await universalLinksController.setupListeners();
 
   await systemController.preloadPackageInformation();
 

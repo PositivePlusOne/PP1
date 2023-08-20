@@ -19,6 +19,7 @@ mixin _$SystemControllerState {
   SystemEnvironment get environment => throw _privateConstructorUsedError;
   bool get showingSemanticsDebugger => throw _privateConstructorUsedError;
   bool get showingDebugMessages => throw _privateConstructorUsedError;
+  dynamic get hasPerformedInitialSetup => throw _privateConstructorUsedError;
   String? get appName => throw _privateConstructorUsedError;
   String? get packageName => throw _privateConstructorUsedError;
   String? get version => throw _privateConstructorUsedError;
@@ -39,6 +40,7 @@ abstract class $SystemControllerStateCopyWith<$Res> {
       {SystemEnvironment environment,
       bool showingSemanticsDebugger,
       bool showingDebugMessages,
+      dynamic hasPerformedInitialSetup,
       String? appName,
       String? packageName,
       String? version,
@@ -62,6 +64,7 @@ class _$SystemControllerStateCopyWithImpl<$Res,
     Object? environment = null,
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
+    Object? hasPerformedInitialSetup = freezed,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -80,6 +83,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
           ? _value.showingDebugMessages
           : showingDebugMessages // ignore: cast_nullable_to_non_nullable
               as bool,
+      hasPerformedInitialSetup: freezed == hasPerformedInitialSetup
+          ? _value.hasPerformedInitialSetup
+          : hasPerformedInitialSetup // ignore: cast_nullable_to_non_nullable
+              as dynamic,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -112,6 +119,7 @@ abstract class _$$_SystemControllerStateCopyWith<$Res>
       {SystemEnvironment environment,
       bool showingSemanticsDebugger,
       bool showingDebugMessages,
+      dynamic hasPerformedInitialSetup,
       String? appName,
       String? packageName,
       String? version,
@@ -132,6 +140,7 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
     Object? environment = null,
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
+    Object? hasPerformedInitialSetup = freezed,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -150,6 +159,9 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
           ? _value.showingDebugMessages
           : showingDebugMessages // ignore: cast_nullable_to_non_nullable
               as bool,
+      hasPerformedInitialSetup: freezed == hasPerformedInitialSetup
+          ? _value.hasPerformedInitialSetup!
+          : hasPerformedInitialSetup,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -179,6 +191,7 @@ class _$_SystemControllerState
       {required this.environment,
       required this.showingSemanticsDebugger,
       required this.showingDebugMessages,
+      this.hasPerformedInitialSetup = bool,
       this.appName,
       this.packageName,
       this.version,
@@ -191,6 +204,9 @@ class _$_SystemControllerState
   @override
   final bool showingDebugMessages;
   @override
+  @JsonKey()
+  final dynamic hasPerformedInitialSetup;
+  @override
   final String? appName;
   @override
   final String? packageName;
@@ -201,7 +217,7 @@ class _$_SystemControllerState
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
+    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
   }
 
   @override
@@ -213,6 +229,8 @@ class _$_SystemControllerState
       ..add(DiagnosticsProperty(
           'showingSemanticsDebugger', showingSemanticsDebugger))
       ..add(DiagnosticsProperty('showingDebugMessages', showingDebugMessages))
+      ..add(DiagnosticsProperty(
+          'hasPerformedInitialSetup', hasPerformedInitialSetup))
       ..add(DiagnosticsProperty('appName', appName))
       ..add(DiagnosticsProperty('packageName', packageName))
       ..add(DiagnosticsProperty('version', version))
@@ -231,6 +249,8 @@ class _$_SystemControllerState
                 other.showingSemanticsDebugger == showingSemanticsDebugger) &&
             (identical(other.showingDebugMessages, showingDebugMessages) ||
                 other.showingDebugMessages == showingDebugMessages) &&
+            const DeepCollectionEquality().equals(
+                other.hasPerformedInitialSetup, hasPerformedInitialSetup) &&
             (identical(other.appName, appName) || other.appName == appName) &&
             (identical(other.packageName, packageName) ||
                 other.packageName == packageName) &&
@@ -245,6 +265,7 @@ class _$_SystemControllerState
       environment,
       showingSemanticsDebugger,
       showingDebugMessages,
+      const DeepCollectionEquality().hash(hasPerformedInitialSetup),
       appName,
       packageName,
       version,
@@ -263,6 +284,7 @@ abstract class _SystemControllerState implements SystemControllerState {
       {required final SystemEnvironment environment,
       required final bool showingSemanticsDebugger,
       required final bool showingDebugMessages,
+      final dynamic hasPerformedInitialSetup,
       final String? appName,
       final String? packageName,
       final String? version,
@@ -274,6 +296,8 @@ abstract class _SystemControllerState implements SystemControllerState {
   bool get showingSemanticsDebugger;
   @override
   bool get showingDebugMessages;
+  @override
+  dynamic get hasPerformedInitialSetup;
   @override
   String? get appName;
   @override

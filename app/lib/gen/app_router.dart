@@ -190,7 +190,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: GuidanceEntryRoute.page, path: '/guidance/:id', guards: kCommonGuards),
         //* Content
         AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
-        AutoRoute(page: PostRoute.page, path: '/post', guards: kCommonGuards),
+        AutoRoute(page: PostRoute.page, path: '/post'),
         AutoRoute(page: CreatePostRoute.page, path: '/post/create', guards: [...kCommonGuards, signedInGuard]),
         //* Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),

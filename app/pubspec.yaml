@@ -52,10 +52,6 @@ dependencies:
   google_mlkit_face_detection: 0.6.0
   google_mlkit_commons: 0.3.0
 
-  # Routing and View Management
-  auto_route: ^7.7.0
-  share_plus: ^7.1.0
-
   # Logging and Tracing
   logger: ^2.0.1
   device_info_plus: ^9.0.2
@@ -85,8 +81,10 @@ dependencies:
   google_maps_flutter: ^2.3.1
   google_maps_webservice: 0.0.20-nullsafety.5
 
-  # Linking and Sharing
+  # Routing, Linking, and Sharing
+  auto_route: ^7.7.0
   app_links: ^3.4.3
+  share_plus: ^7.1.0
 
   # Other
   camerawesome: ^1.4.0

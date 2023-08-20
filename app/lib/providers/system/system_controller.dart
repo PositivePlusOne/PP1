@@ -39,6 +39,7 @@ class SystemControllerState with _$SystemControllerState {
     required SystemEnvironment environment,
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
+    @Default(bool) hasPerformedInitialSetup,
     String? appName,
     String? packageName,
     String? version,
@@ -164,6 +165,9 @@ class SystemController extends _$SystemController {
       final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();
       profileController.onSupportedProfilesUpdated(supportedProfiles);
     }
+
+    state = state.copyWith(hasPerformedInitialSetup: true);
+    logger.i('updateSystemConfiguration: Completed');
   }
 
   //* Travels to a page given on development which allows the users to test the app

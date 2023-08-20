@@ -86,6 +86,20 @@ final randomProvider = Provider<Random>.internal(
 );
 
 typedef RandomRef = ProviderRef<Random>;
+String _$appLinksHash() => r'9d588bef53498deaa4d761ee8ae06b33544f6686';
+
+/// See also [appLinks].
+@ProviderFor(appLinks)
+final appLinksProvider = Provider<AppLinks>.internal(
+  appLinks,
+  name: r'appLinksProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$appLinksHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AppLinksRef = ProviderRef<AppLinks>;
 String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
 
 /// See also [mixpanel].
