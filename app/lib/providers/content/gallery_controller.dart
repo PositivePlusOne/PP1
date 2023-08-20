@@ -18,7 +18,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';

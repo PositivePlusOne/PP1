@@ -13,7 +13,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';

@@ -9,7 +9,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/content/interests_controller.dart';
+import 'package:app/providers/profiles/interests_controller.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveProfileInterestsList extends ConsumerWidget {

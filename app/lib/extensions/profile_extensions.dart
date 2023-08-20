@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/providers/profiles/gender_controller.dart';
+import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,8 +17,6 @@ import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
-import '../providers/content/gender_controller.dart';
-import '../providers/content/hiv_status_controller.dart';
 import '../providers/profiles/profile_controller.dart';
 import '../providers/system/design_controller.dart';
 import '../widgets/atoms/buttons/positive_button.dart';

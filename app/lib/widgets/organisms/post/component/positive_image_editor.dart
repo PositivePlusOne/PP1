@@ -19,7 +19,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
