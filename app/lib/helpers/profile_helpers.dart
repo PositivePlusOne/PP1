@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,8 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
 import '../providers/system/design_controller.dart';

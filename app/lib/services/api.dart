@@ -131,9 +131,9 @@ class PostApiService {
   }) async {
     return await getHttpsCallableResult<Map<String, Object?>>(
       name: 'post-getActivity',
-      selector: (response) => (response.data['activities'] as Map<String, Object?>)[entryId] as Map<String, Object?>,
+      selector: (response) => json.decodeSafe((response.data['activities'] as Iterable).first),
       parameters: {
-        'entryId': entryId,
+        'entry': entryId,
       },
     );
   }

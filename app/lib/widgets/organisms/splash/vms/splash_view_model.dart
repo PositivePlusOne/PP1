@@ -4,7 +4,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';

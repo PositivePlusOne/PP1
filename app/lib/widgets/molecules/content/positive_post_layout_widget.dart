@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/providers/content/sharing_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,6 +15,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
 import 'package:app/widgets/molecules/content/postitive_post_actions.dart';

@@ -1,16 +1,19 @@
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/activities_controller.dart';
-import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
-import 'package:app/services/third_party.dart';
+// Package imports:
 import 'package:app_links/app_links.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/system/system_controller.dart';
+import 'package:app/services/third_party.dart';
 
 part 'universal_links_controller.freezed.dart';
 part 'universal_links_controller.g.dart';
@@ -65,7 +68,6 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     final Uri? initialUri = await appLinks.getInitialAppLink();
     if (initialUri != null) {
       logger.i('Handling initial universal link: $initialUri');
-      return await handleLink(initialUri, replaceRouteOnNavigate: replaceRouteOnNavigate);
     }
 
     logger.i('No initial universal link to handle');
@@ -119,7 +121,6 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
 
@@ -130,13 +131,11 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     }
 
     // Check we have the activity in the cache or in the database
-    Activity? activity = cacheController.getFromCache(routeDetails.$1);
-    if (activity == null) {
-      try {
-        activity = await activitiesController.getActivity(routeDetails.$1);
-      } catch (e) {
-        logger.e('Failed to get activity from database: $e');
-      }
+    Activity? activity;
+    try {
+      activity = await activitiesController.getActivity(routeDetails.$1);
+    } catch (e) {
+      logger.e('Failed to get activity from database: $e');
     }
 
     if (activity == null) {
