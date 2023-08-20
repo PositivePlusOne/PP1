@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_selectable_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,15 +33,28 @@ import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart'
 import '../../../dtos/database/profile/profile.dart';
 import '../../../providers/system/design_controller.dart';
 
+enum PositiveProfileListTileType {
+  view,
+  selectable,
+}
+
 class PositiveProfileListTile extends ConsumerWidget {
   const PositiveProfileListTile({
     this.profile,
     this.isEnabled = true,
+    this.isSelected = false,
+    this.type = PositiveProfileListTileType.view,
+    this.onSelected,
     super.key,
   });
 
   final Profile? profile;
   final bool isEnabled;
+
+  final PositiveProfileListTileType type;
+
+  final bool isSelected;
+  final VoidCallback? onSelected;
 
   static const double kProfileTileHeight = 72.0;
   static const double kProfileTileBorderRadius = 40.0;
@@ -68,6 +82,22 @@ class PositiveProfileListTile extends ConsumerWidget {
       useSafeArea: false,
       child: ProfileModalDialog(profile: profile!, relationship: relationship),
     );
+  }
+
+  Future<void> onListTileSelected() async {
+    if (profile == null) {
+      return;
+    }
+
+    if (type == PositiveProfileListTileType.view) {
+      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+      await profileController.viewProfile(profile!);
+      return;
+    }
+
+    if (onSelected != null) {
+      onSelected!();
+    }
   }
 
   @override
@@ -117,17 +147,40 @@ class PositiveProfileListTile extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: kPaddingSmall),
-            PositiveButton(
-              colors: colors,
-              primaryColor: colors.colorGray7,
-              icon: UniconsSolid.ellipsis_h,
-              layout: PositiveButtonLayout.iconOnly,
-              style: PositiveButtonStyle.text,
-              onTapped: () => onOptionsTapped(context),
-              isDisabled: !isEnabled,
-            ),
+            buildAction(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildAction(BuildContext context) {
+    return switch (type) {
+      PositiveProfileListTileType.view => buildViewAction(context),
+      PositiveProfileListTileType.selectable => buildSelectableAction(context),
+    };
+  }
+
+  Widget buildViewAction(BuildContext context) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    return PositiveButton(
+      colors: colors,
+      primaryColor: colors.colorGray7,
+      icon: UniconsSolid.ellipsis_h,
+      layout: PositiveButtonLayout.iconOnly,
+      style: PositiveButtonStyle.text,
+      onTapped: () => onOptionsTapped(context),
+      isDisabled: !isEnabled,
+    );
+  }
+
+  Widget buildSelectableAction(BuildContext context) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    return Align(
+      alignment: Alignment.centerRight,
+      child: PositiveSelectableIndicator(
+        backgroundColor: colors.white,
+        isSelected: isSelected,
       ),
     );
   }

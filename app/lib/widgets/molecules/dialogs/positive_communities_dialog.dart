@@ -36,8 +36,11 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     required this.selectedCommunityType,
     required this.supportedCommunityTypes,
     this.mode = CommunitiesDialogMode.view,
-    this.onProfileToggled,
     this.actionLabel,
+    this.onActionPressed,
+    this.onProfileSelected,
+    this.selectedProfiles = const <String>[],
+    this.isEnabled = true,
     super.key,
   });
 
@@ -46,8 +49,11 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final CommunitiesDialogMode mode;
 
   // Select mode controls
-  final void Function(String)? onProfileToggled;
   final String? actionLabel;
+  final Future<void>? onActionPressed;
+  final void Function(String)? onProfileSelected;
+  final List<String> selectedProfiles;
+  final bool isEnabled;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveCommunitiesDialogState();
@@ -55,7 +61,16 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
 
 enum CommunitiesDialogMode {
   view,
-  select,
+  select;
+
+  PositiveProfileListTileType get toProfileListTileType {
+    switch (this) {
+      case CommunitiesDialogMode.view:
+        return PositiveProfileListTileType.view;
+      case CommunitiesDialogMode.select:
+        return PositiveProfileListTileType.selectable;
+    }
+  }
 }
 
 class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDialog> {
@@ -234,6 +249,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     }
   }
 
+  Future<void> onInternalActionSelected() async {}
+
   @override
   void dispose() {
     _followingPagingController.dispose();
@@ -309,8 +326,17 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   Widget buildProfileTile(BuildContext context, DesignColorsModel colors, String profileId, int index) {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Profile? profile = cacheController.getFromCache(profileId);
+    final bool isSelected = widget.selectedProfiles.contains(profileId);
 
-    return profile == null ? const SizedBox() : PositiveProfileListTile(profile: profile);
+    return profile == null
+        ? const SizedBox()
+        : PositiveProfileListTile(
+            profile: profile,
+            type: widget.mode.toProfileListTileType,
+            isSelected: isSelected,
+            onSelected: () => widget.onProfileSelected?.call(profileId),
+            isEnabled: widget.isEnabled,
+          );
   }
 
   Widget buildAppBar(BuildContext context, DesignColorsModel colors) {

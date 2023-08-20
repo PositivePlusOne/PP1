@@ -68,6 +68,7 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     final Uri? initialUri = await appLinks.getInitialAppLink();
     if (initialUri != null) {
       logger.i('Handling initial universal link: $initialUri');
+      return await handleLink(initialUri, replaceRouteOnNavigate: replaceRouteOnNavigate);
     }
 
     logger.i('No initial universal link to handle');
