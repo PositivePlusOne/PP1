@@ -302,6 +302,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PostShareRoute.name: (routeData) {
+      final args = routeData.argsAs<PostShareRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: PostSharePage(
+          key: args.key,
+          activity: args.activity,
+          feed: args.feed,
+        ),
+      );
+    },
     ProfileAboutRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1316,6 +1327,49 @@ class PostRouteArgs {
   @override
   String toString() {
     return 'PostRouteArgs{activity: $activity, feed: $feed, key: $key}';
+  }
+}
+
+/// generated route for
+/// [PostSharePage]
+class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
+  PostShareRoute({
+    Key? key,
+    required Activity activity,
+    required String feed,
+    List<PageRouteInfo>? children,
+  }) : super(
+          PostShareRoute.name,
+          args: PostShareRouteArgs(
+            key: key,
+            activity: activity,
+            feed: feed,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'PostShareRoute';
+
+  static const PageInfo<PostShareRouteArgs> page =
+      PageInfo<PostShareRouteArgs>(name);
+}
+
+class PostShareRouteArgs {
+  const PostShareRouteArgs({
+    this.key,
+    required this.activity,
+    required this.feed,
+  });
+
+  final Key? key;
+
+  final Activity activity;
+
+  final String feed;
+
+  @override
+  String toString() {
+    return 'PostShareRouteArgs{key: $key, activity: $activity, feed: $feed}';
   }
 }
 

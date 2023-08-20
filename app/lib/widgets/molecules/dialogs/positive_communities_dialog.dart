@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -16,6 +15,8 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/paging_extensions.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
@@ -37,6 +38,7 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     required this.supportedCommunityTypes,
     this.mode = CommunitiesDialogMode.view,
     this.actionLabel,
+    this.canCallToAction = true,
     this.onActionPressed,
     this.onProfileSelected,
     this.selectedProfiles = const <String>[],
@@ -50,7 +52,8 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
 
   // Select mode controls
   final String? actionLabel;
-  final Future<void>? onActionPressed;
+  final bool canCallToAction;
+  final Future<void> Function()? onActionPressed;
   final void Function(String)? onProfileSelected;
   final List<String> selectedProfiles;
   final bool isEnabled;
@@ -264,8 +267,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     return PositiveScaffold(
-      isBusy: ref.watch(communitiesControllerProvider).isBusy,
-      visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
       refreshController: switch (widget.selectedCommunityType) {
         CommunityType.following => _followingRefreshController,
         CommunityType.followers => _followersRefreshController,
@@ -302,6 +303,16 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             ),
           ],
         ),
+      ],
+      footerWidgets: <Widget>[
+        if (widget.mode == CommunitiesDialogMode.select) ...<Widget>[
+          PositiveButton.standardPrimary(
+            colors: colors,
+            label: widget.actionLabel ?? 'Done',
+            onTapped: () => widget.onActionPressed?.call(),
+            isDisabled: !widget.isEnabled || !widget.canCallToAction,
+          ),
+        ],
       ],
     );
   }
@@ -340,11 +351,12 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   }
 
   Widget buildAppBar(BuildContext context, DesignColorsModel colors) {
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
     return Row(
       children: [
         PositiveButton(
           colors: colors,
-          onTapped: () => context.router.pop(),
+          onTapped: () => appRouter.pop(),
           icon: UniconsLine.angle_left,
           style: PositiveButtonStyle.outline,
           layout: PositiveButtonLayout.iconOnly,

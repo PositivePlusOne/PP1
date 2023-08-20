@@ -13,11 +13,13 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
+import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
@@ -42,6 +44,7 @@ abstract class ISharingController {
   Future<void> shareExternally(BuildContext context, ShareTarget target, Rect origin, {SharePostOptions? postOptions});
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions});
   Future<void> shareViaConnections(BuildContext context, {SharePostOptions? postOptions});
+  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String feed, List<String> profileIds);
 }
 
 enum ShareTarget {
@@ -146,13 +149,48 @@ class SharingController extends _$SharingController implements ISharingControlle
     final String title = message.$1;
     final String text = message.$2;
 
+    Navigator.of(context).pop();
+
     logger.i('Sharing externally');
-    await Share.share(text, subject: title, sharePositionOrigin: origin);
+    Future<void>.delayed(kAnimationDurationDebounce, () {
+      Share.share(text, subject: title, sharePositionOrigin: origin);
+    });
+  }
+
+  @override
+  Future<void> shareViaConnections(BuildContext context, {SharePostOptions? postOptions}) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('Sharing via connections');
+
+    Navigator.of(context).pop();
+
+    Future<void>.delayed(kAnimationDurationDebounce, () {
+      appRouter.push(PostShareRoute(activity: postOptions!.$1, feed: postOptions.$2));
+    });
+  }
+
+  @override
+  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String feed, List<String> profileIds) async {
+    final Logger logger = ref.read(loggerProvider);
+    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+
+    logger.d('Sharing via connection chat');
+    final SharePostOptions postOptions = (activity, feed);
+    final ShareMessage message = getShareMessage(context, ShareTarget.post, postOptions: postOptions);
+
+    final String title = message.$1;
+    final String text = message.$2;
+
+    await reactionApiService.sharePost(
+      activityId: activity.flMeta!.id!,
+      feed: feed,
+      targets: profileIds,
+      title: title,
+      description: text,
+    );
   }
 
   @override
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {}
-
-  @override
-  Future<void> shareViaConnections(BuildContext context, {SharePostOptions? postOptions}) async {}
 }

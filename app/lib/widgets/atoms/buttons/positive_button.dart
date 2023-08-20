@@ -72,6 +72,33 @@ class PositiveButton extends StatefulWidget {
     );
   }
 
+  factory PositiveButton.standardPrimary({
+    required DesignColorsModel colors,
+    required String label,
+    required FutureOr<void> Function() onTapped,
+    final bool isDisabled = false,
+    final String? tooltip,
+    final Color? primaryColor,
+    final Color? foregroundColor,
+    final PositiveButtonSize size = PositiveButtonSize.large,
+    final PositiveButtonLayout layout = PositiveButtonLayout.textOnly,
+    final bool includeBadge = false,
+  }) {
+    return PositiveButton(
+      colors: colors,
+      primaryColor: primaryColor ?? colors.black,
+      style: PositiveButtonStyle.primary,
+      layout: layout,
+      label: label,
+      iconColorOverride: foregroundColor,
+      size: size,
+      onTapped: onTapped,
+      isDisabled: isDisabled,
+      tooltip: tooltip,
+      includeBadge: includeBadge,
+    );
+  }
+
   factory PositiveButton.standardPrimaryWithIcon({
     required DesignColorsModel colors,
     required IconData icon,

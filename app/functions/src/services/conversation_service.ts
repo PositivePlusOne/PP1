@@ -50,6 +50,49 @@ export namespace ConversationService {
   }
 
   /**
+   * Sends a message to a list of conversations.
+   * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
+   * @param {Channel<DefaultGenerics>[]} conversations the conversations to send the message to.
+   * @param {string} uid the user ID of the sender.
+   * @param {string} title the title of the message.
+   * @param {string} description the description of the message.
+   * @return {Promise<void>} a promise that resolves when the message has been sent.
+   */
+  export async function sendBulkMessage(conversations: Channel<DefaultGenerics>[], uid: string, title: any, description: any) {
+    return await Promise.all(conversations.map(async (conversation) => {
+      const message = {
+        text: description,
+        user_id: uid,
+        title: title,
+        type: "system",
+        silent: true,
+      };
+      
+      await conversation.sendMessage(message);
+    }));
+  }
+
+  export async function getOneOnOneChannels(client: StreamChat<DefaultGenerics>, userId: string, targets: string[]): Promise<Channel[]> {
+    const expectedChannelIds = targets.map((target) => StringHelpers.generateDocumentNameFromGuids([userId, target]));
+    const channels = await client.queryChannels({
+      id: {
+        $in: expectedChannelIds,
+      },
+    });
+
+    const existingChannelIds = channels.map((channel) => channel.id);
+    const missingChannelIds = expectedChannelIds.filter((channelId) => !existingChannelIds.includes(channelId));
+    const missingChannels = missingChannelIds.map((channelId) => client.channel("messaging", channelId, {
+      members: [userId, channelId],
+      created_by_id: userId,
+    }));
+
+    await Promise.all(missingChannels.map((channel) => channel.create()));
+
+    return channels;
+  }
+
+  /**
    * Creates a user token for GetStream.
    * @param {StreamChat<DefaultGenerics>} client the StreamChat client.
    * @param {string} userId the user's ID.
