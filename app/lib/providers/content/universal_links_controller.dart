@@ -28,9 +28,8 @@ class UniversalLinksState with _$UniversalLinksState {
 
 abstract class IUniversalLinksController {
   UniversalLinksState build();
-  Future<void> setupListeners();
+  Future<HandleLinkResult> initialize({bool replaceRouteOnNavigate = false});
   Future<bool> canHandleLink(Uri? uri);
-  Future<HandleLinkResult> handleLatestLink({bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
   Future<UniversalPostRouteDetails?> getRouteLinkDetails(Uri? uri);
@@ -55,13 +54,22 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   }
 
   @override
-  Future<void> setupListeners() async {
+  Future<HandleLinkResult> initialize({bool replaceRouteOnNavigate = false}) async {
     final AppLinks appLinks = ref.read(appLinksProvider);
     final Logger logger = ref.read(loggerProvider);
 
     await _allUriLinkStreamSubscription?.cancel();
-    _allUriLinkStreamSubscription = appLinks.allUriLinkStream.listen(handleLink);
+    _allUriLinkStreamSubscription = appLinks.uriLinkStream.listen(handleLink);
     logger.i('Universal links listeners setup');
+
+    final Uri? initialUri = await appLinks.getInitialAppLink();
+    if (initialUri != null) {
+      logger.i('Handling initial universal link: $initialUri');
+      return await handleLink(initialUri, replaceRouteOnNavigate: replaceRouteOnNavigate);
+    }
+
+    logger.i('No initial universal link to handle');
+    return HandleLinkResult.notHandled;
   }
 
   @override
@@ -82,25 +90,6 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     final bool canBuildRouteLink = scheme == state.expectedUniversalLinkScheme && activity.isNotEmpty;
 
     return canBuildRouteLink ? (activity, feed, uri!) : null;
-  }
-
-  @override
-  Future<HandleLinkResult> handleLatestLink({bool replaceRouteOnNavigate = false}) async {
-    final Uri? latestUniversalLink = state.latestUniversalLink;
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('Handling latest universal link: $latestUniversalLink');
-
-    if (latestUniversalLink == null) {
-      logger.i('No latest universal link to handle');
-      return HandleLinkResult.notHandled;
-    }
-
-    if (state.isUniversalLinkHandled) {
-      logger.i('Latest universal link already handled');
-      return HandleLinkResult.handledWithoutNavigation;
-    }
-
-    return await handleLink(latestUniversalLink);
   }
 
   @override

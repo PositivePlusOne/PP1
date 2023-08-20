@@ -124,7 +124,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     }
 
     // Check for initial links
-    final HandleLinkResult result = await universalLinksController.handleLatestLink(replaceRouteOnNavigate: true);
+    final HandleLinkResult result = await universalLinksController.initialize(replaceRouteOnNavigate: true);
     if (result == HandleLinkResult.handledWithNavigation) {
       return;
     }
