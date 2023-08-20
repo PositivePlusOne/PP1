@@ -90,53 +90,57 @@ class PositiveDialog extends ConsumerWidget {
       // ScaffoldMessenger, Builder, and Scaffold are required for the snackbar to show on top of the modal (as opposed to behind it)
       child: ScaffoldMessenger(
         child: Builder(builder: (context) {
-          return Scaffold(
-            backgroundColor: colors.black.withOpacity(barrierOpacity),
-            body: CustomScrollView(
-              slivers: <Widget>[
-                SliverPadding(
-                  padding: EdgeInsets.only(bottom: bottomViewInsets),
-                  sliver: SliverFillRemaining(
-                    child: Padding(
-                      padding: const EdgeInsets.all(kMargin),
-                      child: Center(
-                        child: SingleChildScrollView(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(kBorderRadius),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(kPadding),
-                                decoration: BoxDecoration(
-                                  color: colors.colorGray3.withOpacity(backgroundOpacity),
-                                  borderRadius: BorderRadius.circular(kBorderRadius),
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            title,
-                                            style: typography.styleTitle.copyWith(color: colors.white),
+          return GestureDetector(
+            // Pop the page on background tap
+            onTap: () => Navigator.of(context).pop(),
+            child: Scaffold(
+              backgroundColor: colors.black.withOpacity(barrierOpacity),
+              body: CustomScrollView(
+                slivers: <Widget>[
+                  SliverPadding(
+                    padding: EdgeInsets.only(bottom: bottomViewInsets),
+                    sliver: SliverFillRemaining(
+                      child: Padding(
+                        padding: const EdgeInsets.all(kMargin),
+                        child: Center(
+                          child: SingleChildScrollView(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(kBorderRadius),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(kPadding),
+                                  decoration: BoxDecoration(
+                                    color: colors.colorGray3.withOpacity(backgroundOpacity),
+                                    borderRadius: BorderRadius.circular(kBorderRadius),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              title,
+                                              style: typography.styleTitle.copyWith(color: colors.white),
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(width: kPaddingMedium),
-                                        PositiveButton.appBarIcon(
-                                          colors: colors,
-                                          icon: UniconsLine.multiply,
-                                          primaryColor: title.isNotEmpty ? colors.white : colors.black,
-                                          size: PositiveButtonSize.small,
-                                          style: PositiveButtonStyle.text,
-                                          isDisabled: isDisabled,
-                                          onTapped: () => Navigator.of(context).pop(),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: kPaddingMedium),
-                                    child,
-                                  ],
+                                          const SizedBox(width: kPaddingMedium),
+                                          PositiveButton.appBarIcon(
+                                            colors: colors,
+                                            icon: UniconsLine.multiply,
+                                            primaryColor: title.isNotEmpty ? colors.white : colors.black,
+                                            size: PositiveButtonSize.small,
+                                            style: PositiveButtonStyle.text,
+                                            isDisabled: isDisabled,
+                                            onTapped: () => Navigator.of(context).pop(),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: kPaddingMedium),
+                                      child,
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -145,8 +149,8 @@ class PositiveDialog extends ConsumerWidget {
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }),

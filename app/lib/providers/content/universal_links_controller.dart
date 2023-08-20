@@ -34,6 +34,7 @@ abstract class IUniversalLinksController {
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
   Future<UniversalPostRouteDetails?> getRouteLinkDetails(Uri? uri);
+  Uri buildPostRouteLink(String activity, String feed);
 }
 
 enum HandleLinkResult {
@@ -111,14 +112,17 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
 
     final bool canHandle = await canHandleLink(uri);
     if (!canHandle) {
+      logger.i('Cannot handle universal link');
       return HandleLinkResult.notHandled;
     }
 
     final UniversalPostRouteDetails? routeDetails = await getRouteLinkDetails(uri);
     if (routeDetails != null) {
+      logger.i('Handling post route link: $routeDetails');
       return await handlePostRouteLink(routeDetails);
     }
 
+    logger.w('Unknown universal link');
     return HandleLinkResult.notHandled;
   }
 
@@ -162,5 +166,20 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     logger.i('Handling route link: $routeDetails');
     state = state.copyWith(isUniversalLinkHandled: true);
     return HandleLinkResult.handledWithNavigation;
+  }
+
+  @override
+  Uri buildPostRouteLink(String activity, String feed) {
+    final String scheme = state.expectedUniversalLinkScheme;
+    const String host = 'positiveplusone.com';
+    const String path = '/post';
+
+    final Map<String, String> query = <String, String>{
+      'activity': activity,
+      'feed': feed,
+    };
+
+    final String encodedQuery = query.entries.map((e) => '${e.key}=${Uri.encodeQueryComponent(e.value)}').join('&');
+    return Uri(scheme: scheme, host: host, path: path, query: encodedQuery);
   }
 }

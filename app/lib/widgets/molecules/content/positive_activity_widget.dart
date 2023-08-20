@@ -349,6 +349,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             publisher: publisher,
             isShortformPost: !widget.isFullscreen,
             onImageTap: onInternalMediaTap,
+            feed: widget.targetFeed?.feed,
           ),
         ],
       ),

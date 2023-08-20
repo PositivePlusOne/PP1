@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +14,10 @@ import '../gen/app_router.dart';
 import '../main.dart';
 import '../providers/system/design_controller.dart';
 import '../services/third_party.dart';
+
+String getSafeDisplayNameFromProfile(Profile? profile) {
+  return profile?.displayName.asHandle ?? 'Anonymous User';
+}
 
 Color getSafeProfileColorFromHex(String? color) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));

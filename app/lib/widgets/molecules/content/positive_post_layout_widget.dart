@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/content/sharing_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,6 +33,7 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
+    this.feed,
     this.isShortformPost = true,
     this.sidePadding = kPaddingSmall,
     this.onImageTap,
@@ -39,6 +41,8 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   });
 
   final Activity postContent;
+  final String? feed;
+
   final Profile? publisher;
   final bool isShortformPost;
   final double sidePadding;
@@ -54,11 +58,30 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
 
   late double sidePadding;
+  late bool isBusy;
 
   @override
   void initState() {
     super.initState();
+    isBusy = false;
     sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
+  }
+
+  Future<void> onShareSelected() async {
+    if (!mounted) {
+      return;
+    }
+
+    final SharingController sharingController = ref.read(sharingControllerProvider.notifier);
+    final Activity activity = widget.postContent;
+    final String feed = widget.feed ?? activity.publisherInformation?.originFeed ?? '';
+    final (Activity activity, String feed) postOptions = (activity, feed);
+
+    if (feed.isEmpty) {
+      throw Exception('Feed is empty, cannot share');
+    }
+
+    await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
   @override
@@ -413,22 +436,22 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
-        likes: 0,
         //TODO(S): like enabled and onlike functionality here
-        likeEnabled: true,
+        likes: 0,
+        likeEnabled: !isBusy,
         onLike: () {},
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: true,
-        onShare: () {},
+        shareEnabled: !isBusy,
+        onShare: onShareSelected,
 
-        comments: 0,
         //TODO(S): comment enabled and on comment functionality here
-        commentsEnabled: true,
+        comments: 0,
+        commentsEnabled: !isBusy,
         onComment: () {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarked: true,
+        bookmarked: !isBusy,
         onBookmark: () {},
       ),
     );

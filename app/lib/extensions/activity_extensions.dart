@@ -11,6 +11,10 @@ extension ActivityExt on Activity {
     return hasPublisher && (hasBodyContent || hasImageMedia);
   }
 
+  String get shortDescription {
+    return generalConfiguration?.content.isNotEmpty == true ? generalConfiguration!.content : '';
+  }
+
   List<TargetFeed> get tagTargetFeeds {
     final List<TargetFeed> targetFeeds = <TargetFeed>[];
     if (enrichmentConfiguration?.tags != null) {

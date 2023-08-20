@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -102,7 +103,7 @@ class PositiveProfileListTile extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    profile?.displayName.asHandle ?? 'Anonymous User',
+                    getSafeDisplayNameFromProfile(profile),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.styleTitle.copyWith(color: colors.colorGray7),
