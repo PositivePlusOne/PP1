@@ -48,10 +48,11 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
       appRouter.removeLast();
 
       Future<void>.delayed(kAnimationDurationDebounce, () {
-        ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post shared successfully")));
+        ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(PositiveSnackBar(content: const Text("Post shared successfully")));
       });
     } finally {
-      setStateIfMounted(callback: () => isBusy = false);
+      isBusy = false;
+      setStateIfMounted();
     }
   }
 
