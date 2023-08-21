@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/post/component/positive_image_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
+import 'package:app/widgets/organisms/post/component/positive_image_gallery.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';

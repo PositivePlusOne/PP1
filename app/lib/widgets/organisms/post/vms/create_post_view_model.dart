@@ -424,10 +424,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         router.push(const HomeRoute());
         break;
       case CreatePostCurrentPage.editPhoto:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
-          activeButtonFlexText: localizations.shared_actions_next,
-        );
+        final bool isMultiImage = state.galleryEntries.length > 1;
+        if (isMultiImage) {
+          state = state.copyWith(
+            currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
+            activeButtonFlexText: localizations.shared_actions_next,
+          );
+        } else {
+          state = state.copyWith(
+            currentCreatePostPage: CreatePostCurrentPage.camera,
+            currentPostType: PostType.text,
+            activeButton: PositivePostNavigationActiveButton.post,
+          );
+        }
         break;
       default:
         state = state.copyWith(

@@ -2,8 +2,6 @@
 import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,12 +13,13 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/number_extensions.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
+import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 
 class PositiveImageGallery extends ConsumerWidget {
   const PositiveImageGallery({

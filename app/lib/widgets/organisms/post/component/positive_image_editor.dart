@@ -150,6 +150,8 @@ class PositiveImageFilterSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Put the none filter at the start of the list
+    final List<AwesomeFilter> sortedFiltered = {AwesomeFilter.None, ...allSupportedFilters}.toList();
     return SizedBox(
       height: 161.0,
       width: mediaQueryData.size.width,
@@ -157,9 +159,9 @@ class PositiveImageFilterSelector extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         separatorBuilder: (_, __) => const SizedBox(width: kPaddingMedium),
         padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-        itemCount: allSupportedFilters.length,
+        itemCount: sortedFiltered.length,
         itemBuilder: (context, index) {
-          final AwesomeFilter filter = allSupportedFilters[index];
+          final AwesomeFilter filter = sortedFiltered[index];
           Color borderColor = colors.white;
 
           if (selectedFilter.name != filter.name) {
