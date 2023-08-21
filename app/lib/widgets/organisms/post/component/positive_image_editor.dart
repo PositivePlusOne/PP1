@@ -102,8 +102,7 @@ class _PositiveImageEditorState extends ConsumerState<PositiveImageEditor> {
           ),
         ),
         const SizedBox(height: kPaddingMedium),
-        PositiveEditImagePreview(
-          state: state,
+        PositiveGalleryPreview(
           colors: colors,
           imagePreviewSize: imagePreviewSize,
           editedImageBytes: editedImageBytes,
@@ -208,28 +207,29 @@ class PositiveImageFilterSelector extends StatelessWidget {
   }
 }
 
-class PositiveEditImagePreview extends StatefulWidget {
-  const PositiveEditImagePreview({
+class PositiveGalleryPreview extends StatefulWidget {
+  const PositiveGalleryPreview({
     super.key,
     required this.imagePreviewSize,
     required this.colors,
-    required this.state,
     required this.editedImageBytes,
     required this.currentFilter,
+    this.showEditingHint = true,
   });
 
   final double imagePreviewSize;
   final DesignColorsModel colors;
-  final PositiveEditorState state;
 
   final Uint8List editedImageBytes;
   final AwesomeFilter currentFilter;
 
+  final bool showEditingHint;
+
   @override
-  State<PositiveEditImagePreview> createState() => _PositiveEditImagePreviewState();
+  State<PositiveGalleryPreview> createState() => _PositiveGalleryPreviewState();
 }
 
-class _PositiveEditImagePreviewState extends State<PositiveEditImagePreview> {
+class _PositiveGalleryPreviewState extends State<PositiveGalleryPreview> {
   bool isShowingPinchRotateHint = false;
 
   @override
@@ -239,6 +239,7 @@ class _PositiveEditImagePreviewState extends State<PositiveEditImagePreview> {
   }
 
   void onFirstRender(Duration _) {
+    if (!widget.showEditingHint) return;
     togglePinchRotateHint();
   }
 
@@ -260,7 +261,7 @@ class _PositiveEditImagePreviewState extends State<PositiveEditImagePreview> {
           Positioned.fill(
             child: AnimatedOpacity(
               duration: kAnimationDurationRegular,
-              opacity: widget.state == PositiveEditorState.editing ? 1 : 0,
+              opacity: widget.editedImageBytes.isEmpty ? 0 : 1,
               child: ColorFiltered(
                 colorFilter: ColorFilter.matrix(widget.currentFilter.matrix),
                 child: Image.memory(

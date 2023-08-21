@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/post/component/positive_image_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -53,106 +54,110 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
     final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
 
-    return AnnotatedRegion(
-      value: SystemUiOverlayStyle(
-        statusBarColor: colours.transparent,
-      ),
-      child: WillPopScope(
-        onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
-        child: Scaffold(
-          backgroundColor: colours.black,
-          resizeToAvoidBottomInset: false,
-          body: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: Stack(
-              children: [
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=-                    Camera                    -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
-                  Positioned.fill(
-                    child: PositiveCamera(
-                      onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
-                      cameraNavigation: (_) {
-                        return const SizedBox(
-                          height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
-                        );
-                      },
-                      leftActionWidget: CameraFloatingButton.postWithoutImage(
-                        active: true,
-                        onTap: () => viewModel.showCreateTextPost(context),
-                      ),
-                      onTapClose: viewModel.onWillPopScope,
-                      onTapAddImage: () => viewModel.onMultiImagePicker(context),
-                      //! Flash controlls in FlutterAwesome do not seem to be working
-                      // enableFlashControlls: true,
+    return WillPopScope(
+      onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
+      child: Scaffold(
+        backgroundColor: colours.black,
+        resizeToAvoidBottomInset: false,
+        body: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Stack(
+            children: [
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-                    Camera                    -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
+                Positioned.fill(
+                  child: PositiveCamera(
+                    onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
+                    cameraNavigation: (_) {
+                      return const SizedBox(
+                        height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
+                      );
+                    },
+                    leftActionWidget: CameraFloatingButton.postWithoutImage(
+                      active: true,
+                      onTap: () => viewModel.showCreateTextPost(context),
                     ),
-                  ),
-                ],
-                if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
-                  PositiveImageEditor(
-                    galleryEntry: state.galleryEntries.firstOrNull,
-                    currentFilter: state.currentFilter,
-                    onFilterSelected: viewModel.onFilterSelected,
-                    onBackButtonPressed: viewModel.onWillPopScope,
-                  ),
-                ],
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.galleryEntries.length == 1) ...[
-                  Positioned.fill(
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.matrix(state.currentFilter.matrix),
-                      child: Image.memory(
-                        state.galleryEntries.first.data ?? Uint8List(0),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=-              Create Post Dialog              -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                if (state.currentCreatePostPage.isCreationDialog) ...<Widget>[
-                  Positioned.fill(
-                    child: CreatePostDialogue(
-                      isBusy: state.isBusy,
-                      postType: state.currentPostType,
-                      captionController: viewModel.captionController,
-                      altTextController: viewModel.altTextController,
-                      onTagsPressed: () => viewModel.onTagsPressed(context),
-                      onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
-                      onUpdateAllowComments: viewModel.onUpdateAllowComments,
-                      onUpdateSaveToGallery: state.isEditing ? null : viewModel.onUpdateSaveToGallery,
-                      onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
-                      valueAllowSharing: state.allowSharing,
-                      valueSaveToGallery: state.saveToGallery,
-                      galleryEntries: state.galleryEntries,
-                      tags: state.tags,
-                    ),
-                  ),
-                ],
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                Positioned(
-                  bottom: kPaddingMedium + mediaQueryData.padding.bottom,
-                  height: kCreatePostNavigationHeight,
-                  left: kPaddingSmall,
-                  right: kPaddingSmall,
-                  child: PositivePostNavigationBar(
-                    onTapPost: () {},
-                    onTapClip: () {},
-                    onTapEvent: () {},
-                    onTapFlex: () => viewModel.onFlexButtonPressed(context),
-                    activeButton: state.activeButton,
-                    flexCaption: state.activeButtonFlexText,
-                    isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
+                    onTapClose: viewModel.onWillPopScope,
+                    onTapAddImage: () => viewModel.onMultiImagePicker(context),
+                    //! Flash controlls in FlutterAwesome do not seem to be working
+                    // enableFlashControlls: true,
                   ),
                 ),
               ],
-            ),
+              if (state.currentCreatePostPage == CreatePostCurrentPage.galleryPreview) ...[
+                PositiveImageGallery(
+                  galleryEntries: state.galleryEntries,
+                  selectedGalleryEntry: state.editingGalleryEntry,
+                  onBackButtonPressed: () => viewModel.onWillPopScope(),
+                  onGalleryEntrySelected: (entry) => viewModel.onGalleryEntrySelected(context, entry),
+                ),
+              ],
+              if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
+                PositiveImageEditor(
+                  galleryEntry: state.editingGalleryEntry,
+                  currentFilter: state.currentFilter,
+                  onFilterSelected: viewModel.onFilterSelected,
+                  onBackButtonPressed: viewModel.onWillPopScope,
+                ),
+              ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-    Background Image on Create Image Post     -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              if (state.currentCreatePostPage == CreatePostCurrentPage.createPostImage && state.galleryEntries.length == 1) ...[
+                Positioned.fill(
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.matrix(state.currentFilter.matrix),
+                    child: Image.memory(
+                      state.galleryEntries.first.data ?? Uint8List(0),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-              Create Post Dialog              -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              if (state.currentCreatePostPage.isCreationDialog) ...<Widget>[
+                Positioned.fill(
+                  child: CreatePostDialogue(
+                    isBusy: state.isBusy,
+                    postType: state.currentPostType,
+                    captionController: viewModel.captionController,
+                    altTextController: viewModel.altTextController,
+                    onTagsPressed: () => viewModel.onTagsPressed(context),
+                    onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
+                    onUpdateAllowComments: viewModel.onUpdateAllowComments,
+                    onUpdateSaveToGallery: state.isEditing ? null : viewModel.onUpdateSaveToGallery,
+                    onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
+                    valueAllowSharing: state.allowSharing,
+                    valueSaveToGallery: state.saveToGallery,
+                    galleryEntries: state.galleryEntries,
+                    onEditImagePressed: () => viewModel.onEditImagePressed(context),
+                    tags: state.tags,
+                  ),
+                ),
+              ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              Positioned(
+                bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+                height: kCreatePostNavigationHeight,
+                left: kPaddingSmall,
+                right: kPaddingSmall,
+                child: PositivePostNavigationBar(
+                  onTapPost: () {},
+                  onTapClip: () {},
+                  onTapEvent: () {},
+                  onTapFlex: () => viewModel.onFlexButtonPressed(context),
+                  activeButton: state.activeButton,
+                  flexCaption: state.activeButtonFlexText,
+                  isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
+                ),
+              ),
+            ],
           ),
         ),
       ),
