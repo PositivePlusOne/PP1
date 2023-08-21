@@ -102,7 +102,7 @@ export namespace PostEndpoints {
     const streamClient = await FeedService.getFeedsClient();
     const senderUserFeed = streamClient.feed(feed, uid);
     
-    await FeedService.shareActivityToFeed(uid, senderUserFeed, activityId, feed);
+    await FeedService.shareActivityToFeed(uid, senderUserFeed, activityId);
     functions.logger.info(`Shared activity to feed`, { uid, activityId, feed });
 
     return buildEndpointResponse(context, {
@@ -200,8 +200,9 @@ export namespace PostEndpoints {
         tags: validatedTags,
       },
       securityConfiguration: {
-        viewMode: allowSharing ? "public" : "followers_",
-        reactionMode: allowComments ? "public" : "private",
+        viewMode: "public",
+        commentMode: allowComments ? "public" : "private",
+        shareMode: allowSharing ? "public" : "private",
       },
       media: media,
     } as ActivityJSON;
@@ -328,7 +329,7 @@ export namespace PostEndpoints {
     });
 
     //? Tags to remove are the previous tags that are not in the new validated tags
-    let newValidatedTags = [...validatedTags];
+    const newValidatedTags = [...validatedTags];
     const tagsToRemove = new Array<string>();
 
     for (const tag of validatedTags) {

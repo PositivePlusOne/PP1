@@ -71,25 +71,37 @@ export namespace ActivitiesService {
    * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
    * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
    */
-  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<ActivityJSON[]> {
-    return Promise.all(entrys.map(async (entry) => {
-      const activity = await getActivity(entry.object) as ActivityJSON;
+  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<any[]> {
+    const activityPromise = entrys.map(async (entry) => {
+      if (entry.object === "") {
+        return;
+      }
+      
+      const activity = await getActivity(entry.object);
+      if (!activity) {
+        return;
+      }
 
       switch (entry.verb) {
         case ActivityActionVerb.Post:
           break;
         default:
           const actorId = entry.actor;
-          activity.publisherInformation ??= {};
-          activity.publisherInformation.actorId = actorId;
+          if (activity.publisherInformation) {
+            activity.publisherInformation.actorId = actorId;
+          }
 
-          activity.generalConfiguration ??= {};
-          activity.generalConfiguration.type = entry.verb as ActivityActionVerb || "post";
+          if (activity.generalConfiguration) {
+            activity.generalConfiguration.reactionType = entry.verb as ActivityActionVerb;
+          }
           break;
       }
 
       return activity;
-    }));
+    });
+
+    const activities = await Promise.all(activityPromise);
+    return activities.filter((activity) => activity);
   }
 
   /**

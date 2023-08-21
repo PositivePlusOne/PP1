@@ -1,8 +1,4 @@
-import { ReactionAPIResponse, UR } from "getstream";
 import { StreamActorType } from "../services/enumerations/actors";
-import { CommentJSON } from "./comments";
-import { Media, MediaJSON } from "./media";
-import { Mention, MentionJSON } from "./mentions";
 
 export type DefaultGenerics = {
   id: string;

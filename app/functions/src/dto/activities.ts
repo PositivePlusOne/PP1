@@ -111,6 +111,7 @@ export type ActivityGeneralConfigurationStyle = 'markdown' | 'text';
  */
 export interface ActivityGeneralConfigurationJSON {
   type?: ActivityGeneralConfigurationType;
+  reactionType?: ActivityGeneralConfigurationType;
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
 }
@@ -125,11 +126,13 @@ export interface ActivityGeneralConfigurationJSON {
  */
 export class ActivityGeneralConfiguration {
   type: ActivityGeneralConfigurationType;
+  reactionType: ActivityGeneralConfigurationType;
   style: ActivityGeneralConfigurationStyle;
   content: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
+    this.reactionType = json.reactionType || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
   }

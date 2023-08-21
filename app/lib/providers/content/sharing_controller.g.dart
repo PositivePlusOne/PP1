@@ -6,7 +6,7 @@ part of 'sharing_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sharingControllerHash() => r'd4c4a41cebc4b78bcc4c4c02fb24f78889663df6';
+String _$sharingControllerHash() => r'77f2e29ffa7fba287a5972e010377b795b28bb5e';
 
 /// See also [SharingController].
 @ProviderFor(SharingController)

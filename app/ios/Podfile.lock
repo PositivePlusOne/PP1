@@ -1,4 +1,6 @@
 PODS:
+  - app_links (0.0.1):
+    - Flutter
   - AppAuth (1.6.2):
     - AppAuth/Core (= 1.6.2)
     - AppAuth/ExternalUserAgent (= 1.6.2)
@@ -388,6 +390,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - app_links (from `.symlinks/plugins/app_links/ios`)
   - camerawesome (from `.symlinks/plugins/camerawesome/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
@@ -482,6 +485,8 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
+  app_links:
+    :path: ".symlinks/plugins/app_links/ios"
   camerawesome:
     :path: ".symlinks/plugins/camerawesome/ios"
   cloud_firestore:
@@ -574,6 +579,7 @@ CHECKOUT OPTIONS:
     :tag: 10.12.0
 
 SPEC CHECKSUMS:
+  app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   camerawesome: 1e06540f60158809bc70f398ed1ac2cf93fe4188
   cloud_firestore: c556fefce96568e422e453bf9aeda683dd435367
