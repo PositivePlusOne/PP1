@@ -3,6 +3,7 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/dtos/converters/profile_converters.dart';
@@ -127,6 +128,22 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
       followersAndConnections: () => 'followers_and_connections',
       connections: () => 'connections',
       private: () => 'private',
+    );
+  }
+
+  static Iterable<ActivitySecurityConfigurationMode> values = const [
+    ActivitySecurityConfigurationMode.public(),
+    ActivitySecurityConfigurationMode.followersAndConnections(),
+    ActivitySecurityConfigurationMode.connections(),
+    ActivitySecurityConfigurationMode.private(),
+  ];
+
+  static String toLocale(ActivitySecurityConfigurationMode mode, AppLocalizations localisations) {
+    return mode.when(
+      public: () => localisations.shared_user_type_generic_everyone,
+      followersAndConnections: () => localisations.shared_user_type_generic_followers,
+      connections: () => localisations.shared_user_type_generic_connections,
+      private: () => localisations.shared_user_type_generic_me,
     );
   }
 

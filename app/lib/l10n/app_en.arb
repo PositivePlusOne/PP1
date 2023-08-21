@@ -311,7 +311,7 @@
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",
-    "shared_user_type_generic_me": "P{rivate}",
+    "shared_user_type_generic_me": "Private",
     
     "shared_comment_type_generic_everyone": "All Users",
     "shared_comment_type_generic_connections": "Connections Only",

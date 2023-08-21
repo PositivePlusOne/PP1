@@ -172,8 +172,8 @@ class PostApiService {
         'style': 'text',
         'type': type,
         'allowSharing': activityData.allowSharing ?? false,
-        'visibleTo': activityData.visibleTo ?? "",
-        'allowComments': activityData.allowComments ?? "",
+        'visibleTo': ActivitySecurityConfigurationMode.toJson(activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
+        'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
       },
     );
   }
@@ -190,10 +190,10 @@ class PostApiService {
         'content': activityData.content ?? "",
         'tags': activityData.tags ?? [],
         'media': media.map((e) => e.toJson()).toList(),
-        'allowSharing': activityData.allowSharing ?? false,
-        'visibleTo': activityData.visibleTo ?? "",
-        'allowComments': activityData.allowComments ?? "",
         'postId': activityData.activityID ?? "",
+        'allowSharing': activityData.allowSharing ?? false,
+        'visibleTo': ActivitySecurityConfigurationMode.toJson(activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
+        'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
       },
     );
   }
