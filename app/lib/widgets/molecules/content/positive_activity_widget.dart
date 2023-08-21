@@ -109,7 +109,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
     final String activityId = widget.activity.flMeta?.id ?? '';
-    final String publisherId = widget.activity.publisherInformation?.foreignKey ?? '';
+    final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';
 
     if (event.key.contains(activityId) || event.key.contains(publisherId)) {
       loadActivityData();
@@ -129,7 +129,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     setStateIfMounted();
 
     // Load the publisher.
-    final String publisherKey = widget.activity.publisherInformation?.foreignKey ?? '';
+    final String publisherKey = widget.activity.publisherInformation?.publisherId ?? '';
     if (publisherKey.isEmpty) {
       logger.w('Publisher key is empty for ${widget.activity.flMeta?.id}');
       return;
@@ -233,7 +233,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     try {
       await activityController.deleteActivity(widget.activity.flMeta!.id!);
       final List<TargetFeed> targetFeeds = [
-        TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+        TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
         TargetFeed('timeline', profileController.currentProfileId ?? ''),
         ...widget.activity.tagTargetFeeds,
       ];
@@ -305,7 +305,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
       activity: widget.activity,
-      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
     );
 
     logger.i('Navigating to post ${widget.activity.flMeta?.id}');
@@ -322,7 +322,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
       activity: widget.activity,
-      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.foreignKey ?? ''),
+      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
     );
 
     logger.i('Navigating to post ${widget.activity.flMeta?.id}');

@@ -19,8 +19,7 @@ export namespace CommentEndpoints {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const feed = request.data.feed || FeedName.User;
-        // const reactionId = request.data.reactionId;
-        const comtent = request.data.content || "";
+        const content = request.data.content || "";
         const mentions = request.data.mentions || [] as MentionJSON[];
         const media = request.data.media || [] as MediaJSON[];
 
@@ -36,11 +35,11 @@ export namespace CommentEndpoints {
         await ActivitiesService.verifyActivityExists(activityId);
 
         // Comment verification
-        CommentHelpers.verifyCommentLength(comtent);
+        CommentHelpers.verifyCommentLength(content);
 
         // Build comment
         const commentJSON = {
-            content: comtent,
+            content: content,
             activityId: activityId,
             senderId: uid,
             mentions: mentions,
@@ -86,7 +85,6 @@ export namespace CommentEndpoints {
         if (checkComment.senderId !== uid) {
             throw new functions.https.HttpsError("permission-denied", "You do not have permission to update this comment.");
         }
-
 
         // Build comment
         const updatedComment = {

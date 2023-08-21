@@ -72,18 +72,36 @@ export namespace ReactionEndpoints {
         });
     });
 
-    // List Reactions
     export const listReactionsForActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
-
-        const reactions = await ReactionService.listReactions(activityId);
+        const reactions = await ReactionService.listReactionsForActivity(activityId);
 
         let cursor = "";
         if (reactions.length > 0) {
-            const lastComment = reactions[reactions.length - 1];
-            if (lastComment._fl_meta_ && lastComment._fl_meta_.fl_id) {
-                cursor = lastComment._fl_meta_.fl_id;
+            const lastReaction = reactions[reactions.length - 1];
+            if (lastReaction._fl_meta_ && lastReaction._fl_meta_.fl_id) {
+                cursor = lastReaction._fl_meta_.fl_id;
+            }
+        }
+
+        return buildEndpointResponse(context, {
+            sender: uid,
+            cursor: cursor,
+            limit: request.limit,
+            data: reactions,
+        });
+    });
+
+    export const listReactionsForUser = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+        const uid = await UserService.verifyAuthenticated(context, request.sender);
+        const reactions = await ReactionService.listReactionsForUser(uid);
+
+        let cursor = "";
+        if (reactions.length > 0) {
+            const lastReaction = reactions[reactions.length - 1];
+            if (lastReaction._fl_meta_ && lastReaction._fl_meta_.fl_id) {
+                cursor = lastReaction._fl_meta_.fl_id;
             }
         }
 

@@ -27,7 +27,6 @@ export enum ActivityActionVerb {
  * @export
  * @interface ActivityJSON
  * @property {FlMetaJSON} [_fl_meta_]
- * @property {string} [foreignKey]
  * @property {ActivityGeneralConfigurationJSON} [generalConfiguration]
  * @property {ActivitySecurityConfigurationJSON} [securityConfiguration]
  * @property {ActivityEventConfigurationJSON} [eventConfiguration]
@@ -91,7 +90,7 @@ export class Activity {
  * @property {string} Clip A clip
  * @property {string} Repost A repost
  */
-export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost';
+export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost' | 'comment' | 'like' | 'share' | 'bookmark';
 
 /**
  * The style of activity
@@ -160,8 +159,8 @@ export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connec
 export interface ActivitySecurityConfigurationJSON {
   context?: string;
   viewMode?: ActivitySecurityConfigurationMode;
-  reactionMode?: ActivitySecurityConfigurationMode;
   shareMode?: ActivitySecurityConfigurationMode;
+  commentMode?: ActivitySecurityConfigurationMode;
 }
 
 /**
@@ -176,14 +175,14 @@ export interface ActivitySecurityConfigurationJSON {
 export class ActivitySecurityConfiguration {
   context: string;
   viewMode: ActivitySecurityConfigurationMode;
-  reactionMode: ActivitySecurityConfigurationMode;
   shareMode: ActivitySecurityConfigurationMode;
+  commentMode: ActivitySecurityConfigurationMode;
 
   constructor(json: ActivitySecurityConfigurationJSON) {
     this.context = json.context || '';
     this.viewMode = json.viewMode || 'private';
-    this.reactionMode = json.reactionMode || 'private';
     this.shareMode = json.shareMode || 'private';
+    this.commentMode = json.commentMode || 'private';
   }
 }
 
@@ -350,26 +349,27 @@ export class ActivityPricingInformation {
  * The JSON representation of an activity publisher information
  * @export
  * @interface ActivityPublisherInformationJSON
- * @property {string} [foreignKey] The foreign key of the publisher (Usually the user ID)
  */
 export interface ActivityPublisherInformationJSON {
-  foreignKey?: string;
   originFeed?: string;
+  publisherId?: string;
+  actorId?: string;
 }
 
 /**
  * Publisher information for an activity
  * @export
  * @class ActivityPublisherInformation
- * @property {string} foreignKey The foreign key of the publisher (Usually the user ID)
  */
 export class ActivityPublisherInformation {
-  foreignKey: string;
   originFeed: string;
+  publisherId: string;
+  actorId: string;
 
   constructor(json: ActivityPublisherInformationJSON) {
-    this.foreignKey = json.foreignKey || '';
     this.originFeed = json.originFeed || '';
+    this.publisherId = json.publisherId || '';
+    this.actorId = json.actorId || '';
   }
 }
 
@@ -400,7 +400,6 @@ export interface ActivityEnrichmentConfigurationJSON {
  * @property {boolean} isSensitive
  * @property {string} publishLocation
  * @property {Mention[]} mentions
- * @property {string} [foreignKey] The foreign key of the publisher (Usually the user ID)
  */
 export class ActivityEnrichmentConfiguration {
   title: string;

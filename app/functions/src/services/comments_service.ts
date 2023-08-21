@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import { CommentJSON } from "../dto/comments";
 import { DataService } from "./data_service";
 import { DefaultGenerics, StreamClient } from "getstream";
+import { ReactionEntryJSON } from "../dto/stream";
 
 export namespace CommentsService {
 
@@ -33,8 +34,15 @@ export namespace CommentsService {
             comment,
         });
 
+        const reactionEntry = {
+            kind: "comment",
+            activity_id: comment.activityId,
+            user_id: comment.senderId,
+            data: comment,
+        } as ReactionEntryJSON;
+
         const response = await client.reactions.add("comment", comment.activityId,
-            {...comment},
+            reactionEntry,
             { userId: comment.senderId },
         );
 
@@ -53,10 +61,15 @@ export namespace CommentsService {
      * @returns {Promise<void>} A promise that resolves when the comment has been updated.
      */
     export async function updateComment(comment: CommentJSON, commentId: string, client: StreamClient<DefaultGenerics>): Promise<void> {
-        await client.reactions.update(commentId, {
-            ...comment,
-        });
+        const reactionEntry = {
+            kind: "comment",
+            activity_id: comment.activityId,
+            user_id: comment.senderId,
+            data: comment,
+        } as ReactionEntryJSON;
 
+        await client.reactions.update(commentId, reactionEntry);
+        
         await DataService.updateDocument({
             schemaKey: "comments",
             entryId: commentId,

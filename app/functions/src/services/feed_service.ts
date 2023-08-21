@@ -1,9 +1,10 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, FlatActivityEnriched, StreamClient, StreamFeed, connect } from "getstream";
+import { DefaultGenerics, FlatActivityEnriched, NewActivity, StreamClient, StreamFeed, connect } from "getstream";
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequest } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
+import { ActivityActionVerb } from "../dto/activities";
 
 export namespace FeedService {
   /**
@@ -151,5 +152,20 @@ export namespace FeedService {
     // Follow the target feed
     await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);
     functions.logger.info("Feed unfollowed", { source, target });
+  }
+
+  /**
+   * Adds an activity to a feed.
+   * @param {StreamFeed<DefaultGenerics>} feed the feed to add the activity to.
+   */
+  export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activityId: string, feed: string): Promise<any> {
+    const getStreamActivity: NewActivity<DefaultGenerics> = {
+      actor: uid,
+      verb: ActivityActionVerb.Share,
+      object: activityId,
+      foreign_id: activityId,
+    };
+    
+    return senderUserFeed.addActivity(getStreamActivity);
   }
 }

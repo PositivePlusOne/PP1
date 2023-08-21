@@ -98,6 +98,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         event: () => _eventBuilder(context, ref),
         clip: () => _clipBuilder(context, ref),
         repost: () => const SizedBox.shrink(),
+        bookmark: () => const SizedBox.shrink(),
       ),
     );
   }

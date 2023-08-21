@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -182,7 +183,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final String title = message.$1;
     final String text = message.$2;
 
-    await reactionApiService.sharePost(
+    await reactionApiService.sharePostToConversations(
       activityId: activity.flMeta!.id!,
       feed: feed,
       targets: profileIds,
@@ -192,5 +193,23 @@ class SharingController extends _$SharingController implements ISharingControlle
   }
 
   @override
-  Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {}
+  Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {
+    final Logger logger = ref.read(loggerProvider);
+    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+
+    if (postOptions == null) {
+      throw Exception('Post options must be provided');
+    }
+
+    logger.d('Sharing to feed');
+    await reactionApiService.sharePostToFeed(
+      activityId: postOptions.$1.flMeta!.id!,
+      feed: postOptions.$2,
+    );
+
+    Navigator.of(context).pop();
+    Future<void>.delayed(kAnimationDurationDebounce, () {
+      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text('Post shared to your feed')));
+    });
+  }
 }
