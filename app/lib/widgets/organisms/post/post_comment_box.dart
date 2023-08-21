@@ -1,18 +1,17 @@
 // Dart imports:
-import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:unicons/unicons.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 
 class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
   const PostCommentBox({

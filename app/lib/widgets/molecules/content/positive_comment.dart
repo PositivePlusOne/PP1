@@ -1,3 +1,10 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/comments.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -6,9 +13,6 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'activity_post_heading_widget.dart';
 
 class PositiveComment extends ConsumerWidget {
