@@ -16,7 +16,10 @@ export namespace RelationshipHelpers {
     let blockedSearchIndex = "";
     let connectedSearchIndex = "";
     let followingSearchIndex = "";
+    let followersSearchIndex = "";
     let hiddenSearchIndex = "";
+
+    const allMemberIds = relationship.members.map((member: any) => member.memberId);
 
     for (const member of relationship.members) {
       if (typeof member.memberId !== "string") {
@@ -39,6 +42,16 @@ export namespace RelationshipHelpers {
 
       if (member.hasFollowed) {
         followingSearchIndex += member.memberId;
+
+        // Add the other members to the followed search index except for the current user.
+        // Skip if they are already in the search index.
+        // This way we 
+        const membersExceptCurrent = allMemberIds.filter((id: string) => id !== member.memberId);
+        for (const id of membersExceptCurrent) {
+          if (followersSearchIndex.indexOf(id) === -1) {
+            followersSearchIndex += id;
+          }
+        }
       }
 
       if (member.isHidden) {
@@ -51,6 +64,7 @@ export namespace RelationshipHelpers {
     relationship.searchIndexRelationshipBlocks = blockedSearchIndex;
     relationship.searchIndexRelationshipConnections = connectedSearchIndex;
     relationship.searchIndexRelationshipFollows = followingSearchIndex;
+    relationship.searchIndexRelationshipFollowers = followersSearchIndex;
     relationship.searchIndexRelationshipHides = hiddenSearchIndex;
 
     return relationship;

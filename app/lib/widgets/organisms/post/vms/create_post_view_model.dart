@@ -23,12 +23,12 @@ import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/filter_helpers.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/activities/activities_controller.dart';
-import 'package:app/providers/activities/dtos/gallery_entry.dart';
-import 'package:app/providers/activities/gallery_controller.dart';
-import 'package:app/providers/content/tags_controller.dart';
+import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/dtos/gallery_entry.dart';
+import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
@@ -49,6 +49,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isEditing,
     @Default('') String currentActivityID,
     @Default([]) List<GalleryEntry> galleryEntries,
+    GalleryEntry? editingGalleryEntry,
     @Default([]) List<String> tags,
     @Default("") String visibleTo,
     @Default("") String allowComments,
@@ -339,6 +340,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(
       galleryEntries: entries,
       currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+      editingGalleryEntry: entries.firstOrNull,
       currentPostType: PostType.image,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
@@ -373,14 +375,34 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         ),
       );
 
-      state = state.copyWith(
-        isBusy: false,
-        galleryEntries: entries,
-        currentCreatePostPage: CreatePostCurrentPage.createPostMultiImage,
-        currentPostType: PostType.multiImage,
-        activeButton: PositivePostNavigationActiveButton.flex,
-        activeButtonFlexText: localisations.page_create_post_create,
-      );
+      if (entries.isEmpty) {
+        logger.d("onMultiImagePicker: entries list is empty");
+        return;
+      }
+
+      final bool isMultiImage = entries.length > 1;
+
+      if (isMultiImage) {
+        state = state.copyWith(
+          isBusy: false,
+          galleryEntries: entries,
+          editingGalleryEntry: entries.firstOrNull,
+          currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
+          currentPostType: PostType.multiImage,
+          activeButton: PositivePostNavigationActiveButton.flex,
+          activeButtonFlexText: localisations.shared_actions_next,
+        );
+      } else {
+        state = state.copyWith(
+          isBusy: false,
+          galleryEntries: entries,
+          editingGalleryEntry: entries.firstOrNull,
+          currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+          currentPostType: PostType.image,
+          activeButton: PositivePostNavigationActiveButton.flex,
+          activeButtonFlexText: localisations.shared_actions_done,
+        );
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -401,11 +423,20 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         router.removeWhere((route) => true);
         router.push(const HomeRoute());
         break;
-      case CreatePostCurrentPage.createPostImage:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.editPhoto,
-          activeButtonFlexText: localizations.shared_actions_next,
-        );
+      case CreatePostCurrentPage.editPhoto:
+        final bool isMultiImage = state.galleryEntries.length > 1;
+        if (isMultiImage) {
+          state = state.copyWith(
+            currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
+            activeButtonFlexText: localizations.shared_actions_next,
+          );
+        } else {
+          state = state.copyWith(
+            currentCreatePostPage: CreatePostCurrentPage.camera,
+            currentPostType: PostType.text,
+            activeButton: PositivePostNavigationActiveButton.post,
+          );
+        }
         break;
       default:
         state = state.copyWith(
@@ -429,14 +460,67 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.camera:
         throw Exception("Cannot press flex button on camera page");
+      case CreatePostCurrentPage.galleryPreview:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostImage,
+          activeButtonFlexText: localisations.page_create_post_create,
+          editingGalleryEntry: null,
+        );
+        break;
       case CreatePostCurrentPage.editPhoto:
-        state = state.copyWith(currentCreatePostPage: CreatePostCurrentPage.createPostImage, activeButtonFlexText: localisations.page_create_post_create);
+        final bool isMultiImage = state.galleryEntries.length > 1;
+        state = state.copyWith(
+          currentCreatePostPage: isMultiImage ? CreatePostCurrentPage.galleryPreview : CreatePostCurrentPage.createPostImage,
+          activeButtonFlexText: isMultiImage ? localisations.shared_actions_next : localisations.page_create_post_create,
+        );
         break;
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
         await onPostFinished(context);
         break;
+    }
+  }
+
+  void onGalleryEntrySelected(BuildContext context, GalleryEntry entry) {
+    final Logger logger = ref.read(loggerProvider);
+    final String fileName = entry.fileName;
+    final bool isCurrentlySelected = state.editingGalleryEntry?.fileName == fileName;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    if (!isCurrentlySelected) {
+      logger.d("onGalleryEntrySelected: $fileName");
+      state = state.copyWith(editingGalleryEntry: entry);
+      return;
+    }
+
+    state = state.copyWith(
+      editingGalleryEntry: entry,
+      currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+      activeButtonFlexText: localisations.shared_actions_done,
+    );
+  }
+
+  Future<void> onEditImagePressed(BuildContext context) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final Logger logger = ref.read(loggerProvider);
+    if (state.galleryEntries.isEmpty) {
+      logger.e("Cannot edit image, no images in gallery");
+      return;
+    }
+
+    if (state.galleryEntries.length == 1) {
+      state = state.copyWith(
+        currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+        activeButtonFlexText: localisations.shared_actions_done,
+        editingGalleryEntry: state.galleryEntries.firstOrNull,
+      );
+    } else {
+      state = state.copyWith(
+        currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
+        activeButtonFlexText: localisations.shared_actions_next,
+        editingGalleryEntry: state.galleryEntries.firstOrNull,
+      );
     }
   }
 }

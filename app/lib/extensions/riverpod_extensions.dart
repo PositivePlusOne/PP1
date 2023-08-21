@@ -18,11 +18,11 @@ import '../dtos/database/relationships/relationship.dart';
 
 extension ProviderContainerExt on ProviderContainer {
   void cacheResponseData(Map<String, dynamic> data, Map<String, bool> overwriteCache) {
-    cacheProfileData(data, overwriteCache["users"] ?? false);
-    cacheActivityData(data, overwriteCache["activities"] ?? false);
-    cacheRelationshipData(data, overwriteCache["relationships"] ?? false);
-    cacheTagData(data, overwriteCache["tags"] ?? false);
-    cacheGuidanceDirectoryEntries(data, overwriteCache["guidanceDirectoryEntries"] ?? false);
+    cacheProfileData(data, overwriteCache["users"] ?? true);
+    cacheActivityData(data, overwriteCache["activities"] ?? true);
+    cacheRelationshipData(data, overwriteCache["relationships"] ?? true);
+    cacheTagData(data, overwriteCache["tags"] ?? true);
+    cacheGuidanceDirectoryEntries(data, overwriteCache["guidanceDirectoryEntries"] ?? true);
   }
 }
 

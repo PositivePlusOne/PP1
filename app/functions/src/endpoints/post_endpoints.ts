@@ -14,6 +14,11 @@ import { StorageService } from "../services/storage_service";
 import { FeedService } from "../services/feed_service";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedName } from "../constants/default_feeds";
+import { ProfileService } from "../services/profile_service";
+import { ProfileJSON } from "../dto/profile";
+import { ConversationService } from "../services/conversation_service";
+import { RelationshipService } from "../services/relationship_service";
+import { RelationshipJSON } from "../dto/relationships";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -37,7 +42,6 @@ export namespace PostEndpoints {
     
         // Convert window results to a list of IDs
         const activityObjectIds = window.results.map((item) => item.object);
-        const activityIds = window.results.map((item) => item.id);
     
         // Loop over window IDs in parallel and get the activity data
         const payloadData = await Promise.all([...activityObjectIds.map((id) => ActivitiesService.getActivity(id))]);
@@ -72,6 +76,49 @@ export namespace PostEndpoints {
     return buildEndpointResponse(context, {
       sender: request.sender,
       data: [activity],
+    });
+  });
+
+  export const shareActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    functions.logger.info(`Sharing activity`, { request });
+    
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const activityId = request.data.activityId || "";
+    const feed = request.data.feed || FeedName.User;
+    const targets = request.data.targets || [] as string[];
+
+    const title = request.data.title || "";
+    const description = request.data.description || "";
+
+    if (!activityId || !feed) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
+    }
+
+    if (!targets || targets.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing targets");
+    }
+
+    if (!title || !description) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing title or description");
+    }
+
+    const profiles = await ProfileService.getMultipleProfiles(targets) as ProfileJSON[];
+    const filteredProfiles = profiles.filter((profile) => profile?._fl_meta_?.fl_id && profile?._fl_meta_?.fl_id !== uid);
+    const relationships = await Promise.all(filteredProfiles.map((profile) => RelationshipService.getRelationship([uid, profile._fl_meta_!.fl_id!]))) as RelationshipJSON[];
+
+    // Check all relationships are connected
+    const hasUnconnectedRelationships = relationships.some((relationship) => relationship?.connected !== true);
+    if (hasUnconnectedRelationships) {
+      throw new functions.https.HttpsError("permission-denied", "Cannot share with unconnected users");
+    }
+
+    const streamClient = ConversationService.getStreamChatInstance();
+    const conversations = await ConversationService.getOneOnOneChannels(streamClient, uid, targets);
+    await ConversationService.sendBulkMessage(conversations, uid, title, description);
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [],
     });
   });
 

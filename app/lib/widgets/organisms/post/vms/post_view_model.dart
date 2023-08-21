@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/comments.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/events/content/comments.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -51,6 +52,20 @@ class PostViewModel extends _$PostViewModel {
   @override
   PostViewModelState build(String activityId, TargetFeed feed) {
     return PostViewModelState.fromActivity(activityId: activityId, targetFeed: feed);
+  }
+
+  Future<bool> onWillPopScope() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final bool hasHomeRoute = appRouter.stack.any((element) => element is! PostRoute && element is! SplashRoute);
+
+    if (!hasHomeRoute) {
+      appRouter.removeWhere((route) => true);
+      appRouter.navigate(const HomeRoute());
+    } else {
+      appRouter.removeLast();
+    }
+
+    return false;
   }
 
   void onCommentChanged(String str) {

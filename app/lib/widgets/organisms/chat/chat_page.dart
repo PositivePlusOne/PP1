@@ -21,6 +21,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/main.dart';
@@ -91,10 +92,21 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
     );
   }
 
+  String buildMessageText(bool isOwnMessage, bool isLeaveMessage, String messageText, AppLocalizations locale) {
+    if (isOwnMessage && isLeaveMessage) {
+      return locale.page_chat_leave_group_system_message_own;
+    }
+
+    String returnMessageText = messageText;
+    returnMessageText = returnMessageText.replaceAll(RegExp(r'pp1://'), 'https://');
+    return returnMessageText;
+  }
+
   Widget buildSystemMessage(BuildContext context, Message message, DesignColorsModel colors, DesignTypographyModel typography, AppLocalizations locale, User currentStreamUser) {
     final isOwnMessage = message.user?.id == currentStreamUser.id;
     final isLeaveMessage = message.extraData["eventType"] == GetStreamSystemMessageType.userRemoved;
     final user = message.mentionedUsers.firstOrNull;
+    final String messageText = buildMessageText(isOwnMessage, isLeaveMessage, message.text ?? '', locale);
 
     return Padding(
       padding: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall, top: kPaddingSmall),
@@ -122,9 +134,8 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                     child: Align(
                       alignment: isOwnMessage ? Alignment.center : Alignment.centerLeft,
                       child: StreamMessageText(
-                        message: message.copyWith(
-                          text: isOwnMessage && isLeaveMessage ? locale.page_chat_leave_group_system_message_own : message.text,
-                        ),
+                        onLinkTap: onLinkTap,
+                        message: message.copyWith(text: messageText),
                         messageTheme: StreamMessageThemeData(
                           avatarTheme: const StreamAvatarThemeData(
                             constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
@@ -178,6 +189,17 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
         );
       },
     );
+  }
+
+  void onLinkTap(String url) {
+    Uri uri = Uri.parse(url);
+
+    if (uri.host == 'positiveplusone.com') {
+      uri = uri.replace(scheme: 'pp1');
+    }
+
+    final String fullPath = uri.toString();
+    fullPath.attemptToLaunchURL();
   }
 
   @override

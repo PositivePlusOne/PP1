@@ -23,6 +23,7 @@ mixin _$CreatePostViewModelState {
   bool get isEditing => throw _privateConstructorUsedError;
   String get currentActivityID => throw _privateConstructorUsedError;
   List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
+  GalleryEntry? get editingGalleryEntry => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
   String get visibleTo => throw _privateConstructorUsedError;
   String get allowComments => throw _privateConstructorUsedError;
@@ -51,6 +52,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       bool isEditing,
       String currentActivityID,
       List<GalleryEntry> galleryEntries,
+      GalleryEntry? editingGalleryEntry,
       List<String> tags,
       String visibleTo,
       String allowComments,
@@ -81,6 +83,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isEditing = null,
     Object? currentActivityID = null,
     Object? galleryEntries = null,
+    Object? editingGalleryEntry = freezed,
     Object? tags = null,
     Object? visibleTo = null,
     Object? allowComments = null,
@@ -115,6 +118,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.galleryEntries
           : galleryEntries // ignore: cast_nullable_to_non_nullable
               as List<GalleryEntry>,
+      editingGalleryEntry: freezed == editingGalleryEntry
+          ? _value.editingGalleryEntry
+          : editingGalleryEntry // ignore: cast_nullable_to_non_nullable
+              as GalleryEntry?,
       tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -167,6 +174,7 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       bool isEditing,
       String currentActivityID,
       List<GalleryEntry> galleryEntries,
+      GalleryEntry? editingGalleryEntry,
       List<String> tags,
       String visibleTo,
       String allowComments,
@@ -195,6 +203,7 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? isEditing = null,
     Object? currentActivityID = null,
     Object? galleryEntries = null,
+    Object? editingGalleryEntry = freezed,
     Object? tags = null,
     Object? visibleTo = null,
     Object? allowComments = null,
@@ -229,6 +238,10 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
           ? _value._galleryEntries
           : galleryEntries // ignore: cast_nullable_to_non_nullable
               as List<GalleryEntry>,
+      editingGalleryEntry: freezed == editingGalleryEntry
+          ? _value.editingGalleryEntry
+          : editingGalleryEntry // ignore: cast_nullable_to_non_nullable
+              as GalleryEntry?,
       tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
@@ -275,6 +288,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       this.isEditing = false,
       this.currentActivityID = '',
       final List<GalleryEntry> galleryEntries = const [],
+      this.editingGalleryEntry,
       final List<String> tags = const [],
       this.visibleTo = "",
       this.allowComments = "",
@@ -310,6 +324,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
     return EqualUnmodifiableListView(_galleryEntries);
   }
 
+  @override
+  final GalleryEntry? editingGalleryEntry;
   final List<String> _tags;
   @override
   @JsonKey()
@@ -342,7 +358,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, tags: $tags, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery, currentFilter: $currentFilter, activeButton: $activeButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery, currentFilter: $currentFilter, activeButton: $activeButton)';
   }
 
   @override
@@ -361,6 +377,8 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
                 other.currentActivityID == currentActivityID) &&
             const DeepCollectionEquality()
                 .equals(other._galleryEntries, _galleryEntries) &&
+            (identical(other.editingGalleryEntry, editingGalleryEntry) ||
+                other.editingGalleryEntry == editingGalleryEntry) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.visibleTo, visibleTo) ||
                 other.visibleTo == visibleTo) &&
@@ -387,6 +405,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       isEditing,
       currentActivityID,
       const DeepCollectionEquality().hash(_galleryEntries),
+      editingGalleryEntry,
       const DeepCollectionEquality().hash(_tags),
       visibleTo,
       allowComments,
@@ -412,6 +431,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final bool isEditing,
           final String currentActivityID,
           final List<GalleryEntry> galleryEntries,
+          final GalleryEntry? editingGalleryEntry,
           final List<String> tags,
           final String visibleTo,
           final String allowComments,
@@ -434,6 +454,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   String get currentActivityID;
   @override
   List<GalleryEntry> get galleryEntries;
+  @override
+  GalleryEntry? get editingGalleryEntry;
   @override
   List<String> get tags;
   @override

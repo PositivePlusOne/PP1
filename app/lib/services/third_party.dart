@@ -3,6 +3,7 @@ import 'dart:math';
 
 // Package imports:
 import 'package:algolia/algolia.dart';
+import 'package:app_links/app_links.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cron/cron.dart';
@@ -62,6 +63,11 @@ FutureOr<DefaultCacheManager> defaultCacheManager(DefaultCacheManagerRef ref) as
 @Riverpod(keepAlive: true)
 Random random(RandomRef ref) {
   return Random();
+}
+
+@Riverpod(keepAlive: true)
+AppLinks appLinks(AppLinksRef ref) {
+  return AppLinks();
 }
 
 @Riverpod(keepAlive: true)

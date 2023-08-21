@@ -57,6 +57,7 @@ class PostPage extends ConsumerWidget {
       onRefresh: viewModel.onRefresh,
       refreshController: viewModel.refreshController,
       refreshBackgroundColor: colors.white,
+      onWillPopScope: viewModel.onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -79,7 +80,7 @@ class PostPage extends ConsumerWidget {
             colors: colors,
             primaryColor: colors.black,
             icon: UniconsLine.angle_left_b,
-            onTapped: () => router.removeLast(),
+            onTapped: () => viewModel.onWillPopScope(),
           ),
           appBarTrailing: [
             for (final Widget actionWidget in actions) ...<Widget>[

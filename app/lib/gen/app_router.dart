@@ -11,6 +11,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/providers/events/content/activities.dart';
+import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/chat_create_page.dart';
@@ -27,6 +28,7 @@ import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart'
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/post/post_page.dart';
+import 'package:app/widgets/organisms/post/post_share_page.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
@@ -171,6 +173,7 @@ class AppRouter extends _$AppRouter {
         //* Account
         AutoRoute(page: AccountRoute.page, path: '/account', guards: kCommonGuards),
         AutoRoute(page: AccountDetailsRoute.page, path: '/account/details', guards: kCommonGuards),
+        AutoRoute(page: AccountCommunitiesRoute.page, path: '/account/communities', guards: kCommonGuards),
         AutoRoute(page: AccountUpdateEmailAddressRoute.page, path: '/account/update/email', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: kCommonGuards),
@@ -188,8 +191,9 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: GuidanceEntryRoute.page, path: '/guidance/:id', guards: kCommonGuards),
         //* Content
         AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
-        AutoRoute(page: PostRoute.page, path: '/post', guards: kCommonGuards),
+        AutoRoute(page: PostRoute.page, path: '/post'),
         AutoRoute(page: CreatePostRoute.page, path: '/post/create', guards: [...kCommonGuards, signedInGuard]),
+        AutoRoute(page: PostShareRoute.page, path: '/post/share'),
         //* Dialogs
         AutoRoute(page: TermsAndConditionsRoute.page, path: '/terms'),
         AutoRoute(page: HintDialogRoute.page, path: '/help/dialog'),

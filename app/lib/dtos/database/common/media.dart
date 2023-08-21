@@ -13,7 +13,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 // Project imports:
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 

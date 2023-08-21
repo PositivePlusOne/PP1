@@ -20,11 +20,11 @@ import 'package:universal_platform/universal_platform.dart';
 import 'package:app/constants/key_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/gender_controller.dart';
-import 'package:app/providers/content/hiv_status_controller.dart';
-import 'package:app/providers/content/interests_controller.dart';
-import 'package:app/providers/content/tags_controller.dart';
+import 'package:app/providers/profiles/gender_controller.dart';
+import 'package:app/providers/profiles/hiv_status_controller.dart';
+import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
@@ -39,6 +39,7 @@ class SystemControllerState with _$SystemControllerState {
     required SystemEnvironment environment,
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
+    @Default(bool) hasPerformedInitialSetup,
     String? appName,
     String? packageName,
     String? version,
@@ -164,6 +165,9 @@ class SystemController extends _$SystemController {
       final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();
       profileController.onSupportedProfilesUpdated(supportedProfiles);
     }
+
+    state = state.copyWith(hasPerformedInitialSetup: true);
+    logger.i('updateSystemConfiguration: Completed');
   }
 
   //* Travels to a page given on development which allows the users to test the app

@@ -11,7 +11,7 @@ import 'package:mime/mime.dart';
 import 'package:app/constants/compression_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/activities/gallery_controller.dart';
+import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/services/third_party.dart';
 
 class GalleryEntry {

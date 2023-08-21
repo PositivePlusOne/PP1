@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -68,6 +69,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
+    final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -119,6 +121,12 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final Duration remainingDuration = requiredSplashLength.difference(DateTime.now());
     if (remainingDuration > Duration.zero) {
       await Future<void>.delayed(remainingDuration);
+    }
+
+    // Check for initial links
+    final HandleLinkResult result = await universalLinksController.initialize(replaceRouteOnNavigate: true);
+    if (result == HandleLinkResult.handledWithNavigation) {
+      return;
     }
 
     //* Display various welcome back pages based on system state

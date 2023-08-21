@@ -11,9 +11,10 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/activities/dtos/gallery_entry.dart';
+import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -47,6 +48,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.valueSaveToGallery = false,
     this.tags = const [],
     this.trailingWidget,
+    this.onEditImagePressed,
     super.key,
   });
 
@@ -71,6 +73,8 @@ class CreatePostDialogue extends HookConsumerWidget {
   final bool valueSaveToGallery;
 
   final Widget? trailingWidget;
+
+  final VoidCallback? onEditImagePressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -116,12 +120,16 @@ class CreatePostDialogue extends HookConsumerWidget {
           ),
           //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
           [
-            if (postType == PostType.multiImage && galleryEntries.isNotEmpty)
-              CreatePostMultiImageThumbnailList(
-                images: galleryEntries,
-                colours: colours,
+            if (galleryEntries.isNotEmpty) ...<Widget>[
+              PositiveTapBehaviour(
+                onTap: onEditImagePressed,
+                child: CreatePostMultiImageThumbnailList(
+                  images: galleryEntries,
+                  colours: colours,
+                ),
               ),
-            const SizedBox(height: kPaddingLarge),
+              const SizedBox(height: kPaddingLarge),
+            ],
             //* -=-=-=-=- Caption -=-=-=-=- *\\
             CreatePostTextField(
               text: postType == PostType.text ? localisations.page_create_post_message : localisations.page_create_post_caption,
@@ -239,8 +247,9 @@ class CreatePostDialogue extends HookConsumerWidget {
                 isEnabled: !isBusy,
               ),
             ),
-            const SizedBox(height: kPaddingSmall),
             trailingWidget ?? const SizedBox(),
+            kCreatePostNavigationHeight.asVerticalBox,
+            mediaQueryData.padding.bottom.asVerticalBox,
           ].padded(const EdgeInsets.symmetric(horizontal: kPaddingMedium)),
         ],
       ),

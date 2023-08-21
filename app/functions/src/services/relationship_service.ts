@@ -7,11 +7,19 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipHelpers } from "../helpers/relationship_helpers";
 import { Pagination, PaginationResult } from "../helpers/pagination";
 import { ConversationService } from "./conversation_service";
-import { RelationshipJSON } from "../dto/relationships";
+import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
+import { CacheService } from "./cache_service";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
 export namespace RelationshipService {
+  export const FOLLOWING_CACHE_KEY_PREFIX = "following:";
+  export const FOLLOWERS_CACHE_KEY_PREFIX = "followers:";
+  export const MUTED_CACHE_KEY_PREFIX = "muted:";
+  export const BLOCKED_CACHE_KEY_PREFIX = "blocked:";
+  export const HIDDEN_CACHE_KEY_PREFIX = "hidden:";
+  export const CONNECTED_CACHE_KEY_PREFIX = "connected:";
+
   /**
    * Gets the relationship between entities.
    * @param {string[]} members the members of the relationship.
@@ -86,112 +94,123 @@ export namespace RelationshipService {
   }
 
   /**
-   * Gets the blocked relationships for the given user.
-   * @param {string} uid the user to get the blocked relationships for.
-   * @return {string[]} the blocked relationships as GUIDs.
+   * Resets the relationship pagination cache for the given relationship.
+   * @param {RelationshipJSON} data the relationship data.
+   * @return {Promise<void>} a promise that resolves when the cache has been reset.
    */
-  export async function getBlockedRelationships(uid: string): Promise<string[]> {
+  export async function resetRelationshipPaginationCache(data: RelationshipJSON): Promise<void> {
+    const members = data.members ?? [];
+    await Promise.all([
+      members.map((member: RelationshipMemberJSON) => {
+        if (typeof member.memberId !== "string" || !member.memberId) {
+          return [];
+        }
+
+        return [
+          CacheService.deletePrefixedFromCache(FOLLOWING_CACHE_KEY_PREFIX + member.memberId),
+          CacheService.deletePrefixedFromCache(FOLLOWERS_CACHE_KEY_PREFIX + member.memberId),
+          CacheService.deletePrefixedFromCache(MUTED_CACHE_KEY_PREFIX + member.memberId),
+          CacheService.deletePrefixedFromCache(BLOCKED_CACHE_KEY_PREFIX + member.memberId),
+          CacheService.deletePrefixedFromCache(HIDDEN_CACHE_KEY_PREFIX + member.memberId),
+          CacheService.deletePrefixedFromCache(CONNECTED_CACHE_KEY_PREFIX + member.memberId),
+        ];
+      }),
+    ]);
+  }
+
+  /**
+  * Gets the blocked relationships for the given user.
+  * @param {string} uid the user to get the blocked relationships for.
+  * @param {Pagination} pagination the pagination.
+  * @return {RelationshipJSON[]} the blocked relationships as GUIDs.
+  */
+  export async function getBlockedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
-    const relationships = [] as string[];
+    const cacheKey = BLOCKED_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    let data = await CacheService.getFromCache(cacheKey);
 
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipBlocks", ">=", uid)
-      .where("searchIndexRelationshipBlocks", "<=", uid + "\uf8ff")
-      .where("blocked", "==", true)
-      .get();
+    if (!data) {
+      const relationshipsSnapshot = await adminFirestore
+        .collection("fl_content")
+        .orderBy("searchIndexRelationshipBlocks")
+        .where("_fl_meta_.schema", "==", "relationships")
+        .where("searchIndexRelationshipBlocks", ">=", uid)
+        .where("searchIndexRelationshipBlocks", "<=", uid + "\uf8ff")
+        .where("blocked", "==", true)
+        .limit(pagination.limit ?? 10)
+        .startAfter(pagination.cursor)
+        .get();
 
-    relationshipsSnapshot.docs.forEach((doc) => {
-      const data = doc.data();
+      data = relationshipsSnapshot.docs.map((doc) => doc.data());
+    }
 
-      if (data.members && data.members.length > 0) {
-        let hasBlocked = false;
-        for (const member of data.members) {
-          if (typeof member.memberId === "string" && member.memberId === uid) {
-            hasBlocked = member.hasBlocked;
-            break;
-          }
-        }
+    const hasData = data.length !== 0;
+    const responsePagination = {
+      limit: pagination.limit,
+      cursor: '',
+    } as Pagination;
 
-        if (hasBlocked) {
-          for (const member of data.members) {
-            if (typeof member.memberId === "string" && member.memberId !== uid) {
-              relationships.push(member.memberId);
-            }
-          }
-        }
-      }
-    });
+    if (!hasData) {
+      return { data: [], pagination: responsePagination };
+    }
 
-    functions.logger.info("Blocked relationships", {
-      relationships,
-    });
+    CacheService.setInCache(cacheKey, data);
 
-    return relationships;
+    const last = data[data.length - 1];
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    responsePagination.cursor = lastId;
+
+    return {
+      data: data,
+      pagination: responsePagination,
+    };
   }
 
   /**
    * Gets the connected relationships for the given user.
    * @param {string} uid the user to get the connected relationships for.
-   * @param {boolean} fullRelationship whether this function should return users that have a 2 way connection or not.
-   * @param pagination
-   * @return {string[]} the connected relationships as GUIDs.
+   * @param {Pagination} pagination the pagination.
+   * @return {RelationshipJSON[]} the connected relationships as GUIDs.
    */
-  export async function getConnectedRelationships(uid: string, fullRelationship = false, pagination: Pagination): Promise<PaginationResult<string>> {
+  export async function getConnectedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
-    const relationships = [] as string[];
+    const cacheKey = CONNECTED_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    let data = await CacheService.getFromCache(cacheKey);
 
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .orderBy("searchIndexRelationshipConnections")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipConnections", ">=", uid)
-      .where("searchIndexRelationshipConnections", "<=", uid + "\uf8ff")
-      .where("connected", "==", true)
-      .limit(pagination.limit ?? 10)
-      .startAfter(pagination.cursor)
-      .get();
+    if (!data) {
+      const relationshipsSnapshot = await adminFirestore
+        .collection("fl_content")
+        .orderBy("searchIndexRelationshipConnections")
+        .where("_fl_meta_.schema", "==", "relationships")
+        .where("searchIndexRelationshipConnections", ">=", uid)
+        .where("searchIndexRelationshipConnections", "<=", uid + "\uf8ff")
+        .where("connected", "==", true)
+        .limit(pagination.limit ?? 10)
+        .startAfter(pagination.cursor)
+        .get();
 
-    functions.logger.info("Docs length", relationshipsSnapshot.docs.length);
-    const hasData = relationshipsSnapshot.docs.length !== 0;
-    if (!hasData) {
-      return { data: [], pagination };
+      data = relationshipsSnapshot.docs.map((doc) => doc.data());
     }
 
-    const last = relationshipsSnapshot.docs[relationshipsSnapshot.docs.length - 1].data();
+    const hasData = data.length !== 0;
+    const responsePagination = {
+      limit: pagination.limit,
+      cursor: '',
+    } as Pagination;
 
-    const cursor = last.searchIndexRelationshipConnections;
+    if (!hasData) {
+      return { data: [], pagination: responsePagination };
+    }
 
-    relationshipsSnapshot.docs.forEach((doc) => {
-      const data = doc.data();
+    CacheService.setInCache(cacheKey, data);
 
-      if (data.members && data.members.length > 0) {
-        let hasConnected = false;
-        for (const member of data.members) {
-          if (member.memberId === uid) {
-            hasConnected = member.hasConnected;
-            break;
-          }
-        }
-
-        if (hasConnected) {
-          for (const member of data.members) {
-            if (member.memberId !== uid && (fullRelationship ? member.hasConnected : true)) {
-              relationships.push(member.memberId);
-            }
-          }
-        }
-      }
-    });
-
-    functions.logger.info("Connected relationships", {
-      relationships,
-    });
+    const last = data[data.length - 1];
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    responsePagination.cursor = lastId;
 
     return {
-      data: relationships,
-      pagination: { cursor, limit: pagination.limit },
+      data: data,
+      pagination: responsePagination,
     };
   }
 
@@ -200,39 +219,86 @@ export namespace RelationshipService {
    * @param {string} uid the user to get the followed relationships for.
    * @return {string[]} the followed relationships as GUIDs.
    */
-  export async function getFollowingRelationships(uid: string): Promise<string[]> {
+  export async function getFollowRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
-    const relationships = [] as string[];
+    const cacheKey = FOLLOWING_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    let data = await CacheService.getFromCache(cacheKey);
 
-    const relationshipsSnapshot = await adminFirestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipFollows", ">=", uid)
-      .where("searchIndexRelationshipFollows", "<=", uid + "\uf8ff")
-      .where("following", "==", true)
-      .get();
+    if (!data) {
+      const relationshipsSnapshot = await adminFirestore
+        .collection("fl_content")
+        .orderBy("searchIndexRelationshipFollows")
+        .where("_fl_meta_.schema", "==", "relationships")
+        .where("searchIndexRelationshipFollows", ">=", uid)
+        .where("searchIndexRelationshipFollows", "<=", uid + "\uf8ff")
+        .limit(pagination.limit ?? 10)
+        .startAfter(pagination.cursor)
+        .get();
 
-    relationshipsSnapshot.docs.forEach((doc) => {
-      const data = doc.data();
+      data = relationshipsSnapshot.docs.map((doc) => doc.data());
+    }
 
-      if (data.members && data.members.length > 0) {
-        for (const member of data.members) {
-          if (typeof member.memberId === "string" && member.memberId === uid) {
-            continue;
-          }
+    const hasData = data.length !== 0;
+    const responsePagination = {
+      limit: pagination.limit,
+      cursor: '',
+    } as Pagination;
 
-          if (typeof member.memberId === "string") {
-            relationships.push(member.memberId);
-          }
-        }
-      }
-    });
+    if (!hasData) {
+      return { data: [], pagination: responsePagination };
+    }
 
-    functions.logger.info("Following relationships", {
-      relationships,
-    });
+    CacheService.setInCache(cacheKey, data);
 
-    return relationships;
+    const last = data[data.length - 1];
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    responsePagination.cursor = lastId;
+
+    return {
+      data: data,
+      pagination: responsePagination,
+    };
+  }
+
+  export async function getFollowedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
+    const adminFirestore = adminApp.firestore();
+    const cacheKey = FOLLOWERS_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    let data = await CacheService.getFromCache(cacheKey);
+
+    if (!data) {
+      const relationshipsSnapshot = await adminFirestore
+        .collection("fl_content")
+        .orderBy("searchIndexRelationshipFollowers")
+        .where("_fl_meta_.schema", "==", "relationships")
+        .where("searchIndexRelationshipFollowers", ">=", uid)
+        .where("searchIndexRelationshipFollowers", "<=", uid + "\uf8ff")
+        .limit(pagination.limit ?? 10)
+        .startAfter(pagination.cursor)
+        .get();
+
+      data = relationshipsSnapshot.docs.map((doc) => doc.data());
+    }
+
+    const hasData = data.length !== 0;
+    const responsePagination = {
+      limit: pagination.limit,
+      cursor: '',
+    } as Pagination;
+
+    if (!hasData) {
+      return { data: [], pagination: responsePagination };
+    }
+
+    CacheService.setInCache(cacheKey, data);
+
+    const last = data[data.length - 1];
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    responsePagination.cursor = lastId;
+
+    return {
+      data: data,
+      pagination: responsePagination,
+    };
   }
 
   /**
@@ -346,6 +412,8 @@ export namespace RelationshipService {
     relationship.blocked = hasRemainingBlockers;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -386,6 +454,8 @@ export namespace RelationshipService {
     relationship.connected = false;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -423,10 +493,11 @@ export namespace RelationshipService {
 
     // Sets a flag on the relationship to indicate that it is muted.
     relationship.muted = true;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
+    resetRelationshipPaginationCache(relationship);
+
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
     if (!flamelinkId) {
       throw new Error("Relationship does not have a flamelink id");
     }
@@ -469,8 +540,9 @@ export namespace RelationshipService {
     relationship.muted = hasRemainingMuters;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    resetRelationshipPaginationCache(relationship);
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
     if (!flamelinkId) {
       throw new Error("Relationship does not have a flamelink id");
     }
@@ -514,6 +586,8 @@ export namespace RelationshipService {
 
     relationship.connected = true;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
     if (!flamelinkId) {
       throw new Error("Relationship does not have a flamelink id");
@@ -552,6 +626,8 @@ export namespace RelationshipService {
 
     relationship.connected = false;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -596,6 +672,8 @@ export namespace RelationshipService {
     relationship.connected = hasRemainingConnections;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -654,6 +732,8 @@ export namespace RelationshipService {
     relationship.following = true;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -698,6 +778,8 @@ export namespace RelationshipService {
     relationship.followed = hasRemainingFollowers;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -737,6 +819,8 @@ export namespace RelationshipService {
     relationship.hidden = true;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {
@@ -781,6 +865,8 @@ export namespace RelationshipService {
     relationship.hidden = hasRemainingHidden;
 
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
 
     if (!flamelinkId) {

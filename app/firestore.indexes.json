@@ -49,6 +49,24 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "searchIndexRelationshipFollowers",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "following",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "searchIndexRelationshipFollows",
           "order": "ASCENDING"
         }
@@ -132,6 +150,34 @@
         },
         {
           "fieldPath": "popularity",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipFollowers",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "fl_content",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "_fl_meta_.schema",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "searchIndexRelationshipFollows",
           "order": "ASCENDING"
         }
       ]

@@ -1,9 +1,6 @@
 // Dart imports:
 import 'dart:convert';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,18 +8,17 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
-import '../../profile/dialogs/profile_modal_dialog.dart';
+
+// Flutter imports:
+
+
 
 part 'search_view_model.freezed.dart';
 part 'search_view_model.g.dart';
@@ -208,42 +204,5 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     state = state.copyWith(currentTab: newTab);
-  }
-
-  Future<void> onUserProfileModalRequested(BuildContext context, String uid) async {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
-
-    logger.d('User profile modal requested: $uid');
-    if (uid.isEmpty || auth.currentUser == null) {
-      logger.w('User profile modal requested with empty uid');
-      return;
-    }
-
-    state = state.copyWith(isBusy: true);
-
-    try {
-      final Profile? profile = cacheController.getFromCache(uid);
-      if (profile == null) {
-        logger.w('User profile modal requested with empty profile');
-        return;
-      }
-
-      final List<String> members = <String>[
-        auth.currentUser?.uid ?? '',
-        profile.flMeta?.id ?? '',
-      ];
-
-      final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
-
-      await PositiveDialog.show(
-        context: context,
-        useSafeArea: false,
-        child: ProfileModalDialog(profile: profile, relationship: relationship),
-      );
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
   }
 }
