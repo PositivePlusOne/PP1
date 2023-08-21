@@ -7,7 +7,7 @@ import { DataService } from "../services/data_service";
 import { ActivitiesService } from "../services/activities_service";
 import { UserService } from "../services/user_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
-import { ActivityJSON } from "../dto/activities";
+import { ActivityJSON, ActivitySecurityConfigurationMode } from "../dto/activities";
 import { MediaJSON } from "../dto/media";
 import { TagsService } from "../services/tags_service";
 import { StorageService } from "../services/storage_service";
@@ -166,9 +166,13 @@ export namespace PostEndpoints {
     const type = request.data.type;
     const style = request.data.style;
 
-    // const visibleTo = request.data.visibleTo || [] as string[];
-    const allowSharing = request.data.allowSharing || false;
-    const allowComments = request.data.allowComments || false;
+    const allowSharing = request.data.allowSharing ? "public" : "private" as ActivitySecurityConfigurationMode;
+    const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
+    const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
+
+    if (!allowComments || !allowSharing || !visibleTo) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
+    }
 
     functions.logger.info(`Posting activity`, { uid, content, media, userTags });
     const hasContentOrMedia = content || media.length > 0;
@@ -200,9 +204,9 @@ export namespace PostEndpoints {
         tags: validatedTags,
       },
       securityConfiguration: {
-        viewMode: "public",
-        commentMode: allowComments ? "public" : "private",
-        shareMode: allowSharing ? "public" : "private",
+        viewMode: visibleTo,
+        commentMode: allowComments,
+        shareMode: allowSharing,
       },
       media: media,
     } as ActivityJSON;
@@ -261,9 +265,13 @@ export namespace PostEndpoints {
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
 
-    // const visibleTo = request.data.visibleTo || [] as string[];
-    const allowSharing = request.data.allowSharing || false;
-    const allowComments = request.data.allowComments || false;
+    const allowSharing = request.data.allowSharing ? "public" : "private" as ActivitySecurityConfigurationMode;
+    const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
+    const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
+
+    if (!allowComments || !allowSharing || !visibleTo) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
+    }
 
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activityId");
@@ -316,8 +324,9 @@ export namespace PostEndpoints {
       activity.securityConfiguration = {};
     }
 
-    activity.securityConfiguration.shareMode = allowSharing ? "public" : "private";
-    activity.securityConfiguration.commentMode = allowComments ? "public" : "private";
+    activity.securityConfiguration.viewMode = visibleTo;
+    activity.securityConfiguration.shareMode = allowSharing;
+    activity.securityConfiguration.commentMode = allowComments;
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);

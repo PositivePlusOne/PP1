@@ -9,9 +9,9 @@ class ActivityData {
     this.content,
     this.altText,
     this.tags,
-    this.allowComments,
     this.allowSharing,
-    this.visibleTo,
+    this.visibilityMode,
+    this.reactionVisibilityMode,
     this.postType,
     this.media,
   });
@@ -19,11 +19,14 @@ class ActivityData {
   String? activityID;
 
   String? content;
-  String? altText;
-  String? allowComments;
-  bool? allowSharing;
   List<String>? tags;
-  String? visibleTo;
+  String? altText;
+
+  bool? allowSharing;
+
+  ActivitySecurityConfigurationMode? visibilityMode;
+  ActivitySecurityConfigurationMode? reactionVisibilityMode;
+
   PostType? postType;
   List<Media>? media;
 }

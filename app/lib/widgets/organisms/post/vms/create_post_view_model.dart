@@ -51,10 +51,10 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default([]) List<GalleryEntry> galleryEntries,
     GalleryEntry? editingGalleryEntry,
     @Default([]) List<String> tags,
-    @Default("") String visibleTo,
-    @Default("") String allowComments,
-    @Default("") String activeButtonFlexText,
     @Default(false) bool allowSharing,
+    @Default(ActivitySecurityConfigurationMode.public()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode visibleTo,
+    @Default(ActivitySecurityConfigurationMode.public()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode allowComments,
+    @Default("") String activeButtonFlexText,
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
@@ -112,9 +112,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         currentActivityID: activityData.activityID ?? "",
         isEditing: true,
         tags: activityData.tags ?? [],
-        allowComments: activityData.allowComments ?? "",
         allowSharing: activityData.allowSharing ?? false,
-        visibleTo: activityData.visibleTo ?? "",
+        allowComments: activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.public(),
+        visibleTo: activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.public(),
         currentCreatePostPage: currentPage,
         currentPostType: currentPostType,
         activeButton: PositivePostNavigationActiveButton.flex,
@@ -174,9 +174,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             tags: state.tags,
             postType: state.currentPostType,
             media: media,
-            allowComments: state.allowComments,
             allowSharing: state.allowSharing,
-            visibleTo: state.visibleTo,
+            reactionVisibilityMode: state.allowComments,
+            visibilityMode: state.visibleTo,
           ),
         );
       } else {
@@ -188,9 +188,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             tags: state.tags,
             postType: state.currentPostType,
             media: media,
-            allowComments: state.allowComments,
             allowSharing: state.allowSharing,
-            visibleTo: state.visibleTo,
+            reactionVisibilityMode: state.allowComments,
+            visibilityMode: state.visibleTo,
           ),
         );
       }
@@ -288,12 +288,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(allowSharing: !state.allowSharing);
   }
 
-  void onUpdateVisibleTo(String newValue) {
-    state = state.copyWith(visibleTo: newValue);
+  void onUpdateVisibleTo(ActivitySecurityConfigurationMode mode) {
+    state = state.copyWith(visibleTo: mode);
   }
 
-  void onUpdateAllowComments(String newValue) {
-    state = state.copyWith(allowComments: newValue);
+  void onUpdateAllowComments(ActivitySecurityConfigurationMode mode) {
+    state = state.copyWith(allowComments: mode);
   }
 
   bool get isNavigationEnabled {

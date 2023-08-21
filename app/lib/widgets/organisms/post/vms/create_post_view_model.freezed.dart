@@ -25,10 +25,18 @@ mixin _$CreatePostViewModelState {
   List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
   GalleryEntry? get editingGalleryEntry => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
-  String get visibleTo => throw _privateConstructorUsedError;
-  String get allowComments => throw _privateConstructorUsedError;
-  String get activeButtonFlexText => throw _privateConstructorUsedError;
   bool get allowSharing => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get visibleTo =>
+      throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get allowComments =>
+      throw _privateConstructorUsedError;
+  String get activeButtonFlexText => throw _privateConstructorUsedError;
   bool get saveToGallery => throw _privateConstructorUsedError;
   AwesomeFilter get currentFilter => throw _privateConstructorUsedError;
   PositivePostNavigationActiveButton get activeButton =>
@@ -54,13 +62,22 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
       List<String> tags,
-      String visibleTo,
-      String allowComments,
-      String activeButtonFlexText,
       bool allowSharing,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode visibleTo,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode allowComments,
+      String activeButtonFlexText,
       bool saveToGallery,
       AwesomeFilter currentFilter,
       PositivePostNavigationActiveButton activeButton});
+
+  $ActivitySecurityConfigurationModeCopyWith<$Res> get visibleTo;
+  $ActivitySecurityConfigurationModeCopyWith<$Res> get allowComments;
 }
 
 /// @nodoc
@@ -85,10 +102,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
     Object? tags = null,
+    Object? allowSharing = null,
     Object? visibleTo = null,
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
-    Object? allowSharing = null,
     Object? saveToGallery = null,
     Object? currentFilter = null,
     Object? activeButton = null,
@@ -126,22 +143,22 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      visibleTo: null == visibleTo
-          ? _value.visibleTo
-          : visibleTo // ignore: cast_nullable_to_non_nullable
-              as String,
-      allowComments: null == allowComments
-          ? _value.allowComments
-          : allowComments // ignore: cast_nullable_to_non_nullable
-              as String,
-      activeButtonFlexText: null == activeButtonFlexText
-          ? _value.activeButtonFlexText
-          : activeButtonFlexText // ignore: cast_nullable_to_non_nullable
-              as String,
       allowSharing: null == allowSharing
           ? _value.allowSharing
           : allowSharing // ignore: cast_nullable_to_non_nullable
               as bool,
+      visibleTo: null == visibleTo
+          ? _value.visibleTo
+          : visibleTo // ignore: cast_nullable_to_non_nullable
+              as ActivitySecurityConfigurationMode,
+      allowComments: null == allowComments
+          ? _value.allowComments
+          : allowComments // ignore: cast_nullable_to_non_nullable
+              as ActivitySecurityConfigurationMode,
+      activeButtonFlexText: null == activeButtonFlexText
+          ? _value.activeButtonFlexText
+          : activeButtonFlexText // ignore: cast_nullable_to_non_nullable
+              as String,
       saveToGallery: null == saveToGallery
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
@@ -155,6 +172,24 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           : activeButton // ignore: cast_nullable_to_non_nullable
               as PositivePostNavigationActiveButton,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ActivitySecurityConfigurationModeCopyWith<$Res> get visibleTo {
+    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.visibleTo,
+        (value) {
+      return _then(_value.copyWith(visibleTo: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ActivitySecurityConfigurationModeCopyWith<$Res> get allowComments {
+    return $ActivitySecurityConfigurationModeCopyWith<$Res>(
+        _value.allowComments, (value) {
+      return _then(_value.copyWith(allowComments: value) as $Val);
+    });
   }
 }
 
@@ -176,13 +211,24 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
       List<String> tags,
-      String visibleTo,
-      String allowComments,
-      String activeButtonFlexText,
       bool allowSharing,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode visibleTo,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode allowComments,
+      String activeButtonFlexText,
       bool saveToGallery,
       AwesomeFilter currentFilter,
       PositivePostNavigationActiveButton activeButton});
+
+  @override
+  $ActivitySecurityConfigurationModeCopyWith<$Res> get visibleTo;
+  @override
+  $ActivitySecurityConfigurationModeCopyWith<$Res> get allowComments;
 }
 
 /// @nodoc
@@ -205,10 +251,10 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
     Object? tags = null,
+    Object? allowSharing = null,
     Object? visibleTo = null,
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
-    Object? allowSharing = null,
     Object? saveToGallery = null,
     Object? currentFilter = null,
     Object? activeButton = null,
@@ -246,22 +292,22 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      visibleTo: null == visibleTo
-          ? _value.visibleTo
-          : visibleTo // ignore: cast_nullable_to_non_nullable
-              as String,
-      allowComments: null == allowComments
-          ? _value.allowComments
-          : allowComments // ignore: cast_nullable_to_non_nullable
-              as String,
-      activeButtonFlexText: null == activeButtonFlexText
-          ? _value.activeButtonFlexText
-          : activeButtonFlexText // ignore: cast_nullable_to_non_nullable
-              as String,
       allowSharing: null == allowSharing
           ? _value.allowSharing
           : allowSharing // ignore: cast_nullable_to_non_nullable
               as bool,
+      visibleTo: null == visibleTo
+          ? _value.visibleTo
+          : visibleTo // ignore: cast_nullable_to_non_nullable
+              as ActivitySecurityConfigurationMode,
+      allowComments: null == allowComments
+          ? _value.allowComments
+          : allowComments // ignore: cast_nullable_to_non_nullable
+              as ActivitySecurityConfigurationMode,
+      activeButtonFlexText: null == activeButtonFlexText
+          ? _value.activeButtonFlexText
+          : activeButtonFlexText // ignore: cast_nullable_to_non_nullable
+              as String,
       saveToGallery: null == saveToGallery
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
@@ -290,10 +336,16 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       final List<GalleryEntry> galleryEntries = const [],
       this.editingGalleryEntry,
       final List<String> tags = const [],
-      this.visibleTo = "",
-      this.allowComments = "",
-      this.activeButtonFlexText = "",
       this.allowSharing = false,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.visibleTo = const ActivitySecurityConfigurationMode.public(),
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.allowComments = const ActivitySecurityConfigurationMode.public(),
+      this.activeButtonFlexText = "",
       this.saveToGallery = false,
       required this.currentFilter,
       this.activeButton = PositivePostNavigationActiveButton.post})
@@ -337,16 +389,20 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 
   @override
   @JsonKey()
-  final String visibleTo;
+  final bool allowSharing;
   @override
-  @JsonKey()
-  final String allowComments;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  final ActivitySecurityConfigurationMode visibleTo;
+  @override
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  final ActivitySecurityConfigurationMode allowComments;
   @override
   @JsonKey()
   final String activeButtonFlexText;
-  @override
-  @JsonKey()
-  final bool allowSharing;
   @override
   @JsonKey()
   final bool saveToGallery;
@@ -358,7 +414,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
 
   @override
   String toString() {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, allowSharing: $allowSharing, saveToGallery: $saveToGallery, currentFilter: $currentFilter, activeButton: $activeButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, activeButton: $activeButton)';
   }
 
   @override
@@ -380,14 +436,14 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
             (identical(other.editingGalleryEntry, editingGalleryEntry) ||
                 other.editingGalleryEntry == editingGalleryEntry) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.allowSharing, allowSharing) ||
+                other.allowSharing == allowSharing) &&
             (identical(other.visibleTo, visibleTo) ||
                 other.visibleTo == visibleTo) &&
             (identical(other.allowComments, allowComments) ||
                 other.allowComments == allowComments) &&
             (identical(other.activeButtonFlexText, activeButtonFlexText) ||
                 other.activeButtonFlexText == activeButtonFlexText) &&
-            (identical(other.allowSharing, allowSharing) ||
-                other.allowSharing == allowSharing) &&
             (identical(other.saveToGallery, saveToGallery) ||
                 other.saveToGallery == saveToGallery) &&
             (identical(other.currentFilter, currentFilter) ||
@@ -407,10 +463,10 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       const DeepCollectionEquality().hash(_galleryEntries),
       editingGalleryEntry,
       const DeepCollectionEquality().hash(_tags),
+      allowSharing,
       visibleTo,
       allowComments,
       activeButtonFlexText,
-      allowSharing,
       saveToGallery,
       currentFilter,
       activeButton);
@@ -433,10 +489,16 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final List<GalleryEntry> galleryEntries,
           final GalleryEntry? editingGalleryEntry,
           final List<String> tags,
-          final String visibleTo,
-          final String allowComments,
-          final String activeButtonFlexText,
           final bool allowSharing,
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
+          final ActivitySecurityConfigurationMode visibleTo,
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
+          final ActivitySecurityConfigurationMode allowComments,
+          final String activeButtonFlexText,
           final bool saveToGallery,
           required final AwesomeFilter currentFilter,
           final PositivePostNavigationActiveButton activeButton}) =
@@ -459,13 +521,19 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   @override
   List<String> get tags;
   @override
-  String get visibleTo;
+  bool get allowSharing;
   @override
-  String get allowComments;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get visibleTo;
+  @override
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get allowComments;
   @override
   String get activeButtonFlexText;
-  @override
-  bool get allowSharing;
   @override
   bool get saveToGallery;
   @override

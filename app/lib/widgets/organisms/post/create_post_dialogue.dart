@@ -66,8 +66,8 @@ class CreatePostDialogue extends HookConsumerWidget {
   final VoidCallback onTagsPressed;
   final Function()? onUpdateSaveToGallery;
   final Function()? onUpdateAllowSharing;
-  final Function(String)? onUpdateVisibleTo;
-  final Function(String)? onUpdateAllowComments;
+  final Function(ActivitySecurityConfigurationMode)? onUpdateVisibleTo;
+  final Function(ActivitySecurityConfigurationMode)? onUpdateAllowComments;
 
   final bool valueAllowSharing;
   final bool valueSaveToGallery;
@@ -197,21 +197,14 @@ class CreatePostDialogue extends HookConsumerWidget {
             CreatePostBox(
               colours: colours,
               forceBorder: true,
-              child: PositiveTextFieldDropdown(
-                initialValue: localisations.shared_user_type_generic_everyone,
+              child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_visibility,
+                onValueChanged: (type) => onUpdateVisibleTo!(type),
+                initialValue: const ActivitySecurityConfigurationMode.public(),
                 labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-                onValueChanged: (type) {
-                  if (onUpdateVisibleTo != null) {
-                    onUpdateVisibleTo!(type.toString());
-                  }
-                },
-                values: [
-                  localisations.shared_user_type_generic_everyone,
-                  localisations.shared_user_type_generic_connections,
-                  localisations.shared_user_type_generic_followers,
-                  localisations.shared_user_type_generic_me,
-                ],
+                valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                values: ActivitySecurityConfigurationMode.values.toList(),
                 textStyle: textStyle,
                 backgroundColour: colours.transparent,
                 iconColour: colours.black,
@@ -225,21 +218,14 @@ class CreatePostDialogue extends HookConsumerWidget {
             CreatePostBox(
               colours: colours,
               forceBorder: true,
-              child: PositiveTextFieldDropdown(
-                initialValue: localisations.shared_user_type_generic_everyone,
+              child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_comments,
+                onValueChanged: (type) => onUpdateAllowComments!(type),
+                initialValue: const ActivitySecurityConfigurationMode.public(),
                 labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-                onValueChanged: (type) {
-                  if (onUpdateAllowComments != null) {
-                    onUpdateVisibleTo!(type.toString());
-                  }
-                },
-                values: [
-                  localisations.shared_user_type_generic_everyone,
-                  localisations.shared_user_type_generic_connections,
-                  localisations.shared_user_type_generic_followers,
-                  localisations.shared_user_type_generic_me,
-                ],
+                valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                values: ActivitySecurityConfigurationMode.values.toList(),
                 textStyle: textStyle,
                 backgroundColour: colours.transparent,
                 iconColour: colours.black,
@@ -345,52 +331,38 @@ class CreatePostDialogue extends HookConsumerWidget {
                   CreatePostBox(
                     colours: colours,
                     forceBorder: true,
-                    child: PositiveTextFieldDropdown(
-                      initialValue: localisations.shared_user_type_generic_everyone,
+                    child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                       labelText: localisations.page_create_post_visibility,
+                      onValueChanged: (type) => onUpdateVisibleTo!(type),
+                      initialValue: const ActivitySecurityConfigurationMode.public(),
                       labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-                      onValueChanged: (type) {
-                        if (onUpdateVisibleTo != null) {
-                          onUpdateVisibleTo!(type.toString());
-                        }
-                      },
-                      values: [
-                        localisations.shared_user_type_generic_everyone,
-                        localisations.shared_user_type_generic_connections,
-                        localisations.shared_user_type_generic_followers,
-                        localisations.shared_user_type_generic_me,
-                      ],
+                      valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                      placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                      values: ActivitySecurityConfigurationMode.values.toList(),
                       textStyle: textStyle,
                       backgroundColour: colours.transparent,
                       iconColour: colours.black,
                       iconBackgroundColour: colours.white,
-                      isEnabled: true,
+                      isEnabled: !isBusy,
                     ),
                   ),
                   const SizedBox(height: kPaddingSmall),
                   CreatePostBox(
                     colours: colours,
                     forceBorder: true,
-                    child: PositiveTextFieldDropdown(
-                      initialValue: localisations.shared_user_type_generic_everyone,
+                    child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                       labelText: localisations.page_create_post_comments,
+                      onValueChanged: (type) => onUpdateAllowComments!(type),
+                      initialValue: const ActivitySecurityConfigurationMode.public(),
                       labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
-                      onValueChanged: (type) {
-                        if (onUpdateAllowComments != null) {
-                          onUpdateVisibleTo!(type.toString());
-                        }
-                      },
-                      values: [
-                        localisations.shared_user_type_generic_everyone,
-                        localisations.shared_user_type_generic_connections,
-                        localisations.shared_user_type_generic_followers,
-                        localisations.shared_user_type_generic_me,
-                      ],
+                      valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                      placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
+                      values: ActivitySecurityConfigurationMode.values.toList(),
                       textStyle: textStyle,
                       backgroundColour: colours.transparent,
                       iconColour: colours.black,
                       iconBackgroundColour: colours.white,
-                      isEnabled: true,
+                      isEnabled: !isBusy,
                     ),
                   ),
                   const SizedBox(height: kPaddingSmall),
