@@ -40,6 +40,16 @@ export namespace RelationshipService {
   }
 
   /**
+   * Checks if the given relationship is connected.
+   * @param {any} relationship the relationship to check.
+   * @return {boolean} true if the relationship is connected.
+   */
+  export async function isConnected(members: string[]): Promise<boolean> {
+    const relationship = await RelationshipService.getRelationship(members);
+    return relationship && relationship.connected;
+  }
+
+  /**
    * Gets the relationship between entities.
    * @param {string[]} members the members of the relationship.
    * @return {any} the relationship between the two users.

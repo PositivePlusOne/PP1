@@ -94,8 +94,15 @@ abstract class NotificationHandler {
   Future<void> displayForegroundNotification(NotificationPayload payload) async {
     final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
-    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final BuildContext? context = appRouter.navigatorKey.currentContext;
     final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+
+    // Default to background notification if no context is available
+    if (context == null) {
+      logger.w('displayForegroundNotification: Unable to display notification: $payload');
+      await displayBackgroundNotification(payload);
+      return;
+    }
 
     final PositiveNotificationSnackBar snackbar = PositiveNotificationSnackBar(payload: payload, handler: handler);
     ScaffoldMessenger.of(context).showSnackBar(snackbar);

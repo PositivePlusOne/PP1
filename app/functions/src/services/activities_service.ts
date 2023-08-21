@@ -9,6 +9,7 @@ import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 import { TagsService } from "./tags_service";
 import { FeedName } from "../constants/default_feeds";
+import { FeedEntry } from "../dto/stream";
 
 export namespace ActivitiesService {
   /**
@@ -66,6 +67,32 @@ export namespace ActivitiesService {
   }
 
   /**
+   * Gets a list of activities from a list of feed entrys.
+   * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
+   * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
+   */
+  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<ActivityJSON[]> {
+    return Promise.all(entrys.map(async (entry) => {
+      const activity = await getActivity(entry.object) as ActivityJSON;
+
+      switch (entry.verb) {
+        case ActivityActionVerb.Post:
+          break;
+        default:
+          const actorId = entry.actor;
+          activity.publisherInformation ??= {};
+          activity.publisherInformation.actorId = actorId;
+
+          activity.generalConfiguration ??= {};
+          activity.generalConfiguration.type = entry.verb as ActivityActionVerb || "post";
+          break;
+      }
+
+      return activity;
+    }));
+  }
+
+  /**
    * Posts an activity to the users feed and all the tags feeds.
    * @param {StreamClient<DefaultGenerics>} client the GetStream client.
    * @param {string} feedName the name of the feed to post to.
@@ -81,10 +108,21 @@ export namespace ActivitiesService {
 
     const activityObjectForeignId = uuidv1();
     const targets = [] as string[];
-    activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-      await TagsService.createTagIfNonexistant(tag);
-      targets.push(`${FeedName.Tags}:${tag}`);
-    });
+
+    if (activity.securityConfiguration?.viewMode === "private") {
+      throw new functions.https.HttpsError("permission-denied", "You do not have permission to post this activity.");
+    }
+
+    if (activity.securityConfiguration?.viewMode === "public") {
+      functions.logger.info("Adding tags to public activity", {
+        tags: activity.enrichmentConfiguration?.tags,
+      });
+
+      activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
+        await TagsService.createTagIfNonexistant(tag);
+        targets.push(`${FeedName.Tags}:${tag}`);
+      });
+    }
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: userID,
@@ -102,7 +140,6 @@ export namespace ActivitiesService {
       data: activity,
       entryId: activityObjectForeignId,
     }) as ActivityJSON;
-
     
     return activityResponse;
   }

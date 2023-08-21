@@ -41,7 +41,7 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
     required this.activityId,
     required this.feed,
     required this.refreshController,
-    this.reactionMode,
+    this.commentMode,
     this.onPageLoaded,
     this.windowSize = 10,
     super.key,
@@ -50,7 +50,7 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   final String activityId;
   final TargetFeed feed;
 
-  final ActivitySecurityConfigurationMode? reactionMode;
+  final ActivitySecurityConfigurationMode? commentMode;
 
   final int windowSize;
   final RefreshController refreshController;
@@ -267,8 +267,8 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     String commentShareType = "";
 
-    if (widget.reactionMode != null) {
-      widget.reactionMode!.when(
+    if (widget.commentMode != null) {
+      widget.commentMode!.when(
         public: () {
           commentShareType = localisations.shared_comment_type_generic_everyone;
         },
@@ -303,7 +303,7 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
                   localisations.shared_comments,
                   style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
                 ),
-                if (widget.reactionMode != null)
+                if (widget.commentMode != null)
                   Container(
                     decoration: BoxDecoration(
                       color: colours.colorGray1,

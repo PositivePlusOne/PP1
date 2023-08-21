@@ -41,15 +41,12 @@ export namespace PostEndpoints {
         const reactionCounts = window.results.map((item) => item.reaction_counts || {});
     
         // Convert window results to a list of IDs
-        const activityObjectIds = window.results.map((item) => item.object);
-    
-        // Loop over window IDs in parallel and get the activity data
-        const payloadData = await Promise.all([...activityObjectIds.map((id) => ActivitiesService.getActivity(id))]);
+        const activities = await ActivitiesService.getActivityFeedWindow(window.results);
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
     
         return buildEndpointResponse(context, {
           sender: uid,
-          data: payloadData,
+          data: [...activities],
           limit: limit,
           cursor: paginationToken,
           seedData: {
@@ -79,7 +76,42 @@ export namespace PostEndpoints {
     });
   });
 
-  export const shareActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+
+  export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const activityId = request.data.activityId || "";
+    const feed = request.data.feed || FeedName.User;
+
+    if (!activityId || !feed) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
+    }
+
+    const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
+    if (!activity || !activity.publisherInformation?.publisherId) {
+      throw new functions.https.HttpsError("not-found", "Activity not found");
+    }
+
+    const isConnected = RelationshipService.isConnected([uid, activity.publisherInformation?.publisherId || '']);
+    const isPublic = activity.securityConfiguration?.shareMode === "public";
+    const isConnections = activity.securityConfiguration?.shareMode?.includes("connections");
+
+    if (!isPublic || (isConnections && !isConnected)) {
+      throw new functions.https.HttpsError("permission-denied", "Cannot share with unconnected users");
+    }
+
+    const streamClient = await FeedService.getFeedsClient();
+    const senderUserFeed = streamClient.feed(feed, uid);
+    
+    await FeedService.shareActivityToFeed(uid, senderUserFeed, activityId, feed);
+    functions.logger.info(`Shared activity to feed`, { uid, activityId, feed });
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [],
+    });
+  });
+
+  export const shareActivityToConversations = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Sharing activity`, { request });
     
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -129,9 +161,14 @@ export namespace PostEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
+
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type;
     const style = request.data.style;
+
+    // const visibleTo = request.data.visibleTo || [] as string[];
+    const allowSharing = request.data.allowSharing || false;
+    const allowComments = request.data.allowComments || false;
 
     functions.logger.info(`Posting activity`, { uid, content, media, userTags });
     const hasContentOrMedia = content || media.length > 0;
@@ -151,7 +188,7 @@ export namespace PostEndpoints {
 
     const activityRequest = {
       publisherInformation: {
-        foreignKey: uid,
+        publisherId: uid,
         originFeed: `${feed}:${uid}`,
       },
       generalConfiguration: {
@@ -161,6 +198,10 @@ export namespace PostEndpoints {
       },
       enrichmentConfiguration: {
         tags: validatedTags,
+      },
+      securityConfiguration: {
+        viewMode: allowSharing ? "public" : "followers_",
+        reactionMode: allowComments ? "public" : "private",
       },
       media: media,
     } as ActivityJSON;
@@ -191,7 +232,7 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
-    if (activity.publisherInformation?.foreignKey !== uid) {
+    if (activity.publisherInformation?.publisherId !== uid) {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
     }
 
@@ -218,10 +259,10 @@ export namespace PostEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
-    // TODO update these params
-    // const allowSharing = request.data.allowSharing;
-    // const visibleTo = request.data.visibleTo;
-    // const allowComments = request.data.allowComments;
+
+    // const visibleTo = request.data.visibleTo || [] as string[];
+    const allowSharing = request.data.allowSharing || false;
+    const allowComments = request.data.allowComments || false;
 
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activityId");
@@ -230,14 +271,13 @@ export namespace PostEndpoints {
     let activity = await DataService.getDocument({
       schemaKey: "activities",
       entryId: activityId,
-    });
+    }) as ActivityJSON;
 
     if (!activity) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
-
-    if (activity.publisherInformation?.foreignKey !== uid) {
+    if (activity.publisherInformation?.publisherId !== uid) {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
     }
 
@@ -271,6 +311,13 @@ export namespace PostEndpoints {
       activity.media = media;
     }
 
+    if (!activity.securityConfiguration) {
+      activity.securityConfiguration = {};
+    }
+
+    activity.securityConfiguration.shareMode = allowSharing ? "public" : "private";
+    activity.securityConfiguration.commentMode = allowComments ? "public" : "private";
+
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
 
@@ -280,16 +327,13 @@ export namespace PostEndpoints {
       data: activity,
     });
 
-    let newValidatedTags = [...validatedTags];
     //? Tags to remove are the previous tags that are not in the new validated tags
+    let newValidatedTags = [...validatedTags];
     const tagsToRemove = new Array<string>();
 
     for (const tag of validatedTags) {
-      if (previousTags.includes(tag)) {
-        const index = newValidatedTags.indexOf(tag);
-        if (index > -1) {
-          newValidatedTags = newValidatedTags.splice(index, 1);
-        }
+      if (!previousTags.includes(tag)) {
+        newValidatedTags.push(tag);
       }
     }
 
@@ -298,13 +342,6 @@ export namespace PostEndpoints {
         tagsToRemove.push(tag);
       }
     }
-
-    // add missing tags to activity
-    newValidatedTags.forEach(async (tag) => {
-      TagsService.createTagIfNonexistant(tag);
-      const tagActivity = await ActivitiesService.postActivityToFeed("tags", tag, activity);
-      functions.logger.info("Posted tag activity", { tagActivity });
-    });
 
     // remove tags that are no longer needed from the activity
     tagsToRemove.forEach(async (tag: string) => {

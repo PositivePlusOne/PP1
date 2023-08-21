@@ -47,6 +47,7 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
   const factory ActivityGeneralConfigurationType.event() = _ActivityGeneralConfigurationTypeEvent;
   const factory ActivityGeneralConfigurationType.clip() = _ActivityGeneralConfigurationTypeClip;
   const factory ActivityGeneralConfigurationType.repost() = _ActivityGeneralConfigurationTypeRepost;
+  const factory ActivityGeneralConfigurationType.bookmark() = _ActivityGeneralConfigurationTypeBookmark;
 
   static String toJson(ActivityGeneralConfigurationType type) {
     return type.when(
@@ -54,6 +55,7 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
       event: () => 'event',
       clip: () => 'clip',
       repost: () => 'repost',
+      bookmark: () => 'bookmark',
     );
   }
 
@@ -67,6 +69,8 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
         return const _ActivityGeneralConfigurationTypeClip();
       case 'repost':
         return const _ActivityGeneralConfigurationTypeRepost();
+      case 'bookmark':
+        return const _ActivityGeneralConfigurationTypeBookmark();
       default:
         throw ArgumentError('Invalid value for ActivityGeneralConfigurationType: $value');
     }
@@ -102,7 +106,7 @@ class ActivitySecurityConfiguration with _$ActivitySecurityConfiguration {
   const factory ActivitySecurityConfiguration({
     @Default('') String context,
     @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode viewMode,
-    @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode reactionMode,
+    @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode commentMode,
     @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode shareMode,
   }) = _ActivitySecurityConfiguration;
 
@@ -215,8 +219,9 @@ class ActivityPricingExternalStoreInformationPricingStrategy with _$ActivityPric
 @freezed
 class ActivityPublisherInformation with _$ActivityPublisherInformation {
   const factory ActivityPublisherInformation({
-    @Default('') String foreignKey,
     @Default('') String originFeed,
+    @Default('') String publisherId,
+    @Default('') String actorId,
   }) = _ActivityPublisherInformation;
 
   factory ActivityPublisherInformation.fromJson(Map<String, dynamic> json) => _$ActivityPublisherInformationFromJson(json);

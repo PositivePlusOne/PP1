@@ -73,12 +73,25 @@ export namespace ReactionService {
         });
     }
 
-    export async function listReactions(activityId: string): Promise<ReactionJSON[]> {
+    export async function listReactionsForActivity(activityId: string): Promise<ReactionJSON[]> {
         const client: StreamClient<DefaultGenerics> = await FeedService.getFeedsClient();
         const params: any = {
             activity_id: activityId,
             kind: 'reaction',
-            limit: 100, // you might want to paginate this or adjust the number
+            limit: 100,
+        };
+
+        const response = await client.reactions.filter(params);
+
+        return response.results.map((reaction: any) => reaction.data as ReactionJSON);
+    }
+
+    export async function listReactionsForUser(userId: string): Promise<ReactionJSON[]> {
+        const client: StreamClient<DefaultGenerics> = await FeedService.getFeedsClient();
+        const params: any = {
+            user_id: userId,
+            kind: 'reaction',
+            limit: 100,
         };
 
         const response = await client.reactions.filter(params);

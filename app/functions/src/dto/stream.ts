@@ -1,4 +1,8 @@
+import { ReactionAPIResponse, UR } from "getstream";
 import { StreamActorType } from "../services/enumerations/actors";
+import { CommentJSON } from "./comments";
+import { Media, MediaJSON } from "./media";
+import { Mention, MentionJSON } from "./mentions";
 
 export type DefaultGenerics = {
   id: string;
@@ -21,7 +25,18 @@ export type FeedEntry = {
   reaction_counts: Record<string, number> | undefined;
   time: string | undefined;
   id: string;
+  to: string[];
+  tags: string[];
+  description: string | undefined;
 };
+
+export type ReactionEntryJSON = {
+  kind: string;
+  activity_id: string;
+  user_id: string;
+  data: any;
+  tags: string[];
+}
 
 //* This type is the response to the client when requesting batched feed data.
 export type FeedBatchedClientResponse = {

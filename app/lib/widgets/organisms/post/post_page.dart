@@ -123,7 +123,7 @@ class PostPage extends ConsumerWidget {
             child: SizedBox(height: kPaddingExtraSmall),
           ),
           PositiveCommentPaginationBehaviour(
-            reactionMode: activity.securityConfiguration?.reactionMode,
+            commentMode: activity.securityConfiguration?.commentMode,
             activityId: activity.flMeta!.id!,
             refreshController: viewModel.refreshController,
             feed: feed,

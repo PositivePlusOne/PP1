@@ -18,8 +18,6 @@ import '../../../../services/third_party.dart';
 
 // Flutter imports:
 
-
-
 part 'search_view_model.freezed.dart';
 part 'search_view_model.g.dart';
 
@@ -162,28 +160,25 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           continue;
         }
 
-        newActivity.generalConfiguration!.type.when(
-          post: () {
-            if (state.currentTab == SearchTab.posts) {
-              newActivities.add(newActivity);
-            }
-          },
-          event: () {
-            if (state.currentTab == SearchTab.events) {
-              newActivities.add(newActivity);
-            }
-          },
-          clip: () {
-            if (state.currentTab == SearchTab.posts) {
-              newActivities.add(newActivity);
-            }
-          },
-          repost: () {
-            if (state.currentTab == SearchTab.posts) {
-              newActivities.add(newActivity);
-            }
-          },
-        );
+        newActivity.generalConfiguration!.type.when(post: () {
+          if (state.currentTab == SearchTab.posts) {
+            newActivities.add(newActivity);
+          }
+        }, event: () {
+          if (state.currentTab == SearchTab.events) {
+            newActivities.add(newActivity);
+          }
+        }, clip: () {
+          if (state.currentTab == SearchTab.posts) {
+            newActivities.add(newActivity);
+          }
+        }, repost: () {
+          if (state.currentTab == SearchTab.posts) {
+            newActivities.add(newActivity);
+          }
+        }, bookmark: () {
+          throw UnimplementedError();
+        });
       } catch (ex) {
         logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
       }
