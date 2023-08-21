@@ -316,8 +316,8 @@ export namespace PostEndpoints {
       activity.securityConfiguration = {};
     }
 
-    activity.securityConfiguration.shareMode = allowSharing ? "public" : "followers_and_connections";
-    activity.securityConfiguration.commentMode = allowComments ? "public" : "followers_and_connections";
+    activity.securityConfiguration.shareMode = allowSharing ? "public" : "private";
+    activity.securityConfiguration.commentMode = allowComments ? "public" : "private";
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
