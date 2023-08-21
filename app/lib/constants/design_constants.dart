@@ -74,6 +74,7 @@ const double kOpacityFull = 1.0;
 const double kLogoMaximumWidth = 126.0;
 const double kBadgeSmallSize = 116.0;
 const double kTextFieldSizeLarge = 150.0;
+const double kCommentFooter = 135.0;
 
 // Icon
 const double kIconIndicator = 8.0;

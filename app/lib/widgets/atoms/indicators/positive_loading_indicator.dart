@@ -16,12 +16,14 @@ class PositiveLoadingIndicator extends ConsumerStatefulWidget {
     this.width = kIconMedium,
     this.height = kIconMedium,
     this.color = Colors.black,
+    this.circleRadius = 2.0,
     super.key,
   });
 
   final double width;
   final double height;
   final Color color;
+  final double circleRadius;
 
   @override
   PositiveLoadingIndicatorState createState() => PositiveLoadingIndicatorState();
@@ -68,6 +70,7 @@ class PositiveLoadingIndicatorState extends ConsumerState<PositiveLoadingIndicat
       painter: _PositiveLoadingIndicatorPaintainer(
         animation: _controller.value,
         color: widget.color,
+        circleRadius: widget.circleRadius,
       ),
     );
   }
@@ -77,10 +80,12 @@ class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
   _PositiveLoadingIndicatorPaintainer({
     required this.animation,
     required this.color,
+    required this.circleRadius,
   });
 
   double animation;
   final Color color;
+  final double circleRadius;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -121,7 +126,6 @@ class _PositiveLoadingIndicatorPaintainer extends CustomPainter {
       ..color = color.withOpacity(animationLooped)
       ..style = PaintingStyle.fill;
 
-    double circleRadius = 2.0;
     double yPos = (size.height / 2);
 
     canvas.drawCircle(Offset(circleRadius, yPos), circleRadius, paint1);

@@ -497,8 +497,8 @@ class PositiveButtonState extends State<PositiveButton> {
       case PositiveButtonStyle.tab:
         materialColor = Colors.transparent;
         backgroundColor = Colors.transparent;
-        textColor = widget.colors.colorGray6;
-        iconColor = widget.colors.colorGray6;
+        textColor = widget.iconColorOverride ?? widget.colors.colorGray6;
+        iconColor = widget.iconColorOverride ?? widget.colors.colorGray6;
         textStyle = PositiveButton.kButtonTextStyleTab.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,13 +24,13 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
-    required this.activity,
+    required this.flMetaData,
     required this.publisher,
     required this.onOptions,
     super.key,
   });
 
-  final Activity activity;
+  final FlMeta? flMetaData;
   final Profile? publisher;
   final Function onOptions;
 
@@ -54,9 +55,11 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       displayName = "@${publisher!.displayName}";
     }
 
-    if (activity.flMeta != null && activity.flMeta!.createdDate != null && activity.flMeta!.updatedDate != null) {
-      createdDate = activity.flMeta!.createdDate!.asDateDifference(context);
-      if (activity.flMeta!.updatedDate!.isNotEmpty && activity.flMeta!.createdDate! != activity.flMeta!.updatedDate!) createdDate = createdDate + localisations.post_last_edited;
+    if (flMetaData != null && flMetaData!.createdDate != null && flMetaData!.updatedDate != null) {
+      createdDate = flMetaData!.createdDate!.asDateDifference(context);
+      if (flMetaData!.updatedDate!.isNotEmpty && flMetaData!.createdDate! != flMetaData!.updatedDate!) {
+        createdDate = createdDate + localisations.post_last_edited;
+      }
     }
 
     return Material(
@@ -111,15 +114,14 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                 ],
               ),
             ),
-            const Spacer(),
-            if (userController.currentUser!.uid == publisher!.flMeta!.id)
-              PositiveButton.appBarIcon(
-                colors: colours,
-                icon: UniconsLine.ellipsis_h,
-                style: PositiveButtonStyle.text,
-                size: PositiveButtonSize.medium,
-                onTapped: () => onOptions(context),
-              ),
+            // if (userController.currentUser!.uid == publisher!.flMeta!.id)
+            PositiveButton.appBarIcon(
+              colors: colours,
+              icon: UniconsLine.ellipsis_h,
+              style: PositiveButtonStyle.text,
+              size: PositiveButtonSize.medium,
+              onTapped: () => onOptions(context),
+            ),
           ],
         ),
       ),
