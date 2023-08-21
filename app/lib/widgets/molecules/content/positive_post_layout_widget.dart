@@ -434,7 +434,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     // final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile ?? Profile.empty()));
     // final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    final bool isPublic = widget.postContent.securityConfiguration?.reactionMode == const ActivitySecurityConfigurationMode.public();
+    final bool isPublic = widget.postContent.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.public();
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),

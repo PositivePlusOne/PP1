@@ -345,7 +345,7 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             ),
           ),
         //? comments listed
-        if (commentState.pagingController.itemList != null || commentState.pagingController.itemList!.isNotEmpty)
+        if (commentState.pagingController.itemList != null && commentState.pagingController.itemList!.isNotEmpty)
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
             pagingController: commentState.pagingController,
@@ -357,27 +357,25 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
                 return PositiveComment(comment: comment, isFirst: index == 0);
               },
               firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-              newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+              newPageProgressIndicatorBuilder: (context) {
+                return Container(
+                  padding: const EdgeInsets.only(top: kBorderThicknessMedium),
+                  decoration: BoxDecoration(
+                    color: colours.white,
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(kBorderRadiusLarge),
+                    ),
+                  ),
+                  height: kCommentFooter,
+                  alignment: Alignment.center,
+                  child: const PositiveLoadingIndicator(
+                    circleRadius: 5,
+                    width: 40,
+                  ),
+                );
+              },
             ),
           ),
-        //? Load additional comments?
-        const SizedBox(
-          height: kBorderThicknessMedium,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: colours.white,
-            borderRadius: const BorderRadius.vertical(
-              bottom: Radius.circular(kBorderRadiusLarge),
-            ),
-          ),
-          height: kCommentFooter,
-          alignment: Alignment.center,
-          child: const PositiveLoadingIndicator(
-            circleRadius: 5,
-            width: 40,
-          ),
-        ),
       ],
     );
   }

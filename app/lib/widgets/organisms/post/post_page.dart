@@ -57,7 +57,7 @@ class PostPage extends ConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
-    final String publisherID = activity.publisherInformation?.foreignKey ?? '';
+    final String publisherID = activity.publisherInformation?.publisherId ?? '';
     final String userID = profileControllerState.currentProfile?.flMeta?.id ?? '';
 
     final List<String> members = [publisherID, userID];
@@ -66,7 +66,7 @@ class PostPage extends ConsumerWidget {
     late bool isCommentsEnabled;
     late bool isUserAbleToComment;
 
-    switch (activity.securityConfiguration?.reactionMode) {
+    switch (activity.securityConfiguration?.commentMode) {
       case const ActivitySecurityConfigurationMode.public():
         isUserAbleToComment = true;
         isCommentsEnabled = true;
