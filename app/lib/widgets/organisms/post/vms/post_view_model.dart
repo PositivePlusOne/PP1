@@ -88,7 +88,7 @@ class PostViewModel extends _$PostViewModel {
       logger.i('Posting comment');
       final Comment comment = await commentApiService.postComment(
         activityId: state.activityId,
-        content: state.currentCommentText,
+        content: state.currentCommentText.trim(),
       );
 
       eventBus.fire(CommentCreatedEvent(activityId: activityId, comment: comment));
