@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +22,7 @@ import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 
 part 'sharing_controller.freezed.dart';

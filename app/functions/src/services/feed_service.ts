@@ -158,7 +158,7 @@ export namespace FeedService {
    * Adds an activity to a feed.
    * @param {StreamFeed<DefaultGenerics>} feed the feed to add the activity to.
    */
-  export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activityId: string, feed: string): Promise<any> {
+  export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activityId: string): Promise<any> {
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Share,

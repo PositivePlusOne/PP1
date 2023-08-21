@@ -11,7 +11,8 @@ part of 'activities.dart';
 
 T _$identity<T>(T value) => value;
 
-final _privateConstructorUsedError = UnsupportedError('It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Activity _$ActivityFromJson(Map<String, dynamic> json) {
   return _Activity.fromJson(json);
@@ -21,25 +22,41 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
 mixin _$Activity {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
-  ActivityGeneralConfiguration? get generalConfiguration => throw _privateConstructorUsedError;
-  ActivitySecurityConfiguration? get securityConfiguration => throw _privateConstructorUsedError;
-  ActivityEventConfiguration? get eventConfiguration => throw _privateConstructorUsedError;
-  ActivityPricingInformation? get pricingInformation => throw _privateConstructorUsedError;
-  ActivityPublisherInformation? get publisherInformation => throw _privateConstructorUsedError;
-  ActivityEnrichmentConfiguration? get enrichmentConfiguration => throw _privateConstructorUsedError;
+  ActivityGeneralConfiguration? get generalConfiguration =>
+      throw _privateConstructorUsedError;
+  ActivitySecurityConfiguration? get securityConfiguration =>
+      throw _privateConstructorUsedError;
+  ActivityEventConfiguration? get eventConfiguration =>
+      throw _privateConstructorUsedError;
+  ActivityPricingInformation? get pricingInformation =>
+      throw _privateConstructorUsedError;
+  ActivityPublisherInformation? get publisherInformation =>
+      throw _privateConstructorUsedError;
+  ActivityEnrichmentConfiguration? get enrichmentConfiguration =>
+      throw _privateConstructorUsedError;
   @JsonKey(fromJson: Media.fromJsonList)
   List<Media> get media => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityCopyWith<Activity> get copyWith => throw _privateConstructorUsedError;
+  $ActivityCopyWith<Activity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityCopyWith<$Res> {
-  factory $ActivityCopyWith(Activity value, $Res Function(Activity) then) = _$ActivityCopyWithImpl<$Res, Activity>;
+  factory $ActivityCopyWith(Activity value, $Res Function(Activity) then) =
+      _$ActivityCopyWithImpl<$Res, Activity>;
   @useResult
-  $Res call({@JsonKey(name: '_fl_meta_') FlMeta? flMeta, ActivityGeneralConfiguration? generalConfiguration, ActivitySecurityConfiguration? securityConfiguration, ActivityEventConfiguration? eventConfiguration, ActivityPricingInformation? pricingInformation, ActivityPublisherInformation? publisherInformation, ActivityEnrichmentConfiguration? enrichmentConfiguration, @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
+  $Res call(
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      ActivityGeneralConfiguration? generalConfiguration,
+      ActivitySecurityConfiguration? securityConfiguration,
+      ActivityEventConfiguration? eventConfiguration,
+      ActivityPricingInformation? pricingInformation,
+      ActivityPublisherInformation? publisherInformation,
+      ActivityEnrichmentConfiguration? enrichmentConfiguration,
+      @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
@@ -51,7 +68,8 @@ abstract class $ActivityCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCopyWith<$Res> {
+class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
+    implements $ActivityCopyWith<$Res> {
   _$ActivityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -126,7 +144,8 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
       return null;
     }
 
-    return $ActivityGeneralConfigurationCopyWith<$Res>(_value.generalConfiguration!, (value) {
+    return $ActivityGeneralConfigurationCopyWith<$Res>(
+        _value.generalConfiguration!, (value) {
       return _then(_value.copyWith(generalConfiguration: value) as $Val);
     });
   }
@@ -138,7 +157,8 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
       return null;
     }
 
-    return $ActivitySecurityConfigurationCopyWith<$Res>(_value.securityConfiguration!, (value) {
+    return $ActivitySecurityConfigurationCopyWith<$Res>(
+        _value.securityConfiguration!, (value) {
       return _then(_value.copyWith(securityConfiguration: value) as $Val);
     });
   }
@@ -150,7 +170,8 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
       return null;
     }
 
-    return $ActivityEventConfigurationCopyWith<$Res>(_value.eventConfiguration!, (value) {
+    return $ActivityEventConfigurationCopyWith<$Res>(_value.eventConfiguration!,
+        (value) {
       return _then(_value.copyWith(eventConfiguration: value) as $Val);
     });
   }
@@ -162,7 +183,8 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
       return null;
     }
 
-    return $ActivityPricingInformationCopyWith<$Res>(_value.pricingInformation!, (value) {
+    return $ActivityPricingInformationCopyWith<$Res>(_value.pricingInformation!,
+        (value) {
       return _then(_value.copyWith(pricingInformation: value) as $Val);
     });
   }
@@ -174,7 +196,8 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
       return null;
     }
 
-    return $ActivityPublisherInformationCopyWith<$Res>(_value.publisherInformation!, (value) {
+    return $ActivityPublisherInformationCopyWith<$Res>(
+        _value.publisherInformation!, (value) {
       return _then(_value.copyWith(publisherInformation: value) as $Val);
     });
   }
@@ -186,7 +209,8 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
       return null;
     }
 
-    return $ActivityEnrichmentConfigurationCopyWith<$Res>(_value.enrichmentConfiguration!, (value) {
+    return $ActivityEnrichmentConfigurationCopyWith<$Res>(
+        _value.enrichmentConfiguration!, (value) {
       return _then(_value.copyWith(enrichmentConfiguration: value) as $Val);
     });
   }
@@ -194,10 +218,20 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity> implements $ActivityCo
 
 /// @nodoc
 abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
-  factory _$$_ActivityCopyWith(_$_Activity value, $Res Function(_$_Activity) then) = __$$_ActivityCopyWithImpl<$Res>;
+  factory _$$_ActivityCopyWith(
+          _$_Activity value, $Res Function(_$_Activity) then) =
+      __$$_ActivityCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(name: '_fl_meta_') FlMeta? flMeta, ActivityGeneralConfiguration? generalConfiguration, ActivitySecurityConfiguration? securityConfiguration, ActivityEventConfiguration? eventConfiguration, ActivityPricingInformation? pricingInformation, ActivityPublisherInformation? publisherInformation, ActivityEnrichmentConfiguration? enrichmentConfiguration, @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
+  $Res call(
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      ActivityGeneralConfiguration? generalConfiguration,
+      ActivitySecurityConfiguration? securityConfiguration,
+      ActivityEventConfiguration? eventConfiguration,
+      ActivityPricingInformation? pricingInformation,
+      ActivityPublisherInformation? publisherInformation,
+      ActivityEnrichmentConfiguration? enrichmentConfiguration,
+      @JsonKey(fromJson: Media.fromJsonList) List<Media> media});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -216,8 +250,12 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ActivityCopyWithImpl<$Res> extends _$ActivityCopyWithImpl<$Res, _$_Activity> implements _$$_ActivityCopyWith<$Res> {
-  __$$_ActivityCopyWithImpl(_$_Activity _value, $Res Function(_$_Activity) _then) : super(_value, _then);
+class __$$_ActivityCopyWithImpl<$Res>
+    extends _$ActivityCopyWithImpl<$Res, _$_Activity>
+    implements _$$_ActivityCopyWith<$Res> {
+  __$$_ActivityCopyWithImpl(
+      _$_Activity _value, $Res Function(_$_Activity) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -271,9 +309,20 @@ class __$$_ActivityCopyWithImpl<$Res> extends _$ActivityCopyWithImpl<$Res, _$_Ac
 /// @nodoc
 @JsonSerializable()
 class _$_Activity implements _Activity {
-  const _$_Activity({@JsonKey(name: '_fl_meta_') this.flMeta, this.generalConfiguration, this.securityConfiguration, this.eventConfiguration, this.pricingInformation, this.publisherInformation, this.enrichmentConfiguration, @JsonKey(fromJson: Media.fromJsonList) final List<Media> media = const []}) : _media = media;
+  const _$_Activity(
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
+      this.generalConfiguration,
+      this.securityConfiguration,
+      this.eventConfiguration,
+      this.pricingInformation,
+      this.publisherInformation,
+      this.enrichmentConfiguration,
+      @JsonKey(fromJson: Media.fromJsonList)
+      final List<Media> media = const []})
+      : _media = media;
 
-  factory _$_Activity.fromJson(Map<String, dynamic> json) => _$$_ActivityFromJson(json);
+  factory _$_Activity.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -310,23 +359,40 @@ class _$_Activity implements _Activity {
         (other.runtimeType == runtimeType &&
             other is _$_Activity &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
-            (identical(other.generalConfiguration, generalConfiguration) || other.generalConfiguration == generalConfiguration) &&
-            (identical(other.securityConfiguration, securityConfiguration) || other.securityConfiguration == securityConfiguration) &&
-            (identical(other.eventConfiguration, eventConfiguration) || other.eventConfiguration == eventConfiguration) &&
-            (identical(other.pricingInformation, pricingInformation) || other.pricingInformation == pricingInformation) &&
-            (identical(other.publisherInformation, publisherInformation) || other.publisherInformation == publisherInformation) &&
-            (identical(other.enrichmentConfiguration, enrichmentConfiguration) || other.enrichmentConfiguration == enrichmentConfiguration) &&
+            (identical(other.generalConfiguration, generalConfiguration) ||
+                other.generalConfiguration == generalConfiguration) &&
+            (identical(other.securityConfiguration, securityConfiguration) ||
+                other.securityConfiguration == securityConfiguration) &&
+            (identical(other.eventConfiguration, eventConfiguration) ||
+                other.eventConfiguration == eventConfiguration) &&
+            (identical(other.pricingInformation, pricingInformation) ||
+                other.pricingInformation == pricingInformation) &&
+            (identical(other.publisherInformation, publisherInformation) ||
+                other.publisherInformation == publisherInformation) &&
+            (identical(
+                    other.enrichmentConfiguration, enrichmentConfiguration) ||
+                other.enrichmentConfiguration == enrichmentConfiguration) &&
             const DeepCollectionEquality().equals(other._media, _media));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, flMeta, generalConfiguration, securityConfiguration, eventConfiguration, pricingInformation, publisherInformation, enrichmentConfiguration, const DeepCollectionEquality().hash(_media));
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      generalConfiguration,
+      securityConfiguration,
+      eventConfiguration,
+      pricingInformation,
+      publisherInformation,
+      enrichmentConfiguration,
+      const DeepCollectionEquality().hash(_media));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityCopyWith<_$_Activity> get copyWith => __$$_ActivityCopyWithImpl<_$_Activity>(this, _$identity);
+  _$$_ActivityCopyWith<_$_Activity> get copyWith =>
+      __$$_ActivityCopyWithImpl<_$_Activity>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -337,7 +403,16 @@ class _$_Activity implements _Activity {
 }
 
 abstract class _Activity implements Activity {
-  const factory _Activity({@JsonKey(name: '_fl_meta_') final FlMeta? flMeta, final ActivityGeneralConfiguration? generalConfiguration, final ActivitySecurityConfiguration? securityConfiguration, final ActivityEventConfiguration? eventConfiguration, final ActivityPricingInformation? pricingInformation, final ActivityPublisherInformation? publisherInformation, final ActivityEnrichmentConfiguration? enrichmentConfiguration, @JsonKey(fromJson: Media.fromJsonList) final List<Media> media}) = _$_Activity;
+  const factory _Activity(
+          {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          final ActivityGeneralConfiguration? generalConfiguration,
+          final ActivitySecurityConfiguration? securityConfiguration,
+          final ActivityEventConfiguration? eventConfiguration,
+          final ActivityPricingInformation? pricingInformation,
+          final ActivityPublisherInformation? publisherInformation,
+          final ActivityEnrichmentConfiguration? enrichmentConfiguration,
+          @JsonKey(fromJson: Media.fromJsonList) final List<Media> media}) =
+      _$_Activity;
 
   factory _Activity.fromJson(Map<String, dynamic> json) = _$_Activity.fromJson;
 
@@ -361,38 +436,72 @@ abstract class _Activity implements Activity {
   List<Media> get media;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityCopyWith<_$_Activity> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityCopyWith<_$_Activity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-ActivityGeneralConfiguration _$ActivityGeneralConfigurationFromJson(Map<String, dynamic> json) {
+ActivityGeneralConfiguration _$ActivityGeneralConfigurationFromJson(
+    Map<String, dynamic> json) {
   return _ActivityGeneralConfiguration.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ActivityGeneralConfiguration {
-  @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
-  ActivityGeneralConfigurationType get type => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
-  ActivityGeneralConfigurationStyle get style => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationType.fromJson,
+      toJson: ActivityGeneralConfigurationType.toJson)
+  ActivityGeneralConfigurationType get type =>
+      throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationType.fromJson,
+      toJson: ActivityGeneralConfigurationType.toJson)
+  ActivityGeneralConfigurationType get reactionType =>
+      throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationStyle.fromJson,
+      toJson: ActivityGeneralConfigurationStyle.toJson)
+  ActivityGeneralConfigurationStyle get style =>
+      throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityGeneralConfigurationCopyWith<ActivityGeneralConfiguration> get copyWith => throw _privateConstructorUsedError;
+  $ActivityGeneralConfigurationCopyWith<ActivityGeneralConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
-  factory $ActivityGeneralConfigurationCopyWith(ActivityGeneralConfiguration value, $Res Function(ActivityGeneralConfiguration) then) = _$ActivityGeneralConfigurationCopyWithImpl<$Res, ActivityGeneralConfiguration>;
+  factory $ActivityGeneralConfigurationCopyWith(
+          ActivityGeneralConfiguration value,
+          $Res Function(ActivityGeneralConfiguration) then) =
+      _$ActivityGeneralConfigurationCopyWithImpl<$Res,
+          ActivityGeneralConfiguration>;
   @useResult
-  $Res call({@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type, @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style, String content});
+  $Res call(
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      ActivityGeneralConfigurationType type,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      ActivityGeneralConfigurationType reactionType,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      ActivityGeneralConfigurationStyle style,
+      String content});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
+  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
 }
 
 /// @nodoc
-class _$ActivityGeneralConfigurationCopyWithImpl<$Res, $Val extends ActivityGeneralConfiguration> implements $ActivityGeneralConfigurationCopyWith<$Res> {
+class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
+        $Val extends ActivityGeneralConfiguration>
+    implements $ActivityGeneralConfigurationCopyWith<$Res> {
   _$ActivityGeneralConfigurationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -404,6 +513,7 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res, $Val extends ActivityGene
   @override
   $Res call({
     Object? type = null,
+    Object? reactionType = null,
     Object? style = null,
     Object? content = null,
   }) {
@@ -411,6 +521,10 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res, $Val extends ActivityGene
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
+              as ActivityGeneralConfigurationType,
+      reactionType: null == reactionType
+          ? _value.reactionType
+          : reactionType // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfigurationType,
       style: null == style
           ? _value.style
@@ -426,41 +540,78 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res, $Val extends ActivityGene
   @override
   @pragma('vm:prefer-inline')
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type {
-    return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.type, (value) {
+    return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.type,
+        (value) {
       return _then(_value.copyWith(type: value) as $Val);
     });
   }
 
   @override
   @pragma('vm:prefer-inline')
+  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType {
+    return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.reactionType,
+        (value) {
+      return _then(_value.copyWith(reactionType: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style {
-    return $ActivityGeneralConfigurationStyleCopyWith<$Res>(_value.style, (value) {
+    return $ActivityGeneralConfigurationStyleCopyWith<$Res>(_value.style,
+        (value) {
       return _then(_value.copyWith(style: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res> implements $ActivityGeneralConfigurationCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationCopyWith(_$_ActivityGeneralConfiguration value, $Res Function(_$_ActivityGeneralConfiguration) then) = __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>;
+abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
+    implements $ActivityGeneralConfigurationCopyWith<$Res> {
+  factory _$$_ActivityGeneralConfigurationCopyWith(
+          _$_ActivityGeneralConfiguration value,
+          $Res Function(_$_ActivityGeneralConfiguration) then) =
+      __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type, @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style, String content});
+  $Res call(
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      ActivityGeneralConfigurationType type,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      ActivityGeneralConfigurationType reactionType,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      ActivityGeneralConfigurationStyle style,
+      String content});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
+  @override
+  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType;
   @override
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationCopyWithImpl<$Res, _$_ActivityGeneralConfiguration> implements _$$_ActivityGeneralConfigurationCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationCopyWithImpl(_$_ActivityGeneralConfiguration _value, $Res Function(_$_ActivityGeneralConfiguration) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationCopyWithImpl<$Res,
+        _$_ActivityGeneralConfiguration>
+    implements _$$_ActivityGeneralConfigurationCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationCopyWithImpl(
+      _$_ActivityGeneralConfiguration _value,
+      $Res Function(_$_ActivityGeneralConfiguration) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? type = null,
+    Object? reactionType = null,
     Object? style = null,
     Object? content = null,
   }) {
@@ -468,6 +619,10 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res> extends _$ActivityGene
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
+              as ActivityGeneralConfigurationType,
+      reactionType: null == reactionType
+          ? _value.reactionType
+          : reactionType // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfigurationType,
       style: null == style
           ? _value.style
@@ -484,15 +639,38 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res> extends _$ActivityGene
 /// @nodoc
 @JsonSerializable()
 class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
-  const _$_ActivityGeneralConfiguration({@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) this.type = const ActivityGeneralConfigurationType.post(), @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) this.style = const ActivityGeneralConfigurationStyle.text(), this.content = ''});
+  const _$_ActivityGeneralConfiguration(
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      this.type = const ActivityGeneralConfigurationType.post(),
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      this.reactionType = const ActivityGeneralConfigurationType.post(),
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      this.style = const ActivityGeneralConfigurationStyle.text(),
+      this.content = ''});
 
-  factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$$_ActivityGeneralConfigurationFromJson(json);
+  factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityGeneralConfigurationFromJson(json);
 
   @override
-  @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationType.fromJson,
+      toJson: ActivityGeneralConfigurationType.toJson)
   final ActivityGeneralConfigurationType type;
   @override
-  @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationType.fromJson,
+      toJson: ActivityGeneralConfigurationType.toJson)
+  final ActivityGeneralConfigurationType reactionType;
+  @override
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationStyle.fromJson,
+      toJson: ActivityGeneralConfigurationStyle.toJson)
   final ActivityGeneralConfigurationStyle style;
   @override
   @JsonKey()
@@ -500,22 +678,32 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content)';
+    return 'ActivityGeneralConfiguration(type: $type, reactionType: $reactionType, style: $style, content: $content)';
   }
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfiguration && (identical(other.type, type) || other.type == type) && (identical(other.style, style) || other.style == style) && (identical(other.content, content) || other.content == content));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfiguration &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.reactionType, reactionType) ||
+                other.reactionType == reactionType) &&
+            (identical(other.style, style) || other.style == style) &&
+            (identical(other.content, content) || other.content == content));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, style, content);
+  int get hashCode =>
+      Object.hash(runtimeType, type, reactionType, style, content);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration> get copyWith => __$$_ActivityGeneralConfigurationCopyWithImpl<_$_ActivityGeneralConfiguration>(this, _$identity);
+  _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>
+      get copyWith => __$$_ActivityGeneralConfigurationCopyWithImpl<
+          _$_ActivityGeneralConfiguration>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -525,22 +713,47 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   }
 }
 
-abstract class _ActivityGeneralConfiguration implements ActivityGeneralConfiguration {
-  const factory _ActivityGeneralConfiguration({@JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) final ActivityGeneralConfigurationType type, @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) final ActivityGeneralConfigurationStyle style, final String content}) = _$_ActivityGeneralConfiguration;
+abstract class _ActivityGeneralConfiguration
+    implements ActivityGeneralConfiguration {
+  const factory _ActivityGeneralConfiguration(
+      {@JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      final ActivityGeneralConfigurationType type,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationType.fromJson,
+          toJson: ActivityGeneralConfigurationType.toJson)
+      final ActivityGeneralConfigurationType reactionType,
+      @JsonKey(
+          fromJson: ActivityGeneralConfigurationStyle.fromJson,
+          toJson: ActivityGeneralConfigurationStyle.toJson)
+      final ActivityGeneralConfigurationStyle style,
+      final String content}) = _$_ActivityGeneralConfiguration;
 
-  factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) = _$_ActivityGeneralConfiguration.fromJson;
+  factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
+      _$_ActivityGeneralConfiguration.fromJson;
 
   @override
-  @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson)
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationType.fromJson,
+      toJson: ActivityGeneralConfigurationType.toJson)
   ActivityGeneralConfigurationType get type;
   @override
-  @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson)
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationType.fromJson,
+      toJson: ActivityGeneralConfigurationType.toJson)
+  ActivityGeneralConfigurationType get reactionType;
+  @override
+  @JsonKey(
+      fromJson: ActivityGeneralConfigurationStyle.fromJson,
+      toJson: ActivityGeneralConfigurationStyle.toJson)
   ActivityGeneralConfigurationStyle get style;
   @override
   String get content;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -576,10 +789,13 @@ mixin _$ActivityGeneralConfigurationType {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value) event,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value) repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value) bookmark,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
+        bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -588,7 +804,8 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
+    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
+        bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -605,11 +822,17 @@ mixin _$ActivityGeneralConfigurationType {
 
 /// @nodoc
 abstract class $ActivityGeneralConfigurationTypeCopyWith<$Res> {
-  factory $ActivityGeneralConfigurationTypeCopyWith(ActivityGeneralConfigurationType value, $Res Function(ActivityGeneralConfigurationType) then) = _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, ActivityGeneralConfigurationType>;
+  factory $ActivityGeneralConfigurationTypeCopyWith(
+          ActivityGeneralConfigurationType value,
+          $Res Function(ActivityGeneralConfigurationType) then) =
+      _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+          ActivityGeneralConfigurationType>;
 }
 
 /// @nodoc
-class _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, $Val extends ActivityGeneralConfigurationType> implements $ActivityGeneralConfigurationTypeCopyWith<$Res> {
+class _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        $Val extends ActivityGeneralConfigurationType>
+    implements $ActivityGeneralConfigurationTypeCopyWith<$Res> {
   _$ActivityGeneralConfigurationTypeCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -620,17 +843,27 @@ class _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, $Val extends Activity
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationTypePostCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationTypePostCopyWith(_$_ActivityGeneralConfigurationTypePost value, $Res Function(_$_ActivityGeneralConfigurationTypePost) then) = __$$_ActivityGeneralConfigurationTypePostCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationTypePostCopyWith(
+          _$_ActivityGeneralConfigurationTypePost value,
+          $Res Function(_$_ActivityGeneralConfigurationTypePost) then) =
+      __$$_ActivityGeneralConfigurationTypePostCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationTypePostCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, _$_ActivityGeneralConfigurationTypePost> implements _$$_ActivityGeneralConfigurationTypePostCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationTypePostCopyWithImpl(_$_ActivityGeneralConfigurationTypePost _value, $Res Function(_$_ActivityGeneralConfigurationTypePost) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationTypePostCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationTypePost>
+    implements _$$_ActivityGeneralConfigurationTypePostCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationTypePostCopyWithImpl(
+      _$_ActivityGeneralConfigurationTypePost _value,
+      $Res Function(_$_ActivityGeneralConfigurationTypePost) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationTypePost implements _ActivityGeneralConfigurationTypePost {
+class _$_ActivityGeneralConfigurationTypePost
+    implements _ActivityGeneralConfigurationTypePost {
   const _$_ActivityGeneralConfigurationTypePost();
 
   @override
@@ -640,7 +873,9 @@ class _$_ActivityGeneralConfigurationTypePost implements _ActivityGeneralConfigu
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationTypePost);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationTypePost);
   }
 
   @override
@@ -690,10 +925,13 @@ class _$_ActivityGeneralConfigurationTypePost implements _ActivityGeneralConfigu
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value) event,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value) repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value) bookmark,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
+        bookmark,
   }) {
     return post(this);
   }
@@ -705,7 +943,8 @@ class _$_ActivityGeneralConfigurationTypePost implements _ActivityGeneralConfigu
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
+    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
+        bookmark,
   }) {
     return post?.call(this);
   }
@@ -727,23 +966,35 @@ class _$_ActivityGeneralConfigurationTypePost implements _ActivityGeneralConfigu
   }
 }
 
-abstract class _ActivityGeneralConfigurationTypePost implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypePost() = _$_ActivityGeneralConfigurationTypePost;
+abstract class _ActivityGeneralConfigurationTypePost
+    implements ActivityGeneralConfigurationType {
+  const factory _ActivityGeneralConfigurationTypePost() =
+      _$_ActivityGeneralConfigurationTypePost;
 }
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationTypeEventCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationTypeEventCopyWith(_$_ActivityGeneralConfigurationTypeEvent value, $Res Function(_$_ActivityGeneralConfigurationTypeEvent) then) = __$$_ActivityGeneralConfigurationTypeEventCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationTypeEventCopyWith(
+          _$_ActivityGeneralConfigurationTypeEvent value,
+          $Res Function(_$_ActivityGeneralConfigurationTypeEvent) then) =
+      __$$_ActivityGeneralConfigurationTypeEventCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationTypeEventCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, _$_ActivityGeneralConfigurationTypeEvent> implements _$$_ActivityGeneralConfigurationTypeEventCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationTypeEventCopyWithImpl(_$_ActivityGeneralConfigurationTypeEvent _value, $Res Function(_$_ActivityGeneralConfigurationTypeEvent) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationTypeEventCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationTypeEvent>
+    implements _$$_ActivityGeneralConfigurationTypeEventCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationTypeEventCopyWithImpl(
+      _$_ActivityGeneralConfigurationTypeEvent _value,
+      $Res Function(_$_ActivityGeneralConfigurationTypeEvent) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationTypeEvent implements _ActivityGeneralConfigurationTypeEvent {
+class _$_ActivityGeneralConfigurationTypeEvent
+    implements _ActivityGeneralConfigurationTypeEvent {
   const _$_ActivityGeneralConfigurationTypeEvent();
 
   @override
@@ -753,7 +1004,9 @@ class _$_ActivityGeneralConfigurationTypeEvent implements _ActivityGeneralConfig
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationTypeEvent);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationTypeEvent);
   }
 
   @override
@@ -803,10 +1056,13 @@ class _$_ActivityGeneralConfigurationTypeEvent implements _ActivityGeneralConfig
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value) event,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value) repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value) bookmark,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
+        bookmark,
   }) {
     return event(this);
   }
@@ -818,7 +1074,8 @@ class _$_ActivityGeneralConfigurationTypeEvent implements _ActivityGeneralConfig
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
+    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
+        bookmark,
   }) {
     return event?.call(this);
   }
@@ -840,23 +1097,35 @@ class _$_ActivityGeneralConfigurationTypeEvent implements _ActivityGeneralConfig
   }
 }
 
-abstract class _ActivityGeneralConfigurationTypeEvent implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypeEvent() = _$_ActivityGeneralConfigurationTypeEvent;
+abstract class _ActivityGeneralConfigurationTypeEvent
+    implements ActivityGeneralConfigurationType {
+  const factory _ActivityGeneralConfigurationTypeEvent() =
+      _$_ActivityGeneralConfigurationTypeEvent;
 }
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationTypeClipCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationTypeClipCopyWith(_$_ActivityGeneralConfigurationTypeClip value, $Res Function(_$_ActivityGeneralConfigurationTypeClip) then) = __$$_ActivityGeneralConfigurationTypeClipCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationTypeClipCopyWith(
+          _$_ActivityGeneralConfigurationTypeClip value,
+          $Res Function(_$_ActivityGeneralConfigurationTypeClip) then) =
+      __$$_ActivityGeneralConfigurationTypeClipCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationTypeClipCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, _$_ActivityGeneralConfigurationTypeClip> implements _$$_ActivityGeneralConfigurationTypeClipCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationTypeClipCopyWithImpl(_$_ActivityGeneralConfigurationTypeClip _value, $Res Function(_$_ActivityGeneralConfigurationTypeClip) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationTypeClipCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationTypeClip>
+    implements _$$_ActivityGeneralConfigurationTypeClipCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationTypeClipCopyWithImpl(
+      _$_ActivityGeneralConfigurationTypeClip _value,
+      $Res Function(_$_ActivityGeneralConfigurationTypeClip) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationTypeClip implements _ActivityGeneralConfigurationTypeClip {
+class _$_ActivityGeneralConfigurationTypeClip
+    implements _ActivityGeneralConfigurationTypeClip {
   const _$_ActivityGeneralConfigurationTypeClip();
 
   @override
@@ -866,7 +1135,9 @@ class _$_ActivityGeneralConfigurationTypeClip implements _ActivityGeneralConfigu
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationTypeClip);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationTypeClip);
   }
 
   @override
@@ -916,10 +1187,13 @@ class _$_ActivityGeneralConfigurationTypeClip implements _ActivityGeneralConfigu
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value) event,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value) repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value) bookmark,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
+        bookmark,
   }) {
     return clip(this);
   }
@@ -931,7 +1205,8 @@ class _$_ActivityGeneralConfigurationTypeClip implements _ActivityGeneralConfigu
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
+    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
+        bookmark,
   }) {
     return clip?.call(this);
   }
@@ -953,23 +1228,35 @@ class _$_ActivityGeneralConfigurationTypeClip implements _ActivityGeneralConfigu
   }
 }
 
-abstract class _ActivityGeneralConfigurationTypeClip implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypeClip() = _$_ActivityGeneralConfigurationTypeClip;
+abstract class _ActivityGeneralConfigurationTypeClip
+    implements ActivityGeneralConfigurationType {
+  const factory _ActivityGeneralConfigurationTypeClip() =
+      _$_ActivityGeneralConfigurationTypeClip;
 }
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationTypeRepostCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationTypeRepostCopyWith(_$_ActivityGeneralConfigurationTypeRepost value, $Res Function(_$_ActivityGeneralConfigurationTypeRepost) then) = __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationTypeRepostCopyWith(
+          _$_ActivityGeneralConfigurationTypeRepost value,
+          $Res Function(_$_ActivityGeneralConfigurationTypeRepost) then) =
+      __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, _$_ActivityGeneralConfigurationTypeRepost> implements _$$_ActivityGeneralConfigurationTypeRepostCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl(_$_ActivityGeneralConfigurationTypeRepost _value, $Res Function(_$_ActivityGeneralConfigurationTypeRepost) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationTypeRepost>
+    implements _$$_ActivityGeneralConfigurationTypeRepostCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationTypeRepostCopyWithImpl(
+      _$_ActivityGeneralConfigurationTypeRepost _value,
+      $Res Function(_$_ActivityGeneralConfigurationTypeRepost) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationTypeRepost implements _ActivityGeneralConfigurationTypeRepost {
+class _$_ActivityGeneralConfigurationTypeRepost
+    implements _ActivityGeneralConfigurationTypeRepost {
   const _$_ActivityGeneralConfigurationTypeRepost();
 
   @override
@@ -979,7 +1266,9 @@ class _$_ActivityGeneralConfigurationTypeRepost implements _ActivityGeneralConfi
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationTypeRepost);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationTypeRepost);
   }
 
   @override
@@ -1029,10 +1318,13 @@ class _$_ActivityGeneralConfigurationTypeRepost implements _ActivityGeneralConfi
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value) event,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value) repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value) bookmark,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
+        bookmark,
   }) {
     return repost(this);
   }
@@ -1044,7 +1336,8 @@ class _$_ActivityGeneralConfigurationTypeRepost implements _ActivityGeneralConfi
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
+    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
+        bookmark,
   }) {
     return repost?.call(this);
   }
@@ -1066,23 +1359,35 @@ class _$_ActivityGeneralConfigurationTypeRepost implements _ActivityGeneralConfi
   }
 }
 
-abstract class _ActivityGeneralConfigurationTypeRepost implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypeRepost() = _$_ActivityGeneralConfigurationTypeRepost;
+abstract class _ActivityGeneralConfigurationTypeRepost
+    implements ActivityGeneralConfigurationType {
+  const factory _ActivityGeneralConfigurationTypeRepost() =
+      _$_ActivityGeneralConfigurationTypeRepost;
 }
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith(_$_ActivityGeneralConfigurationTypeBookmark value, $Res Function(_$_ActivityGeneralConfigurationTypeBookmark) then) = __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith(
+          _$_ActivityGeneralConfigurationTypeBookmark value,
+          $Res Function(_$_ActivityGeneralConfigurationTypeBookmark) then) =
+      __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res, _$_ActivityGeneralConfigurationTypeBookmark> implements _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl(_$_ActivityGeneralConfigurationTypeBookmark _value, $Res Function(_$_ActivityGeneralConfigurationTypeBookmark) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationTypeBookmark>
+    implements _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl(
+      _$_ActivityGeneralConfigurationTypeBookmark _value,
+      $Res Function(_$_ActivityGeneralConfigurationTypeBookmark) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationTypeBookmark implements _ActivityGeneralConfigurationTypeBookmark {
+class _$_ActivityGeneralConfigurationTypeBookmark
+    implements _ActivityGeneralConfigurationTypeBookmark {
   const _$_ActivityGeneralConfigurationTypeBookmark();
 
   @override
@@ -1092,7 +1397,9 @@ class _$_ActivityGeneralConfigurationTypeBookmark implements _ActivityGeneralCon
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationTypeBookmark);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationTypeBookmark);
   }
 
   @override
@@ -1142,10 +1449,13 @@ class _$_ActivityGeneralConfigurationTypeBookmark implements _ActivityGeneralCon
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value) event,
+    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
+        event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value) repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value) bookmark,
+    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
+        repost,
+    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
+        bookmark,
   }) {
     return bookmark(this);
   }
@@ -1157,7 +1467,8 @@ class _$_ActivityGeneralConfigurationTypeBookmark implements _ActivityGeneralCon
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
+    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
+        bookmark,
   }) {
     return bookmark?.call(this);
   }
@@ -1179,8 +1490,10 @@ class _$_ActivityGeneralConfigurationTypeBookmark implements _ActivityGeneralCon
   }
 }
 
-abstract class _ActivityGeneralConfigurationTypeBookmark implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypeBookmark() = _$_ActivityGeneralConfigurationTypeBookmark;
+abstract class _ActivityGeneralConfigurationTypeBookmark
+    implements ActivityGeneralConfigurationType {
+  const factory _ActivityGeneralConfigurationTypeBookmark() =
+      _$_ActivityGeneralConfigurationTypeBookmark;
 }
 
 /// @nodoc
@@ -1206,19 +1519,23 @@ mixin _$ActivityGeneralConfigurationStyle {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityGeneralConfigurationStyleMarkdown value) markdown,
-    required TResult Function(_ActivityGeneralConfigurationStyleText value) text,
+    required TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)
+        markdown,
+    required TResult Function(_ActivityGeneralConfigurationStyleText value)
+        text,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityGeneralConfigurationStyleMarkdown value)? markdown,
+    TResult? Function(_ActivityGeneralConfigurationStyleMarkdown value)?
+        markdown,
     TResult? Function(_ActivityGeneralConfigurationStyleText value)? text,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)? markdown,
+    TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)?
+        markdown,
     TResult Function(_ActivityGeneralConfigurationStyleText value)? text,
     required TResult orElse(),
   }) =>
@@ -1227,11 +1544,17 @@ mixin _$ActivityGeneralConfigurationStyle {
 
 /// @nodoc
 abstract class $ActivityGeneralConfigurationStyleCopyWith<$Res> {
-  factory $ActivityGeneralConfigurationStyleCopyWith(ActivityGeneralConfigurationStyle value, $Res Function(ActivityGeneralConfigurationStyle) then) = _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res, ActivityGeneralConfigurationStyle>;
+  factory $ActivityGeneralConfigurationStyleCopyWith(
+          ActivityGeneralConfigurationStyle value,
+          $Res Function(ActivityGeneralConfigurationStyle) then) =
+      _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res,
+          ActivityGeneralConfigurationStyle>;
 }
 
 /// @nodoc
-class _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res, $Val extends ActivityGeneralConfigurationStyle> implements $ActivityGeneralConfigurationStyleCopyWith<$Res> {
+class _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res,
+        $Val extends ActivityGeneralConfigurationStyle>
+    implements $ActivityGeneralConfigurationStyleCopyWith<$Res> {
   _$ActivityGeneralConfigurationStyleCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -1242,17 +1565,27 @@ class _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res, $Val extends Activit
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationStyleMarkdownCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationStyleMarkdownCopyWith(_$_ActivityGeneralConfigurationStyleMarkdown value, $Res Function(_$_ActivityGeneralConfigurationStyleMarkdown) then) = __$$_ActivityGeneralConfigurationStyleMarkdownCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationStyleMarkdownCopyWith(
+          _$_ActivityGeneralConfigurationStyleMarkdown value,
+          $Res Function(_$_ActivityGeneralConfigurationStyleMarkdown) then) =
+      __$$_ActivityGeneralConfigurationStyleMarkdownCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationStyleMarkdownCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res, _$_ActivityGeneralConfigurationStyleMarkdown> implements _$$_ActivityGeneralConfigurationStyleMarkdownCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationStyleMarkdownCopyWithImpl(_$_ActivityGeneralConfigurationStyleMarkdown _value, $Res Function(_$_ActivityGeneralConfigurationStyleMarkdown) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationStyleMarkdownCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationStyleMarkdown>
+    implements _$$_ActivityGeneralConfigurationStyleMarkdownCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationStyleMarkdownCopyWithImpl(
+      _$_ActivityGeneralConfigurationStyleMarkdown _value,
+      $Res Function(_$_ActivityGeneralConfigurationStyleMarkdown) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationStyleMarkdown implements _ActivityGeneralConfigurationStyleMarkdown {
+class _$_ActivityGeneralConfigurationStyleMarkdown
+    implements _ActivityGeneralConfigurationStyleMarkdown {
   const _$_ActivityGeneralConfigurationStyleMarkdown();
 
   @override
@@ -1262,7 +1595,9 @@ class _$_ActivityGeneralConfigurationStyleMarkdown implements _ActivityGeneralCo
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationStyleMarkdown);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationStyleMarkdown);
   }
 
   @override
@@ -1302,8 +1637,10 @@ class _$_ActivityGeneralConfigurationStyleMarkdown implements _ActivityGeneralCo
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityGeneralConfigurationStyleMarkdown value) markdown,
-    required TResult Function(_ActivityGeneralConfigurationStyleText value) text,
+    required TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)
+        markdown,
+    required TResult Function(_ActivityGeneralConfigurationStyleText value)
+        text,
   }) {
     return markdown(this);
   }
@@ -1311,7 +1648,8 @@ class _$_ActivityGeneralConfigurationStyleMarkdown implements _ActivityGeneralCo
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityGeneralConfigurationStyleMarkdown value)? markdown,
+    TResult? Function(_ActivityGeneralConfigurationStyleMarkdown value)?
+        markdown,
     TResult? Function(_ActivityGeneralConfigurationStyleText value)? text,
   }) {
     return markdown?.call(this);
@@ -1320,7 +1658,8 @@ class _$_ActivityGeneralConfigurationStyleMarkdown implements _ActivityGeneralCo
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)? markdown,
+    TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)?
+        markdown,
     TResult Function(_ActivityGeneralConfigurationStyleText value)? text,
     required TResult orElse(),
   }) {
@@ -1331,23 +1670,35 @@ class _$_ActivityGeneralConfigurationStyleMarkdown implements _ActivityGeneralCo
   }
 }
 
-abstract class _ActivityGeneralConfigurationStyleMarkdown implements ActivityGeneralConfigurationStyle {
-  const factory _ActivityGeneralConfigurationStyleMarkdown() = _$_ActivityGeneralConfigurationStyleMarkdown;
+abstract class _ActivityGeneralConfigurationStyleMarkdown
+    implements ActivityGeneralConfigurationStyle {
+  const factory _ActivityGeneralConfigurationStyleMarkdown() =
+      _$_ActivityGeneralConfigurationStyleMarkdown;
 }
 
 /// @nodoc
 abstract class _$$_ActivityGeneralConfigurationStyleTextCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationStyleTextCopyWith(_$_ActivityGeneralConfigurationStyleText value, $Res Function(_$_ActivityGeneralConfigurationStyleText) then) = __$$_ActivityGeneralConfigurationStyleTextCopyWithImpl<$Res>;
+  factory _$$_ActivityGeneralConfigurationStyleTextCopyWith(
+          _$_ActivityGeneralConfigurationStyleText value,
+          $Res Function(_$_ActivityGeneralConfigurationStyleText) then) =
+      __$$_ActivityGeneralConfigurationStyleTextCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivityGeneralConfigurationStyleTextCopyWithImpl<$Res> extends _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res, _$_ActivityGeneralConfigurationStyleText> implements _$$_ActivityGeneralConfigurationStyleTextCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationStyleTextCopyWithImpl(_$_ActivityGeneralConfigurationStyleText _value, $Res Function(_$_ActivityGeneralConfigurationStyleText) _then) : super(_value, _then);
+class __$$_ActivityGeneralConfigurationStyleTextCopyWithImpl<$Res>
+    extends _$ActivityGeneralConfigurationStyleCopyWithImpl<$Res,
+        _$_ActivityGeneralConfigurationStyleText>
+    implements _$$_ActivityGeneralConfigurationStyleTextCopyWith<$Res> {
+  __$$_ActivityGeneralConfigurationStyleTextCopyWithImpl(
+      _$_ActivityGeneralConfigurationStyleText _value,
+      $Res Function(_$_ActivityGeneralConfigurationStyleText) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityGeneralConfigurationStyleText implements _ActivityGeneralConfigurationStyleText {
+class _$_ActivityGeneralConfigurationStyleText
+    implements _ActivityGeneralConfigurationStyleText {
   const _$_ActivityGeneralConfigurationStyleText();
 
   @override
@@ -1357,7 +1708,9 @@ class _$_ActivityGeneralConfigurationStyleText implements _ActivityGeneralConfig
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityGeneralConfigurationStyleText);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityGeneralConfigurationStyleText);
   }
 
   @override
@@ -1397,8 +1750,10 @@ class _$_ActivityGeneralConfigurationStyleText implements _ActivityGeneralConfig
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityGeneralConfigurationStyleMarkdown value) markdown,
-    required TResult Function(_ActivityGeneralConfigurationStyleText value) text,
+    required TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)
+        markdown,
+    required TResult Function(_ActivityGeneralConfigurationStyleText value)
+        text,
   }) {
     return text(this);
   }
@@ -1406,7 +1761,8 @@ class _$_ActivityGeneralConfigurationStyleText implements _ActivityGeneralConfig
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityGeneralConfigurationStyleMarkdown value)? markdown,
+    TResult? Function(_ActivityGeneralConfigurationStyleMarkdown value)?
+        markdown,
     TResult? Function(_ActivityGeneralConfigurationStyleText value)? text,
   }) {
     return text?.call(this);
@@ -1415,7 +1771,8 @@ class _$_ActivityGeneralConfigurationStyleText implements _ActivityGeneralConfig
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)? markdown,
+    TResult Function(_ActivityGeneralConfigurationStyleMarkdown value)?
+        markdown,
     TResult Function(_ActivityGeneralConfigurationStyleText value)? text,
     required TResult orElse(),
   }) {
@@ -1426,34 +1783,64 @@ class _$_ActivityGeneralConfigurationStyleText implements _ActivityGeneralConfig
   }
 }
 
-abstract class _ActivityGeneralConfigurationStyleText implements ActivityGeneralConfigurationStyle {
-  const factory _ActivityGeneralConfigurationStyleText() = _$_ActivityGeneralConfigurationStyleText;
+abstract class _ActivityGeneralConfigurationStyleText
+    implements ActivityGeneralConfigurationStyle {
+  const factory _ActivityGeneralConfigurationStyleText() =
+      _$_ActivityGeneralConfigurationStyleText;
 }
 
-ActivitySecurityConfiguration _$ActivitySecurityConfigurationFromJson(Map<String, dynamic> json) {
+ActivitySecurityConfiguration _$ActivitySecurityConfigurationFromJson(
+    Map<String, dynamic> json) {
   return _ActivitySecurityConfiguration.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ActivitySecurityConfiguration {
   String get context => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-  ActivitySecurityConfigurationMode get viewMode => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-  ActivitySecurityConfigurationMode get commentMode => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
-  ActivitySecurityConfigurationMode get shareMode => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get viewMode =>
+      throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get commentMode =>
+      throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
+  ActivitySecurityConfigurationMode get shareMode =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivitySecurityConfigurationCopyWith<ActivitySecurityConfiguration> get copyWith => throw _privateConstructorUsedError;
+  $ActivitySecurityConfigurationCopyWith<ActivitySecurityConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivitySecurityConfigurationCopyWith<$Res> {
-  factory $ActivitySecurityConfigurationCopyWith(ActivitySecurityConfiguration value, $Res Function(ActivitySecurityConfiguration) then) = _$ActivitySecurityConfigurationCopyWithImpl<$Res, ActivitySecurityConfiguration>;
+  factory $ActivitySecurityConfigurationCopyWith(
+          ActivitySecurityConfiguration value,
+          $Res Function(ActivitySecurityConfiguration) then) =
+      _$ActivitySecurityConfigurationCopyWithImpl<$Res,
+          ActivitySecurityConfiguration>;
   @useResult
-  $Res call({String context, @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode viewMode, @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode commentMode, @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode shareMode});
+  $Res call(
+      {String context,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode viewMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode commentMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode shareMode});
 
   $ActivitySecurityConfigurationModeCopyWith<$Res> get viewMode;
   $ActivitySecurityConfigurationModeCopyWith<$Res> get commentMode;
@@ -1461,7 +1848,9 @@ abstract class $ActivitySecurityConfigurationCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ActivitySecurityConfigurationCopyWithImpl<$Res, $Val extends ActivitySecurityConfiguration> implements $ActivitySecurityConfigurationCopyWith<$Res> {
+class _$ActivitySecurityConfigurationCopyWithImpl<$Res,
+        $Val extends ActivitySecurityConfiguration>
+    implements $ActivitySecurityConfigurationCopyWith<$Res> {
   _$ActivitySecurityConfigurationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -1500,7 +1889,8 @@ class _$ActivitySecurityConfigurationCopyWithImpl<$Res, $Val extends ActivitySec
   @override
   @pragma('vm:prefer-inline')
   $ActivitySecurityConfigurationModeCopyWith<$Res> get viewMode {
-    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.viewMode, (value) {
+    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.viewMode,
+        (value) {
       return _then(_value.copyWith(viewMode: value) as $Val);
     });
   }
@@ -1508,7 +1898,8 @@ class _$ActivitySecurityConfigurationCopyWithImpl<$Res, $Val extends ActivitySec
   @override
   @pragma('vm:prefer-inline')
   $ActivitySecurityConfigurationModeCopyWith<$Res> get commentMode {
-    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.commentMode, (value) {
+    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.commentMode,
+        (value) {
       return _then(_value.copyWith(commentMode: value) as $Val);
     });
   }
@@ -1516,18 +1907,36 @@ class _$ActivitySecurityConfigurationCopyWithImpl<$Res, $Val extends ActivitySec
   @override
   @pragma('vm:prefer-inline')
   $ActivitySecurityConfigurationModeCopyWith<$Res> get shareMode {
-    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.shareMode, (value) {
+    return $ActivitySecurityConfigurationModeCopyWith<$Res>(_value.shareMode,
+        (value) {
       return _then(_value.copyWith(shareMode: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$_ActivitySecurityConfigurationCopyWith<$Res> implements $ActivitySecurityConfigurationCopyWith<$Res> {
-  factory _$$_ActivitySecurityConfigurationCopyWith(_$_ActivitySecurityConfiguration value, $Res Function(_$_ActivitySecurityConfiguration) then) = __$$_ActivitySecurityConfigurationCopyWithImpl<$Res>;
+abstract class _$$_ActivitySecurityConfigurationCopyWith<$Res>
+    implements $ActivitySecurityConfigurationCopyWith<$Res> {
+  factory _$$_ActivitySecurityConfigurationCopyWith(
+          _$_ActivitySecurityConfiguration value,
+          $Res Function(_$_ActivitySecurityConfiguration) then) =
+      __$$_ActivitySecurityConfigurationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String context, @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode viewMode, @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode commentMode, @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode shareMode});
+  $Res call(
+      {String context,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode viewMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode commentMode,
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      ActivitySecurityConfigurationMode shareMode});
 
   @override
   $ActivitySecurityConfigurationModeCopyWith<$Res> get viewMode;
@@ -1538,8 +1947,14 @@ abstract class _$$_ActivitySecurityConfigurationCopyWith<$Res> implements $Activ
 }
 
 /// @nodoc
-class __$$_ActivitySecurityConfigurationCopyWithImpl<$Res> extends _$ActivitySecurityConfigurationCopyWithImpl<$Res, _$_ActivitySecurityConfiguration> implements _$$_ActivitySecurityConfigurationCopyWith<$Res> {
-  __$$_ActivitySecurityConfigurationCopyWithImpl(_$_ActivitySecurityConfiguration _value, $Res Function(_$_ActivitySecurityConfiguration) _then) : super(_value, _then);
+class __$$_ActivitySecurityConfigurationCopyWithImpl<$Res>
+    extends _$ActivitySecurityConfigurationCopyWithImpl<$Res,
+        _$_ActivitySecurityConfiguration>
+    implements _$$_ActivitySecurityConfigurationCopyWith<$Res> {
+  __$$_ActivitySecurityConfigurationCopyWithImpl(
+      _$_ActivitySecurityConfiguration _value,
+      $Res Function(_$_ActivitySecurityConfiguration) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -1572,26 +1987,44 @@ class __$$_ActivitySecurityConfigurationCopyWithImpl<$Res> extends _$ActivitySec
 
 /// @nodoc
 @JsonSerializable()
-class _$_ActivitySecurityConfiguration implements _ActivitySecurityConfiguration {
+class _$_ActivitySecurityConfiguration
+    implements _ActivitySecurityConfiguration {
   const _$_ActivitySecurityConfiguration(
       {this.context = '',
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) this.viewMode = const ActivitySecurityConfigurationMode.private(),
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) this.commentMode = const ActivitySecurityConfigurationMode.private(),
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) this.shareMode = const ActivitySecurityConfigurationMode.private()});
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.viewMode = const ActivitySecurityConfigurationMode.private(),
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.commentMode = const ActivitySecurityConfigurationMode.private(),
+      @JsonKey(
+          fromJson: ActivitySecurityConfigurationMode.fromJson,
+          toJson: ActivitySecurityConfigurationMode.toJson)
+      this.shareMode = const ActivitySecurityConfigurationMode.private()});
 
-  factory _$_ActivitySecurityConfiguration.fromJson(Map<String, dynamic> json) => _$$_ActivitySecurityConfigurationFromJson(json);
+  factory _$_ActivitySecurityConfiguration.fromJson(
+          Map<String, dynamic> json) =>
+      _$$_ActivitySecurityConfigurationFromJson(json);
 
   @override
   @JsonKey()
   final String context;
   @override
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
   final ActivitySecurityConfigurationMode viewMode;
   @override
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
   final ActivitySecurityConfigurationMode commentMode;
   @override
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
   final ActivitySecurityConfigurationMode shareMode;
 
   @override
@@ -1601,17 +2034,29 @@ class _$_ActivitySecurityConfiguration implements _ActivitySecurityConfiguration
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivitySecurityConfiguration && (identical(other.context, context) || other.context == context) && (identical(other.viewMode, viewMode) || other.viewMode == viewMode) && (identical(other.commentMode, commentMode) || other.commentMode == commentMode) && (identical(other.shareMode, shareMode) || other.shareMode == shareMode));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySecurityConfiguration &&
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.viewMode, viewMode) ||
+                other.viewMode == viewMode) &&
+            (identical(other.commentMode, commentMode) ||
+                other.commentMode == commentMode) &&
+            (identical(other.shareMode, shareMode) ||
+                other.shareMode == shareMode));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, context, viewMode, commentMode, shareMode);
+  int get hashCode =>
+      Object.hash(runtimeType, context, viewMode, commentMode, shareMode);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivitySecurityConfigurationCopyWith<_$_ActivitySecurityConfiguration> get copyWith => __$$_ActivitySecurityConfigurationCopyWithImpl<_$_ActivitySecurityConfiguration>(this, _$identity);
+  _$$_ActivitySecurityConfigurationCopyWith<_$_ActivitySecurityConfiguration>
+      get copyWith => __$$_ActivitySecurityConfigurationCopyWithImpl<
+          _$_ActivitySecurityConfiguration>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -1621,29 +2066,48 @@ class _$_ActivitySecurityConfiguration implements _ActivitySecurityConfiguration
   }
 }
 
-abstract class _ActivitySecurityConfiguration implements ActivitySecurityConfiguration {
+abstract class _ActivitySecurityConfiguration
+    implements ActivitySecurityConfiguration {
   const factory _ActivitySecurityConfiguration(
-      {final String context,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) final ActivitySecurityConfigurationMode viewMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) final ActivitySecurityConfigurationMode commentMode,
-      @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) final ActivitySecurityConfigurationMode shareMode}) = _$_ActivitySecurityConfiguration;
+          {final String context,
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
+          final ActivitySecurityConfigurationMode viewMode,
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
+          final ActivitySecurityConfigurationMode commentMode,
+          @JsonKey(
+              fromJson: ActivitySecurityConfigurationMode.fromJson,
+              toJson: ActivitySecurityConfigurationMode.toJson)
+          final ActivitySecurityConfigurationMode shareMode}) =
+      _$_ActivitySecurityConfiguration;
 
-  factory _ActivitySecurityConfiguration.fromJson(Map<String, dynamic> json) = _$_ActivitySecurityConfiguration.fromJson;
+  factory _ActivitySecurityConfiguration.fromJson(Map<String, dynamic> json) =
+      _$_ActivitySecurityConfiguration.fromJson;
 
   @override
   String get context;
   @override
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
   ActivitySecurityConfigurationMode get viewMode;
   @override
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
   ActivitySecurityConfigurationMode get commentMode;
   @override
-  @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson)
+  @JsonKey(
+      fromJson: ActivitySecurityConfigurationMode.fromJson,
+      toJson: ActivitySecurityConfigurationMode.toJson)
   ActivitySecurityConfigurationMode get shareMode;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivitySecurityConfigurationCopyWith<_$_ActivitySecurityConfiguration> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivitySecurityConfigurationCopyWith<_$_ActivitySecurityConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -1675,25 +2139,37 @@ mixin _$ActivitySecurityConfigurationMode {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivitySecurityConfigurationModePublic value) public,
-    required TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value) followersAndConnections,
-    required TResult Function(_ActivitySecurityConfigurationModeConnections value) connections,
-    required TResult Function(_ActivitySecurityConfigurationModePrivate value) private,
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult? Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult? Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     required TResult orElse(),
   }) =>
@@ -1702,11 +2178,17 @@ mixin _$ActivitySecurityConfigurationMode {
 
 /// @nodoc
 abstract class $ActivitySecurityConfigurationModeCopyWith<$Res> {
-  factory $ActivitySecurityConfigurationModeCopyWith(ActivitySecurityConfigurationMode value, $Res Function(ActivitySecurityConfigurationMode) then) = _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, ActivitySecurityConfigurationMode>;
+  factory $ActivitySecurityConfigurationModeCopyWith(
+          ActivitySecurityConfigurationMode value,
+          $Res Function(ActivitySecurityConfigurationMode) then) =
+      _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+          ActivitySecurityConfigurationMode>;
 }
 
 /// @nodoc
-class _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, $Val extends ActivitySecurityConfigurationMode> implements $ActivitySecurityConfigurationModeCopyWith<$Res> {
+class _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        $Val extends ActivitySecurityConfigurationMode>
+    implements $ActivitySecurityConfigurationModeCopyWith<$Res> {
   _$ActivitySecurityConfigurationModeCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -1717,17 +2199,27 @@ class _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, $Val extends Activit
 
 /// @nodoc
 abstract class _$$_ActivitySecurityConfigurationModePublicCopyWith<$Res> {
-  factory _$$_ActivitySecurityConfigurationModePublicCopyWith(_$_ActivitySecurityConfigurationModePublic value, $Res Function(_$_ActivitySecurityConfigurationModePublic) then) = __$$_ActivitySecurityConfigurationModePublicCopyWithImpl<$Res>;
+  factory _$$_ActivitySecurityConfigurationModePublicCopyWith(
+          _$_ActivitySecurityConfigurationModePublic value,
+          $Res Function(_$_ActivitySecurityConfigurationModePublic) then) =
+      __$$_ActivitySecurityConfigurationModePublicCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivitySecurityConfigurationModePublicCopyWithImpl<$Res> extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, _$_ActivitySecurityConfigurationModePublic> implements _$$_ActivitySecurityConfigurationModePublicCopyWith<$Res> {
-  __$$_ActivitySecurityConfigurationModePublicCopyWithImpl(_$_ActivitySecurityConfigurationModePublic _value, $Res Function(_$_ActivitySecurityConfigurationModePublic) _then) : super(_value, _then);
+class __$$_ActivitySecurityConfigurationModePublicCopyWithImpl<$Res>
+    extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        _$_ActivitySecurityConfigurationModePublic>
+    implements _$$_ActivitySecurityConfigurationModePublicCopyWith<$Res> {
+  __$$_ActivitySecurityConfigurationModePublicCopyWithImpl(
+      _$_ActivitySecurityConfigurationModePublic _value,
+      $Res Function(_$_ActivitySecurityConfigurationModePublic) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivitySecurityConfigurationModePublic implements _ActivitySecurityConfigurationModePublic {
+class _$_ActivitySecurityConfigurationModePublic
+    implements _ActivitySecurityConfigurationModePublic {
   const _$_ActivitySecurityConfigurationModePublic();
 
   @override
@@ -1737,7 +2229,9 @@ class _$_ActivitySecurityConfigurationModePublic implements _ActivitySecurityCon
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivitySecurityConfigurationModePublic);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySecurityConfigurationModePublic);
   }
 
   @override
@@ -1783,10 +2277,16 @@ class _$_ActivitySecurityConfigurationModePublic implements _ActivitySecurityCon
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivitySecurityConfigurationModePublic value) public,
-    required TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value) followersAndConnections,
-    required TResult Function(_ActivitySecurityConfigurationModeConnections value) connections,
-    required TResult Function(_ActivitySecurityConfigurationModePrivate value) private,
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
   }) {
     return public(this);
   }
@@ -1795,8 +2295,11 @@ class _$_ActivitySecurityConfigurationModePublic implements _ActivitySecurityCon
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult? Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult? Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
   }) {
     return public?.call(this);
@@ -1806,8 +2309,11 @@ class _$_ActivitySecurityConfigurationModePublic implements _ActivitySecurityCon
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     required TResult orElse(),
   }) {
@@ -1818,23 +2324,43 @@ class _$_ActivitySecurityConfigurationModePublic implements _ActivitySecurityCon
   }
 }
 
-abstract class _ActivitySecurityConfigurationModePublic implements ActivitySecurityConfigurationMode {
-  const factory _ActivitySecurityConfigurationModePublic() = _$_ActivitySecurityConfigurationModePublic;
+abstract class _ActivitySecurityConfigurationModePublic
+    implements ActivitySecurityConfigurationMode {
+  const factory _ActivitySecurityConfigurationModePublic() =
+      _$_ActivitySecurityConfigurationModePublic;
 }
 
 /// @nodoc
-abstract class _$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWith<$Res> {
-  factory _$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWith(_$_ActivitySecurityConfigurationModeFollowersAndConnections value, $Res Function(_$_ActivitySecurityConfigurationModeFollowersAndConnections) then) = __$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWithImpl<$Res>;
+abstract class _$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWith<
+    $Res> {
+  factory _$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWith(
+          _$_ActivitySecurityConfigurationModeFollowersAndConnections value,
+          $Res Function(
+                  _$_ActivitySecurityConfigurationModeFollowersAndConnections)
+              then) =
+      __$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWithImpl<
+          $Res>;
 }
 
 /// @nodoc
-class __$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWithImpl<$Res> extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, _$_ActivitySecurityConfigurationModeFollowersAndConnections> implements _$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWith<$Res> {
-  __$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWithImpl(_$_ActivitySecurityConfigurationModeFollowersAndConnections _value, $Res Function(_$_ActivitySecurityConfigurationModeFollowersAndConnections) _then) : super(_value, _then);
+class __$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWithImpl<
+        $Res>
+    extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        _$_ActivitySecurityConfigurationModeFollowersAndConnections>
+    implements
+        _$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWith<
+            $Res> {
+  __$$_ActivitySecurityConfigurationModeFollowersAndConnectionsCopyWithImpl(
+      _$_ActivitySecurityConfigurationModeFollowersAndConnections _value,
+      $Res Function(_$_ActivitySecurityConfigurationModeFollowersAndConnections)
+          _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivitySecurityConfigurationModeFollowersAndConnections implements _ActivitySecurityConfigurationModeFollowersAndConnections {
+class _$_ActivitySecurityConfigurationModeFollowersAndConnections
+    implements _ActivitySecurityConfigurationModeFollowersAndConnections {
   const _$_ActivitySecurityConfigurationModeFollowersAndConnections();
 
   @override
@@ -1844,7 +2370,10 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections implements _Ac
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivitySecurityConfigurationModeFollowersAndConnections);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other
+                is _$_ActivitySecurityConfigurationModeFollowersAndConnections);
   }
 
   @override
@@ -1890,10 +2419,16 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections implements _Ac
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivitySecurityConfigurationModePublic value) public,
-    required TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value) followersAndConnections,
-    required TResult Function(_ActivitySecurityConfigurationModeConnections value) connections,
-    required TResult Function(_ActivitySecurityConfigurationModePrivate value) private,
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
   }) {
     return followersAndConnections(this);
   }
@@ -1902,8 +2437,11 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections implements _Ac
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult? Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult? Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
   }) {
     return followersAndConnections?.call(this);
@@ -1913,8 +2451,11 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections implements _Ac
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     required TResult orElse(),
   }) {
@@ -1925,23 +2466,35 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections implements _Ac
   }
 }
 
-abstract class _ActivitySecurityConfigurationModeFollowersAndConnections implements ActivitySecurityConfigurationMode {
-  const factory _ActivitySecurityConfigurationModeFollowersAndConnections() = _$_ActivitySecurityConfigurationModeFollowersAndConnections;
+abstract class _ActivitySecurityConfigurationModeFollowersAndConnections
+    implements ActivitySecurityConfigurationMode {
+  const factory _ActivitySecurityConfigurationModeFollowersAndConnections() =
+      _$_ActivitySecurityConfigurationModeFollowersAndConnections;
 }
 
 /// @nodoc
 abstract class _$$_ActivitySecurityConfigurationModeConnectionsCopyWith<$Res> {
-  factory _$$_ActivitySecurityConfigurationModeConnectionsCopyWith(_$_ActivitySecurityConfigurationModeConnections value, $Res Function(_$_ActivitySecurityConfigurationModeConnections) then) = __$$_ActivitySecurityConfigurationModeConnectionsCopyWithImpl<$Res>;
+  factory _$$_ActivitySecurityConfigurationModeConnectionsCopyWith(
+          _$_ActivitySecurityConfigurationModeConnections value,
+          $Res Function(_$_ActivitySecurityConfigurationModeConnections) then) =
+      __$$_ActivitySecurityConfigurationModeConnectionsCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivitySecurityConfigurationModeConnectionsCopyWithImpl<$Res> extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, _$_ActivitySecurityConfigurationModeConnections> implements _$$_ActivitySecurityConfigurationModeConnectionsCopyWith<$Res> {
-  __$$_ActivitySecurityConfigurationModeConnectionsCopyWithImpl(_$_ActivitySecurityConfigurationModeConnections _value, $Res Function(_$_ActivitySecurityConfigurationModeConnections) _then) : super(_value, _then);
+class __$$_ActivitySecurityConfigurationModeConnectionsCopyWithImpl<$Res>
+    extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        _$_ActivitySecurityConfigurationModeConnections>
+    implements _$$_ActivitySecurityConfigurationModeConnectionsCopyWith<$Res> {
+  __$$_ActivitySecurityConfigurationModeConnectionsCopyWithImpl(
+      _$_ActivitySecurityConfigurationModeConnections _value,
+      $Res Function(_$_ActivitySecurityConfigurationModeConnections) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivitySecurityConfigurationModeConnections implements _ActivitySecurityConfigurationModeConnections {
+class _$_ActivitySecurityConfigurationModeConnections
+    implements _ActivitySecurityConfigurationModeConnections {
   const _$_ActivitySecurityConfigurationModeConnections();
 
   @override
@@ -1951,7 +2504,9 @@ class _$_ActivitySecurityConfigurationModeConnections implements _ActivitySecuri
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivitySecurityConfigurationModeConnections);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySecurityConfigurationModeConnections);
   }
 
   @override
@@ -1997,10 +2552,16 @@ class _$_ActivitySecurityConfigurationModeConnections implements _ActivitySecuri
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivitySecurityConfigurationModePublic value) public,
-    required TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value) followersAndConnections,
-    required TResult Function(_ActivitySecurityConfigurationModeConnections value) connections,
-    required TResult Function(_ActivitySecurityConfigurationModePrivate value) private,
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
   }) {
     return connections(this);
   }
@@ -2009,8 +2570,11 @@ class _$_ActivitySecurityConfigurationModeConnections implements _ActivitySecuri
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult? Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult? Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
   }) {
     return connections?.call(this);
@@ -2020,8 +2584,11 @@ class _$_ActivitySecurityConfigurationModeConnections implements _ActivitySecuri
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     required TResult orElse(),
   }) {
@@ -2032,23 +2599,35 @@ class _$_ActivitySecurityConfigurationModeConnections implements _ActivitySecuri
   }
 }
 
-abstract class _ActivitySecurityConfigurationModeConnections implements ActivitySecurityConfigurationMode {
-  const factory _ActivitySecurityConfigurationModeConnections() = _$_ActivitySecurityConfigurationModeConnections;
+abstract class _ActivitySecurityConfigurationModeConnections
+    implements ActivitySecurityConfigurationMode {
+  const factory _ActivitySecurityConfigurationModeConnections() =
+      _$_ActivitySecurityConfigurationModeConnections;
 }
 
 /// @nodoc
 abstract class _$$_ActivitySecurityConfigurationModePrivateCopyWith<$Res> {
-  factory _$$_ActivitySecurityConfigurationModePrivateCopyWith(_$_ActivitySecurityConfigurationModePrivate value, $Res Function(_$_ActivitySecurityConfigurationModePrivate) then) = __$$_ActivitySecurityConfigurationModePrivateCopyWithImpl<$Res>;
+  factory _$$_ActivitySecurityConfigurationModePrivateCopyWith(
+          _$_ActivitySecurityConfigurationModePrivate value,
+          $Res Function(_$_ActivitySecurityConfigurationModePrivate) then) =
+      __$$_ActivitySecurityConfigurationModePrivateCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ActivitySecurityConfigurationModePrivateCopyWithImpl<$Res> extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res, _$_ActivitySecurityConfigurationModePrivate> implements _$$_ActivitySecurityConfigurationModePrivateCopyWith<$Res> {
-  __$$_ActivitySecurityConfigurationModePrivateCopyWithImpl(_$_ActivitySecurityConfigurationModePrivate _value, $Res Function(_$_ActivitySecurityConfigurationModePrivate) _then) : super(_value, _then);
+class __$$_ActivitySecurityConfigurationModePrivateCopyWithImpl<$Res>
+    extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        _$_ActivitySecurityConfigurationModePrivate>
+    implements _$$_ActivitySecurityConfigurationModePrivateCopyWith<$Res> {
+  __$$_ActivitySecurityConfigurationModePrivateCopyWithImpl(
+      _$_ActivitySecurityConfigurationModePrivate _value,
+      $Res Function(_$_ActivitySecurityConfigurationModePrivate) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivitySecurityConfigurationModePrivate implements _ActivitySecurityConfigurationModePrivate {
+class _$_ActivitySecurityConfigurationModePrivate
+    implements _ActivitySecurityConfigurationModePrivate {
   const _$_ActivitySecurityConfigurationModePrivate();
 
   @override
@@ -2058,7 +2637,9 @@ class _$_ActivitySecurityConfigurationModePrivate implements _ActivitySecurityCo
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivitySecurityConfigurationModePrivate);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySecurityConfigurationModePrivate);
   }
 
   @override
@@ -2104,10 +2685,16 @@ class _$_ActivitySecurityConfigurationModePrivate implements _ActivitySecurityCo
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivitySecurityConfigurationModePublic value) public,
-    required TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value) followersAndConnections,
-    required TResult Function(_ActivitySecurityConfigurationModeConnections value) connections,
-    required TResult Function(_ActivitySecurityConfigurationModePrivate value) private,
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
   }) {
     return private(this);
   }
@@ -2116,8 +2703,11 @@ class _$_ActivitySecurityConfigurationModePrivate implements _ActivitySecurityCo
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult? Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult? Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
   }) {
     return private?.call(this);
@@ -2127,8 +2717,11 @@ class _$_ActivitySecurityConfigurationModePrivate implements _ActivitySecurityCo
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
-    TResult Function(_ActivitySecurityConfigurationModeFollowersAndConnections value)? followersAndConnections,
-    TResult Function(_ActivitySecurityConfigurationModeConnections value)? connections,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     required TResult orElse(),
   }) {
@@ -2139,11 +2732,14 @@ class _$_ActivitySecurityConfigurationModePrivate implements _ActivitySecurityCo
   }
 }
 
-abstract class _ActivitySecurityConfigurationModePrivate implements ActivitySecurityConfigurationMode {
-  const factory _ActivitySecurityConfigurationModePrivate() = _$_ActivitySecurityConfigurationModePrivate;
+abstract class _ActivitySecurityConfigurationModePrivate
+    implements ActivitySecurityConfigurationMode {
+  const factory _ActivitySecurityConfigurationModePrivate() =
+      _$_ActivitySecurityConfigurationModePrivate;
 }
 
-ActivityEventConfiguration _$ActivityEventConfigurationFromJson(Map<String, dynamic> json) {
+ActivityEventConfiguration _$ActivityEventConfigurationFromJson(
+    Map<String, dynamic> json) {
   return _ActivityEventConfiguration.fromJson(json);
 }
 
@@ -2158,20 +2754,32 @@ mixin _$ActivityEventConfiguration {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityEventConfigurationCopyWith<ActivityEventConfiguration> get copyWith => throw _privateConstructorUsedError;
+  $ActivityEventConfigurationCopyWith<ActivityEventConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityEventConfigurationCopyWith<$Res> {
-  factory $ActivityEventConfigurationCopyWith(ActivityEventConfiguration value, $Res Function(ActivityEventConfiguration) then) = _$ActivityEventConfigurationCopyWithImpl<$Res, ActivityEventConfiguration>;
+  factory $ActivityEventConfigurationCopyWith(ActivityEventConfiguration value,
+          $Res Function(ActivityEventConfiguration) then) =
+      _$ActivityEventConfigurationCopyWithImpl<$Res,
+          ActivityEventConfiguration>;
   @useResult
-  $Res call({dynamic venue, String name, ActivitySchedule? schedule, String location, int popularityScore, bool isCancelled});
+  $Res call(
+      {dynamic venue,
+      String name,
+      ActivitySchedule? schedule,
+      String location,
+      int popularityScore,
+      bool isCancelled});
 
   $ActivityScheduleCopyWith<$Res>? get schedule;
 }
 
 /// @nodoc
-class _$ActivityEventConfigurationCopyWithImpl<$Res, $Val extends ActivityEventConfiguration> implements $ActivityEventConfigurationCopyWith<$Res> {
+class _$ActivityEventConfigurationCopyWithImpl<$Res,
+        $Val extends ActivityEventConfiguration>
+    implements $ActivityEventConfigurationCopyWith<$Res> {
   _$ActivityEventConfigurationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -2231,19 +2839,35 @@ class _$ActivityEventConfigurationCopyWithImpl<$Res, $Val extends ActivityEventC
 }
 
 /// @nodoc
-abstract class _$$_ActivityEventConfigurationCopyWith<$Res> implements $ActivityEventConfigurationCopyWith<$Res> {
-  factory _$$_ActivityEventConfigurationCopyWith(_$_ActivityEventConfiguration value, $Res Function(_$_ActivityEventConfiguration) then) = __$$_ActivityEventConfigurationCopyWithImpl<$Res>;
+abstract class _$$_ActivityEventConfigurationCopyWith<$Res>
+    implements $ActivityEventConfigurationCopyWith<$Res> {
+  factory _$$_ActivityEventConfigurationCopyWith(
+          _$_ActivityEventConfiguration value,
+          $Res Function(_$_ActivityEventConfiguration) then) =
+      __$$_ActivityEventConfigurationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({dynamic venue, String name, ActivitySchedule? schedule, String location, int popularityScore, bool isCancelled});
+  $Res call(
+      {dynamic venue,
+      String name,
+      ActivitySchedule? schedule,
+      String location,
+      int popularityScore,
+      bool isCancelled});
 
   @override
   $ActivityScheduleCopyWith<$Res>? get schedule;
 }
 
 /// @nodoc
-class __$$_ActivityEventConfigurationCopyWithImpl<$Res> extends _$ActivityEventConfigurationCopyWithImpl<$Res, _$_ActivityEventConfiguration> implements _$$_ActivityEventConfigurationCopyWith<$Res> {
-  __$$_ActivityEventConfigurationCopyWithImpl(_$_ActivityEventConfiguration _value, $Res Function(_$_ActivityEventConfiguration) _then) : super(_value, _then);
+class __$$_ActivityEventConfigurationCopyWithImpl<$Res>
+    extends _$ActivityEventConfigurationCopyWithImpl<$Res,
+        _$_ActivityEventConfiguration>
+    implements _$$_ActivityEventConfigurationCopyWith<$Res> {
+  __$$_ActivityEventConfigurationCopyWithImpl(
+      _$_ActivityEventConfiguration _value,
+      $Res Function(_$_ActivityEventConfiguration) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -2287,9 +2911,16 @@ class __$$_ActivityEventConfigurationCopyWithImpl<$Res> extends _$ActivityEventC
 /// @nodoc
 @JsonSerializable()
 class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
-  const _$_ActivityEventConfiguration({this.venue, this.name = '', this.schedule, this.location = '', this.popularityScore = 0, this.isCancelled = false});
+  const _$_ActivityEventConfiguration(
+      {this.venue,
+      this.name = '',
+      this.schedule,
+      this.location = '',
+      this.popularityScore = 0,
+      this.isCancelled = false});
 
-  factory _$_ActivityEventConfiguration.fromJson(Map<String, dynamic> json) => _$$_ActivityEventConfigurationFromJson(json);
+  factory _$_ActivityEventConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityEventConfigurationFromJson(json);
 
   @override
   final dynamic venue;
@@ -2320,20 +2951,33 @@ class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
             other is _$_ActivityEventConfiguration &&
             const DeepCollectionEquality().equals(other.venue, venue) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.schedule, schedule) || other.schedule == schedule) &&
-            (identical(other.location, location) || other.location == location) &&
-            (identical(other.popularityScore, popularityScore) || other.popularityScore == popularityScore) &&
-            (identical(other.isCancelled, isCancelled) || other.isCancelled == isCancelled));
+            (identical(other.schedule, schedule) ||
+                other.schedule == schedule) &&
+            (identical(other.location, location) ||
+                other.location == location) &&
+            (identical(other.popularityScore, popularityScore) ||
+                other.popularityScore == popularityScore) &&
+            (identical(other.isCancelled, isCancelled) ||
+                other.isCancelled == isCancelled));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, const DeepCollectionEquality().hash(venue), name, schedule, location, popularityScore, isCancelled);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(venue),
+      name,
+      schedule,
+      location,
+      popularityScore,
+      isCancelled);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityEventConfigurationCopyWith<_$_ActivityEventConfiguration> get copyWith => __$$_ActivityEventConfigurationCopyWithImpl<_$_ActivityEventConfiguration>(this, _$identity);
+  _$$_ActivityEventConfigurationCopyWith<_$_ActivityEventConfiguration>
+      get copyWith => __$$_ActivityEventConfigurationCopyWithImpl<
+          _$_ActivityEventConfiguration>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2343,10 +2987,18 @@ class _$_ActivityEventConfiguration implements _ActivityEventConfiguration {
   }
 }
 
-abstract class _ActivityEventConfiguration implements ActivityEventConfiguration {
-  const factory _ActivityEventConfiguration({final dynamic venue, final String name, final ActivitySchedule? schedule, final String location, final int popularityScore, final bool isCancelled}) = _$_ActivityEventConfiguration;
+abstract class _ActivityEventConfiguration
+    implements ActivityEventConfiguration {
+  const factory _ActivityEventConfiguration(
+      {final dynamic venue,
+      final String name,
+      final ActivitySchedule? schedule,
+      final String location,
+      final int popularityScore,
+      final bool isCancelled}) = _$_ActivityEventConfiguration;
 
-  factory _ActivityEventConfiguration.fromJson(Map<String, dynamic> json) = _$_ActivityEventConfiguration.fromJson;
+  factory _ActivityEventConfiguration.fromJson(Map<String, dynamic> json) =
+      _$_ActivityEventConfiguration.fromJson;
 
   @override
   dynamic get venue;
@@ -2362,7 +3014,8 @@ abstract class _ActivityEventConfiguration implements ActivityEventConfiguration
   bool get isCancelled;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityEventConfigurationCopyWith<_$_ActivityEventConfiguration> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityEventConfigurationCopyWith<_$_ActivityEventConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 ActivitySchedule _$ActivityScheduleFromJson(Map<String, dynamic> json) {
@@ -2377,18 +3030,22 @@ mixin _$ActivitySchedule {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityScheduleCopyWith<ActivitySchedule> get copyWith => throw _privateConstructorUsedError;
+  $ActivityScheduleCopyWith<ActivitySchedule> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityScheduleCopyWith<$Res> {
-  factory $ActivityScheduleCopyWith(ActivitySchedule value, $Res Function(ActivitySchedule) then) = _$ActivityScheduleCopyWithImpl<$Res, ActivitySchedule>;
+  factory $ActivityScheduleCopyWith(
+          ActivitySchedule value, $Res Function(ActivitySchedule) then) =
+      _$ActivityScheduleCopyWithImpl<$Res, ActivitySchedule>;
   @useResult
   $Res call({String recurrenceRule, DateTime? start, DateTime? end});
 }
 
 /// @nodoc
-class _$ActivityScheduleCopyWithImpl<$Res, $Val extends ActivitySchedule> implements $ActivityScheduleCopyWith<$Res> {
+class _$ActivityScheduleCopyWithImpl<$Res, $Val extends ActivitySchedule>
+    implements $ActivityScheduleCopyWith<$Res> {
   _$ActivityScheduleCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -2421,16 +3078,23 @@ class _$ActivityScheduleCopyWithImpl<$Res, $Val extends ActivitySchedule> implem
 }
 
 /// @nodoc
-abstract class _$$_ActivityScheduleCopyWith<$Res> implements $ActivityScheduleCopyWith<$Res> {
-  factory _$$_ActivityScheduleCopyWith(_$_ActivitySchedule value, $Res Function(_$_ActivitySchedule) then) = __$$_ActivityScheduleCopyWithImpl<$Res>;
+abstract class _$$_ActivityScheduleCopyWith<$Res>
+    implements $ActivityScheduleCopyWith<$Res> {
+  factory _$$_ActivityScheduleCopyWith(
+          _$_ActivitySchedule value, $Res Function(_$_ActivitySchedule) then) =
+      __$$_ActivityScheduleCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String recurrenceRule, DateTime? start, DateTime? end});
 }
 
 /// @nodoc
-class __$$_ActivityScheduleCopyWithImpl<$Res> extends _$ActivityScheduleCopyWithImpl<$Res, _$_ActivitySchedule> implements _$$_ActivityScheduleCopyWith<$Res> {
-  __$$_ActivityScheduleCopyWithImpl(_$_ActivitySchedule _value, $Res Function(_$_ActivitySchedule) _then) : super(_value, _then);
+class __$$_ActivityScheduleCopyWithImpl<$Res>
+    extends _$ActivityScheduleCopyWithImpl<$Res, _$_ActivitySchedule>
+    implements _$$_ActivityScheduleCopyWith<$Res> {
+  __$$_ActivityScheduleCopyWithImpl(
+      _$_ActivitySchedule _value, $Res Function(_$_ActivitySchedule) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -2461,7 +3125,8 @@ class __$$_ActivityScheduleCopyWithImpl<$Res> extends _$ActivityScheduleCopyWith
 class _$_ActivitySchedule implements _ActivitySchedule {
   const _$_ActivitySchedule({this.recurrenceRule = '', this.start, this.end});
 
-  factory _$_ActivitySchedule.fromJson(Map<String, dynamic> json) => _$$_ActivityScheduleFromJson(json);
+  factory _$_ActivitySchedule.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityScheduleFromJson(json);
 
   @override
   @JsonKey()
@@ -2478,7 +3143,13 @@ class _$_ActivitySchedule implements _ActivitySchedule {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivitySchedule && (identical(other.recurrenceRule, recurrenceRule) || other.recurrenceRule == recurrenceRule) && (identical(other.start, start) || other.start == start) && (identical(other.end, end) || other.end == end));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySchedule &&
+            (identical(other.recurrenceRule, recurrenceRule) ||
+                other.recurrenceRule == recurrenceRule) &&
+            (identical(other.start, start) || other.start == start) &&
+            (identical(other.end, end) || other.end == end));
   }
 
   @JsonKey(ignore: true)
@@ -2488,7 +3159,8 @@ class _$_ActivitySchedule implements _ActivitySchedule {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityScheduleCopyWith<_$_ActivitySchedule> get copyWith => __$$_ActivityScheduleCopyWithImpl<_$_ActivitySchedule>(this, _$identity);
+  _$$_ActivityScheduleCopyWith<_$_ActivitySchedule> get copyWith =>
+      __$$_ActivityScheduleCopyWithImpl<_$_ActivitySchedule>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2499,9 +3171,13 @@ class _$_ActivitySchedule implements _ActivitySchedule {
 }
 
 abstract class _ActivitySchedule implements ActivitySchedule {
-  const factory _ActivitySchedule({final String recurrenceRule, final DateTime? start, final DateTime? end}) = _$_ActivitySchedule;
+  const factory _ActivitySchedule(
+      {final String recurrenceRule,
+      final DateTime? start,
+      final DateTime? end}) = _$_ActivitySchedule;
 
-  factory _ActivitySchedule.fromJson(Map<String, dynamic> json) = _$_ActivitySchedule.fromJson;
+  factory _ActivitySchedule.fromJson(Map<String, dynamic> json) =
+      _$_ActivitySchedule.fromJson;
 
   @override
   String get recurrenceRule;
@@ -2511,34 +3187,46 @@ abstract class _ActivitySchedule implements ActivitySchedule {
   DateTime? get end;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityScheduleCopyWith<_$_ActivitySchedule> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityScheduleCopyWith<_$_ActivitySchedule> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
-ActivityPricingInformation _$ActivityPricingInformationFromJson(Map<String, dynamic> json) {
+ActivityPricingInformation _$ActivityPricingInformationFromJson(
+    Map<String, dynamic> json) {
   return _ActivityPricingInformation.fromJson(json);
 }
 
 /// @nodoc
 mixin _$ActivityPricingInformation {
   String get productId => throw _privateConstructorUsedError;
-  ActivityPricingExternalStoreInformation? get externalStoreInformation => throw _privateConstructorUsedError;
+  ActivityPricingExternalStoreInformation? get externalStoreInformation =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityPricingInformationCopyWith<ActivityPricingInformation> get copyWith => throw _privateConstructorUsedError;
+  $ActivityPricingInformationCopyWith<ActivityPricingInformation>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityPricingInformationCopyWith<$Res> {
-  factory $ActivityPricingInformationCopyWith(ActivityPricingInformation value, $Res Function(ActivityPricingInformation) then) = _$ActivityPricingInformationCopyWithImpl<$Res, ActivityPricingInformation>;
+  factory $ActivityPricingInformationCopyWith(ActivityPricingInformation value,
+          $Res Function(ActivityPricingInformation) then) =
+      _$ActivityPricingInformationCopyWithImpl<$Res,
+          ActivityPricingInformation>;
   @useResult
-  $Res call({String productId, ActivityPricingExternalStoreInformation? externalStoreInformation});
+  $Res call(
+      {String productId,
+      ActivityPricingExternalStoreInformation? externalStoreInformation});
 
-  $ActivityPricingExternalStoreInformationCopyWith<$Res>? get externalStoreInformation;
+  $ActivityPricingExternalStoreInformationCopyWith<$Res>?
+      get externalStoreInformation;
 }
 
 /// @nodoc
-class _$ActivityPricingInformationCopyWithImpl<$Res, $Val extends ActivityPricingInformation> implements $ActivityPricingInformationCopyWith<$Res> {
+class _$ActivityPricingInformationCopyWithImpl<$Res,
+        $Val extends ActivityPricingInformation>
+    implements $ActivityPricingInformationCopyWith<$Res> {
   _$ActivityPricingInformationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -2566,31 +3254,46 @@ class _$ActivityPricingInformationCopyWithImpl<$Res, $Val extends ActivityPricin
 
   @override
   @pragma('vm:prefer-inline')
-  $ActivityPricingExternalStoreInformationCopyWith<$Res>? get externalStoreInformation {
+  $ActivityPricingExternalStoreInformationCopyWith<$Res>?
+      get externalStoreInformation {
     if (_value.externalStoreInformation == null) {
       return null;
     }
 
-    return $ActivityPricingExternalStoreInformationCopyWith<$Res>(_value.externalStoreInformation!, (value) {
+    return $ActivityPricingExternalStoreInformationCopyWith<$Res>(
+        _value.externalStoreInformation!, (value) {
       return _then(_value.copyWith(externalStoreInformation: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$_ActivityPricingInformationCopyWith<$Res> implements $ActivityPricingInformationCopyWith<$Res> {
-  factory _$$_ActivityPricingInformationCopyWith(_$_ActivityPricingInformation value, $Res Function(_$_ActivityPricingInformation) then) = __$$_ActivityPricingInformationCopyWithImpl<$Res>;
+abstract class _$$_ActivityPricingInformationCopyWith<$Res>
+    implements $ActivityPricingInformationCopyWith<$Res> {
+  factory _$$_ActivityPricingInformationCopyWith(
+          _$_ActivityPricingInformation value,
+          $Res Function(_$_ActivityPricingInformation) then) =
+      __$$_ActivityPricingInformationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String productId, ActivityPricingExternalStoreInformation? externalStoreInformation});
+  $Res call(
+      {String productId,
+      ActivityPricingExternalStoreInformation? externalStoreInformation});
 
   @override
-  $ActivityPricingExternalStoreInformationCopyWith<$Res>? get externalStoreInformation;
+  $ActivityPricingExternalStoreInformationCopyWith<$Res>?
+      get externalStoreInformation;
 }
 
 /// @nodoc
-class __$$_ActivityPricingInformationCopyWithImpl<$Res> extends _$ActivityPricingInformationCopyWithImpl<$Res, _$_ActivityPricingInformation> implements _$$_ActivityPricingInformationCopyWith<$Res> {
-  __$$_ActivityPricingInformationCopyWithImpl(_$_ActivityPricingInformation _value, $Res Function(_$_ActivityPricingInformation) _then) : super(_value, _then);
+class __$$_ActivityPricingInformationCopyWithImpl<$Res>
+    extends _$ActivityPricingInformationCopyWithImpl<$Res,
+        _$_ActivityPricingInformation>
+    implements _$$_ActivityPricingInformationCopyWith<$Res> {
+  __$$_ActivityPricingInformationCopyWithImpl(
+      _$_ActivityPricingInformation _value,
+      $Res Function(_$_ActivityPricingInformation) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -2614,9 +3317,11 @@ class __$$_ActivityPricingInformationCopyWithImpl<$Res> extends _$ActivityPricin
 /// @nodoc
 @JsonSerializable()
 class _$_ActivityPricingInformation implements _ActivityPricingInformation {
-  const _$_ActivityPricingInformation({this.productId = '', this.externalStoreInformation});
+  const _$_ActivityPricingInformation(
+      {this.productId = '', this.externalStoreInformation});
 
-  factory _$_ActivityPricingInformation.fromJson(Map<String, dynamic> json) => _$$_ActivityPricingInformationFromJson(json);
+  factory _$_ActivityPricingInformation.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityPricingInformationFromJson(json);
 
   @override
   @JsonKey()
@@ -2631,17 +3336,27 @@ class _$_ActivityPricingInformation implements _ActivityPricingInformation {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityPricingInformation && (identical(other.productId, productId) || other.productId == productId) && (identical(other.externalStoreInformation, externalStoreInformation) || other.externalStoreInformation == externalStoreInformation));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityPricingInformation &&
+            (identical(other.productId, productId) ||
+                other.productId == productId) &&
+            (identical(
+                    other.externalStoreInformation, externalStoreInformation) ||
+                other.externalStoreInformation == externalStoreInformation));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, productId, externalStoreInformation);
+  int get hashCode =>
+      Object.hash(runtimeType, productId, externalStoreInformation);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityPricingInformationCopyWith<_$_ActivityPricingInformation> get copyWith => __$$_ActivityPricingInformationCopyWithImpl<_$_ActivityPricingInformation>(this, _$identity);
+  _$$_ActivityPricingInformationCopyWith<_$_ActivityPricingInformation>
+      get copyWith => __$$_ActivityPricingInformationCopyWithImpl<
+          _$_ActivityPricingInformation>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2651,10 +3366,15 @@ class _$_ActivityPricingInformation implements _ActivityPricingInformation {
   }
 }
 
-abstract class _ActivityPricingInformation implements ActivityPricingInformation {
-  const factory _ActivityPricingInformation({final String productId, final ActivityPricingExternalStoreInformation? externalStoreInformation}) = _$_ActivityPricingInformation;
+abstract class _ActivityPricingInformation
+    implements ActivityPricingInformation {
+  const factory _ActivityPricingInformation(
+      {final String productId,
+      final ActivityPricingExternalStoreInformation?
+          externalStoreInformation}) = _$_ActivityPricingInformation;
 
-  factory _ActivityPricingInformation.fromJson(Map<String, dynamic> json) = _$_ActivityPricingInformation.fromJson;
+  factory _ActivityPricingInformation.fromJson(Map<String, dynamic> json) =
+      _$_ActivityPricingInformation.fromJson;
 
   @override
   String get productId;
@@ -2662,10 +3382,13 @@ abstract class _ActivityPricingInformation implements ActivityPricingInformation
   ActivityPricingExternalStoreInformation? get externalStoreInformation;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityPricingInformationCopyWith<_$_ActivityPricingInformation> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityPricingInformationCopyWith<_$_ActivityPricingInformation>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
-ActivityPricingExternalStoreInformation _$ActivityPricingExternalStoreInformationFromJson(Map<String, dynamic> json) {
+ActivityPricingExternalStoreInformation
+    _$ActivityPricingExternalStoreInformationFromJson(
+        Map<String, dynamic> json) {
   return _ActivityPricingExternalStoreInformation.fromJson(json);
 }
 
@@ -2674,26 +3397,47 @@ mixin _$ActivityPricingExternalStoreInformation {
   String get costExact => throw _privateConstructorUsedError;
   String get costMinimum => throw _privateConstructorUsedError;
   String get costMaximum => throw _privateConstructorUsedError;
-  @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
-  ActivityPricingExternalStoreInformationPricingStrategy get pricingStrategy => throw _privateConstructorUsedError;
+  @JsonKey(
+      toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+      fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+  ActivityPricingExternalStoreInformationPricingStrategy get pricingStrategy =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityPricingExternalStoreInformationCopyWith<ActivityPricingExternalStoreInformation> get copyWith => throw _privateConstructorUsedError;
+  $ActivityPricingExternalStoreInformationCopyWith<
+          ActivityPricingExternalStoreInformation>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityPricingExternalStoreInformationCopyWith<$Res> {
-  factory $ActivityPricingExternalStoreInformationCopyWith(ActivityPricingExternalStoreInformation value, $Res Function(ActivityPricingExternalStoreInformation) then) = _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res, ActivityPricingExternalStoreInformation>;
+  factory $ActivityPricingExternalStoreInformationCopyWith(
+          ActivityPricingExternalStoreInformation value,
+          $Res Function(ActivityPricingExternalStoreInformation) then) =
+      _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res,
+          ActivityPricingExternalStoreInformation>;
   @useResult
-  $Res call({String costExact, String costMinimum, String costMaximum, @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson) ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy});
+  $Res call(
+      {String costExact,
+      String costMinimum,
+      String costMaximum,
+      @JsonKey(
+          toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+          fromJson:
+              ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+      ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy});
 
-  $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res> get pricingStrategy;
+  $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res>
+      get pricingStrategy;
 }
 
 /// @nodoc
-class _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res, $Val extends ActivityPricingExternalStoreInformation> implements $ActivityPricingExternalStoreInformationCopyWith<$Res> {
-  _$ActivityPricingExternalStoreInformationCopyWithImpl(this._value, this._then);
+class _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res,
+        $Val extends ActivityPricingExternalStoreInformation>
+    implements $ActivityPricingExternalStoreInformationCopyWith<$Res> {
+  _$ActivityPricingExternalStoreInformationCopyWithImpl(
+      this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -2730,27 +3474,48 @@ class _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res, $Val extends A
 
   @override
   @pragma('vm:prefer-inline')
-  $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res> get pricingStrategy {
-    return $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res>(_value.pricingStrategy, (value) {
+  $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res>
+      get pricingStrategy {
+    return $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<
+        $Res>(_value.pricingStrategy, (value) {
       return _then(_value.copyWith(pricingStrategy: value) as $Val);
     });
   }
 }
 
 /// @nodoc
-abstract class _$$_ActivityPricingExternalStoreInformationCopyWith<$Res> implements $ActivityPricingExternalStoreInformationCopyWith<$Res> {
-  factory _$$_ActivityPricingExternalStoreInformationCopyWith(_$_ActivityPricingExternalStoreInformation value, $Res Function(_$_ActivityPricingExternalStoreInformation) then) = __$$_ActivityPricingExternalStoreInformationCopyWithImpl<$Res>;
+abstract class _$$_ActivityPricingExternalStoreInformationCopyWith<$Res>
+    implements $ActivityPricingExternalStoreInformationCopyWith<$Res> {
+  factory _$$_ActivityPricingExternalStoreInformationCopyWith(
+          _$_ActivityPricingExternalStoreInformation value,
+          $Res Function(_$_ActivityPricingExternalStoreInformation) then) =
+      __$$_ActivityPricingExternalStoreInformationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String costExact, String costMinimum, String costMaximum, @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson) ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy});
+  $Res call(
+      {String costExact,
+      String costMinimum,
+      String costMaximum,
+      @JsonKey(
+          toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+          fromJson:
+              ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+      ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy});
 
   @override
-  $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res> get pricingStrategy;
+  $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res>
+      get pricingStrategy;
 }
 
 /// @nodoc
-class __$$_ActivityPricingExternalStoreInformationCopyWithImpl<$Res> extends _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res, _$_ActivityPricingExternalStoreInformation> implements _$$_ActivityPricingExternalStoreInformationCopyWith<$Res> {
-  __$$_ActivityPricingExternalStoreInformationCopyWithImpl(_$_ActivityPricingExternalStoreInformation _value, $Res Function(_$_ActivityPricingExternalStoreInformation) _then) : super(_value, _then);
+class __$$_ActivityPricingExternalStoreInformationCopyWithImpl<$Res>
+    extends _$ActivityPricingExternalStoreInformationCopyWithImpl<$Res,
+        _$_ActivityPricingExternalStoreInformation>
+    implements _$$_ActivityPricingExternalStoreInformationCopyWith<$Res> {
+  __$$_ActivityPricingExternalStoreInformationCopyWithImpl(
+      _$_ActivityPricingExternalStoreInformation _value,
+      $Res Function(_$_ActivityPricingExternalStoreInformation) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -2783,10 +3548,23 @@ class __$$_ActivityPricingExternalStoreInformationCopyWithImpl<$Res> extends _$A
 
 /// @nodoc
 @JsonSerializable()
-class _$_ActivityPricingExternalStoreInformation implements _ActivityPricingExternalStoreInformation {
-  const _$_ActivityPricingExternalStoreInformation({this.costExact = '', this.costMinimum = '', this.costMaximum = '', @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson) this.pricingStrategy = const ActivityPricingExternalStoreInformationPricingStrategy.onePerson()});
+class _$_ActivityPricingExternalStoreInformation
+    implements _ActivityPricingExternalStoreInformation {
+  const _$_ActivityPricingExternalStoreInformation(
+      {this.costExact = '',
+      this.costMinimum = '',
+      this.costMaximum = '',
+      @JsonKey(
+          toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+          fromJson:
+              ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+      this.pricingStrategy =
+          const ActivityPricingExternalStoreInformationPricingStrategy
+              .onePerson()});
 
-  factory _$_ActivityPricingExternalStoreInformation.fromJson(Map<String, dynamic> json) => _$$_ActivityPricingExternalStoreInformationFromJson(json);
+  factory _$_ActivityPricingExternalStoreInformation.fromJson(
+          Map<String, dynamic> json) =>
+      _$$_ActivityPricingExternalStoreInformationFromJson(json);
 
   @override
   @JsonKey()
@@ -2798,7 +3576,9 @@ class _$_ActivityPricingExternalStoreInformation implements _ActivityPricingExte
   @JsonKey()
   final String costMaximum;
   @override
-  @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+  @JsonKey(
+      toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+      fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
   final ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy;
 
   @override
@@ -2808,17 +3588,31 @@ class _$_ActivityPricingExternalStoreInformation implements _ActivityPricingExte
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityPricingExternalStoreInformation && (identical(other.costExact, costExact) || other.costExact == costExact) && (identical(other.costMinimum, costMinimum) || other.costMinimum == costMinimum) && (identical(other.costMaximum, costMaximum) || other.costMaximum == costMaximum) && (identical(other.pricingStrategy, pricingStrategy) || other.pricingStrategy == pricingStrategy));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityPricingExternalStoreInformation &&
+            (identical(other.costExact, costExact) ||
+                other.costExact == costExact) &&
+            (identical(other.costMinimum, costMinimum) ||
+                other.costMinimum == costMinimum) &&
+            (identical(other.costMaximum, costMaximum) ||
+                other.costMaximum == costMaximum) &&
+            (identical(other.pricingStrategy, pricingStrategy) ||
+                other.pricingStrategy == pricingStrategy));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, costExact, costMinimum, costMaximum, pricingStrategy);
+  int get hashCode => Object.hash(
+      runtimeType, costExact, costMinimum, costMaximum, pricingStrategy);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityPricingExternalStoreInformationCopyWith<_$_ActivityPricingExternalStoreInformation> get copyWith => __$$_ActivityPricingExternalStoreInformationCopyWithImpl<_$_ActivityPricingExternalStoreInformation>(this, _$identity);
+  _$$_ActivityPricingExternalStoreInformationCopyWith<
+          _$_ActivityPricingExternalStoreInformation>
+      get copyWith => __$$_ActivityPricingExternalStoreInformationCopyWithImpl<
+          _$_ActivityPricingExternalStoreInformation>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -2828,10 +3622,22 @@ class _$_ActivityPricingExternalStoreInformation implements _ActivityPricingExte
   }
 }
 
-abstract class _ActivityPricingExternalStoreInformation implements ActivityPricingExternalStoreInformation {
-  const factory _ActivityPricingExternalStoreInformation({final String costExact, final String costMinimum, final String costMaximum, @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson) final ActivityPricingExternalStoreInformationPricingStrategy pricingStrategy}) = _$_ActivityPricingExternalStoreInformation;
+abstract class _ActivityPricingExternalStoreInformation
+    implements ActivityPricingExternalStoreInformation {
+  const factory _ActivityPricingExternalStoreInformation(
+      {final String costExact,
+      final String costMinimum,
+      final String costMaximum,
+      @JsonKey(
+          toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+          fromJson:
+              ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+      final ActivityPricingExternalStoreInformationPricingStrategy
+          pricingStrategy}) = _$_ActivityPricingExternalStoreInformation;
 
-  factory _ActivityPricingExternalStoreInformation.fromJson(Map<String, dynamic> json) = _$_ActivityPricingExternalStoreInformation.fromJson;
+  factory _ActivityPricingExternalStoreInformation.fromJson(
+          Map<String, dynamic> json) =
+      _$_ActivityPricingExternalStoreInformation.fromJson;
 
   @override
   String get costExact;
@@ -2840,11 +3646,15 @@ abstract class _ActivityPricingExternalStoreInformation implements ActivityPrici
   @override
   String get costMaximum;
   @override
-  @JsonKey(toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson, fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
+  @JsonKey(
+      toJson: ActivityPricingExternalStoreInformationPricingStrategy.toJson,
+      fromJson: ActivityPricingExternalStoreInformationPricingStrategy.fromJson)
   ActivityPricingExternalStoreInformationPricingStrategy get pricingStrategy;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityPricingExternalStoreInformationCopyWith<_$_ActivityPricingExternalStoreInformation> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityPricingExternalStoreInformationCopyWith<
+          _$_ActivityPricingExternalStoreInformation>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -2867,30 +3677,49 @@ mixin _$ActivityPricingExternalStoreInformationPricingStrategy {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value) onePerson,
+    required TResult Function(
+            _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+                value)
+        onePerson,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value)? onePerson,
+    TResult? Function(
+            _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+                value)?
+        onePerson,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value)? onePerson,
+    TResult Function(
+            _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+                value)?
+        onePerson,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res> {
-  factory $ActivityPricingExternalStoreInformationPricingStrategyCopyWith(ActivityPricingExternalStoreInformationPricingStrategy value, $Res Function(ActivityPricingExternalStoreInformationPricingStrategy) then) = _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<$Res, ActivityPricingExternalStoreInformationPricingStrategy>;
+abstract class $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<
+    $Res> {
+  factory $ActivityPricingExternalStoreInformationPricingStrategyCopyWith(
+          ActivityPricingExternalStoreInformationPricingStrategy value,
+          $Res Function(ActivityPricingExternalStoreInformationPricingStrategy)
+              then) =
+      _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<$Res,
+          ActivityPricingExternalStoreInformationPricingStrategy>;
 }
 
 /// @nodoc
-class _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<$Res, $Val extends ActivityPricingExternalStoreInformationPricingStrategy> implements $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res> {
-  _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl(this._value, this._then);
+class _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<$Res,
+        $Val extends ActivityPricingExternalStoreInformationPricingStrategy>
+    implements
+        $ActivityPricingExternalStoreInformationPricingStrategyCopyWith<$Res> {
+  _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl(
+      this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -2899,18 +3728,39 @@ class _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWith<$Res> {
-  factory _$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWith(_$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value, $Res Function(_$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson) then) = __$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWithImpl<$Res>;
+abstract class _$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWith<
+    $Res> {
+  factory _$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWith(
+          _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value,
+          $Res Function(
+                  _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson)
+              then) =
+      __$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWithImpl<
+          $Res>;
 }
 
 /// @nodoc
-class __$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWithImpl<$Res> extends _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<$Res, _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson> implements _$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWith<$Res> {
-  __$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWithImpl(_$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson _value, $Res Function(_$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson) _then) : super(_value, _then);
+class __$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWithImpl<
+        $Res>
+    extends _$ActivityPricingExternalStoreInformationPricingStrategyCopyWithImpl<
+        $Res,
+        _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson>
+    implements
+        _$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWith<
+            $Res> {
+  __$$_ActivityPricingExternalStoreInformationPricingStrategyOnePersonCopyWithImpl(
+      _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson _value,
+      $Res Function(
+              _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson)
+          _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson implements _ActivityPricingExternalStoreInformationPricingStrategyOnePerson {
+class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+    implements
+        _ActivityPricingExternalStoreInformationPricingStrategyOnePerson {
   const _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson();
 
   @override
@@ -2920,7 +3770,10 @@ class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson impleme
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson);
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other
+                is _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson);
   }
 
   @override
@@ -2957,7 +3810,10 @@ class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson impleme
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value) onePerson,
+    required TResult Function(
+            _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+                value)
+        onePerson,
   }) {
     return onePerson(this);
   }
@@ -2965,7 +3821,10 @@ class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson impleme
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value)? onePerson,
+    TResult? Function(
+            _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+                value)?
+        onePerson,
   }) {
     return onePerson?.call(this);
   }
@@ -2973,7 +3832,10 @@ class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson impleme
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityPricingExternalStoreInformationPricingStrategyOnePerson value)? onePerson,
+    TResult Function(
+            _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+                value)?
+        onePerson,
     required TResult orElse(),
   }) {
     if (onePerson != null) {
@@ -2983,11 +3845,14 @@ class _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson impleme
   }
 }
 
-abstract class _ActivityPricingExternalStoreInformationPricingStrategyOnePerson implements ActivityPricingExternalStoreInformationPricingStrategy {
-  const factory _ActivityPricingExternalStoreInformationPricingStrategyOnePerson() = _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson;
+abstract class _ActivityPricingExternalStoreInformationPricingStrategyOnePerson
+    implements ActivityPricingExternalStoreInformationPricingStrategy {
+  const factory _ActivityPricingExternalStoreInformationPricingStrategyOnePerson() =
+      _$_ActivityPricingExternalStoreInformationPricingStrategyOnePerson;
 }
 
-ActivityPublisherInformation _$ActivityPublisherInformationFromJson(Map<String, dynamic> json) {
+ActivityPublisherInformation _$ActivityPublisherInformationFromJson(
+    Map<String, dynamic> json) {
   return _ActivityPublisherInformation.fromJson(json);
 }
 
@@ -2999,18 +3864,25 @@ mixin _$ActivityPublisherInformation {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityPublisherInformationCopyWith<ActivityPublisherInformation> get copyWith => throw _privateConstructorUsedError;
+  $ActivityPublisherInformationCopyWith<ActivityPublisherInformation>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityPublisherInformationCopyWith<$Res> {
-  factory $ActivityPublisherInformationCopyWith(ActivityPublisherInformation value, $Res Function(ActivityPublisherInformation) then) = _$ActivityPublisherInformationCopyWithImpl<$Res, ActivityPublisherInformation>;
+  factory $ActivityPublisherInformationCopyWith(
+          ActivityPublisherInformation value,
+          $Res Function(ActivityPublisherInformation) then) =
+      _$ActivityPublisherInformationCopyWithImpl<$Res,
+          ActivityPublisherInformation>;
   @useResult
   $Res call({String originFeed, String publisherId, String actorId});
 }
 
 /// @nodoc
-class _$ActivityPublisherInformationCopyWithImpl<$Res, $Val extends ActivityPublisherInformation> implements $ActivityPublisherInformationCopyWith<$Res> {
+class _$ActivityPublisherInformationCopyWithImpl<$Res,
+        $Val extends ActivityPublisherInformation>
+    implements $ActivityPublisherInformationCopyWith<$Res> {
   _$ActivityPublisherInformationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -3043,16 +3915,26 @@ class _$ActivityPublisherInformationCopyWithImpl<$Res, $Val extends ActivityPubl
 }
 
 /// @nodoc
-abstract class _$$_ActivityPublisherInformationCopyWith<$Res> implements $ActivityPublisherInformationCopyWith<$Res> {
-  factory _$$_ActivityPublisherInformationCopyWith(_$_ActivityPublisherInformation value, $Res Function(_$_ActivityPublisherInformation) then) = __$$_ActivityPublisherInformationCopyWithImpl<$Res>;
+abstract class _$$_ActivityPublisherInformationCopyWith<$Res>
+    implements $ActivityPublisherInformationCopyWith<$Res> {
+  factory _$$_ActivityPublisherInformationCopyWith(
+          _$_ActivityPublisherInformation value,
+          $Res Function(_$_ActivityPublisherInformation) then) =
+      __$$_ActivityPublisherInformationCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String originFeed, String publisherId, String actorId});
 }
 
 /// @nodoc
-class __$$_ActivityPublisherInformationCopyWithImpl<$Res> extends _$ActivityPublisherInformationCopyWithImpl<$Res, _$_ActivityPublisherInformation> implements _$$_ActivityPublisherInformationCopyWith<$Res> {
-  __$$_ActivityPublisherInformationCopyWithImpl(_$_ActivityPublisherInformation _value, $Res Function(_$_ActivityPublisherInformation) _then) : super(_value, _then);
+class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
+    extends _$ActivityPublisherInformationCopyWithImpl<$Res,
+        _$_ActivityPublisherInformation>
+    implements _$$_ActivityPublisherInformationCopyWith<$Res> {
+  __$$_ActivityPublisherInformationCopyWithImpl(
+      _$_ActivityPublisherInformation _value,
+      $Res Function(_$_ActivityPublisherInformation) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -3081,9 +3963,11 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res> extends _$ActivityPubl
 /// @nodoc
 @JsonSerializable()
 class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
-  const _$_ActivityPublisherInformation({this.originFeed = '', this.publisherId = '', this.actorId = ''});
+  const _$_ActivityPublisherInformation(
+      {this.originFeed = '', this.publisherId = '', this.actorId = ''});
 
-  factory _$_ActivityPublisherInformation.fromJson(Map<String, dynamic> json) => _$$_ActivityPublisherInformationFromJson(json);
+  factory _$_ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityPublisherInformationFromJson(json);
 
   @override
   @JsonKey()
@@ -3102,17 +3986,27 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityPublisherInformation && (identical(other.originFeed, originFeed) || other.originFeed == originFeed) && (identical(other.publisherId, publisherId) || other.publisherId == publisherId) && (identical(other.actorId, actorId) || other.actorId == actorId));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityPublisherInformation &&
+            (identical(other.originFeed, originFeed) ||
+                other.originFeed == originFeed) &&
+            (identical(other.publisherId, publisherId) ||
+                other.publisherId == publisherId) &&
+            (identical(other.actorId, actorId) || other.actorId == actorId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, originFeed, publisherId, actorId);
+  int get hashCode =>
+      Object.hash(runtimeType, originFeed, publisherId, actorId);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation> get copyWith => __$$_ActivityPublisherInformationCopyWithImpl<_$_ActivityPublisherInformation>(this, _$identity);
+  _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation>
+      get copyWith => __$$_ActivityPublisherInformationCopyWithImpl<
+          _$_ActivityPublisherInformation>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -3122,10 +4016,15 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
   }
 }
 
-abstract class _ActivityPublisherInformation implements ActivityPublisherInformation {
-  const factory _ActivityPublisherInformation({final String originFeed, final String publisherId, final String actorId}) = _$_ActivityPublisherInformation;
+abstract class _ActivityPublisherInformation
+    implements ActivityPublisherInformation {
+  const factory _ActivityPublisherInformation(
+      {final String originFeed,
+      final String publisherId,
+      final String actorId}) = _$_ActivityPublisherInformation;
 
-  factory _ActivityPublisherInformation.fromJson(Map<String, dynamic> json) = _$_ActivityPublisherInformation.fromJson;
+  factory _ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =
+      _$_ActivityPublisherInformation.fromJson;
 
   @override
   String get originFeed;
@@ -3135,10 +4034,12 @@ abstract class _ActivityPublisherInformation implements ActivityPublisherInforma
   String get actorId;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
-ActivityEnrichmentConfiguration _$ActivityEnrichmentConfigurationFromJson(Map<String, dynamic> json) {
+ActivityEnrichmentConfiguration _$ActivityEnrichmentConfigurationFromJson(
+    Map<String, dynamic> json) {
   return _ActivityEnrichmentConfiguration.fromJson(json);
 }
 
@@ -3154,18 +4055,31 @@ mixin _$ActivityEnrichmentConfiguration {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ActivityEnrichmentConfigurationCopyWith<ActivityEnrichmentConfiguration> get copyWith => throw _privateConstructorUsedError;
+  $ActivityEnrichmentConfigurationCopyWith<ActivityEnrichmentConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
-  factory $ActivityEnrichmentConfigurationCopyWith(ActivityEnrichmentConfiguration value, $Res Function(ActivityEnrichmentConfiguration) then) = _$ActivityEnrichmentConfigurationCopyWithImpl<$Res, ActivityEnrichmentConfiguration>;
+  factory $ActivityEnrichmentConfigurationCopyWith(
+          ActivityEnrichmentConfiguration value,
+          $Res Function(ActivityEnrichmentConfiguration) then) =
+      _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
+          ActivityEnrichmentConfiguration>;
   @useResult
-  $Res call({String title, @JsonKey(fromJson: stringListFromJson) List<String> tags, bool isSensitive, String publishLocation, @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) List<Mention> mentions});
+  $Res call(
+      {String title,
+      @JsonKey(fromJson: stringListFromJson) List<String> tags,
+      bool isSensitive,
+      String publishLocation,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      List<Mention> mentions});
 }
 
 /// @nodoc
-class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res, $Val extends ActivityEnrichmentConfiguration> implements $ActivityEnrichmentConfigurationCopyWith<$Res> {
+class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
+        $Val extends ActivityEnrichmentConfiguration>
+    implements $ActivityEnrichmentConfigurationCopyWith<$Res> {
   _$ActivityEnrichmentConfigurationCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -3208,16 +4122,32 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res, $Val extends ActivityE
 }
 
 /// @nodoc
-abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res> implements $ActivityEnrichmentConfigurationCopyWith<$Res> {
-  factory _$$_ActivityEnrichmentConfigurationCopyWith(_$_ActivityEnrichmentConfiguration value, $Res Function(_$_ActivityEnrichmentConfiguration) then) = __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>;
+abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
+    implements $ActivityEnrichmentConfigurationCopyWith<$Res> {
+  factory _$$_ActivityEnrichmentConfigurationCopyWith(
+          _$_ActivityEnrichmentConfiguration value,
+          $Res Function(_$_ActivityEnrichmentConfiguration) then) =
+      __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String title, @JsonKey(fromJson: stringListFromJson) List<String> tags, bool isSensitive, String publishLocation, @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) List<Mention> mentions});
+  $Res call(
+      {String title,
+      @JsonKey(fromJson: stringListFromJson) List<String> tags,
+      bool isSensitive,
+      String publishLocation,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      List<Mention> mentions});
 }
 
 /// @nodoc
-class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res> extends _$ActivityEnrichmentConfigurationCopyWithImpl<$Res, _$_ActivityEnrichmentConfiguration> implements _$$_ActivityEnrichmentConfigurationCopyWith<$Res> {
-  __$$_ActivityEnrichmentConfigurationCopyWithImpl(_$_ActivityEnrichmentConfiguration _value, $Res Function(_$_ActivityEnrichmentConfiguration) _then) : super(_value, _then);
+class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
+    extends _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
+        _$_ActivityEnrichmentConfiguration>
+    implements _$$_ActivityEnrichmentConfigurationCopyWith<$Res> {
+  __$$_ActivityEnrichmentConfigurationCopyWithImpl(
+      _$_ActivityEnrichmentConfiguration _value,
+      $Res Function(_$_ActivityEnrichmentConfiguration) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -3255,12 +4185,21 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res> extends _$ActivityE
 
 /// @nodoc
 @JsonSerializable()
-class _$_ActivityEnrichmentConfiguration implements _ActivityEnrichmentConfiguration {
-  const _$_ActivityEnrichmentConfiguration({this.title = '', @JsonKey(fromJson: stringListFromJson) final List<String> tags = const [], this.isSensitive = false, this.publishLocation = '', @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) final List<Mention> mentions = const []})
+class _$_ActivityEnrichmentConfiguration
+    implements _ActivityEnrichmentConfiguration {
+  const _$_ActivityEnrichmentConfiguration(
+      {this.title = '',
+      @JsonKey(fromJson: stringListFromJson) final List<String> tags = const [],
+      this.isSensitive = false,
+      this.publishLocation = '',
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      final List<Mention> mentions = const []})
       : _tags = tags,
         _mentions = mentions;
 
-  factory _$_ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) => _$$_ActivityEnrichmentConfigurationFromJson(json);
+  factory _$_ActivityEnrichmentConfiguration.fromJson(
+          Map<String, dynamic> json) =>
+      _$$_ActivityEnrichmentConfigurationFromJson(json);
 
   @override
   @JsonKey()
@@ -3296,17 +4235,35 @@ class _$_ActivityEnrichmentConfiguration implements _ActivityEnrichmentConfigura
 
   @override
   bool operator ==(dynamic other) {
-    return identical(this, other) || (other.runtimeType == runtimeType && other is _$_ActivityEnrichmentConfiguration && (identical(other.title, title) || other.title == title) && const DeepCollectionEquality().equals(other._tags, _tags) && (identical(other.isSensitive, isSensitive) || other.isSensitive == isSensitive) && (identical(other.publishLocation, publishLocation) || other.publishLocation == publishLocation) && const DeepCollectionEquality().equals(other._mentions, _mentions));
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityEnrichmentConfiguration &&
+            (identical(other.title, title) || other.title == title) &&
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.isSensitive, isSensitive) ||
+                other.isSensitive == isSensitive) &&
+            (identical(other.publishLocation, publishLocation) ||
+                other.publishLocation == publishLocation) &&
+            const DeepCollectionEquality().equals(other._mentions, _mentions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, title, const DeepCollectionEquality().hash(_tags), isSensitive, publishLocation, const DeepCollectionEquality().hash(_mentions));
+  int get hashCode => Object.hash(
+      runtimeType,
+      title,
+      const DeepCollectionEquality().hash(_tags),
+      isSensitive,
+      publishLocation,
+      const DeepCollectionEquality().hash(_mentions));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivityEnrichmentConfigurationCopyWith<_$_ActivityEnrichmentConfiguration> get copyWith => __$$_ActivityEnrichmentConfigurationCopyWithImpl<_$_ActivityEnrichmentConfiguration>(this, _$identity);
+  _$$_ActivityEnrichmentConfigurationCopyWith<
+          _$_ActivityEnrichmentConfiguration>
+      get copyWith => __$$_ActivityEnrichmentConfigurationCopyWithImpl<
+          _$_ActivityEnrichmentConfiguration>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -3316,10 +4273,18 @@ class _$_ActivityEnrichmentConfiguration implements _ActivityEnrichmentConfigura
   }
 }
 
-abstract class _ActivityEnrichmentConfiguration implements ActivityEnrichmentConfiguration {
-  const factory _ActivityEnrichmentConfiguration({final String title, @JsonKey(fromJson: stringListFromJson) final List<String> tags, final bool isSensitive, final String publishLocation, @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) final List<Mention> mentions}) = _$_ActivityEnrichmentConfiguration;
+abstract class _ActivityEnrichmentConfiguration
+    implements ActivityEnrichmentConfiguration {
+  const factory _ActivityEnrichmentConfiguration(
+      {final String title,
+      @JsonKey(fromJson: stringListFromJson) final List<String> tags,
+      final bool isSensitive,
+      final String publishLocation,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      final List<Mention> mentions}) = _$_ActivityEnrichmentConfiguration;
 
-  factory _ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) = _$_ActivityEnrichmentConfiguration.fromJson;
+  factory _ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) =
+      _$_ActivityEnrichmentConfiguration.fromJson;
 
   @override
   String get title;
@@ -3335,5 +4300,7 @@ abstract class _ActivityEnrichmentConfiguration implements ActivityEnrichmentCon
   List<Mention> get mentions;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivityEnrichmentConfigurationCopyWith<_$_ActivityEnrichmentConfiguration> get copyWith => throw _privateConstructorUsedError;
+  _$$_ActivityEnrichmentConfigurationCopyWith<
+          _$_ActivityEnrichmentConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
