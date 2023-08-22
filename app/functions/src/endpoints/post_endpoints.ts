@@ -35,7 +35,8 @@ export namespace PostEndpoints {
         }
     
         const feedsClient = FeedService.getFeedsUserClient(uid);
-        const feed = feedsClient.feed(feedId, slugId);
+        const userToken = FeedService.getUserToken(uid);
+        const feed = feedsClient.feed(feedId, slugId, userToken);
 
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
         const reactionCounts = window.results.map((item) => item.reaction_counts || {});

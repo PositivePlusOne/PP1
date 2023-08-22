@@ -136,15 +136,17 @@ export namespace ActivitiesService {
       });
     }
 
+    const feedClient = FeedService.getFeedsUserClient(userID);
+    const feed = feedClient.feed(feedName, userID);
+
     const getStreamActivity: NewActivity<DefaultGenerics> = {
-      actor: userID,
+      actor: feedClient.currentUser!,
       verb: ActivityActionVerb.Post,
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
       to: targets,
     };
-
-    const feed = FeedService.getFeedsUserClient(userID).feed(feedName, userID);
+    
     await feed.addActivity(getStreamActivity);
 
     const activityResponse = await DataService.updateDocument({

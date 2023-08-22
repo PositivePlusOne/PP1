@@ -29,7 +29,6 @@ export namespace FeedService {
 
   export function getFeedsUserClient(userId: string): StreamClient<DefaultGenerics> {
     const feedsServerClient = getFeedsClient();
-    
     functions.logger.info("Connecting to feeds as user", { structuredData: true });
 
     const apiKey = process.env.STREAM_API_KEY;
@@ -48,16 +47,12 @@ export namespace FeedService {
   /**
    * Creates a user token for GetStream.
    * @param {string} userId the user's ID.
-   * @return {Promise<string>} a promise that resolves to the user's token.
+   * @return {string} a promise that resolves to the user's token.
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
-  export async function getUserToken(client: StreamClient<DefaultGenerics>, userId: string): Promise<string> {
-    functions.logger.info("Creating user token", { userId });
-
-    const token = client.createUserToken(userId);
-    functions.logger.info("User token", { token });
-
-    return token;
+  export function getUserToken(userId: string): string {
+    functions.logger.info(`Creating user token ${userId}`);
+    return getFeedsClient().createUserToken(userId);
   }
 
   /**

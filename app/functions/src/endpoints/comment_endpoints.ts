@@ -48,7 +48,7 @@ export namespace CommentEndpoints {
         } as CommentJSON;
 
         // Create and response
-        const streamClient = FeedService.getFeedsUserClient(uid);
+        const streamClient = FeedService.getFeedsClient();
         const responseComment = await CommentsService.addComment(commentJSON, streamClient);
         
         return buildEndpointResponse(context, {
