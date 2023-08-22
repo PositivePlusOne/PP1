@@ -63,7 +63,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.black,
-      footerBackgroundColor: accentColor,
+      decorationColor: accentColor,
       extendBody: false,
       visibleComponents: const {PositiveScaffoldComponent.headingWidgets},
       onWillPopScope: () async => controller.onBackSelected(ProfileBiographyEntryRoute),
@@ -142,7 +142,8 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
         SliverFillRemaining(
           fillOverscroll: false,
           hasScrollBody: false,
-          child: Container(
+          child: AnimatedContainer(
+            duration: kAnimationDurationRegular,
             color: accentColor,
             padding: const EdgeInsets.all(kPaddingSmall),
             child: Column(
@@ -151,10 +152,9 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                 PositiveProfileTile(
                   profile: userProfile,
                   imageOverridePath: state.newProfileImagePath,
-                  metadata: const {
-                    'Followers': '1.2M',
-                    'Likes': '42k',
-                    'Posts': '120',
+                  metadata: {
+                    'Followers': '${userProfile.statistics.followers}',
+                    'Following': '${userProfile.statistics.following}',
                   },
                 ),
                 const Spacer(),

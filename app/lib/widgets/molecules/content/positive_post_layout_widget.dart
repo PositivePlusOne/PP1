@@ -443,7 +443,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
         likes: 0,
-        likeEnabled: isPublic && !isBusy,
+        likeEnabled: isPublic,
         onLike: (_) {},
 
         //TODO(S): share enabled and on share functionality here
@@ -452,11 +452,11 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
 
         //TODO(S): comment enabled and on comment functionality here
         comments: 0,
-        commentsEnabled: isPublic && !isBusy,
+        commentsEnabled: isPublic,
         onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarked: isPublic && !isBusy,
+        bookmarked: isPublic,
         onBookmark: widget.onBookmark,
       ),
     );

@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
-
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
@@ -29,7 +28,6 @@ import 'package:app/providers/events/content/comments.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/comment_api_service.dart';
-import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_comments_state.dart';
@@ -76,18 +74,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     super.initState();
     setupListeners();
     setupCommentsState();
-    testReactions();
-  }
-
-  Future<void> testReactions() async {
-    final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
-    final EndpointResponse endpointResponse2 = await reactionApiService.listReactionsForActivity(
-      activityId: widget.activityId,
-      kind: 'bookmark',
-      cursor: commentState.currentPaginationKey,
-    );
-
-    final Map<String, dynamic> data2 = json.decodeSafe(endpointResponse2.data);
   }
 
   @override
@@ -336,7 +322,7 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
                         ),
                       ],
                     ),
-                  )
+                  ),
               ],
             ),
           ),
@@ -354,37 +340,40 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             ),
           ),
         //? comments listed
-        if (commentState.pagingController.itemList != null && commentState.pagingController.itemList!.isNotEmpty)
-          PagedSliverList.separated(
-            shrinkWrapFirstPageIndicators: true,
-            pagingController: commentState.pagingController,
-            separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
-            builderDelegate: PagedChildBuilderDelegate<Comment>(
-              animateTransitions: true,
-              transitionDuration: kAnimationDurationRegular,
-              itemBuilder: (_, comment, index) {
-                return PositiveComment(comment: comment, isFirst: index == 0);
-              },
-              firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-              newPageProgressIndicatorBuilder: (context) {
-                return Container(
-                  padding: const EdgeInsets.only(top: kBorderThicknessMedium),
-                  decoration: BoxDecoration(
-                    color: colours.white,
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(kBorderRadiusLarge),
-                    ),
+        PagedSliverList.separated(
+          shrinkWrapFirstPageIndicators: true,
+          pagingController: commentState.pagingController,
+          separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
+          builderDelegate: PagedChildBuilderDelegate<Comment>(
+            animateTransitions: true,
+            transitionDuration: kAnimationDurationRegular,
+            itemBuilder: (_, comment, index) {
+              return PositiveComment(comment: comment, isFirst: index == 0);
+            },
+            firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
+            newPageErrorIndicatorBuilder: (context) => const SizedBox(),
+            noItemsFoundIndicatorBuilder: (context) => const SizedBox(),
+            noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
+            firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+            newPageProgressIndicatorBuilder: (context) {
+              return Container(
+                padding: const EdgeInsets.only(top: kBorderThicknessMedium),
+                decoration: BoxDecoration(
+                  color: colours.white,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(kBorderRadiusLarge),
                   ),
-                  height: kCommentFooter,
-                  alignment: Alignment.center,
-                  child: const PositiveLoadingIndicator(
-                    circleRadius: 5,
-                    width: 40,
-                  ),
-                );
-              },
-            ),
+                ),
+                height: kCommentFooter,
+                alignment: Alignment.center,
+                child: const PositiveLoadingIndicator(
+                  circleRadius: 5,
+                  width: 40,
+                ),
+              );
+            },
           ),
+        ),
       ],
     );
   }

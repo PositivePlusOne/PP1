@@ -1,9 +1,9 @@
 // Dart imports:
 
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
 
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +14,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 
 class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
@@ -92,7 +93,7 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
                     padding: const EdgeInsets.all(kPaddingSmall),
                     child: PositiveTapBehaviour(
                       isEnabled: !isBusy,
-                      onTap: () => onPostCommentRequested(commentTextController.text),
+                      onTap: (_) => onPostCommentRequested(commentTextController.text),
                       child: Icon(
                         UniconsLine.message,
                         color: colours.white,

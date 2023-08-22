@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
-
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:

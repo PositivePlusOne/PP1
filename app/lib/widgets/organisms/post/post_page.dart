@@ -1,9 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,10 +9,14 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_comment_pagination_behaviour.dart';
@@ -93,6 +92,7 @@ class PostPage extends ConsumerWidget {
         PositiveScaffoldComponent.footerPadding,
         PositiveScaffoldComponent.footerWidgets,
       },
+      decorationColor: colors.white,
       bottomNavigationBar: isCommentsEnabled && isUserAbleToComment
           ? PostCommentBox(
               mediaQuery: MediaQuery.of(context),
