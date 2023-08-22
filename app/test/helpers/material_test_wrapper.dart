@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 // Project imports:
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
@@ -33,7 +32,6 @@ class MaterialTestWrapper extends StatelessWidget {
         scrollBehavior: PositiveScrollBehaviour(),
         localizationsDelegates: const [
           AppLocalizations.delegate,
-          RefreshLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,

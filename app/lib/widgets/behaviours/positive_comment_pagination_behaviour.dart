@@ -11,7 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
@@ -41,7 +41,6 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveCommentPaginationBehaviour({
     required this.activityId,
     required this.feed,
-    required this.refreshController,
     this.commentMode,
     this.onPageLoaded,
     this.windowSize = 10,
@@ -54,7 +53,6 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   final ActivitySecurityConfigurationMode? commentMode;
 
   final int windowSize;
-  final RefreshController refreshController;
 
   final Function(Map<String, dynamic>)? onPageLoaded;
 
@@ -184,11 +182,9 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
 
       appendCommentPage(data, next);
       widget.onPageLoaded?.call(data);
-      widget.refreshController.refreshCompleted();
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       commentState.pagingController.error = ex;
-      widget.refreshController.refreshFailed();
     } finally {
       saveCommentsState();
     }

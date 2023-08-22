@@ -53,9 +53,6 @@ class PostPage extends ConsumerWidget {
 
     return PositiveScaffold(
       isBusy: state.isBusy,
-      onRefresh: viewModel.onRefresh,
-      refreshController: viewModel.refreshController,
-      refreshBackgroundColor: colors.white,
       onWillPopScope: viewModel.onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
@@ -125,7 +122,6 @@ class PostPage extends ConsumerWidget {
           PositiveCommentPaginationBehaviour(
             commentMode: activity.securityConfiguration?.commentMode,
             activityId: activity.flMeta!.id!,
-            refreshController: viewModel.refreshController,
             feed: feed,
           ),
         ],

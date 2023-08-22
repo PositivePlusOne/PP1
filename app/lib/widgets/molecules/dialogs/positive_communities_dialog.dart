@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -82,11 +82,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   late PagingController<String, String> _connectionsPagingController;
   late PagingController<String, String> _blockedPagingController;
 
-  late RefreshController _followingRefreshController;
-  late RefreshController _followersRefreshController;
-  late RefreshController _connectionsRefreshController;
-  late RefreshController _blockedRefreshController;
-
   @override
   void initState() {
     super.initState();
@@ -126,18 +121,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     _followersPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.followers));
     _connectionsPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.connected));
     _blockedPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.blocked));
-
-    if (setupRefreshController) {
-      _followingRefreshController = RefreshController(initialRefresh: false);
-      _followersRefreshController = RefreshController(initialRefresh: false);
-      _connectionsRefreshController = RefreshController(initialRefresh: false);
-      _blockedRefreshController = RefreshController(initialRefresh: false);
-
-      _followingRefreshController.refreshCompleted();
-      _followersRefreshController.refreshCompleted();
-      _connectionsRefreshController.refreshCompleted();
-      _blockedRefreshController.refreshCompleted();
-    }
   }
 
   Future<void> requestRefresh() async {
@@ -152,12 +135,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       setupControllers(setupRefreshController: false);
     } catch (ex) {
       logger.e('CommunitiesController - requestRefresh - Failed to load next community data - ex: $ex');
-      () => switch (communityType) {
-            CommunityType.following => _followingRefreshController.refreshFailed(),
-            CommunityType.followers => _followersRefreshController.refreshFailed(),
-            CommunityType.connected => _connectionsRefreshController.refreshFailed(),
-            CommunityType.blocked => _blockedRefreshController.refreshFailed(),
-          };
+      appendPagingError(ex, communityType);
     }
   }
 
@@ -194,12 +172,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     try {
       await controller.loadNextCommunityData(type: communityType);
-      () => switch (communityType) {
-            CommunityType.following => _followersRefreshController.refreshCompleted(),
-            CommunityType.followers => _followersRefreshController.refreshCompleted(),
-            CommunityType.connected => _connectionsRefreshController.refreshCompleted(),
-            CommunityType.blocked => _blockedRefreshController.refreshCompleted(),
-          };
       () => switch (communityType) {
             CommunityType.following => _followingPagingController.appendSafePage(controller.state.followingProfileIds.toList(), controller.state.followingPaginationCursor),
             CommunityType.followers => _followersPagingController.appendSafePage(controller.state.followerProfileIds.toList(), controller.state.followerPaginationCursor),
@@ -267,13 +239,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     return PositiveScaffold(
-      refreshController: switch (widget.selectedCommunityType) {
-        CommunityType.following => _followingRefreshController,
-        CommunityType.followers => _followersRefreshController,
-        CommunityType.connected => _connectionsRefreshController,
-        CommunityType.blocked => _blockedRefreshController,
-      },
-      onRefresh: requestRefresh,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,

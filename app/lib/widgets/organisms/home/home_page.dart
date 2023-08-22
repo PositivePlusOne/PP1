@@ -51,9 +51,6 @@ class HomePage extends HookConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
-      onRefresh: viewModel.onRefresh,
-      refreshController: viewModel.refreshController,
-      refreshBackgroundColor: colors.white,
       appBarColor: colors.pink,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
@@ -95,7 +92,7 @@ class HomePage extends HookConsumerWidget {
         if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
             feed: TargetFeed('timeline', userController.currentUser!.uid),
-            onPageLoaded: (_) => viewModel.refreshController.refreshCompleted(),
+            onPageLoaded: (_) {},
           ),
         ],
       ],
