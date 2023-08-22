@@ -341,39 +341,50 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             ),
           ),
         ),
-        //? comments listed
-        PagedSliverList.separated(
-          shrinkWrapFirstPageIndicators: true,
-          pagingController: commentState.pagingController,
-          separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
-          builderDelegate: PagedChildBuilderDelegate<Comment>(
-            animateTransitions: true,
-            transitionDuration: kAnimationDurationRegular,
-            itemBuilder: (_, comment, index) {
-              return PositiveComment(comment: comment, isFirst: index == 0);
-            },
-            firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-            newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-          ),
-        ),
-        //? Load additional comments?
-        const SizedBox(
-          height: kBorderThicknessMedium,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: colours.white,
-            borderRadius: const BorderRadius.vertical(
-              bottom: Radius.circular(kBorderRadiusLarge),
+        if (commentState.pagingController.itemList == null || commentState.pagingController.itemList!.isEmpty)
+          Container(
+            decoration: BoxDecoration(color: colours.white),
+            child: Padding(
+              padding: const EdgeInsets.all(kPaddingSmallMedium),
+              child: Text(
+                "Be the first to leave a comment",
+                textAlign: TextAlign.left,
+                style: typography.styleHeroMedium,
+              ),
             ),
           ),
-          height: kCommentFooter,
-          alignment: Alignment.center,
-          child: const PositiveLoadingIndicator(
-            circleRadius: 5,
-            width: 40,
+        //? comments listed
+        if (commentState.pagingController.itemList != null && commentState.pagingController.itemList!.isNotEmpty)
+          PagedSliverList.separated(
+            shrinkWrapFirstPageIndicators: true,
+            pagingController: commentState.pagingController,
+            separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
+            builderDelegate: PagedChildBuilderDelegate<Comment>(
+              animateTransitions: true,
+              transitionDuration: kAnimationDurationRegular,
+              itemBuilder: (_, comment, index) {
+                return PositiveComment(comment: comment, isFirst: index == 0);
+              },
+              firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+              newPageProgressIndicatorBuilder: (context) {
+                return Container(
+                  padding: const EdgeInsets.only(top: kBorderThicknessMedium),
+                  decoration: BoxDecoration(
+                    color: colours.white,
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(kBorderRadiusLarge),
+                    ),
+                  ),
+                  height: kCommentFooter,
+                  alignment: Alignment.center,
+                  child: const PositiveLoadingIndicator(
+                    circleRadius: 5,
+                    width: 40,
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }

@@ -1,4 +1,9 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -40,6 +45,7 @@ class PostPage extends ConsumerWidget {
     final AppRouter router = ref.read(appRouterProvider);
 
     final PostViewModelProvider provider = postViewModelProvider(activity.flMeta!.id!, feed);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
@@ -51,6 +57,33 @@ class PostPage extends ConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
+    final String publisherID = activity.publisherInformation?.publisherId ?? '';
+    final String userID = profileControllerState.currentProfile?.flMeta?.id ?? '';
+
+    final List<String> members = [publisherID, userID];
+    final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
+
+    late bool isCommentsEnabled;
+    late bool isUserAbleToComment;
+
+    switch (activity.securityConfiguration?.commentMode) {
+      case const ActivitySecurityConfigurationMode.public():
+        isUserAbleToComment = true;
+        isCommentsEnabled = true;
+        break;
+      case const ActivitySecurityConfigurationMode.connections():
+        isUserAbleToComment = relationship.connected;
+        isCommentsEnabled = true;
+        break;
+      case const ActivitySecurityConfigurationMode.followersAndConnections():
+        isUserAbleToComment = relationship.connected || relationship.following;
+        isCommentsEnabled = true;
+        break;
+      default:
+        isUserAbleToComment = false;
+        isCommentsEnabled = false;
+    }
+
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
@@ -60,14 +93,16 @@ class PostPage extends ConsumerWidget {
         PositiveScaffoldComponent.footerPadding,
         PositiveScaffoldComponent.footerWidgets,
       },
-      bottomNavigationBar: PostCommentBox(
-        mediaQuery: MediaQuery.of(context),
-        commentTextController: viewModel.commentTextController,
-        onCommentChanged: viewModel.onCommentChanged,
-        onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
-        colours: colors,
-        isBusy: state.isBusy,
-      ),
+      bottomNavigationBar: isCommentsEnabled && isUserAbleToComment
+          ? PostCommentBox(
+              mediaQuery: MediaQuery.of(context),
+              commentTextController: viewModel.commentTextController,
+              onCommentChanged: viewModel.onCommentChanged,
+              onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
+              colours: colors,
+              isBusy: state.isBusy,
+            )
+          : null,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           horizontalPadding: kPaddingNone,
@@ -97,7 +132,7 @@ class PostPage extends ConsumerWidget {
             ),
           ],
         ),
-        if (activity.flMeta?.id?.isNotEmpty ?? false) ...<Widget>[
+        if ((activity.flMeta?.id?.isNotEmpty ?? false) && isCommentsEnabled) ...<Widget>[
           const SliverToBoxAdapter(
             child: SizedBox(height: kPaddingSmall),
           ),

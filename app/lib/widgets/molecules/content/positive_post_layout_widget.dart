@@ -436,12 +436,14 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     // final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile ?? Profile.empty()));
     // final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
+    final bool isPublic = widget.postContent.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.public();
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
         likes: 0,
-        likeEnabled: true,
+        likeEnabled: isPublic && !isBusy,
         onLike: (_) {},
 
         //TODO(S): share enabled and on share functionality here
@@ -450,11 +452,11 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
 
         //TODO(S): comment enabled and on comment functionality here
         comments: 0,
-        commentsEnabled: true,
+        commentsEnabled: isPublic && !isBusy,
         onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarked: !widget.isBusy,
+        bookmarked: isPublic && !isBusy,
         onBookmark: widget.onBookmark,
       ),
     );

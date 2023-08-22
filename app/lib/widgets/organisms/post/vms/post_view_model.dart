@@ -75,8 +75,9 @@ class PostViewModel extends _$PostViewModel {
     final Logger logger = ref.read(loggerProvider);
     final CommentApiService commentApiService = await ref.read(commentApiServiceProvider.future);
     final EventBus eventBus = ref.read(eventBusProvider);
+    final String trimmedString = state.currentCommentText.trim();
 
-    if (state.currentCommentText.isEmpty) {
+    if (trimmedString.isEmpty) {
       logger.e('Comment text is empty');
       return;
     }
@@ -87,7 +88,7 @@ class PostViewModel extends _$PostViewModel {
       logger.i('Posting comment');
       final Comment comment = await commentApiService.postComment(
         activityId: state.activityId,
-        content: state.currentCommentText,
+        content: trimmedString,
       );
 
       eventBus.fire(CommentCreatedEvent(activityId: activityId, comment: comment));

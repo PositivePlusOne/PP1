@@ -1,6 +1,9 @@
 // Dart imports:
 
 // Flutter imports:
+import 'dart:math';
+
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,7 +36,11 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
   final DesignColorsModel colours;
 
   static double calculateHeight(MediaQueryData mediaQuery) {
-    return kBottomNavigationBarHeight + (kPaddingMedium * 2) + mediaQuery.padding.bottom + kBottomNavigationBarBorderWidth;
+    return kBottomNavigationBarHeight + (kPaddingMedium * 2) + kBottomNavigationBarBorderWidth + bottomPadding(mediaQuery);
+  }
+
+  static double bottomPadding(MediaQueryData mediaQuery) {
+    return max(mediaQuery.padding.bottom, mediaQuery.viewInsets.bottom);
   }
 
   @override
@@ -60,7 +67,7 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
               top: kPaddingMedium,
               left: kPaddingSmall,
               right: kPaddingSmall,
-              bottom: kPaddingMedium + mediaQuery.padding.bottom,
+              bottom: kPaddingMedium + bottomPadding(mediaQuery),
               child: Container(
                 decoration: BoxDecoration(
                   color: colours.white,
@@ -83,13 +90,17 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(kPaddingSmall),
-                    child: Icon(
-                      UniconsLine.message,
-                      color: colours.white,
-                      size: kIconSmall,
+                    child: PositiveTapBehaviour(
+                      isEnabled: !isBusy,
+                      onTap: () => onPostCommentRequested(commentTextController.text),
+                      child: Icon(
+                        UniconsLine.message,
+                        color: colours.white,
+                        size: kIconSmall,
+                      ),
                     ),
                   ),
-                  isEnabled: isBusy,
+                  isEnabled: !isBusy,
                 ),
               ),
             ),
