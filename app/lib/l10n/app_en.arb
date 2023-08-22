@@ -281,8 +281,6 @@
     "page_connections_list_add_dialog_members_system_join": "{count} joined the conversation",
     "page_connections_list_add_dialog_description": "All conversation history will be shared with users who are added",
 
-    "post_last_edited": " (edited)",
-
     "post_dialogue_edit_post": "Edit Post",
     "post_dialogue_edit_post_fail": "Unable to update post",
     "post_dialogue_edit_post_success": "Post Saved",
@@ -312,6 +310,7 @@
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",
     "shared_user_type_generic_me": "Private",
+    "shared_post_tooltips_edited": "(Edited)",
     
     "shared_comment_type_generic_everyone": "All Users",
     "shared_comment_type_generic_connections": "Connections Only",

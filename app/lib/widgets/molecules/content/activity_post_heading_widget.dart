@@ -13,7 +13,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
@@ -37,14 +36,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final Color accentColor = publisher?.accentColor.toColorFromHex() ?? colours.teal;
     final Color complementaryColor = accentColor.complimentTextColor;
 
     String displayName = localisations.shared_placeholders_empty_display_name;
-    String createdDate = "";
+    String postDateTooltip = "";
 
     if (publisher == null) {
       return const SizedBox();
@@ -54,10 +52,10 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       displayName = "@${publisher!.displayName}";
     }
 
-    if (flMetaData != null && flMetaData!.createdDate != null && flMetaData!.updatedDate != null) {
-      createdDate = flMetaData!.createdDate!.asDateDifference(context);
-      if (flMetaData!.updatedDate!.isNotEmpty && flMetaData!.createdDate! != flMetaData!.updatedDate!) {
-        createdDate = createdDate + localisations.post_last_edited;
+    if (flMetaData != null && flMetaData!.createdDate != null) {
+      postDateTooltip = flMetaData!.createdDate!.asDateDifference(context);
+      if (flMetaData!.lastModifiedDate != null && flMetaData!.lastModifiedDate!.isNotEmpty && flMetaData!.createdDate! != flMetaData!.lastModifiedDate!) {
+        postDateTooltip = '${flMetaData!.createdDate!.asDateDifference(context)} ${localisations.shared_post_tooltips_edited}';
       }
     }
 
@@ -107,7 +105,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                   ),
                   const SizedBox(height: kPaddingExtraSmall),
                   Text(
-                    createdDate,
+                    postDateTooltip,
                     style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
                   ),
                 ],

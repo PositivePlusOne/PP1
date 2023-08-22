@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { DocumentData, DocumentReference, FieldPath } from "firebase-admin/firestore";
+import { DocumentData, DocumentReference, FieldPath, Timestamp } from "firebase-admin/firestore";
 import { adminApp } from "..";
 
 import { SystemService } from "./system_service";
@@ -109,6 +109,53 @@ export namespace DataService {
     return count;
   };
 
+  /**
+   * Updates a document.
+   * @param {any} options the options to use.
+   * @return {Promise<any>} a promise that resolves when the document is updated.
+   */
+  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    const cacheKey = CacheService.generateCacheKey(options);
+
+    functions.logger.info(`Updating document for user: ${options.entryId}`);
+    let data = {};
+
+    await adminApp.firestore().runTransaction(async (transaction) => {
+      let document = await CacheService.getFromCache(cacheKey);
+      if (!document) {
+        functions.logger.info(`Document not found, fetching from flamelink`);
+        document = await flamelinkApp.content.get(options);
+      }
+
+      if (!document) {
+        functions.logger.info(`Document not found, creating new`);
+        data = await flamelinkApp.content.add(options);
+        return;
+      }
+
+      const documentId = document._fl_meta_.docId;
+      const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
+      const isSame = FlamelinkHelpers.arePayloadsEqual(document, options.data);
+
+      if (isSame) {
+        functions.logger.info(`Current document data is the same as the new data, not updating`);
+        return;
+      }
+
+      // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
+      // to ensure that the document is updated in the cache.
+      if (options.data._fl_meta_) {
+        options.data._fl_meta_.lastModifiedDate = new Timestamp(new Date().getTime() / 1000, 0);
+      }
+
+      data = { ...document, ...options.data };
+      transaction.update(documentRef, data);
+    });
+
+    return data;
+  };
+
   export const updateDocumentsRaw = async function(options: UpdateOptions<any>): Promise<void> {
     const firestore = adminApp.firestore();
     const batch = firestore.batch();
@@ -127,6 +174,13 @@ export namespace DataService {
         for (const dataChange in options.dataChanges) {
           if (Object.prototype.hasOwnProperty.call(options.dataChanges, dataChange)) {
             const data = options.dataChanges[dataChange];
+
+            // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
+            // to ensure that the document is updated in the cache.
+            if (data._fl_meta_) {
+              data._fl_meta_.lastModifiedDate = new Timestamp(new Date().getTime() / 1000, 0);
+            }
+
             batch.update(ref, { [dataChange]: data });
           }
         }
@@ -222,46 +276,5 @@ export namespace DataService {
     const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
 
     await documentRef.delete();
-  };
-
-  /**
-   * Updates a document.
-   * @param {any} options the options to use.
-   * @return {Promise<any>} a promise that resolves when the document is updated.
-   */
-  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
-    const cacheKey = CacheService.generateCacheKey(options);
-
-    functions.logger.info(`Updating document for user: ${options.entryId}`);
-    let data = {};
-
-    await adminApp.firestore().runTransaction(async (transaction) => {
-      let document = await CacheService.getFromCache(cacheKey);
-      if (!document) {
-        functions.logger.info(`Document not found, fetching from flamelink`);
-        document = await flamelinkApp.content.get(options);
-      }
-
-      if (!document) {
-        functions.logger.info(`Document not found, creating new`);
-        data = await flamelinkApp.content.add(options);
-        return;
-      }
-
-      const documentId = document._fl_meta_.docId;
-      const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
-      const isSame = FlamelinkHelpers.arePayloadsEqual(document, options.data);
-
-      if (isSame) {
-        functions.logger.info(`Current document data is the same as the new data, not updating`);
-        return;
-      }
-
-      data = { ...document, ...options.data };
-      transaction.update(documentRef, data);
-    });
-
-    return data;
   };
 }
