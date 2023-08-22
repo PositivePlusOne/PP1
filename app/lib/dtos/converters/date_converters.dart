@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 String dateFromUnknown(dynamic json) {
   if (json is String) {
     return json;
@@ -17,4 +19,19 @@ String dateFromUnknown(dynamic json) {
   }
 
   return '';
+}
+
+String dateToUnknown(String? date) {
+  if (date == null || date.isEmpty) {
+    return '';
+  }
+
+  final DateTime dateTime = DateTime.parse(date);
+  final int seconds = dateTime.millisecondsSinceEpoch ~/ 1000;
+  final int nanoseconds = dateTime.millisecondsSinceEpoch % 1000 * 1000000;
+
+  return jsonEncode(<String, dynamic>{
+    '_seconds': seconds,
+    '_nanoseconds': nanoseconds,
+  });
 }

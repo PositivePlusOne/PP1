@@ -21,8 +21,11 @@ FlMeta _$FlMetaFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FlMeta {
   String? get createdBy => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown)
+  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get createdDate => throw _privateConstructorUsedError;
+  String? get lastModifiedBy => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  String? get lastModifiedDate => throw _privateConstructorUsedError;
   String? get docId => throw _privateConstructorUsedError;
   @JsonKey(name: 'fl_id')
   String? get id => throw _privateConstructorUsedError;
@@ -30,9 +33,6 @@ mixin _$FlMeta {
   String? get locale => throw _privateConstructorUsedError;
   String? get schema => throw _privateConstructorUsedError;
   String? get schemaRefId => throw _privateConstructorUsedError;
-  String? get updatedBy => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown)
-  String? get updatedDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,15 +46,17 @@ abstract class $FlMetaCopyWith<$Res> {
   @useResult
   $Res call(
       {String? createdBy,
-      @JsonKey(fromJson: dateFromUnknown) String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      String? createdDate,
+      String? lastModifiedBy,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      String? lastModifiedDate,
       String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
       String? locale,
       String? schema,
-      String? schemaRefId,
-      String? updatedBy,
-      @JsonKey(fromJson: dateFromUnknown) String? updatedDate});
+      String? schemaRefId});
 }
 
 /// @nodoc
@@ -72,14 +74,14 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
   $Res call({
     Object? createdBy = freezed,
     Object? createdDate = freezed,
+    Object? lastModifiedBy = freezed,
+    Object? lastModifiedDate = freezed,
     Object? docId = freezed,
     Object? id = freezed,
     Object? env = freezed,
     Object? locale = freezed,
     Object? schema = freezed,
     Object? schemaRefId = freezed,
-    Object? updatedBy = freezed,
-    Object? updatedDate = freezed,
   }) {
     return _then(_value.copyWith(
       createdBy: freezed == createdBy
@@ -89,6 +91,14 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
       createdDate: freezed == createdDate
           ? _value.createdDate
           : createdDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedBy: freezed == lastModifiedBy
+          ? _value.lastModifiedBy
+          : lastModifiedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedDate: freezed == lastModifiedDate
+          ? _value.lastModifiedDate
+          : lastModifiedDate // ignore: cast_nullable_to_non_nullable
               as String?,
       docId: freezed == docId
           ? _value.docId
@@ -114,14 +124,6 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
           ? _value.schemaRefId
           : schemaRefId // ignore: cast_nullable_to_non_nullable
               as String?,
-      updatedBy: freezed == updatedBy
-          ? _value.updatedBy
-          : updatedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      updatedDate: freezed == updatedDate
-          ? _value.updatedDate
-          : updatedDate // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 }
@@ -134,15 +136,17 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
   @useResult
   $Res call(
       {String? createdBy,
-      @JsonKey(fromJson: dateFromUnknown) String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      String? createdDate,
+      String? lastModifiedBy,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      String? lastModifiedDate,
       String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
       String? locale,
       String? schema,
-      String? schemaRefId,
-      String? updatedBy,
-      @JsonKey(fromJson: dateFromUnknown) String? updatedDate});
+      String? schemaRefId});
 }
 
 /// @nodoc
@@ -157,14 +161,14 @@ class __$$_FlMetaCopyWithImpl<$Res>
   $Res call({
     Object? createdBy = freezed,
     Object? createdDate = freezed,
+    Object? lastModifiedBy = freezed,
+    Object? lastModifiedDate = freezed,
     Object? docId = freezed,
     Object? id = freezed,
     Object? env = freezed,
     Object? locale = freezed,
     Object? schema = freezed,
     Object? schemaRefId = freezed,
-    Object? updatedBy = freezed,
-    Object? updatedDate = freezed,
   }) {
     return _then(_$_FlMeta(
       createdBy: freezed == createdBy
@@ -174,6 +178,14 @@ class __$$_FlMetaCopyWithImpl<$Res>
       createdDate: freezed == createdDate
           ? _value.createdDate
           : createdDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedBy: freezed == lastModifiedBy
+          ? _value.lastModifiedBy
+          : lastModifiedBy // ignore: cast_nullable_to_non_nullable
+              as String?,
+      lastModifiedDate: freezed == lastModifiedDate
+          ? _value.lastModifiedDate
+          : lastModifiedDate // ignore: cast_nullable_to_non_nullable
               as String?,
       docId: freezed == docId
           ? _value.docId
@@ -199,14 +211,6 @@ class __$$_FlMetaCopyWithImpl<$Res>
           ? _value.schemaRefId
           : schemaRefId // ignore: cast_nullable_to_non_nullable
               as String?,
-      updatedBy: freezed == updatedBy
-          ? _value.updatedBy
-          : updatedBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      updatedDate: freezed == updatedDate
-          ? _value.updatedDate
-          : updatedDate // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
@@ -216,15 +220,17 @@ class __$$_FlMetaCopyWithImpl<$Res>
 class _$_FlMeta implements _FlMeta {
   const _$_FlMeta(
       {this.createdBy,
-      @JsonKey(fromJson: dateFromUnknown) this.createdDate,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      this.createdDate,
+      this.lastModifiedBy,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      this.lastModifiedDate,
       this.docId,
       @JsonKey(name: 'fl_id') this.id,
       this.env = '',
       this.locale = 'en',
       this.schema = '',
-      this.schemaRefId,
-      this.updatedBy,
-      @JsonKey(fromJson: dateFromUnknown) this.updatedDate});
+      this.schemaRefId});
 
   factory _$_FlMeta.fromJson(Map<String, dynamic> json) =>
       _$$_FlMetaFromJson(json);
@@ -232,8 +238,13 @@ class _$_FlMeta implements _FlMeta {
   @override
   final String? createdBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown)
+  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   final String? createdDate;
+  @override
+  final String? lastModifiedBy;
+  @override
+  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  final String? lastModifiedDate;
   @override
   final String? docId;
   @override
@@ -250,15 +261,10 @@ class _$_FlMeta implements _FlMeta {
   final String? schema;
   @override
   final String? schemaRefId;
-  @override
-  final String? updatedBy;
-  @override
-  @JsonKey(fromJson: dateFromUnknown)
-  final String? updatedDate;
 
   @override
   String toString() {
-    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId, updatedBy: $updatedBy, updatedDate: $updatedDate)';
+    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, lastModifiedDate: $lastModifiedDate, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId)';
   }
 
   @override
@@ -270,23 +276,33 @@ class _$_FlMeta implements _FlMeta {
                 other.createdBy == createdBy) &&
             (identical(other.createdDate, createdDate) ||
                 other.createdDate == createdDate) &&
+            (identical(other.lastModifiedBy, lastModifiedBy) ||
+                other.lastModifiedBy == lastModifiedBy) &&
+            (identical(other.lastModifiedDate, lastModifiedDate) ||
+                other.lastModifiedDate == lastModifiedDate) &&
             (identical(other.docId, docId) || other.docId == docId) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.env, env) || other.env == env) &&
             (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.schema, schema) || other.schema == schema) &&
             (identical(other.schemaRefId, schemaRefId) ||
-                other.schemaRefId == schemaRefId) &&
-            (identical(other.updatedBy, updatedBy) ||
-                other.updatedBy == updatedBy) &&
-            (identical(other.updatedDate, updatedDate) ||
-                other.updatedDate == updatedDate));
+                other.schemaRefId == schemaRefId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, createdBy, createdDate, docId,
-      id, env, locale, schema, schemaRefId, updatedBy, updatedDate);
+  int get hashCode => Object.hash(
+      runtimeType,
+      createdBy,
+      createdDate,
+      lastModifiedBy,
+      lastModifiedDate,
+      docId,
+      id,
+      env,
+      locale,
+      schema,
+      schemaRefId);
 
   @JsonKey(ignore: true)
   @override
@@ -304,25 +320,31 @@ class _$_FlMeta implements _FlMeta {
 
 abstract class _FlMeta implements FlMeta {
   const factory _FlMeta(
-          {final String? createdBy,
-          @JsonKey(fromJson: dateFromUnknown) final String? createdDate,
-          final String? docId,
-          @JsonKey(name: 'fl_id') final String? id,
-          final String? env,
-          final String? locale,
-          final String? schema,
-          final String? schemaRefId,
-          final String? updatedBy,
-          @JsonKey(fromJson: dateFromUnknown) final String? updatedDate}) =
-      _$_FlMeta;
+      {final String? createdBy,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      final String? createdDate,
+      final String? lastModifiedBy,
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+      final String? lastModifiedDate,
+      final String? docId,
+      @JsonKey(name: 'fl_id') final String? id,
+      final String? env,
+      final String? locale,
+      final String? schema,
+      final String? schemaRefId}) = _$_FlMeta;
 
   factory _FlMeta.fromJson(Map<String, dynamic> json) = _$_FlMeta.fromJson;
 
   @override
   String? get createdBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown)
+  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get createdDate;
+  @override
+  String? get lastModifiedBy;
+  @override
+  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  String? get lastModifiedDate;
   @override
   String? get docId;
   @override
@@ -336,11 +358,6 @@ abstract class _FlMeta implements FlMeta {
   String? get schema;
   @override
   String? get schemaRefId;
-  @override
-  String? get updatedBy;
-  @override
-  @JsonKey(fromJson: dateFromUnknown)
-  String? get updatedDate;
   @override
   @JsonKey(ignore: true)
   _$$_FlMetaCopyWith<_$_FlMeta> get copyWith =>

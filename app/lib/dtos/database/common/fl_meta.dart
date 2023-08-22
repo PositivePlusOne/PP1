@@ -11,15 +11,15 @@ part 'fl_meta.g.dart';
 class FlMeta with _$FlMeta {
   const factory FlMeta({
     String? createdBy,
-    @JsonKey(fromJson: dateFromUnknown) String? createdDate,
+    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdDate,
+    String? lastModifiedBy,
+    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? lastModifiedDate,
     String? docId,
     @JsonKey(name: 'fl_id') String? id,
     @Default('') String? env,
     @Default('en') String? locale,
     @Default('') String? schema,
     String? schemaRefId,
-    String? updatedBy,
-    @JsonKey(fromJson: dateFromUnknown) String? updatedDate,
   }) = _FlMeta;
 
   factory FlMeta.empty(String id, String schema) => FlMeta(
