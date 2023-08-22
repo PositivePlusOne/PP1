@@ -26,7 +26,7 @@ export namespace CommentsService {
     * @returns {Promise<any>} The new comment.
     */
     export async function addComment(comment: CommentJSON, client: StreamClient<DefaultGenerics>): Promise<any> {
-        if (!comment.activityId || !comment.originFeed) {
+        if (!comment.activity_id || !comment.origin) {
             throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
         }
 
@@ -36,14 +36,14 @@ export namespace CommentsService {
 
         const reactionEntry = {
             kind: "comment",
-            activity_id: comment.activityId,
-            user_id: comment.senderId,
-            data: comment,
+            activity_id: comment.activity_id,
+            user_id: comment.user_id,
+            data: comment.data,
         } as ReactionEntryJSON;
 
-        const response = await client.reactions.add("comment", comment.activityId,
+        const response = await client.reactions.add("comment", comment.activity_id!,
             reactionEntry,
-            { userId: comment.senderId },
+            { userId: comment.user_id },
         );
 
         return await DataService.updateDocument({
@@ -63,9 +63,9 @@ export namespace CommentsService {
     export async function updateComment(comment: CommentJSON, commentId: string, client: StreamClient<DefaultGenerics>): Promise<void> {
         const reactionEntry = {
             kind: "comment",
-            activity_id: comment.activityId,
-            user_id: comment.senderId,
-            data: comment,
+            activity_id: comment.activity_id,
+            user_id: comment.user_id,
+            data: comment.data,
         } as ReactionEntryJSON;
 
         await client.reactions.update(commentId, reactionEntry);

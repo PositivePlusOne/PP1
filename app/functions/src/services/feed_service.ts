@@ -7,12 +7,13 @@ import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/defa
 import { ActivityActionVerb } from "../dto/activities";
 
 export namespace FeedService {
+
   /**
    * Returns a StreamClient instance with the API key and secret.
    * @return {StreamClient<DefaultGenerics>} instance of StreamClient
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
-  export async function getFeedsClient(): Promise<StreamClient<DefaultGenerics>> {
+  export function getFeedsClient(): StreamClient<DefaultGenerics> {
     functions.logger.info("Connecting to feeds", { structuredData: true });
     const apiKey = process.env.STREAM_API_KEY;
     const apiSecret = process.env.STREAM_API_SECRET;
@@ -21,11 +22,27 @@ export namespace FeedService {
       throw new Error("Missing Stream Feeds API key or secret");
     }
 
-    const client = connect(apiKey, apiSecret, undefined, {
+    return connect(apiKey, apiSecret, undefined, {
       browser: false,
     });
+  }
 
-    return client;
+  export function getFeedsUserClient(userId: string): StreamClient<DefaultGenerics> {
+    const feedsServerClient = getFeedsClient();
+    
+    functions.logger.info("Connecting to feeds as user", { structuredData: true });
+
+    const apiKey = process.env.STREAM_API_KEY;
+    const apiSecret = process.env.STREAM_API_SECRET;
+    const appId = process.env.STREAM_FEEDS_APP_ID;
+
+    if (!apiKey || !apiSecret || !appId) {
+      throw new Error("Missing Stream Feeds API key or secret");
+    }
+
+    const userToken = feedsServerClient.createUserToken(userId);
+
+    return connect(apiKey, userToken, appId);
   }
 
   /**
@@ -81,28 +98,36 @@ export namespace FeedService {
    * @param {string} next the next token.
    * @return {Promise<GetFeedWindowResult>} a promise that resolves to the feed window.
    */
-  export async function getFeedWindow(feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
+  export async function getFeedWindow(uid: string, feed: StreamFeed<DefaultGenerics>, windowSize: number, next: string): Promise<GetFeedWindowResult> {
     functions.logger.info("Getting feed window", { feed, windowSize, next });
 
     const response = await feed.get({
       limit: windowSize,
       id_lt: next,
+      user_id: uid,
       enrich: true,
       withReactionCounts: true,
+      withOwnChildren: true,
+      withOwnReactions: true,
+      reactionKindsFilter: "like,bookmark,share,comment",
     });
 
     functions.logger.info("Got feed window", { feed, windowSize, next, response });
 
     const results = (response.results as FlatActivityEnriched<DefaultGenerics>[]).map((activity) => {
       functions.logger.info("Origin map", { activity, origin: activity.origin });
+
       return {
         id: activity?.id ?? "",
         foreign_id: activity?.foreign_id ?? "",
         object: activity?.object ?? "",
         actor: activity?.actor ?? "",
         reaction_counts: activity.reaction_counts,
+        verb: activity?.verb ?? "",
       };
     }) as FeedEntry[];
+
+    functions.logger.info("Mapped feed window", { feed, windowSize, next, results });
 
     return {
       results,

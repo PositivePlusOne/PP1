@@ -39,16 +39,16 @@ export namespace CommentEndpoints {
 
         // Build comment
         const commentJSON = {
-            content: content,
-            activityId: activityId,
-            senderId: uid,
+            data: content,
+            activity_id: activityId,
+            user_id: uid,
             mentions: mentions,
-            originFeed: `${feed}:${uid}`,
+            origin: `${feed}:${uid}`,
             media: media,
         } as CommentJSON;
 
         // Create and response
-        const streamClient = await FeedService.getFeedsClient();
+        const streamClient = FeedService.getFeedsUserClient(uid);
         const responseComment = await CommentsService.addComment(commentJSON, streamClient);
         
         return buildEndpointResponse(context, {
@@ -82,20 +82,20 @@ export namespace CommentEndpoints {
 
         // Get the current comment and check the sender
         const checkComment = await CommentsService.getComment(commentId);
-        if (checkComment.senderId !== uid) {
+        if (checkComment.user_id !== uid) {
             throw new functions.https.HttpsError("permission-denied", "You do not have permission to update this comment.");
         }
 
         // Build comment
         const updatedComment = {
             content: content,
-            activityId: activityId,
-            senderId: uid,
+            activity_id: activityId,
+            user_id: uid,
             mentions: mentions,
             media: media,
         } as CommentJSON;
 
-        const streamClient = await FeedService.getFeedsClient();
+        const streamClient = FeedService.getFeedsUserClient(uid);
         await CommentsService.updateComment(updatedComment, commentId, streamClient);
 
         return buildEndpointResponse(context, {
@@ -109,11 +109,11 @@ export namespace CommentEndpoints {
         const commentId = request.data.commentId;
 
         const comment = await CommentsService.getComment(commentId);
-        if (comment.senderId !== uid) {
+        if (comment.user_id !== uid) {
             throw new functions.https.HttpsError("permission-denied", "You do not have permission to delete this comment.");
         }
 
-        const streamClient = await FeedService.getFeedsClient();
+        const streamClient = FeedService.getFeedsUserClient(uid);
         await CommentsService.deleteComment(commentId, streamClient);
 
         return buildEndpointResponse(context, {
@@ -137,7 +137,7 @@ export namespace CommentEndpoints {
             throw new functions.https.HttpsError("invalid-argument", "The activityId is required.");
         }
 
-        const streamClient = await FeedService.getFeedsClient();
+        const streamClient = FeedService.getFeedsUserClient(uid);
         const comments = await CommentsService.listComments(activityId, streamClient, request.limit, request.cursor);
 
         functions.logger.log("Found comments", {

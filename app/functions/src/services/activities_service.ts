@@ -144,7 +144,7 @@ export namespace ActivitiesService {
       to: targets,
     };
 
-    const feed = (await FeedService.getFeedsClient()).feed(feedName, userID);
+    const feed = FeedService.getFeedsUserClient(userID).feed(feedName, userID);
     await feed.addActivity(getStreamActivity);
 
     const activityResponse = await DataService.updateDocument({
@@ -169,7 +169,7 @@ export namespace ActivitiesService {
       actorId,
     });
 
-    const feed = (await FeedService.getFeedsClient()).feed(feedName, actorId);
+    const feed = FeedService.getFeedsUserClient(actorId).feed(feedName, actorId);
 
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
@@ -200,7 +200,7 @@ export namespace ActivitiesService {
       activityId,
     });
 
-    const feed = (await FeedService.getFeedsClient()).feed(feedName, actorId);
+    const feed = FeedService.getFeedsUserClient(actorId).feed(feedName, actorId);
 
 
     await feed.removeActivity({ foreign_id: activityId });

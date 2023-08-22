@@ -198,7 +198,7 @@ export class Profile {
             return;
         }
 
-        const client = await FeedService.getFeedsClient();
+        const client = FeedService.getFeedsClient();
         const feed = client.feed("user", this._fl_meta_!.fl_id!);
         const followStats = await feed.followStats();
 

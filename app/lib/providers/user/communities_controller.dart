@@ -1,8 +1,10 @@
+// ignore_for_file: avoid_public_notifier_properties
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/services/reaction_api_service.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -51,10 +53,11 @@ enum CommunityType {
   blocked,
   connected;
 
+  // The community locales are inverted as the backend uses the opposite terminology
   String get toLocale {
     return switch (this) {
-      CommunityType.followers => 'Followers',
-      CommunityType.following => 'Following',
+      CommunityType.followers => 'Following',
+      CommunityType.following => 'Followers',
       CommunityType.blocked => 'Blocked',
       CommunityType.connected => 'Connections',
     };
@@ -325,5 +328,26 @@ class CommunitiesController extends _$CommunitiesController {
     };
 
     logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data');
+  }
+
+  Future<void> bookmarkActivity({
+    required String activityId,
+  }) async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    logger.i('CommunitiesController - bookmarkActivity - Bookmarking activity: $activityId');
+
+    if (userController.currentUser == null) {
+      throw Exception('User is null');
+    }
+
+    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+    await reactionApiService.postReaction(
+      activityId: activityId,
+      reactionType: 'bookmark',
+    );
+
+    logger.i('CommunitiesController - bookmarkActivity - Bookmarked activity: $activityId');
+    // TODO(ryan): Update however we plan to handle reactions in cache
   }
 }

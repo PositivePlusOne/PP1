@@ -20,11 +20,14 @@ Reaction _$ReactionFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Reaction {
+  @JsonKey(name: 'activity_id')
   String get activityId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'reaction_id')
   String get reactionId => throw _privateConstructorUsedError;
-  String get senderId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'user_id')
+  String get userId => throw _privateConstructorUsedError;
   @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-  ReactionType get reactionType => throw _privateConstructorUsedError;
+  ReactionType get kind => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,13 +41,13 @@ abstract class $ReactionCopyWith<$Res> {
       _$ReactionCopyWithImpl<$Res, Reaction>;
   @useResult
   $Res call(
-      {String activityId,
-      String reactionId,
-      String senderId,
+      {@JsonKey(name: 'activity_id') String activityId,
+      @JsonKey(name: 'reaction_id') String reactionId,
+      @JsonKey(name: 'user_id') String userId,
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-      ReactionType reactionType});
+      ReactionType kind});
 
-  $ReactionTypeCopyWith<$Res> get reactionType;
+  $ReactionTypeCopyWith<$Res> get kind;
 }
 
 /// @nodoc
@@ -62,8 +65,8 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
   $Res call({
     Object? activityId = null,
     Object? reactionId = null,
-    Object? senderId = null,
-    Object? reactionType = null,
+    Object? userId = null,
+    Object? kind = null,
   }) {
     return _then(_value.copyWith(
       activityId: null == activityId
@@ -74,22 +77,22 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
           ? _value.reactionId
           : reactionId // ignore: cast_nullable_to_non_nullable
               as String,
-      senderId: null == senderId
-          ? _value.senderId
-          : senderId // ignore: cast_nullable_to_non_nullable
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      reactionType: null == reactionType
-          ? _value.reactionType
-          : reactionType // ignore: cast_nullable_to_non_nullable
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
               as ReactionType,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $ReactionTypeCopyWith<$Res> get reactionType {
-    return $ReactionTypeCopyWith<$Res>(_value.reactionType, (value) {
-      return _then(_value.copyWith(reactionType: value) as $Val);
+  $ReactionTypeCopyWith<$Res> get kind {
+    return $ReactionTypeCopyWith<$Res>(_value.kind, (value) {
+      return _then(_value.copyWith(kind: value) as $Val);
     });
   }
 }
@@ -102,14 +105,14 @@ abstract class _$$_ReactionCopyWith<$Res> implements $ReactionCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String activityId,
-      String reactionId,
-      String senderId,
+      {@JsonKey(name: 'activity_id') String activityId,
+      @JsonKey(name: 'reaction_id') String reactionId,
+      @JsonKey(name: 'user_id') String userId,
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-      ReactionType reactionType});
+      ReactionType kind});
 
   @override
-  $ReactionTypeCopyWith<$Res> get reactionType;
+  $ReactionTypeCopyWith<$Res> get kind;
 }
 
 /// @nodoc
@@ -125,8 +128,8 @@ class __$$_ReactionCopyWithImpl<$Res>
   $Res call({
     Object? activityId = null,
     Object? reactionId = null,
-    Object? senderId = null,
-    Object? reactionType = null,
+    Object? userId = null,
+    Object? kind = null,
   }) {
     return _then(_$_Reaction(
       activityId: null == activityId
@@ -137,13 +140,13 @@ class __$$_ReactionCopyWithImpl<$Res>
           ? _value.reactionId
           : reactionId // ignore: cast_nullable_to_non_nullable
               as String,
-      senderId: null == senderId
-          ? _value.senderId
-          : senderId // ignore: cast_nullable_to_non_nullable
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      reactionType: null == reactionType
-          ? _value.reactionType
-          : reactionType // ignore: cast_nullable_to_non_nullable
+      kind: null == kind
+          ? _value.kind
+          : kind // ignore: cast_nullable_to_non_nullable
               as ReactionType,
     ));
   }
@@ -153,31 +156,31 @@ class __$$_ReactionCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Reaction implements _Reaction {
   const _$_Reaction(
-      {this.activityId = '',
-      this.reactionId = '',
-      this.senderId = '',
+      {@JsonKey(name: 'activity_id') this.activityId = '',
+      @JsonKey(name: 'reaction_id') this.reactionId = '',
+      @JsonKey(name: 'user_id') this.userId = '',
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-      this.reactionType = const ReactionType.unknownReaction()});
+      this.kind = const ReactionType.unknownReaction()});
 
   factory _$_Reaction.fromJson(Map<String, dynamic> json) =>
       _$$_ReactionFromJson(json);
 
   @override
-  @JsonKey()
+  @JsonKey(name: 'activity_id')
   final String activityId;
   @override
-  @JsonKey()
+  @JsonKey(name: 'reaction_id')
   final String reactionId;
   @override
-  @JsonKey()
-  final String senderId;
+  @JsonKey(name: 'user_id')
+  final String userId;
   @override
   @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-  final ReactionType reactionType;
+  final ReactionType kind;
 
   @override
   String toString() {
-    return 'Reaction(activityId: $activityId, reactionId: $reactionId, senderId: $senderId, reactionType: $reactionType)';
+    return 'Reaction(activityId: $activityId, reactionId: $reactionId, userId: $userId, kind: $kind)';
   }
 
   @override
@@ -189,16 +192,14 @@ class _$_Reaction implements _Reaction {
                 other.activityId == activityId) &&
             (identical(other.reactionId, reactionId) ||
                 other.reactionId == reactionId) &&
-            (identical(other.senderId, senderId) ||
-                other.senderId == senderId) &&
-            (identical(other.reactionType, reactionType) ||
-                other.reactionType == reactionType));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.kind, kind) || other.kind == kind));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, activityId, reactionId, senderId, reactionType);
+      Object.hash(runtimeType, activityId, reactionId, userId, kind);
 
   @JsonKey(ignore: true)
   @override
@@ -216,23 +217,26 @@ class _$_Reaction implements _Reaction {
 
 abstract class _Reaction implements Reaction {
   const factory _Reaction(
-      {final String activityId,
-      final String reactionId,
-      final String senderId,
+      {@JsonKey(name: 'activity_id') final String activityId,
+      @JsonKey(name: 'reaction_id') final String reactionId,
+      @JsonKey(name: 'user_id') final String userId,
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-      final ReactionType reactionType}) = _$_Reaction;
+      final ReactionType kind}) = _$_Reaction;
 
   factory _Reaction.fromJson(Map<String, dynamic> json) = _$_Reaction.fromJson;
 
   @override
+  @JsonKey(name: 'activity_id')
   String get activityId;
   @override
+  @JsonKey(name: 'reaction_id')
   String get reactionId;
   @override
-  String get senderId;
+  @JsonKey(name: 'user_id')
+  String get userId;
   @override
   @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
-  ReactionType get reactionType;
+  ReactionType get kind;
   @override
   @JsonKey(ignore: true)
   _$$_ReactionCopyWith<_$_Reaction> get copyWith =>
@@ -247,6 +251,7 @@ mixin _$ReactionType {
     required TResult Function() like,
     required TResult Function() dislike,
     required TResult Function() comment,
+    required TResult Function() bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -255,6 +260,7 @@ mixin _$ReactionType {
     TResult? Function()? like,
     TResult? Function()? dislike,
     TResult? Function()? comment,
+    TResult? Function()? bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -263,6 +269,7 @@ mixin _$ReactionType {
     TResult Function()? like,
     TResult Function()? dislike,
     TResult Function()? comment,
+    TResult Function()? bookmark,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -273,6 +280,7 @@ mixin _$ReactionType {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
+    required TResult Function(_ReactionTypeComment value) bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -281,6 +289,7 @@ mixin _$ReactionType {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
+    TResult? Function(_ReactionTypeComment value)? bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -289,6 +298,7 @@ mixin _$ReactionType {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
+    TResult Function(_ReactionTypeComment value)? bookmark,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -357,6 +367,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     required TResult Function() like,
     required TResult Function() dislike,
     required TResult Function() comment,
+    required TResult Function() bookmark,
   }) {
     return unknownReaction();
   }
@@ -368,6 +379,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     TResult? Function()? like,
     TResult? Function()? dislike,
     TResult? Function()? comment,
+    TResult? Function()? bookmark,
   }) {
     return unknownReaction?.call();
   }
@@ -379,6 +391,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     TResult Function()? like,
     TResult Function()? dislike,
     TResult Function()? comment,
+    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (unknownReaction != null) {
@@ -395,6 +408,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
+    required TResult Function(_ReactionTypeComment value) bookmark,
   }) {
     return unknownReaction(this);
   }
@@ -406,6 +420,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
+    TResult? Function(_ReactionTypeComment value)? bookmark,
   }) {
     return unknownReaction?.call(this);
   }
@@ -417,6 +432,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
+    TResult Function(_ReactionTypeComment value)? bookmark,
     required TResult orElse(),
   }) {
     if (unknownReaction != null) {
@@ -472,6 +488,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     required TResult Function() like,
     required TResult Function() dislike,
     required TResult Function() comment,
+    required TResult Function() bookmark,
   }) {
     return like();
   }
@@ -483,6 +500,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     TResult? Function()? like,
     TResult? Function()? dislike,
     TResult? Function()? comment,
+    TResult? Function()? bookmark,
   }) {
     return like?.call();
   }
@@ -494,6 +512,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     TResult Function()? like,
     TResult Function()? dislike,
     TResult Function()? comment,
+    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (like != null) {
@@ -510,6 +529,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
+    required TResult Function(_ReactionTypeComment value) bookmark,
   }) {
     return like(this);
   }
@@ -521,6 +541,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
+    TResult? Function(_ReactionTypeComment value)? bookmark,
   }) {
     return like?.call(this);
   }
@@ -532,6 +553,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
+    TResult Function(_ReactionTypeComment value)? bookmark,
     required TResult orElse(),
   }) {
     if (like != null) {
@@ -587,6 +609,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     required TResult Function() like,
     required TResult Function() dislike,
     required TResult Function() comment,
+    required TResult Function() bookmark,
   }) {
     return dislike();
   }
@@ -598,6 +621,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     TResult? Function()? like,
     TResult? Function()? dislike,
     TResult? Function()? comment,
+    TResult? Function()? bookmark,
   }) {
     return dislike?.call();
   }
@@ -609,6 +633,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     TResult Function()? like,
     TResult Function()? dislike,
     TResult Function()? comment,
+    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (dislike != null) {
@@ -625,6 +650,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
+    required TResult Function(_ReactionTypeComment value) bookmark,
   }) {
     return dislike(this);
   }
@@ -636,6 +662,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
+    TResult? Function(_ReactionTypeComment value)? bookmark,
   }) {
     return dislike?.call(this);
   }
@@ -647,6 +674,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
+    TResult Function(_ReactionTypeComment value)? bookmark,
     required TResult orElse(),
   }) {
     if (dislike != null) {
@@ -702,6 +730,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     required TResult Function() like,
     required TResult Function() dislike,
     required TResult Function() comment,
+    required TResult Function() bookmark,
   }) {
     return comment();
   }
@@ -713,6 +742,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult? Function()? like,
     TResult? Function()? dislike,
     TResult? Function()? comment,
+    TResult? Function()? bookmark,
   }) {
     return comment?.call();
   }
@@ -724,6 +754,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult Function()? like,
     TResult Function()? dislike,
     TResult Function()? comment,
+    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (comment != null) {
@@ -740,6 +771,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
+    required TResult Function(_ReactionTypeComment value) bookmark,
   }) {
     return comment(this);
   }
@@ -751,6 +783,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
+    TResult? Function(_ReactionTypeComment value)? bookmark,
   }) {
     return comment?.call(this);
   }
@@ -762,10 +795,132 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
+    TResult Function(_ReactionTypeComment value)? bookmark,
     required TResult orElse(),
   }) {
     if (comment != null) {
       return comment(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ReactionTypeComment implements ReactionType {
+  const factory _ReactionTypeComment() = _$_ReactionTypeComment;
+}
+
+/// @nodoc
+abstract class _$$_ReactionTypeCommentCopyWith<$Res> {
+  factory _$$_ReactionTypeCommentCopyWith(_$_ReactionTypeComment value,
+          $Res Function(_$_ReactionTypeComment) then) =
+      __$$_ReactionTypeCommentCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_ReactionTypeCommentCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeComment>
+    implements _$$_ReactionTypeCommentCopyWith<$Res> {
+  __$$_ReactionTypeCommentCopyWithImpl(_$_ReactionTypeComment _value,
+      $Res Function(_$_ReactionTypeComment) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_ReactionTypeComment implements _ReactionTypeComment {
+  const _$_ReactionTypeComment();
+
+  @override
+  String toString() {
+    return 'ReactionType.bookmark()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_ReactionTypeComment);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknownReaction,
+    required TResult Function() like,
+    required TResult Function() dislike,
+    required TResult Function() comment,
+    required TResult Function() bookmark,
+  }) {
+    return bookmark();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknownReaction,
+    TResult? Function()? like,
+    TResult? Function()? dislike,
+    TResult? Function()? comment,
+    TResult? Function()? bookmark,
+  }) {
+    return bookmark?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknownReaction,
+    TResult Function()? like,
+    TResult Function()? dislike,
+    TResult Function()? comment,
+    TResult Function()? bookmark,
+    required TResult orElse(),
+  }) {
+    if (bookmark != null) {
+      return bookmark();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ReactionTypeUnknownReaction value)
+        unknownReaction,
+    required TResult Function(_ReactionTypeLike value) like,
+    required TResult Function(_ReactionTypeDislike value) dislike,
+    required TResult Function(_ReactionTypeComment value) comment,
+    required TResult Function(_ReactionTypeComment value) bookmark,
+  }) {
+    return bookmark(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ReactionTypeUnknownReaction value)? unknownReaction,
+    TResult? Function(_ReactionTypeLike value)? like,
+    TResult? Function(_ReactionTypeDislike value)? dislike,
+    TResult? Function(_ReactionTypeComment value)? comment,
+    TResult? Function(_ReactionTypeComment value)? bookmark,
+  }) {
+    return bookmark?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ReactionTypeUnknownReaction value)? unknownReaction,
+    TResult Function(_ReactionTypeLike value)? like,
+    TResult Function(_ReactionTypeDislike value)? dislike,
+    TResult Function(_ReactionTypeComment value)? comment,
+    TResult Function(_ReactionTypeComment value)? bookmark,
+    required TResult orElse(),
+  }) {
+    if (bookmark != null) {
+      return bookmark(this);
     }
     return orElse();
   }

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/user/communities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -72,6 +73,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   final Set<RelationshipState> relationshipStates = <RelationshipState>{};
   Relationship? publisherRelationship;
   Profile? publisher;
+
+  bool _isBookmarking = false;
 
   @override
   void initState() {
@@ -269,6 +272,30 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     await router.pop();
   }
 
+  Future<void> onPostBookmarked() async {
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
+    final String? id = widget.activity.flMeta?.id;
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+
+    if (id == null || userController.currentUser == null) {
+      throw Exception('Invalid activity or user');
+    }
+
+    try {
+      _isBookmarking = true;
+      setStateIfMounted();
+
+      await communitiesController.bookmarkActivity(activityId: id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
+      );
+    } finally {
+      _isBookmarking = false;
+      setStateIfMounted();
+    }
+  }
+
   Future<void> onPostEdited(BuildContext context) async {
     final AppRouter router = ref.read(appRouterProvider);
 
@@ -349,6 +376,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             publisher: publisher,
             isShortformPost: !widget.isFullscreen,
             onImageTap: onInternalMediaTap,
+            onBookmark: onPostBookmarked,
+            isBusy: _isBookmarking,
             feed: widget.targetFeed?.feed,
           ),
         ],

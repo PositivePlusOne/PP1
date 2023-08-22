@@ -32,7 +32,7 @@ class PositiveComment extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     // Load the publisher.
-    final String publisherKey = comment.senderId;
+    final String publisherKey = comment.userId;
     final Profile? publisherProfile = cacheController.getFromCache(publisherKey);
 
     return IgnorePointer(
@@ -58,7 +58,7 @@ class PositiveComment extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
                 child: Text(
-                  comment.content,
+                  comment.data,
                   textAlign: TextAlign.left,
                   style: typography.styleBody,
                 ),

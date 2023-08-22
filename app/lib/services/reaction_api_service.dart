@@ -85,6 +85,7 @@ class ReactionApiService {
 
   FutureOr<EndpointResponse> listReactionsForActivity({
     required String activityId,
+    String kind = 'like',
     String cursor = '',
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
@@ -92,6 +93,7 @@ class ReactionApiService {
       pagination: Pagination(cursor: cursor),
       parameters: {
         'activityId': activityId,
+        'kind': kind,
       },
     );
   }

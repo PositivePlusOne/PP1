@@ -36,7 +36,9 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
     this.feed,
     this.isShortformPost = true,
     this.sidePadding = kPaddingSmall,
+    this.isBusy = false,
     this.onImageTap,
+    this.onBookmark,
     super.key,
   });
 
@@ -47,7 +49,10 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   final bool isShortformPost;
   final double sidePadding;
 
+  final bool isBusy;
+
   final void Function(Media media)? onImageTap;
+  final Future<void> Function()? onBookmark;
 
   @override
   ConsumerState<PositivePostLayoutWidget> createState() => _PositivePostLayoutWidgetState();
@@ -58,12 +63,10 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
 
   late double sidePadding;
-  late bool isBusy;
 
   @override
   void initState() {
     super.initState();
-    isBusy = false;
     sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
   }
 
@@ -98,7 +101,6 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         event: () => _eventBuilder(context, ref),
         clip: () => _clipBuilder(context, ref),
         repost: () => const SizedBox.shrink(),
-        bookmark: () => const SizedBox.shrink(),
       ),
     );
   }
@@ -439,21 +441,21 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
         likes: 0,
-        likeEnabled: !isBusy,
+        likeEnabled: true,
         onLike: () {},
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: !isBusy,
+        shareEnabled: true,
         onShare: onShareSelected,
 
         //TODO(S): comment enabled and on comment functionality here
         comments: 0,
-        commentsEnabled: !isBusy,
+        commentsEnabled: true,
         onComment: () {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarked: !isBusy,
-        onBookmark: () {},
+        bookmarked: !widget.isBusy,
+        onBookmark: widget.onBookmark,
       ),
     );
   }

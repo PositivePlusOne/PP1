@@ -392,6 +392,7 @@ export interface ActivityEnrichmentConfigurationJSON {
   isSensitive?: boolean;
   publishLocation?: string;
   mentions?: MentionJSON[];
+  reactionCounts?: Record<string, number>;
 }
 
 /**
@@ -410,6 +411,7 @@ export class ActivityEnrichmentConfiguration {
   isSensitive: boolean;
   publishLocation: string;
   mentions: Mention[];
+  reactionCounts: Record<string, number>;
 
   constructor(json: ActivityEnrichmentConfigurationJSON) {
     this.title = json.title || '';
@@ -417,5 +419,6 @@ export class ActivityEnrichmentConfiguration {
     this.isSensitive = json.isSensitive || false;
     this.publishLocation = json.publishLocation || '';
     this.mentions = json.mentions ? json.mentions.map((m) => new Mention(m)) : [];
+    this.reactionCounts = json.reactionCounts || {};
   }
 }
