@@ -1,5 +1,8 @@
 // Dart imports:
 
+// Dart imports:
+import 'dart:math';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -11,6 +14,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 
 class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
@@ -33,7 +37,11 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
   final DesignColorsModel colours;
 
   static double calculateHeight(MediaQueryData mediaQuery) {
-    return kBottomNavigationBarHeight + (kPaddingMedium * 2) + mediaQuery.padding.bottom + kBottomNavigationBarBorderWidth;
+    return kBottomNavigationBarHeight + (kPaddingMedium * 2) + kBottomNavigationBarBorderWidth + bottomPadding(mediaQuery);
+  }
+
+  static double bottomPadding(MediaQueryData mediaQuery) {
+    return max(mediaQuery.padding.bottom, mediaQuery.viewInsets.bottom);
   }
 
   @override
@@ -60,7 +68,7 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
               top: kPaddingMedium,
               left: kPaddingSmall,
               right: kPaddingSmall,
-              bottom: kPaddingMedium + mediaQuery.padding.bottom,
+              bottom: kPaddingMedium + bottomPadding(mediaQuery),
               child: Container(
                 decoration: BoxDecoration(
                   color: colours.white,
@@ -83,13 +91,17 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(kPaddingSmall),
-                    child: Icon(
-                      UniconsLine.message,
-                      color: colours.white,
-                      size: kIconSmall,
+                    child: PositiveTapBehaviour(
+                      isEnabled: !isBusy,
+                      onTap: (_) => onPostCommentRequested(commentTextController.text),
+                      child: Icon(
+                        UniconsLine.message,
+                        color: colours.white,
+                        size: kIconSmall,
+                      ),
                     ),
                   ),
-                  isEnabled: isBusy,
+                  isEnabled: !isBusy,
                 ),
               ),
             ),

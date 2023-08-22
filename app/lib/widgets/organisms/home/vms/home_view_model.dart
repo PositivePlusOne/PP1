@@ -6,7 +6,6 @@ import 'dart:async';
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -34,8 +33,6 @@ class HomeViewModelState with _$HomeViewModelState {
 
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
-  final RefreshController refreshController = RefreshController(initialRefresh: false);
-
   @override
   HomeViewModelState build() {
     return HomeViewModelState.initialState();
@@ -56,7 +53,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     if (profileController.currentProfileId == null) {
       logger.d('onRefresh() - profileController.currentProfileId is null');
-      refreshController.refreshCompleted();
       return;
     }
 
@@ -64,6 +60,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     try {
       await Future.wait([
+        onRefresh(),
         profileController.updatePhoneNumber(),
         profileController.updateEmailAddress(),
         profileController.updateFirebaseMessagingToken(),
@@ -80,15 +77,12 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     if (profileController.currentProfileId == null) {
       logger.d('onRefresh() - profileController.currentProfileId is null');
-      refreshController.refreshCompleted();
       return;
     }
 
-    logger.d('onRefresh()');
-    state = state.copyWith(isRefreshing: true);
-
     try {
-      await refreshController.requestRefresh(needCallback: false);
+      logger.d('onRefresh()');
+      state = state.copyWith(isRefreshing: true);
       final String cacheId = 'feeds:timeline-${profileController.currentProfileId}';
       final PositiveFeedState? feedState = cacheController.getFromCache<PositiveFeedState>(cacheId);
 

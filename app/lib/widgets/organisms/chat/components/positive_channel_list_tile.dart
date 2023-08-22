@@ -36,7 +36,7 @@ class PositiveChannelListTile extends ConsumerWidget {
 
   final Channel channel;
   final bool isEnabled;
-  final VoidCallback? onTap;
+  final void Function(BuildContext context)? onTap;
 
   final bool? isSelected;
   final bool showProfileTagline;

@@ -278,7 +278,12 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+      if (userController.currentUser == null) {
+        await userController.registerEmailPasswordProvider(state.emailAddress, state.password);
+      } else {
+        await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+      }
+
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
@@ -352,7 +357,7 @@ class AccountFormController extends _$AccountFormController {
     return state.phoneNumber.buildPhoneNumber(state.country);
   }
 
-  Future<void> onPhoneNumberConfirmed() async {
+  Future<void> onPhoneNumberConfirmed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);

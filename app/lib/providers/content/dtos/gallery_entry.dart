@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
@@ -10,6 +11,7 @@ import 'package:mime/mime.dart';
 // Project imports:
 import 'package:app/constants/compression_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -43,14 +45,14 @@ class GalleryEntry {
     }
   }
 
-  Future<Media> createMedia() async {
+  Future<Media> createMedia({AwesomeFilter? filter}) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('createMedia() checking if uploaded');
 
     final bool isUploaded = await hasBeenUploaded();
     if (!isUploaded) {
       logger.i('createMedia() uploading');
-      await upload();
+      await upload(filter: filter);
     }
 
     logger.i('createMedia() creating media');
@@ -62,7 +64,7 @@ class GalleryEntry {
     );
   }
 
-  Future<void> upload() async {
+  Future<void> upload({AwesomeFilter? filter}) async {
     final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
 
@@ -91,14 +93,18 @@ class GalleryEntry {
       logger.d('upload() mimeType.startsWith(image/)');
       data = await FlutterImageCompress.compressWithList(
         data,
-        autoCorrectionAngle: true,
         keepExif: kImageCompressKeepExif,
         minHeight: kImageCompressMaxHeight,
         minWidth: kImageCompressMaxWidth,
         quality: kImageCompressMaxQuality,
         format: kImageCompressFormat,
-        rotate: kImageCompressRotation,
       );
+
+      // Apply filter if not none
+      if (filter != null && filter != AwesomeFilter.None) {
+        logger.d('upload() filter != null && filter != AwesomeFilter.none');
+        data = applyColorMatrix(data, filter.matrix);
+      }
     }
 
     storageUploadTask = reference?.putData(data, SettableMetadata(contentType: mimeType));

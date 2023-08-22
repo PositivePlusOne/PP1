@@ -36,7 +36,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
 
   final bool isEnabled;
 
-  final FutureOr<void> Function() onTap;
+  final FutureOr<void> Function(BuildContext context) onTap;
 
   final Widget? suffixIcon;
 
@@ -45,7 +45,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   static const double kMinimumTextColumnHeight = 40.0;
 
   factory PositiveFakeTextFieldButton.profile({
-    required onTap,
+    required void Function(BuildContext context) onTap,
     labelText = ' ',
     hintText = ' ',
     tintColor,

@@ -5,6 +5,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -241,7 +244,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     return;
   }
 
-  Future<void> onDisplayName() async {
+  Future<void> onDisplayName(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Edit Settings View Model] - Navigating to Display name view');
 
@@ -256,24 +259,24 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     router.push(const ProfileAboutRoute());
   }
 
-  void onHIVStatusUpdate() async {
+  void onHIVStatusUpdate(BuildContext context) async {
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     ref.read(appRouterProvider).push(const ProfileHivStatusRoute());
   }
 
-  void onGenderUpdate() {
+  void onGenderUpdate(BuildContext context) {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileGenderSelectRoute());
   }
 
-  void onYouInterestsUpdate() {
+  void onYouInterestsUpdate(BuildContext context) {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileInterestsEntryRoute());
   }
 
-  void onLocationUpdate() {
+  void onLocationUpdate(BuildContext context) {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileLocationRoute());

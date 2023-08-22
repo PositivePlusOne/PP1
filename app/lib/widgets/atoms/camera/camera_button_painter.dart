@@ -25,7 +25,7 @@ class CameraButton extends StatelessWidget {
   });
 
   final bool active;
-  final VoidCallback onTap;
+  final void Function(BuildContext context) onTap;
   final double width;
   final double height;
 
@@ -108,7 +108,7 @@ class CameraButtonPosition extends ConsumerWidget {
   final String caption;
   final bool displayHintText;
   final bool active;
-  final VoidCallback onTap;
+  final void Function(BuildContext context) onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

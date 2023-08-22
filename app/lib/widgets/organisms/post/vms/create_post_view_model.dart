@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_public_notifier_properties
 // Dart imports:
 
+// Dart imports:
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -21,7 +23,6 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/helpers/filter_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
@@ -149,22 +150,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(isBusy: true);
 
     try {
-      // Update gallery entries with share flag and apply filters
-      final List<Future> filterFutures = [];
-      for (final GalleryEntry entry in state.galleryEntries) {
+      final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
+      for (final GalleryEntry entry in galleryEntries) {
         entry.saveToGallery = state.saveToGallery;
-        filterFutures.addAll(state.galleryEntries.map((entry) async {
-          final newData = await FilterHelpers.applyFilter(data: entry.data!, filter: state.currentFilter);
-          entry.data = newData;
-        }).toList());
       }
 
-      // Wait a tiny bit to allow the UI to update
-      // The next operation is expensive and blocks the UI
-      await Future.wait(filterFutures);
-
       // Upload gallery entries
-      final List<Media> media = await Future.wait(state.galleryEntries.map((e) => e.createMedia()));
+      final List<Media> media = await Future.wait(galleryEntries.map((e) => e.createMedia(filter: state.currentFilter)));
 
       if (!state.isEditing) {
         activity = await activityController.postActivity(
@@ -280,11 +272,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
   }
 
-  void onUpdateSaveToGallery() {
+  void onUpdateSaveToGallery(BuildContext context) {
     state = state.copyWith(saveToGallery: !state.saveToGallery);
   }
 
-  void onUpdateAllowSharing() {
+  void onUpdateAllowSharing(BuildContext context) {
     state = state.copyWith(allowSharing: !state.allowSharing);
   }
 
@@ -387,10 +379,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           isBusy: false,
           galleryEntries: entries,
           editingGalleryEntry: entries.firstOrNull,
-          currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
+          currentCreatePostPage: CreatePostCurrentPage.createPostMultiImage,
           currentPostType: PostType.multiImage,
           activeButton: PositivePostNavigationActiveButton.flex,
-          activeButtonFlexText: localisations.shared_actions_next,
+          activeButtonFlexText: localisations.page_create_post_create,
         );
       } else {
         state = state.copyWith(
@@ -411,7 +403,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    final AppLocalizations localizations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
 
     if (state.isEditing) {
       router.removeLast();
@@ -422,21 +413,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         logger.i("Pop Create Post page, push Home page");
         router.removeWhere((route) => true);
         router.push(const HomeRoute());
-        break;
-      case CreatePostCurrentPage.editPhoto:
-        final bool isMultiImage = state.galleryEntries.length > 1;
-        if (isMultiImage) {
-          state = state.copyWith(
-            currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
-            activeButtonFlexText: localizations.shared_actions_next,
-          );
-        } else {
-          state = state.copyWith(
-            currentCreatePostPage: CreatePostCurrentPage.camera,
-            currentPostType: PostType.text,
-            activeButton: PositivePostNavigationActiveButton.post,
-          );
-        }
         break;
       default:
         state = state.copyWith(
@@ -460,18 +436,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.camera:
         throw Exception("Cannot press flex button on camera page");
-      case CreatePostCurrentPage.galleryPreview:
+      case CreatePostCurrentPage.editPhoto:
         state = state.copyWith(
           currentCreatePostPage: CreatePostCurrentPage.createPostImage,
           activeButtonFlexText: localisations.page_create_post_create,
-          editingGalleryEntry: null,
-        );
-        break;
-      case CreatePostCurrentPage.editPhoto:
-        final bool isMultiImage = state.galleryEntries.length > 1;
-        state = state.copyWith(
-          currentCreatePostPage: isMultiImage ? CreatePostCurrentPage.galleryPreview : CreatePostCurrentPage.createPostImage,
-          activeButtonFlexText: isMultiImage ? localisations.shared_actions_next : localisations.page_create_post_create,
         );
         break;
       case CreatePostCurrentPage.createPostText:
@@ -499,28 +467,5 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       currentCreatePostPage: CreatePostCurrentPage.editPhoto,
       activeButtonFlexText: localisations.shared_actions_done,
     );
-  }
-
-  Future<void> onEditImagePressed(BuildContext context) async {
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final Logger logger = ref.read(loggerProvider);
-    if (state.galleryEntries.isEmpty) {
-      logger.e("Cannot edit image, no images in gallery");
-      return;
-    }
-
-    if (state.galleryEntries.length == 1) {
-      state = state.copyWith(
-        currentCreatePostPage: CreatePostCurrentPage.editPhoto,
-        activeButtonFlexText: localisations.shared_actions_done,
-        editingGalleryEntry: state.galleryEntries.firstOrNull,
-      );
-    } else {
-      state = state.copyWith(
-        currentCreatePostPage: CreatePostCurrentPage.galleryPreview,
-        activeButtonFlexText: localisations.shared_actions_next,
-        editingGalleryEntry: state.galleryEntries.firstOrNull,
-      );
-    }
   }
 }

@@ -33,7 +33,7 @@ class PositiveSwitch extends ConsumerWidget {
   });
 
   final bool value;
-  final FutureOr<void> Function()? onTapped;
+  final FutureOr<void> Function(BuildContext context)? onTapped;
 
   final bool isEnabled;
   final bool ignoring;
@@ -63,7 +63,7 @@ class PositiveSwitch extends ConsumerWidget {
     return IgnorePointer(
       ignoring: ignoring,
       child: PositiveTapBehaviour(
-        onTap: () => onTapped?.call(),
+        onTap: (context) => onTapped?.call(context),
         isEnabled: isEnabled,
         child: Container(
           height: kSwitchHeight,

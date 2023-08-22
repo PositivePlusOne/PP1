@@ -1,14 +1,45 @@
 // Dart imports:
 
+// Dart imports:
+import 'dart:typed_data';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:image/image.dart' as img;
 import 'package:universal_platform/universal_platform.dart';
 
-// Project imports:
+Uint8List applyColorMatrix(Uint8List imageData, List<double> matrix) {
+  final img.Image? image = img.decodeImage(imageData);
+  if (image == null) {
+    return Uint8List.fromList(imageData);
+  }
+
+  for (int y = 0; y < image.height; y++) {
+    for (int x = 0; x < image.width; x++) {
+      final pixel = image.getPixel(x, y);
+      final r = pixel.r;
+      final g = pixel.g;
+      final b = pixel.b;
+      final a = pixel.a;
+
+      // Apply the matrix to the pixel.
+      final rNew = (matrix[0] * r + matrix[1] * g + matrix[2] * b + matrix[3] * a + matrix[4]).clamp(0, 255).round();
+      final gNew = (matrix[5] * r + matrix[6] * g + matrix[7] * b + matrix[8] * a + matrix[9]).clamp(0, 255).round();
+      final bNew = (matrix[10] * r + matrix[11] * g + matrix[12] * b + matrix[13] * a + matrix[14]).clamp(0, 255).round();
+      final aNew = (matrix[15] * r + matrix[16] * g + matrix[17] * b + matrix[18] * a + matrix[19]).clamp(0, 255).round();
+
+      // Set the new pixel value.
+      image.setPixelRgba(x, y, rNew, gNew, bNew, aNew);
+    }
+  }
+
+  final encodedImage = img.encodeJpg(image);
+  return Uint8List.fromList(encodedImage);
+}
 
 Offset rotateResizeImage(
   Offset offset,

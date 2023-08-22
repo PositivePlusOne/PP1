@@ -77,7 +77,7 @@ class AccountDetailsPage extends HookConsumerWidget {
             PositiveTransparentSheet(
               children: <Widget>[
                 PositiveFakeTextFieldButton(
-                  onTap: () {},
+                  onTap: (_) {},
                   backgroundColor: Colors.transparent,
                   hintText: localisations.shared_name,
                   labelText: name,

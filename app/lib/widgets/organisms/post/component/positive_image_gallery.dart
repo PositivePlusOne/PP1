@@ -98,7 +98,7 @@ class PositiveImageGallery extends ConsumerWidget {
               itemBuilder: (BuildContext context, int index) {
                 final GalleryEntry galleryEntry = galleryEntries[index];
                 return PositiveTapBehaviour(
-                  onTap: () => onGalleryEntrySelected?.call(galleryEntry),
+                  onTap: (_) => onGalleryEntrySelected?.call(galleryEntry),
                   isEnabled: onGalleryEntrySelected != null,
                   child: AnimatedOpacity(
                     duration: kAnimationDurationFast,

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/services/reaction_api_service.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
@@ -41,7 +39,6 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveCommentPaginationBehaviour({
     required this.activityId,
     required this.feed,
-    required this.refreshController,
     this.commentMode,
     this.onPageLoaded,
     this.windowSize = 10,
@@ -54,7 +51,6 @@ class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   final ActivitySecurityConfigurationMode? commentMode;
 
   final int windowSize;
-  final RefreshController refreshController;
 
   final Function(Map<String, dynamic>)? onPageLoaded;
 
@@ -78,18 +74,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     super.initState();
     setupListeners();
     setupCommentsState();
-    testReactions();
-  }
-
-  Future<void> testReactions() async {
-    final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
-    final EndpointResponse endpointResponse2 = await reactionApiService.listReactionsForActivity(
-      activityId: widget.activityId,
-      kind: 'bookmark',
-      cursor: commentState.currentPaginationKey,
-    );
-
-    final Map<String, dynamic> data2 = json.decodeSafe(endpointResponse2.data);
   }
 
   @override
@@ -184,11 +168,9 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
 
       appendCommentPage(data, next);
       widget.onPageLoaded?.call(data);
-      widget.refreshController.refreshCompleted();
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       commentState.pagingController.error = ex;
-      widget.refreshController.refreshFailed();
     } finally {
       saveCommentsState();
     }
@@ -340,11 +322,23 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
                         ),
                       ],
                     ),
-                  )
+                  ),
               ],
             ),
           ),
         ),
+        if (commentState.pagingController.itemList == null || commentState.pagingController.itemList!.isEmpty)
+          Container(
+            decoration: BoxDecoration(color: colours.white),
+            child: Padding(
+              padding: const EdgeInsets.all(kPaddingSmallMedium),
+              child: Text(
+                "Be the first to leave a comment",
+                textAlign: TextAlign.left,
+                style: typography.styleHeroMedium,
+              ),
+            ),
+          ),
         //? comments listed
         PagedSliverList.separated(
           shrinkWrapFirstPageIndicators: true,
@@ -356,26 +350,28 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             itemBuilder: (_, comment, index) {
               return PositiveComment(comment: comment, isFirst: index == 0);
             },
+            firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
+            newPageErrorIndicatorBuilder: (context) => const SizedBox(),
+            noItemsFoundIndicatorBuilder: (context) => const SizedBox(),
+            noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
             firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-            newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-          ),
-        ),
-        //? Load additional comments?
-        const SizedBox(
-          height: kBorderThicknessMedium,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: colours.white,
-            borderRadius: const BorderRadius.vertical(
-              bottom: Radius.circular(kBorderRadiusLarge),
-            ),
-          ),
-          height: kCommentFooter,
-          alignment: Alignment.center,
-          child: const PositiveLoadingIndicator(
-            circleRadius: 5,
-            width: 40,
+            newPageProgressIndicatorBuilder: (context) {
+              return Container(
+                padding: const EdgeInsets.only(top: kBorderThicknessMedium),
+                decoration: BoxDecoration(
+                  color: colours.white,
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(kBorderRadiusLarge),
+                  ),
+                ),
+                height: kCommentFooter,
+                alignment: Alignment.center,
+                child: const PositiveLoadingIndicator(
+                  circleRadius: 5,
+                  width: 40,
+                ),
+              );
+            },
           ),
         ),
       ],

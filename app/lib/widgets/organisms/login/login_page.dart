@@ -154,7 +154,7 @@ class LoginPage extends ConsumerWidget {
           textInputType: TextInputType.emailAddress,
           textInputAction: TextInputAction.go,
           onTextChanged: viewModel.updateEmail,
-          onTextSubmitted: (_) => viewModel.onEmailSubmitted(),
+          onTextSubmitted: (_) => viewModel.onEmailSubmitted(context),
           tintColor: tintColor,
           suffixIcon: suffixIcon,
           isEnabled: !state.isBusy,

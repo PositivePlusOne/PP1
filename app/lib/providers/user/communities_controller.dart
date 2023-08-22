@@ -1,10 +1,10 @@
 // ignore_for_file: avoid_public_notifier_properties
+
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/services/reaction_api_service.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,6 +19,7 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/relationship_search_api_service.dart';
 import '../../services/third_party.dart';
 

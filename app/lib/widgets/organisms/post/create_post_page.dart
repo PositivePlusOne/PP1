@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
-import 'package:app/widgets/organisms/post/component/positive_image_gallery.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
@@ -77,21 +76,13 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     },
                     leftActionWidget: CameraFloatingButton.postWithoutImage(
                       active: true,
-                      onTap: () => viewModel.showCreateTextPost(context),
+                      onTap: (context) => viewModel.showCreateTextPost(context),
                     ),
-                    onTapClose: viewModel.onWillPopScope,
-                    onTapAddImage: () => viewModel.onMultiImagePicker(context),
+                    onTapClose: (_) => viewModel.onWillPopScope(),
+                    onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
                     //! Flash controlls in FlutterAwesome do not seem to be working
                     // enableFlashControlls: true,
                   ),
-                ),
-              ],
-              if (state.currentCreatePostPage == CreatePostCurrentPage.galleryPreview) ...[
-                PositiveImageGallery(
-                  galleryEntries: state.galleryEntries,
-                  selectedGalleryEntry: state.editingGalleryEntry,
-                  onBackButtonPressed: () => viewModel.onWillPopScope(),
-                  onGalleryEntrySelected: (entry) => viewModel.onGalleryEntrySelected(context, entry),
                 ),
               ],
               if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
@@ -126,7 +117,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     postType: state.currentPostType,
                     captionController: viewModel.captionController,
                     altTextController: viewModel.altTextController,
-                    onTagsPressed: () => viewModel.onTagsPressed(context),
+                    onTagsPressed: (context) => viewModel.onTagsPressed(context),
                     onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
                     onUpdateAllowComments: viewModel.onUpdateAllowComments,
                     onUpdateSaveToGallery: state.isEditing ? null : viewModel.onUpdateSaveToGallery,
@@ -134,7 +125,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     valueAllowSharing: state.allowSharing,
                     valueSaveToGallery: state.saveToGallery,
                     galleryEntries: state.galleryEntries,
-                    onEditImagePressed: () => viewModel.onEditImagePressed(context),
                     tags: state.tags,
                   ),
                 ),
@@ -148,10 +138,10 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 left: kPaddingSmall,
                 right: kPaddingSmall,
                 child: PositivePostNavigationBar(
-                  onTapPost: () {},
-                  onTapClip: () {},
-                  onTapEvent: () {},
-                  onTapFlex: () => viewModel.onFlexButtonPressed(context),
+                  onTapPost: (_) {},
+                  onTapClip: (_) {},
+                  onTapEvent: (_) {},
+                  onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
                   activeButton: state.activeButton,
                   flexCaption: state.activeButtonFlexText,
                   isEnabled: viewModel.isNavigationEnabled && !state.isBusy,

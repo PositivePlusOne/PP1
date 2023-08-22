@@ -29,13 +29,13 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     super.key,
   });
 
-  final VoidCallback onTapPost;
-  final VoidCallback onTapClip;
-  final VoidCallback onTapEvent;
+  final void Function(BuildContext context) onTapPost;
+  final void Function(BuildContext context) onTapClip;
+  final void Function(BuildContext context) onTapEvent;
 
   final bool isEnabled;
 
-  final VoidCallback onTapFlex;
+  final void Function(BuildContext context) onTapFlex;
   final PositivePostNavigationActiveButton activeButton;
   final String flexCaption;
 
@@ -73,7 +73,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
           backgroundColour: colors.purple,
           textColour: activeButton == PositivePostNavigationActiveButton.post ? colors.white : colors.purple,
           caption: localizations.page_home_post_post,
-          onTap: activeButton == PositivePostNavigationActiveButton.post ? () {} : onTapPost,
+          onTap: activeButton == PositivePostNavigationActiveButton.post ? (_) {} : onTapPost,
           width: buttonWidth,
           isEnabled: isEnabled,
         );
@@ -84,7 +84,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       backgroundColour: colors.yellow,
       textColour: activeButton == PositivePostNavigationActiveButton.clip ? colors.white : colors.white,
       caption: localizations.page_home_post_clip,
-      onTap: activeButton == PositivePostNavigationActiveButton.clip ? () {} : onTapClip,
+      onTap: activeButton == PositivePostNavigationActiveButton.clip ? (_) {} : onTapClip,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
       isEnabled: isEnabled,
     );
@@ -94,7 +94,7 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       backgroundColour: colors.teal,
       textColour: activeButton == PositivePostNavigationActiveButton.event ? colors.white : colors.white,
       caption: localizations.page_home_post_event,
-      onTap: activeButton == PositivePostNavigationActiveButton.event ? () {} : onTapEvent,
+      onTap: activeButton == PositivePostNavigationActiveButton.event ? (_) {} : onTapEvent,
       width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
       isEnabled: isEnabled,
     );
@@ -148,7 +148,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
   final Color backgroundColour;
   final Color textColour;
   final String caption;
-  final VoidCallback onTap;
+  final void Function(BuildContext context) onTap;
   final double width;
   final bool isEnabled;
 

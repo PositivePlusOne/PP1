@@ -81,7 +81,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
 
   void onFocusChanged() {}
 
-  void onResetRequested() {
+  void onResetRequested(BuildContext context) {
     if (!mounted) {
       return;
     }

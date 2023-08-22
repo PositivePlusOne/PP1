@@ -263,7 +263,7 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(name: value.trim());
   }
 
-  void onNameVisibilityToggleRequested() {
+  void onNameVisibilityToggleRequested(BuildContext context) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling name visibility');
 
@@ -330,7 +330,7 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  Future<void> onDisplayNameConfirmed(String thanksDescription) async {
+  Future<void> onDisplayNameConfirmed(BuildContext context, String thanksDescription) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -394,7 +394,7 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(birthday: value.toIso8601String());
   }
 
-  void onBirthdayVisibilityToggleRequested() {
+  void onBirthdayVisibilityToggleRequested(BuildContext context) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling birthday visibility');
 
@@ -472,7 +472,7 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(interests: interests);
   }
 
-  void onInterestsVisibilityToggleRequested() {
+  void onInterestsVisibilityToggleRequested(BuildContext context) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling interests visibility');
 
@@ -530,7 +530,7 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
-  void onHivStatusVisibilityToggleRequested() {
+  void onHivStatusVisibilityToggleRequested(BuildContext context) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling hiv status visibility');
 
@@ -612,7 +612,7 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  void onGenderVisibilityToggleRequested() {
+  void onGenderVisibilityToggleRequested(BuildContext context) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling genders visibility');
 
@@ -668,7 +668,7 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(hasFailedLocationSearch: hasFailed);
   }
 
-  void onLocationVisibilityToggleRequested() {
+  void onLocationVisibilityToggleRequested(BuildContext context) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Toggling location visibility');
 
@@ -695,7 +695,7 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
-  Future<void> onLocationSearchQuerySubmitted() async {
+  Future<void> onLocationSearchQuerySubmitted(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final LocationController locationController = ref.read(locationControllerProvider.notifier);
     final BuildContext context = ref.read(appRouterProvider).navigatorKey.currentContext!;

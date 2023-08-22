@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/user/communities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -28,6 +27,7 @@ import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
+import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
@@ -272,7 +272,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     await router.pop();
   }
 
-  Future<void> onPostBookmarked() async {
+  Future<void> onPostBookmarked(BuildContext context) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
     final String? id = widget.activity.flMeta?.id;
@@ -322,7 +322,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     );
   }
 
-  Future<void> onInternalHeaderTap() async {
+  Future<void> onInternalHeaderTap(BuildContext context) async {
     if (widget.onHeaderTapped != null) {
       widget.onHeaderTapped!();
       return;

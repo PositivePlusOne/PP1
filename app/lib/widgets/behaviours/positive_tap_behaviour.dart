@@ -16,7 +16,7 @@ class PositiveTapBehaviour extends StatefulWidget {
   });
 
   final Widget child;
-  final FutureOr<void> Function()? onTap;
+  final FutureOr<void> Function(BuildContext context)? onTap;
   final Duration animationDuration;
 
   final bool isEnabled;
@@ -60,7 +60,7 @@ class PositiveTapBehaviourState extends State<PositiveTapBehaviour> {
         onTapDown: _onTapDown,
         onTapUp: _onTapUp,
         onTapCancel: _onTapCancel,
-        onTap: widget.onTap,
+        onTap: () => widget.onTap?.call(context),
         child: AnimatedOpacity(
           opacity: opacity,
           duration: widget.animationDuration,

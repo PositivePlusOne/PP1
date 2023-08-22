@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -47,7 +46,6 @@ class PostViewModelState with _$PostViewModelState {
 @riverpod
 class PostViewModel extends _$PostViewModel {
   final TextEditingController commentTextController = TextEditingController();
-  final RefreshController refreshController = RefreshController(initialRefresh: false);
 
   @override
   PostViewModelState build(String activityId, TargetFeed feed) {
@@ -76,8 +74,9 @@ class PostViewModel extends _$PostViewModel {
     final Logger logger = ref.read(loggerProvider);
     final CommentApiService commentApiService = await ref.read(commentApiServiceProvider.future);
     final EventBus eventBus = ref.read(eventBusProvider);
+    final String trimmedString = state.currentCommentText.trim();
 
-    if (state.currentCommentText.isEmpty) {
+    if (trimmedString.isEmpty) {
       logger.e('Comment text is empty');
       return;
     }
@@ -88,7 +87,7 @@ class PostViewModel extends _$PostViewModel {
       logger.i('Posting comment');
       final Comment comment = await commentApiService.postComment(
         activityId: state.activityId,
-        content: state.currentCommentText,
+        content: trimmedString,
       );
 
       eventBus.fire(CommentCreatedEvent(activityId: activityId, comment: comment));
@@ -105,7 +104,6 @@ class PostViewModel extends _$PostViewModel {
 
     if (profileController.currentProfileId == null) {
       logger.d('onRefresh() - profileController.currentProfileId is null');
-      refreshController.refreshCompleted();
       return;
     }
 
@@ -113,7 +111,6 @@ class PostViewModel extends _$PostViewModel {
     state = state.copyWith(isRefreshing: true);
 
     try {
-      await refreshController.requestRefresh(needCallback: false);
       final String cacheId = 'comments:${state.activityId}';
       final PositiveCommentsState? commentsState = cacheController.getFromCache<PositiveCommentsState>(cacheId);
 

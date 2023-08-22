@@ -107,7 +107,7 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
     final String id = item.flMeta?.id ?? '';
 
     return PositiveTapBehaviour(
-      onTap: () => appRouter.push(GuidanceDirectoryEntryRoute(guidanceEntryId: id)),
+      onTap: (_) => appRouter.push(GuidanceDirectoryEntryRoute(guidanceEntryId: id)),
       isEnabled: !guidanceControllerState.isBusy,
       child: Container(
         padding: const EdgeInsets.all(kPaddingMedium),

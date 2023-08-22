@@ -97,7 +97,7 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
     currentValue = widget.initialValue;
   }
 
-  Future<void> onWidgetSelected() async {
+  Future<void> onWidgetSelected(BuildContext context) async {
     final T? value = await PositiveTextFieldDropdown.showDropdownDialog<T>(
       context: context,
       values: widget.values as List<T>,

@@ -95,7 +95,7 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: controller.onPhoneNumberConfirmed,
+          onTapped: () => controller.onPhoneNumberConfirmed(context),
           isDisabled: !controller.isPhoneValid || state.isBusy,
           label: localizations.shared_actions_continue,
         ),
