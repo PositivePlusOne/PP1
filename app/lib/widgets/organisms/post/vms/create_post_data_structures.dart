@@ -56,7 +56,6 @@ enum PostType {
       event: () => PostType.clip,
       clip: () => PostType.event,
       repost: () => PostType.repost,
-      bookmark: () => PostType.error,
     );
   }
 }

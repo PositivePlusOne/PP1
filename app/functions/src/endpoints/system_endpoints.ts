@@ -139,7 +139,7 @@ export namespace SystemEndpoints {
 
     // We should check here the integrity of the user's feeds.
     // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
-    const feedsClient = await FeedService.getFeedsClient();
+    const feedsClient = FeedService.getFeedsClient();
     await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
 
     return buildEndpointResponse(context, {

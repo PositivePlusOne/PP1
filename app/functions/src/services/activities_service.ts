@@ -136,15 +136,17 @@ export namespace ActivitiesService {
       });
     }
 
+    const feedClient = FeedService.getFeedsUserClient(userID);
+    const feed = feedClient.feed(feedName, userID);
+
     const getStreamActivity: NewActivity<DefaultGenerics> = {
-      actor: userID,
+      actor: feedClient.currentUser!,
       verb: ActivityActionVerb.Post,
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
       to: targets,
     };
-
-    const feed = (await FeedService.getFeedsClient()).feed(feedName, userID);
+    
     await feed.addActivity(getStreamActivity);
 
     const activityResponse = await DataService.updateDocument({
@@ -169,7 +171,7 @@ export namespace ActivitiesService {
       actorId,
     });
 
-    const feed = (await FeedService.getFeedsClient()).feed(feedName, actorId);
+    const feed = FeedService.getFeedsUserClient(actorId).feed(feedName, actorId);
 
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
@@ -200,7 +202,7 @@ export namespace ActivitiesService {
       activityId,
     });
 
-    const feed = (await FeedService.getFeedsClient()).feed(feedName, actorId);
+    const feed = FeedService.getFeedsUserClient(actorId).feed(feedName, actorId);
 
 
     await feed.removeActivity({ foreign_id: activityId });

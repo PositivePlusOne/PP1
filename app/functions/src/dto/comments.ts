@@ -6,32 +6,32 @@ export const commentSchemaKey = "comments";
 
 export interface CommentJSON {
     _fl_meta_?: FlMetaJSON;
-    content?: string;
-    reactionId?: string;
-    activityId?: string;
-    senderId?: string;
-    originFeed?: string;
+    data?: string;
+    reaction_id?: string;
+    activity_id?: string;
+    user_id?: string;
+    origin?: string;
     mentions?: MentionJSON[];
     media?: MediaJSON[];
 }
 
 export class Comment {
     _fl_meta_?: FlMeta;
-    content?: string;
-    reactionId?: string;
-    activityId?: string;
-    senderId?: string;
-    originFeed?: string;
+    data?: string;
+    reaction_id?: string;
+    activity_id?: string;
+    user_id?: string;
+    origin?: string;
     mentions?: MentionJSON[];
     media?: MediaJSON[];
 
     constructor(json: CommentJSON) {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
-        this.content = json.content;
-        this.reactionId = json.reactionId;
-        this.activityId = json.activityId;
-        this.senderId = json.senderId;
-        this.originFeed = json.originFeed;
+        this.data = json.data;
+        this.reaction_id = json.reaction_id;
+        this.activity_id = json.activity_id;
+        this.user_id = json.user_id;
+        this.origin = json.origin;
         this.mentions = json.mentions;
         this.media = json.media;
     }
@@ -39,11 +39,11 @@ export class Comment {
     public toJSON(): CommentJSON {
         return {
             _fl_meta_: this._fl_meta_ ? this._fl_meta_.toJSON() : undefined,
-            content: this.content,
-            reactionId: this.reactionId,
-            activityId: this.activityId,
-            senderId: this.senderId,
-            originFeed: this.originFeed,
+            data: this.data,
+            reaction_id: this.reaction_id,
+            activity_id: this.activity_id,
+            user_id: this.user_id,
+            origin: this.origin,
             mentions: this.mentions,
             media: this.media,
         };

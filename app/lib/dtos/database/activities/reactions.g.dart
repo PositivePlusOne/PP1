@@ -7,18 +7,18 @@ part of 'reactions.dart';
 // **************************************************************************
 
 _$_Reaction _$$_ReactionFromJson(Map<String, dynamic> json) => _$_Reaction(
-      activityId: json['activityId'] as String? ?? '',
-      reactionId: json['reactionId'] as String? ?? '',
-      senderId: json['senderId'] as String? ?? '',
-      reactionType: json['reactionType'] == null
+      activityId: json['activity_id'] as String? ?? '',
+      reactionId: json['reaction_id'] as String? ?? '',
+      userId: json['user_id'] as String? ?? '',
+      kind: json['kind'] == null
           ? const ReactionType.unknownReaction()
-          : ReactionType.fromJson(json['reactionType'] as String),
+          : ReactionType.fromJson(json['kind'] as String),
     );
 
 Map<String, dynamic> _$$_ReactionToJson(_$_Reaction instance) =>
     <String, dynamic>{
-      'activityId': instance.activityId,
-      'reactionId': instance.reactionId,
-      'senderId': instance.senderId,
-      'reactionType': ReactionType.toJson(instance.reactionType),
+      'activity_id': instance.activityId,
+      'reaction_id': instance.reactionId,
+      'user_id': instance.userId,
+      'kind': ReactionType.toJson(instance.kind),
     };

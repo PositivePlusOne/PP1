@@ -13,10 +13,10 @@ part 'comments.g.dart';
 class Comment with _$Comment {
   const factory Comment({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') String content,
-    @Default('') String reactionId,
-    @Default('') String activityId,
-    @Default('') String senderId,
+    @Default('') String data,
+    @Default('') @JsonKey(name: 'reaction_id') String reactionId,
+    @Default('') @JsonKey(name: 'activity_id') String activityId,
+    @Default('') @JsonKey(name: 'user_id') userId,
     @Default([]) @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) List<Mention> mentions,
     @Default([]) @JsonKey(fromJson: Media.fromJsonList, toJson: Media.toJsonList) List<Media> media,
   }) = _Comment;

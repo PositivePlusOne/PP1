@@ -33,5 +33,6 @@ module.exports = {
     "brace-style":"off",
     "key-spacing":"off",
     "spaced-comment":"off",
+    "camelcase":"off",
   },
 };

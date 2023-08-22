@@ -34,10 +34,11 @@ export namespace PostEndpoints {
           throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
         }
     
-        const feedsClient = await FeedService.getFeedsClient();
-        const feed = feedsClient.feed(feedId, slugId);
+        const feedsClient = FeedService.getFeedsUserClient(uid);
+        const userToken = FeedService.getUserToken(uid);
+        const feed = feedsClient.feed(feedId, slugId, userToken);
 
-        const window = await FeedService.getFeedWindow(feed, limit, cursor);
+        const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
         const reactionCounts = window.results.map((item) => item.reaction_counts || {});
     
         // Convert window results to a list of IDs
@@ -99,7 +100,7 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("permission-denied", "Cannot share with unconnected users");
     }
 
-    const streamClient = await FeedService.getFeedsClient();
+    const streamClient = FeedService.getFeedsUserClient(uid);
     const senderUserFeed = streamClient.feed(feed, uid);
     
     await FeedService.shareActivityToFeed(uid, senderUserFeed, activityId);

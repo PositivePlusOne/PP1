@@ -764,7 +764,6 @@ mixin _$ActivityGeneralConfigurationType {
     required TResult Function() event,
     required TResult Function() clip,
     required TResult Function() repost,
-    required TResult Function() bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -773,7 +772,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function()? event,
     TResult? Function()? clip,
     TResult? Function()? repost,
-    TResult? Function()? bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -782,7 +780,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult Function()? event,
     TResult Function()? clip,
     TResult Function()? repost,
-    TResult Function()? bookmark,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -794,8 +791,6 @@ mixin _$ActivityGeneralConfigurationType {
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
     required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
         repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
-        bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -804,8 +799,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
-        bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -814,7 +807,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -888,7 +880,6 @@ class _$_ActivityGeneralConfigurationTypePost
     required TResult Function() event,
     required TResult Function() clip,
     required TResult Function() repost,
-    required TResult Function() bookmark,
   }) {
     return post();
   }
@@ -900,7 +891,6 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult? Function()? event,
     TResult? Function()? clip,
     TResult? Function()? repost,
-    TResult? Function()? bookmark,
   }) {
     return post?.call();
   }
@@ -912,7 +902,6 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult Function()? event,
     TResult Function()? clip,
     TResult Function()? repost,
-    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (post != null) {
@@ -930,8 +919,6 @@ class _$_ActivityGeneralConfigurationTypePost
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
     required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
         repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
-        bookmark,
   }) {
     return post(this);
   }
@@ -943,8 +930,6 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
-        bookmark,
   }) {
     return post?.call(this);
   }
@@ -956,7 +941,6 @@ class _$_ActivityGeneralConfigurationTypePost
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (post != null) {
@@ -1019,7 +1003,6 @@ class _$_ActivityGeneralConfigurationTypeEvent
     required TResult Function() event,
     required TResult Function() clip,
     required TResult Function() repost,
-    required TResult Function() bookmark,
   }) {
     return event();
   }
@@ -1031,7 +1014,6 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult? Function()? event,
     TResult? Function()? clip,
     TResult? Function()? repost,
-    TResult? Function()? bookmark,
   }) {
     return event?.call();
   }
@@ -1043,7 +1025,6 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult Function()? event,
     TResult Function()? clip,
     TResult Function()? repost,
-    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (event != null) {
@@ -1061,8 +1042,6 @@ class _$_ActivityGeneralConfigurationTypeEvent
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
     required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
         repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
-        bookmark,
   }) {
     return event(this);
   }
@@ -1074,8 +1053,6 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
-        bookmark,
   }) {
     return event?.call(this);
   }
@@ -1087,7 +1064,6 @@ class _$_ActivityGeneralConfigurationTypeEvent
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (event != null) {
@@ -1150,7 +1126,6 @@ class _$_ActivityGeneralConfigurationTypeClip
     required TResult Function() event,
     required TResult Function() clip,
     required TResult Function() repost,
-    required TResult Function() bookmark,
   }) {
     return clip();
   }
@@ -1162,7 +1137,6 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult? Function()? event,
     TResult? Function()? clip,
     TResult? Function()? repost,
-    TResult? Function()? bookmark,
   }) {
     return clip?.call();
   }
@@ -1174,7 +1148,6 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult Function()? event,
     TResult Function()? clip,
     TResult Function()? repost,
-    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (clip != null) {
@@ -1192,8 +1165,6 @@ class _$_ActivityGeneralConfigurationTypeClip
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
     required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
         repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
-        bookmark,
   }) {
     return clip(this);
   }
@@ -1205,8 +1176,6 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
-        bookmark,
   }) {
     return clip?.call(this);
   }
@@ -1218,7 +1187,6 @@ class _$_ActivityGeneralConfigurationTypeClip
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (clip != null) {
@@ -1281,7 +1249,6 @@ class _$_ActivityGeneralConfigurationTypeRepost
     required TResult Function() event,
     required TResult Function() clip,
     required TResult Function() repost,
-    required TResult Function() bookmark,
   }) {
     return repost();
   }
@@ -1293,7 +1260,6 @@ class _$_ActivityGeneralConfigurationTypeRepost
     TResult? Function()? event,
     TResult? Function()? clip,
     TResult? Function()? repost,
-    TResult? Function()? bookmark,
   }) {
     return repost?.call();
   }
@@ -1305,7 +1271,6 @@ class _$_ActivityGeneralConfigurationTypeRepost
     TResult Function()? event,
     TResult Function()? clip,
     TResult Function()? repost,
-    TResult Function()? bookmark,
     required TResult orElse(),
   }) {
     if (repost != null) {
@@ -1323,8 +1288,6 @@ class _$_ActivityGeneralConfigurationTypeRepost
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
     required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
         repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
-        bookmark,
   }) {
     return repost(this);
   }
@@ -1336,8 +1299,6 @@ class _$_ActivityGeneralConfigurationTypeRepost
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
-        bookmark,
   }) {
     return repost?.call(this);
   }
@@ -1349,7 +1310,6 @@ class _$_ActivityGeneralConfigurationTypeRepost
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
     TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (repost != null) {
@@ -1363,137 +1323,6 @@ abstract class _ActivityGeneralConfigurationTypeRepost
     implements ActivityGeneralConfigurationType {
   const factory _ActivityGeneralConfigurationTypeRepost() =
       _$_ActivityGeneralConfigurationTypeRepost;
-}
-
-/// @nodoc
-abstract class _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith<$Res> {
-  factory _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith(
-          _$_ActivityGeneralConfigurationTypeBookmark value,
-          $Res Function(_$_ActivityGeneralConfigurationTypeBookmark) then) =
-      __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl<$Res>
-    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
-        _$_ActivityGeneralConfigurationTypeBookmark>
-    implements _$$_ActivityGeneralConfigurationTypeBookmarkCopyWith<$Res> {
-  __$$_ActivityGeneralConfigurationTypeBookmarkCopyWithImpl(
-      _$_ActivityGeneralConfigurationTypeBookmark _value,
-      $Res Function(_$_ActivityGeneralConfigurationTypeBookmark) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_ActivityGeneralConfigurationTypeBookmark
-    implements _ActivityGeneralConfigurationTypeBookmark {
-  const _$_ActivityGeneralConfigurationTypeBookmark();
-
-  @override
-  String toString() {
-    return 'ActivityGeneralConfigurationType.bookmark()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_ActivityGeneralConfigurationTypeBookmark);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() post,
-    required TResult Function() event,
-    required TResult Function() clip,
-    required TResult Function() repost,
-    required TResult Function() bookmark,
-  }) {
-    return bookmark();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? post,
-    TResult? Function()? event,
-    TResult? Function()? clip,
-    TResult? Function()? repost,
-    TResult? Function()? bookmark,
-  }) {
-    return bookmark?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? post,
-    TResult Function()? event,
-    TResult Function()? clip,
-    TResult Function()? repost,
-    TResult Function()? bookmark,
-    required TResult orElse(),
-  }) {
-    if (bookmark != null) {
-      return bookmark();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
-        event,
-    required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
-        repost,
-    required TResult Function(_ActivityGeneralConfigurationTypeBookmark value)
-        bookmark,
-  }) {
-    return bookmark(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
-    TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
-    TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult? Function(_ActivityGeneralConfigurationTypeBookmark value)?
-        bookmark,
-  }) {
-    return bookmark?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
-    TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
-    TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    TResult Function(_ActivityGeneralConfigurationTypeBookmark value)? bookmark,
-    required TResult orElse(),
-  }) {
-    if (bookmark != null) {
-      return bookmark(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ActivityGeneralConfigurationTypeBookmark
-    implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypeBookmark() =
-      _$_ActivityGeneralConfigurationTypeBookmark;
 }
 
 /// @nodoc
@@ -4052,6 +3881,7 @@ mixin _$ActivityEnrichmentConfiguration {
   String get publishLocation => throw _privateConstructorUsedError;
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions => throw _privateConstructorUsedError;
+  Map<String, int> get reactionCounts => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -4073,7 +3903,8 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
       bool isSensitive,
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
-      List<Mention> mentions});
+      List<Mention> mentions,
+      Map<String, int> reactionCounts});
 }
 
 /// @nodoc
@@ -4095,6 +3926,7 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
     Object? isSensitive = null,
     Object? publishLocation = null,
     Object? mentions = null,
+    Object? reactionCounts = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -4117,6 +3949,10 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
           ? _value.mentions
           : mentions // ignore: cast_nullable_to_non_nullable
               as List<Mention>,
+      reactionCounts: null == reactionCounts
+          ? _value.reactionCounts
+          : reactionCounts // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
     ) as $Val);
   }
 }
@@ -4136,7 +3972,8 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
       bool isSensitive,
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
-      List<Mention> mentions});
+      List<Mention> mentions,
+      Map<String, int> reactionCounts});
 }
 
 /// @nodoc
@@ -4157,6 +3994,7 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
     Object? isSensitive = null,
     Object? publishLocation = null,
     Object? mentions = null,
+    Object? reactionCounts = null,
   }) {
     return _then(_$_ActivityEnrichmentConfiguration(
       title: null == title
@@ -4179,6 +4017,10 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
           ? _value._mentions
           : mentions // ignore: cast_nullable_to_non_nullable
               as List<Mention>,
+      reactionCounts: null == reactionCounts
+          ? _value._reactionCounts
+          : reactionCounts // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
     ));
   }
 }
@@ -4193,9 +4035,11 @@ class _$_ActivityEnrichmentConfiguration
       this.isSensitive = false,
       this.publishLocation = '',
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
-      final List<Mention> mentions = const []})
+      final List<Mention> mentions = const [],
+      final Map<String, int> reactionCounts = const {}})
       : _tags = tags,
-        _mentions = mentions;
+        _mentions = mentions,
+        _reactionCounts = reactionCounts;
 
   factory _$_ActivityEnrichmentConfiguration.fromJson(
           Map<String, dynamic> json) =>
@@ -4228,9 +4072,18 @@ class _$_ActivityEnrichmentConfiguration
     return EqualUnmodifiableListView(_mentions);
   }
 
+  final Map<String, int> _reactionCounts;
+  @override
+  @JsonKey()
+  Map<String, int> get reactionCounts {
+    if (_reactionCounts is EqualUnmodifiableMapView) return _reactionCounts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_reactionCounts);
+  }
+
   @override
   String toString() {
-    return 'ActivityEnrichmentConfiguration(title: $title, tags: $tags, isSensitive: $isSensitive, publishLocation: $publishLocation, mentions: $mentions)';
+    return 'ActivityEnrichmentConfiguration(title: $title, tags: $tags, isSensitive: $isSensitive, publishLocation: $publishLocation, mentions: $mentions, reactionCounts: $reactionCounts)';
   }
 
   @override
@@ -4244,7 +4097,9 @@ class _$_ActivityEnrichmentConfiguration
                 other.isSensitive == isSensitive) &&
             (identical(other.publishLocation, publishLocation) ||
                 other.publishLocation == publishLocation) &&
-            const DeepCollectionEquality().equals(other._mentions, _mentions));
+            const DeepCollectionEquality().equals(other._mentions, _mentions) &&
+            const DeepCollectionEquality()
+                .equals(other._reactionCounts, _reactionCounts));
   }
 
   @JsonKey(ignore: true)
@@ -4255,7 +4110,8 @@ class _$_ActivityEnrichmentConfiguration
       const DeepCollectionEquality().hash(_tags),
       isSensitive,
       publishLocation,
-      const DeepCollectionEquality().hash(_mentions));
+      const DeepCollectionEquality().hash(_mentions),
+      const DeepCollectionEquality().hash(_reactionCounts));
 
   @JsonKey(ignore: true)
   @override
@@ -4276,12 +4132,14 @@ class _$_ActivityEnrichmentConfiguration
 abstract class _ActivityEnrichmentConfiguration
     implements ActivityEnrichmentConfiguration {
   const factory _ActivityEnrichmentConfiguration(
-      {final String title,
-      @JsonKey(fromJson: stringListFromJson) final List<String> tags,
-      final bool isSensitive,
-      final String publishLocation,
-      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
-      final List<Mention> mentions}) = _$_ActivityEnrichmentConfiguration;
+          {final String title,
+          @JsonKey(fromJson: stringListFromJson) final List<String> tags,
+          final bool isSensitive,
+          final String publishLocation,
+          @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+          final List<Mention> mentions,
+          final Map<String, int> reactionCounts}) =
+      _$_ActivityEnrichmentConfiguration;
 
   factory _ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityEnrichmentConfiguration.fromJson;
@@ -4298,6 +4156,8 @@ abstract class _ActivityEnrichmentConfiguration
   @override
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions;
+  @override
+  Map<String, int> get reactionCounts;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityEnrichmentConfigurationCopyWith<

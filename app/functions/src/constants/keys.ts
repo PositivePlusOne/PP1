@@ -4,6 +4,7 @@ export namespace Keys {
   export const OccasionGeniusApiKey = "OCCASION_GENIUS_API_KEY";
   export const StreamApiKey = "STREAM_API_KEY";
   export const StreamApiSecret = "STREAM_API_SECRET";
+  export const StreamFeedsAppId = "STREAM_FEEDS_APP_ID";
   export const AlgoliaApiKey = "ALGOLIA_API_KEY";
   export const AlgoliaAppId = "ALGOLIA_APP_ID";
 
@@ -16,6 +17,7 @@ export namespace Keys {
     OccasionGeniusApiKey,
     StreamApiKey,
     StreamApiSecret,
+    StreamFeedsAppId,
     AlgoliaApiKey,
     AlgoliaAppId,
   ];

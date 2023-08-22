@@ -7,10 +7,10 @@ part 'reactions.g.dart';
 @freezed
 class Reaction with _$Reaction {
   const factory Reaction({
-    @Default('') String activityId,
-    @Default('') String reactionId,
-    @Default('') String senderId,
-    @Default(ReactionType.unknownReaction()) @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson) ReactionType reactionType,
+    @Default('') @JsonKey(name: 'activity_id') String activityId,
+    @Default('') @JsonKey(name: 'reaction_id') String reactionId,
+    @Default('') @JsonKey(name: 'user_id') String userId,
+    @Default(ReactionType.unknownReaction()) @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson) ReactionType kind,
   }) = _Reaction;
 
   factory Reaction.fromJson(Map<String, dynamic> json) => _$ReactionFromJson(json);
@@ -22,6 +22,7 @@ class ReactionType with _$ReactionType {
   const factory ReactionType.like() = _ReactionTypeLike;
   const factory ReactionType.dislike() = _ReactionTypeDislike;
   const factory ReactionType.comment() = _ReactionTypeComment;
+  const factory ReactionType.bookmark() = _ReactionTypeComment;
 
   factory ReactionType.fromJson(String json) {
     switch (json) {
@@ -31,6 +32,8 @@ class ReactionType with _$ReactionType {
         return const ReactionType.dislike();
       case 'comment':
         return const ReactionType.comment();
+      case 'bookmark':
+        return const ReactionType.bookmark();
       default:
         return const ReactionType.unknownReaction();
     }
@@ -44,6 +47,8 @@ class ReactionType with _$ReactionType {
         return 'dislike';
       case ReactionType.comment:
         return 'comment';
+      case ReactionType.bookmark:
+        return 'bookmark';
       default:
         return 'unknownReaction';
     }

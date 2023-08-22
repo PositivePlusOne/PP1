@@ -49,7 +49,6 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
   const factory ActivityGeneralConfigurationType.event() = _ActivityGeneralConfigurationTypeEvent;
   const factory ActivityGeneralConfigurationType.clip() = _ActivityGeneralConfigurationTypeClip;
   const factory ActivityGeneralConfigurationType.repost() = _ActivityGeneralConfigurationTypeRepost;
-  const factory ActivityGeneralConfigurationType.bookmark() = _ActivityGeneralConfigurationTypeBookmark;
 
   static String toJson(ActivityGeneralConfigurationType type) {
     return type.when(
@@ -57,7 +56,6 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
       event: () => 'event',
       clip: () => 'clip',
       repost: () => 'repost',
-      bookmark: () => 'bookmark',
     );
   }
 
@@ -71,8 +69,6 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
         return const _ActivityGeneralConfigurationTypeClip();
       case 'repost':
         return const _ActivityGeneralConfigurationTypeRepost();
-      case 'bookmark':
-        return const _ActivityGeneralConfigurationTypeBookmark();
       default:
         throw ArgumentError('Invalid value for ActivityGeneralConfigurationType: $value');
     }
@@ -253,6 +249,7 @@ class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
     @Default(false) bool isSensitive,
     @Default('') String publishLocation,
     @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
+    @Default({}) Map<String, int> reactionCounts,
   }) = _ActivityEnrichmentConfiguration;
 
   factory ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityEnrichmentConfigurationFromJson(json);

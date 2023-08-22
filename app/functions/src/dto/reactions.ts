@@ -4,38 +4,38 @@ export const reactionSchemaKey = "reactions";
 
 export interface ReactionJSON {
     _fl_meta_?: FlMetaJSON;
-    activityId?: string;
-    reactionId?: string;
-    senderId?: string;
-    reactionType?: string;
-    originFeed?: string;
+    activity_id?: string;
+    reaction_id?: string;
+    user_id?: string;
+    kind?: string;
+    origin?: string;
 }
 
 export class Reaction {
     _fl_meta_?: FlMeta;
-    activityId?: string;
-    reactionId?: string;
-    senderId?: string;
-    reactionType?: string;
-    originFeed?: string;
+    activity_id?: string;
+    reaction_id?: string;
+    user_id?: string;
+    kind?: string;
+    origin?: string;
 
     constructor(json: ReactionJSON) {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
-        this.activityId = json.activityId;
-        this.reactionId = json.reactionId;
-        this.senderId = json.senderId;
-        this.reactionType = json.reactionType;
-        this.originFeed = json.originFeed;
+        this.activity_id = json.activity_id;
+        this.reaction_id = json.reaction_id;
+        this.user_id = json.user_id;
+        this.kind = json.kind;
+        this.origin = json.origin;
     }
 
     public toJSON(): ReactionJSON {
         return {
             _fl_meta_: this._fl_meta_ ? this._fl_meta_.toJSON() : undefined,
-            activityId: this.activityId,
-            reactionId: this.reactionId,
-            senderId: this.senderId,
-            reactionType: this.reactionType,
-            originFeed: this.originFeed,
+            activity_id: this.activity_id,
+            reaction_id: this.reaction_id,
+            user_id: this.user_id,
+            kind: this.kind,
+            origin: this.origin,
         };
     }
 

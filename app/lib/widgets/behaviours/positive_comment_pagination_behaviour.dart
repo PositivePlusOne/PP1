@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/services/reaction_api_service.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -77,6 +78,18 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     super.initState();
     setupListeners();
     setupCommentsState();
+    testReactions();
+  }
+
+  Future<void> testReactions() async {
+    final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
+    final EndpointResponse endpointResponse2 = await reactionApiService.listReactionsForActivity(
+      activityId: widget.activityId,
+      kind: 'bookmark',
+      cursor: commentState.currentPaginationKey,
+    );
+
+    final Map<String, dynamic> data2 = json.decodeSafe(endpointResponse2.data);
   }
 
   @override
