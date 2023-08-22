@@ -278,7 +278,12 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+      if (userController.currentUser == null) {
+        await userController.registerEmailPasswordProvider(state.emailAddress, state.password);
+      } else {
+        await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+      }
+
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
