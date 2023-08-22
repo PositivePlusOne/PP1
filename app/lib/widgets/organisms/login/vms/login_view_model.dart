@@ -139,7 +139,7 @@ class LoginViewModel extends _$LoginViewModel {
     }
   }
 
-  Future<void> onEmailSubmitted() async {
+  Future<void> onEmailSubmitted(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 

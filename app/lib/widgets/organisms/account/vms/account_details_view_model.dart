@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -74,7 +77,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     );
   }
 
-  Future<void> onUpdateEmailAddressButtonPressed() async {
+  Future<void> onUpdateEmailAddressButtonPressed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);
@@ -84,7 +87,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     await appRouter.push(const AccountUpdateEmailAddressRoute());
   }
 
-  Future<void> onUpdatePhoneNumberButtonPressed() async {
+  Future<void> onUpdatePhoneNumberButtonPressed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);

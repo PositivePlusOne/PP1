@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -83,7 +86,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     await systemController.openSettings();
   }
 
-  Future<void> toggleIncognitoMode() async {
+  Future<void> toggleIncognitoMode(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Set<String> currentFlags = profileController.state.currentProfile?.featureFlags ?? <String>{};
@@ -106,7 +109,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     state = state.copyWith(isIncognitoEnabled: isIncognitoEnabled);
   }
 
-  Future<void> toggleBiometrics() async {
+  Future<void> toggleBiometrics(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
@@ -136,7 +139,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     await handler.onNotificationDisplayed(payload, true);
   }
 
-  Future<void> toggleMarketingEmails() async {
+  Future<void> toggleMarketingEmails(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Set<String> currentFlags = profileController.state.currentProfile?.featureFlags ?? <String>{};

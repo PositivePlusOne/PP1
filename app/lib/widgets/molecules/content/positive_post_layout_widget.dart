@@ -52,7 +52,7 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   final bool isBusy;
 
   final void Function(Media media)? onImageTap;
-  final Future<void> Function()? onBookmark;
+  final Future<void> Function(BuildContext context)? onBookmark;
 
   @override
   ConsumerState<PositivePostLayoutWidget> createState() => _PositivePostLayoutWidgetState();
@@ -70,7 +70,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
   }
 
-  Future<void> onShareSelected() async {
+  Future<void> onShareSelected(BuildContext context) async {
     if (!mounted) {
       return;
     }
@@ -442,7 +442,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         //TODO(S): like enabled and onlike functionality here
         likes: 0,
         likeEnabled: true,
-        onLike: () {},
+        onLike: (_) {},
 
         //TODO(S): share enabled and on share functionality here
         shareEnabled: true,
@@ -451,7 +451,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         //TODO(S): comment enabled and on comment functionality here
         comments: 0,
         commentsEnabled: true,
-        onComment: () {},
+        onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
         bookmarked: !widget.isBusy,

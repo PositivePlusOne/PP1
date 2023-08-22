@@ -352,7 +352,7 @@ class AccountFormController extends _$AccountFormController {
     return state.phoneNumber.buildPhoneNumber(state.country);
   }
 
-  Future<void> onPhoneNumberConfirmed() async {
+  Future<void> onPhoneNumberConfirmed(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);

@@ -120,7 +120,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                               : 0.2,
                       child: PositiveTapBehaviour(
                         isEnabled: !state.isBusy,
-                        onTap: () => controller.onAccentColorSelected(colorHex),
+                        onTap: (_) => controller.onAccentColorSelected(colorHex),
                         child: AbsorbPointer(
                           child: PositiveProfileCircularIndicator(
                             profile: userProfile,

@@ -25,7 +25,7 @@ class PositiveVisibilityHint extends ConsumerWidget {
 
   final PositiveTogglableState toggleState;
   final bool isEnabled;
-  final VoidCallback? onTap;
+  final void Function(BuildContext context)? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,7 +89,7 @@ class PositiveVisibilityHint extends ConsumerWidget {
 
     return PositiveTapBehaviour(
       isEnabled: isEnabled,
-      onTap: onTap ?? () {},
+      onTap: onTap ?? (context) {},
       child: Container(
         decoration: BoxDecoration(
           color: colors.colorGray3.withOpacity(kOpacityQuarter),

@@ -73,8 +73,8 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final Widget? leftActionWidget;
   final String? takePictureCaption;
 
-  final VoidCallback? onTapClose;
-  final VoidCallback? onTapAddImage;
+  final void Function(BuildContext context)? onTapClose;
+  final void Function(BuildContext context)? onTapAddImage;
   final bool enableFlashControls;
 
   final bool isBusy;
@@ -166,14 +166,14 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     }
   }
 
-  void onInternalAddImageTap() {
+  void onInternalAddImageTap(BuildContext context) {
     if (!hasLibraryPermission) {
       viewMode = PositiveCameraViewMode.libraryPermissionOverlay;
       setStateIfMounted();
       return;
     }
 
-    widget.onTapAddImage!();
+    widget.onTapAddImage?.call(context);
     setStateIfMounted();
   }
 
@@ -312,7 +312,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
                 alignment: Alignment.centerLeft,
                 child: CameraFloatingButton.close(
                   active: true,
-                  onTap: widget.onTapClose ?? () => appRouter.removeLast(),
+                  onTap: widget.onTapClose ?? (context) => appRouter.removeLast(),
                 ),
               )
             : const SizedBox.shrink(),
@@ -330,7 +330,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               alignment: Alignment.centerRight,
               child: CameraFloatingButton.showCamera(
                 active: true,
-                onTap: () => setState(() {
+                onTap: (context) => setState(() {
                   viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
                 }),
               ),
@@ -401,7 +401,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
             viewMode = libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
             if (libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) {
-              onInternalAddImageTap();
+              onInternalAddImageTap(context);
             }
           },
         ));
@@ -438,7 +438,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
         CameraFloatingButton.flash(
           active: true,
           flashMode: flashMode,
-          onTap: () {
+          onTap: (_) {
             setState(
               () {
                 switch (flashMode) {
@@ -548,7 +548,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               CameraButton(
                 active: canTakePictureOrVideo,
-                onTap: () => state.when(
+                onTap: (_) => state.when(
                   onPhotoMode: onImageTaken,
                   onVideoMode: (videoState) {},
                   onVideoRecordingMode: (videoState) {},
@@ -561,9 +561,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               CameraFloatingButton.changeCamera(
                 active: canTakePictureOrVideo,
-                onTap: () {
-                  state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9);
-                },
+                onTap: (_) => state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9),
               ),
             ],
           ),

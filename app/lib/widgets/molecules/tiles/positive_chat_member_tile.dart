@@ -33,7 +33,7 @@ class PositiveChatMemberTile extends ConsumerWidget {
   final bool isEnabled;
 
   final bool displaySelectToggle;
-  final void Function() onTap;
+  final void Function(BuildContext context) onTap;
 
   static const double kSelectSize = 24;
 

@@ -114,7 +114,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     );
 
     return PositiveTapBehaviour(
-      onTap: () => _handleTap(ref),
+      onTap: (context) => _handleTap(context, ref),
       isEnabled: isEnabled,
       child: PositiveCircularIndicator(
         ringColor: actualColor,
@@ -126,7 +126,7 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     );
   }
 
-  void _handleTap(WidgetRef ref) {
+  void _handleTap(BuildContext context, WidgetRef ref) {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 

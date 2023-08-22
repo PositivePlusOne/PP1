@@ -121,7 +121,7 @@ class ChatMembersPage extends HookConsumerWidget {
                     for (final keyval in otherUserProfiles.entries) ...<Widget>[
                       PositiveChatMemberTile(
                         profile: keyval.value,
-                        onTap: () => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
+                        onTap: (_) => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
                         isSelected: chatViewModelState.selectedMembers.contains(keyval.value.flMeta!.id!),
                         displaySelectToggle: !isOneOnOneConversation,
                         isEnabled: !isOneOnOneConversation,

@@ -39,7 +39,7 @@ class PositiveCheckboxButton extends ConsumerWidget {
   final String label;
   final bool value;
 
-  final FutureOr<void> Function() onTapped;
+  final FutureOr<void> Function(BuildContext context) onTapped;
   final bool isBusy;
   final bool showDisabledState;
 

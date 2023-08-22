@@ -33,7 +33,7 @@ class PositiveCameraDialog extends ConsumerWidget {
         displayCameraShade: displayCameraShade,
         onCameraImageTaken: (path) async => Navigator.pop(context, path),
         topChildren: <Widget>[
-          CameraFloatingButton.close(active: true, onTap: () => Navigator.pop(context, null)),
+          CameraFloatingButton.close(active: true, onTap: (context) => Navigator.pop(context, null)),
         ],
       ),
     );

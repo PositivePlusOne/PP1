@@ -142,7 +142,7 @@ class CreateConversationPage extends HookConsumerWidget {
                 final String otherMemberId = (displayedChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
                 return PositiveChannelListTile(
                   channel: displayedChannels[index],
-                  onTap: () => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
+                  onTap: (_) => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
                   isSelected: chatViewModelState.selectedMembers.contains(otherMemberId),
                   showProfileTagline: true,
                 );

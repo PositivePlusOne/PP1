@@ -53,7 +53,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     Navigator.pop(context, selectedTags.map((e) => e.key).toList());
   }
 
-  void onTagTapped(Tag tag, {bool insert = false}) {
+  void onTagTapped(BuildContext context, Tag tag, {bool insert = false}) {
     if (selectedTags.contains(tag)) {
       selectedTags.remove(tag);
     } else {
@@ -128,7 +128,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
         tagWidgets.add(
           TagLabel(
             tag: lastSearchedTag!,
-            onTap: () => onTagTapped(lastSearchedTag!, insert: true),
+            onTap: (context) => onTagTapped(context, lastSearchedTag!, insert: true),
             isAddKeyword: true,
             isSelected: false,
           ),
@@ -141,7 +141,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
       tagWidgets.add(
         TagLabel(
           tag: tag,
-          onTap: () => onTagTapped(tag),
+          onTap: (context) => onTagTapped(context, tag),
           isRemoveKeyword: !tagsController.tagExists(tag.key),
           isSelected: true,
         ),
@@ -154,7 +154,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
       tagWidgets.add(
         TagLabel(
           tag: filteredTags[i],
-          onTap: () => onTagTapped(filteredTags[i]),
+          onTap: (context) => onTagTapped(context, filteredTags[i]),
           isSelected: selectedTags.contains(filteredTags[i]) ? true : false,
         ),
       );
@@ -220,7 +220,7 @@ class TagLabel extends HookConsumerWidget {
 
   final Tag tag;
   final bool isSelected;
-  final VoidCallback onTap;
+  final void Function(BuildContext context) onTap;
   final bool isAddKeyword;
   final bool isRemoveKeyword;
 

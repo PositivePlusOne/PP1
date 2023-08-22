@@ -31,17 +31,17 @@ class PositivePostActions extends HookConsumerWidget {
   });
 
   final int? likes;
-  final Function()? onLike;
+  final Function(BuildContext context)? onLike;
   final bool likeEnabled;
 
   final int? comments;
-  final Function()? onComment;
+  final Function(BuildContext context)? onComment;
   final bool commentsEnabled;
 
   final bool? bookmarked;
-  final Function()? onBookmark;
+  final Function(BuildContext context)? onBookmark;
 
-  final Function()? onShare;
+  final Function(BuildContext context)? onShare;
   final bool shareEnabled;
 
   final double horizontalPadding;

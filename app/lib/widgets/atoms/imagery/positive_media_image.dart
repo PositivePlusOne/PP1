@@ -366,7 +366,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
         });
   }
 
-  FutureOr<void> onInternalTap() async {
+  FutureOr<void> onInternalTap(BuildContext context) async {
     if (widget.onTap != null) {
       widget.onTap!();
       return;

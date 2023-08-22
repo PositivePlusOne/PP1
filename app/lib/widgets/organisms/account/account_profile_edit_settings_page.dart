@@ -173,7 +173,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       labelText: profile.birthday.asDateString,
                       backgroundColor: colors.transparent,
                       //? empty onTap, users may not update date of birth in app
-                      onTap: () {},
+                      onTap: (_) {},
                     ),
                     RichText(
                       text: TextSpan(
@@ -191,7 +191,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     ),
                     PositiveVisibilityHint(
                       toggleState: viewModelState.toggleStateDateOfBirth,
-                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagBirthday),
+                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagBirthday),
                     ),
                   ],
                 ),
@@ -210,7 +210,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     ),
                     PositiveVisibilityHint(
                       toggleState: viewModelState.toggleStateGender,
-                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagGenders),
+                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagGenders),
                     ),
                   ],
                 ),
@@ -229,7 +229,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     ),
                     PositiveVisibilityHint(
                       toggleState: viewModelState.toggleStateHIVStatus,
-                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagHivStatus),
+                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagHivStatus),
                     ),
                   ],
                 ),
@@ -248,7 +248,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     ),
                     PositiveVisibilityHint(
                       toggleState: viewModelState.toggleStateLocation,
-                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagLocation),
+                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagLocation),
                     ),
                   ],
                 ),
@@ -267,7 +267,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                     ),
                     PositiveVisibilityHint(
                       toggleState: viewModelState.toggleStateYouInterests,
-                      onTap: () => viewModel.onVisibilityToggleRequested(kVisibilityFlagInterests),
+                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagInterests),
                     ),
                   ],
                 ),

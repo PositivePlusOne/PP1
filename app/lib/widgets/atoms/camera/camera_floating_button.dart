@@ -22,13 +22,13 @@ class CameraFloatingButton extends ConsumerWidget {
   });
 
   final bool active;
-  final VoidCallback onTap;
+  final void Function(BuildContext context) onTap;
   final IconData iconData;
   final bool removeBorder;
 
   factory CameraFloatingButton.close({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
   }) {
     return CameraFloatingButton(
       active: active,
@@ -39,7 +39,7 @@ class CameraFloatingButton extends ConsumerWidget {
 
   factory CameraFloatingButton.changeCamera({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
   }) {
     return CameraFloatingButton(
       active: active,
@@ -50,7 +50,7 @@ class CameraFloatingButton extends ConsumerWidget {
 
   factory CameraFloatingButton.skipMedia({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
   }) {
     return CameraFloatingButton(
       active: active,
@@ -61,7 +61,7 @@ class CameraFloatingButton extends ConsumerWidget {
 
   factory CameraFloatingButton.showCamera({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
   }) {
     return CameraFloatingButton(
       active: active,
@@ -72,7 +72,7 @@ class CameraFloatingButton extends ConsumerWidget {
 
   factory CameraFloatingButton.addImage({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
   }) {
     return CameraFloatingButton(
       active: active,
@@ -83,7 +83,7 @@ class CameraFloatingButton extends ConsumerWidget {
 
   factory CameraFloatingButton.postWithoutImage({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
   }) {
     return CameraFloatingButton(
       active: active,
@@ -94,7 +94,7 @@ class CameraFloatingButton extends ConsumerWidget {
 
   factory CameraFloatingButton.flash({
     required bool active,
-    required VoidCallback onTap,
+    required void Function(BuildContext context) onTap,
     required FlashMode flashMode,
   }) {
     late IconData icon;

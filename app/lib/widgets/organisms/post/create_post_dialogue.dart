@@ -48,7 +48,6 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.valueSaveToGallery = false,
     this.tags = const [],
     this.trailingWidget,
-    this.onEditImagePressed,
     super.key,
   });
 
@@ -63,9 +62,9 @@ class CreatePostDialogue extends HookConsumerWidget {
 
   final Activity? prepopulatedActivity;
 
-  final VoidCallback onTagsPressed;
-  final Function()? onUpdateSaveToGallery;
-  final Function()? onUpdateAllowSharing;
+  final void Function(BuildContext context) onTagsPressed;
+  final Function(BuildContext context)? onUpdateSaveToGallery;
+  final Function(BuildContext context)? onUpdateAllowSharing;
   final Function(ActivitySecurityConfigurationMode)? onUpdateVisibleTo;
   final Function(ActivitySecurityConfigurationMode)? onUpdateAllowComments;
 
@@ -73,8 +72,6 @@ class CreatePostDialogue extends HookConsumerWidget {
   final bool valueSaveToGallery;
 
   final Widget? trailingWidget;
-
-  final VoidCallback? onEditImagePressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -120,13 +117,10 @@ class CreatePostDialogue extends HookConsumerWidget {
           ),
           //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
           [
-            if (galleryEntries.isNotEmpty) ...<Widget>[
-              PositiveTapBehaviour(
-                onTap: onEditImagePressed,
-                child: CreatePostMultiImageThumbnailList(
-                  images: galleryEntries,
-                  colours: colours,
-                ),
+            if (galleryEntries.length >= 2) ...<Widget>[
+              CreatePostMultiImageThumbnailList(
+                images: galleryEntries,
+                colours: colours,
               ),
               const SizedBox(height: kPaddingLarge),
             ],
@@ -176,7 +170,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               CreatePostToggleContainer(
                 value: valueSaveToGallery,
                 colours: colours,
-                onTap: isBusy ? () {} : onUpdateSaveToGallery,
+                onTap: isBusy ? (context) {} : onUpdateSaveToGallery,
                 textStyle: textStyle,
                 text: localisations.page_create_post_save,
               ),
@@ -187,7 +181,7 @@ class CreatePostDialogue extends HookConsumerWidget {
             CreatePostToggleContainer(
               value: valueAllowSharing,
               colours: colours,
-              onTap: isBusy ? () {} : onUpdateAllowSharing,
+              onTap: isBusy ? (context) {} : onUpdateAllowSharing,
               textStyle: textStyle,
               text: localisations.page_create_post_allow_sharing,
             ),
@@ -417,7 +411,7 @@ class CreatePostBox extends StatelessWidget {
   }
 }
 
-class CreatePostTextField extends StatelessWidget {
+class CreatePostTextField extends StatefulWidget {
   const CreatePostTextField({
     super.key,
     required this.colours,
@@ -440,24 +434,30 @@ class CreatePostTextField extends StatelessWidget {
   final bool isBusy;
 
   @override
+  State<CreatePostTextField> createState() => _CreatePostTextFieldState();
+}
+
+class _CreatePostTextFieldState extends State<CreatePostTextField> {
+  @override
   Widget build(BuildContext context) {
     return CreatePostBox(
-      colours: colours,
+      colours: widget.colours,
       child: PositiveTextField(
-        labelText: text,
-        textStyle: textStyle,
-        labelStyle: textStyle,
-        textEditingController: controller,
-        showRemainingStyle: textStyle.copyWith(color: colours.colorGray3),
-        fillColor: colours.transparent,
-        tintColor: colours.white,
+        labelText: widget.text,
+        textStyle: widget.textStyle,
+        labelStyle: widget.textStyle,
+        textEditingController: widget.controller,
+        onTextChanged: (_) => setStateIfMounted(),
+        showRemainingStyle: widget.textStyle.copyWith(color: widget.colours.colorGray3),
+        fillColor: widget.colours.transparent,
+        tintColor: widget.colours.white,
         borderRadius: kBorderRadiusLargePlus,
-        isEnabled: !isBusy,
+        isEnabled: !widget.isBusy,
         showRemaining: true,
-        maxLength: maxLength,
-        maxLengthEnforcement: maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
-        minLines: minLines,
-        maxLines: maxLines,
+        maxLength: widget.maxLength,
+        maxLengthEnforcement: widget.maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
         textInputType: TextInputType.text,
       ),
     );
@@ -478,7 +478,7 @@ class CreatePostToggleContainer extends StatelessWidget {
   final TextStyle textStyle;
   final String text;
   final bool value;
-  final Function()? onTap;
+  final Function(BuildContext context)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -524,7 +524,7 @@ class CreatePostTagsContainer extends StatelessWidget {
   final String text;
   final TextStyle textStyle;
   final List<String> tags;
-  final Function()? onTap;
+  final Function(BuildContext context)? onTap;
 
   final bool isBusy;
 

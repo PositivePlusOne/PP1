@@ -84,7 +84,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     );
   }
 
-  Future<void> onListTileSelected() async {
+  Future<void> onListTileSelected(BuildContext context) async {
     if (profile == null) {
       return;
     }

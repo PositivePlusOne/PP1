@@ -29,7 +29,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
-  factory PositiveTextFieldIcon.success({required Color backgroundColor, Color? iconColor, bool isEnabled = true, Future<void> Function()? onTap}) {
+  factory PositiveTextFieldIcon.success({required Color backgroundColor, Color? iconColor, bool isEnabled = true, Future<void> Function(BuildContext context)? onTap}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.check,
       color: backgroundColor,
@@ -55,7 +55,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
-  factory PositiveTextFieldIcon.search({required Color backgroundColor, Color? iconColor, Future<void> Function()? onTap, bool isEnabled = true}) {
+  factory PositiveTextFieldIcon.search({required Color backgroundColor, Color? iconColor, Future<void> Function(BuildContext context)? onTap, bool isEnabled = true}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.search,
       color: backgroundColor,
@@ -72,12 +72,12 @@ class PositiveTextFieldIcon extends ConsumerWidget {
   final Color? iconColor;
 
   final bool isEnabled;
-  final Future<void> Function()? onTap;
+  final Future<void> Function(BuildContext context)? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PositiveTapBehaviour(
-      onTap: onTap ?? () => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: onTap ?? (context) => FocusManager.instance.primaryFocus?.unfocus(),
       isEnabled: isEnabled,
       child: SizedBox(
         width: size,

@@ -173,7 +173,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                     ),
                     onTextChanged: viewModel.onLocationSearchQueryChanged,
                     onControllerCreated: viewModel.onLocationSearchQueryControllerChanged,
-                    onTextSubmitted: (_) => viewModel.onLocationSearchQuerySubmitted(),
+                    onTextSubmitted: (_) => viewModel.onLocationSearchQuerySubmitted(context),
                     suffixIcon: PositiveTextFieldIcon.search(
                       backgroundColor: getTintColor(
                         colors: colors,

@@ -138,7 +138,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
             Column(
               children: [
                 PositiveTapBehaviour(
-                  onTap: () => controller.onChangeBirthdayRequested(context),
+                  onTap: (context) => controller.onChangeBirthdayRequested(context),
                   child: AbsorbPointer(
                     child: PositiveTextField(
                       labelText: localizations.page_profile_birthday_input_label,

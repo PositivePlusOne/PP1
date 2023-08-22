@@ -125,7 +125,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
                     value: state.notificationSubscribedTopics.contains(NotificationTopic.toJson(topic)),
                     isBusy: state.isBusy,
                     showDisabledState: state.isBusy,
-                    onTapped: () => viewModel.toggleNotificationTopic(topic),
+                    onTapped: (_) => viewModel.toggleNotificationTopic(topic),
                   ),
                   if (topic != NotificationTopic.allTopics.last) const SizedBox(height: kPaddingMedium),
                 ],

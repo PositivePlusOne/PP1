@@ -36,7 +36,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
 
   final bool isEnabled;
 
-  final FutureOr<void> Function() onTap;
+  final FutureOr<void> Function(BuildContext context) onTap;
 
   final Widget? suffixIcon;
 

@@ -58,9 +58,12 @@ class _PositiveImageEditorState extends ConsumerState<PositiveImageEditor> {
   Uint8List originalImageBytes = Uint8List(0);
   Uint8List editedImageBytes = Uint8List(0);
 
+  late final ScrollController _filterScrollController;
+
   @override
   void initState() {
     super.initState();
+    _filterScrollController = ScrollController();
     loadInitialGalleryEntryData();
   }
 
@@ -75,6 +78,25 @@ class _PositiveImageEditorState extends ConsumerState<PositiveImageEditor> {
     editedImageBytes = widget.galleryEntry!.data!;
     state = PositiveEditorState.editing;
     setStateIfMounted();
+  }
+
+  void onInternalFilterSelected(BuildContext context, int index, AwesomeFilter filter) {
+    widget.onFilterSelected?.call(filter);
+
+    // Scroll the filter into the screen
+    final int totalFilterCount = allSupportedFilters.length;
+    const double filterSize = PositiveImageFilterSelector.kFilterSelectorSize;
+    const double dividerSize = kPaddingMedium;
+
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final double scrollOffset = (index * (filterSize + dividerSize)) - (mediaQueryData.size.width / 2) + (filterSize / 2);
+
+    // TODO(stu): Please help me fix this
+    // _filterScrollController.animateTo(
+    //   scrollOffset,
+    //   duration: kAnimationDurationRegular,
+    //   curve: kAnimationCurveDefault,
+    // );
   }
 
   @override
@@ -111,12 +133,13 @@ class _PositiveImageEditorState extends ConsumerState<PositiveImageEditor> {
         if (widget.currentFilter != null && widget.onFilterSelected != null) ...[
           const SizedBox(height: kPaddingMedium),
           PositiveImageFilterSelector(
+            controller: _filterScrollController,
             mediaQueryData: mediaQueryData,
             originalImageBytes: originalImageBytes,
             typography: typography,
             colors: colors,
-            selectedFilter: widget.currentFilter!,
-            onFilterSelected: widget.onFilterSelected!,
+            selectedFilter: widget.currentFilter ?? AwesomeFilter.None,
+            onFilterSelected: onInternalFilterSelected,
           ),
         ],
         //* Add padding so that the create post page navigation bar doesn't overlap the image editor
@@ -138,6 +161,7 @@ class PositiveImageFilterSelector extends StatelessWidget {
     required this.colors,
     required this.onFilterSelected,
     required this.selectedFilter,
+    required this.controller,
   });
 
   final MediaQueryData mediaQueryData;
@@ -145,17 +169,21 @@ class PositiveImageFilterSelector extends StatelessWidget {
   final DesignTypographyModel typography;
   final DesignColorsModel colors;
   final AwesomeFilter selectedFilter;
+  final ScrollController controller;
 
-  final void Function(AwesomeFilter filter) onFilterSelected;
+  final void Function(BuildContext context, int index, AwesomeFilter filter) onFilterSelected;
+
+  static const double kFilterSelectorSize = 161.0;
 
   @override
   Widget build(BuildContext context) {
     // Put the none filter at the start of the list
-    final List<AwesomeFilter> sortedFiltered = {AwesomeFilter.None, ...allSupportedFilters}.toList();
+    final List<AwesomeFilter> sortedFiltered = {AwesomeFilter.None, ...allSupportedFilters.where((element) => element.name != AwesomeFilter.None.name)}.toList();
     return SizedBox(
-      height: 161.0,
+      height: kFilterSelectorSize,
       width: mediaQueryData.size.width,
       child: ListView.separated(
+        controller: controller,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (_, __) => const SizedBox(width: kPaddingMedium),
         padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
@@ -171,7 +199,7 @@ class PositiveImageFilterSelector extends StatelessWidget {
           return Column(
             children: <Widget>[
               PositiveTapBehaviour(
-                onTap: () => onFilterSelected(filter),
+                onTap: (context) => onFilterSelected(context, index, filter),
                 child: AnimatedContainer(
                   duration: kAnimationDurationRegular,
                   decoration: BoxDecoration(

@@ -52,7 +52,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
           )
         : PositiveTextFieldIcon.success(
             backgroundColor: colors.green,
-            onTap: () => controller.onDisplayNameConfirmed(thanksString),
+            onTap: (context) => controller.onDisplayNameConfirmed(context, thanksString),
           );
   }
 
@@ -96,7 +96,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
             return PositiveButton(
               colors: colors,
               primaryColor: colors.black,
-              onTapped: () => controller.onDisplayNameConfirmed(localizations.page_profile_thanks_display_name),
+              onTapped: () => controller.onDisplayNameConfirmed(context, localizations.page_profile_thanks_display_name),
               isDisabled: !controller.isDisplayNameValid || (isSameDisplayName && state.formMode == FormMode.edit),
               label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
             );
