@@ -86,14 +86,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   ),
                 ),
               ],
-              if (state.currentCreatePostPage == CreatePostCurrentPage.galleryPreview) ...[
-                PositiveImageGallery(
-                  galleryEntries: state.galleryEntries,
-                  selectedGalleryEntry: state.editingGalleryEntry,
-                  onBackButtonPressed: () => viewModel.onWillPopScope(),
-                  onGalleryEntrySelected: (entry) => viewModel.onGalleryEntrySelected(context, entry),
-                ),
-              ],
               if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
                 PositiveImageEditor(
                   galleryEntry: state.editingGalleryEntry,
@@ -134,7 +126,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     valueAllowSharing: state.allowSharing,
                     valueSaveToGallery: state.saveToGallery,
                     galleryEntries: state.galleryEntries,
-                    onEditImagePressed: () => viewModel.onEditImagePressed(context),
                     tags: state.tags,
                   ),
                 ),
