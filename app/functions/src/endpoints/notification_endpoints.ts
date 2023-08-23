@@ -20,13 +20,13 @@ export namespace NotificationEndpoints {
 
     const client = FeedService.getFeedsUserClient(uid);
     const notificationResult = await NotificationsService.listNotificationWindow(client, uid, request.limit, request.cursor);
-    const profileData = await ProfileService.getMultipleProfiles(notificationResult.map((notification) => notification.sender_id).filter((senderId) => senderId.length > 0));
+    const profileData = await ProfileService.getMultipleProfiles(notificationResult.map((notification) => notification.sender).filter((sender) => sender.length > 0));
 
     let cursor = "";
     if (notificationResult.length > 0) {
       const lastReaction = notificationResult[notificationResult.length - 1];
-      if (lastReaction.key && lastReaction.key.length > 0) {
-        cursor = lastReaction.key;
+      if (lastReaction.id && lastReaction.id.length > 0) {
+        cursor = lastReaction.id;
       }
     }
 
