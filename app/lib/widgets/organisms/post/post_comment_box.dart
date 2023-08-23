@@ -4,17 +4,20 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
+import 'package:app/widgets/behaviours/positive_measure_behaviour.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 
@@ -80,57 +83,55 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
             left: kPaddingSmall,
             right: kPaddingSmall,
             bottom: kPaddingMedium + PostCommentBox.bottomPadding(mediaQuery),
-            child: Column(
-              children: [
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: colours.white,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(kBorderRadiusMassive),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(kPaddingSmallMedium),
-                  child: PositiveTextField(
-                    labelText: 'Leave a comment',
-                    textEditingController: widget.commentTextController,
-                    onTextChanged: widget.onCommentChanged,
-                    onTextSubmitted: widget.onPostCommentRequested,
-                    fillColor: colours.colorGray1,
-                    isEnabled: !widget.isBusy,
-                    minLines: 1,
-                    //TODO(S): We need a best guess helper to make sure maxLines can fit within the provided area
-                    maxLines: 10,
-                    onFocusedChanged: (focus) {
-                      setState(() {
-                        hasFocus = focus;
-                      });
-                    },
-                    suffixIcon: Container(
-                      decoration: BoxDecoration(
-                        color: hasFocus ? colours.purple : colours.black,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(kBorderRadiusLarge),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(kPaddingSmall),
-                      child: PositiveTapBehaviour(
-                        isEnabled: !widget.isBusy,
-                        onTap: (_) => widget.onPostCommentRequested(widget.commentTextController.text),
-                        child: Icon(
-                          UniconsLine.message,
-                          color: colours.white,
-                          size: kIconSmall,
-                        ),
-                      ),
-                    ),
-                    tintColor: colours.purple,
-                    borderRadius: kBorderRadiusLargePlus,
-                    showRemaining: true,
-                    textInputType: TextInputType.text,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colours.white,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(kBorderRadiusMassive),
                   ),
                 ),
-              ],
+                padding: const EdgeInsets.all(kPaddingSmallMedium),
+                child: PositiveTextField(
+                  labelText: 'Leave a comment',
+                  textEditingController: widget.commentTextController,
+                  onTextChanged: widget.onCommentChanged,
+                  onTextSubmitted: widget.onPostCommentRequested,
+                  fillColor: colours.colorGray1,
+                  isEnabled: !widget.isBusy,
+                  minLines: 1,
+                  //TODO(S): We need a best guess helper to make sure maxLines can fit within the provided area
+                  maxLines: 10,
+                  onFocusedChanged: (focus) {
+                    setState(() {
+                      hasFocus = focus;
+                    });
+                  },
+                  suffixIcon: Container(
+                    decoration: BoxDecoration(
+                      color: hasFocus ? colours.purple : colours.black,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(kBorderRadiusLarge),
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(kPaddingSmall),
+                    child: PositiveTapBehaviour(
+                      isEnabled: !widget.isBusy,
+                      onTap: (_) => widget.onPostCommentRequested(widget.commentTextController.text),
+                      child: Icon(
+                        UniconsLine.message,
+                        color: colours.white,
+                        size: kIconSmall,
+                      ),
+                    ),
+                  ),
+                  tintColor: colours.purple,
+                  borderRadius: kBorderRadiusLargePlus,
+                  showRemaining: true,
+                  textInputType: TextInputType.text,
+                ),
+              ),
             ),
           ),
         ],

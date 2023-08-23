@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
@@ -17,6 +18,7 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
 import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
 import '../../../constants/design_constants.dart';
@@ -39,6 +41,7 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
     this.isBusy = false,
     this.onImageTap,
     this.onBookmark,
+    this.onPostPageRequested,
     super.key,
   });
 
@@ -50,6 +53,8 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   final double sidePadding;
 
   final bool isBusy;
+
+  final FutureOr<void> Function(BuildContext context)? onPostPageRequested;
 
   final void Function(Media media)? onImageTap;
   final Future<void> Function(BuildContext context)? onBookmark;
@@ -520,9 +525,13 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       //? remove until last instance of space to get rid of whole words, remove carrage returns, new lines, and tabs to condense the string
       parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
     }
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
-      child: buildMarkdownWidgetFromBody(parsedMarkdown),
+
+    return PositiveTapBehaviour(
+      onTap: widget.onPostPageRequested,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
+        child: buildMarkdownWidgetFromBody(parsedMarkdown),
+      ),
     );
   }
 }

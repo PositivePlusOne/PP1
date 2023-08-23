@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:math';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -83,14 +86,15 @@ class PostPage extends ConsumerWidget {
         isCommentsEnabled = false;
     }
 
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
+
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
-        PositiveScaffoldComponent.footerPadding,
-        PositiveScaffoldComponent.footerWidgets,
       },
       decorationColor: colors.white,
       resizeToAvoidBottomInset: false,
@@ -151,14 +155,15 @@ class PostPage extends ConsumerWidget {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: kPaddingExtraSmall),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
           PositiveCommentPaginationBehaviour(
             commentMode: activity.securityConfiguration?.commentMode,
             activityId: activity.flMeta!.id!,
             feed: feed,
           ),
+
+          //! Apply extra padding for the comment box assuming one line height.
+          SliverToBoxAdapter(child: Container(height: maxSafePadding + kPaddingMedium, color: colors.white)),
         ],
       ],
     );

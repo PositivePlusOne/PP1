@@ -23,6 +23,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(String str, {void Function(String lin
     data: str,
     padding: EdgeInsets.zero,
     shrinkWrap: true,
+    selectable: false,
     config: MarkdownConfig(configs: buildMmarkdownWidgetConfig(onTapLink: onTapLink)),
     markdownGeneratorConfig: MarkdownGeneratorConfig(
       linesMargin: const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),

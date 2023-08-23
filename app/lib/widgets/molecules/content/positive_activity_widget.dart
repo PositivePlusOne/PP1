@@ -328,12 +328,22 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       return;
     }
 
+    await requestPostRoute(context);
+  }
+
+  Future<void> requestPostRoute(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
       activity: widget.activity,
       feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
     );
+
+    // Check if we are already on the post page.
+    if (router.current.name == PostRoute.name) {
+      logger.i('Already on post ${widget.activity.flMeta?.id}');
+      return;
+    }
 
     logger.i('Navigating to post ${widget.activity.flMeta?.id}');
     await router.push(postRoute);
@@ -377,8 +387,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             isShortformPost: !widget.isFullscreen,
             onImageTap: onInternalMediaTap,
             onBookmark: onPostBookmarked,
-            isBusy: _isBookmarking,
+            isBusy: !widget.isEnabled || _isBookmarking,
             feed: widget.targetFeed?.feed,
+            onPostPageRequested: requestPostRoute,
           ),
         ],
       ),
