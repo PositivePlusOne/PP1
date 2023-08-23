@@ -105,11 +105,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       captionController.text = activityData.content ?? "";
       altTextController.text = activityData.altText ?? "";
 
-      final List<Future<GalleryEntry>> galleryEntriesFutures = activityData.media?.map((e) async => await Media.toGalleryEntry(media: e)).toList() ?? [];
-      final List<GalleryEntry> galleryEntries = await Future.wait(galleryEntriesFutures);
-
       state = state.copyWith(
-        galleryEntries: galleryEntries,
         currentActivityID: activityData.activityID ?? "",
         isEditing: true,
         tags: activityData.tags ?? [],
@@ -121,6 +117,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         activeButton: PositivePostNavigationActiveButton.flex,
         activeButtonFlexText: localisations.post_dialogue_update_post,
       );
+
+      final List<Future<GalleryEntry>> galleryEntriesFutures = activityData.media?.map((e) async => await Media.toGalleryEntry(media: e)).toList() ?? [];
+      final List<GalleryEntry> galleryEntries = await Future.wait(galleryEntriesFutures);
+
+      state = state.copyWith(galleryEntries: galleryEntries);
     } catch (e) {
       logger.e("Error loading activity data: $e");
     } finally {
