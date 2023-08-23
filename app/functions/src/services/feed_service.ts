@@ -104,7 +104,8 @@ export namespace FeedService {
       withReactionCounts: true,
       withOwnChildren: true,
       withOwnReactions: true,
-      reactionKindsFilter: "like,bookmark,share,comment",
+      reactionKindsFilter: ["like", "share", "comment", "bookmark"],
+      ownReactions: true,
     });
 
     functions.logger.info("Got feed window", { feed, windowSize, next, response });
