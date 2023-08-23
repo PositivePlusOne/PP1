@@ -51,8 +51,8 @@ export namespace NotificationsService {
 
     // Assume the notification is new
     notification.created_at = new Date().toISOString();
-    if (notification.key) {
-      notification.key = uuidv1();
+    if (notification.id) {
+      notification.id = uuidv1();
     }
 
     const feed = client.feed("notification", uid);
@@ -62,11 +62,12 @@ export namespace NotificationsService {
       actor: notification.user_id,
       sender: notification.sender,
       action: notification.action,
-      object: notification.key,
-      foreign_id: notification.key,
       priority: notification.priority,
       extra_data: notification.extra_data,
       time: notification.created_at,
+      object: notification.id,
+      foreign_id: notification.id,
+      id: notification.id,
     });
 
     functions.logger.info(`Successfully posted notification payload to user feed: ${uid}`);
@@ -87,7 +88,7 @@ export namespace NotificationsService {
 
      const results = (response.results as FlatActivity<DefaultGenerics>[]).map((activity) => {
         return new NotificationPayload({
-          key: activity.id,
+          id: activity.id,
           user_id: activity.actor.toString(),
           sender: activity.sender?.toString() ?? "",
           title: activity.title?.toString() ?? "",
