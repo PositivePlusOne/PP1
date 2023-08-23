@@ -60,7 +60,6 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
       //? We only want to allow a maximum of 5 tags, for the server validation refer to tags_service.ts under the function removeRestrictedTagsFromStringArray
       if (selectedTags.length < 5) {
         selectedTags.insert(insert ? 0 : selectedTags.length, tag);
-        // selectedTags.add(tag);
       }
     }
 
