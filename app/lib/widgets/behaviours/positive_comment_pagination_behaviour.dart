@@ -345,6 +345,7 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             noItemsFoundIndicatorBuilder: (context) => Container(
               decoration: BoxDecoration(color: colours.white),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
