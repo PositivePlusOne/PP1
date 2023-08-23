@@ -1,5 +1,8 @@
-import 'package:app/dtos/database/common/fl_meta.dart';
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Project imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
 
 class FlamelinkHelpers {
   static Timestamp? getCreatedDateFromMap(Map<String, dynamic> map) {
