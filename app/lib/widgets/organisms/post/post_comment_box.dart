@@ -4,6 +4,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,14 +18,13 @@ import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 
-class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
-  const PostCommentBox({
+class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSizeWidget {
+  PostCommentBox({
     required this.mediaQuery,
     required this.commentTextController,
     required this.onCommentChanged,
     required this.onPostCommentRequested,
     required this.isBusy,
-    required this.colours,
     Key? key,
   }) : super(key: key);
 
@@ -34,7 +34,6 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
   final Function(String) onCommentChanged;
   final Function(String) onPostCommentRequested;
   final bool isBusy;
-  final DesignColorsModel colours;
 
   static double calculateHeight(MediaQueryData mediaQuery) {
     return kBottomNavigationBarHeight + (kPaddingMedium * 2) + kBottomNavigationBarBorderWidth + bottomPadding(mediaQuery);
@@ -45,7 +44,7 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(calculateHeight(mediaQuery));
+  Size get preferredSize => mediaQuery.size;
 
   static const String kHeroTag = 'pp1-components-comment-bar';
 
@@ -54,59 +53,87 @@ class PostCommentBox extends ConsumerWidget implements PreferredSizeWidget {
   static const double kBottomNavigationBarSigmaBlur = 10.0;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Hero(
-      tag: kHeroTag,
-      child: SizedBox(
-        height: preferredSize.height,
-        child: Stack(
-          children: <Widget>[
-            const Positioned.fill(
-              child: PositiveNavigationBarShade(),
-            ),
-            Positioned(
-              top: kPaddingMedium,
-              left: kPaddingSmall,
-              right: kPaddingSmall,
-              bottom: kPaddingMedium + bottomPadding(mediaQuery),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: colours.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(kBorderRadiusMassive),
-                  ),
-                ),
-                padding: const EdgeInsets.all(kPaddingSmallMedium),
-                child: PositiveTextField(
-                  hintText: 'Leave a comment',
-                  textEditingController: commentTextController,
-                  onTextChanged: onCommentChanged,
-                  onTextSubmitted: onPostCommentRequested,
-                  fillColor: colours.colorGray1,
-                  suffixIcon: Container(
-                    decoration: BoxDecoration(
-                      color: colours.black,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(kBorderRadiusLarge),
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(kPaddingSmall),
-                    child: PositiveTapBehaviour(
-                      isEnabled: !isBusy,
-                      onTap: (_) => onPostCommentRequested(commentTextController.text),
-                      child: Icon(
-                        UniconsLine.message,
-                        color: colours.white,
-                        size: kIconSmall,
-                      ),
+  ConsumerState<PostCommentBox> createState() => _PostCommentBoxState();
+}
+
+class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
+  bool hasFocus = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+
+    return SizedBox(
+      height: widget.preferredSize.height,
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: PostCommentBox.bottomPadding(mediaQuery),
+            top: mediaQuery.size.height - PostCommentBox.calculateHeight(mediaQuery),
+            child: const PositiveNavigationBarShade(),
+          ),
+          Positioned(
+            top: kPaddingMedium,
+            left: kPaddingSmall,
+            right: kPaddingSmall,
+            bottom: kPaddingMedium + PostCommentBox.bottomPadding(mediaQuery),
+            child: Column(
+              children: [
+                const Spacer(),
+                Container(
+                  decoration: BoxDecoration(
+                    color: colours.white,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(kBorderRadiusMassive),
                     ),
                   ),
-                  isEnabled: !isBusy,
+                  padding: const EdgeInsets.all(kPaddingSmallMedium),
+                  child: PositiveTextField(
+                    labelText: 'Leave a comment',
+                    textEditingController: widget.commentTextController,
+                    onTextChanged: widget.onCommentChanged,
+                    onTextSubmitted: widget.onPostCommentRequested,
+                    fillColor: colours.colorGray1,
+                    isEnabled: !widget.isBusy,
+                    minLines: 1,
+                    //TODO(S): We need a best guess helper to make sure maxLines can fit within the provided area
+                    maxLines: 10,
+                    onFocusedChanged: (focus) {
+                      setState(() {
+                        hasFocus = focus;
+                      });
+                    },
+                    suffixIcon: Container(
+                      decoration: BoxDecoration(
+                        color: hasFocus ? colours.purple : colours.black,
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(kBorderRadiusLarge),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(kPaddingSmall),
+                      child: PositiveTapBehaviour(
+                        isEnabled: !widget.isBusy,
+                        onTap: (_) => widget.onPostCommentRequested(widget.commentTextController.text),
+                        child: Icon(
+                          UniconsLine.message,
+                          color: colours.white,
+                          size: kIconSmall,
+                        ),
+                      ),
+                    ),
+                    tintColor: colours.purple,
+                    borderRadius: kBorderRadiusLargePlus,
+                    showRemaining: true,
+                    textInputType: TextInputType.text,
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

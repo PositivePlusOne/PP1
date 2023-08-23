@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -260,6 +261,9 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+
     String commentShareType = "";
 
     if (widget.commentMode != null) {
@@ -278,8 +282,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
         },
       );
     }
-
-    const Widget loadingIndicator = PositivePostLoadingIndicator();
 
     return MultiSliver(
       children: [
@@ -327,18 +329,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             ),
           ),
         ),
-        if (commentState.pagingController.itemList == null || commentState.pagingController.itemList!.isEmpty)
-          Container(
-            decoration: BoxDecoration(color: colours.white),
-            child: Padding(
-              padding: const EdgeInsets.all(kPaddingSmallMedium),
-              child: Text(
-                "Be the first to leave a comment",
-                textAlign: TextAlign.left,
-                style: typography.styleHeroMedium,
-              ),
-            ),
-          ),
         //? comments listed
         PagedSliverList.separated(
           shrinkWrapFirstPageIndicators: true,
@@ -352,9 +342,30 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             },
             firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
             newPageErrorIndicatorBuilder: (context) => const SizedBox(),
-            noItemsFoundIndicatorBuilder: (context) => const SizedBox(),
+            noItemsFoundIndicatorBuilder: (context) => Container(
+              decoration: BoxDecoration(color: colours.white),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
+                    child: Text(
+                      "Be the first to leave a comment",
+                      textAlign: TextAlign.left,
+                      style: typography.styleHeroMedium,
+                    ),
+                  ),
+                  SizedBox(
+                    width: screenSize.width,
+                    height: screenSize.width,
+                    child: Stack(
+                      children: buildType5ScaffoldDecorations(colours),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
-            firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+            firstPageProgressIndicatorBuilder: (context) => const SizedBox(),
             newPageProgressIndicatorBuilder: (context) {
               return Container(
                 padding: const EdgeInsets.only(top: kBorderThicknessMedium),
