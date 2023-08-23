@@ -65,7 +65,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
         profileController.updateEmailAddress(),
         profileController.updateFirebaseMessagingToken(),
         notificationsController.setupPushNotificationListeners(),
-        if (notificationsController.state.notifications.isEmpty) notificationsController.loadNextNotificationWindow(),
       ]);
     } finally {}
   }

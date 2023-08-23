@@ -3,28 +3,29 @@ import { NotificationTopic } from "../../constants/notification_topics";
 
 /**
  * Notification payload
- * @param {string} key The key of the notification
+ * @param {string} id The id of the notification
  * @param {string} sender The sender of the notification
- * @param {string} receiver The receiver of the notification
+ * @param {string} user_id The user_id of the notification
+ * @param {string} title The title of the notification
  * @param {string} title The title of the notification
  * @param {string} body The body of the notification
  * @param {NotificationTopic} topic The topic of the notification
  * @param {NotificationAction} action The action of the notification
  * @param {boolean} hasDismissed Whether the notification has been dismissed
- * @param {Record<string, any>} extraData Any extra data to send with the notification
+ * @param {Record<string, any>} extra_data Any extra data to send with the notification
  * @param {NotificationPriority} priority The priority of the notification
  */
 export class NotificationPayload {
-    public key = '';
+    public id = '';
+    public user_id = '';
     public sender = '';
-    public receiver = '';
     public title = '';
     public body = '';
     public icon = '';
+    public created_at = '';
+    public extra_data: Record<string, any> = {};
     public topic: NotificationTopic = NotificationTopic.OTHER;
     public action: NotificationAction = NotificationAction.NONE;
-    public hasDismissed = false;
-    public extraData: Record<string, any> = {};
     public priority: NotificationPriority | null = NotificationPriority.PRIORITY_HIGH;
 
     /**
@@ -34,16 +35,16 @@ export class NotificationPayload {
      */
     constructor(payload?: Partial<NotificationPayload>) {
         if (payload) {
-            this.key = payload.key || '';
+            this.id = payload.id || '';
+            this.user_id = payload.user_id || '';
             this.sender = payload.sender || '';
-            this.receiver = payload.receiver || '';
             this.title = payload.title || '';
             this.body = payload.body || '';
             this.icon = payload.icon || '';
+            this.created_at = payload.created_at || '';
+            this.extra_data = payload.extra_data || {};
             this.topic = payload.topic || NotificationTopic.OTHER;
             this.action = payload.action || NotificationAction.NONE;
-            this.hasDismissed = payload.hasDismissed || false;
-            this.extraData = payload.extraData || {};
             this.priority = payload.priority || NotificationPriority.PRIORITY_HIGH;
         }
     }

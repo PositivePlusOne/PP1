@@ -70,10 +70,6 @@ abstract class NotificationHandler {
     if (payload.sender.isNotEmpty) {
       profileFetchProcessor.appendProfileIds({payload.sender});
     }
-
-    if (payload.receiver.isNotEmpty) {
-      profileFetchProcessor.appendProfileIds({payload.receiver});
-    }
   }
 
   Future<void> onNotificationDisplayed(NotificationPayload payload, bool isForeground) async {
@@ -112,7 +108,7 @@ abstract class NotificationHandler {
     final logger = providerContainer.read(loggerProvider);
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = providerContainer.read(flutterLocalNotificationsPluginProvider);
 
-    final int id = convertStringToUniqueInt(payload.key);
+    final int id = convertStringToUniqueInt(payload.id);
     final NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         payload.topic.toLocalizedTopic,

@@ -22,20 +22,15 @@ export namespace HealthEndpoints {
             throw new functions.https.HttpsError("not-found", "Profile not found");
         }
 
-        const token = profile.fcmToken;
-        if (!token) {
-            throw new functions.https.HttpsError("not-found", "FCM token not found");
-        }
-
         const payload = new NotificationPayload({
-            sender: "",
+            user_id: uid,
             title: "Test notification",
-            body: "This is a test notification",
-            
+            body: "This is a test notification",            
             action: NotificationAction.TEST,
         });
 
         // Send the notification
-        await NotificationsService.sendPayloadToUser(token, payload, false);
+        await NotificationsService.sendPayloadToUser(uid, payload);
+        await NotificationsService.postNotifationPayloadToUserFeed(uid, payload);
     });
 }

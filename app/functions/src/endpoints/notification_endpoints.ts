@@ -4,78 +4,57 @@ import { UserService } from "../services/user_service";
 import { ProfileService } from "../services/profile_service";
 import { NotificationsService } from "../services/notifications_service";
 
-import safeJsonStringify from "safe-json-stringify";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { FeedService } from "../services/feed_service";
+import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace NotificationEndpoints {
-  export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const uid = context.auth?.uid || "";
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 
     if (uid.length === 0) {
       throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const notificationResult = await NotificationsService.listNotifications(uid, data.cursor, data.limit || 50);
-    return safeJsonStringify(notificationResult);
+    const client = FeedService.getFeedsUserClient(uid);
+    const notificationResult = await NotificationsService.listNotificationWindow(client, uid, request.limit, request.cursor);
+    const profileData = await ProfileService.getMultipleProfiles(notificationResult.map((notification) => notification.sender_id).filter((senderId) => senderId.length > 0));
+
+    let cursor = "";
+    if (notificationResult.length > 0) {
+      const lastReaction = notificationResult[notificationResult.length - 1];
+      if (lastReaction.key && lastReaction.key.length > 0) {
+        cursor = lastReaction.key;
+      }
+    }
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [...profileData],
+      cursor: cursor,
+      limit: request.limit,
+      seedData: {
+        notifications: notificationResult,
+      },
+    });
   });
 
-  export const countUnreadNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const markNotificationsAsReadAndSeen = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const uid = context.auth?.uid || "";
-    functions.logger.info(`Getting unread notification count for current user: ${uid}`);
-
-    const profile = await ProfileService.getProfile(uid);
-    if (!profile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
+    functions.logger.info(`Marking notifications as read and seen for current user: ${uid}`);
+    if (uid.length === 0) {
+      throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const notificationCount = await NotificationsService.getUnreadNotificationsCount(profile);
-    return safeJsonStringify({ count: notificationCount });
-  });
+    const client = FeedService.getFeedsUserClient(uid);
+    await NotificationsService.markAllNotificationsReadAndSeen(client, uid);
 
-  export const dismissNotification = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info(`Dismissing notification for current user: ${uid}`);
-
-    const notificationKey = data.notificationKey || "";
-    if (!notificationKey) {
-      return safeJsonStringify({ success: true });
-    }
-
-    // May not be stored, in which case this is a no-op
-    const notification = await NotificationsService.getNotification(notificationKey);
-    if (!notification) {
-      return safeJsonStringify({ success: true });
-    }
-
-    if (notification.receiver !== uid) {
-      throw new functions.https.HttpsError("permission-denied", "Notification does not belong to current user");
-    }
-
-    await NotificationsService.dismissNotification(notification);
-
-    return safeJsonStringify({ success: true });
-  });
-
-  export const dismissAllNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    const uid = context.auth?.uid || "";
-    functions.logger.info(`Dismissing all notifications for current user: ${uid}`);
-
-    const profile = await ProfileService.getProfile(uid);
-    if (!profile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    await NotificationsService.dismissAllNotifications(profile);
-
-    return safeJsonStringify({ success: true });
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [],
+    });
   });
 }

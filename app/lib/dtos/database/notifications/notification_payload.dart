@@ -2,7 +2,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/converters/date_converters.dart';
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 
@@ -12,18 +12,17 @@ part 'notification_payload.g.dart';
 @freezed
 abstract class NotificationPayload with _$NotificationPayload {
   const factory NotificationPayload({
-    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') String key,
+    @Default('') String id,
+    @Default('') @JsonKey(name: 'user_id') String userId,
     @Default('') String sender,
-    @Default('') String receiver,
+    @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdAt,
     @Default('') String title,
     @Default('') String body,
     @Default('') String icon,
-    @Default(NotificationTopic.other()) @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson) NotificationTopic topic,
     @Default('') String type,
+    @Default({}) @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
+    @Default(NotificationTopic.other()) @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson) NotificationTopic topic,
     @Default(NotificationAction.none()) @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson) NotificationAction action,
-    @Default(false) bool hasDismissed,
-    @Default({}) Map<String, dynamic> extraData,
     @Default(NotificationPriority.defaultPriority()) @JsonKey(fromJson: NotificationPriority.fromJson, toJson: NotificationPriority.toJson) NotificationPriority priority,
   }) = _NotificationPayload;
 

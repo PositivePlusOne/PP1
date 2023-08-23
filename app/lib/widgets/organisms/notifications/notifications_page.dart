@@ -1,5 +1,3 @@
-// Dart imports:
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -9,17 +7,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
+import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
-import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
-import '../../../providers/system/notifications_controller.dart';
 
 @RoutePage()
 class NotificationsPage extends ConsumerWidget {
@@ -27,18 +21,15 @@ class NotificationsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
-    final List<NotificationPayload> notifications = ref.watch(notificationsControllerProvider.select((value) => value.notifications.values.toList()));
-
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-
-    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final String profileId = currentProfile?.flMeta?.id ?? '';
 
     final List<Widget> actions = [];
-    if (profileState.currentProfile != null) {
-      actions.addAll(profileState.currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
+    if (currentProfile != null) {
+      actions.addAll(currentProfile.buildCommonProfilePageActions(disableNotifications: true));
     }
 
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
@@ -46,16 +37,10 @@ class NotificationsPage extends ConsumerWidget {
           appBarTrailing: actions,
           appBarSpacing: kPaddingSmall,
           children: <Widget>[
-            for (final NotificationPayload payload in notifications) ...<Widget>[
-              Dismissible(
-                key: ValueKey<String>('notification-${payload.key}'),
-                onDismissed: (_) => viewModel.onNotificationDismissed(payload),
-                child: PositiveTileEntryAnimation(
-                  child: PositiveNotificationTile(notification: payload),
-                ),
-              ),
+            if (profileId.isNotEmpty) ...<Widget>[
+              PositiveNotificationsPaginationBehaviour(uid: profileId),
             ],
-          ].spaceWithVertical(kPaddingSmall),
+          ],
         ),
       ],
     );

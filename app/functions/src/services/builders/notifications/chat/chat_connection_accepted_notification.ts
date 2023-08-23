@@ -24,11 +24,11 @@ export namespace ChatConnectionAcceptedNotification {
       throw new Error("Could not get sender or receiver id");
     }
 
-    const key = `connection_accepted_${senderId}_${receiverId}`;
+    const id = `connection_accepted_${senderId}_${receiverId}`;
     const payload = new NotificationPayload({
-      key,
+      id,
       sender: senderId,
-      receiver: receiverId,
+      user_id: receiverId,
       title,
       body,
       topic: NotificationTopic.CONNECTION_REQUEST,
@@ -36,5 +36,6 @@ export namespace ChatConnectionAcceptedNotification {
     });
 
     await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
+    await NotificationsService.postNotifationPayloadToUserFeed(target.fcmToken, payload);
   }
 }

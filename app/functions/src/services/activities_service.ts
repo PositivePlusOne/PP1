@@ -144,6 +144,7 @@ export namespace ActivitiesService {
       verb: ActivityActionVerb.Post,
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
+      time: activity?._fl_meta_?.createdDate ?? new Date().toISOString(),
       to: targets,
     };
     

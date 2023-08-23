@@ -34,7 +34,6 @@ import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_comments_state.dart';
 import '../../dtos/database/activities/comments.dart';
 import '../../services/third_party.dart';
-import '../atoms/indicators/positive_post_loading_indicator.dart';
 
 class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveCommentPaginationBehaviour({
