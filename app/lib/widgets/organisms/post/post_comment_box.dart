@@ -129,7 +129,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                   tintColor: colours.purple,
                   borderRadius: kBorderRadiusLargePlus,
                   showRemaining: true,
-                  textInputType: TextInputType.text,
+                  textInputType: TextInputType.multiline,
                 ),
               ),
             ),
