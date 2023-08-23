@@ -93,13 +93,13 @@ class PostPage extends ConsumerWidget {
         PositiveScaffoldComponent.footerWidgets,
       },
       decorationColor: colors.white,
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: isCommentsEnabled && isUserAbleToComment
           ? PostCommentBox(
               mediaQuery: MediaQuery.of(context),
               commentTextController: viewModel.commentTextController,
               onCommentChanged: viewModel.onCommentChanged,
               onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
-              colours: colors,
               isBusy: state.isBusy,
             )
           : null,

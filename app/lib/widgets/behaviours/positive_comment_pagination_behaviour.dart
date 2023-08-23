@@ -279,8 +279,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
       );
     }
 
-    const Widget loadingIndicator = PositivePostLoadingIndicator();
-
     return MultiSliver(
       children: [
         //? Comments header
@@ -327,18 +325,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             ),
           ),
         ),
-        if (commentState.pagingController.itemList == null || commentState.pagingController.itemList!.isEmpty)
-          Container(
-            decoration: BoxDecoration(color: colours.white),
-            child: Padding(
-              padding: const EdgeInsets.all(kPaddingSmallMedium),
-              child: Text(
-                "Be the first to leave a comment",
-                textAlign: TextAlign.left,
-                style: typography.styleHeroMedium,
-              ),
-            ),
-          ),
         //? comments listed
         PagedSliverList.separated(
           shrinkWrapFirstPageIndicators: true,
@@ -352,9 +338,19 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
             },
             firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
             newPageErrorIndicatorBuilder: (context) => const SizedBox(),
-            noItemsFoundIndicatorBuilder: (context) => const SizedBox(),
+            noItemsFoundIndicatorBuilder: (context) => Container(
+              decoration: BoxDecoration(color: colours.white),
+              child: Padding(
+                padding: const EdgeInsets.all(kPaddingSmallMedium),
+                child: Text(
+                  "Be the first to leave a comment",
+                  textAlign: TextAlign.left,
+                  style: typography.styleHeroMedium,
+                ),
+              ),
+            ),
             noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
-            firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+            firstPageProgressIndicatorBuilder: (context) => const SizedBox(),
             newPageProgressIndicatorBuilder: (context) {
               return Container(
                 padding: const EdgeInsets.only(top: kBorderThicknessMedium),
