@@ -128,8 +128,8 @@ export namespace TagsService {
       return formattedTag.slice(0, 30);
     });
     
-    //? We only want to allow a maximum of 6 tags, for the local validation refer to create_post_tag_dialogue.dart under the function onTagTapped
-    returnTags = returnTags.slice(0, 6);
+    //? We only want to allow a maximum of 5 tags, for the local validation refer to create_post_tag_dialogue.dart under the function onTagTapped
+    returnTags = returnTags.slice(0, 4);
     return returnTags;
   }
 
