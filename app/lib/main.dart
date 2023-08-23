@@ -36,8 +36,15 @@ class App extends ConsumerWidget {
     final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
 
     return MaterialApp.router(
-      builder: (context, child) => StreamChatWrapper.wrap(context, child ?? const SizedBox.shrink()),
-      theme: ThemeData(useMaterial3: false),
+      builder: (context, child) {
+        final DefaultTextHeightBehavior textHeightChild = DefaultTextHeightBehavior(
+          textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
+          child: child ?? const SizedBox.shrink(),
+        );
+
+        return StreamChatWrapper.wrap(context, textHeightChild);
+      },
+      theme: ThemeData(useMaterial3: true),
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           RouteAnalyticsObserver(),
