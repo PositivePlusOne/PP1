@@ -8,6 +8,7 @@ import { ReactionService } from "../services/reaction_service";
 import { FeedName } from "../constants/default_feeds";
 import { ReactionJSON } from "../dto/reactions";
 import { FeedService } from "../services/feed_service";
+import { ProfileService } from "../services/profile_service";
 
 export namespace ReactionEndpoints {
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -107,11 +108,14 @@ export namespace ReactionEndpoints {
             }
         }
 
+        // Get the profiles from the reactions
+        const profiles = await ProfileService.getMultipleProfiles(reactions.map((reaction) => reaction.user_id || "").filter((userId) => userId !== ""));
+
         return buildEndpointResponse(context, {
             sender: uid,
             cursor: cursor,
             limit: request.limit,
-            data: reactions,
+            data: [reactions, profiles],
         });
     });
 
