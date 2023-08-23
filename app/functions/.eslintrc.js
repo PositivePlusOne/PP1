@@ -34,5 +34,6 @@ module.exports = {
     "key-spacing":"off",
     "spaced-comment":"off",
     "camelcase":"off",
+    "space-before-function-paren":"off",
   },
 };

@@ -10,7 +10,7 @@ import { QueryOptions, UpdateOptions } from "./types/query_options";
 
 export namespace DataService {
 
-  export const getDocumentReference = async function(options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
+  export const getDocumentReference = async function (options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
     const cacheKey = CacheService.generateCacheKey(options);
     const cachedDocument = await CacheService.getFromCache(cacheKey);
     let documentId = cachedDocument?._fl_meta_?.docId || "";
@@ -36,7 +36,7 @@ export namespace DataService {
     return documentRef;
   };
 
-  export const getDocument = async function(options: { schemaKey: string; entryId: string }, skipCacheLookup = false): Promise<any> {
+  export const getDocument = async function (options: { schemaKey: string; entryId: string }, skipCacheLookup = false): Promise<any> {
     let data;
     const cacheKey = CacheService.generateCacheKey(options);
 
@@ -63,7 +63,7 @@ export namespace DataService {
     return data;
   };
 
-  export const getDocumentWindowRaw = async function(options: QueryOptions): Promise<DocumentData[]> {
+  export const getDocumentWindowRaw = async function (options: QueryOptions): Promise<DocumentData[]> {
     functions.logger.info(`Getting document window query`, options);
 
     const firestore = adminApp.firestore();
@@ -90,7 +90,7 @@ export namespace DataService {
     return documents;
   };
 
-  export const countDocumentsRaw = async function(options: QueryOptions): Promise<number> {
+  export const countDocumentsRaw = async function (options: QueryOptions): Promise<number> {
     functions.logger.info(`Getting document count query for ${options.schemaKey}`);
 
     const firestore = adminApp.firestore();
@@ -114,7 +114,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<any>} a promise that resolves when the document is updated.
    */
-  export const updateDocument = async function(options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
+  export const updateDocument = async function (options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const cacheKey = CacheService.generateCacheKey(options);
 
@@ -146,7 +146,8 @@ export namespace DataService {
       // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
       // to ensure that the document is updated in the cache.
       if (options.data._fl_meta_) {
-        options.data._fl_meta_.lastModifiedDate = new Timestamp(new Date().getTime() / 1000, 0);
+        const timeSecondsInteger = Math.floor(new Date().getTime() / 1000);
+        options.data._fl_meta_.lastModifiedDate = new Timestamp(timeSecondsInteger, 0);
       }
 
       data = { ...document, ...options.data };
@@ -156,7 +157,7 @@ export namespace DataService {
     return data;
   };
 
-  export const updateDocumentsRaw = async function(options: UpdateOptions<any>): Promise<void> {
+  export const updateDocumentsRaw = async function (options: UpdateOptions<any>): Promise<void> {
     const firestore = adminApp.firestore();
     const batch = firestore.batch();
 
@@ -178,7 +179,8 @@ export namespace DataService {
             // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
             // to ensure that the document is updated in the cache.
             if (data._fl_meta_) {
-              data._fl_meta_.lastModifiedDate = new Timestamp(new Date().getTime() / 1000, 0);
+              const timeSecondsInteger = Math.floor(new Date().getTime() / 1000);
+              data._fl_meta_.lastModifiedDate = new Timestamp(timeSecondsInteger, 0);
             }
 
             batch.update(ref, { [dataChange]: data });
@@ -190,7 +192,7 @@ export namespace DataService {
     await batch.commit();
   };
 
-  export const getBatchDocuments = async function(options: { schemaKey: string; entryIds: string[] }): Promise<any> {
+  export const getBatchDocuments = async function (options: { schemaKey: string; entryIds: string[] }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting batch documents for ${options.schemaKey}: ${options.entryIds}`);
 
@@ -217,7 +219,7 @@ export namespace DataService {
     return entries;
   };
 
-  export const getDocumentByField = async function(options: { schemaKey: string; field: string; value: string }): Promise<any> {
+  export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     functions.logger.info(`Getting document for ${options.schemaKey}: ${options.field} = ${options.value}`);
 
@@ -229,7 +231,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<boolean>} true if the document exists, false otherwise.
    */
-  export const exists = async function(options: { schemaKey: string; entryId: string }): Promise<boolean> {
+  export const exists = async function (options: { schemaKey: string; entryId: string }): Promise<boolean> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const cacheKey = CacheService.generateCacheKey(options);
     const cachedDocument = await CacheService.getFromCache(cacheKey);
@@ -253,7 +255,7 @@ export namespace DataService {
    * @param {any} options the options to use.
    * @return {Promise<void>} a promise that resolves when the document is deleted.
    */
-  export const deleteDocument = async function(options: { schemaKey: string; entryId: string }): Promise<void> {
+  export const deleteDocument = async function (options: { schemaKey: string; entryId: string }): Promise<void> {
     const cacheKey = CacheService.generateCacheKey(options);
     let currentDocument = await CacheService.getFromCache(cacheKey);
 
