@@ -39,6 +39,7 @@ export namespace CommentsService {
             activity_id: comment.activity_id,
             user_id: comment.user_id,
             data: comment.data,
+            time: new Date().toISOString(),
         } as ReactionEntryJSON;
 
         const response = await client.reactions.add("comment", comment.activity_id!,
