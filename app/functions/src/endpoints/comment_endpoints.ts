@@ -13,6 +13,7 @@ import { CommentHelpers } from "../helpers/comment_helpers";
 import { CommentJSON } from "../dto/comments";
 import { CommentsService } from "../services/comments_service";
 import { FeedService } from "../services/feed_service";
+import { ProfileService } from "../services/profile_service";
 
 export namespace CommentEndpoints {
     export const postComment = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -152,16 +153,14 @@ export namespace CommentEndpoints {
             }
         }
 
-        functions.logger.log("Returning comments", {
-            cursor: cursor,
-            comments: comments,
-        });
+        // Get the profiles from the reactions
+        const profiles = await ProfileService.getMultipleProfiles(comments.map((comment) => comment.user_id || "").filter((userId) => userId !== ""));
 
         return buildEndpointResponse(context, {
             sender: uid,
             cursor: cursor,
             limit: request.limit,
-            data: comments,
+            data: [comments, profiles],
         });
     });
 }
