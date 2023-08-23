@@ -116,8 +116,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await checkCameraPermission(request: true);
-      await checkLibraryPermission(request: true);
+      if (mounted) {
+        await checkCameraPermission(request: true);
+      }
+
+      if (mounted) {
+        await checkLibraryPermission(request: true);
+      }
 
       if (hasCameraPermission) {
         viewMode = PositiveCameraViewMode.camera;

@@ -213,3 +213,62 @@ List<PositiveScaffoldDecoration> buildType4ScaffoldDecorations(DesignColorsModel
     ),
   ].map((e) => PositiveScaffoldDecoration.fromPageDecoration(e)).toList();
 }
+
+List<PositiveScaffoldDecoration> buildType5ScaffoldDecorations(DesignColorsModel colors) {
+  return <PositiveScaffoldDecorationModel>[
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationStar,
+      alignment: Alignment.bottomCenter,
+      color: colors.purple,
+      scale: 1,
+      offsetX: 0,
+      offsetY: 70,
+      rotationDegrees: -0.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationRings,
+      alignment: Alignment.bottomLeft,
+      color: colors.teal,
+      scale: 1,
+      offsetX: -100,
+      offsetY: 0,
+      rotationDegrees: -10.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationArrowRight,
+      alignment: Alignment.topLeft,
+      color: colors.yellow,
+      scale: 1,
+      offsetX: -80,
+      offsetY: 0,
+      rotationDegrees: -30.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationFlower,
+      alignment: Alignment.center,
+      color: colors.black,
+      scale: 1,
+      offsetX: 0,
+      offsetY: 0,
+      rotationDegrees: 0.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationGlobe,
+      alignment: Alignment.topRight,
+      color: colors.pink,
+      scale: 1.1,
+      offsetX: 60,
+      offsetY: 20,
+      rotationDegrees: 0.0,
+    ),
+    PositiveScaffoldDecorationModel(
+      asset: SvgImages.decorationEye,
+      alignment: Alignment.bottomRight,
+      color: colors.green,
+      scale: 0.9,
+      offsetX: 110,
+      offsetY: -30,
+      rotationDegrees: 40.0,
+    ),
+  ].map((e) => PositiveScaffoldDecoration.fromPageDecoration(e)).toList();
+}
