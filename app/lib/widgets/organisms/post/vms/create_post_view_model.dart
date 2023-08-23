@@ -105,6 +105,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       captionController.text = activityData.content ?? "";
       altTextController.text = activityData.altText ?? "";
 
+      //? State is updated in two steps, otherwise the camera can breifly activate on the edit page due to the asynchronus fucnctions required for gallery
       state = state.copyWith(
         currentActivityID: activityData.activityID ?? "",
         isEditing: true,
