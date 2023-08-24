@@ -1,6 +1,13 @@
 import { NotificationAction } from "../../constants/notification_actions";
 import { NotificationTopic } from "../../constants/notification_topics";
 
+
+export class NotificationPayloadResponse {
+    public payloads: NotificationPayload[] = [];
+    public unread_count = 0;
+    public unseen_count = 0;
+}
+
 /**
  * Notification payload
  * @param {string} id The id of the notification
@@ -46,7 +53,7 @@ export class NotificationPayload {
             this.topic = payload.topic || NotificationTopic.OTHER;
             this.action = payload.action || NotificationAction.NONE;
             this.priority = payload.priority || NotificationPriority.PRIORITY_HIGH;
-        }
+        }   
     }
 }
 

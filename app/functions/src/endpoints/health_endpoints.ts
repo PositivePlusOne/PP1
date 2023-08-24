@@ -31,6 +31,6 @@ export namespace HealthEndpoints {
 
         // Send the notification
         await NotificationsService.sendPayloadToUser(profile.fcmToken, payload);
-        await NotificationsService.postNotifationPayloadToUserFeed(uid, payload);
+        await NotificationsService.postNotificationPayloadToUserFeed(uid, payload);
     });
 }

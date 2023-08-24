@@ -15,12 +15,14 @@ import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
+import 'package:app/constants/cache_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/common/events/force_media_fetch_event.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
@@ -266,7 +268,7 @@ class PositiveMediaImage extends StatefulWidget {
 
 class _PositiveMediaImageState extends State<PositiveMediaImage> {
   PositiveMediaImageProvider? _imageProvider;
-  final ValueNotifier<Uint8List> bytesNotifier = ValueNotifier<Uint8List>(Uint8List(0));
+  Uint8List bytes = Uint8List(0);
   late final StreamSubscription<ForceMediaFetchEvent> _forceMediaFetchSubscription;
 
   bool isSvg = false;
@@ -274,6 +276,10 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
   @override
   void initState() {
     super.initState();
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final String expectedCacheKey = 'bytes:${Media.getKey(widget.media, widget.thumbnailTargetSize)}';
+
     _imageProvider = PositiveMediaImageProvider(
       media: widget.media,
       useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
@@ -281,8 +287,18 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    _imageProvider?.loadBytes();
     _forceMediaFetchSubscription = providerContainer.read(eventBusProvider).on<ForceMediaFetchEvent>().listen(onForceMediaFetchCalled);
+
+    final Uint8List? cachedBytes = cacheController.getFromCache(expectedCacheKey);
+    final String mimeType = lookupMimeType(widget.media.name, headerBytes: bytes) ?? '';
+
+    if (cachedBytes != null && cachedBytes.isNotEmpty) {
+      bytes = cachedBytes;
+      isSvg = mimeType == 'image/svg+xml';
+      setStateIfMounted();
+    } else {
+      _imageProvider!.loadBytes();
+    }
   }
 
   @override
@@ -318,52 +334,52 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
   }
 
   void onBytesLoaded(String mimeType, Uint8List bytes) {
-    if (!mounted || bytesNotifier.value == bytes) {
+    if (this.bytes == bytes || bytes.isEmpty) {
       return;
     }
 
-    bytesNotifier.value = bytes;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final String expectedCacheKey = 'bytes:${Media.getKey(widget.media, widget.thumbnailTargetSize)}';
+
+    this.bytes = bytes;
     isSvg = mimeType == 'image/svg+xml';
     setStateIfMounted();
+
+    cacheController.addToCache(key: expectedCacheKey, value: bytes, ttl: kCacheTTLShort);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<Uint8List>(
-        valueListenable: bytesNotifier,
-        builder: (context, bytes, child) {
-          Widget imageChild = const SizedBox.shrink();
-          if (bytes.isEmpty) {
-            imageChild = widget.placeholderBuilder?.call(context) ?? const SizedBox.shrink();
-          } else if (isSvg) {
-            imageChild = SvgPicture.memory(
-              bytes,
-              height: widget.height,
-              width: widget.width,
-              fit: widget.fit,
-              // any other properties you need
-            );
-          } else {
-            imageChild = Image.memory(
-              bytes,
-              height: widget.height,
-              width: widget.width,
-              fit: widget.fit,
-              isAntiAlias: true,
-              gaplessPlayback: true,
-            );
-          }
-          return PositiveTapBehaviour(
-            isEnabled: widget.isEnabled,
-            showDisabledState: false,
-            onTap: onInternalTap,
-            child: AnimatedOpacity(
-              opacity: bytes.isEmpty ? 0 : 1,
-              duration: kAnimationDurationRegular,
-              child: imageChild,
-            ),
-          );
-        });
+    Widget child = widget.placeholderBuilder?.call(context) ?? SizedBox(height: widget.height, width: widget.width);
+    if (bytes.isNotEmpty) {
+      if (isSvg) {
+        child = SvgPicture.memory(
+          bytes,
+          height: widget.height,
+          width: widget.width,
+          fit: widget.fit,
+          // any other properties you need
+        );
+      } else {
+        child = Image.memory(
+          bytes,
+          height: widget.height,
+          width: widget.width,
+          fit: widget.fit,
+          gaplessPlayback: true,
+        );
+      }
+    }
+
+    return PositiveTapBehaviour(
+      isEnabled: widget.isEnabled,
+      showDisabledState: false,
+      onTap: onInternalTap,
+      child: Opacity(
+        opacity: bytes.isEmpty ? 0 : 1,
+        child: child,
+      ),
+    );
   }
 
   FutureOr<void> onInternalTap(BuildContext context) async {

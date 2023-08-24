@@ -19,6 +19,7 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/notification_extensions.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -333,7 +334,7 @@ class NotificationsController extends _$NotificationsController {
     }
 
     logger.d('attemptToAppendNotification: Appended notification');
-    notificationsState.pagingController.appendPage([payload], notificationsState.currentPaginationKey);
+    notificationsState.pagingController.appendSafePage([payload], notificationsState.currentPaginationKey);
   }
 
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {

@@ -368,30 +368,34 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: !widget.isEnabled,
-      child: Column(
-        children: <Widget>[
-          PositiveTapBehaviour(
-            onTap: onInternalHeaderTap,
-            child: ActivityPostHeadingWidget(
-              flMetaData: widget.activity.flMeta,
-              publisher: publisher,
-              onOptions: onPostOptionsSelected,
+    return Hero(
+      tag: 'activity-${widget.activity.flMeta?.id ?? widget.activity.hashCode}',
+      transitionOnUserGestures: true,
+      child: IgnorePointer(
+        ignoring: !widget.isEnabled,
+        child: Column(
+          children: <Widget>[
+            PositiveTapBehaviour(
+              onTap: onInternalHeaderTap,
+              child: ActivityPostHeadingWidget(
+                flMetaData: widget.activity.flMeta,
+                publisher: publisher,
+                onOptions: onPostOptionsSelected,
+              ),
             ),
-          ),
-          const SizedBox(height: kPaddingExtraSmall),
-          PositivePostLayoutWidget(
-            postContent: widget.activity,
-            publisher: publisher,
-            isShortformPost: !widget.isFullscreen,
-            onImageTap: onInternalMediaTap,
-            onBookmark: onPostBookmarked,
-            isBusy: !widget.isEnabled || _isBookmarking,
-            feed: widget.targetFeed?.feed,
-            onPostPageRequested: requestPostRoute,
-          ),
-        ],
+            const SizedBox(height: kPaddingExtraSmall),
+            PositivePostLayoutWidget(
+              postContent: widget.activity,
+              publisher: publisher,
+              isShortformPost: !widget.isFullscreen,
+              onImageTap: onInternalMediaTap,
+              onBookmark: onPostBookmarked,
+              isBusy: !widget.isEnabled || _isBookmarking,
+              feed: widget.targetFeed?.feed,
+              onPostPageRequested: requestPostRoute,
+            ),
+          ],
+        ),
       ),
     );
   }

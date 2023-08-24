@@ -14,6 +14,9 @@ _$_CacheRecord _$$_CacheRecordFromJson(Map<String, dynamic> json) =>
       lastAccessedBy: json['lastAccessedBy'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       lastUpdatedAt: DateTime.parse(json['lastUpdatedAt'] as String),
+      expiresAt: json['expiresAt'] == null
+          ? null
+          : DateTime.parse(json['expiresAt'] as String),
     );
 
 Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
@@ -24,13 +27,14 @@ Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
       'lastAccessedBy': instance.lastAccessedBy,
       'createdAt': instance.createdAt.toIso8601String(),
       'lastUpdatedAt': instance.lastUpdatedAt.toIso8601String(),
+      'expiresAt': instance.expiresAt?.toIso8601String(),
     };
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cacheControllerHash() => r'c2772017d5b0f850fa0badddf96b33cdb98bfa36';
+String _$cacheControllerHash() => r'86bae7d71594b27b0c6d5bd58431daae02d7b5ec';
 
 /// See also [CacheController].
 @ProviderFor(CacheController)

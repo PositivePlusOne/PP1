@@ -118,7 +118,7 @@ class PositiveScaffold extends ConsumerWidget {
             resizeToAvoidBottomInset: resizeToAvoidBottomInset,
             extendBody: extendBody,
             appBar: appBar,
-            bottomNavigationBar: bottomNavigationBar,
+            bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
             body: CustomScrollView(
               controller: controller,
               physics: physics,

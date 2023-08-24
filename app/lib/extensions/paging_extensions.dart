@@ -18,4 +18,13 @@ extension PagingExtensions on PagingController {
       appendLastPage(actualNewItems);
     }
   }
+
+  void appendSafeLastPage<T>(List<T> newItems) {
+    final List<T> actualNewItems = newItems.where((T item) => !(itemList?.contains(item) ?? false)).toList();
+    final bool hasNewItems = actualNewItems.isNotEmpty;
+
+    if (hasNewItems) {
+      appendLastPage(actualNewItems);
+    }
+  }
 }

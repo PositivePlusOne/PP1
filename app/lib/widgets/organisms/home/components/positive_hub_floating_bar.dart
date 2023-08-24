@@ -56,17 +56,13 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
           const SizedBox(height: kPaddingMedium),
           PositiveRecommendedTopics(tags: tags),
         },
-        PositiveTabBar(
-          index: index,
-          onTapped: onTapped,
-          tabColours: tabColours,
-          tabs: const <String>[
-            'All',
-            'Clips',
-            'Events',
-            'Posts',
-          ],
-        ),
+        const SizedBox(height: kPaddingSmall),
+        // PositiveTabBar(
+        //   index: index,
+        //   onTapped: onTapped,
+        //   tabColours: tabColours,
+        //   tabs: tabs,
+        // ),
       ],
     );
   }

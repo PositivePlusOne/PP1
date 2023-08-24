@@ -2,11 +2,9 @@ import * as functions from "firebase-functions";
 
 import { v1 as uuidv1 } from "uuid";
 
-import { NotificationPayload, NotificationPriority, appendPriorityToMessagePayload } from "./types/notification_payload";
+import { NotificationPayload, NotificationPayloadResponse, appendPriorityToMessagePayload } from "./types/notification_payload";
 import { FeedService } from "./feed_service";
-import { DefaultGenerics, FlatActivity, StreamClient } from "getstream";
-import { NotificationTopic } from "../constants/notification_topics";
-import { NotificationAction } from "../constants/notification_actions";
+import { DefaultGenerics, StreamClient } from "getstream";
 import { adminApp } from "..";
 
 export namespace NotificationsService {
@@ -40,70 +38,95 @@ export namespace NotificationsService {
     }
   }
 
-  export async function postNotifationPayloadToUserFeed(uid: string, notification: NotificationPayload): Promise<void> {
+  export async function postNotificationPayloadToUserFeed(uid: string, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to post notification payload to user feed: ${uid}`);
     if (!uid || uid.length === 0) {
       functions.logger.info(`No uid provided, skipping post notification payload to user feed`);
       return;
     }
 
-    const client = FeedService.getFeedsUserClient(uid);
+    const client = FeedService.getFeedsClient();
 
     // Assume the notification is new
     notification.created_at = new Date().toISOString();
-    if (notification.id) {
+    if (!notification.id) {
       notification.id = uuidv1();
     }
 
     const feed = client.feed("notification", uid);
     await feed.addActivity({
-      verb: "notification",
-      schema: "payload",
-      actor: notification.user_id,
-      sender: notification.sender,
-      action: notification.action,
-      priority: notification.priority,
-      extra_data: notification.extra_data,
+      verb: "post",
+      actor: uid,
+      object: notification,
       time: notification.created_at,
-      object: notification.id,
       foreign_id: notification.id,
-      id: notification.id,
     });
 
     functions.logger.info(`Successfully posted notification payload to user feed: ${uid}`);
   }
 
-  export async function listNotificationWindow(client: StreamClient<DefaultGenerics>, uid: string, windowSize: number, next: string): Promise<NotificationPayload[]> {
+  export async function listNotificationWindow(client: StreamClient<DefaultGenerics>, uid: string, windowSize: number, next: string): Promise<NotificationPayloadResponse> {
     functions.logger.info(`Attempting to list notification window for user: ${uid}`);
+    const payloadResponse = new NotificationPayloadResponse();
+
     if (!uid || uid.length === 0) {
       functions.logger.info(`No uid provided, skipping list notification window`);
-      return [];
+      return payloadResponse;
     }
 
+    functions.logger.info(`Listing notification window for user: ${uid}`);
     const feed = client.feed("notification", uid);
-    const response = await feed.get({ 
+    const response = await feed.get({
       limit: windowSize,
       id_lt: next,
-     });
+    });
 
-     const results = (response.results as FlatActivity<DefaultGenerics>[]).map((activity) => {
-        return new NotificationPayload({
-          id: activity.id,
-          user_id: activity.actor.toString(),
-          sender: activity.sender?.toString() ?? "",
-          title: activity.title?.toString() ?? "",
-          body: activity.body?.toString() ?? "",
-          icon: activity.icon?.toString() ?? "",
-          created_at: activity.time,
-          extra_data: activity.extra_data ?? {},
-          topic: activity.topic as NotificationTopic ?? NotificationTopic.OTHER,
-          action: activity.action as NotificationAction ?? NotificationAction.NONE,
-          priority: activity.priority as NotificationPriority ?? NotificationPriority.PRIORITY_HIGH,
-        });
-      }) as NotificationPayload[];
+    functions.logger.info(`Successfully listed notification window for user: ${uid}`, { response });
+    const notifications = [] as NotificationPayload[];
 
-    functions.logger.info(`Successfully listed notification window for user: ${uid}`);
-    return results;
+    if (response.results.length > 0) {
+      functions.logger.info(`Successfully listed notification window for user: ${uid}`, { response });
+      const initialResult = response.results[0] as any;
+      if (initialResult?.unread) {
+        payloadResponse.unread_count = initialResult.unread;
+      }
+
+      if (initialResult?.unseen) {
+        payloadResponse.unseen_count = initialResult.unseen;
+      }
+
+      response.results.forEach((activity: any) => {
+        functions.logger.info(`Processing notification payload for user: ${uid}`, { activity });
+        const realActivity = activity.activities[0] || {};
+        const objectStr = realActivity.object;
+        let object = {} as any;
+        if (typeof objectStr === "string") {
+          object = JSON.parse(objectStr);
+        } else if (typeof objectStr === "object") {
+          object = objectStr;
+        }
+
+        functions.logger.info(`Successfully processed notification payload for user: ${uid}`, { activity, object });
+
+        notifications.push(new NotificationPayload({
+            user_id: uid,
+            id: realActivity.id,
+            sender: realActivity.actor,
+            created_at: realActivity.time,
+            action: object?.action || "",
+            topic: object?.topic || "",
+            title: object?.title || "",
+            body: object?.body || "",
+            icon: object?.icon || "",
+            extra_data: object?.extra_data || {},
+          }));
+      });
+    }
+
+    functions.logger.info(`Successfully listed notification window for user: ${uid}`, { notifications });
+    payloadResponse.payloads = notifications;
+
+    return payloadResponse;
   }
 
   export async function markAllNotificationsReadAndSeen(client: StreamClient<DefaultGenerics>, uid: string): Promise<void> {

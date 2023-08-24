@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,6 +17,7 @@ import 'package:app/constants/pagination_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/notification_api_service.dart';
@@ -158,9 +160,9 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     logger.d('requestNextTimelinePage() - newNotifications: $newNotifications');
 
     if (!hasNext && mounted) {
-      notificationsState.pagingController.appendLastPage(newNotifications);
+      notificationsState.pagingController.appendSafeLastPage(newNotifications);
     } else if (mounted) {
-      notificationsState.pagingController.appendPage(newNotifications, nextPageKey);
+      notificationsState.pagingController.appendSafePage(newNotifications, nextPageKey);
     }
 
     saveNotificationsState();
@@ -168,7 +170,10 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   @override
   Widget build(BuildContext context) {
+    const Widget loadingIndicator = PositiveLoadingIndicator();
     return PagedListView.separated(
+      shrinkWrap: true,
+      padding: EdgeInsets.zero,
       pagingController: notificationsState.pagingController,
       separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
       builderDelegate: PagedChildBuilderDelegate<NotificationPayload>(
@@ -180,7 +185,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
         firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
         newPageErrorIndicatorBuilder: (context) => const SizedBox(),
         noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
-        firstPageProgressIndicatorBuilder: (context) => const SizedBox(),
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
       ),
     );
   }

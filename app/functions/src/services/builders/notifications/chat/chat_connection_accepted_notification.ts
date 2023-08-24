@@ -36,6 +36,6 @@ export namespace ChatConnectionAcceptedNotification {
     });
 
     await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
-    await NotificationsService.postNotifationPayloadToUserFeed(target.fcmToken, payload);
+    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
   }
 }

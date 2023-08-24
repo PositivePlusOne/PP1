@@ -19,6 +19,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
@@ -115,6 +116,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('setupFeedState() - Loading state for ${widget.feed}');
+    // feeds:timeline-AZk68qtxPmgjrpaZSMcUkmS1i443
     final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
     if (cachedFeedState != null) {
       logger.d('setupFeedState() - Found cached state for ${widget.feed}');
@@ -169,20 +171,18 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       feedState.pagingController.error = ex;
-    } finally {
-      saveFeedState();
     }
   }
 
   void appendActivityPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = providerContainer.read(loggerProvider);
-    final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != feedState.currentPaginationKey;
 
     feedState.currentPaginationKey = nextPageKey;
-    logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: ${feedState.currentPaginationKey}');
+    logger.i('requestNextTimelinePage() - nextPageKey: $nextPageKey - currentPaginationKey: ${feedState.currentPaginationKey}');
 
     final List<Activity> newActivities = [];
     final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
+    final bool hasNext = nextPageKey.isNotEmpty && activities.isNotEmpty;
 
     for (final dynamic activity in activities) {
       try {
@@ -203,10 +203,10 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
     logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 
-    if (!hasNext && mounted) {
-      feedState.pagingController.appendLastPage(newActivities);
-    } else if (mounted) {
-      feedState.pagingController.appendPage(newActivities, nextPageKey);
+    if (!hasNext) {
+      feedState.pagingController.appendSafeLastPage(newActivities);
+    } else {
+      feedState.pagingController.appendSafePage(newActivities, nextPageKey);
     }
 
     saveFeedState();
