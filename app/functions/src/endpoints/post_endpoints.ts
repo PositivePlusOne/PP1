@@ -269,6 +269,9 @@ export namespace PostEndpoints {
     const allowSharing = request.data.allowSharing ? "public" : "private" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
     const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
+    
+    const allowLikes = request.data.allowLikes || "public" as ActivitySecurityConfigurationMode;
+    const allowBookmarks = request.data.allowBookmarks || "public" as ActivitySecurityConfigurationMode;
 
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
@@ -328,6 +331,8 @@ export namespace PostEndpoints {
     activity.securityConfiguration.viewMode = visibleTo;
     activity.securityConfiguration.shareMode = allowSharing;
     activity.securityConfiguration.commentMode = allowComments;
+    activity.securityConfiguration.likesMode =  allowLikes;
+    activity.securityConfiguration.bookmarksMode =  allowBookmarks;
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);

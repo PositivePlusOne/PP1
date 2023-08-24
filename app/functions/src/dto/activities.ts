@@ -164,6 +164,8 @@ export interface ActivitySecurityConfigurationJSON {
   viewMode?: ActivitySecurityConfigurationMode;
   shareMode?: ActivitySecurityConfigurationMode;
   commentMode?: ActivitySecurityConfigurationMode;
+  likesMode?: ActivitySecurityConfigurationMode;
+  bookmarksMode?: ActivitySecurityConfigurationMode;
 }
 
 /**
@@ -180,12 +182,16 @@ export class ActivitySecurityConfiguration {
   viewMode: ActivitySecurityConfigurationMode;
   shareMode: ActivitySecurityConfigurationMode;
   commentMode: ActivitySecurityConfigurationMode;
+  likesMode?: ActivitySecurityConfigurationMode;
+  bookmarksMode?: ActivitySecurityConfigurationMode;
 
   constructor(json: ActivitySecurityConfigurationJSON) {
     this.context = json.context || '';
     this.viewMode = json.viewMode || 'private';
     this.shareMode = json.shareMode || 'private';
     this.commentMode = json.commentMode || 'private';
+    this.likesMode = json.likesMode || 'public';
+    this.bookmarksMode = json.bookmarksMode || 'public';
   }
 }
 

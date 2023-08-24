@@ -111,7 +111,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         isEditing: true,
         tags: activityData.tags ?? [],
         allowSharing: activityData.allowSharing ?? false,
-        allowComments: activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.public(),
+        allowComments: activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.public(),
         visibleTo: activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.public(),
         currentCreatePostPage: currentPage,
         currentPostType: currentPostType,
@@ -169,7 +169,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             postType: state.currentPostType,
             media: media,
             allowSharing: state.allowSharing,
-            reactionVisibilityMode: state.allowComments,
+            reactionPermissionMode: state.allowComments,
             visibilityMode: state.visibleTo,
           ),
         );
@@ -183,7 +183,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             postType: state.currentPostType,
             media: media,
             allowSharing: state.allowSharing,
-            reactionVisibilityMode: state.allowComments,
+            reactionPermissionMode: state.allowComments,
             visibilityMode: state.visibleTo,
           ),
         );
