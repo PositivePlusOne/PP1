@@ -95,6 +95,9 @@ class CreatePostDialogue extends HookConsumerWidget {
 
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
+    final List<ActivitySecurityConfigurationMode> commentsDropdownValues = ActivitySecurityConfigurationMode.values.toList();
+    commentsDropdownValues.remove(const ActivitySecurityConfigurationMode.public());
+
     return Container(
       color: colours.black.withAlpha(230),
       child: ListView(
@@ -215,11 +218,11 @@ class CreatePostDialogue extends HookConsumerWidget {
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_comments,
                 onValueChanged: (type) => onUpdateAllowComments!(type),
-                initialValue: const ActivitySecurityConfigurationMode.public(),
+                initialValue: const ActivitySecurityConfigurationMode.signedIn(),
                 labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
-                values: ActivitySecurityConfigurationMode.values.toList(),
+                values: commentsDropdownValues,
                 textStyle: textStyle,
                 backgroundColour: colours.transparent,
                 iconColour: colours.black,

@@ -280,6 +280,9 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
         private: () {
           commentShareType = localisations.shared_comment_type_generic_me;
         },
+        signedIn: () {
+          commentShareType = localisations.shared_comment_type_generic_signed_in;
+        },
       );
     }
 
