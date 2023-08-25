@@ -515,9 +515,9 @@ class PositiveButtonState extends State<PositiveButton> {
         if (widget.isActive) {
           materialColor = widget.colors.white;
           backgroundColor = widget.colors.white;
-          textColor = widget.colors.purple;
+          textColor = widget.primaryColor ?? widget.colors.purple;
           textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
-          iconColor = widget.colors.purple;
+          iconColor = widget.primaryColor ?? widget.colors.purple;
           borderColor = widget.colors.white;
         }
 
