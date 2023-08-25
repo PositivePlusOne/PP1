@@ -16,6 +16,7 @@ export namespace TagsService {
     popular = "popular",
     new = "new",
     verified = "verified",
+    promoted = "promoted",
   }
 
   /**
