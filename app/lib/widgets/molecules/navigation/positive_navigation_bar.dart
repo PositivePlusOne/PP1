@@ -119,15 +119,19 @@ class PositiveNavigationBarContent extends ConsumerWidget {
   final NavigationBarIndex index;
   final bool isDisabled;
 
-  Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex index) async {
+  Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
 
+    if (newIndex == index) {
+      return;
+    }
+
     // You must be able to navigate back from the post route
-    if (index != NavigationBarIndex.add) {
+    if (newIndex != NavigationBarIndex.add) {
       router.removeWhere((route) => true);
     }
 
-    switch (index) {
+    switch (newIndex) {
       case NavigationBarIndex.add:
         await router.push(CreatePostRoute());
         break;
