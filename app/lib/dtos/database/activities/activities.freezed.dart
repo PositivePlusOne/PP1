@@ -1947,6 +1947,7 @@ mixin _$ActivitySecurityConfigurationMode {
     required TResult Function() followersAndConnections,
     required TResult Function() connections,
     required TResult Function() private,
+    required TResult Function() signedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1955,6 +1956,7 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult? Function()? followersAndConnections,
     TResult? Function()? connections,
     TResult? Function()? private,
+    TResult? Function()? signedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1963,6 +1965,7 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult Function()? followersAndConnections,
     TResult Function()? connections,
     TResult Function()? private,
+    TResult Function()? signedIn,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1978,6 +1981,8 @@ mixin _$ActivitySecurityConfigurationMode {
         connections,
     required TResult Function(_ActivitySecurityConfigurationModePrivate value)
         private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1989,6 +1994,8 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -2000,6 +2007,8 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -2073,6 +2082,7 @@ class _$_ActivitySecurityConfigurationModePublic
     required TResult Function() followersAndConnections,
     required TResult Function() connections,
     required TResult Function() private,
+    required TResult Function() signedIn,
   }) {
     return public();
   }
@@ -2084,6 +2094,7 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult? Function()? followersAndConnections,
     TResult? Function()? connections,
     TResult? Function()? private,
+    TResult? Function()? signedIn,
   }) {
     return public?.call();
   }
@@ -2095,6 +2106,7 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult Function()? followersAndConnections,
     TResult Function()? connections,
     TResult Function()? private,
+    TResult Function()? signedIn,
     required TResult orElse(),
   }) {
     if (public != null) {
@@ -2116,6 +2128,8 @@ class _$_ActivitySecurityConfigurationModePublic
         connections,
     required TResult Function(_ActivitySecurityConfigurationModePrivate value)
         private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
   }) {
     return public(this);
   }
@@ -2130,6 +2144,8 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
   }) {
     return public?.call(this);
   }
@@ -2144,6 +2160,8 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
     required TResult orElse(),
   }) {
     if (public != null) {
@@ -2215,6 +2233,7 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     required TResult Function() followersAndConnections,
     required TResult Function() connections,
     required TResult Function() private,
+    required TResult Function() signedIn,
   }) {
     return followersAndConnections();
   }
@@ -2226,6 +2245,7 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult? Function()? followersAndConnections,
     TResult? Function()? connections,
     TResult? Function()? private,
+    TResult? Function()? signedIn,
   }) {
     return followersAndConnections?.call();
   }
@@ -2237,6 +2257,7 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult Function()? followersAndConnections,
     TResult Function()? connections,
     TResult Function()? private,
+    TResult Function()? signedIn,
     required TResult orElse(),
   }) {
     if (followersAndConnections != null) {
@@ -2258,6 +2279,8 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
         connections,
     required TResult Function(_ActivitySecurityConfigurationModePrivate value)
         private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
   }) {
     return followersAndConnections(this);
   }
@@ -2272,6 +2295,8 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
   }) {
     return followersAndConnections?.call(this);
   }
@@ -2286,6 +2311,8 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
     required TResult orElse(),
   }) {
     if (followersAndConnections != null) {
@@ -2348,6 +2375,7 @@ class _$_ActivitySecurityConfigurationModeConnections
     required TResult Function() followersAndConnections,
     required TResult Function() connections,
     required TResult Function() private,
+    required TResult Function() signedIn,
   }) {
     return connections();
   }
@@ -2359,6 +2387,7 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult? Function()? followersAndConnections,
     TResult? Function()? connections,
     TResult? Function()? private,
+    TResult? Function()? signedIn,
   }) {
     return connections?.call();
   }
@@ -2370,6 +2399,7 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult Function()? followersAndConnections,
     TResult Function()? connections,
     TResult Function()? private,
+    TResult Function()? signedIn,
     required TResult orElse(),
   }) {
     if (connections != null) {
@@ -2391,6 +2421,8 @@ class _$_ActivitySecurityConfigurationModeConnections
         connections,
     required TResult Function(_ActivitySecurityConfigurationModePrivate value)
         private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
   }) {
     return connections(this);
   }
@@ -2405,6 +2437,8 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
   }) {
     return connections?.call(this);
   }
@@ -2419,6 +2453,8 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
     required TResult orElse(),
   }) {
     if (connections != null) {
@@ -2481,6 +2517,7 @@ class _$_ActivitySecurityConfigurationModePrivate
     required TResult Function() followersAndConnections,
     required TResult Function() connections,
     required TResult Function() private,
+    required TResult Function() signedIn,
   }) {
     return private();
   }
@@ -2492,6 +2529,7 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult? Function()? followersAndConnections,
     TResult? Function()? connections,
     TResult? Function()? private,
+    TResult? Function()? signedIn,
   }) {
     return private?.call();
   }
@@ -2503,6 +2541,7 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult Function()? followersAndConnections,
     TResult Function()? connections,
     TResult Function()? private,
+    TResult Function()? signedIn,
     required TResult orElse(),
   }) {
     if (private != null) {
@@ -2524,6 +2563,8 @@ class _$_ActivitySecurityConfigurationModePrivate
         connections,
     required TResult Function(_ActivitySecurityConfigurationModePrivate value)
         private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
   }) {
     return private(this);
   }
@@ -2538,6 +2579,8 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
   }) {
     return private?.call(this);
   }
@@ -2552,6 +2595,8 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult Function(_ActivitySecurityConfigurationModeConnections value)?
         connections,
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
     required TResult orElse(),
   }) {
     if (private != null) {
@@ -2565,6 +2610,148 @@ abstract class _ActivitySecurityConfigurationModePrivate
     implements ActivitySecurityConfigurationMode {
   const factory _ActivitySecurityConfigurationModePrivate() =
       _$_ActivitySecurityConfigurationModePrivate;
+}
+
+/// @nodoc
+abstract class _$$_ActivitySecurityConfigurationModeSignedInCopyWith<$Res> {
+  factory _$$_ActivitySecurityConfigurationModeSignedInCopyWith(
+          _$_ActivitySecurityConfigurationModeSignedIn value,
+          $Res Function(_$_ActivitySecurityConfigurationModeSignedIn) then) =
+      __$$_ActivitySecurityConfigurationModeSignedInCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_ActivitySecurityConfigurationModeSignedInCopyWithImpl<$Res>
+    extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        _$_ActivitySecurityConfigurationModeSignedIn>
+    implements _$$_ActivitySecurityConfigurationModeSignedInCopyWith<$Res> {
+  __$$_ActivitySecurityConfigurationModeSignedInCopyWithImpl(
+      _$_ActivitySecurityConfigurationModeSignedIn _value,
+      $Res Function(_$_ActivitySecurityConfigurationModeSignedIn) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_ActivitySecurityConfigurationModeSignedIn
+    implements _ActivitySecurityConfigurationModeSignedIn {
+  const _$_ActivitySecurityConfigurationModeSignedIn();
+
+  @override
+  String toString() {
+    return 'ActivitySecurityConfigurationMode.signedIn()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySecurityConfigurationModeSignedIn);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() public,
+    required TResult Function() followersAndConnections,
+    required TResult Function() connections,
+    required TResult Function() private,
+    required TResult Function() signedIn,
+  }) {
+    return signedIn();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? public,
+    TResult? Function()? followersAndConnections,
+    TResult? Function()? connections,
+    TResult? Function()? private,
+    TResult? Function()? signedIn,
+  }) {
+    return signedIn?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? public,
+    TResult Function()? followersAndConnections,
+    TResult Function()? connections,
+    TResult Function()? private,
+    TResult Function()? signedIn,
+    required TResult orElse(),
+  }) {
+    if (signedIn != null) {
+      return signedIn();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
+  }) {
+    return signedIn(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
+    TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
+  }) {
+    return signedIn?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
+    TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
+    required TResult orElse(),
+  }) {
+    if (signedIn != null) {
+      return signedIn(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ActivitySecurityConfigurationModeSignedIn
+    implements ActivitySecurityConfigurationMode {
+  const factory _ActivitySecurityConfigurationModeSignedIn() =
+      _$_ActivitySecurityConfigurationModeSignedIn;
 }
 
 ActivityEventConfiguration _$ActivityEventConfigurationFromJson(

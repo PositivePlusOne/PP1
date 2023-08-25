@@ -2,6 +2,8 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/user/user_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,6 +54,9 @@ class PostPage extends ConsumerWidget {
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
 
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final User? user = userController.currentUser;
+
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final List<Widget> actions = [];
 
@@ -70,7 +75,8 @@ class PostPage extends ConsumerWidget {
 
     switch (activity.securityConfiguration?.commentMode) {
       case const ActivitySecurityConfigurationMode.public():
-        isUserAbleToComment = true;
+      case const ActivitySecurityConfigurationMode.signedIn():
+        isUserAbleToComment = user != null;
         isCommentsEnabled = true;
         break;
       case const ActivitySecurityConfigurationMode.connections():

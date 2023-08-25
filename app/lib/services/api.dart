@@ -173,7 +173,9 @@ class PostApiService {
         'type': type,
         'allowSharing': activityData.allowSharing ?? false,
         'visibleTo': ActivitySecurityConfigurationMode.toJson(activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
-        'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
+        'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
+        'allowLikes': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
+        'allowBookmarks': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
       },
     );
   }
@@ -193,7 +195,9 @@ class PostApiService {
         'postId': activityData.activityID ?? "",
         'allowSharing': activityData.allowSharing ?? false,
         'visibleTo': ActivitySecurityConfigurationMode.toJson(activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
-        'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
+        'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
+        'allowLikes': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
+        'allowBookmarks': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
       },
     );
   }

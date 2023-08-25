@@ -117,6 +117,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
   const factory ActivitySecurityConfigurationMode.followersAndConnections() = _ActivitySecurityConfigurationModeFollowersAndConnections;
   const factory ActivitySecurityConfigurationMode.connections() = _ActivitySecurityConfigurationModeConnections;
   const factory ActivitySecurityConfigurationMode.private() = _ActivitySecurityConfigurationModePrivate;
+  const factory ActivitySecurityConfigurationMode.signedIn() = _ActivitySecurityConfigurationModeSignedIn;
 
   static String toJson(ActivitySecurityConfigurationMode mode) {
     return mode.when(
@@ -124,6 +125,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
       followersAndConnections: () => 'followers_and_connections',
       connections: () => 'connections',
       private: () => 'private',
+      signedIn: () => 'signed_in',
     );
   }
 
@@ -132,6 +134,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
     ActivitySecurityConfigurationMode.followersAndConnections(),
     ActivitySecurityConfigurationMode.connections(),
     ActivitySecurityConfigurationMode.private(),
+    ActivitySecurityConfigurationMode.signedIn(),
   ];
 
   static String toLocale(ActivitySecurityConfigurationMode mode, AppLocalizations localisations) {
@@ -140,6 +143,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
       followersAndConnections: () => localisations.shared_user_type_generic_followers,
       connections: () => localisations.shared_user_type_generic_connections,
       private: () => localisations.shared_user_type_generic_me,
+      signedIn: () => localisations.shared_user_type_generic_signed_in,
     );
   }
 
@@ -153,6 +157,8 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
         return const _ActivitySecurityConfigurationModeConnections();
       case 'private':
         return const _ActivitySecurityConfigurationModePrivate();
+      case 'signed_in':
+        return const _ActivitySecurityConfigurationModeSignedIn();
       default:
         throw ArgumentError('Invalid value for ActivitySecurityConfigurationMode: $value');
     }

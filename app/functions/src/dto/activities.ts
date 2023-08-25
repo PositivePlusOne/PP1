@@ -147,8 +147,9 @@ export class ActivityGeneralConfiguration {
  * @property {string} FollowersAndConnections Followers and connections
  * @property {string} Connections Connections
  * @property {string} Private Private
+ * @property {string} SignedIn signed_in
  */
-export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private';
+export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private' | 'signed_in';
 
 /**
  * The JSON representation of an activity security configuration
@@ -164,6 +165,8 @@ export interface ActivitySecurityConfigurationJSON {
   viewMode?: ActivitySecurityConfigurationMode;
   shareMode?: ActivitySecurityConfigurationMode;
   commentMode?: ActivitySecurityConfigurationMode;
+  likesMode?: ActivitySecurityConfigurationMode;
+  bookmarksMode?: ActivitySecurityConfigurationMode;
 }
 
 /**
@@ -180,12 +183,16 @@ export class ActivitySecurityConfiguration {
   viewMode: ActivitySecurityConfigurationMode;
   shareMode: ActivitySecurityConfigurationMode;
   commentMode: ActivitySecurityConfigurationMode;
+  likesMode?: ActivitySecurityConfigurationMode;
+  bookmarksMode?: ActivitySecurityConfigurationMode;
 
   constructor(json: ActivitySecurityConfigurationJSON) {
     this.context = json.context || '';
     this.viewMode = json.viewMode || 'private';
     this.shareMode = json.shareMode || 'private';
     this.commentMode = json.commentMode || 'private';
+    this.likesMode = json.likesMode || 'public';
+    this.bookmarksMode = json.bookmarksMode || 'public';
   }
 }
 

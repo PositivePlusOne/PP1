@@ -4,6 +4,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -105,22 +106,24 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       captionController.text = activityData.content ?? "";
       altTextController.text = activityData.altText ?? "";
 
-      final List<Future<GalleryEntry>> galleryEntriesFutures = activityData.media?.map((e) async => await Media.toGalleryEntry(media: e)).toList() ?? [];
-      final List<GalleryEntry> galleryEntries = await Future.wait(galleryEntriesFutures);
-
+      //? State is updated in two steps, otherwise the camera can breifly activate on the edit page due to the asynchronus fucnctions required for gallery
       state = state.copyWith(
-        galleryEntries: galleryEntries,
         currentActivityID: activityData.activityID ?? "",
         isEditing: true,
         tags: activityData.tags ?? [],
         allowSharing: activityData.allowSharing ?? false,
-        allowComments: activityData.reactionVisibilityMode ?? const ActivitySecurityConfigurationMode.public(),
+        allowComments: activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.public(),
         visibleTo: activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.public(),
         currentCreatePostPage: currentPage,
         currentPostType: currentPostType,
         activeButton: PositivePostNavigationActiveButton.flex,
         activeButtonFlexText: localisations.post_dialogue_update_post,
       );
+
+      final List<Future<GalleryEntry>> galleryEntriesFutures = activityData.media?.map((e) async => await Media.toGalleryEntry(media: e)).toList() ?? [];
+      final List<GalleryEntry> galleryEntries = await Future.wait(galleryEntriesFutures);
+
+      state = state.copyWith(galleryEntries: galleryEntries);
     } catch (e) {
       logger.e("Error loading activity data: $e");
     } finally {
@@ -167,7 +170,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             postType: state.currentPostType,
             media: media,
             allowSharing: state.allowSharing,
-            reactionVisibilityMode: state.allowComments,
+            reactionPermissionMode: state.allowComments,
             visibilityMode: state.visibleTo,
           ),
         );
@@ -181,19 +184,28 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             postType: state.currentPostType,
             media: media,
             allowSharing: state.allowSharing,
-            reactionVisibilityMode: state.allowComments,
+            reactionPermissionMode: state.allowComments,
             visibilityMode: state.visibleTo,
           ),
         );
       }
     } catch (e) {
       logger.e("Error posting activity: $e");
+      final bool alreadyExists = e is FirebaseException && e.code == "already-exists";
 
-      final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-        title: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
-        icon: UniconsLine.plus_circle,
-        backgroundColour: colours.black,
-      );
+      late final PositiveSnackBar snackBar;
+
+      if (alreadyExists) {
+        snackBar = PositiveGenericSnackBar(
+          title: "No update required",
+          icon: UniconsLine.envelope_exclamation,
+          backgroundColour: colours.black,
+        );
+      } else {
+        snackBar = PositiveErrorSnackBar(
+          text: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
+        );
+      }
 
       if (router.navigatorKey.currentContext != null) {
         ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);

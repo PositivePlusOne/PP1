@@ -247,6 +247,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                 focusNode: textFocusNode,
                 inputFormatters: [
                   if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
+                  //? Universal input formatter to prevent successive new lines
+                  FilteringTextInputFormatter.deny(RegExp(r'(?<=\n{2,}[ ]{0,}.{0,1})\n')),
                 ],
                 enableSuggestions: true,
                 obscureText: widget.obscureText,

@@ -180,8 +180,8 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
     case SystemEnvironment.develop:
       client = StreamChatClient(
         'pw32v2pqjetx',
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds: 300),
+        receiveTimeout: const Duration(seconds: 300),
       );
       break;
   }

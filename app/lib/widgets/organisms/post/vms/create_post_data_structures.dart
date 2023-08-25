@@ -11,7 +11,7 @@ class ActivityData {
     this.tags,
     this.allowSharing,
     this.visibilityMode,
-    this.reactionVisibilityMode,
+    this.reactionPermissionMode,
     this.postType,
     this.media,
   });
@@ -25,7 +25,7 @@ class ActivityData {
   bool? allowSharing;
 
   ActivitySecurityConfigurationMode? visibilityMode;
-  ActivitySecurityConfigurationMode? reactionVisibilityMode;
+  ActivitySecurityConfigurationMode? reactionPermissionMode;
 
   PostType? postType;
   List<Media>? media;

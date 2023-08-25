@@ -8,21 +8,18 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/behaviours/positive_measure_behaviour.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 
 class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSizeWidget {
-  PostCommentBox({
+  const PostCommentBox({
     required this.mediaQuery,
     required this.commentTextController,
     required this.onCommentChanged,
@@ -129,7 +126,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                   tintColor: colours.purple,
                   borderRadius: kBorderRadiusLargePlus,
                   showRemaining: true,
-                  textInputType: TextInputType.text,
+                  textInputType: TextInputType.multiline,
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,6 +40,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
       if (widget.isEditPage) {
         ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
       }
