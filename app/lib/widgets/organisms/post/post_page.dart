@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:math';
 
 // Flutter imports:
 import 'package:app/providers/user/user_controller.dart';

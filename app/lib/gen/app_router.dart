@@ -119,7 +119,7 @@ class AppRouter extends _$AppRouter {
       ];
 
   @override
-  RouteType get defaultRouteType => const RouteType.custom(transitionsBuilder: TransitionsBuilders.fadeIn);
+  RouteType get defaultRouteType => const CupertinoRouteType();
 
   @override
   List<AutoRoute> get routes => [

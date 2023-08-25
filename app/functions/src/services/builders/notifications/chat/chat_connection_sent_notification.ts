@@ -21,16 +21,16 @@ export namespace ChatConnectionSentNotification {
     const title = await LocalizationsService.getLocalizedString("notifications.connection_sent.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_sent.body", { displayName });
 
-    const key = `connection_sent_${senderId}_${receiverId}`;
+    const id = `connection_sent_${senderId}_${receiverId}`;
 
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
 
     const payload = new NotificationPayload({
-      key,
+      id,
       sender: senderId,
-      receiver: receiverId,
+      user_id: receiverId,
       title,
       body,
       topic: NotificationTopic.CONNECTION_REQUEST,
@@ -38,5 +38,6 @@ export namespace ChatConnectionSentNotification {
     });
 
     await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
+    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
   }
 }

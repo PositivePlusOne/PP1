@@ -16,6 +16,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/guidance/guidance_controller.dart';
@@ -70,12 +71,12 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
       final GuidanceApiService apiService = await providerContainer.read(guidanceApiServiceProvider.future);
       final EndpointResponse response = await apiService.getDirectoryEntryWindow(cursor: pageKey);
       final List<GuidanceDirectoryEntry> entries = (response.data['guidanceDirectoryEntries'] as List<dynamic>).map((dynamic e) => GuidanceDirectoryEntry.fromJson(e as Map<String, dynamic>)).toList();
-      if (entries.isEmpty) {
-        pagingController.appendLastPage(entries);
+      if (entries.isEmpty || response.cursor == null) {
+        pagingController.appendSafeLastPage(entries);
         return;
       }
 
-      pagingController.appendPage(entries, response.cursor);
+      pagingController.appendSafePage(entries, response.cursor!);
     } catch (e) {
       logger.e(e.toString());
       pagingController.error = e;

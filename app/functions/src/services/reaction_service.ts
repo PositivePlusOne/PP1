@@ -49,6 +49,7 @@ export namespace ReactionService {
             kind: reaction.kind,
             activity_id: reaction.activity_id,
             user_id: reaction.user_id,
+            time: new Date().toISOString(),
         } as ReactionEntryJSON;
 
         const response = await client.reactions.add(reaction.kind!, reaction.activity_id!, reactionEntry, {

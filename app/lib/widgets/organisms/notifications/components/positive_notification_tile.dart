@@ -86,8 +86,8 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     Relationship? senderRelationship;
     final Profile? senderProfile = cacheController.getFromCache(widget.notification.sender);
 
-    if (widget.notification.sender.isNotEmpty && widget.notification.receiver.isNotEmpty) {
-      senderRelationship = cacheController.getFromCache([widget.notification.sender, widget.notification.receiver].asGUID);
+    if (widget.notification.userId.isNotEmpty && widget.notification.sender.isNotEmpty) {
+      senderRelationship = cacheController.getFromCache([widget.notification.sender, widget.notification.userId].asGUID);
     }
 
     presenter = NotificationPresenter(
@@ -119,7 +119,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
     final Logger logger = ref.read(loggerProvider);
     final String senderStr = widget.notification.sender;
-    final String receiverStr = widget.notification.receiver;
+    final String receiverStr = widget.notification.userId;
     bool shouldReload = false;
 
     if (senderStr.isNotEmpty) {

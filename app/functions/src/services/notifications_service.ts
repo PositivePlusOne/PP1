@@ -1,11 +1,11 @@
 import * as functions from "firebase-functions";
 
+import { v1 as uuidv1 } from "uuid";
+
+import { NotificationPayload, NotificationPayloadResponse, appendPriorityToMessagePayload } from "./types/notification_payload";
+import { FeedService } from "./feed_service";
+import { DefaultGenerics, StreamClient } from "getstream";
 import { adminApp } from "..";
-import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
-import { DataService } from "./data_service";
-import { NotificationPayload, appendPriorityToMessagePayload } from "./types/notification_payload";
-import { PaginationResult } from "../helpers/pagination";
-import { CacheService } from "./cache_service";
 
 export namespace NotificationsService {
   /**
@@ -14,14 +14,10 @@ export namespace NotificationsService {
     * @param {NotificationBody} notification The notification to send
     * @return {Promise<void>} The result of the send operation
    */
-  export async function sendPayloadToUser(token: string, notification: NotificationPayload, shouldStore = true): Promise<void> {
-    functions.logger.info(`Attempting to send payload to user: ${notification.receiver}`);
-    if (shouldStore) {
-      await storeNotification(notification);
-    }
-
+  export async function sendPayloadToUser(token: string, notification: NotificationPayload): Promise<void> {
+    functions.logger.info(`Attempting to send payload to user: ${notification.user_id}`);
     if (!token || token.length === 0) {
-      functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.receiver}`);
+      functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.user_id}`);
       return;
     }
 
@@ -38,180 +34,111 @@ export namespace NotificationsService {
     try {
       await adminApp.messaging().send(message);
     } catch (ex) {
-      functions.logger.error(`Error sending payload to user: ${notification.receiver} with token ${token}`, ex);
+      functions.logger.error(`Error sending payload to user: ${notification.user_id} with token ${token}`, ex);
     }
   }
 
-  /**
-   * Get the number of unread notifications for a target
-   * @param {any} target The target to get the notifications for
-   * @return {Promise<number>} The number of unread notifications
-   */
-  export async function getUnreadNotificationsCount(target: any): Promise<number> {
-    functions.logger.info(`Getting notification count for target: ${target.uid}`);
-    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-
-    const notificationCount = await DataService.countDocumentsRaw({
-      schemaKey: "notifications",
-      where: [
-        { fieldPath: "receiver", op: "==", value: flamelinkID },
-        { fieldPath: "read", op: "==", value: false },
-      ],
-    });
-
-    return notificationCount;
-  }
-
-  /**
-   * Store a notification for a target
-   * @param {NotificationBody} notification The notification to store
-   * @return {Promise<void>} The result of the store operation
-   */
-  export async function storeNotification(notification: NotificationPayload): Promise<void> {
-    functions.logger.info(`Storing notification ${notification.key} for user: ${notification.receiver}`);
-
-    // Ryan: Look at this
-    // if (notification.receiver && notification) {
-    //   const feedsClient = await FeedService.getFeedsClient();
-    //   const feed = feedsClient.feed("notification", notification.receiver);
-    //   const activityData = {
-    //     actor: notification.sender,
-    //     verb: notification.topic,
-    //     object: notification.key,
-    //     foreign_id: notification.key,
-    //   } as NewActivity;
-
-    //   await feed.addActivity(activityData);
-    // }
-
-    await resetNotificationListCache(notification.receiver);
-    await DataService.updateDocument({
-      schemaKey: "notifications",
-      entryId: notification.key,
-      data: notification,
-    });
-  }
-
-  /**
-   * Get a notification
-   * @param {string} notificationKey The key of the notification to get
-   * @return {Promise<any>} The result of the get operation
-   */
-  export async function getNotification(notificationKey: string): Promise<any> {
-    functions.logger.info(`Getting notification ${notificationKey}`);
-    return await DataService.getDocument({
-      schemaKey: "notifications",
-      entryId: notificationKey,
-    });
-  }
-
-  /**
-   * Lists notifications for a uid
-   * @param {string} uid The uid to get the notifications for
-   * @param {Pagination} pagination The pagination to use
-   * @return {Promise<any>} The stored notifications
-   */
-  export async function listNotifications(uid: string, startAfter: any, limit: number | undefined): Promise<PaginationResult<any>> {
-    functions.logger.info(`Getting stored notifications for target`, { uid, startAfter, limit });
-
-    const cacheKey = `notifications-${uid}-${startAfter}-${limit}`;
-    const cachedData = await CacheService.getFromCache(cacheKey) as PaginationResult<any>;
-    if (cachedData) {
-      return cachedData;
-    }
-
-    const data = await DataService.getDocumentWindowRaw({
-      schemaKey: "notifications",
-      startAfter: startAfter,
-      limit: limit,
-      orderBy: [
-        { fieldPath: "createdAt", directionStr: "desc" },
-      ],
-      where: [
-        { fieldPath: "receiver", op: "==", value: uid },
-        { fieldPath: "hasDismissed", op: "==", value: false },
-      ],
-    });
-
-    const payload = {
-      data,
-      pagination: {
-        cursor: data.length > 0 ? data[data.length - 1].id : null,
-        limit,
-      },
-    };
-
-    await CacheService.setInCache(cacheKey, payload, 60 * 60 * 24);
-
-    return payload;
-  }
-
-  /**
-   * Dismiss a notification
-   * @param {any} notification The notification to dismiss
-   * @return {Promise<any>} The result of the dismiss operation
-   */
-  export async function dismissNotification(notification: any): Promise<any> {
-    if (!notification) {
-      throw new Error("Notification does not exist");
-    }
-
-    const notificationKey = notification.key;
-    functions.logger.info(`Dismissing notification: ${notificationKey}`);
-
-    if (notificationKey === "") {
-      throw new Error("Notification key is empty");
-    }
-
-    await resetNotificationListCache(notification.receiver);
-    return await DataService.updateDocument({
-      schemaKey: "notifications",
-      entryId: notificationKey,
-      data: {
-        hasDismissed: true,
-      },
-    });
-  }
-
-  /**
-   * Reset the notification list cache for a uid
-   * @param {string} uid The uid to reset the cache for
-   * @return {Promise<void>} The result of the reset operation
-   */
-  export async function resetNotificationListCache(uid: string): Promise<void> {
-    if (!uid) {
+  export async function postNotificationPayloadToUserFeed(uid: string, notification: NotificationPayload): Promise<void> {
+    functions.logger.info(`Attempting to post notification payload to user feed: ${uid}`);
+    if (!uid || uid.length === 0) {
+      functions.logger.info(`No uid provided, skipping post notification payload to user feed`);
       return;
     }
 
-    const keyPrefix = `notifications-${uid}`;
-    await CacheService.deletePrefixedFromCache(keyPrefix);
-  }
+    const client = FeedService.getFeedsClient();
 
-  /**
-   * Dismiss all notifications for a target
-   * @param {any} target The target to dismiss the notifications for
-   * @return {Promise<any>} The result of the dismiss operation
-   */
-  export async function dismissAllNotifications(target: any): Promise<any> {
-    functions.logger.info(`Dismissing all notifications for target: ${target.uid}`);
-    const flamelinkID = FlamelinkHelpers.getFlamelinkIdFromObject(target);
-
-    if (!flamelinkID) {
-      throw new Error("Target does not have a flamelink id");
+    // Assume the notification is new
+    notification.created_at = new Date().toISOString();
+    if (!notification.id) {
+      notification.id = uuidv1();
     }
 
-    await resetNotificationListCache(flamelinkID);
-    const data = await DataService.updateDocumentsRaw({
-      schemaKey: "notifications",
-      where: [
-        { fieldPath: "receiver", op: "==", value: flamelinkID },
-        { fieldPath: "hasDismissed", op: "==", value: false },
-      ],
-      dataChanges: {
-        hasDismissed: true,
-      },
+    const feed = client.feed("notification", uid);
+    await feed.addActivity({
+      verb: "post",
+      actor: uid,
+      object: notification,
+      time: notification.created_at,
+      foreign_id: notification.id,
     });
 
-    return data;
+    functions.logger.info(`Successfully posted notification payload to user feed: ${uid}`);
+  }
+
+  export async function listNotificationWindow(client: StreamClient<DefaultGenerics>, uid: string, windowSize: number, next: string): Promise<NotificationPayloadResponse> {
+    functions.logger.info(`Attempting to list notification window for user: ${uid}`);
+    const payloadResponse = new NotificationPayloadResponse();
+
+    if (!uid || uid.length === 0) {
+      functions.logger.info(`No uid provided, skipping list notification window`);
+      return payloadResponse;
+    }
+
+    functions.logger.info(`Listing notification window for user: ${uid}`);
+    const feed = client.feed("notification", uid);
+    const response = await feed.get({
+      limit: windowSize,
+      id_lt: next,
+    });
+
+    functions.logger.info(`Successfully listed notification window for user: ${uid}`, { response });
+    const notifications = [] as NotificationPayload[];
+
+    if (response.results.length > 0) {
+      functions.logger.info(`Successfully listed notification window for user: ${uid}`, { response });
+      const initialResult = response.results[0] as any;
+      if (initialResult?.unread) {
+        payloadResponse.unread_count = initialResult.unread;
+      }
+
+      if (initialResult?.unseen) {
+        payloadResponse.unseen_count = initialResult.unseen;
+      }
+
+      response.results.forEach((activity: any) => {
+        functions.logger.info(`Processing notification payload for user: ${uid}`, { activity });
+        const realActivity = activity.activities[0] || {};
+        const objectStr = realActivity.object;
+        let object = {} as any;
+        if (typeof objectStr === "string") {
+          object = JSON.parse(objectStr);
+        } else if (typeof objectStr === "object") {
+          object = objectStr;
+        }
+
+        functions.logger.info(`Successfully processed notification payload for user: ${uid}`, { activity, object });
+
+        notifications.push(new NotificationPayload({
+            user_id: uid,
+            id: realActivity.id,
+            sender: realActivity.actor,
+            created_at: realActivity.time,
+            action: object?.action || "",
+            topic: object?.topic || "",
+            title: object?.title || "",
+            body: object?.body || "",
+            icon: object?.icon || "",
+            extra_data: object?.extra_data || {},
+          }));
+      });
+    }
+
+    functions.logger.info(`Successfully listed notification window for user: ${uid}`, { notifications });
+    payloadResponse.payloads = notifications;
+
+    return payloadResponse;
+  }
+
+  export async function markAllNotificationsReadAndSeen(client: StreamClient<DefaultGenerics>, uid: string): Promise<void> {
+    functions.logger.info(`Attempting to mark all notifications read for user: ${uid}`);
+    if (!uid || uid.length === 0) {
+      functions.logger.info(`No uid provided, skipping mark all notifications read`);
+      return;
+    }
+
+    const feed = client.feed("notification", uid);
+    await feed.get({ mark_read: true, mark_seen: true });
+
+    functions.logger.info(`Successfully marked all notifications read for user: ${uid}`);
   }
 }

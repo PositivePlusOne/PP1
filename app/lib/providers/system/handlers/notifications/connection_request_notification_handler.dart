@@ -15,7 +15,6 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -94,9 +93,6 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
       final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
       await relationshipController.disconnectRelationship(state.presenter.payload.sender);
     });
-
-    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
-    notificationsController.dismissNotification(state.presenter.payload.key);
   }
 
   Future<void> onAcceptRelationship(PositiveNotificationTileState state) async {
@@ -104,8 +100,5 @@ class ConnectionRequestNotificationHandler extends NotificationHandler {
       final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
       await relationshipController.connectRelationship(state.presenter.payload.sender);
     });
-
-    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
-    notificationsController.dismissNotification(state.presenter.payload.key);
   }
 }

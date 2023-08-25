@@ -30,6 +30,7 @@ class CacheRecord with _$CacheRecord {
     required String lastAccessedBy,
     required DateTime createdAt,
     required DateTime lastUpdatedAt,
+    required DateTime? expiresAt,
   }) = _CacheRecord;
 
   factory CacheRecord.fromJson(Map<String, Object?> json) => _$CacheRecordFromJson(json);
@@ -64,10 +65,10 @@ class CacheController extends _$CacheController {
     scheduledJobCachePersist?.cancel();
 
     // * This will delete profile eventually
-    // scheduledJobCacheClear = Timer.periodic(
-    //   kCacheCleanupFrequency,
-    //   (Timer t) => clearOutdatedCacheEntries(),
-    // );
+    scheduledJobCacheClear = Timer.periodic(
+      kCacheCleanupFrequency,
+      (Timer t) => clearOutdatedCacheEntries(),
+    );
 
     // scheduledJobCachePersist = Timer.periodic(
     //   kCacheCleanupPersist,
@@ -159,24 +160,26 @@ class CacheController extends _$CacheController {
 
     logger.d('Clearing outdated cache entries');
     cacheData.forEach((String key, CacheRecord record) {
-      final Duration difference = now.difference(record.lastUpdatedAt);
-      if (difference > kCacheTTL) {
-        logger.d('Removing outdated cache entry for $key');
+      final DateTime? ttl = record.expiresAt;
+      if (ttl?.isBefore(now) ?? false) {
         keysToRemove.add(key);
       }
     });
 
-    for (var key in keysToRemove) {
-      cacheData.remove(key);
+    logger.d('Removing ${keysToRemove.length} outdated cache entries');
+    final newCacheData = {...cacheData};
+    for (final String key in keysToRemove) {
+      newCacheData.remove(key);
     }
 
-    state = state.copyWith(cacheData: cacheData);
+    state = state.copyWith(cacheData: newCacheData);
   }
 
   void addToCache({
     required String key,
     required dynamic value,
     bool overwrite = true,
+    Duration? ttl,
   }) {
     final StackTrace trace = StackTrace.current;
     final String caller = trace.toString().split('#')[1].split(' ')[0];
@@ -196,6 +199,7 @@ class CacheController extends _$CacheController {
             createdAt: DateTime.now(),
             lastUpdatedAt: DateTime.now(),
             lastAccessedBy: caller,
+            expiresAt: ttl != null ? DateTime.now().add(ttl) : null,
           );
 
       state = state.copyWith(cacheData: {...state.cacheData}..[key] = record);

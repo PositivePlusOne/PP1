@@ -18,25 +18,25 @@ export namespace RelationshipUpdatedNotification {
           continue;
         }
 
-        const key = `relationship_updated_${relationship.id}_${member.memberId}`;
+        const id = `relationship_updated_${relationship.id}_${member.memberId}`;
         const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(member);
 
         if (!receiverId) {
-          functions.logger.error("Could not get receiver id", { key, receiverId, relationship, member });
+          functions.logger.error("Could not get receiver id", { id, receiverId, relationship, member });
           continue;
         }
 
         const payload = new NotificationPayload({
-          key,
-          receiver: receiverId,
+          id,
+          sender: receiverId,
           topic: NotificationTopic.OTHER,
           action: NotificationAction.RELATIONSHIP_UPDATED,
-          extraData: {
+          extra_data: {
             relationship: relationship,
           },
         });
 
-        await NotificationsService.sendPayloadToUser(member.fcmToken, payload, false);
+        await NotificationsService.sendPayloadToUser(member.fcmToken, payload);
       }
     }
   }

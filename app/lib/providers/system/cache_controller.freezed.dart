@@ -26,6 +26,7 @@ mixin _$CacheRecord {
   String get lastAccessedBy => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get lastUpdatedAt => throw _privateConstructorUsedError;
+  DateTime? get expiresAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +46,8 @@ abstract class $CacheRecordCopyWith<$Res> {
       String createdBy,
       String lastAccessedBy,
       DateTime createdAt,
-      DateTime lastUpdatedAt});
+      DateTime lastUpdatedAt,
+      DateTime? expiresAt});
 }
 
 /// @nodoc
@@ -67,6 +69,7 @@ class _$CacheRecordCopyWithImpl<$Res, $Val extends CacheRecord>
     Object? lastAccessedBy = null,
     Object? createdAt = null,
     Object? lastUpdatedAt = null,
+    Object? expiresAt = freezed,
   }) {
     return _then(_value.copyWith(
       key: null == key
@@ -90,6 +93,10 @@ class _$CacheRecordCopyWithImpl<$Res, $Val extends CacheRecord>
           ? _value.lastUpdatedAt
           : lastUpdatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      expiresAt: freezed == expiresAt
+          ? _value.expiresAt
+          : expiresAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -108,7 +115,8 @@ abstract class _$$_CacheRecordCopyWith<$Res>
       String createdBy,
       String lastAccessedBy,
       DateTime createdAt,
-      DateTime lastUpdatedAt});
+      DateTime lastUpdatedAt,
+      DateTime? expiresAt});
 }
 
 /// @nodoc
@@ -128,6 +136,7 @@ class __$$_CacheRecordCopyWithImpl<$Res>
     Object? lastAccessedBy = null,
     Object? createdAt = null,
     Object? lastUpdatedAt = null,
+    Object? expiresAt = freezed,
   }) {
     return _then(_$_CacheRecord(
       key: null == key
@@ -151,6 +160,10 @@ class __$$_CacheRecordCopyWithImpl<$Res>
           ? _value.lastUpdatedAt
           : lastUpdatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      expiresAt: freezed == expiresAt
+          ? _value.expiresAt
+          : expiresAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -164,7 +177,8 @@ class _$_CacheRecord implements _CacheRecord {
       required this.createdBy,
       required this.lastAccessedBy,
       required this.createdAt,
-      required this.lastUpdatedAt});
+      required this.lastUpdatedAt,
+      required this.expiresAt});
 
   factory _$_CacheRecord.fromJson(Map<String, dynamic> json) =>
       _$$_CacheRecordFromJson(json);
@@ -181,10 +195,12 @@ class _$_CacheRecord implements _CacheRecord {
   final DateTime createdAt;
   @override
   final DateTime lastUpdatedAt;
+  @override
+  final DateTime? expiresAt;
 
   @override
   String toString() {
-    return 'CacheRecord(key: $key, value: $value, createdBy: $createdBy, lastAccessedBy: $lastAccessedBy, createdAt: $createdAt, lastUpdatedAt: $lastUpdatedAt)';
+    return 'CacheRecord(key: $key, value: $value, createdBy: $createdBy, lastAccessedBy: $lastAccessedBy, createdAt: $createdAt, lastUpdatedAt: $lastUpdatedAt, expiresAt: $expiresAt)';
   }
 
   @override
@@ -201,7 +217,9 @@ class _$_CacheRecord implements _CacheRecord {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.lastUpdatedAt, lastUpdatedAt) ||
-                other.lastUpdatedAt == lastUpdatedAt));
+                other.lastUpdatedAt == lastUpdatedAt) &&
+            (identical(other.expiresAt, expiresAt) ||
+                other.expiresAt == expiresAt));
   }
 
   @JsonKey(ignore: true)
@@ -213,7 +231,8 @@ class _$_CacheRecord implements _CacheRecord {
       createdBy,
       lastAccessedBy,
       createdAt,
-      lastUpdatedAt);
+      lastUpdatedAt,
+      expiresAt);
 
   @JsonKey(ignore: true)
   @override
@@ -236,7 +255,8 @@ abstract class _CacheRecord implements CacheRecord {
       required final String createdBy,
       required final String lastAccessedBy,
       required final DateTime createdAt,
-      required final DateTime lastUpdatedAt}) = _$_CacheRecord;
+      required final DateTime lastUpdatedAt,
+      required final DateTime? expiresAt}) = _$_CacheRecord;
 
   factory _CacheRecord.fromJson(Map<String, dynamic> json) =
       _$_CacheRecord.fromJson;
@@ -253,6 +273,8 @@ abstract class _CacheRecord implements CacheRecord {
   DateTime get createdAt;
   @override
   DateTime get lastUpdatedAt;
+  @override
+  DateTime? get expiresAt;
   @override
   @JsonKey(ignore: true)
   _$$_CacheRecordCopyWith<_$_CacheRecord> get copyWith =>

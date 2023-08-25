@@ -24,16 +24,16 @@ export namespace ChatConnectionRejectedNotification {
     const title = await LocalizationsService.getLocalizedString("notifications.connection_rejected.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_rejected.body", { displayName });
 
-    const key = `${KEY_PREFIX}_${senderId}_${receiverId}`;
+    const id = `${KEY_PREFIX}_${senderId}_${receiverId}`;
 
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
     
     const payload = new NotificationPayload({
-      key,
+      id,
       sender: senderId,
-      receiver: receiverId,
+      user_id: receiverId,
       title,
       body,
       topic: NotificationTopic.CONNECTION_REQUEST,
@@ -41,5 +41,6 @@ export namespace ChatConnectionRejectedNotification {
     });
 
     await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
+    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
   }
 }

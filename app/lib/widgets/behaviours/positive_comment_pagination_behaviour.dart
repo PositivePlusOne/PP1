@@ -21,6 +21,7 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
@@ -34,7 +35,6 @@ import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_comments_state.dart';
 import '../../dtos/database/activities/comments.dart';
 import '../../services/third_party.dart';
-import '../atoms/indicators/positive_post_loading_indicator.dart';
 
 class PositiveCommentPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveCommentPaginationBehaviour({
@@ -207,9 +207,9 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     logger.d('requestNextTimelinePage() - newComments: $newComments');
 
     if (!hasNext && mounted) {
-      commentState.pagingController.appendLastPage(newComments);
+      commentState.pagingController.appendSafeLastPage(newComments);
     } else if (mounted) {
-      commentState.pagingController.appendPage(newComments, nextPageKey);
+      commentState.pagingController.appendSafePage(newComments, nextPageKey);
     }
 
     saveCommentsState();

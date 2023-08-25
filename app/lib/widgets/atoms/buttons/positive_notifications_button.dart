@@ -9,7 +9,6 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 
 class PositiveNotificationsButton extends ConsumerWidget {
@@ -23,9 +22,11 @@ class PositiveNotificationsButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final NotificationsControllerState notificationsState = ref.watch(notificationsControllerProvider);
+    // final NotificationsControllerState notificationsState = ref.watch(notificationsControllerProvider);
     final AppRouter router = ref.read(appRouterProvider);
-    final bool includeBadge = notificationsState.notifications.isNotEmpty;
+
+    //! TODO Get this number when we get reaction counts from get stream!
+    const bool includeBadge = false;
 
     // If the route is the notifications route, then we want to disable the notifications button
     final bool disableNotifications = router.current.name == NotificationsRoute.name;

@@ -20,23 +20,24 @@ NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$NotificationPayload {
-  @JsonKey(name: '_fl_meta_')
-  FlMeta? get flMeta => throw _privateConstructorUsedError;
-  String get key => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'user_id')
+  String get userId => throw _privateConstructorUsedError;
   String get sender => throw _privateConstructorUsedError;
-  String get receiver => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+  String? get createdAt => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  @JsonKey(name: 'extra_data')
+  Map<String, dynamic> get extraData => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
   NotificationTopic get topic => throw _privateConstructorUsedError;
-  String get type => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
   NotificationAction get action => throw _privateConstructorUsedError;
-  bool get hasDismissed => throw _privateConstructorUsedError;
-  Map<String, dynamic> get extraData => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: NotificationPriority.fromJson,
       toJson: NotificationPriority.toJson)
@@ -55,30 +56,30 @@ abstract class $NotificationPayloadCopyWith<$Res> {
       _$NotificationPayloadCopyWithImpl<$Res, NotificationPayload>;
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      String key,
+      {String id,
+      @JsonKey(name: 'user_id') String userId,
       String sender,
-      String receiver,
+      @JsonKey(
+          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+      String? createdAt,
       String title,
       String body,
       String icon,
+      String type,
+      @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationTopic.fromJson,
           toJson: NotificationTopic.toJson)
       NotificationTopic topic,
-      String type,
       @JsonKey(
           fromJson: NotificationAction.fromJson,
           toJson: NotificationAction.toJson)
       NotificationAction action,
-      bool hasDismissed,
-      Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationPriority.fromJson,
           toJson: NotificationPriority.toJson)
       NotificationPriority priority});
 
-  $FlMetaCopyWith<$Res>? get flMeta;
   $NotificationTopicCopyWith<$Res> get topic;
   $NotificationActionCopyWith<$Res> get action;
   $NotificationPriorityCopyWith<$Res> get priority;
@@ -97,37 +98,36 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? flMeta = freezed,
-    Object? key = null,
+    Object? id = null,
+    Object? userId = null,
     Object? sender = null,
-    Object? receiver = null,
+    Object? createdAt = freezed,
     Object? title = null,
     Object? body = null,
     Object? icon = null,
-    Object? topic = null,
     Object? type = null,
-    Object? action = null,
-    Object? hasDismissed = null,
     Object? extraData = null,
+    Object? topic = null,
+    Object? action = null,
     Object? priority = null,
   }) {
     return _then(_value.copyWith(
-      flMeta: freezed == flMeta
-          ? _value.flMeta
-          : flMeta // ignore: cast_nullable_to_non_nullable
-              as FlMeta?,
-      key: null == key
-          ? _value.key
-          : key // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as String,
       sender: null == sender
           ? _value.sender
           : sender // ignore: cast_nullable_to_non_nullable
               as String,
-      receiver: null == receiver
-          ? _value.receiver
-          : receiver // ignore: cast_nullable_to_non_nullable
-              as String,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -140,43 +140,27 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
               as String,
-      topic: null == topic
-          ? _value.topic
-          : topic // ignore: cast_nullable_to_non_nullable
-              as NotificationTopic,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      action: null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as NotificationAction,
-      hasDismissed: null == hasDismissed
-          ? _value.hasDismissed
-          : hasDismissed // ignore: cast_nullable_to_non_nullable
-              as bool,
       extraData: null == extraData
           ? _value.extraData
           : extraData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
+      topic: null == topic
+          ? _value.topic
+          : topic // ignore: cast_nullable_to_non_nullable
+              as NotificationTopic,
+      action: null == action
+          ? _value.action
+          : action // ignore: cast_nullable_to_non_nullable
+              as NotificationAction,
       priority: null == priority
           ? _value.priority
           : priority // ignore: cast_nullable_to_non_nullable
               as NotificationPriority,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $FlMetaCopyWith<$Res>? get flMeta {
-    if (_value.flMeta == null) {
-      return null;
-    }
-
-    return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
-      return _then(_value.copyWith(flMeta: value) as $Val);
-    });
   }
 
   @override
@@ -213,31 +197,30 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      String key,
+      {String id,
+      @JsonKey(name: 'user_id') String userId,
       String sender,
-      String receiver,
+      @JsonKey(
+          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+      String? createdAt,
       String title,
       String body,
       String icon,
+      String type,
+      @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationTopic.fromJson,
           toJson: NotificationTopic.toJson)
       NotificationTopic topic,
-      String type,
       @JsonKey(
           fromJson: NotificationAction.fromJson,
           toJson: NotificationAction.toJson)
       NotificationAction action,
-      bool hasDismissed,
-      Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationPriority.fromJson,
           toJson: NotificationPriority.toJson)
       NotificationPriority priority});
 
-  @override
-  $FlMetaCopyWith<$Res>? get flMeta;
   @override
   $NotificationTopicCopyWith<$Res> get topic;
   @override
@@ -257,37 +240,36 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? flMeta = freezed,
-    Object? key = null,
+    Object? id = null,
+    Object? userId = null,
     Object? sender = null,
-    Object? receiver = null,
+    Object? createdAt = freezed,
     Object? title = null,
     Object? body = null,
     Object? icon = null,
-    Object? topic = null,
     Object? type = null,
-    Object? action = null,
-    Object? hasDismissed = null,
     Object? extraData = null,
+    Object? topic = null,
+    Object? action = null,
     Object? priority = null,
   }) {
     return _then(_$_NotificationPayload(
-      flMeta: freezed == flMeta
-          ? _value.flMeta
-          : flMeta // ignore: cast_nullable_to_non_nullable
-              as FlMeta?,
-      key: null == key
-          ? _value.key
-          : key // ignore: cast_nullable_to_non_nullable
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as String,
       sender: null == sender
           ? _value.sender
           : sender // ignore: cast_nullable_to_non_nullable
               as String,
-      receiver: null == receiver
-          ? _value.receiver
-          : receiver // ignore: cast_nullable_to_non_nullable
-              as String,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -300,26 +282,22 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
               as String,
-      topic: null == topic
-          ? _value.topic
-          : topic // ignore: cast_nullable_to_non_nullable
-              as NotificationTopic,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      action: null == action
-          ? _value.action
-          : action // ignore: cast_nullable_to_non_nullable
-              as NotificationAction,
-      hasDismissed: null == hasDismissed
-          ? _value.hasDismissed
-          : hasDismissed // ignore: cast_nullable_to_non_nullable
-              as bool,
       extraData: null == extraData
           ? _value._extraData
           : extraData // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
+      topic: null == topic
+          ? _value.topic
+          : topic // ignore: cast_nullable_to_non_nullable
+              as NotificationTopic,
+      action: null == action
+          ? _value.action
+          : action // ignore: cast_nullable_to_non_nullable
+              as NotificationAction,
       priority: null == priority
           ? _value.priority
           : priority // ignore: cast_nullable_to_non_nullable
@@ -332,24 +310,26 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_NotificationPayload implements _NotificationPayload {
   const _$_NotificationPayload(
-      {@JsonKey(name: '_fl_meta_') this.flMeta,
-      this.key = '',
+      {this.id = '',
+      @JsonKey(name: 'user_id') this.userId = '',
       this.sender = '',
-      this.receiver = '',
+      @JsonKey(
+          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+      this.createdAt,
       this.title = '',
       this.body = '',
       this.icon = '',
+      this.type = '',
+      @JsonKey(name: 'extra_data')
+      final Map<String, dynamic> extraData = const {},
       @JsonKey(
           fromJson: NotificationTopic.fromJson,
           toJson: NotificationTopic.toJson)
       this.topic = const NotificationTopic.other(),
-      this.type = '',
       @JsonKey(
           fromJson: NotificationAction.fromJson,
           toJson: NotificationAction.toJson)
       this.action = const NotificationAction.none(),
-      this.hasDismissed = false,
-      final Map<String, dynamic> extraData = const {},
       @JsonKey(
           fromJson: NotificationPriority.fromJson,
           toJson: NotificationPriority.toJson)
@@ -360,17 +340,17 @@ class _$_NotificationPayload implements _NotificationPayload {
       _$$_NotificationPayloadFromJson(json);
 
   @override
-  @JsonKey(name: '_fl_meta_')
-  final FlMeta? flMeta;
-  @override
   @JsonKey()
-  final String key;
+  final String id;
+  @override
+  @JsonKey(name: 'user_id')
+  final String userId;
   @override
   @JsonKey()
   final String sender;
   @override
-  @JsonKey()
-  final String receiver;
+  @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+  final String? createdAt;
   @override
   @JsonKey()
   final String title;
@@ -381,22 +361,11 @@ class _$_NotificationPayload implements _NotificationPayload {
   @JsonKey()
   final String icon;
   @override
-  @JsonKey(
-      fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
-  final NotificationTopic topic;
-  @override
   @JsonKey()
   final String type;
-  @override
-  @JsonKey(
-      fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
-  final NotificationAction action;
-  @override
-  @JsonKey()
-  final bool hasDismissed;
   final Map<String, dynamic> _extraData;
   @override
-  @JsonKey()
+  @JsonKey(name: 'extra_data')
   Map<String, dynamic> get extraData {
     if (_extraData is EqualUnmodifiableMapView) return _extraData;
     // ignore: implicit_dynamic_type
@@ -405,13 +374,21 @@ class _$_NotificationPayload implements _NotificationPayload {
 
   @override
   @JsonKey(
+      fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
+  final NotificationTopic topic;
+  @override
+  @JsonKey(
+      fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
+  final NotificationAction action;
+  @override
+  @JsonKey(
       fromJson: NotificationPriority.fromJson,
       toJson: NotificationPriority.toJson)
   final NotificationPriority priority;
 
   @override
   String toString() {
-    return 'NotificationPayload(flMeta: $flMeta, key: $key, sender: $sender, receiver: $receiver, title: $title, body: $body, icon: $icon, topic: $topic, type: $type, action: $action, hasDismissed: $hasDismissed, extraData: $extraData, priority: $priority)';
+    return 'NotificationPayload(id: $id, userId: $userId, sender: $sender, createdAt: $createdAt, title: $title, body: $body, icon: $icon, type: $type, extraData: $extraData, topic: $topic, action: $action, priority: $priority)';
   }
 
   @override
@@ -419,21 +396,19 @@ class _$_NotificationPayload implements _NotificationPayload {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_NotificationPayload &&
-            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
-            (identical(other.key, key) || other.key == key) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.sender, sender) || other.sender == sender) &&
-            (identical(other.receiver, receiver) ||
-                other.receiver == receiver) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.body, body) || other.body == body) &&
             (identical(other.icon, icon) || other.icon == icon) &&
-            (identical(other.topic, topic) || other.topic == topic) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.action, action) || other.action == action) &&
-            (identical(other.hasDismissed, hasDismissed) ||
-                other.hasDismissed == hasDismissed) &&
             const DeepCollectionEquality()
                 .equals(other._extraData, _extraData) &&
+            (identical(other.topic, topic) || other.topic == topic) &&
+            (identical(other.action, action) || other.action == action) &&
             (identical(other.priority, priority) ||
                 other.priority == priority));
   }
@@ -442,18 +417,17 @@ class _$_NotificationPayload implements _NotificationPayload {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      flMeta,
-      key,
+      id,
+      userId,
       sender,
-      receiver,
+      createdAt,
       title,
       body,
       icon,
-      topic,
       type,
-      action,
-      hasDismissed,
       const DeepCollectionEquality().hash(_extraData),
+      topic,
+      action,
       priority);
 
   @JsonKey(ignore: true)
@@ -473,24 +447,25 @@ class _$_NotificationPayload implements _NotificationPayload {
 
 abstract class _NotificationPayload implements NotificationPayload {
   const factory _NotificationPayload(
-      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      final String key,
+      {final String id,
+      @JsonKey(name: 'user_id') final String userId,
       final String sender,
-      final String receiver,
+      @JsonKey(
+          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+      final String? createdAt,
       final String title,
       final String body,
       final String icon,
+      final String type,
+      @JsonKey(name: 'extra_data') final Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationTopic.fromJson,
           toJson: NotificationTopic.toJson)
       final NotificationTopic topic,
-      final String type,
       @JsonKey(
           fromJson: NotificationAction.fromJson,
           toJson: NotificationAction.toJson)
       final NotificationAction action,
-      final bool hasDismissed,
-      final Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationPriority.fromJson,
           toJson: NotificationPriority.toJson)
@@ -500,14 +475,15 @@ abstract class _NotificationPayload implements NotificationPayload {
       _$_NotificationPayload.fromJson;
 
   @override
-  @JsonKey(name: '_fl_meta_')
-  FlMeta? get flMeta;
+  String get id;
   @override
-  String get key;
+  @JsonKey(name: 'user_id')
+  String get userId;
   @override
   String get sender;
   @override
-  String get receiver;
+  @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+  String? get createdAt;
   @override
   String get title;
   @override
@@ -515,19 +491,18 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get icon;
   @override
+  String get type;
+  @override
+  @JsonKey(name: 'extra_data')
+  Map<String, dynamic> get extraData;
+  @override
   @JsonKey(
       fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson)
   NotificationTopic get topic;
   @override
-  String get type;
-  @override
   @JsonKey(
       fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson)
   NotificationAction get action;
-  @override
-  bool get hasDismissed;
-  @override
-  Map<String, dynamic> get extraData;
   @override
   @JsonKey(
       fromJson: NotificationPriority.fromJson,
