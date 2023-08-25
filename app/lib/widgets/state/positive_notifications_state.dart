@@ -11,9 +11,13 @@ class PositiveNotificationsState {
     required this.uid,
     required this.pagingController,
     required this.currentPaginationKey,
+    required this.unreadCount,
+    required this.unseenCount,
   });
 
   final String uid;
   final PagingController<String, NotificationPayload> pagingController;
   String currentPaginationKey;
+  int unreadCount;
+  int unseenCount;
 }

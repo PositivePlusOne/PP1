@@ -39,6 +39,8 @@ class NotificationsPage extends ConsumerWidget {
           children: <Widget>[
             if (profileId.isNotEmpty) ...<Widget>[
               PositiveNotificationsPaginationBehaviour(uid: profileId),
+              const SizedBox(height: kPaddingSmall),
+              SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData)),
             ],
           ],
         ),

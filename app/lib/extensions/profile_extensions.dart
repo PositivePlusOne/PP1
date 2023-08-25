@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/widgets/state/positive_notifications_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -42,6 +45,19 @@ extension UserProfileExtensions on Profile {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
+    // Add notification information
+    int unreadCount = 0;
+    bool showNotificationBadge = false;
+    if (profileController.currentProfileId != null) {
+      final String expectedCacheKey = 'notifications:${profileController.currentProfileId}';
+      final PositiveNotificationsState? notificationsState = cacheController.getFromCache(expectedCacheKey);
+      if (notificationsState != null) {
+        unreadCount = notificationsState.unreadCount;
+        showNotificationBadge = unreadCount > 0;
+      }
+    }
 
     if (profileController.hasSetupProfile) {
       children.addAll([
@@ -52,6 +68,7 @@ extension UserProfileExtensions on Profile {
           icon: UniconsLine.user,
           onTapped: onProfileAccountActionSelected,
           isDisabled: disableAccount,
+          includeBadge: showNotificationBadge,
         ),
       ]);
     }

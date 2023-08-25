@@ -46,7 +46,7 @@ class PositiveNotificationsPaginationBehaviour extends StatefulHookConsumerWidge
 class PositiveNotificationsPaginationBehaviourState extends ConsumerState<PositiveNotificationsPaginationBehaviour> {
   late PositiveNotificationsState notificationsState;
 
-  String get expectedCacheKey => 'notifications:${widget.uid}';
+  static String getExpectedCacheKey(String uid) => 'notifications:$uid';
 
   @override
   void initState() {
@@ -78,7 +78,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('setupNotificationsState() - Loading state for ${widget.uid}');
-    final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
+    final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(getExpectedCacheKey(widget.uid));
     if (cachedFeedState != null) {
       logger.d('setupNotificationsState() - Found cached state for ${widget.uid}');
       notificationsState = cachedFeedState;
@@ -94,6 +94,8 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
       uid: widget.uid,
       pagingController: pagingController,
       currentPaginationKey: '',
+      unreadCount: 0,
+      unseenCount: 0,
     );
   }
 
@@ -102,7 +104,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('saveState() - Saving notifications state for ${widget.uid}');
-    cacheController.addToCache(key: expectedCacheKey, value: notificationsState);
+    cacheController.addToCache(key: getExpectedCacheKey(widget.uid), value: notificationsState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
@@ -116,6 +118,16 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       String next = data.containsKey('cursor') ? data['cursor'].toString() : '';
+
+      if (data.containsKey('unread_count') && data['unread_count'] is int) {
+        logger.d('requestNextTimelinePage() - unread_count: ${data['unread_count']}');
+        notificationsState.unreadCount = data['unread_count'] as int;
+      }
+
+      if (data.containsKey('unseen_count') && data['unseen_count'] is int) {
+        logger.d('requestNextTimelinePage() - unseen_count: ${data['unseen_count']}');
+        notificationsState.unseenCount = data['unseen_count'] as int;
+      }
 
       // Check for weird backend loops (extra safety)
       if (next == notificationsState.currentPaginationKey) {
@@ -170,12 +182,12 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   @override
   Widget build(BuildContext context) {
-    const Widget loadingIndicator = PositiveLoadingIndicator();
+    const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedListView.separated(
       shrinkWrap: true,
       padding: EdgeInsets.zero,
       pagingController: notificationsState.pagingController,
-      separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
+      separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
       builderDelegate: PagedChildBuilderDelegate<NotificationPayload>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,

@@ -1,7 +1,13 @@
+// ignore_for_file: avoid_public_notifier_properties
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/services/notification_api_service.dart';
+import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -313,6 +319,8 @@ class NotificationsController extends _$NotificationsController {
       uid: uid,
       pagingController: PagingController<String, NotificationPayload>(firstPageKey: ''),
       currentPaginationKey: '',
+      unreadCount: 0,
+      unseenCount: 0,
     );
 
     cacheController.addToCache(key: expectedCacheKey, value: notificationsState);
