@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "types": ["cors"],
   },
   "compileOnSave": true,
   "include": ["src"]
