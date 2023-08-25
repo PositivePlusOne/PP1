@@ -4,6 +4,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -190,12 +191,21 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
     } catch (e) {
       logger.e("Error posting activity: $e");
+      final bool alreadyExists = e is FirebaseException && e.code == "already-exists";
 
-      final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-        title: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
-        icon: UniconsLine.plus_circle,
-        backgroundColour: colours.black,
-      );
+      late final PositiveSnackBar snackBar;
+
+      if (alreadyExists) {
+        snackBar = PositiveGenericSnackBar(
+          title: "No update required",
+          icon: UniconsLine.envelope_exclamation,
+          backgroundColour: colours.black,
+        );
+      } else {
+        snackBar = PositiveErrorSnackBar(
+          text: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
+        );
+      }
 
       if (router.navigatorKey.currentContext != null) {
         ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);

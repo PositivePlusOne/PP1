@@ -196,8 +196,8 @@ class PostApiService {
         'allowSharing': activityData.allowSharing ?? false,
         'visibleTo': ActivitySecurityConfigurationMode.toJson(activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
         'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
-        'allowLikes': const ActivitySecurityConfigurationMode.public(),
-        'allowBookmarks': const ActivitySecurityConfigurationMode.public(),
+        'allowLikes': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
+        'allowBookmarks': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
       },
     );
   }
