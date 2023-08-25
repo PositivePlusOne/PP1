@@ -140,6 +140,7 @@ export namespace DataService {
 
       if (isSame) {
         functions.logger.info(`Current document data is the same as the new data, not updating`);
+        throw new functions.https.HttpsError("already-exists", "Inbound document data is the same as the current data, not updating");
         return;
       }
 
