@@ -331,8 +331,8 @@ export namespace PostEndpoints {
     activity.securityConfiguration.viewMode = visibleTo;
     activity.securityConfiguration.shareMode = allowSharing;
     activity.securityConfiguration.commentMode = allowComments;
-    activity.securityConfiguration.likesMode =  allowLikes;
-    activity.securityConfiguration.bookmarksMode =  allowBookmarks;
+    activity.securityConfiguration.likesMode = allowLikes;
+    activity.securityConfiguration.bookmarksMode = allowBookmarks;
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
