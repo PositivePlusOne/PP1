@@ -153,18 +153,19 @@ class AccountDetailsPage extends HookConsumerWidget {
               ),
               const SizedBox(height: kPaddingMedium),
             ],
-            if (viewModelState.facebookUserInfo != null) ...<Widget>[
-              PositiveButton(
-                colors: colors,
-                onTapped: viewModel.onDisconnectFacebookProviderPressed,
-                isDisabled: viewModelState.isBusy,
-                primaryColor: colors.white,
-                label: localisations.page_account_actions_change_disable_facebook_sign_in,
-                icon: UniconsLine.facebook_f,
-                style: PositiveButtonStyle.primary,
-              ),
-              const SizedBox(height: kPaddingMedium),
-            ],
+            //! TODO: Implement Facebook login
+            // if (viewModelState.facebookUserInfo != null) ...<Widget>[
+            //   PositiveButton(
+            //     colors: colors,
+            //     onTapped: viewModel.onDisconnectFacebookProviderPressed,
+            //     isDisabled: viewModelState.isBusy,
+            //     primaryColor: colors.white,
+            //     label: localisations.page_account_actions_change_disable_facebook_sign_in,
+            //     icon: UniconsLine.facebook_f,
+            //     style: PositiveButtonStyle.primary,
+            //   ),
+            //   const SizedBox(height: kPaddingMedium),
+            // ],
             if (viewModelState.googleUserInfo == null || viewModelState.facebookUserInfo == null || viewModelState.googleUserInfo == null || viewModelState.appleUserInfo != null) ...<Widget>[
               PositiveButton(
                 colors: colors,
