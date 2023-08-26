@@ -46,7 +46,6 @@ dependencies:
   mixpanel_flutter: ^2.1.1
   freerasp: ^6.1.0
   stream_chat_flutter: ^6.9.0
-  stream_chat_persistence: ^6.8.0
   algolia: ^1.1.2
 
   google_mlkit_face_detection: 0.6.0

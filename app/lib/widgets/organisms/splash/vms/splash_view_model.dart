@@ -134,6 +134,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     if (profileController.currentProfileId != null && !profileController.hasSetupProfile) {
       nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
+    } else if (profileController.currentProfileId != null) {
+      nextRoute = const HomeRoute();
     }
 
     router.removeWhere((route) => true);

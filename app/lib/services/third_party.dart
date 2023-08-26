@@ -30,7 +30,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
-import 'package:stream_chat_persistence/stream_chat_persistence.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
@@ -159,11 +158,6 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNoti
 }
 
 @Riverpod(keepAlive: true)
-StreamChatPersistenceClient streamChatPersistenceClient(StreamChatPersistenceClientRef ref) {
-  return StreamChatPersistenceClient();
-}
-
-@Riverpod(keepAlive: true)
 StreamChatClient streamChatClient(StreamChatClientRef ref) {
   final SystemController systemController = ref.read(systemControllerProvider.notifier);
   late final StreamChatClient client;
@@ -186,7 +180,6 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
       break;
   }
 
-  client.chatPersistenceClient = ref.read(streamChatPersistenceClientProvider);
   return client;
 }
 

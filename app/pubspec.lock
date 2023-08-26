@@ -577,14 +577,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.2"
-  drift:
-    dependency: transitive
-    description:
-      name: drift
-      sha256: a255df2476431d3179f5aba7a7435a3678542642fba43de98c330ae0e0393c2e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.11.0"
   dynamic_color:
     dependency: transitive
     description:
@@ -2266,22 +2258,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0"
-  sqlite3:
-    dependency: transitive
-    description:
-      name: sqlite3
-      sha256: db65233e6b99e99b2548932f55a987961bc06d82a31a0665451fa0b4fff4c3fb
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
-  sqlite3_flutter_libs:
-    dependency: transitive
-    description:
-      name: sqlite3_flutter_libs
-      sha256: "1e20a88d5c7ae8400e009f38ddbe8b001800a6dffa37832481a86a219bc904c7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.15"
   stack_trace:
     dependency: transitive
     description:
@@ -2327,14 +2303,6 @@ packages:
     description:
       name: stream_chat_flutter_core
       sha256: f7971b7500954e70c0058689038e86ee7635a56e097fe3fa66fe3f84fe4c4c98
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.8.0"
-  stream_chat_persistence:
-    dependency: "direct main"
-    description:
-      name: stream_chat_persistence
-      sha256: "1253cd8122a06261c71ffa6b9fbafbbe2f72be7adac20b6bac14ac4671d0befa"
       url: "https://pub.dev"
     source: hosted
     version: "6.8.0"
