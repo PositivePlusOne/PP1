@@ -99,17 +99,20 @@ export namespace ReactionEndpoints {
 
         const streamClient = FeedService.getFeedsUserClient(uid);
         const reactions = await ReactionService.listReactionsForActivity(streamClient, kind, activityId);
+        functions.logger.info("Reactions for activity", { activityId, reactions });
 
         let cursor = "";
         if (reactions.length > 0) {
             const lastReaction = reactions[reactions.length - 1];
             if (lastReaction._fl_meta_ && lastReaction._fl_meta_.fl_id) {
+                functions.logger.info("Last reaction", { lastReaction });
                 cursor = lastReaction._fl_meta_.fl_id;
             }
         }
 
         // Get the profiles from the reactions
         const profiles = await ProfileService.getMultipleProfiles(reactions.map((reaction) => reaction.user_id || "").filter((userId) => userId !== ""));
+        functions.logger.info("Profiles for reactions", { profiles });
 
         return buildEndpointResponse(context, {
             sender: uid,

@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, FlatActivityEnriched, NewActivity, StreamClient, StreamFeed, connect } from "getstream";
+import { DefaultGenerics, NewActivity, StreamClient, StreamFeed, connect } from "getstream";
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequest } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
@@ -110,23 +110,29 @@ export namespace FeedService {
 
     functions.logger.info("Got feed window", { feed, windowSize, next, response });
 
-    const results = (response.results as FlatActivityEnriched<DefaultGenerics>[]).map((activity) => {
-      functions.logger.info("Origin map", { activity, origin: activity.origin });
+    const entries = [] as FeedEntry[];
+    response.results.forEach((activity: any) => {
+      functions.logger.info("Mapping feed window", { feed, windowSize, next, activity });
 
-      return {
+      entries.push({
         id: activity?.id ?? "",
         foreign_id: activity?.foreign_id ?? "",
         object: activity?.object ?? "",
         actor: activity?.actor ?? "",
         reaction_counts: activity.reaction_counts,
         verb: activity?.verb ?? "",
-      };
-    }) as FeedEntry[];
+        actorType: activity?.actor_type ?? "",
+        description: activity?.description ?? "",
+        tags: activity?.tags ?? [],
+        time: activity?.time ?? "",
+        to: activity?.to ?? [],
+      });
+    });
 
-    functions.logger.info("Mapped feed window", { feed, windowSize, next, results });
+    functions.logger.info("Mapped feed window", { feed, windowSize, next, entries });
 
     return {
-      results,
+      results: entries,
       next: response?.next ?? "",
       unread: response?.unread ?? 0,
       unseen: response?.unseen ?? 0,
