@@ -601,6 +601,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     }
 
     await state.switchCameraSensor();
+    await state.sensorConfig.setFlashMode(flashMode);
   }
 }
 
