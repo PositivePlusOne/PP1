@@ -1,5 +1,8 @@
 // Package imports:
+import 'package:app/providers/user/pledge_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -26,11 +29,29 @@ class OnboardingWelcomeViewModel extends _$OnboardingWelcomeViewModel with Lifec
 
   Future<void> onSignUpSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.registration));
+    final PledgeControllerState pledgeState = await ref.read(asyncPledgeControllerProvider.future);
+    final Logger logger = ref.read(loggerProvider);
+
+    if (!pledgeState.arePledgesAccepted) {
+      logger.w('Pledges not accepted, navigating to onboarding');
+      await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.registration));
+    } else {
+      logger.i('Pledges accepted, navigating to login');
+      await appRouter.push(LoginRoute(senderRoute: RegistrationAccountRoute));
+    }
   }
 
   Future<void> onContinueSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    await appRouter.push(const OnboardingConnectRoute());
+    final PledgeControllerState pledgeState = await ref.read(asyncPledgeControllerProvider.future);
+    final Logger logger = ref.read(loggerProvider);
+
+    if (!pledgeState.arePledgesAccepted) {
+      logger.w('Pledges not accepted, navigating to onboarding');
+      await appRouter.push(const OnboardingConnectRoute());
+    } else {
+      logger.i('Pledges accepted, navigating to home');
+      await appRouter.push(const HomeRoute());
+    }
   }
 }

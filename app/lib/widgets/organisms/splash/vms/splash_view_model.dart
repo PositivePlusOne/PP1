@@ -130,9 +130,9 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     }
 
     //* Display various welcome back pages based on system state
-    PageRouteInfo? nextRoute = const HomeRoute();
+    PageRouteInfo? nextRoute = const OnboardingWelcomeRoute();
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    if (!profileController.hasSetupProfile) {
+    if (profileController.currentProfileId != null && !profileController.hasSetupProfile) {
       nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
     }
 
