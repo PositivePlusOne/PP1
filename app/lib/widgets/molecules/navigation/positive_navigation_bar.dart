@@ -49,7 +49,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
   static const double kBottomNavigationBarBorderRadius = 40.0;
   static const double kBottomNavigationBarBorderWidth = 1.0;
   static const double kBottomNavigationBarHorizontalMargin = 10.0;
-  static const double kBottomNavigationBarVerticalMargin = 20.0;
+  static const double kBottomNavigationBarVerticalMargin = 10.0;
   static const double kBottomNavigationBarSigmaBlur = 10.0;
   static const double kBottomNavigationBarOpacity = 0.9;
 
