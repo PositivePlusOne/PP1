@@ -181,7 +181,7 @@ class AccountDetailsPage extends HookConsumerWidget {
               colors: colors,
               onTapped: viewModel.onDeleteAccountButtonPressed,
               isDisabled: viewModelState.isBusy,
-              primaryColor: colors.black,
+              primaryColor: colors.colorGray7,
               label: localisations.page_account_actions_change_delete_account,
               style: PositiveButtonStyle.text,
             ),
