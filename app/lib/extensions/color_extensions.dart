@@ -80,11 +80,6 @@ extension ColorExtensions on Color {
     return exceedsBrightnessUpperRestriction ? colors.black : colors.white;
   }
 
-  Color get complimentButtonTextColor {
-    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
-    return exceedsBrightnessUpperRestriction ? colors.colorGray7 : colors.white;
-  }
-
   Color get complimentDividerColor {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     return exceedsBrightnessUpperRestriction ? colors.colorGray2 : colors.colorGray2;

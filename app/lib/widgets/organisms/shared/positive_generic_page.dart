@@ -122,7 +122,7 @@ class PositiveGenericPage extends ConsumerWidget {
               body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingMedium),
+            const SizedBox(height: kPaddingMassive),
           ],
         ),
         if (style == PositiveGenericPageStyle.imaged) ...<Widget>[

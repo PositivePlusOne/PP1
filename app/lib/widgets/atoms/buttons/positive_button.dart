@@ -29,6 +29,7 @@ class PositiveButton extends StatefulWidget {
     this.icon,
     this.iconWidgetBuilder,
     this.iconColorOverride,
+    this.fontColorOverride,
     this.layout = PositiveButtonLayout.iconLeft,
     this.style = PositiveButtonStyle.primary,
     this.size = PositiveButtonSize.large,
@@ -150,6 +151,9 @@ class PositiveButton extends StatefulWidget {
 
   /// Overrides the icon color if required, for example white on a white background.
   final Color? iconColorOverride;
+
+  /// Overrides the font color if required, for example white on a white background.
+  final Color? fontColorOverride;
 
   /// The layout applied to the button.
   /// This is how the text and icons are positioned within the button.
@@ -326,12 +330,12 @@ class PositiveButtonState extends State<PositiveButton> {
       case PositiveButtonStyle.primary:
         materialColor = primaryColor;
         backgroundColor = primaryColor;
-        textColor = primaryColor.complimentButtonTextColor;
+        textColor = primaryColor.complimentTextColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = primaryColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        iconColor = primaryColor.complimentButtonTextColor;
+        iconColor = primaryColor.complimentTextColor;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;
@@ -367,12 +371,12 @@ class PositiveButtonState extends State<PositiveButton> {
       case PositiveButtonStyle.primaryBorder:
         materialColor = primaryColor;
         backgroundColor = primaryColor;
-        textColor = primaryColor.complimentButtonTextColor;
+        textColor = primaryColor.complimentTextColor;
         textStyle = PositiveButton.kButtonTextStyleBold.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidth;
-        borderColor = primaryColor.complimentButtonTextColor;
+        borderColor = primaryColor.complimentTextColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
-        iconColor = primaryColor.complimentButtonTextColor;
+        iconColor = primaryColor.complimentTextColor;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;
@@ -611,6 +615,11 @@ class PositiveButtonState extends State<PositiveButton> {
 
     if (widget.iconColorOverride != null) {
       iconColor = widget.iconColorOverride!;
+    }
+
+    if (widget.fontColorOverride != null) {
+      textColor = widget.fontColorOverride!;
+      textStyle = textStyle.copyWith(color: textColor);
     }
 
     // This widget is the standard widget when using non-navigation buttons, or icon only buttons.
