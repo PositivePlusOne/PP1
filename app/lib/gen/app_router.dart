@@ -37,6 +37,7 @@ import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
 import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
+import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/auth_setup_guard.dart';
@@ -156,6 +157,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
         AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/references/start', guards: [signedInGuard]),
+        AutoRoute(page: ProfileReferenceImageCameraRoute.page, path: '/profile/setup/references/camera', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageSuccessRoute.page, path: '/profile/setup/images/references/success', guards: [signedInGuard]),
         AutoRoute(page: ProfileAccentPhotoRoute.page, path: '/profile/setup/accent', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),

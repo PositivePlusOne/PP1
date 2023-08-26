@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,8 +10,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_reference_image_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 
-class ProfileReferenceImageDialog extends ConsumerWidget {
-  const ProfileReferenceImageDialog({super.key});
+@RoutePage()
+class ProfileReferenceImageCameraPage extends ConsumerWidget {
+  const ProfileReferenceImageCameraPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,6 +31,7 @@ class ProfileReferenceImageDialog extends ConsumerWidget {
       useFaceDetection: true,
       displayCameraShade: false,
       onFaceDetected: (p0) => viewModel.onFaceDetected(p0),
+      onCameraImageTaken: (p0) => viewModel.onReferenceImageTaken(p0),
       takePictureCaption: caption,
     );
   }

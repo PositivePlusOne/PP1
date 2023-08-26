@@ -1,9 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/country_constants.dart';
-import 'package:app/dtos/localization/country.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,17 +8,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/country_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/localization/country.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';

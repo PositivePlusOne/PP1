@@ -15,6 +15,7 @@ class PositiveCameraDialog extends ConsumerWidget {
     this.onFaceDetected,
     this.takePictureCaption,
     this.displayCameraShade = true,
+    this.onCameraImageTaken,
     super.key,
   });
 
@@ -22,6 +23,8 @@ class PositiveCameraDialog extends ConsumerWidget {
   final Function(FaceDetectionModel?)? onFaceDetected;
   final String? takePictureCaption;
   final bool displayCameraShade;
+
+  final Future<void> Function(String)? onCameraImageTaken;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +34,7 @@ class PositiveCameraDialog extends ConsumerWidget {
         onFaceDetected: onFaceDetected,
         takePictureCaption: takePictureCaption,
         displayCameraShade: displayCameraShade,
-        onCameraImageTaken: (path) async => Navigator.pop(context, path),
+        onCameraImageTaken: onCameraImageTaken ?? (path) async => Navigator.pop(context, path),
         topChildren: <Widget>[
           CameraFloatingButton.close(active: true, onTap: (context) => Navigator.pop(context, null)),
         ],

@@ -2,10 +2,10 @@
 import 'dart:math';
 
 // Package imports:
-import 'package:app/constants/country_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
+import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
 

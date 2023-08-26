@@ -1,13 +1,10 @@
 // ignore_for_file: avoid_public_notifier_properties
+
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/services/notification_api_service.dart';
-import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,8 +19,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 
 // Project imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/notification_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
@@ -37,6 +36,8 @@ import 'package:app/providers/system/handlers/notifications/notification_handler
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/test_notification_handler.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/services/notification_api_service.dart';
+import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';

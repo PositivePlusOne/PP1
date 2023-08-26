@@ -4,12 +4,12 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';

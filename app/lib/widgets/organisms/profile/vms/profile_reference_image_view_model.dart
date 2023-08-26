@@ -14,7 +14,7 @@ import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/profile/components/profile_reference_image_dialog.dart';
+import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 
 // Project imports:
@@ -59,15 +59,19 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
   Future<void> onRequestCamera(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d("Requesting camera");
+    // appRouter.push(const ProfileReferenceImageCameraRoute());
+  }
+
+  Future<void> onReferenceImageTaken(String result) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    final dynamic result = await showCupertinoDialog(
-      context: context,
-      builder: (context) => const ProfileReferenceImageDialog(),
-    );
-
-    if (result == null || result is! String || result.isEmpty) {
-      logger.d("onSelectCamera: result is null or not a string");
+    if (result.isEmpty) {
+      logger.i("No reference image taken, returning to profile");
+      appRouter.pop();
       return;
     }
 

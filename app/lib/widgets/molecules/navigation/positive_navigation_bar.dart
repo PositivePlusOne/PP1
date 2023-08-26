@@ -3,10 +3,10 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 

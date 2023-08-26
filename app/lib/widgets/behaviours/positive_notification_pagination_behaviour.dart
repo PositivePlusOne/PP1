@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,6 +20,7 @@ import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/notification_api_service.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../../services/third_party.dart';
