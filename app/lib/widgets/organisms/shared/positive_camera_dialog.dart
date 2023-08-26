@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PositiveCameraDialog extends ConsumerWidget {
   const PositiveCameraDialog({
@@ -24,7 +25,7 @@ class PositiveCameraDialog extends ConsumerWidget {
   final String? takePictureCaption;
   final bool displayCameraShade;
 
-  final Future<void> Function(String)? onCameraImageTaken;
+  final Future<void> Function(XFile)? onCameraImageTaken;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

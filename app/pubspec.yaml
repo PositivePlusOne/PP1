@@ -84,7 +84,7 @@ dependencies:
   share_plus: ^7.1.0
 
   # Other
-  camerawesome: ^1.4.0
+  camerawesome: ^2.0.0-dev.1
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
   open_settings_plus: ^0.1.0

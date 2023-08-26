@@ -70,7 +70,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
               if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
                 Positioned.fill(
                   child: PositiveCamera(
-                    onCameraImageTaken: (image) => viewModel.onImageTaken(context, XFile(image)),
+                    onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
                     cameraNavigation: (_) {
                       return const SizedBox(
                         height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,

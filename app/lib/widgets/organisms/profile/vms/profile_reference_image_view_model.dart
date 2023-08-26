@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -61,19 +62,13 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     logger.d("Requesting camera");
-    // appRouter.push(const ProfileReferenceImageCameraRoute());
+    appRouter.push(const ProfileReferenceImageCameraRoute());
   }
 
-  Future<void> onReferenceImageTaken(String result) async {
+  Future<void> onReferenceImageTaken(XFile result) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    if (result.isEmpty) {
-      logger.i("No reference image taken, returning to profile");
-      appRouter.pop();
-      return;
-    }
 
     state = state.copyWith(isBusy: true);
 

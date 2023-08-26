@@ -17,8 +17,8 @@ class ProfileReferenceImageCameraPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations appLocalization = AppLocalizations.of(context)!;
-    final ProfileReferenceImageViewModel viewModel = ref.watch(profileReferenceImageViewModelProvider.notifier);
-    final ProfileReferenceImageViewModelState state = ref.read(profileReferenceImageViewModelProvider);
+    final ProfileReferenceImageViewModel viewModel = ref.read(profileReferenceImageViewModelProvider.notifier);
+    final ProfileReferenceImageViewModelState state = ref.watch(profileReferenceImageViewModelProvider);
 
     String caption = appLocalization.page_profile_image_selfie_pending;
     if (state.isBusy) {
