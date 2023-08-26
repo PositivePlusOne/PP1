@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -121,34 +122,41 @@ class PositiveNavigationBarContent extends ConsumerWidget {
 
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
-
-    if (newIndex == index) {
-      return;
-    }
-
-    // You must be able to navigate back from the post route
-    if (newIndex != NavigationBarIndex.add) {
-      router.removeWhere((route) => true);
-    }
+    late final PageRouteInfo routeInfo;
 
     switch (newIndex) {
       case NavigationBarIndex.add:
-        await router.push(CreatePostRoute());
+        routeInfo = CreatePostRoute();
         break;
       case NavigationBarIndex.guidance:
-        await router.push(const GuidanceRoute());
+        routeInfo = const GuidanceRoute();
         break;
       case NavigationBarIndex.chat:
-        await router.push(const ChatConversationsRoute());
+        routeInfo = const ChatConversationsRoute();
         break;
       case NavigationBarIndex.search:
-        await router.push(const SearchRoute());
+        routeInfo = const SearchRoute();
         break;
       case NavigationBarIndex.hub:
       default:
-        await router.push(const HomeRoute());
+        routeInfo = const HomeRoute();
         break;
     }
+
+    // Check if we are currently on the route we want to navigate to
+    // If so, do nothing.
+    if (router.current.name == routeInfo.routeName) {
+      return;
+    }
+
+    // Check if that route is in our history, if so pop to it
+    if (router.stack.any((route) => route.name == routeInfo.routeName)) {
+      router.popUntil((route) => route.data?.name == routeInfo.routeName);
+      return;
+    }
+
+    // Else push the route
+    await router.push(routeInfo);
   }
 
   @override
