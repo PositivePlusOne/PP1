@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,7 +28,7 @@ import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
 @RoutePage()
-class LoginPage extends ConsumerWidget {
+class LoginPage extends HookConsumerWidget {
   const LoginPage({
     super.key,
     required this.senderRoute,
@@ -81,6 +82,8 @@ class LoginPage extends ConsumerWidget {
         const SizedBox(height: kPaddingSmall),
       ],
     ];
+
+    useLifecycleHook(viewModel);
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onBackSelected,

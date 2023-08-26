@@ -4,6 +4,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,7 +46,7 @@ class LoginValidator extends AbstractValidator<LoginViewModelState> {
 }
 
 @Riverpod(keepAlive: true)
-class LoginViewModel extends _$LoginViewModel {
+class LoginViewModel extends _$LoginViewModel with LifecycleMixin {
   final LoginValidator validator = LoginValidator();
 
   List<ValidationError> get emailValidationResults => validator.validate(state).getErrorList('email');
@@ -57,6 +58,12 @@ class LoginViewModel extends _$LoginViewModel {
   @override
   LoginViewModelState build() {
     return LoginViewModelState.initialState();
+  }
+
+  @override
+  void onFirstRender() {
+    super.onFirstRender();
+    resetState();
   }
 
   void resetState() {
