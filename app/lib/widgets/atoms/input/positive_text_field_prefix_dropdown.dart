@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +19,7 @@ class PositiveTextFieldPrefixDropdown<T> extends ConsumerStatefulWidget implemen
     this.valueStringBuilder,
     this.placeholderStringBuilder,
     this.isEnabled = true,
+    this.isPreviewOnly = false,
     super.key,
   });
 
@@ -30,12 +32,18 @@ class PositiveTextFieldPrefixDropdown<T> extends ConsumerStatefulWidget implemen
 
   final bool isEnabled;
 
+  // Removes the dropdown arrow and disables the dropdown
+  final bool isPreviewOnly;
+
   Size get preferredItemSize => const Size(29.0, 17.0);
 
   Size get preferredIconSize => const Size(24.0, 24.0);
 
+  Size get preferredSizeWithoutSelection => const Size(48.0, 40.0);
+  Size get preferredSizeWithSelection => const Size(53.0, 40.0);
+
   @override
-  Size get preferredSize => const Size(53.0, 40.0);
+  Size get preferredSize => isPreviewOnly ? preferredSizeWithoutSelection : preferredSizeWithSelection;
 
   @override
   PositiveTextFieldPrefixDropdownState<T> createState() => PositiveTextFieldPrefixDropdownState();
@@ -87,8 +95,9 @@ class PositiveTextFieldPrefixDropdownState<T> extends ConsumerState<PositiveText
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    return GestureDetector(
-      onTap: () => onWidgetSelected(typography),
+    return PositiveTapBehaviour(
+      isEnabled: widget.isEnabled,
+      onTap: (_) => onWidgetSelected(typography),
       child: SizedBox(
         height: widget.preferredSize.height,
         width: widget.preferredSize.width,
@@ -107,14 +116,16 @@ class PositiveTextFieldPrefixDropdownState<T> extends ConsumerState<PositiveText
                 ),
               ),
             ),
-            SizedBox(
-              width: widget.preferredIconSize.width,
-              height: widget.preferredIconSize.height,
-              child: Icon(
-                UniconsLine.angle_down,
-                color: colors.black,
+            if (!widget.isPreviewOnly) ...<Widget>[
+              SizedBox(
+                width: widget.preferredIconSize.width,
+                height: widget.preferredIconSize.height,
+                child: Icon(
+                  UniconsLine.angle_down,
+                  color: colors.black,
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),

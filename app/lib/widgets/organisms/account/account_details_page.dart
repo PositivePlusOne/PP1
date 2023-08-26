@@ -1,4 +1,9 @@
 // Flutter imports:
+import 'package:app/constants/country_constants.dart';
+import 'package:app/dtos/localization/country.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -57,6 +62,8 @@ class AccountDetailsPage extends HookConsumerWidget {
       actions.addAll(profileState.currentProfile!.buildCommonProfilePageActions(disableAccount: true));
     }
 
+    final (String countryCode, String formattedPhoneNumber) phoneNumberComponents = phoneNumber.formatPhoneNumberIntoComponents();
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
@@ -74,27 +81,12 @@ class AccountDetailsPage extends HookConsumerWidget {
               style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
-            PositiveTransparentSheet(
-              children: <Widget>[
-                PositiveFakeTextFieldButton(
-                  onTap: (_) {},
-                  backgroundColor: Colors.transparent,
-                  hintText: localisations.shared_name,
-                  labelText: name,
-                ),
-                const SizedBox(height: kPaddingMedium),
-                PositiveRichText(
-                  actionColor: colors.linkBlue,
-                  textColor: colors.colorGray7,
-                  onActionTapped: (_) {},
-                  // body: localisations.page_profile_edit_change_details,Need to change these details? Please refer to our {}
-                  //TODO(Ryan): Use markdown to deal with localisation strings and inline links (will be breaking change across app)
-                  body: "Need to change these details? Please refer to our {}",
-                  actions: <String>[
-                    localisations.page_profile_edit_change_details_link,
-                  ],
-                )
-              ],
+            PositiveFakeTextFieldButton(
+              hintText: localisations.shared_name,
+              labelText: name,
+              onTap: (_) {},
+              isEnabled: !viewModelState.isBusy,
+              suffixIcon: PositiveTextFieldIcon.action(backgroundColor: colors.purple),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveFakeTextFieldButton(
@@ -102,19 +94,29 @@ class AccountDetailsPage extends HookConsumerWidget {
               labelText: emailAddress,
               onTap: viewModel.onUpdateEmailAddressButtonPressed,
               isEnabled: !viewModelState.isBusy,
-              suffixIcon: PositiveTextFieldIcon.action(
-                backgroundColor: colors.purple,
-              ),
+              suffixIcon: PositiveTextFieldIcon.action(backgroundColor: colors.purple),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveFakeTextFieldButton(
               hintText: localisations.shared_phone_number,
-              labelText: phoneNumber,
+              labelText: phoneNumberComponents.$2,
               onTap: viewModel.onUpdatePhoneNumberButtonPressed,
               isEnabled: !viewModelState.isBusy,
-              suffixIcon: PositiveTextFieldIcon.action(
-                backgroundColor: colors.purple,
-              ),
+              suffixIcon: PositiveTextFieldIcon.action(backgroundColor: colors.purple),
+              prefixIcon: phoneNumberComponents.$1.isEmpty
+                  ? null
+                  : PositiveTextFieldPrefixContainer(
+                      color: colors.colorGray6,
+                      isPreviewOnly: true,
+                      child: PositiveTextFieldPrefixDropdown<Country>(
+                        onValueChanged: (_) {},
+                        isPreviewOnly: true,
+                        initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
+                        valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',
+                        placeholderStringBuilder: (value) => '+${value.phoneCode}',
+                        values: kCountryList,
+                      ),
+                    ),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveButton(

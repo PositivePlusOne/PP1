@@ -11,11 +11,13 @@ class PositiveTextFieldPrefixContainer extends ConsumerWidget implements Preferr
   const PositiveTextFieldPrefixContainer({
     required this.child,
     required this.color,
+    this.isPreviewOnly = false,
     super.key,
   });
 
   final Widget child;
   final Color color;
+  final bool isPreviewOnly;
 
   static const double kSeparatorWidth = 1.0;
   static const double kVerticalMargin = 5.0;
@@ -42,5 +44,5 @@ class PositiveTextFieldPrefixContainer extends ConsumerWidget implements Preferr
   }
 
   @override
-  Size get preferredSize => const Size(75.0, 40.0);
+  Size get preferredSize => Size(isPreviewOnly ? 69.0 : 75.0, 40.0);
 }
