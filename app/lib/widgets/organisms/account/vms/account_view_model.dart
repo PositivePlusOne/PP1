@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

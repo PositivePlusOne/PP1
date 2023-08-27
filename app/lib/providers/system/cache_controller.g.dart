@@ -34,7 +34,7 @@ Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cacheControllerHash() => r'95556d2186280ca6e0dfe288ca81d37b88edd707';
+String _$cacheControllerHash() => r'7eb9961d3f3cfeb936d8f7f5337df3cf17709a70';
 
 /// See also [CacheController].
 @ProviderFor(CacheController)
