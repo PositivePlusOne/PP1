@@ -81,6 +81,7 @@ enum PositivePostNavigationActiveButton {
 }
 
 enum CreatePostCurrentPage {
+  entry,
   camera,
   editPhoto,
   createPostText,

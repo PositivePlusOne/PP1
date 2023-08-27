@@ -48,6 +48,8 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.valueSaveToGallery = false,
     this.tags = const [],
     this.trailingWidget,
+    this.initialValueSharingVisibility = const ActivitySecurityConfigurationMode.public(),
+    this.initialValueAllowComments = const ActivitySecurityConfigurationMode.signedIn(),
     super.key,
   });
 
@@ -67,6 +69,9 @@ class CreatePostDialogue extends HookConsumerWidget {
   final Function(BuildContext context)? onUpdateAllowSharing;
   final Function(ActivitySecurityConfigurationMode)? onUpdateVisibleTo;
   final Function(ActivitySecurityConfigurationMode)? onUpdateAllowComments;
+
+  final ActivitySecurityConfigurationMode initialValueAllowComments;
+  final ActivitySecurityConfigurationMode initialValueSharingVisibility;
 
   final bool valueAllowSharing;
   final bool valueSaveToGallery;
@@ -198,7 +203,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_visibility,
                 onValueChanged: (type) => onUpdateVisibleTo!(type),
-                initialValue: const ActivitySecurityConfigurationMode.public(),
+                initialValue: initialValueSharingVisibility,
                 labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
@@ -219,7 +224,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_comments,
                 onValueChanged: (type) => onUpdateAllowComments!(type),
-                initialValue: const ActivitySecurityConfigurationMode.signedIn(),
+                initialValue: initialValueAllowComments,
                 labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toLocale(value, localisations),

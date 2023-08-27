@@ -47,7 +47,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
   const factory CreatePostViewModelState({
     @Default(false) bool isBusy,
     @Default(PostType.image) PostType currentPostType,
-    @Default(CreatePostCurrentPage.camera) CreatePostCurrentPage currentCreatePostPage,
+    @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default(false) bool isEditing,
     @Default('') String currentActivityID,
     @Default([]) List<GalleryEntry> galleryEntries,
@@ -55,7 +55,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default([]) List<String> tags,
     @Default(false) bool allowSharing,
     @Default(ActivitySecurityConfigurationMode.public()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode visibleTo,
-    @Default(ActivitySecurityConfigurationMode.public()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode allowComments,
+    @Default(ActivitySecurityConfigurationMode.signedIn()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode allowComments,
     @Default("") String activeButtonFlexText,
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
@@ -75,6 +75,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   @override
   CreatePostViewModelState build() {
     return CreatePostViewModelState.initialState();
+  }
+
+  Future<void> initCamera(BuildContext context) async {
+    state = state.copyWith(
+      currentCreatePostPage: CreatePostCurrentPage.camera,
+    );
   }
 
   Future<void> loadActivityData(BuildContext context, ActivityData activityData) async {
@@ -112,7 +118,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         isEditing: true,
         tags: activityData.tags ?? [],
         allowSharing: activityData.allowSharing ?? false,
-        allowComments: activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.public(),
+        allowComments: activityData.reactionPermissionMode ?? const ActivitySecurityConfigurationMode.signedIn(),
         visibleTo: activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.public(),
         currentCreatePostPage: currentPage,
         currentPostType: currentPostType,
@@ -446,6 +452,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.entry:
+        break;
       case CreatePostCurrentPage.camera:
         throw Exception("Cannot press flex button on camera page");
       case CreatePostCurrentPage.editPhoto:
