@@ -218,6 +218,13 @@ class CacheController extends _$CacheController {
     providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
   }
 
+  void removeMultipleFromCache(List<String> keys) {
+    state = state.copyWith(cacheData: {...state.cacheData}..removeWhere((key, value) => keys.contains(key)));
+    for (final String key in keys) {
+      providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
+    }
+  }
+
   T? getFromCache<T>(String key) {
     final CacheRecord? record = state.cacheData[key];
     final dynamic data = record?.value;

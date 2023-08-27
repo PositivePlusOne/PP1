@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -495,6 +496,10 @@ class ProfileController extends _$ProfileController {
 
     final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
     final Profile profile = Profile.fromJson(profileJson);
+
+    //! Remove the cache records for the bytes data
+    //! This is important as the bytes data is not stored in the cache manager, but the media is
+    PositiveMediaImageState.clearCacheDataForMedia(media);
 
     eventBus.fire(ForceMediaFetchEvent(media: media));
     state = state.copyWith(currentProfile: profile);
