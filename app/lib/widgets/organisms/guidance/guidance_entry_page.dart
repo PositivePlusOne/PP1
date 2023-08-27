@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -60,7 +61,7 @@ class GuidanceEntryPage extends HookConsumerWidget {
             index: NavigationBarIndex.guidance,
           ),
           headingWidgets: [
-            SliverToBoxAdapter(
+            SliverPinnedHeader(
               child: GuidanceSearchBar(
                 onSubmitted: gc.onSearch,
                 onBackSelected: () => context.router.pop(),
@@ -128,31 +129,38 @@ class _GuidanceSearchBarState extends ConsumerState<GuidanceSearchBar> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final double topPadding = mediaQuery.padding.top;
 
-    return SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingLarge),
-        child: Row(
-          children: [
-            PositiveButton.appBarIcon(
-              colors: colors,
-              primaryColor: colors.black,
-              icon: UniconsLine.angle_left_b,
-              onTapped: widget.onBackSelected,
+    return Container(
+      padding: EdgeInsets.only(
+        top: kPaddingSmall + topPadding,
+        left: kPaddingMedium,
+        right: kPaddingMedium,
+        bottom: kPaddingSmall,
+      ),
+      decoration: BoxDecoration(
+        color: colors.colorGray1,
+      ),
+      child: Row(
+        children: [
+          PositiveButton.appBarIcon(
+            colors: colors,
+            primaryColor: colors.black,
+            icon: UniconsLine.angle_left_b,
+            onTapped: widget.onBackSelected,
+          ),
+          kPaddingExtraSmall.asHorizontalBox,
+          Expanded(
+            child: PositiveSearchField(
+              controller: _controller,
+              onSubmitted: (str) => widget.onSubmitted(str, _controller),
+              initialText: widget.initialText,
+              hintText: widget.hintText,
+              isEnabled: widget.isEnabled,
             ),
-            kPaddingExtraSmall.asHorizontalBox,
-            Expanded(
-              child: PositiveSearchField(
-                controller: _controller,
-                onSubmitted: (str) => widget.onSubmitted(str, _controller),
-                initialText: widget.initialText,
-                hintText: widget.hintText,
-                isEnabled: widget.isEnabled,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

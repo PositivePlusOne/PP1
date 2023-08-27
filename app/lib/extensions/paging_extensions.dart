@@ -9,6 +9,11 @@ extension PagingExtensions on PagingController {
   }
 
   void appendSafePage<T>(List<T> newItems, String nextPageKey) {
+    if (itemList == null) {
+      appendPage(newItems, nextPageKey);
+      return;
+    }
+
     final List<T> actualNewItems = newItems.where((T item) => !itemList!.contains(item)).toList();
     final bool hasNewItems = actualNewItems.isNotEmpty;
 
@@ -20,11 +25,18 @@ extension PagingExtensions on PagingController {
   }
 
   void appendSafeLastPage<T>(List<T> newItems) {
+    if (itemList == null) {
+      appendLastPage(newItems);
+      return;
+    }
+
     final List<T> actualNewItems = newItems.where((T item) => !(itemList?.contains(item) ?? false)).toList();
     final bool hasNewItems = actualNewItems.isNotEmpty;
 
     if (hasNewItems) {
       appendLastPage(actualNewItems);
+    } else {
+      appendLastPage(<T>[]);
     }
   }
 }

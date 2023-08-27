@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -76,7 +77,7 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
         return;
       }
 
-      pagingController.appendSafePage(entries, response.cursor!);
+      pagingController.appendSafePage(entries, response.cursor ?? '');
     } catch (e) {
       logger.e(e.toString());
       pagingController.error = e;
@@ -85,10 +86,10 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
 
   @override
   Widget build(BuildContext context) {
-    const Widget loadingIndicator = GuidanceLoadingIndicator();
+    const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedSliverList.separated(
       pagingController: pagingController,
-      separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
+      separatorBuilder: (context, index) => const SizedBox(height: kPaddingExtraSmall),
       builderDelegate: PagedChildBuilderDelegate<GuidanceDirectoryEntry>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,

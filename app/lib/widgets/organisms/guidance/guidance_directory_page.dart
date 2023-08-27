@@ -10,10 +10,10 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_directory_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
@@ -62,7 +62,7 @@ class GuidanceDirectoryPage extends ConsumerWidget {
             index: NavigationBarIndex.guidance,
           ),
           headingWidgets: [
-            SliverToBoxAdapter(
+            SliverPinnedHeader(
               child: GuidanceSearchBar(
                 onSubmitted: controller.onSearch,
                 onBackSelected: () => context.router.pop(),
@@ -73,7 +73,7 @@ class GuidanceDirectoryPage extends ConsumerWidget {
             ),
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingMedium),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -97,29 +97,7 @@ class GuidanceDirectoryPage extends ConsumerWidget {
             ),
           ],
         ),
-        if (state.isBusy) ...[const GuidanceLoadingIndicator()],
       ],
-    );
-  }
-}
-
-class GuidanceLoadingIndicator extends StatelessWidget {
-  const GuidanceLoadingIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Center(
-          child: PositiveLoadingIndicator(),
-        ),
-      ),
     );
   }
 }

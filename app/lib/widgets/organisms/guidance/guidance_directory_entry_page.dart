@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -80,7 +81,7 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
             index: NavigationBarIndex.guidance,
           ),
           headingWidgets: [
-            SliverToBoxAdapter(
+            SliverPinnedHeader(
               child: GuidanceSearchBar(
                 onSubmitted: controller.onSearch,
                 onBackSelected: () => context.router.pop(),
@@ -90,7 +91,7 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              padding: const EdgeInsets.only(left: kPaddingMedium, top: kPaddingMedium, right: kPaddingMedium),
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   <Widget>[
