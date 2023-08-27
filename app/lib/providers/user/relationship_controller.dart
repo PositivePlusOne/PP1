@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:_internal';
 import 'dart:async';
 import 'dart:convert';
 
@@ -19,8 +18,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
-
-// Project imports:
 
 part 'relationship_controller.freezed.dart';
 part 'relationship_controller.g.dart';
@@ -127,7 +124,7 @@ class RelationshipController extends _$RelationshipController {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final String relationshipId = [profileController.currentProfileId!, uid].asGUID;
     final Relationship? relationship = cacheController.getFromCache(relationshipId);
-    final EfficientLengthIterable<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(profileController.currentProfileId!) ?? [];
+    final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(profileController.currentProfileId!) ?? {};
     if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
       logger.d('[Profile Service] - User is already blocked: $uid');
       return;
