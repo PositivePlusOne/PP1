@@ -1,6 +1,5 @@
 const String kVisibilityFlagName = 'name';
 const String kVisibilityFlagBirthday = 'birthday';
-const String kVisibilityFlagIdentity = 'identity';
 const String kVisibilityFlagInterests = 'interests';
 const String kVisibilityFlagGenders = 'genders';
 const String kVisibilityFlagLocation = 'location';
@@ -13,7 +12,6 @@ const String kFeatureFlagOrganisationControls = 'organisationControls';
 const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagName: true,
   kVisibilityFlagBirthday: true,
-  kVisibilityFlagIdentity: true,
   kVisibilityFlagInterests: true,
   kVisibilityFlagGenders: true,
   kVisibilityFlagLocation: true,

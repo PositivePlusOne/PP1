@@ -76,19 +76,30 @@ extension UserProfileExtensions on Profile {
   }
 
   Map<String, bool> buildFormVisibilityFlags() {
-    // If the user has not set the field then the visibility flag should be set to the default value
-    // If they have set the field then the visibility flag should be set using the set from the database
-    final Map<String, bool> visibilityFlags = {
-      kVisibilityFlagBirthday: birthday.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagBirthday) : (kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false),
-      kVisibilityFlagIdentity: this.visibilityFlags.contains(kVisibilityFlagIdentity),
-      kVisibilityFlagInterests: interests.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagInterests) : (kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false),
-      kVisibilityFlagLocation: place != null || placeSkipped ? this.visibilityFlags.contains(kVisibilityFlagLocation) : (kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false),
-      kVisibilityFlagName: this.visibilityFlags.contains(kVisibilityFlagName),
-      kVisibilityFlagGenders: genders.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagGenders) : (kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false),
-      kVisibilityFlagHivStatus: hivStatus.isNotEmpty ? this.visibilityFlags.contains(kVisibilityFlagHivStatus) : (kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false),
+    final Map<String, bool> newVisibilityFlags = {
+      kVisibilityFlagBirthday: kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? true,
+      kVisibilityFlagInterests: kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? true,
+      kVisibilityFlagLocation: kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? true,
+      kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? true,
+      kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true,
+      kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? true,
     };
 
-    return visibilityFlags;
+    final List<(String flag, bool newValue)> overrideFlags = [];
+    for (final String flag in visibilityFlags) {
+      final bool? newValue = bool.tryParse(flag);
+      if (newValue == null) {
+        continue;
+      }
+
+      overrideFlags.add((flag, newValue));
+    }
+
+    for (final (String flag, bool newValue) in overrideFlags) {
+      newVisibilityFlags[flag] = newValue;
+    }
+
+    return newVisibilityFlags;
   }
 
   Map<String, bool> buildFormFeatureFlags() {
