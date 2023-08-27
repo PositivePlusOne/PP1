@@ -158,7 +158,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         ),
       );
 
-      Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
+      final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       String next = data.containsKey('next') ? data['next'].toString() : '';
 
       // Check for weird backend loops (extra safety)

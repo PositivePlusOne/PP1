@@ -104,7 +104,7 @@ class ActivitySecurityConfiguration with _$ActivitySecurityConfiguration {
   const factory ActivitySecurityConfiguration({
     @Default('') String context,
     @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode viewMode,
-    @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode commentMode,
+    @Default(ActivitySecurityConfigurationMode.signedIn()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode commentMode,
     @Default(ActivitySecurityConfigurationMode.private()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode shareMode,
   }) = _ActivitySecurityConfiguration;
 

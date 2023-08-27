@@ -134,6 +134,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
               labelText: localizations.page_profile_name_entry_input_label,
               initialText: state.name,
               onTextChanged: controller.onNameChanged,
+              onTextSubmitted: (_) => controller.onNameConfirmed(),
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,

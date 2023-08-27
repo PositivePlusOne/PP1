@@ -180,9 +180,9 @@ export interface ActivitySecurityConfigurationJSON {
  */
 export class ActivitySecurityConfiguration {
   context: string;
-  viewMode: ActivitySecurityConfigurationMode;
-  shareMode: ActivitySecurityConfigurationMode;
-  commentMode: ActivitySecurityConfigurationMode;
+  viewMode?: ActivitySecurityConfigurationMode;
+  shareMode?: ActivitySecurityConfigurationMode;
+  commentMode?: ActivitySecurityConfigurationMode;
   likesMode?: ActivitySecurityConfigurationMode;
   bookmarksMode?: ActivitySecurityConfigurationMode;
 
@@ -190,7 +190,7 @@ export class ActivitySecurityConfiguration {
     this.context = json.context || '';
     this.viewMode = json.viewMode || 'private';
     this.shareMode = json.shareMode || 'private';
-    this.commentMode = json.commentMode || 'private';
+    this.commentMode = json.commentMode || 'signed_in';
     this.likesMode = json.likesMode || 'public';
     this.bookmarksMode = json.bookmarksMode || 'public';
   }
