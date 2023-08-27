@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_public_notifier_properties
 // Dart imports:
 import 'dart:async';
 

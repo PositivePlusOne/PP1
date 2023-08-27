@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_public_notifier_properties
-
 // Flutter imports:
 import 'package:flutter/material.dart';
 
