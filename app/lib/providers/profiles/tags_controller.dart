@@ -96,4 +96,29 @@ class TagsController extends _$TagsController {
 
     return tags;
   }
+
+  void addTagsToRecentTags({
+    required List<String> tags,
+  }) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<Tag> newTags = [];
+
+    if (tags.isEmpty) {
+      logger.d('No tags to add to recent tags');
+      return;
+    }
+
+    for (final String tag in tags) {
+      final Tag? existingTag = state.recentTags.firstWhereOrNull((Tag t) => t.key == tag);
+      if (existingTag == null) {
+        final Tag? newTag = allTags.firstWhereOrNull((Tag t) => t.key == tag);
+        if (newTag != null) {
+          newTags.add(newTag);
+        }
+      }
+    }
+
+    logger.d('Adding tags to recent tags: $newTags');
+    state = state.copyWith(recentTags: [...state.recentTags, ...newTags]);
+  }
 }
