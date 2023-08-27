@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -192,9 +193,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
-
     logger.d('onFeedbackSubmitted');
-    logger.d(state.feedback);
 
     final ValidationResult validationResult = feedbackValidator.validate(state.feedback);
     if (validationResult.hasError) {
@@ -227,7 +226,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       });
 
       await appRouter.pop();
-      state.feedback.feedbackType.when(
+      feedbackType.when(
         unknown: () {},
         userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
         genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),

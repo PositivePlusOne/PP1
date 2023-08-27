@@ -330,7 +330,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
   const _$_CreatePostViewModelState(
       {this.isBusy = false,
       this.currentPostType = PostType.image,
-      this.currentCreatePostPage = CreatePostCurrentPage.camera,
+      this.currentCreatePostPage = CreatePostCurrentPage.entry,
       this.isEditing = false,
       this.currentActivityID = '',
       final List<GalleryEntry> galleryEntries = const [],
@@ -344,7 +344,7 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
           toJson: ActivitySecurityConfigurationMode.toJson)
-      this.allowComments = const ActivitySecurityConfigurationMode.public(),
+      this.allowComments = const ActivitySecurityConfigurationMode.signedIn(),
       this.activeButtonFlexText = "",
       this.saveToGallery = false,
       required this.currentFilter,

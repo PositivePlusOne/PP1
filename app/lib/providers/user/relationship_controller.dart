@@ -1,8 +1,11 @@
 // Dart imports:
+import 'dart:_internal';
 import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -115,6 +118,21 @@ class RelationshipController extends _$RelationshipController {
 
   Future<void> blockRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    if (profileController.currentProfileId == null || uid.isEmpty) {
+      logger.d('[Profile Service] - Cannot block user: $uid');
+      return;
+    }
+
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final String relationshipId = [profileController.currentProfileId!, uid].asGUID;
+    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    final EfficientLengthIterable<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(profileController.currentProfileId!) ?? [];
+    if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
+      logger.d('[Profile Service] - User is already blocked: $uid');
+      return;
+    }
+
     final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Blocking user: $uid');
 
