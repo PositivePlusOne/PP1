@@ -67,8 +67,11 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final AccountFormController controller = ref.read(accountFormControllerProvider.notifier);
-    final AccountFormState state = ref.watch(accountFormControllerProvider);
+    final Locale locale = Localizations.localeOf(context);
+    final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
+
+    final AccountFormController controller = ref.read(provider.notifier);
+    final AccountFormState state = ref.watch(provider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
@@ -153,11 +156,11 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
               isEnabled: !state.isBusy,
               textInputType: TextInputType.phone,
               prefixIcon: PositiveTextFieldPrefixDropdown<Country>(
-                onValueChanged: (dynamic str) => controller.onCountryChanged(str as Country),
+                onValueChanged: (Country? str) => controller.onCountryChanged(str),
                 initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
                 valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',
                 placeholderStringBuilder: (value) => '+${value.phoneCode}',
-                values: kCountryList,
+                values: kCountryListSortedWithTargetsFirst,
               ),
             ),
           ],

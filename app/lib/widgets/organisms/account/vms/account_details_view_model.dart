@@ -77,33 +77,30 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     );
   }
 
-  Future<void> onUpdateEmailAddressButtonPressed(BuildContext context) async {
+  Future<void> onUpdateEmailAddressButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);
 
     logger.d('onUpdateEmailAddressButtonPressed');
-    accountFormController.resetState(formMode: FormMode.edit, editTarget: AccountEditTarget.email);
+    controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.email);
     await appRouter.push(const AccountUpdateEmailAddressRoute());
   }
 
-  Future<void> onUpdatePhoneNumberButtonPressed(BuildContext context) async {
+  Future<void> onUpdatePhoneNumberButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);
 
     logger.d('onUpdatePhoneNumberButtonPressed');
-    accountFormController.resetState(formMode: FormMode.edit, editTarget: AccountEditTarget.phone);
+    controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.phone);
     await appRouter.push(const AccountUpdatePhoneNumberRoute());
   }
 
-  Future<void> onUpdatePasswordButtonPressed() async {
+  Future<void> onUpdatePasswordButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);
 
     logger.d('onUpdatePasswordButtonPressed');
-    accountFormController.resetState(formMode: FormMode.edit, editTarget: AccountEditTarget.password);
+    controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.password);
     await appRouter.push(const AccountUpdatePasswordRoute());
   }
 
@@ -180,13 +177,12 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     }
   }
 
-  Future<void> onDeleteAccountButtonPressed() async {
+  Future<void> onDeleteAccountButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final AccountFormController accountFormController = ref.read(accountFormControllerProvider.notifier);
 
     logger.d('onUpdatePasswordButtonPressed');
-    accountFormController.resetState(formMode: FormMode.edit, editTarget: AccountEditTarget.deleteProfile);
+    controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.deleteProfile);
     await appRouter.push(const AccountDeleteProfileRoute());
   }
 

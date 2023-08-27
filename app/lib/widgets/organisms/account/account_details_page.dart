@@ -20,6 +20,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
@@ -41,10 +42,15 @@ class AccountDetailsPage extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppRouter router = ref.read(appRouterProvider);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Locale locale = Localizations.localeOf(context);
 
     final AccountDetailsViewModel viewModel = ref.read(accountDetailsViewModelProvider.notifier);
     final AccountDetailsViewModelState viewModelState = ref.watch(accountDetailsViewModelProvider);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
+    final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
+    final AccountFormController controller = ref.read(provider.notifier);
 
     useLifecycleHook(viewModel);
 
@@ -52,8 +58,6 @@ class AccountDetailsPage extends HookConsumerWidget {
     final String name = profile?.name ?? '';
     final String emailAddress = profile?.email ?? '';
     final String phoneNumber = profile?.phoneNumber ?? '';
-
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final List<Widget> actions = [];
     if (profileState.currentProfile != null) {
@@ -90,7 +94,7 @@ class AccountDetailsPage extends HookConsumerWidget {
             PositiveFakeTextFieldButton(
               hintText: localisations.shared_email_address,
               labelText: emailAddress,
-              onTap: viewModel.onUpdateEmailAddressButtonPressed,
+              onTap: (context) => viewModel.onUpdateEmailAddressButtonPressed(context, locale, controller),
               isEnabled: !viewModelState.isBusy,
               suffixIcon: PositiveTextFieldIcon.action(backgroundColor: colors.purple),
             ),
@@ -98,7 +102,7 @@ class AccountDetailsPage extends HookConsumerWidget {
             PositiveFakeTextFieldButton(
               hintText: localisations.shared_phone_number,
               labelText: phoneNumberComponents.$2,
-              onTap: viewModel.onUpdatePhoneNumberButtonPressed,
+              onTap: (context) => viewModel.onUpdatePhoneNumberButtonPressed(context, locale, controller),
               isEnabled: !viewModelState.isBusy,
               suffixIcon: PositiveTextFieldIcon.action(backgroundColor: colors.purple),
               prefixIcon: phoneNumberComponents.$1.isEmpty
@@ -106,20 +110,21 @@ class AccountDetailsPage extends HookConsumerWidget {
                   : PositiveTextFieldPrefixContainer(
                       color: colors.colorGray6,
                       isPreviewOnly: true,
+                      //! THIS SHOULD BE THE USERS COUNTRY
                       child: PositiveTextFieldPrefixDropdown<Country>(
                         onValueChanged: (_) {},
                         isPreviewOnly: true,
-                        initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
+                        initialValue: Country.fromPhoneCode(phoneNumberComponents.$1) ?? Country.fromContext(context),
                         valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',
                         placeholderStringBuilder: (value) => '+${value.phoneCode}',
-                        values: kCountryList,
+                        values: kCountryListSortedWithTargetsFirst,
                       ),
                     ),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveButton(
               colors: colors,
-              onTapped: viewModel.onUpdatePasswordButtonPressed,
+              onTapped: () => viewModel.onUpdatePasswordButtonPressed(context, locale, controller),
               isDisabled: viewModelState.isBusy,
               primaryColor: colors.white,
               label: localisations.page_account_actions_change_password,
@@ -186,7 +191,7 @@ class AccountDetailsPage extends HookConsumerWidget {
             ],
             PositiveButton(
               colors: colors,
-              onTapped: viewModel.onDeleteAccountButtonPressed,
+              onTapped: () => viewModel.onDeleteAccountButtonPressed(context, locale, controller),
               isDisabled: viewModelState.isBusy,
               primaryColor: colors.colorGray7,
               label: localisations.page_account_actions_change_delete_account,

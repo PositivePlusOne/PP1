@@ -26,9 +26,9 @@ class PositiveTextFieldPrefixDropdown<T> extends ConsumerStatefulWidget implemen
   final List<T> values;
   final T initialValue;
 
-  final String Function(dynamic value)? valueStringBuilder;
-  final String Function(dynamic value)? placeholderStringBuilder;
-  final void Function(dynamic value) onValueChanged;
+  final String Function(T value)? valueStringBuilder;
+  final String Function(T value)? placeholderStringBuilder;
+  final void Function(T value) onValueChanged;
 
   final bool isEnabled;
 
@@ -46,10 +46,10 @@ class PositiveTextFieldPrefixDropdown<T> extends ConsumerStatefulWidget implemen
   Size get preferredSize => isPreviewOnly ? preferredSizeWithoutSelection : preferredSizeWithSelection;
 
   @override
-  PositiveTextFieldPrefixDropdownState<T> createState() => PositiveTextFieldPrefixDropdownState();
+  PositiveTextFieldPrefixDropdownState<T> createState() => PositiveTextFieldPrefixDropdownState<T>();
 }
 
-class PositiveTextFieldPrefixDropdownState<T> extends ConsumerState<PositiveTextFieldPrefixDropdown> {
+class PositiveTextFieldPrefixDropdownState<T> extends ConsumerState<PositiveTextFieldPrefixDropdown<T>> {
   late T currentValue;
 
   @override

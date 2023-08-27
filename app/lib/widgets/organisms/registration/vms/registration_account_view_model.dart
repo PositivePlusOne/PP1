@@ -1,6 +1,9 @@
 // Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -92,14 +95,14 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
     }
   }
 
-  Future<void> onSignUpWithEmailSelected() async {
+  Future<void> onSignUpWithEmailSelected(BuildContext context, AccountFormController controller) async {
     state = state.copyWith(isBusy: true);
 
     try {
       final AppRouter appRouter = ref.read(appRouterProvider);
-      final AccountFormController newAccountFormController = ref.read(accountFormControllerProvider.notifier);
+      final Locale locale = Localizations.localeOf(context);
 
-      newAccountFormController.resetState();
+      controller.resetState(locale);
       state = state.copyWith(isBusy: false);
 
       await appRouter.push(const RegistrationEmailEntryRoute());
