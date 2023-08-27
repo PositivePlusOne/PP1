@@ -25,8 +25,12 @@ class PositivePostActions extends HookConsumerWidget {
     this.onBookmark,
     this.onShare,
     this.shareEnabled = false,
-    this.horizontalPadding = kPaddingMedium,
-    this.verticalPadding = kPaddingSmallMedium,
+    this.padding = const EdgeInsets.only(
+      left: kPaddingMedium,
+      right: kPaddingMedium,
+      top: kPaddingSmallMedium,
+      bottom: kPaddingSmallMedium,
+    ),
     super.key,
   });
 
@@ -44,8 +48,7 @@ class PositivePostActions extends HookConsumerWidget {
   final Function(BuildContext context)? onShare;
   final bool shareEnabled;
 
-  final double horizontalPadding;
-  final double verticalPadding;
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,7 +57,7 @@ class PositivePostActions extends HookConsumerWidget {
     final UserController userController = ref.read(userControllerProvider.notifier);
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
+      padding: padding,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

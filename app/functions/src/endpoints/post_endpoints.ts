@@ -34,9 +34,8 @@ export namespace PostEndpoints {
           throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
         }
     
-        const feedsClient = FeedService.getFeedsUserClient(uid);
-        const userToken = FeedService.getUserToken(uid);
-        const feed = feedsClient.feed(feedId, slugId, userToken);
+        const feedsClient = FeedService.getFeedsClient();
+        const feed = feedsClient.feed(feedId, slugId);
 
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
         const reactionCounts = window.results.map((item) => item.reaction_counts || {});

@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -115,5 +117,13 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     logger.d('onSignInRequested()');
     loginViewModel.resetState();
     await appRouter.push(LoginRoute(senderRoute: HomeRoute));
+  }
+
+  Future<void> onTopicSelected(BuildContext context, Tag tag) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onTopicSelected() - tag: ${tag.fallback}');
+    await appRouter.push(TagFeedRoute(tag: tag));
   }
 }

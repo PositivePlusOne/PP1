@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,9 +19,19 @@ import '../dtos/system/design_colors_model.dart';
 import '../resources/resources.dart';
 import '../widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 
-MarkdownWidget buildMarkdownWidgetFromBody(String str, {void Function(String link)? onTapLink}) {
+MarkdownWidget buildMarkdownWidgetFromBody(
+  String str, {
+  List<Tag> tags = const [],
+  void Function(String link)? onTapLink,
+}) {
+  //! Add the tags to the start of the markdown as bolded text
+  String markdown = str;
+  if (tags.isNotEmpty) {
+    markdown = '${tags.map((Tag tag) => '#${tag.key}').join(' ')}\n\n$markdown';
+  }
+
   return MarkdownWidget(
-    data: str,
+    data: markdown,
     padding: EdgeInsets.zero,
     shrinkWrap: true,
     selectable: false,

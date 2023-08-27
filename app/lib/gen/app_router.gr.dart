@@ -483,6 +483,16 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    TagFeedRoute.name: (routeData) {
+      final args = routeData.argsAs<TagFeedRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: TagFeedPage(
+          key: args.key,
+          tag: args.tag,
+        ),
+      );
+    },
     TermsAndConditionsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1824,6 +1834,44 @@ class SplashRouteArgs {
   @override
   String toString() {
     return 'SplashRouteArgs{key: $key, style: $style}';
+  }
+}
+
+/// generated route for
+/// [TagFeedPage]
+class TagFeedRoute extends PageRouteInfo<TagFeedRouteArgs> {
+  TagFeedRoute({
+    Key? key,
+    required Tag tag,
+    List<PageRouteInfo>? children,
+  }) : super(
+          TagFeedRoute.name,
+          args: TagFeedRouteArgs(
+            key: key,
+            tag: tag,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'TagFeedRoute';
+
+  static const PageInfo<TagFeedRouteArgs> page =
+      PageInfo<TagFeedRouteArgs>(name);
+}
+
+class TagFeedRouteArgs {
+  const TagFeedRouteArgs({
+    this.key,
+    required this.tag,
+  });
+
+  final Key? key;
+
+  final Tag tag;
+
+  @override
+  String toString() {
+    return 'TagFeedRouteArgs{key: $key, tag: $tag}';
   }
 }
 

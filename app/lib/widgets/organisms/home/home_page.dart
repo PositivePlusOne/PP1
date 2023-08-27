@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,6 +38,8 @@ class HomePage extends HookConsumerWidget {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
+    final TagsControllerState tagsControllerState = ref.watch(tagsControllerProvider);
+
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
@@ -74,6 +77,8 @@ class HomePage extends HookConsumerWidget {
             PositiveHubFloatingBar(
               index: state.currentTabIndex,
               onTapped: viewModel.onTabSelected,
+              topics: tagsControllerState.topicTags,
+              onTopicSelected: viewModel.onTopicSelected,
               tabColours: <Color>[
                 colors.green,
                 // colors.yellow,

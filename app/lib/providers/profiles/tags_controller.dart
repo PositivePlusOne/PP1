@@ -59,7 +59,7 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = Tag.fromJsonList(rawStatuses);
 
     logger.d('Updating recommended tags with $tags');
-    state = state.copyWith(popularTags: tags);
+    state = state.copyWith(topicTags: tags);
   }
 
   void updateRecentTags(List<dynamic> rawStatuses) {
@@ -120,5 +120,21 @@ class TagsController extends _$TagsController {
 
     logger.d('Adding tags to recent tags: $newTags');
     state = state.copyWith(recentTags: [...state.recentTags, ...newTags]);
+  }
+
+  List<Tag> resolveTags(List<String> tagStrings) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<Tag> tags = [];
+
+    for (final String tag in tagStrings) {
+      for (final Tag existingTag in allTags) {
+        if (existingTag.key == tag) {
+          tags.add(existingTag);
+        }
+      }
+    }
+
+    logger.d('Resolved tags: $tags');
+    return tags;
   }
 }
