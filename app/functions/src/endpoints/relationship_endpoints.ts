@@ -62,9 +62,19 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
 
+    // Check if we are already blocking this user
+    const isAlreadyBlocking = RelationshipHelpers.hasBlockedRelationship(uid, relationship);
+    if (isAlreadyBlocking) {
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [relationship],
+      });
+    }
+
+    const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
     functions.logger.info("User blocked", { uid, targetUid });
+
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {
@@ -93,9 +103,17 @@ export namespace RelationshipEndpoints {
     }
 
     const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
+    const isUnblocked = RelationshipHelpers.hasNotBlockedRelationship(uid, relationship);
+    if (isUnblocked) {
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [relationship],
+      });
+    }
 
+    const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
     functions.logger.info("User unblocked", { uid, targetUid });
+
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {

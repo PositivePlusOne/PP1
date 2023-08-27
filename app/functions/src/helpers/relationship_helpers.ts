@@ -97,6 +97,38 @@ export namespace RelationshipHelpers {
     return true;
   }
 
+  export function hasBlockedRelationship(uid: string, relationship: any) {
+    if (!relationship) {
+      return false;
+    }
+
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid) {
+          return member.hasBlocked;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  export function hasNotBlockedRelationship(uid: string, relationship: any) {
+    if (!relationship) {
+      return false;
+    }
+
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid) {
+          return member.hasBlocked;
+        }
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Checks if a relationship can be cancelled by the given user.
    * Cancellation is only possible if the current user has connected and the other user has not connected.

@@ -86,7 +86,7 @@ _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(
           : ActivitySecurityConfigurationMode.fromJson(
               json['viewMode'] as String),
       commentMode: json['commentMode'] == null
-          ? const ActivitySecurityConfigurationMode.private()
+          ? const ActivitySecurityConfigurationMode.signedIn()
           : ActivitySecurityConfigurationMode.fromJson(
               json['commentMode'] as String),
       shareMode: json['shareMode'] == null
