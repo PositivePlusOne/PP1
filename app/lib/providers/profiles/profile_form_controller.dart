@@ -983,20 +983,20 @@ class ProfileFormController extends _$ProfileFormController {
     logger.d("onSelectCamera");
     await appRouter.pop();
 
-    final dynamic result = await showCupertinoDialog(
+    final XFile? result = await showCupertinoDialog(
       context: context,
       builder: (_) {
         return const PositiveCameraDialog();
       },
     );
 
-    if (result == null || result is! String || result.isEmpty) {
+    if (result == null || result.path.isEmpty) {
       logger.d("onSelectCamera: result is null or not a string");
       return;
     }
 
     logger.d("onSelectCamera: result is $result");
-    state = state.copyWith(newProfileImagePath: result);
+    state = state.copyWith(newProfileImagePath: result.path);
   }
 
   Future<void> onChangeImageFromPickerSelected(BuildContext context) async {

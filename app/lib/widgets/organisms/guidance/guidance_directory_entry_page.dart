@@ -97,16 +97,13 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
                     if (guidanceEntry.logoUrl.isNotEmpty) ...<Widget>[
                       Align(
                         alignment: Alignment.center,
-                        child: SizedBox(
-                          height: kIconDirectoryHeader,
-                          width: kIconDirectoryHeader,
-                          child: PositiveProfileCircularIndicator(
-                            imageOverridePath: guidanceEntry.logoUrl,
-                            borderThickness: kBorderThicknessMedium,
-                            backgroundColorOverride: colors.white,
-                            isEnabled: false,
-                            fit: BoxFit.contain,
-                          ),
+                        child: PositiveProfileCircularIndicator(
+                          imageOverridePath: guidanceEntry.logoUrl,
+                          borderThickness: kBorderThicknessMedium,
+                          backgroundColorOverride: colors.white,
+                          size: kIconDirectoryHeader,
+                          fit: BoxFit.cover,
+                          isEnabled: false,
                         ),
                       ),
                       const SizedBox(height: kPaddingMedium),

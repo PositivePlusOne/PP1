@@ -26,7 +26,7 @@ class PositiveCircularIndicator extends ConsumerWidget {
   final double size;
 
   double get padding {
-    return size >= kPaddingMassive ? kPaddingExtraSmall : kPaddingThin;
+    return size > kPaddingAppBarBreak ? kPaddingExtraSmall : kPaddingThin;
   }
 
   @override
