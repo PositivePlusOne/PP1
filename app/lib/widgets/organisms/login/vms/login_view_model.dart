@@ -4,6 +4,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -95,20 +96,18 @@ class LoginViewModel extends _$LoginViewModel {
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
-      await userController.registerGoogleProvider();
+      final UserCredential? credential = await userController.registerGoogleProvider();
+      if (credential == null) {
+        state = state.copyWith(isBusy: false);
+        return;
+      }
+
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-
-      if (profileController.state.currentProfile != null) {
-        appRouter.removeWhere((route) => true);
-        appRouter.push(const LoginWelcomeBackRoute());
-        return;
-      } else {
-        appRouter.push(const HomeRoute());
-      }
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -120,20 +119,18 @@ class LoginViewModel extends _$LoginViewModel {
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
 
-      await userController.registerAppleProvider();
+      final UserCredential? credential = await userController.registerAppleProvider();
+      if (credential == null) {
+        state = state.copyWith(isBusy: false);
+        return;
+      }
+
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-
-      if (profileController.state.currentProfile != null) {
-        appRouter.removeWhere((route) => true);
-        appRouter.push(const LoginWelcomeBackRoute());
-        return;
-      } else {
-        appRouter.push(const HomeRoute());
-      }
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -166,7 +163,6 @@ class LoginViewModel extends _$LoginViewModel {
 
   Future<void> onPasswordSubmitted() async {
     final UserController userController = ref.read(userControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
 
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -180,17 +176,16 @@ class LoginViewModel extends _$LoginViewModel {
     try {
       state = state.copyWith(isBusy: true);
 
-      await userController.loginWithEmailAndPassword(state.email, state.password);
+      final UserCredential? credential = await userController.loginWithEmailAndPassword(state.email, state.password);
+      if (credential == null) {
+        state = state.copyWith(isBusy: false);
+        return;
+      }
+
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-
-      if (profileController.state.currentProfile != null) {
-        appRouter.removeWhere((route) => true);
-        appRouter.push(const LoginWelcomeBackRoute());
-        return;
-      } else {
-        appRouter.push(const HomeRoute());
-      }
+      appRouter.removeWhere((route) => true);
+      appRouter.push(const HomeRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }

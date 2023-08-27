@@ -107,7 +107,7 @@ class UserController extends _$UserController {
     userChangedController.sink.add(user);
   }
 
-  Future<void> loginWithEmailAndPassword(String email, String password) async {
+  Future<UserCredential?> loginWithEmailAndPassword(String email, String password) async {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
@@ -116,11 +116,12 @@ class UserController extends _$UserController {
     final UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     if (userCredential.user == null) {
       log.e('[UserController] loginWithEmailAndPassword() userCredential.user is null');
-      return;
+      return null;
     }
 
     log.i('[UserController] loginWithEmailAndPassword() userCredential.user: ${userCredential.user}');
     await analyticsController.trackEvent(AnalyticEvents.signInWithEmail);
+    return userCredential;
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
