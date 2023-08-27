@@ -316,7 +316,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           media: widget.activity.media,
           commentPermissionMode: widget.activity.securityConfiguration?.commentMode,
           visibilityMode: widget.activity.securityConfiguration?.viewMode,
-          allowSharing: widget.activity.securityConfiguration?.shareMode == ActivitySecurityConfigurationMode.public(),
+          allowSharing: widget.activity.securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),
         ),
         isEditPage: true,
       ),

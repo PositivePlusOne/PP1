@@ -96,14 +96,43 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
   @override
   void initState() {
-    selectedTags.addAll(widget.currentTags);
     super.initState();
+    selectedTags.addAll(widget.currentTags);
+    enrichFilteredTagList();
   }
 
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
+  }
+
+  void enrichFilteredTagList() {
+    final TagsControllerState tagState = ref.read(tagsControllerProvider);
+    if (tagState.recentTags.isEmpty) {
+      return;
+    }
+
+    final List<Tag> returnTags = [];
+    final List<Tag> enrichedTags = [
+      ...tagState.recentTags,
+    ];
+
+    // Remove any tags that have already been selected
+    for (Tag tag in enrichedTags) {
+      if (selectedTags.any((element) => element.key == tag.key)) {
+        continue;
+      }
+
+      returnTags.add(tag);
+    }
+
+    // Sort by popularity
+    returnTags.sort((a, b) => b.popularity.compareTo(a.popularity));
+
+    filteredTags.clear();
+    filteredTags.addAll(returnTags);
+    setStateIfMounted();
   }
 
   @override
@@ -183,6 +212,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
               const SizedBox(height: kPaddingMedium),
               PositiveSearchField(
                 controller: searchController,
+                onCancel: () => enrichFilteredTagList(),
                 onChange: (_) {
                   lastSearchedTag = null;
                   setStateIfMounted();

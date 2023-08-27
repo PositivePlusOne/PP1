@@ -20,7 +20,6 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';
 
