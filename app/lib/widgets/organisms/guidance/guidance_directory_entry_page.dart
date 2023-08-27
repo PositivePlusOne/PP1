@@ -104,6 +104,7 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
                             imageOverridePath: guidanceEntry.logoUrl,
                             borderThickness: kBorderThicknessMedium,
                             backgroundColorOverride: colors.white,
+                            isEnabled: false,
                             fit: BoxFit.contain,
                           ),
                         ),
