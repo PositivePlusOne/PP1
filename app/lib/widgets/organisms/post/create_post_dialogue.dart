@@ -263,10 +263,8 @@ class CreatePostDialogue extends HookConsumerWidget {
           children: [
             PositiveButton.appBarIcon(
               colors: colours,
-              primaryColor: colours.colorGray7,
+              primaryColor: colours.white,
               icon: UniconsLine.angle_left,
-              size: PositiveButtonSize.medium,
-              style: PositiveButtonStyle.primaryBorder,
               onTapped: router.pop,
             ),
             const SizedBox(height: kPaddingMedium),
