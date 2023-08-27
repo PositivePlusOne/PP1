@@ -21,7 +21,8 @@ class Tag with _$Tag {
     @Default('') String fallback,
     @Default(-1) int popularity,
     @Default(false) bool promoted,
-    @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations) required List<TagLocalization> localizations,
+    @Default([]) @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations) List<TagLocalization> localizations,
+    TagTopic? topic,
   }) = _Tag;
 
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
@@ -44,6 +45,20 @@ class TagLocalization with _$TagLocalization {
   }
 
   factory TagLocalization.fromJson(Map<String, dynamic> json) => _$TagLocalizationFromJson(json);
+}
+
+@freezed
+class TagTopic with _$TagTopic {
+  const factory TagTopic({
+    @Default('') String fallback,
+    @Default([]) @JsonKey(fromJson: TagLocalization.fromJsonLocalizations, toJson: TagLocalization.toJsonLocalizations) List<TagLocalization> localizations,
+    @Default(false) bool isEnabled,
+  }) = _TagTopic;
+
+  factory TagTopic.fromJson(Map<String, dynamic> json) => _$TagTopicFromJson(json);
+  factory TagTopic.empty() => const TagTopic();
+
+  static List<TagTopic> fromJsonList(List<dynamic> json) => json.map((e) => TagTopic.fromJson(e)).toList();
 }
 
 class TagHelpers {

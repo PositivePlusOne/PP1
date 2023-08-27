@@ -3,6 +3,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -70,7 +71,13 @@ class ActivitiesController extends _$ActivitiesController {
     logger.i('[Activities Service] - Posting activity');
 
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
-    return await postApiService.postActivity(activityData: activityData);
+    final Activity activity = await postApiService.postActivity(activityData: activityData);
+
+    // Add the tags to the users recent tags
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+    tagsController.addTagsToRecentTags(tags: activityData.tags ?? <String>[]);
+
+    return activity;
   }
 
   Future<void> deleteActivity(String activityId) async {
@@ -89,6 +96,12 @@ class ActivitiesController extends _$ActivitiesController {
     logger.i('[Activities Service] - Updating activity');
 
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
-    return await postApiService.updateActivity(activityData: activityData);
+    final Activity activity = await postApiService.updateActivity(activityData: activityData);
+
+    // Add the tags to the users recent tags
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+    tagsController.addTagsToRecentTags(tags: activityData.tags ?? <String>[]);
+
+    return activity;
   }
 }

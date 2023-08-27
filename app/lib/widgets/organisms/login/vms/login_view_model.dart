@@ -4,10 +4,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -20,7 +20,6 @@ import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';
 

@@ -63,7 +63,7 @@ export namespace DataService {
     return data;
   };
 
-  export const getDocumentWindowRaw = async function (options: QueryOptions): Promise<DocumentData[]> {
+  export const getDocumentWindowRaw = async function (options: QueryOptions): Promise<any[]> {
     functions.logger.info(`Getting document window query`, options);
 
     const firestore = adminApp.firestore();
