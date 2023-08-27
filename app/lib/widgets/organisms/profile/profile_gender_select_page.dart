@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,158 +37,119 @@ import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class ProfileGenderSelectPage extends ConsumerStatefulWidget {
+class ProfileGenderSelectPage extends ConsumerWidget {
   const ProfileGenderSelectPage({super.key});
 
   @override
-  ConsumerState<ProfileGenderSelectPage> createState() => _ProfileGenderSelectPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-class _ProfileGenderSelectPageState extends ConsumerState<ProfileGenderSelectPage> {
-  @override
-  Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final bool hasGenderVisibilityFlag = ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagGenders] ?? false;
 
+    final ProfileControllerState profileController = ref.watch(profileControllerProvider);
     final ProfileFormController formController = ref.read(profileFormControllerProvider.notifier);
+    final ProfileFormState formControllerState = ref.watch(profileFormControllerProvider);
+
     final bool isBusy = ref.watch(profileFormControllerProvider.select((value) => value.isBusy));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    return Stack(
-      children: [
-        PositiveScaffold(
-          onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
-          headingWidgets: <Widget>[
-            PositiveBasicSliverList(
-              children: [
-                Consumer(
-                  builder: (context, ref, child) {
-                    final state = ref.watch(profileFormControllerProvider);
-                    return Row(
-                      children: [
-                        Consumer(
-                          builder: (context, ref, child) {
-                            final state = ref.watch(profileFormControllerProvider);
-                            return PositiveButton(
-                              colors: colors,
-                              primaryColor: colors.black,
-                              onTapped: () => formController.onBackSelected(ProfileGenderSelectRoute),
-                              label: localizations.shared_actions_back,
-                              isDisabled: state.isBusy,
-                              style: PositiveButtonStyle.text,
-                              layout: PositiveButtonLayout.textOnly,
-                              size: PositiveButtonSize.small,
-                            );
-                          },
-                        ),
-                        if (state.formMode == FormMode.create)
-                          PositivePageIndicator(
-                            color: colors.black,
-                            pagesNum: 9,
-                            currentPage: 3,
-                          ),
-                      ],
-                    );
-                  },
+
+    final Profile? currentProfile = profileController.currentProfile;
+    final bool isSameGender = currentProfile?.genders.length == formControllerState.genders.length && (currentProfile?.genders.containsAll(formControllerState.genders) ?? false);
+    final bool isSameVisibility = currentProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerState.visibilityFlags[kVisibilityFlagGenders];
+    final bool isUpdateDisabled = isSameGender && isSameVisibility && formControllerState.formMode == FormMode.edit;
+
+    final ScrollController scrollController = ScrollController();
+    final GlobalKey selectionListKey = GlobalKey();
+
+    return PositiveScaffold(
+      onWillPopScope: () async => formController.onBackSelected(ProfileGenderSelectRoute),
+      controller: scrollController,
+      headingWidgets: <Widget>[
+        PositiveBasicSliverList(
+          children: [
+            Row(
+              children: <Widget>[
+                PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  onTapped: () => formController.onBackSelected(ProfileGenderSelectRoute),
+                  label: localizations.shared_actions_back,
+                  isDisabled: formControllerState.isBusy,
+                  style: PositiveButtonStyle.text,
+                  layout: PositiveButtonLayout.textOnly,
+                  size: PositiveButtonSize.small,
                 ),
-                const SizedBox(height: kPaddingMedium),
-                Text(
-                  localizations.page_registration_gender_title,
-                  style: typography.styleHero.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingSmall),
-                Text(
-                  localizations.page_registration_gender_subtitle,
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingSmall),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IntrinsicWidth(
-                    child: PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      label: localizations.shared_form_information_display,
-                      size: PositiveButtonSize.small,
-                      style: PositiveButtonStyle.text,
-                      onTapped: () => formController.onGenderHelpRequested(context),
-                    ),
+                if (formControllerState.formMode == FormMode.create)
+                  PositivePageIndicator(
+                    color: colors.black,
+                    pagesNum: 9,
+                    currentPage: 3,
                   ),
-                ),
-                const SizedBox(height: kPaddingLarge),
-                const _Search(),
-                const SizedBox(height: kPaddingMedium),
-                const _SelectionList(),
-                if (MediaQuery.of(context).viewInsets.bottom == 0) const SizedBox(height: kPaddingSplashTextBreak),
               ],
             ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localizations.page_registration_gender_title,
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Text(
+              localizations.page_registration_gender_subtitle,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  label: localizations.shared_form_information_display,
+                  size: PositiveButtonSize.small,
+                  style: PositiveButtonStyle.text,
+                  onTapped: () => formController.onGenderHelpRequested(context),
+                ),
+              ),
+            ),
+            const SizedBox(height: kPaddingLarge),
+            _Search(scrollController: scrollController, selectionListKey: selectionListKey),
+            const SizedBox(height: kPaddingMedium),
+            _SelectionList(key: selectionListKey),
           ],
         ),
-        AnimatedPositioned(
-          // only show the display in app toggle when keyboard is open
-          bottom: MediaQuery.of(context).viewInsets.bottom == 0 ? 0 : max(MediaQuery.of(context).viewInsets.bottom - 120, 0),
-          right: 0,
-          left: 0,
-          duration: const Duration(milliseconds: 260),
-          curve: Curves.easeOutQuad,
-          child: Container(
-            padding: EdgeInsets.only(
-              right: kPaddingMedium,
-              left: kPaddingMedium,
-              top: kPaddingExtraSmall,
-              bottom: MediaQuery.of(context).viewPadding.bottom,
-            ),
-            decoration: BoxDecoration(color: colors.colorGray1),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Consumer(
-                  builder: (context, ref, child) => Material(
-                    child: PositiveVisibilityHint(
-                      toggleState: PositiveTogglableState.fromBool(hasGenderVisibilityFlag),
-                      onTap: formController.onGenderVisibilityToggleRequested,
-                      isEnabled: !isBusy,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final formControllerWatch = ref.watch(profileFormControllerProvider);
-                    final profileController = ref.watch(profileControllerProvider);
-                    final currentProfile = profileController.currentProfile;
-                    final isSameGender = currentProfile?.genders.length == formControllerWatch.genders.length && (currentProfile?.genders.containsAll(formControllerWatch.genders) ?? false);
-                    final isSameVisibility = currentProfile?.visibilityFlags.contains(kVisibilityFlagGenders) == formControllerWatch.visibilityFlags[kVisibilityFlagGenders];
-                    final isUpdateDisabled = isSameGender && isSameVisibility && formControllerWatch.formMode == FormMode.edit;
-                    return PositiveGlassSheet(
-                      children: [
-                        PositiveButton(
-                          colors: colors,
-                          isDisabled: formControllerWatch.genders.isEmpty || formControllerWatch.isBusy || isUpdateDisabled,
-                          onTapped: () {
-                            formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
-                          },
-                          label: formControllerWatch.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
-                          layout: PositiveButtonLayout.textOnly,
-                          style: PositiveButtonStyle.primary,
-                          primaryColor: colors.black,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        )
+      ],
+      trailingWidgets: <Widget>[
+        PositiveVisibilityHint(
+          toggleState: PositiveTogglableState.fromBool(hasGenderVisibilityFlag),
+          onTap: formController.onGenderVisibilityToggleRequested,
+          isEnabled: !isBusy,
+        ),
+        const SizedBox(height: kPaddingMedium),
+      ],
+      footerWidgets: <Widget>[
+        PositiveButton(
+          colors: colors,
+          isDisabled: formControllerState.genders.isEmpty || formControllerState.isBusy || isUpdateDisabled,
+          onTapped: () {
+            formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
+          },
+          label: formControllerState.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
+          layout: PositiveButtonLayout.textOnly,
+          style: PositiveButtonStyle.primary,
+          primaryColor: colors.black,
+        ),
       ],
     );
   }
 }
 
 class _Search extends ConsumerStatefulWidget {
-  const _Search({Key? key}) : super(key: key);
+  const _Search({Key? key, required this.scrollController, required this.selectionListKey}) : super(key: key);
+
+  final ScrollController scrollController;
+  final GlobalKey selectionListKey;
 
   @override
   ConsumerState<_Search> createState() => _SearchState();
@@ -196,12 +158,29 @@ class _Search extends ConsumerStatefulWidget {
 class _SearchState extends ConsumerState<_Search> {
   TextEditingController? textController;
 
+  Future<void> onFocusStateChanged(BuildContext context, bool isFocused) async {
+    if (!isFocused) {
+      return;
+    }
+
+    // Wait a bit of time for the keyboard to show up
+    await Future.delayed(kAnimationDurationDebounce);
+
+    // Use the widget.selectionListKey to get the position of the selection list in the scroll view
+    widget.selectionListKey.currentContext!.findRenderObject()!.showOnScreen(
+          duration: kAnimationDurationDebounce,
+          rect: Rect.fromCenter(center: Offset.zero, width: 0, height: 200), //! 200px from the top of the widget
+          curve: kAnimationCurveDefault,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final locale = AppLocalizations.of(context)!;
     return PositiveTextField(
       onControllerCreated: (controller) => textController = controller,
+      onFocusedChanged: (focus) => onFocusStateChanged(context, focus),
       onTextChanged: (value) => ref.read(genderSelectViewModelProvider.notifier).updateSearchQuery(value),
       tintColor: colors.purple,
       labelText: locale.shared_search_hint,
