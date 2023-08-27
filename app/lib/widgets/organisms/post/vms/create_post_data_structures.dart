@@ -11,7 +11,7 @@ class ActivityData {
     this.tags,
     this.allowSharing,
     this.visibilityMode,
-    this.reactionPermissionMode,
+    this.commentPermissionMode,
     this.postType,
     this.media,
   });
@@ -25,7 +25,7 @@ class ActivityData {
   bool? allowSharing;
 
   ActivitySecurityConfigurationMode? visibilityMode;
-  ActivitySecurityConfigurationMode? reactionPermissionMode;
+  ActivitySecurityConfigurationMode? commentPermissionMode;
 
   PostType? postType;
   List<Media>? media;
@@ -81,6 +81,7 @@ enum PositivePostNavigationActiveButton {
 }
 
 enum CreatePostCurrentPage {
+  entry,
   camera,
   editPhoto,
   createPostText,

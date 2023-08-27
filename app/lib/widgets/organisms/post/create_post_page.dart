@@ -42,6 +42,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
       ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
       if (widget.isEditPage) {
         ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
+      } else {
+        ref.read(createPostViewModelProvider.notifier).initCamera(context);
       }
     });
   }
@@ -127,6 +129,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     valueSaveToGallery: state.saveToGallery,
                     galleryEntries: state.galleryEntries,
                     tags: state.tags,
+                    initialValueAllowComments: state.allowComments,
+                    initialValueSharingVisibility: state.visibleTo,
                   ),
                 ),
               ],
