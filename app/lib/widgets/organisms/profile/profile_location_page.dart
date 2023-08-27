@@ -156,7 +156,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
             ),
             const SizedBox(height: kPaddingMedium),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: PositiveTextField(
