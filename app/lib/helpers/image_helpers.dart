@@ -5,12 +5,42 @@ import 'dart:typed_data';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 // Package imports:
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 import 'package:universal_platform/universal_platform.dart';
+
+Color? getMostCommonColor(Uint8List bytes) {
+  img.Image? image = img.decodeImage(bytes);
+  if (image == null) {
+    return null;
+  }
+
+  Map<String, int> colorFrequency = {};
+
+  for (int y = 0; y < image.height; y++) {
+    for (int x = 0; x < image.width; x++) {
+      img.Pixel color = image.getPixel(x, y);
+      String colorKey = '${color.r},${color.g},${color.b},${color.a}';
+
+      if (colorFrequency.containsKey(colorKey)) {
+        colorFrequency[colorKey] = colorFrequency[colorKey]! + 1;
+      } else {
+        colorFrequency[colorKey] = 1;
+      }
+    }
+  }
+
+  String mostCommonColorKey = colorFrequency.entries.fold('', (prev, entry) {
+    return (prev.isEmpty || entry.value > colorFrequency[prev]!) ? entry.key : prev;
+  });
+
+  List<String> rgba = mostCommonColorKey.split(",");
+
+  // Convert to Flutter color object
+  return Color.fromARGB(255, int.parse(rgba[0]), int.parse(rgba[1]), int.parse(rgba[2]));
+}
 
 Uint8List applyColorMatrix(Uint8List imageData, List<double> matrix) {
   final img.Image? image = img.decodeImage(imageData);

@@ -1,7 +1,9 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:typed_data';
 
 // Flutter imports:
+import 'package:app/helpers/image_helpers.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -120,7 +122,12 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
         child: Row(
           children: <Widget>[
             if (item.logoUrl.isNotEmpty) ...<Widget>[
-              PositiveMediaImage(media: Media.fromImageUrl(item.logoUrl), width: kIconHuge, height: kIconHuge),
+              PositiveMediaImage(
+                media: Media.fromImageUrl(item.logoUrl),
+                fit: BoxFit.contain,
+                width: kIconHuge,
+                height: kIconHuge,
+              ),
               const SizedBox(width: kPaddingMedium),
             ],
             Expanded(

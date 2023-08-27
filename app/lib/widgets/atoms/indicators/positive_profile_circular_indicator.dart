@@ -1,11 +1,15 @@
-// Dart imports:
-import 'dart:io';
-
 // Flutter imports:
+import 'dart:typed_data';
+
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/helpers/image_helpers.dart';
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -23,103 +27,138 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../dtos/database/common/media.dart';
 import '../../../providers/system/design_controller.dart';
 
-class PositiveProfileCircularIndicator extends ConsumerWidget {
+class PositiveProfileCircularIndicator extends ConsumerStatefulWidget {
   const PositiveProfileCircularIndicator({
     this.profile,
     this.onTap,
     this.isEnabled = true,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
+    this.borderPadding = kPaddingSmall,
     this.icon,
-    this.isApplyingOnAccentColor = false,
+    this.complimentRingColorForBackground = false,
+    this.backgroundColorOverride,
     this.ringColorOverride,
     this.imageOverridePath = '',
+    this.fit,
     super.key,
   });
 
   final Profile? profile;
   final double size;
   final double borderThickness;
+  final double borderPadding;
 
   final VoidCallback? onTap;
   final bool isEnabled;
 
   final IconData? icon;
-  final bool isApplyingOnAccentColor;
+  final bool complimentRingColorForBackground;
 
+  final Color? backgroundColorOverride;
   final Color? ringColorOverride;
 
   final String imageOverridePath;
+
+  final BoxFit? fit;
 
   bool get hasOverrideImage => imageOverridePath.isNotEmpty;
 
   static const int kTargetSize = 100;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PositiveProfileCircularIndicator> createState() => _PositiveProfileCircularIndicatorState();
+}
+
+class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfileCircularIndicator> {
+  Color ringColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    loadInitialRingColor();
+  }
+
+  void loadInitialRingColor() {
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    Color actualColor = widget.profile?.accentColor.toSafeColorFromHex(defaultColor: colours.colorGray2) ?? colours.colorGray2;
+    if (widget.ringColorOverride != null) {
+      actualColor = widget.ringColorOverride!;
+    }
+
+    ringColor = actualColor;
+  }
+
+  Future<void> onBytesLoaded(String mimeType, Uint8List bytes) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (widget.ringColorOverride != null) {
+      return;
+    }
+
+    if (widget.profile?.accentColor.isNotEmpty ?? false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() => ringColor = widget.profile!.accentColor.toSafeColorFromHex(defaultColor: Colors.transparent));
+      });
+
+      return;
+    }
+
+    final Color? dominantColor = getMostCommonColor(bytes);
+    if (dominantColor == null) {
+      logger.w('Could not get dominant color for ${widget.imageOverridePath}');
+      return;
+    }
+
+    logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() => ringColor = dominantColor);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
-    Color actualColor = profile?.accentColor.toSafeColorFromHex(defaultColor: colours.colorGray2) ?? colours.colorGray2;
-    if (isApplyingOnAccentColor) {
-      actualColor = actualColor.complimentTextColor;
+    Color actualRingColor = ringColor;
+    if (widget.complimentRingColorForBackground) {
+      actualRingColor = actualRingColor.complimentTextColor;
     }
 
-    if (ringColorOverride != null) {
-      actualColor = ringColorOverride!;
-    }
-
-    final Icon errorWidget = Icon(
-      UniconsLine.user,
-      color: colours.white,
-      size: kIconSmall,
-    );
-
-    final Media? media = profile?.profileImage;
-
+    final Media? media = widget.hasOverrideImage ? Media.fromImageUrl(widget.imageOverridePath) : widget.profile?.profileImage;
     final Widget child = Stack(
       children: <Widget>[
-        if (hasOverrideImage) ...<Widget>[
-          Positioned.fill(
-            child: Image.file(
-              File(imageOverridePath),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ],
-        if (!hasOverrideImage && media != null) ...<Widget>[
+        if (media != null) ...<Widget>[
           Positioned.fill(
             child: PositiveMediaImage(
-              fit: BoxFit.cover,
               media: media,
               isEnabled: false,
-              placeholderBuilder: (context) => Align(
-                alignment: Alignment.center,
-                child: PositiveLoadingIndicator(
-                  width: kIconSmall,
-                  color: actualColor.complimentTextColor,
-                ),
-              ),
-              errorBuilder: (_) => errorWidget,
+              fit: widget.fit ?? BoxFit.cover,
+              backgroundColor: widget.backgroundColorOverride ?? Colors.transparent,
+              placeholderBuilder: (_) => const SizedBox.shrink(),
+              errorBuilder: (_) => const SizedBox.shrink(),
+              onBytesLoaded: onBytesLoaded,
             ),
           ),
         ],
-        Positioned.fill(
-          child: Icon(
-            size: kIconSmall,
-            icon,
-            color: colours.white,
+        if (widget.icon != null) ...<Widget>[
+          Positioned.fill(
+            child: Icon(
+              size: kIconSmall,
+              widget.icon,
+              color: colours.white,
+            ),
           ),
-        )
+        ],
       ],
     );
 
     return PositiveTapBehaviour(
       onTap: (context) => _handleTap(context, ref),
-      isEnabled: isEnabled,
+      isEnabled: widget.isEnabled,
       child: PositiveCircularIndicator(
-        ringColor: actualColor,
-        borderThickness: borderThickness,
-        size: size,
+        ringColor: actualRingColor,
+        borderThickness: widget.borderThickness,
+        size: widget.size,
         child: child,
         // child: hasValidImage ? child : errorWidget,
       ),
@@ -130,8 +169,8 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    if (onTap != null) {
-      onTap!();
+    if (widget.onTap != null) {
+      widget.onTap!();
       return;
     }
 
@@ -140,6 +179,6 @@ class PositiveProfileCircularIndicator extends ConsumerWidget {
       return;
     }
 
-    profileController.viewProfile(profile ?? Profile.empty());
+    profileController.viewProfile(widget.profile ?? Profile.empty());
   }
 }

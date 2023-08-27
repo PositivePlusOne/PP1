@@ -25,12 +25,17 @@ class PositiveCircularIndicator extends ConsumerWidget {
   final double borderThickness;
   final double size;
 
+  double get padding {
+    return size >= kPaddingMassive ? kPaddingExtraSmall : kPaddingThin;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
+    return AnimatedContainer(
       height: size,
       width: size,
-      padding: const EdgeInsets.all(kPaddingThin),
+      duration: kAnimationDurationRegular,
+      padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(kBorderRadiusHuge),
         color: gapColor,
@@ -41,7 +46,8 @@ class PositiveCircularIndicator extends ConsumerWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadiusHuge),
-        child: Container(
+        child: AnimatedContainer(
+          duration: kAnimationDurationRegular,
           color: ringColor,
           child: child,
         ),

@@ -239,11 +239,12 @@ class PositiveMediaImage extends StatefulWidget {
     this.errorBuilder,
     this.height,
     this.width,
-    this.fit = BoxFit.contain,
+    this.fit = BoxFit.cover,
     this.useThumbnailIfAvailable = true,
     this.thumbnailTargetSize = PositiveThumbnailTargetSize.small,
     this.onTap,
     this.isEnabled = true,
+    this.onBytesLoaded,
     Key? key,
   }) : super(key: key);
 
@@ -251,6 +252,7 @@ class PositiveMediaImage extends StatefulWidget {
   final Color backgroundColor;
   final WidgetBuilder? placeholderBuilder;
   final WidgetBuilder? errorBuilder;
+  final void Function(String mimeType, Uint8List bytes)? onBytesLoaded;
 
   final double? height;
   final double? width;
@@ -294,6 +296,8 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
 
     if (cachedBytes != null && cachedBytes.isNotEmpty) {
       bytes = cachedBytes;
+      widget.onBytesLoaded?.call(mimeType, bytes);
+
       isSvg = mimeType == 'image/svg+xml';
       setStateIfMounted();
     } else {
@@ -316,7 +320,7 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
     }
   }
 
-  void onForceMediaFetchCalled(ForceMediaFetchEvent event) {
+  Future<void> onForceMediaFetchCalled(ForceMediaFetchEvent event) async {
     final Logger logger = providerContainer.read(loggerProvider);
     if (event.media.bucketPath.isEmpty || event.media.bucketPath != widget.media.bucketPath) {
       return;
@@ -330,7 +334,10 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onBytesLoaded: onBytesLoaded,
     );
 
-    _imageProvider?.loadBytes();
+    final FutureOr<Uint8List>? bytes = await _imageProvider?.loadBytes();
+    if (bytes != null && bytes is Uint8List && bytes.isNotEmpty) {
+      widget.onBytesLoaded?.call(lookupMimeType(widget.media.name, headerBytes: bytes) ?? '', bytes);
+    }
   }
 
   void onBytesLoaded(String mimeType, Uint8List bytes) {
@@ -343,8 +350,9 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
 
     this.bytes = bytes;
     isSvg = mimeType == 'image/svg+xml';
-    setStateIfMounted();
+    widget.onBytesLoaded?.call(mimeType, bytes);
 
+    setStateIfMounted();
     cacheController.addToCache(key: expectedCacheKey, value: bytes, ttl: kCacheTTLShort);
   }
 
@@ -377,7 +385,10 @@ class _PositiveMediaImageState extends State<PositiveMediaImage> {
       onTap: onInternalTap,
       child: Opacity(
         opacity: bytes.isEmpty ? 0 : 1,
-        child: child,
+        child: Material(
+          color: widget.backgroundColor,
+          child: child,
+        ),
       ),
     );
   }

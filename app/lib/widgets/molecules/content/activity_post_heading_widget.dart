@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -49,7 +50,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     }
 
     if (publisher!.displayName.isNotEmpty) {
-      displayName = "@${publisher!.displayName}";
+      displayName = getSafeDisplayNameFromProfile(publisher);
     }
 
     if (flMetaData != null && flMetaData!.createdDate != null) {

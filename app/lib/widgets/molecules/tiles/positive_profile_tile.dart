@@ -90,7 +90,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                 PositiveProfileCircularIndicator(
                   profile: profile,
                   size: kIconHeader,
-                  isApplyingOnAccentColor: true,
+                  complimentRingColorForBackground: true,
                   imageOverridePath: imageOverridePath,
                   onTap: () => profile.profileImage != null ? appRouter.push(MediaRoute(media: profile.profileImage!)) : () {},
                 ),
