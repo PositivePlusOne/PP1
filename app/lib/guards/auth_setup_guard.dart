@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,9 +25,11 @@ class AuthSetupGuard extends AutoRouteGuard {
     }
 
     if (!userController.isPasswordProviderLinked) {
-      final AccountFormController newAccountFormController = providerContainer.read(accountFormControllerProvider.notifier);
+      final Locale locale = Localizations.localeOf(router.navigatorKey.currentContext!);
+      final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
+      final AccountFormController controller = providerContainer.read(provider.notifier);
       if (user.email != null) {
-        newAccountFormController.onEmailAddressChanged(user.email!);
+        controller.onEmailAddressChanged(user.email!);
       }
 
       router.removeWhere((route) => true);

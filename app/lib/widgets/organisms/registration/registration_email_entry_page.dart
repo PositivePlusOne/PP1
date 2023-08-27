@@ -51,8 +51,10 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final AccountFormController controller = ref.read(accountFormControllerProvider.notifier);
-    final AccountFormState state = ref.watch(accountFormControllerProvider);
+    final Locale locale = Localizations.localeOf(context);
+    final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
+    final AccountFormController controller = ref.read(provider.notifier);
+    final AccountFormState state = ref.watch(provider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;

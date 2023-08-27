@@ -5,6 +5,33 @@ import 'package:intl/intl.dart';
 import '../dtos/localization/country.dart';
 
 final DateFormat kDefaultDateFormat = DateFormat('dd/MM/yyyy');
+const String kDefaultCountryIsoCode = 'GB-ENG';
+
+//! Talk to Christian about this
+final List<String> kTargetCountryIso3Codes = <String>[
+  'USA',
+  'GBR',
+];
+
+List<Country> get kCountryListSortedWithTargetsFirst {
+  final List<Country> sortedList = kCountryList.toList();
+  sortedList.sort((Country a, Country b) {
+    final bool aIsTarget = kTargetCountryIso3Codes.contains(a.iso3Code);
+    final bool bIsTarget = kTargetCountryIso3Codes.contains(b.iso3Code);
+
+    if (aIsTarget && !bIsTarget) {
+      return -1;
+    }
+
+    if (!aIsTarget && bIsTarget) {
+      return 1;
+    }
+
+    return a.name.compareTo(b.name);
+  });
+
+  return sortedList;
+}
 
 const List<Country> kCountryList = <Country>[
   Country(

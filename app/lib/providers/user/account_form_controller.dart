@@ -16,7 +16,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import 'package:app/constants/country_constants.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -47,13 +46,14 @@ class AccountFormState with _$AccountFormState {
   }) = _AccountFormState;
 
   factory AccountFormState.initialState({
+    required Locale locale,
     FormMode formMode = FormMode.create,
     AccountEditTarget editTarget = AccountEditTarget.email,
   }) =>
       AccountFormState(
         emailAddress: '',
         password: '',
-        country: kCountryList.firstWhere((element) => element.phoneCode == '44'),
+        country: Country.fromLocale(locale),
         phoneNumber: '',
         pin: '',
         isBusy: false,
@@ -115,8 +115,8 @@ class AccountFormController extends _$AccountFormController {
   bool get isPinValid => pinValidationResults.isEmpty;
 
   @override
-  AccountFormState build() {
-    return AccountFormState.initialState();
+  AccountFormState build(Locale locale) {
+    return AccountFormState.initialState(locale: locale);
   }
 
   Future<bool> onWillPopScope() async {
@@ -144,7 +144,7 @@ class AccountFormController extends _$AccountFormController {
     return true;
   }
 
-  void resetState({FormMode formMode = FormMode.create, AccountEditTarget editTarget = AccountEditTarget.email}) {
+  void resetState(Locale locale, {FormMode formMode = FormMode.create, AccountEditTarget editTarget = AccountEditTarget.email}) {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     validator = NewAccountValidator(
@@ -152,7 +152,7 @@ class AccountFormController extends _$AccountFormController {
       currentPhoneNumber: profileController.state.currentProfile?.phoneNumber ?? '',
     );
 
-    state = AccountFormState.initialState(formMode: formMode, editTarget: editTarget);
+    state = AccountFormState.initialState(locale: locale, formMode: formMode, editTarget: editTarget);
     if (formMode == FormMode.edit) {
       // TODO: Preload details (optional)
     }
@@ -166,7 +166,11 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(phoneNumber: value.trim());
   }
 
-  void onCountryChanged(Country value) {
+  void onCountryChanged(Country? value) {
+    if (value == null) {
+      return;
+    }
+
     state = state.copyWith(country: value);
   }
 

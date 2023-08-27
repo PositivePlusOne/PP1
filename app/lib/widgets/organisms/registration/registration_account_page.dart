@@ -11,6 +11,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -32,6 +33,10 @@ class RegistrationAccountPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final RegistrationAccountViewModel viewModel = ref.watch(registrationAccountViewModelProvider.notifier);
+
+    final Locale locale = Localizations.localeOf(context);
+    final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
+    final AccountFormController controller = ref.read(provider.notifier);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
@@ -95,7 +100,7 @@ class RegistrationAccountPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           isDisabled: viewModel.state.isBusy,
-          onTapped: viewModel.onSignUpWithEmailSelected,
+          onTapped: () => viewModel.onSignUpWithEmailSelected(context, controller),
           label: localizations.page_registration_create_account_action_continue_email,
           icon: UniconsLine.envelope_add,
           layout: PositiveButtonLayout.iconLeft,

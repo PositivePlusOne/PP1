@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -54,8 +55,11 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final AccountFormController controller = ref.read(accountFormControllerProvider.notifier);
-    final AccountFormState state = ref.watch(accountFormControllerProvider);
+    final Locale locale = Localizations.localeOf(context);
+
+    final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
+    final AccountFormController controller = ref.read(provider.notifier);
+    final AccountFormState state = ref.watch(provider);
 
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
@@ -76,6 +80,8 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
       ],
     ];
 
+    final phoneOptions = state.phoneNumber.formatPhoneNumberIntoComponents();
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
@@ -94,19 +100,18 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveTextField(
               labelText: localisations.shared_phone_number,
-              initialText: state.phoneNumber,
+              initialText: phoneOptions.$2,
               onTextChanged: controller.onPhoneNumberChanged,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
               textInputType: TextInputType.phone,
-              prefixIcon: PositiveTextFieldPrefixDropdown<Country>(
-                onValueChanged: (dynamic str) => controller.onCountryChanged(str as Country),
-                //TODO(R): hard coded 44, this seems very very wrong here for a global audiance. Making a severe ticket for this
-                initialValue: kCountryList.firstWhere((element) => element.phoneCode == '44'),
-                valueStringBuilder: (value) => '${value.name} (+${value.phoneCode})',
-                placeholderStringBuilder: (value) => '+${value.phoneCode}',
-                values: kCountryList,
+              prefixIcon: PositiveTextFieldPrefixDropdown<Country?>(
+                onValueChanged: (Country? c) => controller.onCountryChanged(c),
+                initialValue: Country.fromContext(context),
+                valueStringBuilder: (value) => '${value?.name} (+${value?.phoneCode})',
+                placeholderStringBuilder: (value) => '+${value?.phoneCode}',
+                values: kCountryListSortedWithTargetsFirst,
               ),
             ),
           ],
