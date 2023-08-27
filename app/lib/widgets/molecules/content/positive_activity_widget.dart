@@ -309,13 +309,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         activityData: ActivityData(
           activityID: widget.activity.flMeta!.id,
           content: widget.activity.generalConfiguration?.content ?? "",
+          //TODO alt text
           // altText: widget.activity.altText,
           tags: widget.activity.enrichmentConfiguration?.tags ?? const [],
           postType: PostType.getPostTypeFromActivity(widget.activity),
           media: widget.activity.media,
-          // allowComments: widget.activity.allowComments,
-          // allowSharing: widget.activity.allowSharing,
-          // visibleTo: widget.activity.visibleTo,
+          commentPermissionMode: widget.activity.securityConfiguration?.commentMode,
+          visibilityMode: widget.activity.securityConfiguration?.viewMode,
+          allowSharing: widget.activity.securityConfiguration?.shareMode == ActivitySecurityConfigurationMode.public(),
         ),
         isEditPage: true,
       ),
