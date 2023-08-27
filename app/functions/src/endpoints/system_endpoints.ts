@@ -53,11 +53,15 @@ export namespace SystemEndpoints {
 
   export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const locale = request.data.locale || "en";
-    const [genders, interests, hivStatuses, tags] = await Promise.all([
+    const uid = context.auth?.uid || "";
+
+    const [genders, interests, hivStatuses, popularTags, recentTags, topicTags] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
-      TagsService.getInitialTags(locale),
+      TagsService.getPopularTags(locale),
+      uid ? TagsService.getRecentUserTags(uid) : Promise.resolve([]),
+      TagsService.getTopicTags(locale),
     ]);
 
     const interestResponse = {} as any;
@@ -66,7 +70,6 @@ export namespace SystemEndpoints {
     });
 
     let profile = {};
-    const uid = context.auth?.uid || "";
     const supportedProfiles = [];
 
     if (typeof uid === "string" && uid.length > 0) {
@@ -106,11 +109,14 @@ export namespace SystemEndpoints {
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [profile, ...tags],
+      data: [profile],
       seedData: {
         genders,
         medicalConditions: hivStatuses,
         interests: interestResponse,
+        popularTags,
+        recentTags,
+        topicTags,
         supportedProfiles,
       },
     });

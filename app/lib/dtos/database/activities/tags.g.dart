@@ -14,8 +14,13 @@ _$_Tag _$$_TagFromJson(Map<String, dynamic> json) => _$_Tag(
       fallback: json['fallback'] as String? ?? '',
       popularity: json['popularity'] as int? ?? -1,
       promoted: json['promoted'] as bool? ?? false,
-      localizations:
-          TagLocalization.fromJsonLocalizations(json['localizations'] as List),
+      localizations: json['localizations'] == null
+          ? const []
+          : TagLocalization.fromJsonLocalizations(
+              json['localizations'] as List),
+      topic: json['topic'] == null
+          ? null
+          : TagTopic.fromJson(json['topic'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_TagToJson(_$_Tag instance) => <String, dynamic>{
@@ -26,6 +31,7 @@ Map<String, dynamic> _$$_TagToJson(_$_Tag instance) => <String, dynamic>{
       'promoted': instance.promoted,
       'localizations':
           TagLocalization.toJsonLocalizations(instance.localizations),
+      'topic': instance.topic?.toJson(),
     };
 
 _$_TagLocalization _$$_TagLocalizationFromJson(Map<String, dynamic> json) =>
@@ -38,4 +44,21 @@ Map<String, dynamic> _$$_TagLocalizationToJson(_$_TagLocalization instance) =>
     <String, dynamic>{
       'locale': instance.locale,
       'value': instance.value,
+    };
+
+_$_TagTopic _$$_TagTopicFromJson(Map<String, dynamic> json) => _$_TagTopic(
+      fallback: json['fallback'] as String? ?? '',
+      localizations: json['localizations'] == null
+          ? const []
+          : TagLocalization.fromJsonLocalizations(
+              json['localizations'] as List),
+      isEnabled: json['isEnabled'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$$_TagTopicToJson(_$_TagTopic instance) =>
+    <String, dynamic>{
+      'fallback': instance.fallback,
+      'localizations':
+          TagLocalization.toJsonLocalizations(instance.localizations),
+      'isEnabled': instance.isEnabled,
     };

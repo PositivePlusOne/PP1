@@ -1,9 +1,11 @@
 import * as functions from "firebase-functions";
 
-import { Tag } from "../dto/tags";
+import { Tag, TagJSON } from "../dto/tags";
 import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
-import { DocumentData } from "firebase-admin/firestore";
+import { FeedService } from "./feed_service";
+import { ActivitiesService } from "./activities_service";
+import { ActivityJSON } from "../dto/activities";
 
 export namespace TagsService {
   /**
@@ -18,6 +20,12 @@ export namespace TagsService {
     verified = "verified",
     promoted = "promoted",
   }
+
+  /**
+   * The number of tags to return in a window.
+   * @type {number}
+   */
+  export const TAG_WINDOW_SIZE = 30;
 
   /**
    * Gets a tag.
@@ -42,11 +50,33 @@ export namespace TagsService {
   }
 
   /**
-   * Gets initials tags to display to the user
+   * Gets multiple tags.
+   * @param {string[]} keys the tag keys.
+   * @returns {Promise<TagJSON[]>} the tags.
+   */
+  export async function getMultipleTags(keys: string[]): Promise<any[]> {
+    const formattedKeys = keys.map((key) => formatTag(key));
+    functions.logger.info("Getting multiple tags", { formattedKeys });
+
+    if (!formattedKeys || formattedKeys.length === 0) {
+      functions.logger.error("Invalid tag keys", { keys });
+      return [];
+    }
+
+    const tagData = await DataService.getBatchDocuments({
+      schemaKey: "tags",
+      entryIds: formattedKeys,
+    });
+
+    return tagData;
+  }
+
+  /**
+   * Gets popular tags to display to the user
    * @returns {Promise<Tag[]>} the tags.
    */
-  export async function getInitialTags(locale: string): Promise<DocumentData[]> {
-    functions.logger.info("Getting initial tags for locale", { locale });
+  export async function getPopularTags(locale: string): Promise<TagJSON[]> {
+    functions.logger.info("Getting popular tags for locale", { locale });
     const latestCacheKey = `tags-${locale}-popularity`;
     const latestCachedData = await CacheService.getFromCache(latestCacheKey) as Tag[];
     if (latestCachedData) {
@@ -54,10 +84,10 @@ export namespace TagsService {
     }
 
 
-    functions.logger.info("Refreshing initial tags for locale", { locale });
-    const popularTags = await DataService.getDocumentWindowRaw({
+    functions.logger.info("Refreshing popular tags for locale", { locale });
+    const queryWindowResponse = await DataService.getDocumentWindowRaw({
       schemaKey: "tags",
-      limit: 10,
+      limit: TAG_WINDOW_SIZE,
       orderBy: [
         { fieldPath: "popularity", directionStr: "asc" },
       ],
@@ -66,11 +96,81 @@ export namespace TagsService {
       ],
     });
 
+    const popularTags = [] as TagJSON[];
+    for (const tagData of queryWindowResponse) {
+      popularTags.push(tagData as TagJSON);
+    }
+
     if (popularTags.length > 0) {
       await CacheService.setInCache(latestCacheKey, popularTags);
     }
 
     return popularTags;
+  }
+
+  /**
+   * Gets topic tags to display to the user
+   * @returns {Promise<Tag[]>} the tags.
+   */
+  export async function getTopicTags(locale: string): Promise<TagJSON[]> {
+    functions.logger.info("Getting topics tags for locale", { locale });
+    const latestCacheKey = `tags-${locale}-topics`;
+    const latestCachedData = await CacheService.getFromCache(latestCacheKey) as Tag[];
+    if (latestCachedData) {
+      return latestCachedData;
+    }
+
+
+    functions.logger.info("Refreshing topic tags for locale", { locale });
+    const queryWindowResponse = await DataService.getDocumentWindowRaw({
+      schemaKey: "tags",
+      limit: TAG_WINDOW_SIZE,
+      where: [
+        { fieldPath: "topic.isEnabled", op: "==", value: true },
+      ],
+    });
+
+    const topicTags = [] as TagJSON[];
+    for (const tagData of queryWindowResponse) {
+      topicTags.push(tagData as TagJSON);
+    }
+
+    if (topicTags.length > 0) {
+      await CacheService.setInCache(latestCacheKey, topicTags);
+    }
+
+    return topicTags;
+  }
+
+  export async function getRecentUserTags(uid: string): Promise<TagJSON[]> {
+    functions.logger.info("Getting recent user tags", { uid });
+    const feedClient = FeedService.getFeedsClient();
+    const userFeed = feedClient.feed("user", uid);
+
+    const feedWindow = await FeedService.getFeedWindow(uid, userFeed, 10, "");
+    const activities = await ActivitiesService.getActivityFeedWindow(feedWindow.results) as ActivityJSON[];
+
+    functions.logger.info("Getting tags from activities", { activities });
+
+    const tagStringValues = [] as string[];
+    for (const activity of activities) {
+      for (const tag of activity?.enrichmentConfiguration?.tags || []) {
+        if (!tag || tagStringValues.includes(tag)) {
+          continue;
+        }
+        
+        tagStringValues.push(tag);
+      }
+    }
+
+    functions.logger.info("Getting recent tags from cache", { tagStringValues });
+    const cachedTags = await TagsService.getMultipleTags(tagStringValues);
+
+    // Filter out nulls
+    const filteredTags = cachedTags.filter((tag) => !!tag);
+
+    functions.logger.info("Got recent tags from cache", { cachedTags });
+    return filteredTags;
   }
 
   /**

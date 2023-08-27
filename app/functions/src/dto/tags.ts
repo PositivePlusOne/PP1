@@ -8,7 +8,14 @@ export type TagJSON = {
   promoted?: boolean;
   popularity?: number;
   localizations?: TagLocalizationJSON[];
+  topic?: TagTopicJSON;
 };
+
+export type TagTopicJSON = {
+  fallback?: string;
+  localizations?: TagLocalizationJSON[];
+  isEnabled?: boolean;
+}
 
 export type TagLocalizationJSON = {
   locale?: string;
@@ -30,6 +37,7 @@ export class Tag {
   promoted: boolean;
   popularity: number;
   localizations: TagLocalization[];
+  topic?: TagTopic;
 
   /**
    * Creates a new tag.
@@ -43,6 +51,7 @@ export class Tag {
     this.promoted = json.promoted || false;
     this.popularity = json.popularity || -1;
     this.localizations = json.localizations?.map((e) => new TagLocalization(e)) || [];
+    this.topic = json.topic ? new TagTopic(json.topic) : undefined;
   }
 
   /**
@@ -82,6 +91,18 @@ export class TagLocalization {
   constructor(json: TagLocalizationJSON) {
     this.locale = json.locale || "";
     this.value = json.value || "";
+  }
+}
+
+export class TagTopic {
+  fallback: string;
+  localizations: TagLocalization[];
+  isEnabled: boolean;
+
+  constructor(json: TagTopicJSON) {
+    this.fallback = json.fallback || "";
+    this.localizations = json.localizations?.map((e) => new TagLocalization(e)) || [];
+    this.isEnabled = json.isEnabled || false;
   }
 }
 

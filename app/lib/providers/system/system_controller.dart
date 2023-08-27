@@ -159,7 +159,9 @@ class SystemController extends _$SystemController {
     interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
     genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
     hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
-    tagsController.updateRecommendedTags(payload['tags'] as List<dynamic>);
+    tagsController.updatePopularTags(payload['popularTags'] as List<dynamic>);
+    tagsController.updateRecentTags(payload['recentTags'] as List<dynamic>);
+    tagsController.updateTopicTags(payload['topicTags'] as List<dynamic>);
 
     if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
       final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();

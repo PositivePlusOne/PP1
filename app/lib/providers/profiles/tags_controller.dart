@@ -18,7 +18,9 @@ part 'tags_controller.g.dart';
 @freezed
 class TagsControllerState with _$TagsControllerState {
   const factory TagsControllerState({
-    @Default(<Tag>[]) List<Tag> recommendedTags,
+    @Default(<Tag>[]) List<Tag> popularTags,
+    @Default(<Tag>[]) List<Tag> recentTags,
+    @Default(<Tag>[]) List<Tag> topicTags,
   }) = _TagsControllerState;
 
   factory TagsControllerState.initialState() => const TagsControllerState();
@@ -44,12 +46,28 @@ class TagsController extends _$TagsController {
     return allTags.any((Tag tag) => tag.key == key);
   }
 
-  void updateRecommendedTags(List<dynamic> rawStatuses) {
+  void updatePopularTags(List<dynamic> rawStatuses) {
     final Logger logger = ref.read(loggerProvider);
     final List<Tag> tags = Tag.fromJsonList(rawStatuses);
 
     logger.d('Updating recommended tags with $tags');
-    state = state.copyWith(recommendedTags: tags);
+    state = state.copyWith(popularTags: tags);
+  }
+
+  void updateTopicTags(List<dynamic> rawStatuses) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<Tag> tags = Tag.fromJsonList(rawStatuses);
+
+    logger.d('Updating recommended tags with $tags');
+    state = state.copyWith(popularTags: tags);
+  }
+
+  void updateRecentTags(List<dynamic> rawStatuses) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<Tag> tags = Tag.fromJsonList(rawStatuses);
+
+    logger.d('Updating recommended tags with $tags');
+    state = state.copyWith(recentTags: tags);
   }
 
 //? get Tags From Tags Controller, else return a new tag

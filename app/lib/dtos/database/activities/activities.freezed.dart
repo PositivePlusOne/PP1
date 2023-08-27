@@ -1827,7 +1827,7 @@ class _$_ActivitySecurityConfiguration
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
           toJson: ActivitySecurityConfigurationMode.toJson)
-      this.commentMode = const ActivitySecurityConfigurationMode.private(),
+      this.commentMode = const ActivitySecurityConfigurationMode.signedIn(),
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
           toJson: ActivitySecurityConfigurationMode.toJson)
