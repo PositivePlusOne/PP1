@@ -137,6 +137,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               maxLines: 15,
               minLines: 8,
               isBusy: isBusy,
+              textInputType: TextInputType.multiline,
             ),
             const SizedBox(height: kPaddingSmall),
 
@@ -281,6 +282,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     maxLength: kMaxLengthCaption,
                     maxLines: 15,
                     minLines: 8,
+                    textInputType: TextInputType.multiline,
                   ),
                   const SizedBox(height: kPaddingSmall),
                   CreatePostTagsContainer(
@@ -423,6 +425,7 @@ class CreatePostTextField extends StatefulWidget {
     this.isBusy = false,
     this.controller,
     this.maxLength,
+    this.textInputType = TextInputType.text,
   });
 
   final DesignColorsModel colours;
@@ -433,6 +436,7 @@ class CreatePostTextField extends StatefulWidget {
   final TextEditingController? controller;
   final int? maxLength;
   final bool isBusy;
+  final TextInputType textInputType;
 
   @override
   State<CreatePostTextField> createState() => _CreatePostTextFieldState();
@@ -459,7 +463,7 @@ class _CreatePostTextFieldState extends State<CreatePostTextField> {
         maxLengthEnforcement: widget.maxLength != null ? MaxLengthEnforcement.enforced : MaxLengthEnforcement.none,
         minLines: widget.minLines,
         maxLines: widget.maxLines,
-        textInputType: TextInputType.text,
+        textInputType: widget.textInputType,
       ),
     );
   }
