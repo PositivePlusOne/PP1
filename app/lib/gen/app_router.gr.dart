@@ -195,6 +195,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HomeLoginPromptRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomeLoginPromptPage(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -400,6 +406,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfilePhotoSelectionPage(),
+      );
+    },
+    ProfileReferenceImageCameraRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileReferenceImageCameraPage(),
       );
     },
     ProfileReferenceImageSuccessRoute.name: (routeData) {
@@ -1011,6 +1023,20 @@ class HintDialogRouteArgs {
 }
 
 /// generated route for
+/// [HomeLoginPromptPage]
+class HomeLoginPromptRoute extends PageRouteInfo<void> {
+  const HomeLoginPromptRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeLoginPromptRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeLoginPromptRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [HomePage]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
@@ -1595,6 +1621,20 @@ class ProfilePhotoSelectionRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfilePhotoSelectionRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileReferenceImageCameraPage]
+class ProfileReferenceImageCameraRoute extends PageRouteInfo<void> {
+  const ProfileReferenceImageCameraRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileReferenceImageCameraRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileReferenceImageCameraRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

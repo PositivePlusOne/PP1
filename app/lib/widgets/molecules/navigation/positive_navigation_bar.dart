@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
@@ -48,7 +49,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
   static const double kBottomNavigationBarBorderRadius = 40.0;
   static const double kBottomNavigationBarBorderWidth = 1.0;
   static const double kBottomNavigationBarHorizontalMargin = 10.0;
-  static const double kBottomNavigationBarVerticalMargin = 20.0;
+  static const double kBottomNavigationBarVerticalMargin = 10.0;
   static const double kBottomNavigationBarSigmaBlur = 10.0;
   static const double kBottomNavigationBarOpacity = 0.9;
 
@@ -121,34 +122,58 @@ class PositiveNavigationBarContent extends ConsumerWidget {
 
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
 
-    if (newIndex == index) {
-      return;
-    }
-
-    // You must be able to navigate back from the post route
-    if (newIndex != NavigationBarIndex.add) {
-      router.removeWhere((route) => true);
-    }
-
+    late final PageRouteInfo routeInfo;
     switch (newIndex) {
       case NavigationBarIndex.add:
-        await router.push(CreatePostRoute());
+        routeInfo = CreatePostRoute();
         break;
       case NavigationBarIndex.guidance:
-        await router.push(const GuidanceRoute());
+        routeInfo = const GuidanceRoute();
         break;
       case NavigationBarIndex.chat:
-        await router.push(const ChatConversationsRoute());
+        routeInfo = const ChatConversationsRoute();
         break;
       case NavigationBarIndex.search:
-        await router.push(const SearchRoute());
+        routeInfo = const SearchRoute();
         break;
       case NavigationBarIndex.hub:
       default:
-        await router.push(const HomeRoute());
+        routeInfo = const HomeRoute();
         break;
     }
+
+    // Check if we are currently on the route we want to navigate to
+    // If so, do nothing.
+    if (router.current.name == routeInfo.routeName) {
+      return;
+    }
+
+    // Check if that route is in our history, if so pop to it
+    if (router.stack.any((route) => route.name == routeInfo.routeName)) {
+      router.popUntil((route) => route.data?.name == routeInfo.routeName);
+      return;
+    }
+
+    // Check if we require a logged in user
+    final bool isSignedIn = userController.currentUser != null;
+    final bool requiresSignIn = switch (routeInfo.routeName) {
+      CreatePostRoute.name => true,
+      ChatConversationsRoute.name => true,
+      SearchRoute.name => true,
+      _ => false,
+    };
+
+    // If we require a logged in user and we are not logged in...
+    // Then push the login reminder page
+    if (requiresSignIn && !isSignedIn) {
+      await router.push(const HomeLoginPromptRoute());
+      return;
+    }
+
+    // Else push the route
+    await router.push(routeInfo);
   }
 
   @override
@@ -176,11 +201,11 @@ class PositiveNavigationBarContent extends ConsumerWidget {
             children: <Widget>[
               buildNavigationBarButton(ref, colors, isDisabled, 'Hub', UniconsLine.estate, NavigationBarIndex.hub),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Search', UniconsLine.search, NavigationBarIndex.search),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Search', UniconsLine.search, NavigationBarIndex.search),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
               const SizedBox(width: kPaddingExtraSmall),
               buildNavigationBarButton(ref, colors, isDisabled, 'Guidance', UniconsLine.book_alt, NavigationBarIndex.guidance),
             ],

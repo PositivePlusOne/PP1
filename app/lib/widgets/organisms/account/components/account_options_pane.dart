@@ -83,6 +83,8 @@ class AccountOptionsPane extends ConsumerWidget {
           icon: UniconsLine.feedback,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.teal,
+          iconColorOverride: colors.black,
+          fontColorOverride: colors.black,
           label: localizations.page_account_actions_feedback,
           onTapped: () => viewModel.onProvideFeedbackButtonPressed(context),
           // isDisabled: state.isBusy,

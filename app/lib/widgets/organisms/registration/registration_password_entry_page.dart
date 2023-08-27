@@ -123,6 +123,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
                   labelText: localizations.page_registration_password_label,
                   initialText: state.password,
                   onTextChanged: controller.onPasswordChanged,
+                  onTextSubmitted: (_) => controller.onPasswordConfirmed(),
                   tintColor: tintColor,
                   suffixIcon: suffixIcon,
                   isEnabled: !state.isBusy,

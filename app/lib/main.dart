@@ -44,7 +44,7 @@ class App extends ConsumerWidget {
 
         return StreamChatWrapper.wrap(context, textHeightChild);
       },
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(useMaterial3: false),
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           RouteAnalyticsObserver(),

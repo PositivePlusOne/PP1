@@ -29,6 +29,7 @@ class PositiveButton extends StatefulWidget {
     this.icon,
     this.iconWidgetBuilder,
     this.iconColorOverride,
+    this.fontColorOverride,
     this.layout = PositiveButtonLayout.iconLeft,
     this.style = PositiveButtonStyle.primary,
     this.size = PositiveButtonSize.large,
@@ -151,6 +152,9 @@ class PositiveButton extends StatefulWidget {
   /// Overrides the icon color if required, for example white on a white background.
   final Color? iconColorOverride;
 
+  /// Overrides the font color if required, for example white on a white background.
+  final Color? fontColorOverride;
+
   /// The layout applied to the button.
   /// This is how the text and icons are positioned within the button.
   final PositiveButtonLayout layout;
@@ -209,7 +213,7 @@ class PositiveButton extends StatefulWidget {
   static const TextStyle kButtonTextStyleNavigation = TextStyle(
     fontFamily: 'AlbertSans',
     fontWeight: FontWeight.w800,
-    fontSize: 11.0,
+    fontSize: 12.0,
   );
 
   static const TextStyle kButtonTextStyleTab = TextStyle(
@@ -611,6 +615,11 @@ class PositiveButtonState extends State<PositiveButton> {
 
     if (widget.iconColorOverride != null) {
       iconColor = widget.iconColorOverride!;
+    }
+
+    if (widget.fontColorOverride != null) {
+      textColor = widget.fontColorOverride!;
+      textStyle = textStyle.copyWith(color: textColor);
     }
 
     // This widget is the standard widget when using non-navigation buttons, or icon only buttons.

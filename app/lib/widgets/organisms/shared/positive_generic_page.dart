@@ -68,6 +68,7 @@ class PositiveGenericPage extends ConsumerWidget {
     const double imageTopOffset = badgeRadius / 4;
 
     return PositiveScaffold(
+      visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
       onWillPopScope: () async {
         if (canBack) {
           Navigator.of(context).pop();
@@ -122,7 +123,7 @@ class PositiveGenericPage extends ConsumerWidget {
               body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingMedium),
+            const SizedBox(height: kPaddingMassive),
           ],
         ),
         if (style == PositiveGenericPageStyle.imaged) ...<Widget>[

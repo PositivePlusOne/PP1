@@ -163,6 +163,8 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
+    // TODO - Check if it is a rude name!
+
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     const newProfile = await ProfileService.updateName(uid, name);
     functions.logger.info("Profile name updated", {

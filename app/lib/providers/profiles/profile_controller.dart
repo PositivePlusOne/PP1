@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -430,14 +431,13 @@ class ProfileController extends _$ProfileController {
     );
   }
 
-  Future<void> updateReferenceImage(String imagePath) async {
+  Future<void> updateReferenceImage(XFile image) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
-    final File picture = File(imagePath);
 
     final Uint8List imageData = await Isolate.run(() async {
-      final Uint8List imageAsUint8List = await picture.readAsBytes();
+      final Uint8List imageAsUint8List = await image.readAsBytes();
       final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
       if (decodedImage == null) {
         return Uint8List(0);

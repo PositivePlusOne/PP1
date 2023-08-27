@@ -168,29 +168,6 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
     );
   }
 
-  Widget buildMessage(BuildContext context, MessageDetails details, List<Message> messages, StreamMessageWidget defaultWidget, DesignColorsModel colors) {
-    final controller = StreamMessageInputController(message: details.message);
-    return defaultWidget.copyWith(
-      userAvatarBuilder: (context, user) => buildUserAvatar(user, colors),
-      editMessageInputBuilder: (context, message) {
-        return StreamMessageInput(
-          attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed, context: context),
-          messageInputController: controller,
-          enableActionAnimation: false,
-          sendButtonLocation: SendButtonLocation.inside,
-          activeSendButton: buildSendButton(),
-          idleSendButton: buildSendButton(isActive: false),
-          commandButtonBuilder: (context, commandButton) => const SizedBox(),
-          onMessageSent: (_) => Navigator.of(context).pop(),
-          preMessageSending: (message) {
-            controller.text = message.text ?? "";
-            return message;
-          },
-        );
-      },
-    );
-  }
-
   void onLinkTap(String url) {
     Uri uri = Uri.parse(url);
 
@@ -255,6 +232,11 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                     child: StreamMessageListView(
                       showFloatingDateDivider: false,
                       showScrollToBottom: false,
+                      // messageListBuilder: (context, messages) => ListView.builder(
+                      //   padding: const EdgeInsets.only(bottom: kPaddingSmall),
+                      //   itemCount: messages.length,
+                      //   itemBuilder: (context, index) => messages[index],
+                      // ),
                       messageFilter: !isArchived ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                       emptyBuilder: (context) => buildEmptyChatList(context, members, memberProfiles, locale),
                       systemMessageBuilder: (context, message) => buildSystemMessage(context, message, colors, typography, locale, currentStreamUser),

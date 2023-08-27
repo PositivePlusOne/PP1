@@ -91,6 +91,13 @@ class PositiveScaffold extends ConsumerWidget {
     }
   }
 
+  static MediaQueryData buildMediaQuery(MediaQueryData mediaQueryData) {
+    return mediaQueryData.copyWith(
+      textScaleFactor: 1.0,
+      boldText: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -113,89 +120,92 @@ class PositiveScaffold extends ConsumerWidget {
         value: buildSystemUiOverlayStyle(appBarColor: appBarColor, backgroundColor: actualBackgroundColor),
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Scaffold(
-            backgroundColor: actualBackgroundColor,
-            resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-            extendBody: extendBody,
-            appBar: appBar,
-            bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
-            body: CustomScrollView(
-              controller: controller,
-              physics: physics,
-              slivers: <Widget>[
-                if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
-                  ...headingWidgets,
-                ],
-                if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
-                  SliverToBoxAdapter(
-                    child: Container(height: kPaddingMedium, color: decorationColor ?? Colors.transparent),
-                  ),
-                  SliverStack(
-                    positionedAlignment: Alignment.bottomCenter,
-                    children: <Widget>[
-                      if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+          child: MediaQuery(
+            data: buildMediaQuery(mediaQueryData),
+            child: Scaffold(
+              backgroundColor: actualBackgroundColor,
+              resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+              extendBody: extendBody,
+              appBar: appBar,
+              bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
+              body: CustomScrollView(
+                controller: controller,
+                physics: physics,
+                slivers: <Widget>[
+                  if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
+                    ...headingWidgets,
+                  ],
+                  if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
+                    SliverToBoxAdapter(
+                      child: Container(height: kPaddingMedium, color: decorationColor ?? Colors.transparent),
+                    ),
+                    SliverStack(
+                      positionedAlignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                          SliverFillRemaining(
+                            fillOverscroll: true,
+                            hasScrollBody: false,
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: SizedBox(
+                                height: decorationBoxSize,
+                                width: decorationBoxSize,
+                                child: Stack(children: decorations),
+                              ),
+                            ),
+                          ),
+                        ],
+                        if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                          SliverFillRemaining(
+                            fillOverscroll: true,
+                            hasScrollBody: false,
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: SizedBox(
+                                height: decorationBoxSize,
+                                width: decorationBoxSize,
+                                child: decorationWidget!,
+                              ),
+                            ),
+                          ),
+                        ],
                         SliverFillRemaining(
                           fillOverscroll: true,
                           hasScrollBody: false,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: SizedBox(
-                              height: decorationBoxSize,
-                              width: decorationBoxSize,
-                              child: Stack(children: decorations),
-                            ),
-                          ),
-                        ),
-                      ],
-                      if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                        SliverFillRemaining(
-                          fillOverscroll: true,
-                          hasScrollBody: false,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: SizedBox(
-                              height: decorationBoxSize,
-                              width: decorationBoxSize,
-                              child: decorationWidget!,
-                            ),
-                          ),
-                        ),
-                      ],
-                      SliverFillRemaining(
-                        fillOverscroll: true,
-                        hasScrollBody: false,
-                        child: Container(
-                          color: decorationColor ?? Colors.transparent,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              if (trailingWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.trailingWidgets)) ...<Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-                                  child: Column(children: trailingWidgets),
-                                ),
-                              ],
-                              if (footerWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.footerWidgets)) ...<Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                                  child: PositiveGlassSheet(
-                                    isBusy: isBusy,
-                                    children: footerWidgets,
+                          child: Container(
+                            color: decorationColor ?? Colors.transparent,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                if (trailingWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.trailingWidgets)) ...<Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                                    child: Column(children: trailingWidgets),
                                   ),
-                                ),
+                                ],
+                                if (footerWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.footerWidgets)) ...<Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                                    child: PositiveGlassSheet(
+                                      isBusy: isBusy,
+                                      children: footerWidgets,
+                                    ),
+                                  ),
+                                ],
+                                if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
+                                  //* This also helps to guard against overscroll when showing the keyboard on Android!
+                                  Flexible(child: Container(height: bottomPadding, color: decorationColor ?? Colors.transparent)),
+                                ],
                               ],
-                              if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
-                                //* This also helps to guard against overscroll when showing the keyboard on Android!
-                                Flexible(child: Container(height: bottomPadding, color: decorationColor ?? Colors.transparent)),
-                              ],
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

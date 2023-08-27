@@ -11,6 +11,7 @@ import 'package:camerawesome/pigeon.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -57,12 +58,12 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.leftActionWidget,
     this.onTapClose,
     this.onTapAddImage,
-    this.enableFlashControls = false,
+    this.enableFlashControls = true,
     this.displayCameraShade = true,
     super.key,
   });
 
-  final Future<void> Function(String imagePath)? onCameraImageTaken;
+  final Future<void> Function(XFile imagePath)? onCameraImageTaken;
   final void Function(FaceDetectionModel? model)? onFaceDetected;
 
   final bool useFaceDetection;
@@ -87,6 +88,11 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMixin {
   FaceDetectionModel? faceDetectionModel;
   FlashMode flashMode = FlashMode.auto;
+
+  final SensorConfig config = SensorConfig.single(
+    flashMode: FlashMode.auto,
+    sensor: Sensor.position(SensorPosition.front),
+  );
 
   PositiveCameraViewMode viewMode = PositiveCameraViewMode.none;
 
@@ -265,9 +271,16 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   }
 
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
-    // TODO(ryan): Pause the camera preview while we process the image
-    final photo = await cameraState.takePhoto();
-    await widget.onCameraImageTaken?.call(photo);
+    final CaptureRequest captureRequest = await cameraState.takePhoto();
+    final XFile? file = captureRequest.when(
+      single: (p0) => p0.file,
+    );
+
+    if (file == null) {
+      return;
+    }
+
+    await widget.onCameraImageTaken?.call(file);
   }
 
   @override
@@ -280,23 +293,17 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
     final Widget camera = CameraAwesomeBuilder.awesome(
       saveConfig: SaveConfig.photo(
-        pathBuilder: () async {
-          final Directory dir = await getTemporaryDirectory();
-          final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-          return "${dir.path}/$currentTime.jpg";
-        },
+        mirrorFrontCamera: true,
+        pathBuilder: buildCaptureRequest,
       ),
-      mirrorFrontCamera: true,
+      sensorConfig: config,
       enablePhysicalButton: true,
       topActionsBuilder: (state) => topOverlay(state),
       middleContentBuilder: (state) => cameraOverlay(state),
       bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
       previewDecoratorBuilder: buildPreviewDecoratorWidgets,
       filter: AwesomeFilter.None,
-      flashMode: flashMode,
-      aspectRatio: CameraAspectRatios.ratio_16_9,
       previewFit: CameraPreviewFit.cover,
-      sensor: Sensors.front,
       theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
       onImageForAnalysis: onAnalyzeImage,
       imageAnalysisConfig: faceAnalysisConfig,
@@ -443,24 +450,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
         CameraFloatingButton.flash(
           active: true,
           flashMode: flashMode,
-          onTap: (_) {
-            setState(
-              () {
-                switch (flashMode) {
-                  case FlashMode.none:
-                    flashMode = FlashMode.auto;
-                    break;
-                  case FlashMode.auto:
-                    flashMode = FlashMode.always;
-                    break;
-                  default:
-                    flashMode = FlashMode.none;
-                }
-              },
-            );
-          },
+          onTap: onFlashToggleRequest,
         ),
-      const SizedBox(width: kPaddingExtraSmall),
+      const SizedBox(width: kPaddingSmall),
       if (widget.onTapAddImage != null) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
     ];
   }
@@ -566,13 +558,50 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               CameraFloatingButton.changeCamera(
                 active: canTakePictureOrVideo,
-                onTap: (_) => state.switchCameraSensor(aspectRatio: CameraAspectRatios.ratio_16_9),
+                onTap: (context) => onChangeCameraRequest(context, state),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<void> onFlashToggleRequest(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+
+    switch (flashMode) {
+      case FlashMode.none:
+        flashMode = FlashMode.auto;
+        break;
+      case FlashMode.auto:
+        flashMode = FlashMode.always;
+        break;
+      default:
+        flashMode = FlashMode.none;
+    }
+
+    logger.i("Flash mode: $flashMode");
+    await config.setFlashMode(flashMode);
+
+    setStateIfMounted();
+  }
+
+  Future<CaptureRequest> buildCaptureRequest(List<Sensor> sensors) async {
+    final Directory dir = await getTemporaryDirectory();
+    final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
+    final String filePath = '${dir.path}/$currentTime.jpg';
+
+    return SingleCaptureRequest(filePath, sensors.first);
+  }
+
+  Future<void> onChangeCameraRequest(BuildContext context, CameraState state) async {
+    if (!mounted) {
+      return;
+    }
+
+    await state.switchCameraSensor();
+    await state.sensorConfig.setFlashMode(flashMode);
   }
 }
 

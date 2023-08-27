@@ -27,7 +27,7 @@ import '../../atoms/input/positive_text_field_icon.dart';
 import '../../molecules/prompts/positive_hint.dart';
 
 @RoutePage()
-class LoginPage extends ConsumerWidget {
+class LoginPage extends HookConsumerWidget {
   const LoginPage({
     super.key,
     required this.senderRoute,
@@ -135,18 +135,19 @@ class LoginPage extends ConsumerWidget {
           style: PositiveButtonStyle.primary,
           outlineHoverColorOverride: colors.black,
         ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          isDisabled: true,
-          onTapped: () async {},
-          label: localizations.page_registration_create_account_action_continue_facebook,
-          icon: UniconsLine.facebook_f,
-          layout: PositiveButtonLayout.iconLeft,
-          style: PositiveButtonStyle.primary,
-          outlineHoverColorOverride: colors.black,
-        ),
+        //! TODO: Implement Facebook login
+        // const SizedBox(height: kPaddingMedium),
+        // PositiveButton(
+        //   colors: colors,
+        //   primaryColor: colors.black,
+        //   isDisabled: true,
+        //   onTapped: () async {},
+        //   label: localizations.page_registration_create_account_action_continue_facebook,
+        //   icon: UniconsLine.facebook_f,
+        //   layout: PositiveButtonLayout.iconLeft,
+        //   style: PositiveButtonStyle.primary,
+        //   outlineHoverColorOverride: colors.black,
+        // ),
         const SizedBox(height: kPaddingMedium),
         PositiveTextField(
           labelText: 'Continue With Email',

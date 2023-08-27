@@ -79,7 +79,7 @@ class GuidanceCategoryList extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+          padding: const EdgeInsets.only(left: kPaddingMedium, top: kPaddingMedium, right: kPaddingMedium),
           child: Text(
             actualTitle,
             style: typography.styleHeroMedium.copyWith(color: colors.black),

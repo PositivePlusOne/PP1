@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
+import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
 
@@ -26,6 +27,29 @@ extension StringExt on String {
 
     final String actualPhoneNumber = phoneNumberBuffer.toString();
     return actualPhoneNumber;
+  }
+
+  (String countryCode, String phoneNumber) formatPhoneNumberIntoComponents() {
+    if (!startsWith("+")) {
+      return ('', this);
+    }
+
+    // Use kCountryList to find the country code
+    String countryCode = '';
+    for (final Country country in kCountryList) {
+      if (startsWith("+${country.phoneCode}")) {
+        countryCode = country.phoneCode;
+        break;
+      }
+    }
+
+    if (countryCode.isEmpty) {
+      return ('', this);
+    }
+
+    // Replace the country code with a placeholder 0
+    final String phoneNumberWithReplacement = replaceFirst("+$countryCode", "0");
+    return (countryCode, phoneNumberWithReplacement);
   }
 
   Future<void> attemptToLaunchURL() async {

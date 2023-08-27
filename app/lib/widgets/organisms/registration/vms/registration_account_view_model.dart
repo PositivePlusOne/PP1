@@ -11,6 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/user/account_form_controller.dart';
@@ -110,8 +111,10 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
   Future<void> onSignInRequested() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final LoginViewModel loginViewModel = ref.read(loginViewModelProvider.notifier);
 
     logger.i('Navigating to login screen');
+    loginViewModel.resetState();
     await appRouter.push(LoginRoute(senderRoute: RegistrationAccountRoute));
   }
 

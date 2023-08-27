@@ -140,27 +140,26 @@ export namespace CommentEndpoints {
 
         const streamClient = FeedService.getFeedsUserClient(uid);
         const comments = await CommentsService.listComments(activityId, streamClient, request.limit, request.cursor);
-
-        functions.logger.log("Found comments", {
-            count: comments.length,
-        });
+        functions.logger.info("Comments for activity", { activityId, comments });
 
         let cursor = "";
         if (comments.length > 0) {
             const lastComment = comments[comments.length - 1];
             if (lastComment._fl_meta_ && lastComment._fl_meta_.fl_id) {
                 cursor = lastComment._fl_meta_.fl_id;
+                functions.logger.info("Last comment", { lastComment });
             }
         }
 
         // Get the profiles from the reactions
         const profiles = await ProfileService.getMultipleProfiles(comments.map((comment) => comment.user_id || "").filter((userId) => userId !== ""));
+        functions.logger.info("Profiles for comments", { profiles, comments });
 
         return buildEndpointResponse(context, {
             sender: uid,
             cursor: cursor,
             limit: request.limit,
-            data: [comments, profiles],
+            data: [profiles, comments],
         });
     });
 }

@@ -39,7 +39,7 @@ class PositiveGlassSheet extends ConsumerWidget {
 
   final bool isBusy;
 
-  static const double kGlassContainerOpacity = 0.15;
+  static const double kGlassContainerOpacity = 0.25;
   static const double kGlassContainerSigmaBlur = 5.0;
 
   @override
@@ -58,7 +58,7 @@ class PositiveGlassSheet extends ConsumerWidget {
             padding: const EdgeInsets.all(kPaddingSmallMedium),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-              color: isBusy ? colors.white : colors.colorGray2.withOpacity(PositiveGlassSheet.kGlassContainerOpacity),
+              color: isBusy ? colors.white : colors.colorGray3.withOpacity(PositiveGlassSheet.kGlassContainerOpacity),
             ),
             child: Column(
               mainAxisSize: mainAxisSize,

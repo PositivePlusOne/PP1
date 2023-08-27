@@ -25,6 +25,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
     this.tintColor,
     this.backgroundColor,
     this.suffixIcon,
+    this.prefixIcon,
     super.key,
   });
 
@@ -39,6 +40,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   final FutureOr<void> Function(BuildContext context) onTap;
 
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   static const double kBorderWidthFocused = 1.0;
   static const double kMinimumHeight = 48.0;
@@ -75,14 +77,13 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final double leftPadding = prefixIcon != null ? kPaddingExtraSmall : kPaddingLarge;
 
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: isEnabled,
       child: Container(
-        constraints: const BoxConstraints(
-          minHeight: kMinimumHeight,
-        ),
+        constraints: const BoxConstraints(minHeight: kMinimumHeight),
         decoration: BoxDecoration(
           border: Border.all(
             color: tintColor ?? colors.colorGray6,
@@ -92,12 +93,17 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
           color: backgroundColor ?? colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(kBorderRadiusHuge)),
         ),
-        padding: const EdgeInsets.fromLTRB(kPaddingExtraLarge, kPaddingExtraSmall, kPaddingExtraSmall, kPaddingExtraSmall),
+        padding: EdgeInsets.fromLTRB(leftPadding, kPaddingExtraSmall, kPaddingExtraSmall, kPaddingExtraSmall),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            if (prefixIcon != null) ...<Widget>[
+              IgnorePointer(child: prefixIcon ?? const SizedBox.shrink()),
+            ],
+            Expanded(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -105,16 +111,19 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
                     style: typography.styleSubtextBold.copyWith(color: colors.colorGray6),
                     maxLines: 2,
                   ),
+                  // Take away some padding to compensate for bad monospace font
                   const SizedBox(height: kPaddingExtraSmall),
                   Text(
                     labelText,
-                    style: typography.styleButtonRegular,
+                    style: typography.styleButtonRegular.copyWith(color: colors.black),
                     maxLines: 2,
                   ),
                 ],
               ),
             ),
-            IgnorePointer(child: suffixIcon ?? const SizedBox.shrink()),
+            if (suffixIcon != null) ...<Widget>[
+              IgnorePointer(child: suffixIcon ?? const SizedBox.shrink()),
+            ],
           ],
         ),
       ),

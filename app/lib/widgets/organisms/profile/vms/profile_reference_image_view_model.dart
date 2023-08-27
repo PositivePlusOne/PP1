@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,7 +15,6 @@ import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/organisms/profile/components/profile_reference_image_dialog.dart';
 import '../../../../helpers/dialog_hint_helpers.dart';
 
 // Project imports:
@@ -59,17 +59,15 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
   Future<void> onRequestCamera(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d("Requesting camera");
+    appRouter.push(const ProfileReferenceImageCameraRoute());
+  }
+
+  Future<void> onReferenceImageTaken(XFile result) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    final dynamic result = await showCupertinoDialog(
-      context: context,
-      builder: (context) => const ProfileReferenceImageDialog(),
-    );
-
-    if (result == null || result is! String || result.isEmpty) {
-      logger.d("onSelectCamera: result is null or not a string");
-      return;
-    }
 
     state = state.copyWith(isBusy: true);
 

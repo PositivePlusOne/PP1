@@ -23,9 +23,9 @@ import 'package:app/providers/guidance/guidance_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../services/third_party.dart';
-import '../organisms/guidance/guidance_directory_page.dart';
 
 class PositiveDirectoryPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveDirectoryPaginationBehaviour({
@@ -76,7 +76,7 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
         return;
       }
 
-      pagingController.appendSafePage(entries, response.cursor!);
+      pagingController.appendSafePage(entries, response.cursor ?? '');
     } catch (e) {
       logger.e(e.toString());
       pagingController.error = e;
@@ -85,10 +85,10 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
 
   @override
   Widget build(BuildContext context) {
-    const Widget loadingIndicator = GuidanceLoadingIndicator();
+    const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedSliverList.separated(
       pagingController: pagingController,
-      separatorBuilder: (context, index) => const SizedBox(height: kPaddingMedium),
+      separatorBuilder: (context, index) => const SizedBox(height: kPaddingExtraSmall),
       builderDelegate: PagedChildBuilderDelegate<GuidanceDirectoryEntry>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
@@ -119,7 +119,12 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
         child: Row(
           children: <Widget>[
             if (item.logoUrl.isNotEmpty) ...<Widget>[
-              PositiveMediaImage(media: Media.fromImageUrl(item.logoUrl), width: kIconHuge, height: kIconHuge),
+              PositiveMediaImage(
+                media: Media.fromImageUrl(item.logoUrl),
+                fit: BoxFit.contain,
+                width: kIconHuge,
+                height: kIconHuge,
+              ),
               const SizedBox(width: kPaddingMedium),
             ],
             Expanded(

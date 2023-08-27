@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -22,7 +22,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
 import '../../../providers/guidance/guidance_controller.dart';
@@ -80,7 +80,7 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
             index: NavigationBarIndex.guidance,
           ),
           headingWidgets: [
-            SliverToBoxAdapter(
+            SliverPinnedHeader(
               child: GuidanceSearchBar(
                 onSubmitted: controller.onSearch,
                 onBackSelected: () => context.router.pop(),
@@ -90,7 +90,7 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              padding: const EdgeInsets.only(left: kPaddingMedium, top: kPaddingMedium, right: kPaddingMedium),
               sliver: SliverList(
                 delegate: SliverChildListDelegate(
                   <Widget>[
@@ -100,7 +100,12 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
                         child: SizedBox(
                           height: kIconDirectoryHeader,
                           width: kIconDirectoryHeader,
-                          child: PositiveMediaImage(media: Media.fromImageUrl(guidanceEntry.logoUrl)),
+                          child: PositiveProfileCircularIndicator(
+                            imageOverridePath: guidanceEntry.logoUrl,
+                            borderThickness: kBorderThicknessMedium,
+                            backgroundColorOverride: colors.white,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                       const SizedBox(height: kPaddingMedium),

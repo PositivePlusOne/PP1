@@ -13,6 +13,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
@@ -49,7 +50,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     }
 
     if (publisher!.displayName.isNotEmpty) {
-      displayName = "@${publisher!.displayName}";
+      displayName = getSafeDisplayNameFromProfile(publisher);
     }
 
     if (flMetaData != null && flMetaData!.createdDate != null) {
@@ -103,7 +104,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: kPaddingExtraSmall),
+                  const SizedBox(height: kPaddingThin),
                   Text(
                     postDateTooltip,
                     style: typeography.styleSubtext.copyWith(color: colours.colorGray3),

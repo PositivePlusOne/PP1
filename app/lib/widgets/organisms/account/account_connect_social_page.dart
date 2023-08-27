@@ -71,17 +71,18 @@ class AccountConnectSocialPage extends ConsumerWidget {
             style: PositiveButtonStyle.primary,
           ),
         ],
-        if (!userController.isFacebookProviderLinked) ...<Widget>[
-          PositiveButton(
-            colors: colors,
-            onTapped: controller.onConnectFacebookUserRequested,
-            isDisabled: state.isBusy,
-            primaryColor: colors.white,
-            label: 'Continue With Facebook',
-            icon: UniconsLine.facebook_f,
-            style: PositiveButtonStyle.primary,
-          ),
-        ],
+        //! TODO: Implement Facebook login
+        // if (!userController.isFacebookProviderLinked) ...<Widget>[
+        //   PositiveButton(
+        //     colors: colors,
+        //     onTapped: controller.onConnectFacebookUserRequested,
+        //     isDisabled: state.isBusy,
+        //     primaryColor: colors.white,
+        //     label: 'Continue With Facebook',
+        //     icon: UniconsLine.facebook_f,
+        //     style: PositiveButtonStyle.primary,
+        //   ),
+        // ],
       ].spaceWithVertical(kPaddingMedium),
     );
   }

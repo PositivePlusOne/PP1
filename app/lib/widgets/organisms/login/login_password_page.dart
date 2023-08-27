@@ -110,6 +110,7 @@ class LoginPasswordPage extends ConsumerWidget {
               initialText: state.password,
               textInputType: TextInputType.text,
               onTextChanged: viewModel.updatePassword,
+              onTextSubmitted: (_) => viewModel.onPasswordSubmitted(),
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
