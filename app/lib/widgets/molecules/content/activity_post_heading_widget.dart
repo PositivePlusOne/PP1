@@ -103,7 +103,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: kPaddingExtraSmall),
+                  const SizedBox(height: kPaddingThin),
                   Text(
                     postDateTooltip,
                     style: typeography.styleSubtext.copyWith(color: colours.colorGray3),

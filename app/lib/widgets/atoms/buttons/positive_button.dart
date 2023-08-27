@@ -213,7 +213,7 @@ class PositiveButton extends StatefulWidget {
   static const TextStyle kButtonTextStyleNavigation = TextStyle(
     fontFamily: 'AlbertSans',
     fontWeight: FontWeight.w800,
-    fontSize: 11.0,
+    fontSize: 12.0,
   );
 
   static const TextStyle kButtonTextStyleTab = TextStyle(
