@@ -43,6 +43,8 @@ export namespace PostEndpoints {
     
         // Convert window results to a list of IDs
         const activities = await ActivitiesService.getActivityFeedWindow(window.results);
+        functions.logger.info(`Got activities`, { activities });
+        
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
     
         return buildEndpointResponse(context, {
