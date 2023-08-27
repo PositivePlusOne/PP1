@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -30,6 +31,7 @@ class OnboardingWelcomeViewModel extends _$OnboardingWelcomeViewModel with Lifec
   Future<void> onSignUpSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final PledgeControllerState pledgeState = await ref.read(asyncPledgeControllerProvider.future);
+    final LoginViewModel loginViewModel = ref.read(loginViewModelProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
     if (!pledgeState.arePledgesAccepted) {
@@ -37,6 +39,7 @@ class OnboardingWelcomeViewModel extends _$OnboardingWelcomeViewModel with Lifec
       await appRouter.push(OnboardingOurPledgeRoute(style: OnboardingStyle.registration));
     } else {
       logger.i('Pledges accepted, navigating to login');
+      loginViewModel.resetState();
       await appRouter.push(LoginRoute(senderRoute: RegistrationAccountRoute));
     }
   }

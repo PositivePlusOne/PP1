@@ -83,8 +83,6 @@ class LoginPage extends HookConsumerWidget {
       ],
     ];
 
-    useLifecycleHook(viewModel);
-
     return PositiveScaffold(
       onWillPopScope: viewModel.onBackSelected,
       headingWidgets: <Widget>[

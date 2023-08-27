@@ -46,7 +46,7 @@ class LoginValidator extends AbstractValidator<LoginViewModelState> {
 }
 
 @Riverpod(keepAlive: true)
-class LoginViewModel extends _$LoginViewModel with LifecycleMixin {
+class LoginViewModel extends _$LoginViewModel {
   final LoginValidator validator = LoginValidator();
 
   List<ValidationError> get emailValidationResults => validator.validate(state).getErrorList('email');
@@ -58,12 +58,6 @@ class LoginViewModel extends _$LoginViewModel with LifecycleMixin {
   @override
   LoginViewModelState build() {
     return LoginViewModelState.initialState();
-  }
-
-  @override
-  void onFirstRender() {
-    super.onFirstRender();
-    resetState();
   }
 
   void resetState() {

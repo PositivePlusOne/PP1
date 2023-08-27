@@ -54,9 +54,9 @@ class PostViewModel extends _$PostViewModel {
 
   Future<bool> onWillPopScope() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final bool hasHomeRoute = appRouter.stack.any((element) => element is! PostRoute && element is! SplashRoute);
+    final bool comeFromDeepLink = appRouter.stack.any((element) => element is SplashRoute);
 
-    if (!hasHomeRoute) {
+    if (comeFromDeepLink) {
       appRouter.removeWhere((route) => true);
       appRouter.navigate(const HomeRoute());
     } else {

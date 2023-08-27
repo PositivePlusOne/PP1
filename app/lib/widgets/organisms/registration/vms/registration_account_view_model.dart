@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -110,8 +111,10 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
   Future<void> onSignInRequested() async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final LoginViewModel loginViewModel = ref.read(loginViewModelProvider.notifier);
 
     logger.i('Navigating to login screen');
+    loginViewModel.resetState();
     await appRouter.push(LoginRoute(senderRoute: RegistrationAccountRoute));
   }
 
