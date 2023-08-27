@@ -121,6 +121,7 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
             if (item.logoUrl.isNotEmpty) ...<Widget>[
               PositiveMediaImage(
                 media: Media.fromImageUrl(item.logoUrl),
+                isEnabled: false,
                 fit: BoxFit.contain,
                 width: kIconHuge,
                 height: kIconHuge,
