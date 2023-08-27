@@ -195,6 +195,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    HomeLoginPromptRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomeLoginPromptPage(),
+      );
+    },
     HomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1014,6 +1020,20 @@ class HintDialogRouteArgs {
   String toString() {
     return 'HintDialogRouteArgs{key: $key, widgets: $widgets}';
   }
+}
+
+/// generated route for
+/// [HomeLoginPromptPage]
+class HomeLoginPromptRoute extends PageRouteInfo<void> {
+  const HomeLoginPromptRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeLoginPromptRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeLoginPromptRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

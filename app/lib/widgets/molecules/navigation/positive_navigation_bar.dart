@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/home/home_login_prompt_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -122,8 +123,9 @@ class PositiveNavigationBarContent extends ConsumerWidget {
 
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
-    late final PageRouteInfo routeInfo;
+    final UserController userController = ref.read(userControllerProvider.notifier);
 
+    late final PageRouteInfo routeInfo;
     switch (newIndex) {
       case NavigationBarIndex.add:
         routeInfo = CreatePostRoute();
@@ -152,6 +154,22 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     // Check if that route is in our history, if so pop to it
     if (router.stack.any((route) => route.name == routeInfo.routeName)) {
       router.popUntil((route) => route.data?.name == routeInfo.routeName);
+      return;
+    }
+
+    // Check if we require a logged in user
+    final bool isSignedIn = userController.currentUser != null;
+    final bool requiresSignIn = switch (routeInfo.routeName) {
+      CreatePostRoute.name => true,
+      ChatConversationsRoute.name => true,
+      SearchRoute.name => true,
+      _ => false,
+    };
+
+    // If we require a logged in user and we are not logged in...
+    // Then push the login reminder page
+    if (requiresSignIn && !isSignedIn) {
+      await router.push(const HomeLoginPromptRoute());
       return;
     }
 
@@ -184,11 +202,11 @@ class PositiveNavigationBarContent extends ConsumerWidget {
             children: <Widget>[
               buildNavigationBarButton(ref, colors, isDisabled, 'Hub', UniconsLine.estate, NavigationBarIndex.hub),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Search', UniconsLine.search, NavigationBarIndex.search),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Search', UniconsLine.search, NavigationBarIndex.search),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled || !isUserLoggedIn, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
+              buildNavigationBarButton(ref, colors, isDisabled, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
               const SizedBox(width: kPaddingExtraSmall),
               buildNavigationBarButton(ref, colors, isDisabled, 'Guidance', UniconsLine.book_alt, NavigationBarIndex.guidance),
             ],

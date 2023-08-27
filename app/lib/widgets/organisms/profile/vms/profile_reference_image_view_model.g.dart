@@ -7,7 +7,7 @@ part of 'profile_reference_image_view_model.dart';
 // **************************************************************************
 
 String _$profileReferenceImageViewModelHash() =>
-    r'7e843050b8ce5c19cb904f0f464c2d471b660ee4';
+    r'2e09b31a665e69bcd07c828c9827240a5a044f07';
 
 /// See also [ProfileReferenceImageViewModel].
 @ProviderFor(ProfileReferenceImageViewModel)

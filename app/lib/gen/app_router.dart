@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/home/home_login_prompt_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -166,6 +167,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         //* Home and direct affiliates
         AutoRoute(page: HomeRoute.page, path: '/home', guards: [...kCommonGuards, profileSetupGuard]),
+        AutoRoute(page: HomeLoginPromptRoute.page, path: '/home/login', guards: [...kCommonGuards]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
