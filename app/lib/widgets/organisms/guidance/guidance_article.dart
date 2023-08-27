@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/guidance/guidance_article.dart';
-import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/extensions/number_extensions.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';

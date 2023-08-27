@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';

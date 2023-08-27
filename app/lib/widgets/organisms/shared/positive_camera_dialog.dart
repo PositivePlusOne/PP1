@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 // Project imports:
 import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
-import 'package:image_picker/image_picker.dart';
 
 class PositiveCameraDialog extends ConsumerWidget {
   const PositiveCameraDialog({

@@ -1,10 +1,7 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:app/helpers/image_helpers.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -26,9 +23,9 @@ import 'package:app/providers/guidance/guidance_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../services/third_party.dart';
-import '../organisms/guidance/guidance_directory_page.dart';
 
 class PositiveDirectoryPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveDirectoryPaginationBehaviour({

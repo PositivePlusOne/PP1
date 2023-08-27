@@ -16,7 +16,6 @@ import 'package:mime/mime.dart';
 
 // Project imports:
 import 'package:app/constants/cache_constants.dart';
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';

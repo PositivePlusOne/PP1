@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/home/home_login_prompt_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

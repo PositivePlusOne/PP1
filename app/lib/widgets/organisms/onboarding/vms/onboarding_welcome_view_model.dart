@@ -1,5 +1,4 @@
 // Package imports:
-import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 

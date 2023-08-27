@@ -24,14 +24,12 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
-import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_details_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_fake_text_field_button.dart';
-import '../../molecules/containers/positive_transparent_sheet.dart';
 
 @RoutePage()
 class AccountDetailsPage extends HookConsumerWidget {

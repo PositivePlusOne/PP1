@@ -1,16 +1,12 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:typed_data';
 
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/helpers/image_helpers.dart';
-import 'package:app/main.dart';
-import 'package:app/services/third_party.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -19,10 +15,12 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/image_helpers.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../dtos/database/common/media.dart';
 import '../../../providers/system/design_controller.dart';

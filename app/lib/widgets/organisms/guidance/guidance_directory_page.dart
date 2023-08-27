@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -13,7 +14,6 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/widgets/behaviours/positive_directory_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 import '../../../providers/guidance/guidance_controller.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../../providers/system/design_controller.dart';
