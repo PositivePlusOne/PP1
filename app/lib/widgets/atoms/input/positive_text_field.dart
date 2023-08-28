@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/formatter_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -42,6 +43,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.textStyle,
     this.labelColor,
     this.labelStyle,
+    this.inputformatters,
     this.showRemaining = false,
     this.showRemainingStyle,
     this.autofocus = false,
@@ -75,6 +77,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final TextInputAction? textInputAction;
   final TextInputType textInputType;
   final TextEditingController? textEditingController;
+
+  final List<TextInputFormatter>? inputformatters;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -248,7 +252,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                 inputFormatters: [
                   if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
                   //? Universal input formatter to prevent successive new lines
-                  FilteringTextInputFormatter.deny(RegExp(r'(?<=\n{2,}[ ]{0,}.{0,1})\n')),
+                  removeDuplicateWhitespaceFormatter(),
+                  ...?widget.inputformatters
                 ],
                 enableSuggestions: true,
                 obscureText: widget.obscureText,

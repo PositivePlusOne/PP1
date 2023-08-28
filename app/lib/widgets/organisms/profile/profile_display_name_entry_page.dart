@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/formatter_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -160,6 +161,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               labelText: localizations.shared_profile_display_name,
               initialText: state.displayName,
               onTextChanged: controller.onDisplayNameChanged,
+              inputformatters: [removeNumbersFormatter()],
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
