@@ -28,6 +28,8 @@ mixin _$DesignTypographyModel {
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   TextStyle get styleHeroSmall => throw _privateConstructorUsedError;
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+  TextStyle get styleHeroExtraSmall => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   TextStyle get styleBody => throw _privateConstructorUsedError;
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   TextStyle get styleTitle => throw _privateConstructorUsedError;
@@ -74,6 +76,8 @@ abstract class $DesignTypographyModelCopyWith<$Res> {
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       TextStyle styleHeroSmall,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+      TextStyle styleHeroExtraSmall,
+      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       TextStyle styleBody,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       TextStyle styleTitle,
@@ -118,6 +122,7 @@ class _$DesignTypographyModelCopyWithImpl<$Res,
     Object? styleHero = null,
     Object? styleHeroMedium = null,
     Object? styleHeroSmall = null,
+    Object? styleHeroExtraSmall = null,
     Object? styleBody = null,
     Object? styleTitle = null,
     Object? styleTitleTwo = null,
@@ -144,6 +149,10 @@ class _$DesignTypographyModelCopyWithImpl<$Res,
       styleHeroSmall: null == styleHeroSmall
           ? _value.styleHeroSmall
           : styleHeroSmall // ignore: cast_nullable_to_non_nullable
+              as TextStyle,
+      styleHeroExtraSmall: null == styleHeroExtraSmall
+          ? _value.styleHeroExtraSmall
+          : styleHeroExtraSmall // ignore: cast_nullable_to_non_nullable
               as TextStyle,
       styleBody: null == styleBody
           ? _value.styleBody
@@ -217,6 +226,8 @@ abstract class _$$_DesignTypographyModelCopyWith<$Res>
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       TextStyle styleHeroSmall,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+      TextStyle styleHeroExtraSmall,
+      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       TextStyle styleBody,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       TextStyle styleTitle,
@@ -258,6 +269,7 @@ class __$$_DesignTypographyModelCopyWithImpl<$Res>
     Object? styleHero = null,
     Object? styleHeroMedium = null,
     Object? styleHeroSmall = null,
+    Object? styleHeroExtraSmall = null,
     Object? styleBody = null,
     Object? styleTitle = null,
     Object? styleTitleTwo = null,
@@ -284,6 +296,10 @@ class __$$_DesignTypographyModelCopyWithImpl<$Res>
       styleHeroSmall: null == styleHeroSmall
           ? _value.styleHeroSmall
           : styleHeroSmall // ignore: cast_nullable_to_non_nullable
+              as TextStyle,
+      styleHeroExtraSmall: null == styleHeroExtraSmall
+          ? _value.styleHeroExtraSmall
+          : styleHeroExtraSmall // ignore: cast_nullable_to_non_nullable
               as TextStyle,
       styleBody: null == styleBody
           ? _value.styleBody
@@ -352,6 +368,8 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required this.styleHeroSmall,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+      required this.styleHeroExtraSmall,
+      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required this.styleBody,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required this.styleTitle,
@@ -390,6 +408,9 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
   @override
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   final TextStyle styleHeroSmall;
+  @override
+  @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+  final TextStyle styleHeroExtraSmall;
   @override
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   final TextStyle styleBody;
@@ -432,7 +453,7 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
 
   @override
   String toString() {
-    return 'DesignTypographyModel(styleHero: $styleHero, styleHeroMedium: $styleHeroMedium, styleHeroSmall: $styleHeroSmall, styleBody: $styleBody, styleTitle: $styleTitle, styleTitleTwo: $styleTitleTwo, styleSubtitle: $styleSubtitle, styleSubtitleBold: $styleSubtitleBold, styleBold: $styleBold, styleSubtext: $styleSubtext, styleSubtextBold: $styleSubtextBold, styleButtonRegular: $styleButtonRegular, styleButtonBold: $styleButtonBold, styleTopic: $styleTopic, styleFieldAction: $styleFieldAction, styleNotification: $styleNotification)';
+    return 'DesignTypographyModel(styleHero: $styleHero, styleHeroMedium: $styleHeroMedium, styleHeroSmall: $styleHeroSmall, styleHeroExtraSmall: $styleHeroExtraSmall, styleBody: $styleBody, styleTitle: $styleTitle, styleTitleTwo: $styleTitleTwo, styleSubtitle: $styleSubtitle, styleSubtitleBold: $styleSubtitleBold, styleBold: $styleBold, styleSubtext: $styleSubtext, styleSubtextBold: $styleSubtextBold, styleButtonRegular: $styleButtonRegular, styleButtonBold: $styleButtonBold, styleTopic: $styleTopic, styleFieldAction: $styleFieldAction, styleNotification: $styleNotification)';
   }
 
   @override
@@ -446,6 +467,8 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
                 other.styleHeroMedium == styleHeroMedium) &&
             (identical(other.styleHeroSmall, styleHeroSmall) ||
                 other.styleHeroSmall == styleHeroSmall) &&
+            (identical(other.styleHeroExtraSmall, styleHeroExtraSmall) ||
+                other.styleHeroExtraSmall == styleHeroExtraSmall) &&
             (identical(other.styleBody, styleBody) ||
                 other.styleBody == styleBody) &&
             (identical(other.styleTitle, styleTitle) ||
@@ -481,6 +504,7 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
       styleHero,
       styleHeroMedium,
       styleHeroSmall,
+      styleHeroExtraSmall,
       styleBody,
       styleTitle,
       styleTitleTwo,
@@ -518,6 +542,8 @@ abstract class _DesignTypographyModel implements DesignTypographyModel {
       required final TextStyle styleHeroMedium,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required final TextStyle styleHeroSmall,
+      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+      required final TextStyle styleHeroExtraSmall,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required final TextStyle styleBody,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
@@ -557,6 +583,9 @@ abstract class _DesignTypographyModel implements DesignTypographyModel {
   @override
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   TextStyle get styleHeroSmall;
+  @override
+  @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+  TextStyle get styleHeroExtraSmall;
   @override
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
   TextStyle get styleBody;

@@ -1,8 +1,11 @@
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 
 class TargetFeed {
   TargetFeed(this.feed, this.slug);
+
+  static TargetFeed fromTag(Tag tag) => TargetFeed('tags', tag.key);
 
   final String feed;
   final String slug;

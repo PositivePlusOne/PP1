@@ -14,8 +14,9 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
     required this.tabs,
     required this.onTapped,
     required this.tabColours,
-    this.tags = const <Tag>[],
+    this.topics = const <Tag>[],
     this.margin = const EdgeInsets.all(kPaddingMedium),
+    this.onTopicSelected,
     this.index = -1,
     super.key,
   });
@@ -23,8 +24,10 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   final List<String> tabs;
   final int index;
   final Future<void> Function(int index) onTapped;
-  final List<Tag> tags;
+  final List<Tag> topics;
   final List<Color> tabColours;
+
+  final void Function(BuildContext context, Tag tag)? onTopicSelected;
 
   final EdgeInsets? margin;
 
@@ -34,7 +37,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
   double get totalHeight => kTabBarHeight + kRecommendedTopicHeight + kRecommendedPostIndicatorHeight + kPaddingSmall + (margin?.vertical ?? 0);
   double get kRecommendedTopicHeight {
-    if (tags.isNotEmpty) {
+    if (topics.isNotEmpty) {
       return kSizeRecommendedTopic + kPaddingMedium;
     } else {
       return 0;
@@ -50,12 +53,14 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
     return Column(
       children: [
-        const SizedBox(height: kPaddingSmall),
-        if (tags.isNotEmpty) ...{
-          const SizedBox(height: kPaddingMedium),
-          PositiveRecommendedTopics(tags: tags),
+        const SizedBox(height: kPaddingMedium),
+        if (topics.isNotEmpty) ...{
+          PositiveRecommendedTopics(
+            tags: topics,
+            onTagSelected: (context, tag) => onTopicSelected?.call(context, tag),
+          ),
         },
-        const SizedBox(height: kPaddingSmall),
+        const SizedBox(height: kPaddingMedium),
         // PositiveTabBar(
         //   index: index,
         //   onTapped: onTapped,

@@ -17,10 +17,12 @@ import '../../../providers/system/design_controller.dart';
 class PositiveRecommendedTopics extends ConsumerWidget {
   const PositiveRecommendedTopics({
     required this.tags,
+    required this.onTagSelected,
     super.key,
   });
 
   final List<Tag> tags;
+  final void Function(BuildContext context, Tag tag) onTagSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,6 +44,7 @@ class PositiveRecommendedTopics extends ConsumerWidget {
                 tag: tag,
                 typeography: typeography,
                 colours: colours,
+                onTap: (context) => onTagSelected(context, tag),
               ),
             ),
           ],
@@ -56,6 +59,7 @@ class PositiveRecomemendedTopic extends ConsumerWidget {
     required this.tag,
     required this.typeography,
     required this.colours,
+    required this.onTap,
     super.key,
   });
 
@@ -63,9 +67,12 @@ class PositiveRecomemendedTopic extends ConsumerWidget {
   final DesignTypographyModel typeography;
   final DesignColorsModel colours;
 
+  final void Function(BuildContext context) onTap;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PositiveTapBehaviour(
+      onTap: onTap,
       child: Container(
         width: kSizeRecommendedTopic,
         height: kSizeRecommendedTopic,
@@ -85,7 +92,7 @@ class PositiveRecomemendedTopic extends ConsumerWidget {
               ),
             ),
             Text(
-              tag.fallback,
+              tag.topic?.fallback ?? tag.fallback,
               style: typeography.styleTopic,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,

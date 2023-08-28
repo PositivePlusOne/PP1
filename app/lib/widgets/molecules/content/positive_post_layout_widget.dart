@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -180,7 +182,6 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         //* -=-=-=- Post Actions -=-=-=- *\\
         _postActions(),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-        const SizedBox(height: kPaddingSmall),
         _markdownBody(),
       ],
     );
@@ -520,17 +521,18 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   Widget _markdownBody() {
     String parsedMarkdown = html2md.convert(widget.postContent.generalConfiguration?.content ?? '');
     if (widget.isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      //? Truncate string to max length
       parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
-      //? remove until last instance of space to get rid of whole words, remove carrage returns, new lines, and tabs to condense the string
       parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
     }
+
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+    final List<Tag> tags = tagsController.resolveTags(widget.postContent.enrichmentConfiguration?.tags ?? []);
 
     return PositiveTapBehaviour(
       onTap: widget.onPostPageRequested,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown),
+        child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
       ),
     );
   }

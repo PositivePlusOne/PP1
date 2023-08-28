@@ -86,6 +86,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
 
                 const tags = obj.enrichmentConfiguration?.tags || [] as string[];
+                functions.logger.debug(`Activity tags: ${tags}`, { sender, tags });
                 for (const tag of tags) {
                     joinedDataRecords.get(tagSchemaKey)?.add(tag);
                 }
