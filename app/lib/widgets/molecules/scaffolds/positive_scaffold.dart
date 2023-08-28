@@ -173,32 +173,13 @@ class PositiveScaffold extends ConsumerWidget {
                         SliverFillRemaining(
                           fillOverscroll: true,
                           hasScrollBody: false,
-                          child: Container(
-                            color: decorationColor ?? Colors.transparent,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                if (trailingWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.trailingWidgets)) ...<Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-                                    child: Column(children: trailingWidgets),
-                                  ),
-                                ],
-                                if (footerWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.footerWidgets)) ...<Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-                                    child: PositiveGlassSheet(
-                                      isBusy: isBusy,
-                                      children: footerWidgets,
-                                    ),
-                                  ),
-                                ],
-                                if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
-                                  //* This also helps to guard against overscroll when showing the keyboard on Android!
-                                  Flexible(child: Container(height: bottomPadding, color: decorationColor ?? Colors.transparent)),
-                                ],
-                              ],
-                            ),
+                          child: ScaffoldTrailingContent(
+                            decorationColor: decorationColor,
+                            trailingWidgets: trailingWidgets,
+                            visibleComponents: visibleComponents,
+                            footerWidgets: footerWidgets,
+                            isBusy: isBusy,
+                            bottomPadding: bottomPadding,
                           ),
                         ),
                       ],
@@ -209,6 +190,56 @@ class PositiveScaffold extends ConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ScaffoldTrailingContent extends StatelessWidget {
+  const ScaffoldTrailingContent({
+    super.key,
+    required this.decorationColor,
+    required this.trailingWidgets,
+    required this.visibleComponents,
+    required this.footerWidgets,
+    required this.isBusy,
+    required this.bottomPadding,
+  });
+
+  final Color? decorationColor;
+  final List<Widget> trailingWidgets;
+  final Set<PositiveScaffoldComponent> visibleComponents;
+  final List<Widget> footerWidgets;
+  final bool isBusy;
+  final double bottomPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: decorationColor ?? Colors.transparent,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          if (trailingWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.trailingWidgets)) ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              child: Column(children: trailingWidgets),
+            ),
+          ],
+          if (footerWidgets.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.footerWidgets)) ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+              child: PositiveGlassSheet(
+                isBusy: isBusy,
+                children: footerWidgets,
+              ),
+            ),
+          ],
+          if (visibleComponents.contains(PositiveScaffoldComponent.footerPadding)) ...<Widget>[
+            //* This also helps to guard against overscroll when showing the keyboard on Android!
+            Flexible(child: Container(height: bottomPadding, color: decorationColor ?? Colors.transparent)),
+          ],
+        ],
       ),
     );
   }
