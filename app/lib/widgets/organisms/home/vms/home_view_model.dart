@@ -1,14 +1,16 @@
 // Dart imports:
 import 'dart:async';
 
-// Package imports:
-import 'package:app/dtos/database/activities/tags.dart';
+// Flutter imports:
 import 'package:flutter/src/widgets/framework.dart';
+
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';

@@ -63,6 +63,23 @@ export namespace FlamelinkHelpers {
     return isEqual(d1, d2);
   }
 
+  export function removeUndefinedValues(data: any): any {
+    if (data == null) {
+      throw new Error("Data cannot be null.");
+    }
+
+    const keys = Object.keys(data);
+    const result: any = {};
+    keys.forEach((key) => {
+      const value = data[key];
+      if (value != null) {
+        result[key] = value;
+      }
+    });
+
+    return result;
+  }
+
   /**
    * Converts a firestore document to a Firebase Storage file url.
    * @param {any} documentReference the document reference to convert.

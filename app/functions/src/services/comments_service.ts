@@ -4,6 +4,7 @@ import { CommentJSON } from "../dto/comments";
 import { DataService } from "./data_service";
 import { DefaultGenerics, StreamClient } from "getstream";
 import { ReactionEntryJSON } from "../dto/stream";
+import { ReactionStatisticsService } from "./reaction_statistics_service";
 
 export namespace CommentsService {
 
@@ -30,10 +31,6 @@ export namespace CommentsService {
             throw new functions.https.HttpsError("invalid-argument", "Comment must have an activityId");
         }
 
-        functions.logger.log("Adding comment", {
-            comment,
-        });
-
         const reactionEntry = {
             kind: "comment",
             activity_id: comment.activity_id,
@@ -47,6 +44,10 @@ export namespace CommentsService {
             { userId: comment.user_id },
         );
 
+        if (comment.activity_id) {
+            await ReactionStatisticsService.updateReactionCountForActivity(client, comment.origin, comment.activity_id, "comment", 1);
+        }
+        
         return await DataService.updateDocument({
             schemaKey: "comments",
             entryId: response.id,
@@ -84,12 +85,19 @@ export namespace CommentsService {
      * @param {StreamClient<DefaultGenerics>} client The Stream client.
      * @returns {Promise<void>} A promise that resolves when the comment has been deleted.
      */
-    export async function deleteComment(commentId: string, client: StreamClient<DefaultGenerics>): Promise<void> {
-        await client.reactions.delete(commentId);
+    export async function deleteComment(comment: CommentJSON, client: StreamClient<DefaultGenerics>): Promise<void> {
+        if (!comment._fl_meta_ || !comment._fl_meta_.fl_id || !comment.origin) {
+            throw new functions.https.HttpsError("invalid-argument", "Comment must have an fl_id and origin");
+        }
+
+        await client.reactions.delete(comment._fl_meta_.fl_id);
+        if (comment.activity_id) {
+            await ReactionStatisticsService.updateReactionCountForActivity(client, comment.origin, comment.activity_id, "comment", -1);
+        }
 
         await DataService.deleteDocument({
             schemaKey: "comments",
-            entryId: commentId,
+            entryId: comment._fl_meta_.fl_id,
         });
     }
 

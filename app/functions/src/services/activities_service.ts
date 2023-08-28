@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { v1 as uuidv1 } from "uuid";
 
-import { DefaultGenerics, NewActivity } from "getstream";
+import { DefaultGenerics, NewActivity, StreamClient } from "getstream";
 import { Activity, ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
@@ -10,6 +10,8 @@ import { DataService } from "./data_service";
 import { TagsService } from "./tags_service";
 import { FeedName } from "../constants/default_feeds";
 import { FeedEntry } from "../dto/stream";
+import { ReactionStatisticsService } from "./reaction_statistics_service";
+import { ReactionStatisticsJSON } from "../dto/reactions";
 
 export namespace ActivitiesService {
   /**
@@ -67,17 +69,60 @@ export namespace ActivitiesService {
   }
 
   /**
+   * Gets an activity with reaction statistics.
+   * @param {string} id the id of the activity.
+   * @param {string} origin the origin of the activity.
+   * @return {Promise<ActivityJSON>} a promise that resolves to the activity.
+   */
+  export async function getActivityWithReactionStatistics(client: StreamClient<DefaultGenerics>, id: string, feed: string, skipCacheLookup = false): Promise<ActivityJSON> {
+    const reactionStatsPromise = feed && client ? ReactionStatisticsService.getReactionStatisticsForSenderAndActivity(client, feed, id) : Promise.resolve({});
+    const activity = await DataService.getDocument({
+      schemaKey: "activities",
+      entryId: id,
+    }, skipCacheLookup) as ActivityJSON;
+
+    if (!activity) {
+      functions.logger.warn("Could not find activity", { id });
+      return {};
+    } else if (!feed) {
+      functions.logger.warn("Could not find origin", { feed });
+      return activity;
+    }
+
+    const reactionStatistics = await reactionStatsPromise as ReactionStatisticsJSON;
+    if (!activity.enrichmentConfiguration) {
+      activity.enrichmentConfiguration = {};
+    }
+
+    if (reactionStatistics) {
+      functions.logger.info("Found reaction statistics for activity", {
+        activityId: id,
+        reactionStatistics,
+      });
+
+      activity.enrichmentConfiguration.reactionCounts = reactionStatistics.counts;
+      activity.enrichmentConfiguration.originFeed = reactionStatistics.feed;
+    } else {
+      functions.logger.info("No reaction statistics found for activity", {
+        activityId: id,
+      });
+    }
+
+    return activity;
+  }
+
+  /**
    * Gets a list of activities from a list of feed entrys.
    * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
    * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
    */
-  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<any[]> {
+  export async function getActivityFeedWindow(client: StreamClient<DefaultGenerics>, entrys: FeedEntry[], feed: string): Promise<any[]> {
     const activityPromise = entrys.map(async (entry) => {
-      if (entry.object === "") {
+      if (!entry.object || !feed) {
         return;
       }
       
-      const activity = await getActivity(entry.object);
+      const activity = await getActivityWithReactionStatistics(client, entry.object, feed);
       if (!activity) {
         return;
       }
@@ -87,13 +132,19 @@ export namespace ActivitiesService {
           break;
         default:
           const actorId = entry.actor;
-          if (activity.publisherInformation) {
-            activity.publisherInformation.actorId = actorId;
+          if (!activity.publisherInformation) {
+            activity.publisherInformation = {};
           }
-
-          if (activity.generalConfiguration) {
-            activity.generalConfiguration.reactionType = entry.verb as ActivityActionVerb;
+          if (!activity.generalConfiguration) {
+            activity.generalConfiguration = {};
           }
+          
+          activity.publisherInformation.actorId = actorId;
+          activity.generalConfiguration.reactionType = entry.verb as ActivityActionVerb;
+          functions.logger.info("Enriched activity for verb", {
+            activityId: entry.object,
+            verb: entry.verb,
+          });
           break;
       }
 

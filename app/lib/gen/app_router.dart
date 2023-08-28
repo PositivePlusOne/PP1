@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/widgets/organisms/shared/tag_feed_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
@@ -42,6 +41,7 @@ import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
+import 'package:app/widgets/organisms/shared/tag_feed_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/auth_setup_guard.dart';
 import '../guards/development_guard.dart';

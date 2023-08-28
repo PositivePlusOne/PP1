@@ -36,6 +36,47 @@ export namespace DataService {
     return documentRef;
   };
 
+  export const getOrCreateDocument = async function (initialData: any, options: { schemaKey: string; entryId: string }, skipCacheLookup = false): Promise<any> {
+    let data;
+    const cacheKey = CacheService.generateCacheKey(options);
+
+    if (!options.entryId || !options.schemaKey) {
+      throw new functions.https.HttpsError("invalid-argument", "Missing entryId or schema");
+    }
+
+    if (!skipCacheLookup) {
+      data = await CacheService.getFromCache(cacheKey);
+      if (data) {
+        functions.logger.debug(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
+        return data;
+      }
+    }
+
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
+
+    // Remove all undefined values from the initial data.
+    initialData = FlamelinkHelpers.removeUndefinedValues(initialData);
+
+    data = await flamelinkApp.content.get(options);
+    if (!data) {
+      functions.logger.debug(`Document not found, creating new`);
+      data = await flamelinkApp.content.add({
+        schemaKey: options.schemaKey,
+        entryId: options.entryId,
+        data: initialData,
+      });
+
+      functions.logger.debug(`Created document for ${options.schemaKey}: ${options.entryId}`);
+    }
+
+    if (data) {
+      CacheService.setInCache(cacheKey, data);
+    }
+
+    return data;
+  };
+
   export const getDocument = async function (options: { schemaKey: string; entryId: string }, skipCacheLookup = false): Promise<any> {
     let data;
     const cacheKey = CacheService.generateCacheKey(options);
@@ -47,7 +88,7 @@ export namespace DataService {
     if (!skipCacheLookup) {
       data = await CacheService.getFromCache(cacheKey);
       if (data) {
-        functions.logger.info(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
+        functions.logger.debug(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
         return data;
       }
     }
@@ -64,7 +105,7 @@ export namespace DataService {
   };
 
   export const getDocumentWindowRaw = async function (options: QueryOptions): Promise<any[]> {
-    functions.logger.info(`Getting document window query`, options);
+    functions.logger.debug(`Getting document window query`, options);
 
     const firestore = adminApp.firestore();
     let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey);

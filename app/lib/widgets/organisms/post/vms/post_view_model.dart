@@ -10,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/comments.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/events/content/comments.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -70,12 +71,19 @@ class PostViewModel extends _$PostViewModel {
 
   Future<void> onPostCommentRequested() async {
     final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
     final CommentApiService commentApiService = await ref.read(commentApiServiceProvider.future);
     final EventBus eventBus = ref.read(eventBusProvider);
     final String trimmedString = state.currentCommentText.trim();
 
     if (trimmedString.isEmpty) {
       logger.e('Comment text is empty');
+      return;
+    }
+
+    if (profileController.currentProfileId == null) {
+      logger.e('Profile is not loaded');
       return;
     }
 
@@ -86,6 +94,14 @@ class PostViewModel extends _$PostViewModel {
       final Comment comment = await commentApiService.postComment(
         activityId: state.activityId,
         content: trimmedString,
+      );
+
+      reactionsController.offsetReactionCountForActivity(
+        activityId: activityId,
+        userId: profileController.currentProfileId!,
+        origin: TargetFeed.toOrigin(state.targetFeed),
+        reactionType: 'comment',
+        offset: 1,
       );
 
       eventBus.fire(CommentCreatedEvent(activityId: activityId, comment: comment));

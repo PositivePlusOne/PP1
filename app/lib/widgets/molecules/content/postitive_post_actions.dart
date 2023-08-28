@@ -74,7 +74,7 @@ class PositivePostActions extends HookConsumerWidget {
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
-                    likes.toString(),
+                    '${likes ?? 0}',
                     style: typography.styleSubtitle.copyWith(
                       color: colours.colorGray6,
                     ),
@@ -95,7 +95,7 @@ class PositivePostActions extends HookConsumerWidget {
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
-                    likes.toString(),
+                    '${comments ?? 0}',
                     style: typography.styleSubtitle.copyWith(
                       color: colours.colorGray6,
                     ),

@@ -1,3 +1,13 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
+import 'package:unicons/unicons.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -7,14 +17,8 @@ import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sliver_tools/sliver_tools.dart';
-import 'package:unicons/unicons.dart';
 
 @RoutePage()
 class TagFeedPage extends ConsumerWidget {
