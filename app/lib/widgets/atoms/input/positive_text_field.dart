@@ -152,12 +152,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     //? Since this is a little arcane to understand, here's a breakdown of the calculation:
     //? 1. kCreatePostHeight is the height of the text field
     //? 2. labelTextHeight is the height of the label text
-    //?     thus (kCreatePostHeight - labelTextHeight) / 2 is the space required between the top of the tex label and the top of the text field
+    //?     thus (kCreatePostHeight - labelTextHeight) / 2 is the space required between the top of the text label and the top of the text field
     //? From here, we need to subtract the following:
     //? 3. widget.borderWidth is the thickness of the border
     //? 4. (kPaddingExtraSmall - widget.borderWidth) is the padding applied to the whole text field (including icons etc)
     //? 5. kPaddingSmall is the padding applied to the top text field in order to allow space between it and the label once focused.
-    //?        Since the unfocused text field applies the padding to the label, we need to remove it to
+    //?        Since the unfocused text field applies the padding to the label, we need to remove it from the label padding
     //? 6. labelPadding is the padding between the label and the text field
     labelPadding = (kCreatePostHeight - labelTextHeight) / 2 - (widget.borderWidth) - (kPaddingExtraSmall - widget.borderWidth) - kPaddingSmall;
   }
