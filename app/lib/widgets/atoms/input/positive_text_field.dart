@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/helpers/formatter_helpers.dart';
+import 'package:app/helpers/text_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -104,6 +105,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
   late final TextEditingController textEditingController;
 
   String lastKnownText = '';
+  double labelPadding = 0.0;
 
   bool get isFocused => _isFocused;
 
@@ -121,12 +123,43 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     super.initState();
     setupLateVariables();
     setupListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkTextSize();
+    });
   }
 
   @override
   void dispose() {
     disposeListeners();
     super.dispose();
+  }
+
+  checkTextSize() {
+    if (widget.labelText == null) {
+      return;
+    }
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    TextStyle labelStyle = widget.labelStyle ?? typography.styleButtonRegular;
+    labelStyle = labelStyle.copyWith(fontWeight: FontWeight.w600);
+
+    final double labelTextHeight = getTextSize(
+      text: widget.labelText!,
+      textStyle: labelStyle,
+      context: context,
+    ).height;
+
+    //? Since this is a little arcane to understand, here's a breakdown of the calculation:
+    //? 1. kCreatePostHeight is the height of the text field
+    //? 2. labelTextHeight is the height of the label text
+    //?     thus (kCreatePostHeight - labelTextHeight) / 2 is the space required between the top of the tex label and the top of the text field
+    //? From here, we need to subtract the following:
+    //? 3. widget.borderWidth is the thickness of the border
+    //? 4. (kPaddingExtraSmall - widget.borderWidth) is the padding applied to the whole text field (including icons etc)
+    //? 5. kPaddingSmall is the padding applied to the top text field in order to allow space between it and the label once focused.
+    //?        Since the unfocused text field applies the padding to the label, we need to remove it to
+    //? 6. labelPadding is the padding between the label and the text field
+    labelPadding = (kCreatePostHeight - labelTextHeight) / 2 - (widget.borderWidth) - (kPaddingExtraSmall - widget.borderWidth) - kPaddingSmall;
   }
 
   void setupLateVariables() {
@@ -181,7 +214,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     final bool hasTextIsFocused = hasText || isFocused;
 
     final Color textColour = widget.textStyle?.color ?? colours.black;
-    final TextStyle labelStyle = widget.labelStyle ?? typography.styleButtonRegular;
+    TextStyle labelStyle = widget.labelStyle ?? typography.styleButtonRegular;
+
+    labelStyle = labelStyle.copyWith(
+      color: widget.labelColor ?? (hasTextIsFocused ? widget.tintColor : textColour),
+      fontWeight: hasTextIsFocused ? FontWeight.w800 : FontWeight.w600,
+    );
 
     final bool hasBorder = isFocused || widget.forceBorder;
 
@@ -243,7 +281,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
           ],
           Expanded(
             child: AnimatedPadding(
-              padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : kPaddingNone),
+              padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : labelPadding),
               duration: kAnimationDurationFast,
               child: TextFormField(
                 autocorrect: widget.autocorrect,
@@ -251,9 +289,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                 focusNode: textFocusNode,
                 inputFormatters: [
                   if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
-                  //? Universal input formatter to prevent successive new lines
                   removeDuplicateWhitespaceFormatter(),
-                  ...?widget.inputformatters
+                  ...?widget.inputformatters,
                 ],
                 enableSuggestions: true,
                 obscureText: widget.obscureText,
@@ -273,17 +310,14 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                   alignLabelWithHint: true,
                   label: labelChild,
                   labelText: labelChild == null ? widget.labelText : null,
-                  labelStyle: labelStyle.copyWith(
-                    color: widget.labelColor ?? (hasTextIsFocused ? widget.tintColor : textColour),
-                    fontWeight: hasTextIsFocused ? FontWeight.w800 : FontWeight.w600,
-                  ),
+                  labelStyle: labelStyle,
                   hintText: widget.hintText,
                   hintStyle: typography.styleButtonRegular.copyWith(
                     color: textColour,
                     fontWeight: FontWeight.w600,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  contentPadding: const EdgeInsets.only(
+                  contentPadding: EdgeInsets.only(
                     top: kPaddingSmall,
                     bottom: kPaddingNone,
                     left: kPaddingNone,
