@@ -241,7 +241,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       int remainingCharacters = widget.maxLength! - textEditingController.text.length;
       labelChild = RichText(
         text: TextSpan(
-          style: widget.labelStyle ?? typography.styleButtonRegular,
+          style: labelStyle,
           text: widget.labelText,
           children: [
             TextSpan(
@@ -317,7 +317,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                     fontWeight: FontWeight.w600,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  contentPadding: EdgeInsets.only(
+                  contentPadding: const EdgeInsets.only(
                     top: kPaddingSmall,
                     bottom: kPaddingNone,
                     left: kPaddingNone,
