@@ -1,20 +1,32 @@
 import * as functions from "firebase-functions";
 
-import { v1 as uuidv1 } from "uuid";
-
 import { NotificationPayload, NotificationPayloadResponse, appendPriorityToMessagePayload } from "./types/notification_payload";
 import { FeedService } from "./feed_service";
 import { DefaultGenerics, StreamClient } from "getstream";
 import { adminApp } from "..";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace NotificationsService {
+  export function prepareNewNotification(notification: NotificationPayload) : NotificationPayload {
+    if (!notification.id || notification.id.length === 0) {
+      notification.id = FlamelinkHelpers.generateIdentifier();
+    }
+
+    // if created_at is not set, set it to now
+    if (!notification.created_at || notification.created_at.length === 0) {
+      notification.created_at = new Date().toISOString();
+    }
+
+    return notification;
+  }
+
   /**
    * Send a payload to a user
     * @param {string} token The FCM token of the user
     * @param {NotificationBody} notification The notification to send
     * @return {Promise<void>} The result of the send operation
    */
-  export async function sendPayloadToUser(token: string, notification: NotificationPayload): Promise<void> {
+  export async function sendPayloadToUserIfTokenSet(token: string, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to send payload to user: ${notification.user_id}`);
     if (!token || token.length === 0) {
       functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.user_id}`);
@@ -41,29 +53,20 @@ export namespace NotificationsService {
 
   export async function postNotificationPayloadToUserFeed(uid: string, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to post notification payload to user feed: ${uid}`);
-    if (!uid || uid.length === 0) {
-      functions.logger.info(`No uid provided, skipping post notification payload to user feed`);
-      return;
+    if (!uid || !notification || !notification.id) {
+      functions.logger.info(`No uid or notification provided, skipping post notification payload to user feed`);
+      throw new Error("No uid or notification provided, skipping post notification payload to user feed");
     }
 
     const client = FeedService.getFeedsClient();
-
-    // Assume the notification is new
-    notification.created_at = new Date().toISOString();
-    if (!notification.id) {
-      notification.id = uuidv1();
-    }
-
     const feed = client.feed("notification", uid);
     await feed.addActivity({
       verb: "post",
       actor: uid,
-      object: notification,
-      time: notification.created_at,
+      object: notification.id,
       foreign_id: notification.id,
+      time: notification.created_at,
     });
-
-    functions.logger.info(`Successfully posted notification payload to user feed: ${uid}`);
   }
 
   export async function listNotificationWindow(client: StreamClient<DefaultGenerics>, uid: string, windowSize: number, next: string): Promise<NotificationPayloadResponse> {
@@ -108,19 +111,7 @@ export namespace NotificationsService {
         }
 
         functions.logger.info(`Successfully processed notification payload for user: ${uid}`, { activity, object });
-
-        notifications.push(new NotificationPayload({
-            user_id: uid,
-            id: realActivity.id,
-            sender: realActivity.actor,
-            created_at: realActivity.time,
-            action: object?.action || "",
-            topic: object?.topic || "",
-            title: object?.title || "",
-            body: object?.body || "",
-            icon: object?.icon || "",
-            extra_data: object?.extra_data || {},
-          }));
+        notifications.push(new NotificationPayload(object));
       });
     }
 

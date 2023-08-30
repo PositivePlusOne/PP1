@@ -15,6 +15,7 @@ import { RelationshipUpdatedNotification } from "../services/builders/notificati
 import { FeedService } from "../services/feed_service";
 import { FeedRequest } from "../dto/feed_dtos";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
+import { RelationshipJSON } from "../dto/relationships";
 
 export namespace RelationshipEndpoints {
   export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -246,9 +247,8 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const isDisconnected = RelationshipHelpers.isUserDisconnected(uid, oldRelationship);
-    if (isDisconnected) {
+    const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]) as RelationshipJSON;
+    if (!oldRelationship.connected) {
       functions.logger.info("User already disconnected", { uid, targetUid });
       return buildEndpointResponse(context, {
         sender: uid,
@@ -257,16 +257,10 @@ export namespace RelationshipEndpoints {
     }
     
     const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
-    const canCancel = RelationshipHelpers.canCancelConnectionRequest(uid, oldRelationship);
+    const newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
 
-    let newRelationship = { ...oldRelationship };
     if (canReject) {
-      newRelationship = await RelationshipService.rejectRelationship(uid, oldRelationship);
       await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
-    } else if (canCancel) {
-      newRelationship = await RelationshipService.rejectRelationship(uid, oldRelationship);
-    } else {
-      newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
     }
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);

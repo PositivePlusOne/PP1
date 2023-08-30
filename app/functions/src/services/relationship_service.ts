@@ -609,47 +609,6 @@ export namespace RelationshipService {
   }
 
   /**
-   * Rejects a relationship from the given sender.
-   * @param {string} sender the sender of the message.
-   * @param {any} relationship the relationship to reject.
-   * @return {Promise<any>} the updated relationship.
-   */
-  export async function rejectRelationship(sender: string, relationship: any): Promise<void> {
-    functions.logger.info("Rejecting relationship", {
-      sender,
-      relationship,
-    });
-
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    let hasRemainingConnections = false;
-    if (relationship.members && relationship.members.length > 0) {
-      for (const member of relationship.members) {
-        if (typeof member.memberId === "string" && member.memberId === sender) {
-          member.hasConnected = false;
-        }
-
-        if (member.hasConnected === true) {
-          hasRemainingConnections = true;
-        }
-      }
-    }
-
-    relationship.connected = hasRemainingConnections;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
-
-    return await DataService.updateDocument({
-      schemaKey: "relationships",
-      entryId: flamelinkId,
-      data: relationship,
-    });
-  }
-
-  /**
    * Disconnects a relationship from the given sender.
    * @param {string} sender the sender of the message.
    * @param {any} relationship the relationship to disconnect.
@@ -666,21 +625,18 @@ export namespace RelationshipService {
       throw new Error("Relationship does not have a flamelink id");
     }
 
-    let hasRemainingConnections = false;
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
-        if (typeof member.memberId === "string" && member.memberId === sender) {
-          member.hasConnected = false;
+        if (!member) {
+          continue;
         }
 
-        if (member.hasConnected === true) {
-          hasRemainingConnections = true;
-        }
+        member.hasConnected = false;
       }
     }
 
     // Remove the connected flag if all members have disconnected.
-    relationship.connected = hasRemainingConnections;
+    relationship.connected = false;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 

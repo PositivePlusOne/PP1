@@ -33,7 +33,8 @@ export namespace RelationshipUpdatedNotification {
           },
         });
 
-        await NotificationsService.sendPayloadToUser(member.fcmToken, payload);
+        const preparedNotification = NotificationsService.prepareNewNotification(payload);
+        await NotificationsService.sendPayloadToUserIfTokenSet(member.fcmToken, preparedNotification);
       }
     }
   }

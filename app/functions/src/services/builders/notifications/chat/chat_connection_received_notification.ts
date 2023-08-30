@@ -36,7 +36,8 @@ export namespace ChatConnectionReceivedNotification {
       action: NotificationAction.CONNECTION_REQUEST_RECEIVED,
     });
 
-    await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
-    await NotificationsService.postNotificationPayloadToUserFeed(receiverId, payload);
+    const preparedNotification = NotificationsService.prepareNewNotification(payload);
+    await NotificationsService.sendPayloadToUserIfTokenSet(target.fcmToken, preparedNotification);
+    await NotificationsService.postNotificationPayloadToUserFeed(receiverId, preparedNotification);
   }
 }

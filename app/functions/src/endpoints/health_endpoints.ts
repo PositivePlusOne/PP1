@@ -30,7 +30,8 @@ export namespace HealthEndpoints {
         });
 
         // Send the notification
-        await NotificationsService.sendPayloadToUser(profile.fcmToken, payload);
-        await NotificationsService.postNotificationPayloadToUserFeed(uid, payload);
+        const preparedNotification = NotificationsService.prepareNewNotification(payload);
+        await NotificationsService.sendPayloadToUserIfTokenSet(profile.fcmToken, preparedNotification);
+        await NotificationsService.postNotificationPayloadToUserFeed(uid, preparedNotification);
     });
 }
