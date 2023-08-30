@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -79,11 +80,11 @@ class PostPage extends ConsumerWidget {
         isCommentsEnabled = true;
         break;
       case const ActivitySecurityConfigurationMode.connections():
-        isUserAbleToComment = relationship.connected;
+        isUserAbleToComment = relationship.isFullyConnected;
         isCommentsEnabled = true;
         break;
       case const ActivitySecurityConfigurationMode.followersAndConnections():
-        isUserAbleToComment = relationship.connected || relationship.following;
+        isUserAbleToComment = relationship.isFullyConnected || relationship.following;
         isCommentsEnabled = true;
         break;
       default:

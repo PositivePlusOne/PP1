@@ -110,34 +110,20 @@ export namespace CommentsService {
     * @param {string} lastCommentId The ID of the last comment fetched (optional).
     * @returns {Promise<CommentJSON[]>} A promise that resolves to an array of CommentJSON objects.
     */
-    export async function listComments(activityForeignKey: string, client: StreamClient<DefaultGenerics>, limit = 10, lastCommentId?: string): Promise<CommentJSON[]> {
-        const params: any = {
+    export async function listComments(activityForeignKey: string, client: StreamClient<DefaultGenerics>, limit = 10, cursor: string): Promise<CommentJSON[]> {
+        const response = await client.reactions.filter({
             activity_id: activityForeignKey,
             kind: 'comment',
             limit: limit,
-        };
-
-        if (lastCommentId) {
-            params.id_lt = lastCommentId; // fetch comments with IDs less than the provided lastCommentId
-        }
-
-        const response = await client.reactions.filter(params);
-        const responseData = response.results.map((reaction) => {
-            const comment = reaction.data as CommentJSON;
-            comment._fl_meta_ = {
-                schema: "comments",
-                fl_id: reaction.id,
-                createdDate: reaction.created_at,
-            };
-
-            return comment;
+            id_lt: cursor,
         });
 
-        functions.logger.log("Got response", {
-            response,
-            responseData,
+        return response.results.map((response: any) => {
+            return {
+                activity_id: response.activity_id,
+                user_id: response.user_id,
+                data: response.data,
+            } as CommentJSON;
         });
-        
-        return responseData;
     }
 }

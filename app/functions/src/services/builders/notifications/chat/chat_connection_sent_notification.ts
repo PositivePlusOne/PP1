@@ -20,8 +20,7 @@ export namespace ChatConnectionSentNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_sent.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_sent.body", { displayName });
-
-    const id = `connection_sent_${senderId}_${receiverId}`;
+    const id = FlamelinkHelpers.generateIdentifier();
 
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
@@ -38,6 +37,6 @@ export namespace ChatConnectionSentNotification {
     });
 
     await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
-    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
+    await NotificationsService.postNotificationPayloadToUserFeed(receiverId, payload);
   }
 }

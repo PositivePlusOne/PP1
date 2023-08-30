@@ -7,8 +7,6 @@ import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ChatConnectionReceivedNotification {
 
-  export const KEY_PREFIX = "connection_received";
-
   /**
    * Sends a notification to the user that a connection request has been sent.
    * @param {any} userProfile the user profile of the current user.
@@ -27,7 +25,7 @@ export namespace ChatConnectionReceivedNotification {
       throw new Error("Could not get sender or receiver id");
     }
 
-    const id = `${KEY_PREFIX}_${senderId}_${receiverId}`;
+    const id = FlamelinkHelpers.generateIdentifier();
     const payload = new NotificationPayload({
       id,
       sender: senderId,
@@ -39,6 +37,6 @@ export namespace ChatConnectionReceivedNotification {
     });
 
     await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
-    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
+    await NotificationsService.postNotificationPayloadToUserFeed(receiverId, payload);
   }
 }

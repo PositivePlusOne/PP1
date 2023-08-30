@@ -1,7 +1,12 @@
 import * as functions from "firebase-functions";
 import { isEqual } from "lodash";
+import { v1 as uuidv1 } from "uuid";
 
 export namespace FlamelinkHelpers {
+  export function generateIdentifier(): string {
+    return uuidv1();
+  }
+  
   /**
    * Determines if an object is a valid flamelink object.
    * @param {any} object the object to check.

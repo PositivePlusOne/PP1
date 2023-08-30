@@ -190,44 +190,37 @@ export namespace RelationshipEndpoints {
     }
 
     const userProfile = await ProfileService.getProfile(uid);
-    if (!userProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
+    const targetProfile = await ProfileService.getProfile(targetUid);
+    if (!userProfile || !targetProfile) {
+      throw new functions.https.HttpsError("not-found", "User profiles not found");
     }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, relationship);
+    const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+    const isUserAlreadyConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
+    const hasTargetAlreadyRequested = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
 
+    if (isUserAlreadyConnected) {
+      functions.logger.info("User already connected", { uid, targetUid });
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [oldRelationship],
+      });
+    }
+
+    const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, oldRelationship);
     if (!canActionRelationship) {
       throw new functions.https.HttpsError("permission-denied", "You cannot connect with this user");
     }
 
-    const connectionAcceptanceNotificationTargets = RelationshipHelpers.getConnectionAcceptedNotificationTargets(uid, relationship);
-    const connectionRequestNotificationTargets = RelationshipHelpers.getRequestConnectionNotificationTargets(uid, relationship);
-    const newRelationship = await RelationshipService.connectRelationship(uid, relationship);
+    const newRelationship = await RelationshipService.connectRelationship(uid, oldRelationship);
 
-    functions.logger.info("User connected, sending notifications", {
-      uid,
-      targetUid,
-      newRelationship,
-    });
-
-    for (const memberId of connectionRequestNotificationTargets) {
-      const memberProfile = await ProfileService.getProfile(memberId);
-      if (!memberProfile) {
-        continue;
-      }
-
-      await ChatConnectionSentNotification.sendNotification(memberProfile, userProfile);
-      await ChatConnectionReceivedNotification.sendNotification(userProfile, memberProfile);
-    }
-
-    for (const memberId of connectionAcceptanceNotificationTargets) {
-      const memberProfile = await ProfileService.getProfile(memberId);
-      if (!memberProfile) {
-        continue;
-      }
-
-      await ChatConnectionAcceptedNotification.sendNotification(userProfile, memberProfile);
+    functions.logger.info("User connected, sending notifications", { uid, targetUid, hasTargetAlreadyRequested });
+    
+    await ChatConnectionSentNotification.sendNotification(targetProfile, userProfile);
+    if (hasTargetAlreadyRequested) {
+      await ChatConnectionAcceptedNotification.sendNotification(userProfile, targetProfile);
+    } else {
+      await ChatConnectionReceivedNotification.sendNotification(userProfile, targetProfile);
     }
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
@@ -253,19 +246,27 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("not-found", "User profile not found");
     }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+    const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+    const isDisconnected = RelationshipHelpers.isUserDisconnected(uid, oldRelationship);
+    if (isDisconnected) {
+      functions.logger.info("User already disconnected", { uid, targetUid });
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [oldRelationship],
+      });
+    }
     
-    const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, relationship);
-    const canCancel = RelationshipHelpers.canCancelConnectionRequest(uid, relationship);
+    const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
+    const canCancel = RelationshipHelpers.canCancelConnectionRequest(uid, oldRelationship);
 
-    let newRelationship = { ...relationship };
+    let newRelationship = { ...oldRelationship };
     if (canReject) {
-      newRelationship = await RelationshipService.rejectRelationship(uid, relationship);
+      newRelationship = await RelationshipService.rejectRelationship(uid, oldRelationship);
       await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
     } else if (canCancel) {
-      newRelationship = await RelationshipService.rejectRelationship(uid, relationship);
+      newRelationship = await RelationshipService.rejectRelationship(uid, oldRelationship);
     } else {
-      newRelationship = await RelationshipService.disconnectRelationship(uid, relationship);
+      newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
     }
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);

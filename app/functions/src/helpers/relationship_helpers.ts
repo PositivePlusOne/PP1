@@ -129,6 +129,22 @@ export namespace RelationshipHelpers {
     return false;
   }
 
+  export function hasMutedRelationship(uid: string, relationship: any) {
+    if (!relationship) {
+      return false;
+    }
+
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid) {
+          return member.hasMuted;
+        }
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Checks if a relationship can be cancelled by the given user.
    * Cancellation is only possible if the current user has connected and the other user has not connected.
@@ -199,10 +215,6 @@ export namespace RelationshipHelpers {
       return targets;
     }
 
-    if (hasOtherUserBlocked(uid, relationship)) {
-      return targets;
-    }
-
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === uid) {
@@ -227,10 +239,6 @@ export namespace RelationshipHelpers {
   export function getConnectionAcceptedNotificationTargets(uid: string, relationship: any): string[] {
     const targets: string[] = [];
     if (!relationship) {
-      return targets;
-    }
-
-    if (hasOtherUserBlocked(uid, relationship)) {
       return targets;
     }
 
@@ -260,10 +268,6 @@ export namespace RelationshipHelpers {
       return false;
     }
 
-    if (hasOtherUserBlocked(uid, relationship)) {
-      return false;
-    }
-
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === uid && member.hasConnected) {
@@ -275,20 +279,14 @@ export namespace RelationshipHelpers {
     return false;
   }
 
-  /**
-   * Checks if another user has blocked the relationship.
-   * @param {string} uid the user id.
-   * @param {any} relationship the relationship to check.
-   * @return {boolean} true if another user has blocked the relationship, false otherwise.
-   */
-  export function hasOtherUserBlocked(uid: string, relationship: any): boolean {
+  export function isUserDisconnected(uid: string, relationship: any): boolean {
     if (!relationship) {
       return false;
     }
 
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
-        if (typeof member.memberId === "string" && member.memberId !== uid && member.hasBlocked) {
+        if (typeof member.memberId === "string" && member.memberId === uid && !member.hasConnected) {
           return true;
         }
       }

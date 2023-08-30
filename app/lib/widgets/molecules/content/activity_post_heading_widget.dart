@@ -45,11 +45,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     String displayName = localisations.shared_placeholders_empty_display_name;
     String postDateTooltip = "";
 
-    if (publisher == null) {
-      return const SizedBox();
-    }
-
-    if (publisher!.displayName.isNotEmpty) {
+    if (publisher?.displayName.isNotEmpty == true) {
       displayName = getSafeDisplayNameFromProfile(publisher);
     }
 

@@ -32,6 +32,7 @@ export namespace NotificationsService {
     message = appendPriorityToMessagePayload(message, notification.priority);
 
     try {
+      functions.logger.info(`Sending payload to user: ${notification.user_id} with token ${token}`, { message });
       await adminApp.messaging().send(message);
     } catch (ex) {
       functions.logger.error(`Error sending payload to user: ${notification.user_id} with token ${token}`, ex);

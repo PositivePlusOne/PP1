@@ -12,23 +12,20 @@ export namespace RelationshipUpdatedNotification {
    * @param {any} relationship the relationship which has updated.
    */
   export async function sendNotification(relationship: any): Promise<void> {
+    functions.logger.log("Sending relationship updated notification.", { relationship });
+    
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId !== "string") {
           continue;
         }
 
-        const id = `relationship_updated_${relationship.id}_${member.memberId}`;
-        const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(member);
-
-        if (!receiverId) {
-          functions.logger.error("Could not get receiver id", { id, receiverId, relationship, member });
-          continue;
-        }
+        const id = FlamelinkHelpers.generateIdentifier();
+        const memberId = member.memberId;
 
         const payload = new NotificationPayload({
           id,
-          sender: receiverId,
+          sender: memberId,
           topic: NotificationTopic.OTHER,
           action: NotificationAction.RELATIONSHIP_UPDATED,
           extra_data: {

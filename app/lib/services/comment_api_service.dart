@@ -60,8 +60,6 @@ class CommentApiService {
 
   FutureOr<EndpointResponse> listCommentsForActivity({
     required String activityId,
-    required String feedID,
-    required String slugID,
     String cursor = '',
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
@@ -69,10 +67,6 @@ class CommentApiService {
       pagination: Pagination(cursor: cursor),
       parameters: {
         'activityId': activityId,
-        'feed': feedID,
-        'options': {
-          'slug': slugID,
-        },
       },
     );
   }

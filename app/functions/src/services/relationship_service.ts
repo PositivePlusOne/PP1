@@ -407,6 +407,11 @@ export namespace RelationshipService {
       relationship,
     });
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
     let hasRemainingBlockers = false;
     for (const member of relationship.members) {
       if (typeof member.memberId === "string" && member.memberId === sender) {
@@ -420,15 +425,8 @@ export namespace RelationshipService {
 
     // Remove the blocked flag if all members have unblocked.
     relationship.blocked = hasRemainingBlockers;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
-
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -451,34 +449,35 @@ export namespace RelationshipService {
       relationship,
     });
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
+    let isRelationshipConnectedAfterBlock = false;
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
           member.hasBlocked = true;
           member.hasConnected = false;
         }
+
+        if (member.hasConnected) {
+          isRelationshipConnectedAfterBlock = true;
+        }
       }
     }
 
     relationship.blocked = true;
-    relationship.connected = false;
-
+    relationship.connected = isRelationshipConnectedAfterBlock;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -493,6 +492,11 @@ export namespace RelationshipService {
       relationship,
     });
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
@@ -504,21 +508,13 @@ export namespace RelationshipService {
     // Sets a flag on the relationship to indicate that it is muted.
     relationship.muted = true;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -532,6 +528,11 @@ export namespace RelationshipService {
       sender,
       relationship,
     });
+
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
 
     let hasRemainingMuters = false;
     if (relationship.members && relationship.members.length > 0) {
@@ -548,22 +549,14 @@ export namespace RelationshipService {
 
     // Remove the muted flag if all members have unmuted.
     relationship.muted = hasRemainingMuters;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -578,6 +571,11 @@ export namespace RelationshipService {
       relationship,
     });
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
     const memberIds = [];
     for (const member of relationship.members) {
       if (typeof member.memberId !== "string") {
@@ -590,30 +588,24 @@ export namespace RelationshipService {
       }
     }
 
-    if (memberIds.length < 2) {
-      throw new Error("Relationship does not have enough members to connect");
-    }
-
     relationship.connected = true;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
+    if (!relationship.channelId) {
+      functions.logger.info("Creating conversation for newly connected relationship");
+      const chatClient = ConversationService.getStreamChatInstance();
+      const conversationId = await ConversationService.createConversation(chatClient, sender, memberIds);
+      relationship.channelId = conversationId;
+    } else {
+      functions.logger.info("Conversation already exists for newly connected relationship");
     }
 
-    const chatClient = ConversationService.getStreamChatInstance();
-    const conversationId = await ConversationService.createConversation(chatClient, sender, memberIds);
-    relationship.channelId = conversationId;
-
-    await DataService.updateDocument({
+    return DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -628,29 +620,33 @@ export namespace RelationshipService {
       relationship,
     });
 
-    if (relationship.members && relationship.members.length > 0) {
-      for (const member of relationship.members) {
-        member.hasConnected = false;
-      }
-    }
-
-    relationship.connected = false;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
-
     const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
     if (!flamelinkId) {
       throw new Error("Relationship does not have a flamelink id");
     }
 
-    await DataService.updateDocument({
+    let hasRemainingConnections = false;
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === sender) {
+          member.hasConnected = false;
+        }
+
+        if (member.hasConnected === true) {
+          hasRemainingConnections = true;
+        }
+      }
+    }
+
+    relationship.connected = hasRemainingConnections;
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -664,6 +660,11 @@ export namespace RelationshipService {
       sender,
       relationship,
     });
+
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
 
     let hasRemainingConnections = false;
     if (relationship.members && relationship.members.length > 0) {
@@ -680,23 +681,14 @@ export namespace RelationshipService {
 
     // Remove the connected flag if all members have disconnected.
     relationship.connected = hasRemainingConnections;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -730,6 +722,11 @@ export namespace RelationshipService {
       relationship,
     });
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
@@ -740,23 +737,14 @@ export namespace RelationshipService {
 
     // Sets a flag on the relationship to indicate that it is followed.
     relationship.following = true;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -770,6 +758,11 @@ export namespace RelationshipService {
       sender,
       relationship,
     });
+
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
 
     let hasRemainingFollowers = false;
     if (relationship.members && relationship.members.length > 0) {
@@ -786,23 +779,14 @@ export namespace RelationshipService {
 
     // Remove the followed flag if all members have unfollowed.
     relationship.followed = hasRemainingFollowers;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -817,6 +801,11 @@ export namespace RelationshipService {
       relationship,
     });
 
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
@@ -827,23 +816,14 @@ export namespace RelationshipService {
 
     // Sets a flag on the relationship to indicate that it is hidden.
     relationship.hidden = true;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
@@ -857,6 +837,11 @@ export namespace RelationshipService {
       sender,
       relationship,
     });
+
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
 
     let hasRemainingHidden = false;
     if (relationship.members && relationship.members.length > 0) {
@@ -873,23 +858,14 @@ export namespace RelationshipService {
 
     // Remove the hidden flag if all members have unhidden.
     relationship.hidden = hasRemainingHidden;
-
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 
-    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
-
-    if (!flamelinkId) {
-      throw new Error("Relationship does not have a flamelink id");
-    }
-
-    await DataService.updateDocument({
+    return await DataService.updateDocument({
       schemaKey: "relationships",
       entryId: flamelinkId,
       data: relationship,
     });
-
-    return relationship;
   }
 
   /**
