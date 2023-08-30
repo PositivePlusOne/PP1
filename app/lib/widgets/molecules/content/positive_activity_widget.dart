@@ -190,17 +190,22 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   Future<void> onPostOptionsSelected(BuildContext context) async {
-    await PositiveDialog.show(
-      title: '',
-      context: context,
-      backgroundOpacity: kOpacityQuarter,
-      barrierOpacity: kOpacityBarrier,
-      barrierDismissible: true,
-      child: PostOptionsDialog(
-        onEditPostSelected: () => onPostEdited(context),
-        onDeletePostSelected: () => onPostDeleted(context),
-      ),
-    );
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    if (userController.currentUser!.uid == publisher!.flMeta!.id) {
+      await PositiveDialog.show(
+        title: '',
+        context: context,
+        backgroundOpacity: kOpacityQuarter,
+        barrierOpacity: kOpacityBarrier,
+        barrierDismissible: true,
+        child: PostOptionsDialog(
+          onEditPostSelected: () => onPostEdited(context),
+          onDeletePostSelected: () => onPostDeleted(context),
+        ),
+      );
+    } else {
+      //TODO: Add report post and other options here
+    }
   }
 
   Future<void> onPostDeleted(BuildContext context) async {
