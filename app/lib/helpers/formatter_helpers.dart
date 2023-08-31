@@ -1,4 +1,4 @@
-// Package imports:
+// Flutter imports:
 import 'package:flutter/services.dart';
 
 //? Universal input formatter to prevent successive new lines
