@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -11,7 +12,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../../constants/cache_constants.dart';
 import '../../services/third_party.dart';
@@ -201,9 +204,29 @@ class CacheController extends _$CacheController {
           );
 
       state = state.copyWith(cacheData: {...state.cacheData}..[key] = record);
-      providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, value));
+      processEvents(record);
     } else {
       logger.d('Not overwriting cache entry for $key from $caller');
+    }
+  }
+
+  void processEvents(CacheRecord record) {
+    final Logger logger = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    logger.i('Processing add events for cache record ${record.key}');
+
+    final List<dynamic> events = [];
+    switch (record.value.runtimeType) {
+      case ReactionStatistics:
+        events.add(ActivityReactionsUpdatedEvent(reactionStatistics: record.value as ReactionStatistics));
+        break;
+    }
+
+    events.add(CacheKeyUpdatedEvent(record.key, record.value));
+
+    for (final dynamic event in events) {
+      logger.d('Firing processed cache event: $event');
+      eventBus.fire(event);
     }
   }
 

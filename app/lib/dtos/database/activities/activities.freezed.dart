@@ -4068,7 +4068,10 @@ mixin _$ActivityEnrichmentConfiguration {
   String get publishLocation => throw _privateConstructorUsedError;
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions => throw _privateConstructorUsedError;
+  String get originFeed => throw _privateConstructorUsedError;
   Map<String, int> get reactionCounts => throw _privateConstructorUsedError;
+  Map<String, bool> get uniqueUserReactions =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -4091,7 +4094,9 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions,
-      Map<String, int> reactionCounts});
+      String originFeed,
+      Map<String, int> reactionCounts,
+      Map<String, bool> uniqueUserReactions});
 }
 
 /// @nodoc
@@ -4113,7 +4118,9 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
     Object? isSensitive = null,
     Object? publishLocation = null,
     Object? mentions = null,
+    Object? originFeed = null,
     Object? reactionCounts = null,
+    Object? uniqueUserReactions = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -4136,10 +4143,18 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
           ? _value.mentions
           : mentions // ignore: cast_nullable_to_non_nullable
               as List<Mention>,
+      originFeed: null == originFeed
+          ? _value.originFeed
+          : originFeed // ignore: cast_nullable_to_non_nullable
+              as String,
       reactionCounts: null == reactionCounts
           ? _value.reactionCounts
           : reactionCounts // ignore: cast_nullable_to_non_nullable
               as Map<String, int>,
+      uniqueUserReactions: null == uniqueUserReactions
+          ? _value.uniqueUserReactions
+          : uniqueUserReactions // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
     ) as $Val);
   }
 }
@@ -4160,7 +4175,9 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions,
-      Map<String, int> reactionCounts});
+      String originFeed,
+      Map<String, int> reactionCounts,
+      Map<String, bool> uniqueUserReactions});
 }
 
 /// @nodoc
@@ -4181,7 +4198,9 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
     Object? isSensitive = null,
     Object? publishLocation = null,
     Object? mentions = null,
+    Object? originFeed = null,
     Object? reactionCounts = null,
+    Object? uniqueUserReactions = null,
   }) {
     return _then(_$_ActivityEnrichmentConfiguration(
       title: null == title
@@ -4204,10 +4223,18 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
           ? _value._mentions
           : mentions // ignore: cast_nullable_to_non_nullable
               as List<Mention>,
+      originFeed: null == originFeed
+          ? _value.originFeed
+          : originFeed // ignore: cast_nullable_to_non_nullable
+              as String,
       reactionCounts: null == reactionCounts
           ? _value._reactionCounts
           : reactionCounts // ignore: cast_nullable_to_non_nullable
               as Map<String, int>,
+      uniqueUserReactions: null == uniqueUserReactions
+          ? _value._uniqueUserReactions
+          : uniqueUserReactions // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
     ));
   }
 }
@@ -4223,10 +4250,13 @@ class _$_ActivityEnrichmentConfiguration
       this.publishLocation = '',
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions = const [],
-      final Map<String, int> reactionCounts = const {}})
+      this.originFeed = '',
+      final Map<String, int> reactionCounts = const {},
+      final Map<String, bool> uniqueUserReactions = const {}})
       : _tags = tags,
         _mentions = mentions,
-        _reactionCounts = reactionCounts;
+        _reactionCounts = reactionCounts,
+        _uniqueUserReactions = uniqueUserReactions;
 
   factory _$_ActivityEnrichmentConfiguration.fromJson(
           Map<String, dynamic> json) =>
@@ -4259,6 +4289,9 @@ class _$_ActivityEnrichmentConfiguration
     return EqualUnmodifiableListView(_mentions);
   }
 
+  @override
+  @JsonKey()
+  final String originFeed;
   final Map<String, int> _reactionCounts;
   @override
   @JsonKey()
@@ -4268,9 +4301,19 @@ class _$_ActivityEnrichmentConfiguration
     return EqualUnmodifiableMapView(_reactionCounts);
   }
 
+  final Map<String, bool> _uniqueUserReactions;
+  @override
+  @JsonKey()
+  Map<String, bool> get uniqueUserReactions {
+    if (_uniqueUserReactions is EqualUnmodifiableMapView)
+      return _uniqueUserReactions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_uniqueUserReactions);
+  }
+
   @override
   String toString() {
-    return 'ActivityEnrichmentConfiguration(title: $title, tags: $tags, isSensitive: $isSensitive, publishLocation: $publishLocation, mentions: $mentions, reactionCounts: $reactionCounts)';
+    return 'ActivityEnrichmentConfiguration(title: $title, tags: $tags, isSensitive: $isSensitive, publishLocation: $publishLocation, mentions: $mentions, originFeed: $originFeed, reactionCounts: $reactionCounts, uniqueUserReactions: $uniqueUserReactions)';
   }
 
   @override
@@ -4285,8 +4328,12 @@ class _$_ActivityEnrichmentConfiguration
             (identical(other.publishLocation, publishLocation) ||
                 other.publishLocation == publishLocation) &&
             const DeepCollectionEquality().equals(other._mentions, _mentions) &&
+            (identical(other.originFeed, originFeed) ||
+                other.originFeed == originFeed) &&
             const DeepCollectionEquality()
-                .equals(other._reactionCounts, _reactionCounts));
+                .equals(other._reactionCounts, _reactionCounts) &&
+            const DeepCollectionEquality()
+                .equals(other._uniqueUserReactions, _uniqueUserReactions));
   }
 
   @JsonKey(ignore: true)
@@ -4298,7 +4345,9 @@ class _$_ActivityEnrichmentConfiguration
       isSensitive,
       publishLocation,
       const DeepCollectionEquality().hash(_mentions),
-      const DeepCollectionEquality().hash(_reactionCounts));
+      originFeed,
+      const DeepCollectionEquality().hash(_reactionCounts),
+      const DeepCollectionEquality().hash(_uniqueUserReactions));
 
   @JsonKey(ignore: true)
   @override
@@ -4325,7 +4374,9 @@ abstract class _ActivityEnrichmentConfiguration
           final String publishLocation,
           @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
           final List<Mention> mentions,
-          final Map<String, int> reactionCounts}) =
+          final String originFeed,
+          final Map<String, int> reactionCounts,
+          final Map<String, bool> uniqueUserReactions}) =
       _$_ActivityEnrichmentConfiguration;
 
   factory _ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) =
@@ -4344,7 +4395,11 @@ abstract class _ActivityEnrichmentConfiguration
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions;
   @override
+  String get originFeed;
+  @override
   Map<String, int> get reactionCounts;
+  @override
+  Map<String, bool> get uniqueUserReactions;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityEnrichmentConfigurationCopyWith<

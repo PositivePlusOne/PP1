@@ -15,6 +15,7 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
@@ -79,11 +80,11 @@ class PostPage extends ConsumerWidget {
         isCommentsEnabled = true;
         break;
       case const ActivitySecurityConfigurationMode.connections():
-        isUserAbleToComment = relationship.connected;
+        isUserAbleToComment = relationship.isFullyConnected;
         isCommentsEnabled = true;
         break;
       case const ActivitySecurityConfigurationMode.followersAndConnections():
-        isUserAbleToComment = relationship.connected || relationship.following;
+        isUserAbleToComment = relationship.isFullyConnected || relationship.following;
         isCommentsEnabled = true;
         break;
       default:

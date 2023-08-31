@@ -154,8 +154,6 @@ class _PositiveCommentPaginationBehaviourState extends ConsumerState<PositiveCom
     try {
       final EndpointResponse endpointResponse = await commentApiService.listCommentsForActivity(
         activityId: widget.activityId,
-        feedID: "user",
-        slugID: widget.feed.slug,
         cursor: commentState.currentPaginationKey,
       );
 

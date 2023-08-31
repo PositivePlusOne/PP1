@@ -15,6 +15,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
@@ -331,6 +332,7 @@ class CommunitiesController extends _$CommunitiesController {
 
   Future<void> bookmarkActivity({
     required String activityId,
+    required String feed,
   }) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
@@ -341,12 +343,26 @@ class CommunitiesController extends _$CommunitiesController {
     }
 
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    await reactionApiService.postReaction(
-      activityId: activityId,
-      reactionType: 'bookmark',
-    );
+    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
 
-    logger.i('CommunitiesController - bookmarkActivity - Bookmarked activity: $activityId');
-    // TODO(ryan): Update however we plan to handle reactions in cache
+    try {
+      await reactionApiService.postReaction(
+        activityId: activityId,
+        reactionType: 'bookmark',
+      );
+
+      reactionsController.offsetReactionCountForActivity(
+        activityId: activityId,
+        userId: userController.currentUser!.uid,
+        origin: feed,
+        reactionType: 'bookmark',
+        offset: 1,
+      );
+
+      logger.i('CommunitiesController - bookmarkActivity - Bookmarked activity: $activityId');
+    } catch (ex) {
+      logger.e('CommunitiesController - bookmarkActivity - Failed to bookmark activity: $activityId - ex: $ex');
+      return;
+    }
   }
 }

@@ -24,7 +24,7 @@ export namespace ChatConnectionAcceptedNotification {
       throw new Error("Could not get sender or receiver id");
     }
 
-    const id = `connection_accepted_${senderId}_${receiverId}`;
+    const id = FlamelinkHelpers.generateIdentifier();
     const payload = new NotificationPayload({
       id,
       sender: senderId,
@@ -35,7 +35,8 @@ export namespace ChatConnectionAcceptedNotification {
       action: NotificationAction.CONNECTION_REQUEST_ACCEPTED,
     });
 
-    await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
-    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
+    const preparedNotification = NotificationsService.prepareNewNotification(payload);
+    await NotificationsService.sendPayloadToUserIfTokenSet(target.fcmToken, preparedNotification);
+    await NotificationsService.postNotificationPayloadToUserFeed(receiverId, preparedNotification);
   }
 }

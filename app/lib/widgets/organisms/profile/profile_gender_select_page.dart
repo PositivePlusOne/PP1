@@ -1,8 +1,6 @@
 // Dart imports:
-import 'dart:math';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +12,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
@@ -29,7 +28,6 @@ import 'package:app/widgets/atoms/buttons/select_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/organisms/profile/vms/gender_select_view_model.dart';

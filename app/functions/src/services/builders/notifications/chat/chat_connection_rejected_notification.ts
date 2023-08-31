@@ -7,8 +7,6 @@ import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ChatConnectionRejectedNotification {
 
-  export const KEY_PREFIX = "connection_rejected";
-
   /**
    * Sends a notification to the user that a connection request has been rejected.
    * @param {any} userProfile the user profile of the current user.
@@ -23,8 +21,7 @@ export namespace ChatConnectionRejectedNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_rejected.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_rejected.body", { displayName });
-
-    const id = `${KEY_PREFIX}_${senderId}_${receiverId}`;
+    const id = FlamelinkHelpers.generateIdentifier();
 
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
@@ -40,7 +37,8 @@ export namespace ChatConnectionRejectedNotification {
       action: NotificationAction.CONNECTION_REQUEST_REJECTED,
     });
 
-    await NotificationsService.sendPayloadToUser(target.fcmToken, payload);
-    await NotificationsService.postNotificationPayloadToUserFeed(target.fcmToken, payload);
+    const preparedNotification = NotificationsService.prepareNewNotification(payload);
+    await NotificationsService.sendPayloadToUserIfTokenSet(target.fcmToken, preparedNotification);
+    await NotificationsService.postNotificationPayloadToUserFeed(receiverId, preparedNotification);
   }
 }

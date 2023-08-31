@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,10 +13,13 @@ import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/sharing_controller.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
@@ -37,6 +38,7 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
+    this.reactionStatistics,
     this.feed,
     this.isShortformPost = true,
     this.sidePadding = kPaddingSmall,
@@ -48,6 +50,7 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   });
 
   final Activity postContent;
+  final ReactionStatistics? reactionStatistics;
   final String? feed;
 
   final Profile? publisher;
@@ -164,7 +167,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
-      children: [
+      children: <Widget>[
         //* -=-=-=- Single attached image -=-=-=- *\\
         if (widget.postContent.media.length == 1) ...[
           const SizedBox(height: kPaddingSmall),
@@ -448,7 +451,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
-        likes: 0,
+        likes: widget.reactionStatistics?.counts['like'] ?? 0,
         likeEnabled: isPublic,
         onLike: (_) {},
 
@@ -457,7 +460,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         onShare: onShareSelected,
 
         //TODO(S): comment enabled and on comment functionality here
-        comments: 0,
+        comments: widget.reactionStatistics?.counts['comment'] ?? 0,
         commentsEnabled: isPublic,
         onComment: (_) {},
 

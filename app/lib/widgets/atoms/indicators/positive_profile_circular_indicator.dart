@@ -14,6 +14,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
@@ -100,7 +101,12 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
 
     if (widget.profile?.accentColor.isNotEmpty ?? false) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() => ringColor = widget.profile!.accentColor.toSafeColorFromHex(defaultColor: Colors.transparent));
+        if (widget.profile == null) {
+          return;
+        }
+
+        ringColor = widget.profile!.accentColor.toSafeColorFromHex(defaultColor: Colors.transparent);
+        setStateIfMounted();
       });
 
       return;

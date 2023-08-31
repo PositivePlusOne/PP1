@@ -5,6 +5,7 @@ import { DataService } from "./data_service";
 import { StreamClient, DefaultGenerics, ReactionFilterConditions } from "getstream";
 import { FeedService } from "./feed_service";
 import { ReactionEntryJSON } from "../dto/stream";
+import { ReactionStatisticsService } from "./reaction_statistics_service";
 
 export namespace ReactionService {
     
@@ -19,25 +20,6 @@ export namespace ReactionService {
         if (!VALID_REACTIONS.includes(kind)) {
             throw new Error(`Invalid reaction type: ${kind}`);
         }
-    }
-
-    export async function getUniqueReactionForSenderAndActivity(kind: string, senderId: string, activity_id: string): Promise<ReactionJSON | null> {
-        const client: StreamClient<DefaultGenerics> = FeedService.getFeedsClient();
-        const activityParams: ReactionFilterConditions = {
-            activity_id: activity_id,
-            filter_user_id: senderId,
-            kind: kind,
-            limit : 1,
-        };
-
-        const response = await client.reactions.filter(activityParams);
-
-        if (response.results.length > 0) {
-            functions.logger.info(`getUniqueReactionForSenderAndActivity`, { activity_id, senderId, response });
-            return response.results[0].data as ReactionJSON;
-        }
-
-        return null;
     }
 
     export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<any> {
@@ -56,7 +38,8 @@ export namespace ReactionService {
             userId: reaction.user_id,
         });
 
-        return await DataService.updateDocument({
+        await ReactionStatisticsService.updateReactionCountForActivity(client, reaction.origin, reaction.activity_id, reaction.kind, 1);
+        return DataService.updateDocument({
             schemaKey: reactionSchemaKey,
             entryId: response.id,
             data: reaction,
@@ -79,12 +62,36 @@ export namespace ReactionService {
         });
     }
 
-    export async function deleteReaction(client: StreamClient<DefaultGenerics>, reactionId: string): Promise<void> {
-        await client.reactions.delete(reactionId);
+    export async function deleteReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<void> {
+        if (!reaction.activity_id || !reaction.origin || !reaction.kind || !reaction.reaction_id) {
+            throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
+        }
+
+        await client.reactions.delete(reaction.reaction_id);
+        await ReactionStatisticsService.updateReactionCountForActivity(client, reaction.origin, reaction.activity_id, reaction.kind, -1);
         await DataService.deleteDocument({
             schemaKey: reactionSchemaKey,
-            entryId: reactionId,
+            entryId: reaction.reaction_id,
         });
+    }
+
+    export async function getUniqueReactionForSenderAndActivity(kind: string, senderId: string, activity_id: string): Promise<ReactionJSON | null> {
+        const client: StreamClient<DefaultGenerics> = FeedService.getFeedsClient();
+        const activityParams: ReactionFilterConditions = {
+            activity_id: activity_id,
+            filter_user_id: senderId,
+            kind: kind,
+            limit : 1,
+        };
+
+        const response = await client.reactions.filter(activityParams);
+
+        if (response.results.length > 0) {
+            functions.logger.info(`getUniqueReactionForSenderAndActivity`, { activity_id, senderId, response });
+            return response.results[0].data as ReactionJSON;
+        }
+
+        return null;
     }
 
     export async function listReactionsForActivity(client: StreamClient<DefaultGenerics>, kind: string, activity_id: string): Promise<ReactionJSON[]> {

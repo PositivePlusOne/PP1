@@ -36,12 +36,13 @@ export namespace PostEndpoints {
     
         const feedsClient = FeedService.getFeedsClient();
         const feed = feedsClient.feed(feedId, slugId);
+        const origin = `${feedId}:${slugId}`;
 
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
         const reactionCounts = window.results.map((item) => item.reaction_counts || {});
     
         // Convert window results to a list of IDs
-        const activities = await ActivitiesService.getActivityFeedWindow(window.results);
+        const activities = await ActivitiesService.getActivityFeedWindow(feedsClient, window.results, origin);
         functions.logger.info(`Got activities`, { activities });
         
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);

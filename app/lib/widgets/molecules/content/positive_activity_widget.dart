@@ -13,6 +13,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -72,6 +73,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   final Set<RelationshipState> relationshipStates = <RelationshipState>{};
   Relationship? publisherRelationship;
+  ReactionStatistics? reactionStatistics;
   Profile? publisher;
 
   bool _isBookmarking = false;
@@ -81,6 +83,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     super.initState();
     setupListeners();
     loadActivityData();
+    fetchReactionStatistics();
   }
 
   @override
@@ -91,6 +94,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       disposeListeners();
       setupListeners();
       loadActivityData();
+      fetchReactionStatistics();
     }
   }
 
@@ -116,6 +120,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     if (event.key.contains(activityId) || event.key.contains(publisherId)) {
       loadActivityData();
+      fetchReactionStatistics();
     }
   }
 
@@ -170,6 +175,24 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     logger.i('Loaded relationship for $relationship');
     setStateIfMounted();
+  }
+
+  void fetchReactionStatistics() {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final ReactionStatistics requestStatistics = ReactionStatistics.fromActivity(
+      widget.activity,
+      widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
+    );
+
+    final String cacheKey = ReactionStatistics.buildCacheKey(requestStatistics);
+    final ReactionStatistics? cachedStatistics = cacheController.getFromCache(cacheKey);
+    if (cachedStatistics != null) {
+      logger.i('Loaded reaction statistics from cache for ${widget.activity.flMeta?.id}');
+      reactionStatistics = cachedStatistics;
+      setStateIfMounted();
+      return;
+    }
   }
 
   bool get canDisplayActivity {
@@ -280,8 +303,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   Future<void> onPostBookmarked(BuildContext context) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
-    final String? id = widget.activity.flMeta?.id;
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final String? id = widget.activity.flMeta?.id;
+    final String feed = TargetFeed.toOrigin(widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''));
 
     if (id == null || userController.currentUser == null) {
       throw Exception('Invalid activity or user');
@@ -291,7 +315,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       _isBookmarking = true;
       setStateIfMounted();
 
-      await communitiesController.bookmarkActivity(activityId: id);
+      await communitiesController.bookmarkActivity(feed: feed, activityId: id);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
@@ -392,6 +416,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             const SizedBox(height: kPaddingExtraSmall),
             PositivePostLayoutWidget(
               postContent: widget.activity,
+              reactionStatistics: reactionStatistics,
               publisher: publisher,
               isShortformPost: !widget.isFullscreen,
               onImageTap: onInternalMediaTap,

@@ -101,19 +101,10 @@ export namespace FeedService {
       id_lt: next,
       user_id: uid,
       enrich: true,
-      withReactionCounts: true,
-      withOwnChildren: true,
-      withOwnReactions: true,
-      reactionKindsFilter: ["like", "share", "comment", "bookmark"],
-      ownReactions: true,
     });
-
-    functions.logger.info("Got feed window", { feed, windowSize, next, response });
 
     const entries = [] as FeedEntry[];
     response.results.forEach((activity: any) => {
-      functions.logger.info("Mapping feed window", { feed, windowSize, next, activity });
-
       entries.push({
         id: activity?.id ?? "",
         foreign_id: activity?.foreign_id ?? "",
@@ -128,8 +119,6 @@ export namespace FeedService {
         to: activity?.to ?? [],
       });
     });
-
-    functions.logger.info("Mapped feed window", { feed, windowSize, next, entries });
 
     return {
       results: entries,

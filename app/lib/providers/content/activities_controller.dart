@@ -3,7 +3,6 @@
 // Dart imports:
 
 // Package imports:
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import '../../services/api.dart';
 import '../../services/third_party.dart';

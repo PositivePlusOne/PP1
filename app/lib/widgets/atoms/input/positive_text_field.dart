@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/helpers/formatter_helpers.dart';
-import 'package:app/helpers/text_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,6 +9,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/helpers/formatter_helpers.dart';
+import 'package:app/helpers/text_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import '../../../constants/design_constants.dart';

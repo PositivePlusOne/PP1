@@ -15,9 +15,14 @@ enum RelationshipState {
   sourceHidden,
   targetMuted,
   sourceMuted,
+  fullyConnected,
 }
 
 extension RelationshipStateExt on Relationship {
+  bool get isFullyConnected {
+    return members.every((element) => element.hasConnected);
+  }
+
   Set<RelationshipState> relationshipStatesForEntity(String entityId) {
     final member = members.firstWhereOrNull((m) => m.memberId == entityId);
     final otherMembers = members.where((m) => m.memberId != entityId);
@@ -37,6 +42,7 @@ extension RelationshipStateExt on Relationship {
       if (otherMembers.any((element) => element.hasFollowed)) RelationshipState.targetFollowing,
       if (otherMembers.any((element) => element.hasHidden)) RelationshipState.targetHidden,
       if (otherMembers.any((element) => element.hasMuted)) RelationshipState.targetMuted,
+      if (member.hasConnected && otherMembers.any((element) => element.hasConnected)) RelationshipState.fullyConnected,
     };
   }
 

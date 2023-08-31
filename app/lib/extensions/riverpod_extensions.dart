@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -95,6 +96,15 @@ void cacheActivityData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
+      if (newActivity.enrichmentConfiguration?.originFeed.isNotEmpty ?? false) {
+        cacheReactionStatisticsData(
+          feed: newActivity.enrichmentConfiguration?.originFeed ?? '',
+          reactionCounts: newActivity.enrichmentConfiguration?.reactionCounts ?? {},
+          activityId: activityId,
+          overwriteCache: overwriteCache,
+        );
+      }
+
       cacheController.addToCache(key: activityId, value: newActivity, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
@@ -169,4 +179,27 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCach
       logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');
     }
   }
+}
+
+void cacheReactionStatisticsData({
+  required String feed,
+  required Map<String, int> reactionCounts,
+  String activityId = '',
+  String reactionId = '',
+  String userId = '',
+  bool overwriteCache = true,
+}) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  final ReactionStatistics newReactionStatistics = ReactionStatistics(
+    feed: feed,
+    counts: reactionCounts,
+    activityId: activityId,
+    reactionId: reactionId,
+    userId: userId,
+  );
+
+  final String cacheKey = ReactionStatistics.buildCacheKey(newReactionStatistics);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+  cacheController.addToCache(key: cacheKey, value: newReactionStatistics, overwrite: overwriteCache);
+  logger.i('cacheReactionStatisticsData() - Cached reaction statistics: $newReactionStatistics');
 }

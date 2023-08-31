@@ -5,7 +5,6 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Package imports:
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,6 +31,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import '../../services/third_party.dart';
 

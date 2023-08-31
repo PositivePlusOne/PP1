@@ -1,7 +1,12 @@
 import * as functions from "firebase-functions";
 import { isEqual } from "lodash";
+import { v1 as uuidv1 } from "uuid";
 
 export namespace FlamelinkHelpers {
+  export function generateIdentifier(): string {
+    return uuidv1();
+  }
+  
   /**
    * Determines if an object is a valid flamelink object.
    * @param {any} object the object to check.
@@ -61,6 +66,23 @@ export namespace FlamelinkHelpers {
   export function arePayloadsEqual(d1: any, d2: any): boolean {
     functions.logger.log("Checking if payloads are equal.", { d1, d2 });
     return isEqual(d1, d2);
+  }
+
+  export function removeUndefinedValues(data: any): any {
+    if (data == null) {
+      throw new Error("Data cannot be null.");
+    }
+
+    const keys = Object.keys(data);
+    const result: any = {};
+    keys.forEach((key) => {
+      const value = data[key];
+      if (value != null) {
+        result[key] = value;
+      }
+    });
+
+    return result;
   }
 
   /**

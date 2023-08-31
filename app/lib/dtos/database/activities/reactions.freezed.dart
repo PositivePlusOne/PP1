@@ -280,7 +280,7 @@ mixin _$ReactionType {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
-    required TResult Function(_ReactionTypeComment value) bookmark,
+    required TResult Function(_ReactionTypeBookmark value) bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -289,7 +289,7 @@ mixin _$ReactionType {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
-    TResult? Function(_ReactionTypeComment value)? bookmark,
+    TResult? Function(_ReactionTypeBookmark value)? bookmark,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -298,7 +298,7 @@ mixin _$ReactionType {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
-    TResult Function(_ReactionTypeComment value)? bookmark,
+    TResult Function(_ReactionTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -408,7 +408,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
-    required TResult Function(_ReactionTypeComment value) bookmark,
+    required TResult Function(_ReactionTypeBookmark value) bookmark,
   }) {
     return unknownReaction(this);
   }
@@ -420,7 +420,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
-    TResult? Function(_ReactionTypeComment value)? bookmark,
+    TResult? Function(_ReactionTypeBookmark value)? bookmark,
   }) {
     return unknownReaction?.call(this);
   }
@@ -432,7 +432,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
-    TResult Function(_ReactionTypeComment value)? bookmark,
+    TResult Function(_ReactionTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (unknownReaction != null) {
@@ -529,7 +529,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
-    required TResult Function(_ReactionTypeComment value) bookmark,
+    required TResult Function(_ReactionTypeBookmark value) bookmark,
   }) {
     return like(this);
   }
@@ -541,7 +541,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
-    TResult? Function(_ReactionTypeComment value)? bookmark,
+    TResult? Function(_ReactionTypeBookmark value)? bookmark,
   }) {
     return like?.call(this);
   }
@@ -553,7 +553,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
-    TResult Function(_ReactionTypeComment value)? bookmark,
+    TResult Function(_ReactionTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (like != null) {
@@ -650,7 +650,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
-    required TResult Function(_ReactionTypeComment value) bookmark,
+    required TResult Function(_ReactionTypeBookmark value) bookmark,
   }) {
     return dislike(this);
   }
@@ -662,7 +662,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
-    TResult? Function(_ReactionTypeComment value)? bookmark,
+    TResult? Function(_ReactionTypeBookmark value)? bookmark,
   }) {
     return dislike?.call(this);
   }
@@ -674,7 +674,7 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
-    TResult Function(_ReactionTypeComment value)? bookmark,
+    TResult Function(_ReactionTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (dislike != null) {
@@ -771,7 +771,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
-    required TResult Function(_ReactionTypeComment value) bookmark,
+    required TResult Function(_ReactionTypeBookmark value) bookmark,
   }) {
     return comment(this);
   }
@@ -783,7 +783,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
-    TResult? Function(_ReactionTypeComment value)? bookmark,
+    TResult? Function(_ReactionTypeBookmark value)? bookmark,
   }) {
     return comment?.call(this);
   }
@@ -795,7 +795,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
-    TResult Function(_ReactionTypeComment value)? bookmark,
+    TResult Function(_ReactionTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (comment != null) {
@@ -810,25 +810,25 @@ abstract class _ReactionTypeComment implements ReactionType {
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeCommentCopyWith<$Res> {
-  factory _$$_ReactionTypeCommentCopyWith(_$_ReactionTypeComment value,
-          $Res Function(_$_ReactionTypeComment) then) =
-      __$$_ReactionTypeCommentCopyWithImpl<$Res>;
+abstract class _$$_ReactionTypeBookmarkCopyWith<$Res> {
+  factory _$$_ReactionTypeBookmarkCopyWith(_$_ReactionTypeBookmark value,
+          $Res Function(_$_ReactionTypeBookmark) then) =
+      __$$_ReactionTypeBookmarkCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeCommentCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeComment>
-    implements _$$_ReactionTypeCommentCopyWith<$Res> {
-  __$$_ReactionTypeCommentCopyWithImpl(_$_ReactionTypeComment _value,
-      $Res Function(_$_ReactionTypeComment) _then)
+class __$$_ReactionTypeBookmarkCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeBookmark>
+    implements _$$_ReactionTypeBookmarkCopyWith<$Res> {
+  __$$_ReactionTypeBookmarkCopyWithImpl(_$_ReactionTypeBookmark _value,
+      $Res Function(_$_ReactionTypeBookmark) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeComment implements _ReactionTypeComment {
-  const _$_ReactionTypeComment();
+class _$_ReactionTypeBookmark implements _ReactionTypeBookmark {
+  const _$_ReactionTypeBookmark();
 
   @override
   String toString() {
@@ -838,7 +838,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ReactionTypeComment);
+        (other.runtimeType == runtimeType && other is _$_ReactionTypeBookmark);
   }
 
   @override
@@ -892,7 +892,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     required TResult Function(_ReactionTypeLike value) like,
     required TResult Function(_ReactionTypeDislike value) dislike,
     required TResult Function(_ReactionTypeComment value) comment,
-    required TResult Function(_ReactionTypeComment value) bookmark,
+    required TResult Function(_ReactionTypeBookmark value) bookmark,
   }) {
     return bookmark(this);
   }
@@ -904,7 +904,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult? Function(_ReactionTypeLike value)? like,
     TResult? Function(_ReactionTypeDislike value)? dislike,
     TResult? Function(_ReactionTypeComment value)? comment,
-    TResult? Function(_ReactionTypeComment value)? bookmark,
+    TResult? Function(_ReactionTypeBookmark value)? bookmark,
   }) {
     return bookmark?.call(this);
   }
@@ -916,7 +916,7 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
     TResult Function(_ReactionTypeLike value)? like,
     TResult Function(_ReactionTypeDislike value)? dislike,
     TResult Function(_ReactionTypeComment value)? comment,
-    TResult Function(_ReactionTypeComment value)? bookmark,
+    TResult Function(_ReactionTypeBookmark value)? bookmark,
     required TResult orElse(),
   }) {
     if (bookmark != null) {
@@ -926,6 +926,295 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
   }
 }
 
-abstract class _ReactionTypeComment implements ReactionType {
-  const factory _ReactionTypeComment() = _$_ReactionTypeComment;
+abstract class _ReactionTypeBookmark implements ReactionType {
+  const factory _ReactionTypeBookmark() = _$_ReactionTypeBookmark;
+}
+
+ReactionStatistics _$ReactionStatisticsFromJson(Map<String, dynamic> json) {
+  return _ReactionStatistics.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ReactionStatistics {
+  @JsonKey(name: 'feed')
+  String get feed => throw _privateConstructorUsedError;
+  @JsonKey(name: 'counts')
+  Map<String, int> get counts => throw _privateConstructorUsedError;
+  @JsonKey(name: 'unique_user_reactions')
+  Map<String, bool> get uniqueUserReactions =>
+      throw _privateConstructorUsedError;
+  @JsonKey(name: 'activity_id')
+  String get activityId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'reaction_id')
+  String get reactionId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'user_id')
+  String get userId => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ReactionStatisticsCopyWith<ReactionStatistics> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ReactionStatisticsCopyWith<$Res> {
+  factory $ReactionStatisticsCopyWith(
+          ReactionStatistics value, $Res Function(ReactionStatistics) then) =
+      _$ReactionStatisticsCopyWithImpl<$Res, ReactionStatistics>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'feed') String feed,
+      @JsonKey(name: 'counts') Map<String, int> counts,
+      @JsonKey(name: 'unique_user_reactions')
+      Map<String, bool> uniqueUserReactions,
+      @JsonKey(name: 'activity_id') String activityId,
+      @JsonKey(name: 'reaction_id') String reactionId,
+      @JsonKey(name: 'user_id') String userId});
+}
+
+/// @nodoc
+class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
+    implements $ReactionStatisticsCopyWith<$Res> {
+  _$ReactionStatisticsCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? feed = null,
+    Object? counts = null,
+    Object? uniqueUserReactions = null,
+    Object? activityId = null,
+    Object? reactionId = null,
+    Object? userId = null,
+  }) {
+    return _then(_value.copyWith(
+      feed: null == feed
+          ? _value.feed
+          : feed // ignore: cast_nullable_to_non_nullable
+              as String,
+      counts: null == counts
+          ? _value.counts
+          : counts // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      uniqueUserReactions: null == uniqueUserReactions
+          ? _value.uniqueUserReactions
+          : uniqueUserReactions // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      reactionId: null == reactionId
+          ? _value.reactionId
+          : reactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_ReactionStatisticsCopyWith<$Res>
+    implements $ReactionStatisticsCopyWith<$Res> {
+  factory _$$_ReactionStatisticsCopyWith(_$_ReactionStatistics value,
+          $Res Function(_$_ReactionStatistics) then) =
+      __$$_ReactionStatisticsCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'feed') String feed,
+      @JsonKey(name: 'counts') Map<String, int> counts,
+      @JsonKey(name: 'unique_user_reactions')
+      Map<String, bool> uniqueUserReactions,
+      @JsonKey(name: 'activity_id') String activityId,
+      @JsonKey(name: 'reaction_id') String reactionId,
+      @JsonKey(name: 'user_id') String userId});
+}
+
+/// @nodoc
+class __$$_ReactionStatisticsCopyWithImpl<$Res>
+    extends _$ReactionStatisticsCopyWithImpl<$Res, _$_ReactionStatistics>
+    implements _$$_ReactionStatisticsCopyWith<$Res> {
+  __$$_ReactionStatisticsCopyWithImpl(
+      _$_ReactionStatistics _value, $Res Function(_$_ReactionStatistics) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? feed = null,
+    Object? counts = null,
+    Object? uniqueUserReactions = null,
+    Object? activityId = null,
+    Object? reactionId = null,
+    Object? userId = null,
+  }) {
+    return _then(_$_ReactionStatistics(
+      feed: null == feed
+          ? _value.feed
+          : feed // ignore: cast_nullable_to_non_nullable
+              as String,
+      counts: null == counts
+          ? _value._counts
+          : counts // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      uniqueUserReactions: null == uniqueUserReactions
+          ? _value._uniqueUserReactions
+          : uniqueUserReactions // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      reactionId: null == reactionId
+          ? _value.reactionId
+          : reactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_ReactionStatistics implements _ReactionStatistics {
+  const _$_ReactionStatistics(
+      {@JsonKey(name: 'feed') this.feed = '',
+      @JsonKey(name: 'counts') final Map<String, int> counts = const {},
+      @JsonKey(name: 'unique_user_reactions')
+      final Map<String, bool> uniqueUserReactions = const {},
+      @JsonKey(name: 'activity_id') this.activityId = '',
+      @JsonKey(name: 'reaction_id') this.reactionId = '',
+      @JsonKey(name: 'user_id') this.userId = ''})
+      : _counts = counts,
+        _uniqueUserReactions = uniqueUserReactions;
+
+  factory _$_ReactionStatistics.fromJson(Map<String, dynamic> json) =>
+      _$$_ReactionStatisticsFromJson(json);
+
+  @override
+  @JsonKey(name: 'feed')
+  final String feed;
+  final Map<String, int> _counts;
+  @override
+  @JsonKey(name: 'counts')
+  Map<String, int> get counts {
+    if (_counts is EqualUnmodifiableMapView) return _counts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_counts);
+  }
+
+  final Map<String, bool> _uniqueUserReactions;
+  @override
+  @JsonKey(name: 'unique_user_reactions')
+  Map<String, bool> get uniqueUserReactions {
+    if (_uniqueUserReactions is EqualUnmodifiableMapView)
+      return _uniqueUserReactions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_uniqueUserReactions);
+  }
+
+  @override
+  @JsonKey(name: 'activity_id')
+  final String activityId;
+  @override
+  @JsonKey(name: 'reaction_id')
+  final String reactionId;
+  @override
+  @JsonKey(name: 'user_id')
+  final String userId;
+
+  @override
+  String toString() {
+    return 'ReactionStatistics(feed: $feed, counts: $counts, uniqueUserReactions: $uniqueUserReactions, activityId: $activityId, reactionId: $reactionId, userId: $userId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ReactionStatistics &&
+            (identical(other.feed, feed) || other.feed == feed) &&
+            const DeepCollectionEquality().equals(other._counts, _counts) &&
+            const DeepCollectionEquality()
+                .equals(other._uniqueUserReactions, _uniqueUserReactions) &&
+            (identical(other.activityId, activityId) ||
+                other.activityId == activityId) &&
+            (identical(other.reactionId, reactionId) ||
+                other.reactionId == reactionId) &&
+            (identical(other.userId, userId) || other.userId == userId));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      feed,
+      const DeepCollectionEquality().hash(_counts),
+      const DeepCollectionEquality().hash(_uniqueUserReactions),
+      activityId,
+      reactionId,
+      userId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ReactionStatisticsCopyWith<_$_ReactionStatistics> get copyWith =>
+      __$$_ReactionStatisticsCopyWithImpl<_$_ReactionStatistics>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_ReactionStatisticsToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ReactionStatistics implements ReactionStatistics {
+  const factory _ReactionStatistics(
+      {@JsonKey(name: 'feed') final String feed,
+      @JsonKey(name: 'counts') final Map<String, int> counts,
+      @JsonKey(name: 'unique_user_reactions')
+      final Map<String, bool> uniqueUserReactions,
+      @JsonKey(name: 'activity_id') final String activityId,
+      @JsonKey(name: 'reaction_id') final String reactionId,
+      @JsonKey(name: 'user_id') final String userId}) = _$_ReactionStatistics;
+
+  factory _ReactionStatistics.fromJson(Map<String, dynamic> json) =
+      _$_ReactionStatistics.fromJson;
+
+  @override
+  @JsonKey(name: 'feed')
+  String get feed;
+  @override
+  @JsonKey(name: 'counts')
+  Map<String, int> get counts;
+  @override
+  @JsonKey(name: 'unique_user_reactions')
+  Map<String, bool> get uniqueUserReactions;
+  @override
+  @JsonKey(name: 'activity_id')
+  String get activityId;
+  @override
+  @JsonKey(name: 'reaction_id')
+  String get reactionId;
+  @override
+  @JsonKey(name: 'user_id')
+  String get userId;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ReactionStatisticsCopyWith<_$_ReactionStatistics> get copyWith =>
+      throw _privateConstructorUsedError;
 }

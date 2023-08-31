@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
