@@ -89,6 +89,11 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
 
   Future<void> onBytesLoaded(String mimeType, Uint8List bytes) async {
     final Logger logger = providerContainer.read(loggerProvider);
+
+    if (!mounted) {
+      return;
+    }
+
     if (widget.ringColorOverride != null) {
       return;
     }

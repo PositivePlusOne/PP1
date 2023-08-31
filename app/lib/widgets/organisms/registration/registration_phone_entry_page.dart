@@ -126,11 +126,12 @@ class RegistrationPhoneEntryPage extends ConsumerWidget {
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingSmall),
-            Text(
-              localizations.page_registration_verification_code,
-              style: typography.styleBody.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingSmall),
+            //? Removed until such a time as a cost efficient solution can be found
+            // Text(
+            //   localizations.page_registration_verification_code,
+            //   style: typography.styleBody.copyWith(color: colors.black),
+            // ),
+            // const SizedBox(height: kPaddingSmall),
             Align(
               alignment: Alignment.centerLeft,
               child: IntrinsicWidth(
