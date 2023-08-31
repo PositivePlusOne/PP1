@@ -519,7 +519,11 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _markdownBody() {
-    String parsedMarkdown = html2md.convert(widget.postContent.generalConfiguration?.content ?? '');
+    String parsedMarkdown = html2md.convert(
+      //TODO(S): either fork the package, find a new one, or replace the whole markdown idea to get around some hard coded issues
+      //? This is purest Jank, replace \n with an unusual string until after the markdown conversion as the converter is hardcoded to remove all whitespace
+      widget.postContent.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
+    );
     if (widget.isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
       parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
       parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
@@ -532,7 +536,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       onTap: widget.onPostPageRequested,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
+        child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
       ),
     );
   }
