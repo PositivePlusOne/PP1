@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -227,7 +229,46 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         ),
       );
     } else {
-      //TODO: Add report post and other options here
+      final logger = providerContainer.read(loggerProvider);
+      final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
+      if (publisher == null) {
+        return;
+      }
+      final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
+      final String uid = publisher!.flMeta?.id ?? '';
+
+      logger.d('User profile modal requested: $uid');
+      if (uid.isEmpty || auth.currentUser == null) {
+        logger.w('User profile modal requested with empty uid');
+        return;
+      }
+
+      final List<String> members = <String>[
+        auth.currentUser?.uid ?? '',
+        publisher!.flMeta?.id ?? '',
+      ];
+
+      final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
+      await PositiveDialog.show(
+        context: context,
+        useSafeArea: false,
+        child: ProfileModalDialog(
+          profile: publisher!,
+          relationship: relationship,
+          postID: widget.activity.flMeta?.id ?? "",
+          types: const {
+            ProfileModalDialogOptionType.viewProfile,
+            ProfileModalDialogOptionType.follow,
+            ProfileModalDialogOptionType.connect,
+            ProfileModalDialogOptionType.message,
+            ProfileModalDialogOptionType.block,
+            ProfileModalDialogOptionType.report,
+            ProfileModalDialogOptionType.hidePosts,
+            ProfileModalDialogOptionType.reportPost,
+          },
+        ),
+      );
     }
   }
 

@@ -7,11 +7,13 @@ part 'feedback_type.freezed.dart';
 class FeedbackType with _$FeedbackType {
   const factory FeedbackType.unknown() = Unknown;
   const factory FeedbackType.userReport() = UserReport;
+  const factory FeedbackType.postReport() = PostReport;
   const factory FeedbackType.genericFeedback() = GenericFeedback;
 
   static const List<FeedbackType> values = [
     Unknown(),
     UserReport(),
+    PostReport(),
     GenericFeedback(),
   ];
 
@@ -21,6 +23,8 @@ class FeedbackType with _$FeedbackType {
         return const Unknown();
       case 'userReport':
         return const UserReport();
+      case 'postReport':
+        return const PostReport();
       case 'genericFeedback':
         return const GenericFeedback();
       default:
@@ -32,6 +36,7 @@ class FeedbackType with _$FeedbackType {
     return value.when(
       unknown: () => 'unknown',
       userReport: () => 'userReport',
+      postReport: () => 'postReport',
       genericFeedback: () => 'genericFeedback',
     );
   }

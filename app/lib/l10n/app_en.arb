@@ -389,6 +389,7 @@
     "shared_profile_modal_action_block": "Block {displayName}",
     "shared_profile_modal_action_unblock": "{displayName} Blocked",
     "shared_profile_modal_action_report": "Report {displayName}",
+    "shared_profile_modal_action_report_post": "Report Post",
     "shared_profile_modal_action_mute": "Mute {displayName}",
     "shared_profile_modal_action_unmute": "Unmute {displayName}",
     "shared_profile_modal_action_hide_posts": "Hide Posts from {displayName}",

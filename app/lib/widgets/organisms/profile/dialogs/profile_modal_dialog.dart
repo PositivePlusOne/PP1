@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/dialogs/post_report_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,7 +40,8 @@ enum ProfileModalDialogOptionType {
   hidePosts(4),
   block(5),
   report(6),
-  mute(7);
+  mute(7),
+  reportPost(8);
 
   const ProfileModalDialogOptionType([this.order = 0]);
 
@@ -66,6 +68,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
     required this.profile,
     required this.relationship,
     this.styleOverrides = const {},
+    this.postID = "",
     this.types = const {
       ProfileModalDialogOptionType.viewProfile,
       ProfileModalDialogOptionType.follow,
@@ -81,6 +84,7 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
   final Profile profile;
   final Relationship relationship;
   final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
+  final String postID;
 
   final Set<ProfileModalDialogOptionType> types;
 
@@ -179,6 +183,20 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
             useSafeArea: false,
             title: localizations.shared_profile_report_modal_title(widget.profile.displayName.asHandle),
             child: ProfileReportDialog(currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
+          );
+          break;
+        case ProfileModalDialogOptionType.reportPost:
+          if (widget.postID.isEmpty) {
+            await appRouter.pop();
+            break;
+          }
+          await appRouter.pop();
+
+          await PositiveDialog.show(
+            context: context,
+            useSafeArea: false,
+            title: localizations.shared_profile_report_modal_title(widget.profile.displayName.asHandle),
+            child: PostReportDialog(targetPost: widget.postID!, currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
           );
           break;
       }
@@ -283,6 +301,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(displayName.asHandle) : localizations.shared_profile_modal_action_block(displayName.asHandle), highlightOption: isSourceBlocked);
       case ProfileModalDialogOptionType.report:
         return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(displayName.asHandle));
+      case ProfileModalDialogOptionType.reportPost:
+        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report_post);
       case ProfileModalDialogOptionType.hidePosts:
         return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(displayName.asHandle) : localizations.shared_profile_modal_action_hide_posts(displayName.asHandle), highlightOption: isHidden);
       case ProfileModalDialogOptionType.mute:

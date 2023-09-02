@@ -228,6 +228,64 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       feedbackType.when(
         unknown: () {},
         userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
+        postReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post Reported"))),
+        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
+      );
+    } catch (ex) {
+      logger.e('Failed to send feedback. $ex');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onPostFeedbackSubmitted({
+    Profile? reporter,
+    Profile? reportee,
+    String? reportedPost,
+  }) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onPostFeedbackSubmitted');
+
+    final ValidationResult validationResult = feedbackValidator.validate(state.feedback);
+    if (validationResult.hasError) {
+      logger.e('Feedback is invalid');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+    String content = state.feedback.content;
+
+    if (state.feedback.feedbackType == const FeedbackType.userReport() && (reporter == null || reportedPost == null || reportee == null)) {
+      throw Exception('Reporter, reportee, and reportedPost must be provided for post reports');
+    } else if (state.feedback.feedbackType == const FeedbackType.postReport()) {
+      content = postReportTemplate(reportedPost!, reportee!, reporter!, content);
+      await relationshipController.blockRelationship(reportee.flMeta!.id!);
+    }
+
+    try {
+      final User? user = auth.currentUser;
+      if (user == null) {
+        logger.e('Cannot send feedback without a user');
+        return;
+      }
+
+      final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
+      await callable.call(<String, dynamic>{
+        'content': content,
+        'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
+        'reportType': ReportType.toJson(state.feedback.reportType),
+      });
+
+      await appRouter.pop();
+      feedbackType.when(
+        unknown: () {},
+        userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
+        postReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post Reported"))),
         genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
       );
     } catch (ex) {
