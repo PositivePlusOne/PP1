@@ -41,7 +41,7 @@ class PostReportDialog extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.userReport());
+    final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.postReport());
     final AccountViewModel viewModel = ref.read(viewModelProvider.notifier);
     final AccountViewModelState state = ref.watch(viewModelProvider);
 
