@@ -239,17 +239,20 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   }
 
   Future<void> onPostFeedbackSubmitted({
-    Profile? reporter,
-    Profile? reportee,
-    String? reportedPost,
+    required Profile reporter,
+    required Profile reportee,
+    required String reportedPost,
   }) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.d('onPostFeedbackSubmitted');
+
+    if (state.feedback.feedbackType != const FeedbackType.postReport()) {
+      throw Exception('Feedback type must be post report');
+    }
 
     final ValidationResult validationResult = feedbackValidator.validate(state.feedback);
     if (validationResult.hasError) {
@@ -258,14 +261,13 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     }
 
     state = state.copyWith(isBusy: true);
-    String content = state.feedback.content;
-
-    if (state.feedback.feedbackType == const FeedbackType.userReport() && (reporter == null || reportedPost == null || reportee == null)) {
-      throw Exception('Reporter, reportee, and reportedPost must be provided for post reports');
-    } else if (state.feedback.feedbackType == const FeedbackType.postReport()) {
-      content = postReportTemplate(reportedPost!, reportee!, reporter!, content);
-      await relationshipController.blockRelationship(reportee.flMeta!.id!);
-    }
+    final String content = state.feedback.content.trim();
+    final String template = postReportTemplate(
+      reportedPost,
+      reportee,
+      reporter,
+      content,
+    );
 
     try {
       final User? user = auth.currentUser;
@@ -276,7 +278,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
 
       final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
       await callable.call(<String, dynamic>{
-        'content': content,
+        'content': template,
         'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
         'reportType': ReportType.toJson(state.feedback.reportType),
       });
