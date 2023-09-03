@@ -16,6 +16,11 @@ import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
 import { TagsService } from "../services/tags_service";
 import { ProfileJSON } from "../dto/profile";
+import { NotificationsService } from "../services/notifications_service";
+import { DEFAULT_PAGINATION_WINDOW_SIZE } from "../helpers/pagination";
+import { NotificationPayloadResponse } from "../services/types/notification_payload";
+// import { GetFeedWindowResult } from "../dto/stream";
+// import { ActivitiesService } from "../services/activities_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -54,17 +59,24 @@ export namespace SystemEndpoints {
   export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
+    const streamClient = FeedService.getFeedsClient();
 
-    const [genders, interests, hivStatuses, popularTags, recentTags, topicTags] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, notificationFeed] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
       TagsService.getPopularTags(locale),
-      uid ? TagsService.getRecentUserTags(uid) : Promise.resolve([]),
       TagsService.getTopicTags(locale),
+      TagsService.getRecentUserTags(locale),
+      // uid ? FeedService.getFeedWindow(uid, streamClient.feed("user", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
+      // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
+      uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
     ]);
 
+
+    const joinRecords = [] as string[];
     const interestResponse = {} as any;
+
     interests.forEach((value, key) => {
       interestResponse[key] = value;
     });
@@ -107,17 +119,65 @@ export namespace SystemEndpoints {
       profile = userProfile as ProfileJSON;
     }
 
+    const notificationFeedRecords = [];
+    // const userFeedRecords = [];
+    // const timelineFeedRecords = [];
+
+    let unreadCount = 0;
+    let unseenCount = 0;
+
+    if (uid) {
+      // If we are logged in, we add enough data to the endpoint for the client to be able to pre-populate the app rather than waiting for the first API call to complete.
+      // This makes the experience on the app slightly smoother, but we should measure the impact on this endpoint's performance.
+      const notificationResult = notificationFeed as NotificationPayloadResponse;
+      unreadCount = notificationResult.unread_count;
+      unseenCount = notificationResult.unseen_count;
+      notificationFeedRecords.push(...notificationResult.payloads);
+
+      const profileIds = notificationResult.payloads.map((notification) => notification.sender).filter((sender) => sender.length > 0);
+      if (profileIds.length > 0) {
+        joinRecords.push(...profileIds);
+      }
+
+      // const userFeedResult = userFeed as GetFeedWindowResult;
+      // const timelineFeedResult = timelineFeed as GetFeedWindowResult;
+
+      // joinRecords.push(...userFeedActivities);
+      // joinRecords.push(...timelineFeedActivities);
+
+      // // Add the FL IDs of each activity to the feed records so we can identify them later.
+      // for (const activity of userFeedActivities) {
+      //   const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
+      //   if (flamelinkId) {
+      //     userFeedRecords.push(flamelinkId);
+      //   }
+      // }
+
+      // for (const activity of timelineFeedActivities) {
+      //   const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
+      //   if (flamelinkId) {
+      //     timelineFeedRecords.push(flamelinkId);
+      //   }
+      // }
+    }
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [profile],
+      joins: joinRecords,
       seedData: {
         genders,
         medicalConditions: hivStatuses,
         interests: interestResponse,
         popularTags,
-        recentTags,
         topicTags,
+        recentTags,
         supportedProfiles,
+        unreadNotificationCount: unreadCount,
+        unseenNotificationCount: unseenCount,
+        notifications: notificationFeedRecords,
+        // userFeedRecords: userFeedRecords,
+        // timelineFeeduserFeedRecords: timelineFeedRecords,
       },
     });
   });
@@ -164,4 +224,53 @@ export namespace SystemEndpoints {
 
     return JSON.stringify({ success: true });
   });
+
+  // This is a dangerous endpoint and should only be used in development.
+  // export const clearGetStreamContentFromSystem = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
+  //   const firestore = adminApp.firestore();
+  //   const storage = adminApp.storage();
+
+  //   // Get the firebase application name
+  //   const appName = process.env.GCLOUD_PROJECT || "";
+    
+  //   // Verify the app name if not positiveplusone-production
+  //   if (appName === "positiveplusone-production") {
+  //     throw new Error("Nice try.");
+  //   }
+
+  //   // Within the fl_content collection, delete all documents with the _fl_meta_.schema property set to the value of the schema parameter.
+  //   const targetSchemas = [
+  //     "activities",
+  //     "reactions",
+  //     "reactionStatistics",
+  //     "tags",
+  //   ];
+
+  //   for (const schema of targetSchemas) {
+  //     const query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", schema);
+  //     const querySnapshot = await query.get();
+
+  //     for (const doc of querySnapshot.docs) {
+  //       const docId = doc.id;
+  //       const docData = doc.data();
+
+  //       functions.logger.info("Deleting document", { docId, docData });
+
+  //       await doc.ref.delete();
+  //     }
+  //   }
+
+  //   // Delete the /users folder in storage.
+  //   const usersFolder = storage.bucket().file("users");
+  //   const usersFolderExists = await usersFolder.exists();
+
+  //   if (usersFolderExists[0]) {
+  //     functions.logger.info("Deleting users folder");
+  //     await usersFolder.delete();
+  //   }
+
+  //   // Clearing feed data has to be manual :(
+
+  //   return JSON.stringify({ success: true });
+  // });
 }

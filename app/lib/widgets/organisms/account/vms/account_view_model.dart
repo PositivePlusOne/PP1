@@ -228,6 +228,66 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       feedbackType.when(
         unknown: () {},
         userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
+        postReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post Reported"))),
+        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
+      );
+    } catch (ex) {
+      logger.e('Failed to send feedback. $ex');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onPostFeedbackSubmitted({
+    required Profile reporter,
+    required Profile reportee,
+    required String reportedPost,
+  }) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onPostFeedbackSubmitted');
+
+    if (state.feedback.feedbackType != const FeedbackType.postReport()) {
+      throw Exception('Feedback type must be post report');
+    }
+
+    final ValidationResult validationResult = feedbackValidator.validate(state.feedback);
+    if (validationResult.hasError) {
+      logger.e('Feedback is invalid');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+    final String content = state.feedback.content.trim();
+    final String template = postReportTemplate(
+      reportedPost,
+      reportee,
+      reporter,
+      content,
+    );
+
+    try {
+      final User? user = auth.currentUser;
+      if (user == null) {
+        logger.e('Cannot send feedback without a user');
+        return;
+      }
+
+      final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
+      await callable.call(<String, dynamic>{
+        'content': template,
+        'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
+        'reportType': ReportType.toJson(state.feedback.reportType),
+      });
+
+      await appRouter.pop();
+      feedbackType.when(
+        unknown: () {},
+        userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
+        postReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post Reported"))),
         genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
       );
     } catch (ex) {

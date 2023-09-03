@@ -5,6 +5,7 @@ import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequest } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 import { ActivityActionVerb } from "../dto/activities";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace FeedService {
 
@@ -125,6 +126,7 @@ export namespace FeedService {
       next: response?.next ?? "",
       unread: response?.unread ?? 0,
       unseen: response?.unseen ?? 0,
+      origin: StreamHelpers.getOriginFromFeed(feed),
     };
   }
 

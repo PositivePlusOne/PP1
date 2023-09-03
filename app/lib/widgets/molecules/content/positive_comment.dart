@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/database/activities/comments.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -22,7 +22,7 @@ class PositiveComment extends ConsumerWidget {
     super.key,
   });
 
-  final Comment comment;
+  final Reaction comment;
   final bool isFirst;
 
   @override
@@ -58,7 +58,7 @@ class PositiveComment extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
                 child: Text(
-                  comment.data,
+                  comment.text,
                   textAlign: TextAlign.left,
                   style: typography.styleBody,
                 ),

@@ -8,42 +8,50 @@ import { ReactionService } from "../services/reaction_service";
 import { FeedName } from "../constants/default_feeds";
 import { ReactionJSON } from "../dto/reactions";
 import { FeedService } from "../services/feed_service";
-import { ProfileService } from "../services/profile_service";
+import { CommentHelpers } from "../helpers/comment_helpers";
 
 export namespace ReactionEndpoints {
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const feed = request.data.feed || FeedName.User;
         const activityId = request.data.activityId;
-        const reactionType = request.data.reactionType;
+        const kind = request.data.kind;
+        const text = request.data.text || "";
+
+        // If text is supplied, we need to verify it is not empty and above the maximum length
+        if (text) {
+            CommentHelpers.verifyCommentLength(text);
+        }
 
         // Activity verification
         await ActivitiesService.verifyActivityExists(activityId);
 
         // Reaction verification
-        ReactionService.verifyReactionKind(reactionType);
+        ReactionService.verifyReactionKind(kind);
 
         // Build reaction
+        const origin = ReactionService.getOriginFromFeedStringAndUserId(feed, uid);
         const reactionJSON = {
             activity_id: activityId,
-            origin: `${feed}:${uid}`,
+            origin,
             reaction_id: "",
             user_id: uid,
-            kind: reactionType,
+            kind: kind,
+            text: text,
         } as ReactionJSON;
 
-        const isUniqueReaction = ReactionService.isUniqueReaction(reactionType);
+        const isUniqueReaction = ReactionService.isUniqueReactionKind(kind);
         if (isUniqueReaction) {
-            functions.logger.info("Checking for unique reaction", { activityId, uid, reactionType });
-            const uniqueReaction = await ReactionService.getUniqueReactionForSenderAndActivity(reactionType, uid, activityId);
-            if (uniqueReaction) {
+            functions.logger.debug("Checking meets unique reaction criteria");
+            const uniqueReactions = await ReactionService.listUniqueReactionsForActivitiesAndUser(feed, [activityId], uid);
+            const uniqueReactionKind = uniqueReactions.find((reaction) => reaction.kind === kind);
+            if (uniqueReactionKind) {
                 throw new functions.https.HttpsError("already-exists", "Reaction already exists");
             }
         } else {
-            functions.logger.info("Reaction is not unique", { activityId, uid, reactionType });
-        }
+            functions.logger.debug("Reaction is not unique, skipping unique reaction check");
+        } 
 
-        functions.logger.info("Adding reaction", { reactionJSON });
         const streamClient = FeedService.getFeedsUserClient(uid);
         const responseReaction = await ReactionService.addReaction(streamClient, reactionJSON);
 
@@ -53,33 +61,45 @@ export namespace ReactionEndpoints {
         });
     });
 
-    // Update Reaction
-    // export const updateReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        // const uid = await UserService.verifyAuthenticated(context, request.sender);
-        // const reactionId = request.data.reactionId;
-        // const reactionType = request.data.reactionType;
+    export const updateReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+        const uid = await UserService.verifyAuthenticated(context, request.sender);
+        const reactionId = request.data.reactionId;
+        const text = request.data.text || "";
 
-        // TODO
-        // Reaction verification
-        // ReactionService.verifyVerb(reactionType);
+        // If text is supplied, we need to verify it is not empty and above the maximum length
+        if (text) {
+            CommentHelpers.verifyCommentLength(text);
+        }
 
-        // const updatedReaction = {
-        //     activity_id: "",
-        //     senderId: uid,
-        //     reactionType: reactionType,
-        // } as ReactionJSON;
+        let reaction = await ReactionService.getReaction(reactionId);
+        if (!reaction) {
+            throw new functions.https.HttpsError("not-found", "Reaction not found");
+        }
 
-        // await ReactionService.updateReaction(updatedReaction, reactionId);
-        // return buildEndpointResponse(context, {
-        //     sender: uid,
-        //     data: [updatedReaction],
-        // });
-    // });
+        if (reaction.user_id !== uid) {
+            throw new functions.https.HttpsError("permission-denied", "Reaction does not belong to user");
+        }
+
+        reaction = await ReactionService.updateReaction(reactionId, text);
+        return buildEndpointResponse(context, {
+            sender: uid,
+            data: [reaction],
+        });
+    });
 
     // Delete Reaction
     export const deleteReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const reactionId = request.data.reactionId;
+
+        const reaction = await ReactionService.getReaction(reactionId);
+        if (!reaction) {
+            throw new functions.https.HttpsError("not-found", "Reaction not found");
+        }
+
+        if (reaction.user_id !== uid) {
+            throw new functions.https.HttpsError("permission-denied", "Reaction does not belong to user");
+        }
 
         functions.logger.info("Deleting reaction", { reactionId });
         const streamClient = FeedService.getFeedsUserClient(uid);
@@ -96,12 +116,13 @@ export namespace ReactionEndpoints {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
+        const limit = request.limit || 25;
+        let cursor = request.cursor;
 
         const streamClient = FeedService.getFeedsUserClient(uid);
-        const reactions = await ReactionService.listReactionsForActivity(streamClient, kind, activityId);
+        const reactions = await ReactionService.listReactionsForActivity(streamClient, kind, activityId, limit, cursor);
         functions.logger.info("Reactions for activity", { activityId, reactions });
 
-        let cursor = "";
         if (reactions.length > 0) {
             const lastReaction = reactions[reactions.length - 1];
             if (lastReaction._fl_meta_ && lastReaction._fl_meta_.fl_id) {
@@ -110,36 +131,11 @@ export namespace ReactionEndpoints {
             }
         }
 
-        // Get the profiles from the reactions
-        const profiles = await ProfileService.getMultipleProfiles(reactions.map((reaction) => reaction.user_id || "").filter((userId) => userId !== ""));
-        functions.logger.info("Profiles for reactions", { profiles });
-
         return buildEndpointResponse(context, {
             sender: uid,
-            cursor: cursor,
-            limit: request.limit,
-            data: [reactions, profiles],
-        });
-    });
-
-    export const listReactionsForUser = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
-        const streamClient = FeedService.getFeedsUserClient(uid);
-        const reactions = await ReactionService.listReactionsForUser(streamClient, uid);
-
-        let cursor = "";
-        if (reactions.length > 0) {
-            const lastReaction = reactions[reactions.length - 1];
-            if (lastReaction._fl_meta_ && lastReaction._fl_meta_.fl_id) {
-                cursor = lastReaction._fl_meta_.fl_id;
-            }
-        }
-
-        return buildEndpointResponse(context, {
-            sender: uid,
-            cursor: cursor,
-            limit: request.limit,
             data: reactions,
+            cursor,
+            limit,
         });
     });
 }

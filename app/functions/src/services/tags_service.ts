@@ -146,10 +146,10 @@ export namespace TagsService {
     functions.logger.info("Getting recent user tags", { uid });
     const feedClient = FeedService.getFeedsClient();
     const userFeed = feedClient.feed("user", uid);
-    const origin = `user:${uid}`;
 
-    const feedWindow = await FeedService.getFeedWindow(uid, userFeed, 10, "");
-    const activities = await ActivitiesService.getActivityFeedWindow(feedClient, feedWindow.results, origin) as ActivityJSON[];
+    // Increase this number from 3 when we find a way to scale this better
+    const feedWindow = await FeedService.getFeedWindow(uid, userFeed, 3, "");
+    const activities = await ActivitiesService.getActivityFeedWindow(feedWindow.results) as ActivityJSON[];
 
     functions.logger.info("Getting tags from activities", { activities });
 

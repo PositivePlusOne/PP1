@@ -19,6 +19,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/sharing_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -442,30 +443,30 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postActions() {
     //TODO(S): Reenable when other info available
-    // final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.userProfile ?? Profile.empty()));
-    // final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Profile? userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
     final bool isPublic = widget.postContent.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.public();
+    final bool isOwner = userProfile?.flMeta?.id != null && widget.postContent.publisherInformation?.publisherId == userProfile?.flMeta?.id;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
         likes: widget.reactionStatistics?.counts['like'] ?? 0,
-        likeEnabled: isPublic,
+        likeEnabled: isPublic || isOwner,
         onLike: (_) {},
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: true,
+        shareEnabled: !isOwner,
         onShare: onShareSelected,
 
         //TODO(S): comment enabled and on comment functionality here
         comments: widget.reactionStatistics?.counts['comment'] ?? 0,
-        commentsEnabled: isPublic,
+        commentsEnabled: isPublic || isOwner,
         onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarked: isPublic,
+        bookmarked: isPublic || isOwner,
         onBookmark: widget.onBookmark,
       ),
     );

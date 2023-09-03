@@ -19,6 +19,8 @@ import { ProfileJSON } from "../dto/profile";
 import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
+import { ReactionStatisticsService } from "../services/reaction_statistics_service";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -36,15 +38,14 @@ export namespace PostEndpoints {
     
         const feedsClient = FeedService.getFeedsClient();
         const feed = feedsClient.feed(feedId, slugId);
-        const origin = `${feedId}:${slugId}`;
-
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
-        const reactionCounts = window.results.map((item) => item.reaction_counts || {});
     
         // Convert window results to a list of IDs
-        const activities = await ActivitiesService.getActivityFeedWindow(feedsClient, window.results, origin);
-        functions.logger.info(`Got activities`, { activities });
-        
+        let activities = await ActivitiesService.getActivityFeedWindow(window.results);
+        let statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(feedId, activities.map((activity) => FlamelinkHelpers.getFlamelinkIdFromObject(activity)!));
+        statistics = await ReactionStatisticsService.enrichReactionStatisticsWithUserInformation(feed, uid, statistics);
+        activities = ActivitiesService.enrichActivitiesWithReactionStatistics(activities, statistics);
+
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
     
         return buildEndpointResponse(context, {
@@ -56,7 +57,6 @@ export namespace PostEndpoints {
             next: paginationToken,
             unread: window.unread,
             unseen: window.unseen,
-            reactionCounts: reactionCounts,
           },
         });
       });

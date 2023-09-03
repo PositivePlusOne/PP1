@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/providers/events/content/activities.dart';
 
 part 'reactions.freezed.dart';
@@ -11,10 +12,14 @@ part 'reactions.g.dart';
 @freezed
 class Reaction with _$Reaction {
   const factory Reaction({
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
     @Default('') @JsonKey(name: 'user_id') String userId,
     @Default(ReactionType.unknownReaction()) @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson) ReactionType kind,
+    @Default('') @JsonKey(name: 'text') String text,
+    @Default('') @JsonKey(name: 'origin') String origin,
+    @Default([]) @JsonKey(name: 'tags') List<String> tags,
   }) = _Reaction;
 
   factory Reaction.fromJson(Map<String, dynamic> json) => _$ReactionFromJson(json);
@@ -27,6 +32,7 @@ class ReactionType with _$ReactionType {
   const factory ReactionType.dislike() = _ReactionTypeDislike;
   const factory ReactionType.comment() = _ReactionTypeComment;
   const factory ReactionType.bookmark() = _ReactionTypeBookmark;
+  const factory ReactionType.share() = _ReactionTypeShare;
 
   factory ReactionType.fromJson(String json) {
     switch (json) {
@@ -38,6 +44,8 @@ class ReactionType with _$ReactionType {
         return const ReactionType.comment();
       case 'bookmark':
         return const ReactionType.bookmark();
+      case 'share':
+        return const ReactionType.share();
       default:
         return const ReactionType.unknownReaction();
     }
@@ -53,6 +61,8 @@ class ReactionType with _$ReactionType {
         return 'comment';
       case ReactionType.bookmark:
         return 'bookmark';
+      case ReactionType.share:
+        return 'share';
       default:
         return 'unknownReaction';
     }

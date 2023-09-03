@@ -16,7 +16,6 @@ import { config } from "firebase-functions/v1";
 import { StorageEndpoints } from "./endpoints/storage_endpoints";
 import { PostEndpoints } from "./endpoints/post_endpoints";
 import { ReactionEndpoints } from "./endpoints/reaction_endpoints";
-import { CommentEndpoints } from "./endpoints/comment_endpoints";
 
 export const adminApp = admin.initializeApp();
 export const applicationConfig = config().config;
@@ -42,5 +41,4 @@ exports.search = SearchEndpoints;
 exports.guidance = GuidanceEndpoints;
 exports.conversation = ConversationEndpoints;
 exports.post = PostEndpoints;
-exports.comment = CommentEndpoints;
 exports.reaction = ReactionEndpoints;

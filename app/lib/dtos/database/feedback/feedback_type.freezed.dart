@@ -20,6 +20,7 @@ mixin _$FeedbackType {
   TResult when<TResult extends Object?>({
     required TResult Function() unknown,
     required TResult Function() userReport,
+    required TResult Function() postReport,
     required TResult Function() genericFeedback,
   }) =>
       throw _privateConstructorUsedError;
@@ -27,6 +28,7 @@ mixin _$FeedbackType {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unknown,
     TResult? Function()? userReport,
+    TResult? Function()? postReport,
     TResult? Function()? genericFeedback,
   }) =>
       throw _privateConstructorUsedError;
@@ -34,6 +36,7 @@ mixin _$FeedbackType {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unknown,
     TResult Function()? userReport,
+    TResult Function()? postReport,
     TResult Function()? genericFeedback,
     required TResult orElse(),
   }) =>
@@ -42,6 +45,7 @@ mixin _$FeedbackType {
   TResult map<TResult extends Object?>({
     required TResult Function(Unknown value) unknown,
     required TResult Function(UserReport value) userReport,
+    required TResult Function(PostReport value) postReport,
     required TResult Function(GenericFeedback value) genericFeedback,
   }) =>
       throw _privateConstructorUsedError;
@@ -49,6 +53,7 @@ mixin _$FeedbackType {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Unknown value)? unknown,
     TResult? Function(UserReport value)? userReport,
+    TResult? Function(PostReport value)? postReport,
     TResult? Function(GenericFeedback value)? genericFeedback,
   }) =>
       throw _privateConstructorUsedError;
@@ -56,6 +61,7 @@ mixin _$FeedbackType {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Unknown value)? unknown,
     TResult Function(UserReport value)? userReport,
+    TResult Function(PostReport value)? postReport,
     TResult Function(GenericFeedback value)? genericFeedback,
     required TResult orElse(),
   }) =>
@@ -118,6 +124,7 @@ class _$Unknown implements Unknown {
   TResult when<TResult extends Object?>({
     required TResult Function() unknown,
     required TResult Function() userReport,
+    required TResult Function() postReport,
     required TResult Function() genericFeedback,
   }) {
     return unknown();
@@ -128,6 +135,7 @@ class _$Unknown implements Unknown {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unknown,
     TResult? Function()? userReport,
+    TResult? Function()? postReport,
     TResult? Function()? genericFeedback,
   }) {
     return unknown?.call();
@@ -138,6 +146,7 @@ class _$Unknown implements Unknown {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unknown,
     TResult Function()? userReport,
+    TResult Function()? postReport,
     TResult Function()? genericFeedback,
     required TResult orElse(),
   }) {
@@ -152,6 +161,7 @@ class _$Unknown implements Unknown {
   TResult map<TResult extends Object?>({
     required TResult Function(Unknown value) unknown,
     required TResult Function(UserReport value) userReport,
+    required TResult Function(PostReport value) postReport,
     required TResult Function(GenericFeedback value) genericFeedback,
   }) {
     return unknown(this);
@@ -162,6 +172,7 @@ class _$Unknown implements Unknown {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Unknown value)? unknown,
     TResult? Function(UserReport value)? userReport,
+    TResult? Function(PostReport value)? postReport,
     TResult? Function(GenericFeedback value)? genericFeedback,
   }) {
     return unknown?.call(this);
@@ -172,6 +183,7 @@ class _$Unknown implements Unknown {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Unknown value)? unknown,
     TResult Function(UserReport value)? userReport,
+    TResult Function(PostReport value)? postReport,
     TResult Function(GenericFeedback value)? genericFeedback,
     required TResult orElse(),
   }) {
@@ -226,6 +238,7 @@ class _$UserReport implements UserReport {
   TResult when<TResult extends Object?>({
     required TResult Function() unknown,
     required TResult Function() userReport,
+    required TResult Function() postReport,
     required TResult Function() genericFeedback,
   }) {
     return userReport();
@@ -236,6 +249,7 @@ class _$UserReport implements UserReport {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unknown,
     TResult? Function()? userReport,
+    TResult? Function()? postReport,
     TResult? Function()? genericFeedback,
   }) {
     return userReport?.call();
@@ -246,6 +260,7 @@ class _$UserReport implements UserReport {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unknown,
     TResult Function()? userReport,
+    TResult Function()? postReport,
     TResult Function()? genericFeedback,
     required TResult orElse(),
   }) {
@@ -260,6 +275,7 @@ class _$UserReport implements UserReport {
   TResult map<TResult extends Object?>({
     required TResult Function(Unknown value) unknown,
     required TResult Function(UserReport value) userReport,
+    required TResult Function(PostReport value) postReport,
     required TResult Function(GenericFeedback value) genericFeedback,
   }) {
     return userReport(this);
@@ -270,6 +286,7 @@ class _$UserReport implements UserReport {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Unknown value)? unknown,
     TResult? Function(UserReport value)? userReport,
+    TResult? Function(PostReport value)? postReport,
     TResult? Function(GenericFeedback value)? genericFeedback,
   }) {
     return userReport?.call(this);
@@ -280,6 +297,7 @@ class _$UserReport implements UserReport {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Unknown value)? unknown,
     TResult Function(UserReport value)? userReport,
+    TResult Function(PostReport value)? postReport,
     TResult Function(GenericFeedback value)? genericFeedback,
     required TResult orElse(),
   }) {
@@ -292,6 +310,120 @@ class _$UserReport implements UserReport {
 
 abstract class UserReport implements FeedbackType {
   const factory UserReport() = _$UserReport;
+}
+
+/// @nodoc
+abstract class _$$PostReportCopyWith<$Res> {
+  factory _$$PostReportCopyWith(
+          _$PostReport value, $Res Function(_$PostReport) then) =
+      __$$PostReportCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostReportCopyWithImpl<$Res>
+    extends _$FeedbackTypeCopyWithImpl<$Res, _$PostReport>
+    implements _$$PostReportCopyWith<$Res> {
+  __$$PostReportCopyWithImpl(
+      _$PostReport _value, $Res Function(_$PostReport) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostReport implements PostReport {
+  const _$PostReport();
+
+  @override
+  String toString() {
+    return 'FeedbackType.postReport()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostReport);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() userReport,
+    required TResult Function() postReport,
+    required TResult Function() genericFeedback,
+  }) {
+    return postReport();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? userReport,
+    TResult? Function()? postReport,
+    TResult? Function()? genericFeedback,
+  }) {
+    return postReport?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? userReport,
+    TResult Function()? postReport,
+    TResult Function()? genericFeedback,
+    required TResult orElse(),
+  }) {
+    if (postReport != null) {
+      return postReport();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(Unknown value) unknown,
+    required TResult Function(UserReport value) userReport,
+    required TResult Function(PostReport value) postReport,
+    required TResult Function(GenericFeedback value) genericFeedback,
+  }) {
+    return postReport(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Unknown value)? unknown,
+    TResult? Function(UserReport value)? userReport,
+    TResult? Function(PostReport value)? postReport,
+    TResult? Function(GenericFeedback value)? genericFeedback,
+  }) {
+    return postReport?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(Unknown value)? unknown,
+    TResult Function(UserReport value)? userReport,
+    TResult Function(PostReport value)? postReport,
+    TResult Function(GenericFeedback value)? genericFeedback,
+    required TResult orElse(),
+  }) {
+    if (postReport != null) {
+      return postReport(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostReport implements FeedbackType {
+  const factory PostReport() = _$PostReport;
 }
 
 /// @nodoc
@@ -334,6 +466,7 @@ class _$GenericFeedback implements GenericFeedback {
   TResult when<TResult extends Object?>({
     required TResult Function() unknown,
     required TResult Function() userReport,
+    required TResult Function() postReport,
     required TResult Function() genericFeedback,
   }) {
     return genericFeedback();
@@ -344,6 +477,7 @@ class _$GenericFeedback implements GenericFeedback {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? unknown,
     TResult? Function()? userReport,
+    TResult? Function()? postReport,
     TResult? Function()? genericFeedback,
   }) {
     return genericFeedback?.call();
@@ -354,6 +488,7 @@ class _$GenericFeedback implements GenericFeedback {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? unknown,
     TResult Function()? userReport,
+    TResult Function()? postReport,
     TResult Function()? genericFeedback,
     required TResult orElse(),
   }) {
@@ -368,6 +503,7 @@ class _$GenericFeedback implements GenericFeedback {
   TResult map<TResult extends Object?>({
     required TResult Function(Unknown value) unknown,
     required TResult Function(UserReport value) userReport,
+    required TResult Function(PostReport value) postReport,
     required TResult Function(GenericFeedback value) genericFeedback,
   }) {
     return genericFeedback(this);
@@ -378,6 +514,7 @@ class _$GenericFeedback implements GenericFeedback {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Unknown value)? unknown,
     TResult? Function(UserReport value)? userReport,
+    TResult? Function(PostReport value)? postReport,
     TResult? Function(GenericFeedback value)? genericFeedback,
   }) {
     return genericFeedback?.call(this);
@@ -388,6 +525,7 @@ class _$GenericFeedback implements GenericFeedback {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Unknown value)? unknown,
     TResult Function(UserReport value)? userReport,
+    TResult Function(PostReport value)? postReport,
     TResult Function(GenericFeedback value)? genericFeedback,
     required TResult orElse(),
   }) {
