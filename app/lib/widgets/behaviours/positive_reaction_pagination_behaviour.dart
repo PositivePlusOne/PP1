@@ -150,6 +150,11 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
+    if (reactionState.pagingController.itemList?.isEmpty ?? true) {
+      logger.d('saveState() - No reactions to save for ${widget.activityId}');
+      return;
+    }
+
     logger.d('saveState() - Saving reactions state for ${widget.activityId}');
     cacheController.addToCache(key: expectedCacheKey, value: reactionState);
   }
