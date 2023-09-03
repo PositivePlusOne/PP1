@@ -499,7 +499,7 @@ class ProfileController extends _$ProfileController {
 
     //! Remove the cache records for the bytes data
     //! This is important as the bytes data is not stored in the cache manager, but the media is
-    PositiveMediaImageState.clearCacheDataForMedia(media);
+    PositiveMediaImageState.clearCacheProvidersForMedia(media);
 
     eventBus.fire(ForceMediaFetchEvent(media: media));
     state = state.copyWith(currentProfile: profile);
