@@ -1,8 +1,20 @@
+import { StreamFeed } from "getstream";
+
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
 
   export function getCurrentTimestamp() {
     return getTimestampForDate(new Date());
+  }
+
+  export function getOriginFromFeed(feed: StreamFeed): string {
+    // Check if the slug is read-only such as "timeline".
+    // Then we default back to the user feed.
+    if (feed.slug === "timeline") {
+      return `user:${feed.userId}`;
+    }
+    
+    return `${feed.slug}:${feed.userId}`;
   }
 
   export function getTimestampForDate(date: Date) {

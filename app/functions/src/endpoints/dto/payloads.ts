@@ -9,7 +9,6 @@ import { DirectoryEntry, directorySchemaKey } from '../../dto/directory_entry';
 import { DataService } from '../../services/data_service';
 import { CacheService } from '../../services/cache_service';
 import { StringHelpers } from '../../helpers/string_helpers';
-import { Comment, commentSchemaKey } from '../../dto/comments';
 import { Reaction, reactionSchemaKey } from '../../dto/reactions';
 
 export type EndpointRequest = {
@@ -29,11 +28,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     sender,
     data = [],
     seedData = {},
+    joins = [],
     cursor = "",
     limit = 0,
 }: {
     data?: Record<string, any>[];
     seedData?: Record<string, any>;
+    joins?: string[];
     cursor?: string;
     limit?: number;
     sender: string;
@@ -56,7 +57,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "relationships": [],
             "tags": [],
             "guidanceDirectoryEntries": [],
-            "comments": [],
             "reactions": [],
         },
     } as EndpointResponse;
@@ -128,6 +128,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     // Prepare Join
     const joinPromises = [] as Promise<any>[];
     const allFlamelinkIds = [];
+
+    if (joins) {
+        allFlamelinkIds.push(...joins);
+    }
 
     for (const [schemaKey, flamelinkIds] of joinedDataRecords.entries()) {
         for (const flamelinkId of flamelinkIds) {
@@ -244,9 +248,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case directorySchemaKey:
                 responseData.data[schema].push(new DirectoryEntry(obj));
-                break;
-            case commentSchemaKey:
-                responseData.data[schema].push(new Comment(obj));
                 break;
             case reactionSchemaKey:
                 responseData.data[schema].push(new Reaction(obj));

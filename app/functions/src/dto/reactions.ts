@@ -59,6 +59,8 @@ export interface ReactionJSON {
     user_id?: string;
     kind?: string;
     origin?: string;
+    text?: string;
+    tags?: string[];
 }
 
 export class Reaction {
@@ -68,6 +70,8 @@ export class Reaction {
     user_id?: string;
     kind?: string;
     origin?: string;
+    text?: string;
+    tags?: string[];
 
     constructor(json: ReactionJSON) {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
@@ -76,6 +80,8 @@ export class Reaction {
         this.user_id = json.user_id;
         this.kind = json.kind;
         this.origin = json.origin;
+        this.text = json.text;
+        this.tags = json.tags;
     }
 
     public toJSON(): ReactionJSON {
@@ -86,6 +92,8 @@ export class Reaction {
             user_id: this.user_id,
             kind: this.kind,
             origin: this.origin,
+            text: this.text,
+            tags: this.tags,
         };
     }
 

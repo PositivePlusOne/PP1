@@ -107,6 +107,7 @@ export namespace NotificationsService {
           functions.logger.info(`Processing nested notification payload for user: ${uid}`, { nestedActivity });
           const objectStr = nestedActivity?.object;
           let object = {} as any;
+          
           try {
             if (typeof objectStr === "string") {
               functions.logger.info(`Attempting to parse notification as JSON for user: ${uid}`, { objectStr });

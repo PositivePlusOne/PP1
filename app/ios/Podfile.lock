@@ -10,7 +10,7 @@ PODS:
   - camerawesome (0.0.1):
     - Flutter
     - JPSVolumeButtonHandler
-  - cloud_firestore (4.8.5):
+  - cloud_firestore (4.9.0):
     - Firebase/Firestore (= 10.12.0)
     - firebase_core
     - Flutter
@@ -83,7 +83,7 @@ PODS:
   - Firebase/Storage (10.12.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.12.0)
-  - firebase_auth (4.7.3):
+  - firebase_auth (4.8.0):
     - Firebase/Auth (= 10.12.0)
     - firebase_core
     - Flutter
@@ -94,7 +94,7 @@ PODS:
     - Firebase/Crashlytics (= 10.12.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.6.6):
+  - firebase_messaging (14.6.7):
     - Firebase/Messaging (= 10.12.0)
     - firebase_core
     - Flutter
@@ -363,21 +363,6 @@ PODS:
   - sqflite (0.0.3):
     - Flutter
     - FMDB (>= 2.7.5)
-  - sqlite3 (3.41.2):
-    - sqlite3/common (= 3.41.2)
-  - sqlite3/common (3.41.2)
-  - sqlite3/fts5 (3.41.2):
-    - sqlite3/common
-  - sqlite3/perf-threadsafe (3.41.2):
-    - sqlite3/common
-  - sqlite3/rtree (3.41.2):
-    - sqlite3/common
-  - sqlite3_flutter_libs (0.0.1):
-    - Flutter
-    - sqlite3 (~> 3.41.2)
-    - sqlite3/fts5
-    - sqlite3/perf-threadsafe
-    - sqlite3/rtree
   - SwiftyGif (5.4.4)
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -428,7 +413,6 @@ DEPENDENCIES:
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player_avfoundation (from `.symlinks/plugins/video_player_avfoundation/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
@@ -481,7 +465,6 @@ SPEC REPOS:
     - ReachabilitySwift
     - SDWebImage
     - SDWebImageWebPCoder
-    - sqlite3
     - SwiftyGif
 
 EXTERNAL SOURCES:
@@ -562,8 +545,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  sqlite3_flutter_libs:
-    :path: ".symlinks/plugins/sqlite3_flutter_libs/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player_avfoundation:
@@ -582,7 +563,7 @@ SPEC CHECKSUMS:
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   camerawesome: 1e06540f60158809bc70f398ed1ac2cf93fe4188
-  cloud_firestore: c556fefce96568e422e453bf9aeda683dd435367
+  cloud_firestore: 2d219f5d2eec836c5525699e777f907c9d3cd3eb
   cloud_functions: 19478d5af48098293778c254f64cf85ac8f1c1b8
   connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
   device_info_plus: 7545d84d8d1b896cb16a4ff98c19f07ec4b298ea
@@ -591,10 +572,10 @@ SPEC CHECKSUMS:
   file_picker: ce3938a0df3cc1ef404671531facef740d03f920
   file_selector_ios: 8c25d700d625e1dcdd6599f2d927072f2254647b
   Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
-  firebase_auth: 95f4a6acafa6a7a0d902aa467dd4d7ca336ee4be
+  firebase_auth: 604e47908bc2dcd7baa113bbd37ab74000bff488
   firebase_core: 4a3246a02f828a01c74a2c26427037786d90f17f
   firebase_crashlytics: df144edf7d04ace42beb3a3e29d825bfa49dd04b
-  firebase_messaging: 13b378c8449cae7ec96c79570170943dd73d4738
+  firebase_messaging: 0b4f7997f491343b90d9300af54fe55c72135833
   firebase_performance: 9277c037aba44142df6dc5f5b1b184168f36973a
   firebase_storage: 90a6038e00d3903c7f665dcfc57a9a98c7c8366b
   FirebaseABTesting: 86ac5a4fc749088bb4d55a1cbfb2c4cb42c6d5de
@@ -662,8 +643,6 @@ SPEC CHECKSUMS:
   share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
-  sqlite3: fd89671d969f3e73efe503ce203e28b016b58f68
-  sqlite3_flutter_libs: 04ba0d14a04335a2fbf9a331e8664f401fbccdd5
   SwiftyGif: 93a1cc87bf3a51916001cf8f3d63835fb64c819f
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126

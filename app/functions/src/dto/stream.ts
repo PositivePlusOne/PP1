@@ -47,4 +47,5 @@ export type GetFeedWindowResult = {
   results: FeedEntry[];
   unread: number;
   unseen: number;
+  origin: string;
 };

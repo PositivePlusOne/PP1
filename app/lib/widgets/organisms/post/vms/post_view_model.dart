@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/services/reaction_api_service.dart';
+import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,16 +11,14 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/comments.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/events/content/comments.dart';
+import 'package:app/providers/events/content/reactions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/comment_api_service.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/state/positive_comments_state.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 
 part 'post_view_model.freezed.dart';
 part 'post_view_model.g.dart';
@@ -65,7 +66,7 @@ class PostViewModel extends _$PostViewModel {
     return false;
   }
 
-  void onCommentChanged(String str) {
+  void onCommentTextChanged(String str) {
     state = state.copyWith(currentCommentText: str.trim());
   }
 
@@ -73,12 +74,12 @@ class PostViewModel extends _$PostViewModel {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-    final CommentApiService commentApiService = await ref.read(commentApiServiceProvider.future);
+    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final EventBus eventBus = ref.read(eventBusProvider);
     final String trimmedString = state.currentCommentText.trim();
 
     if (trimmedString.isEmpty) {
-      logger.e('Comment text is empty');
+      logger.e('Reaction text is empty');
       return;
     }
 
@@ -91,20 +92,21 @@ class PostViewModel extends _$PostViewModel {
 
     try {
       logger.i('Posting comment');
-      final Comment comment = await commentApiService.postComment(
+      final Reaction reaction = await reactionApiService.postReaction(
         activityId: state.activityId,
-        content: trimmedString,
+        kind: 'comment',
+        text: trimmedString,
       );
 
       reactionsController.offsetReactionCountForActivity(
         activityId: activityId,
         userId: profileController.currentProfileId!,
         origin: TargetFeed.toOrigin(state.targetFeed),
-        reactionType: 'comment',
+        reactionType: 'reaction',
         offset: 1,
       );
 
-      eventBus.fire(CommentCreatedEvent(activityId: activityId, comment: comment));
+      eventBus.fire(ReactionCreatedEvent(activityId: activityId, reaction: reaction));
       commentTextController.clear();
     } finally {
       state = state.copyWith(isBusy: false);
@@ -125,8 +127,8 @@ class PostViewModel extends _$PostViewModel {
     state = state.copyWith(isRefreshing: true);
 
     try {
-      final String cacheId = 'comments:${state.activityId}';
-      final PositiveCommentsState? commentsState = cacheController.getFromCache<PositiveCommentsState>(cacheId);
+      final String cacheId = PositiveReactionPaginationBehaviourState.buildCacheKey("comment", state.activityId);
+      final PositiveReactionsState? commentsState = cacheController.getFromCache<PositiveReactionsState>(cacheId);
 
       // Check if the feed is already loaded
       if (commentsState != null) {

@@ -24,7 +24,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/behaviours/positive_comment_pagination_behaviour.dart';
+import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -92,6 +92,12 @@ class PostPage extends ConsumerWidget {
         isCommentsEnabled = false;
     }
 
+    // Revert enabled flags if the user is the publisher
+    if (activity.publisherInformation?.publisherId == user?.uid) {
+      isUserAbleToComment = true;
+      isCommentsEnabled = true;
+    }
+
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
 
@@ -108,7 +114,7 @@ class PostPage extends ConsumerWidget {
           ? PostCommentBox(
               mediaQuery: MediaQuery.of(context),
               commentTextController: viewModel.commentTextController,
-              onCommentChanged: viewModel.onCommentChanged,
+              onCommentChanged: viewModel.onCommentTextChanged,
               onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
               isBusy: state.isBusy,
             )
@@ -162,8 +168,9 @@ class PostPage extends ConsumerWidget {
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
-          PositiveCommentPaginationBehaviour(
-            commentMode: activity.securityConfiguration?.commentMode,
+          PositiveReactionPaginationBehaviour(
+            kind: 'comment',
+            reactionMode: activity.securityConfiguration?.commentMode,
             activityId: activity.flMeta!.id!,
             feed: feed,
           ),

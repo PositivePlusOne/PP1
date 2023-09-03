@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { v1 as uuidv1 } from "uuid";
 
-import { DefaultGenerics, NewActivity, StreamClient } from "getstream";
+import { DefaultGenerics, NewActivity } from "getstream";
 import { Activity, ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
@@ -10,8 +10,8 @@ import { DataService } from "./data_service";
 import { TagsService } from "./tags_service";
 import { FeedName } from "../constants/default_feeds";
 import { FeedEntry } from "../dto/stream";
-import { ReactionStatisticsService } from "./reaction_statistics_service";
 import { ReactionStatisticsJSON } from "../dto/reactions";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace ActivitiesService {
   /**
@@ -69,46 +69,15 @@ export namespace ActivitiesService {
   }
 
   /**
-   * Gets an activity with reaction statistics.
-   * @param {string} id the id of the activity.
-   * @param {string} origin the origin of the activity.
-   * @return {Promise<ActivityJSON>} a promise that resolves to the activity.
+   * Gets a list of activities.
+   * @param {string[]} ids the ids of the activities.
+   * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
    */
-  export async function getActivityWithReactionStatistics(client: StreamClient<DefaultGenerics>, id: string, feed: string, skipCacheLookup = false): Promise<ActivityJSON> {
-    const reactionStatsPromise = feed && client ? ReactionStatisticsService.getReactionStatisticsForSenderAndActivity(client, feed, id) : Promise.resolve({});
-    const activity = await DataService.getDocument({
+  export async function getActivities(ids: string[]): Promise<ActivityJSON[]> {
+    return await DataService.getBatchDocuments({
       schemaKey: "activities",
-      entryId: id,
-    }, skipCacheLookup) as ActivityJSON;
-
-    if (!activity) {
-      functions.logger.warn("Could not find activity", { id });
-      return {};
-    } else if (!feed) {
-      functions.logger.warn("Could not find origin", { feed });
-      return activity;
-    }
-
-    const reactionStatistics = await reactionStatsPromise as ReactionStatisticsJSON;
-    if (!activity.enrichmentConfiguration) {
-      activity.enrichmentConfiguration = {};
-    }
-
-    if (reactionStatistics) {
-      functions.logger.info("Found reaction statistics for activity", {
-        activityId: id,
-        reactionStatistics,
-      });
-
-      activity.enrichmentConfiguration.reactionCounts = reactionStatistics.counts;
-      activity.enrichmentConfiguration.originFeed = reactionStatistics.feed;
-    } else {
-      functions.logger.info("No reaction statistics found for activity", {
-        activityId: id,
-      });
-    }
-
-    return activity;
+      entryIds: ids,
+    }) as ActivityJSON[];
   }
 
   /**
@@ -116,15 +85,12 @@ export namespace ActivitiesService {
    * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
    * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
    */
-  export async function getActivityFeedWindow(client: StreamClient<DefaultGenerics>, entrys: FeedEntry[], feed: string): Promise<any[]> {
-    const activityPromise = entrys.map(async (entry) => {
-      if (!entry.object || !feed) {
-        return;
-      }
-      
-      const activity = await getActivityWithReactionStatistics(client, entry.object, feed);
-      if (!activity) {
-        return;
+  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<any[]> {
+    const activities = await getActivities(entrys.map((entry) => entry.object));
+    for (const activity of activities) {
+      const entry = entrys.find((entry) => entry.object === activity?._fl_meta_?.fl_id);
+      if (!entry) {
+        continue;
       }
 
       switch (entry.verb) {
@@ -135,23 +101,17 @@ export namespace ActivitiesService {
           if (!activity.publisherInformation) {
             activity.publisherInformation = {};
           }
+
           if (!activity.generalConfiguration) {
             activity.generalConfiguration = {};
           }
           
           activity.publisherInformation.actorId = actorId;
           activity.generalConfiguration.reactionType = entry.verb as ActivityActionVerb;
-          functions.logger.info("Enriched activity for verb", {
-            activityId: entry.object,
-            verb: entry.verb,
-          });
           break;
       }
+    }
 
-      return activity;
-    });
-
-    const activities = await Promise.all(activityPromise);
     return activities.filter((activity) => activity);
   }
 
@@ -258,5 +218,33 @@ export namespace ActivitiesService {
 
 
     await feed.removeActivity({ foreign_id: activityId });
+  }
+
+  export function enrichActivitiesWithReactionStatistics(activities: ActivityJSON[], statistics: ReactionStatisticsJSON[]): ActivityJSON[] {
+    if (!statistics || statistics.length === 0) {
+      return activities;
+    }
+
+    return activities.map((activity) => {
+      const id = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
+      if (!id) {
+        return activity;
+      }
+
+      for (const stat of statistics ?? []) {
+        if (!stat) {
+          continue;
+        }
+        
+        if (stat.activity_id === id) {
+          activity.enrichmentConfiguration ??= {};
+          activity.enrichmentConfiguration.originFeed = stat.feed ?? "";
+          activity.enrichmentConfiguration.reactionCounts = stat.counts ?? {};
+          activity.enrichmentConfiguration.uniqueUserReactions = stat.unique_user_reactions ?? {};
+        }
+      }
+
+      return activity;
+    });
   }
 }

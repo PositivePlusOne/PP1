@@ -78,7 +78,10 @@ export namespace CacheService {
             return [];
         }
 
-        const values = await redisClient.mget(...keys);
+        // Remove any empty keys or duplicates.
+        const uniqueKeys = [...new Set(keys.filter((key) => !!key && key.length > 0))];
+
+        const values = await redisClient.mget(...uniqueKeys);
         if (!values || values.length === 0) {
             return [];
         }

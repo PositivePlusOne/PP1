@@ -348,7 +348,7 @@ class CommunitiesController extends _$CommunitiesController {
     try {
       await reactionApiService.postReaction(
         activityId: activityId,
-        reactionType: 'bookmark',
+        kind: 'bookmark',
       );
 
       reactionsController.offsetReactionCountForActivity(

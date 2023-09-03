@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -46,28 +47,31 @@ class ReactionApiService {
     );
   }
 
-  FutureOr<EndpointResponse> postReaction({
+  FutureOr<Reaction> postReaction({
     required String activityId,
-    required String reactionType,
+    required String kind,
+    String text = '',
   }) async {
-    return await getHttpsCallableResult<EndpointResponse>(
+    return await getHttpsCallableResult<Reaction>(
       name: 'reaction-postReaction',
+      selector: (response) => Reaction.fromJson(response.data),
       parameters: {
         'activityId': activityId,
-        'reactionType': reactionType,
+        'kind': kind,
+        'text': text,
       },
     );
   }
 
   FutureOr<EndpointResponse> updateReaction({
     required String reactionId,
-    required String reactionType,
+    required String text,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'reaction-updateReaction',
       parameters: {
         'reactionId': reactionId,
-        'reactionType': reactionType,
+        'text': text,
       },
     );
   }
@@ -85,7 +89,7 @@ class ReactionApiService {
 
   FutureOr<EndpointResponse> listReactionsForActivity({
     required String activityId,
-    String kind = 'like',
+    String kind = 'comment',
     String cursor = '',
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
