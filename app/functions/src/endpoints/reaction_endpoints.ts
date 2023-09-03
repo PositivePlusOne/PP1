@@ -8,7 +8,6 @@ import { ReactionService } from "../services/reaction_service";
 import { FeedName } from "../constants/default_feeds";
 import { ReactionJSON } from "../dto/reactions";
 import { FeedService } from "../services/feed_service";
-import { ProfileService } from "../services/profile_service";
 import { CommentHelpers } from "../helpers/comment_helpers";
 
 export namespace ReactionEndpoints {
@@ -132,14 +131,9 @@ export namespace ReactionEndpoints {
             }
         }
 
-        // Get the profiles from the reactions
-        // We should move this into the buildEndpointResponse function
-        const profiles = await ProfileService.getMultipleProfiles(reactions.map((reaction) => reaction.user_id || "").filter((userId) => userId !== ""));
-        functions.logger.info("Profiles for reactions", { profiles });
-
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [reactions, profiles],
+            data: reactions,
             cursor,
             limit,
         });

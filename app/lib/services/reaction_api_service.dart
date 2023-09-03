@@ -1,9 +1,13 @@
+// Dart imports:
+import 'dart:convert';
+
 // Package imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/extensions/json_extensions.dart';
 import '../dtos/database/common/endpoint_response.dart';
 import 'api.dart';
 
@@ -54,7 +58,7 @@ class ReactionApiService {
   }) async {
     return await getHttpsCallableResult<Reaction>(
       name: 'reaction-postReaction',
-      selector: (response) => Reaction.fromJson(response.data),
+      selector: (response) => Reaction.fromJson(json.decodeSafe((response.data['reactions'] as Iterable).first)),
       parameters: {
         'activityId': activityId,
         'kind': kind,

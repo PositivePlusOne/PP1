@@ -4,8 +4,9 @@ export const reactionSchemaKey = "reactions";
 export const reactionStatisticsSchemaKey = "reactionStatistics";
 
 export interface ReactionStatisticsJSON {
-    feed: string;
-    counts: Record<string, number>;
+    _fl_meta_?: FlMetaJSON;
+    feed?: string;
+    counts?: Record<string, number>;
     unique_user_reactions?: Record<string, boolean>;
     activity_id?: string;
     reaction_id?: string;
@@ -13,6 +14,7 @@ export interface ReactionStatisticsJSON {
 }
 
 export class ReactionStatistics {
+    _fl_meta_?: FlMeta;
     feed: string;
     counts: Record<string, number>;
     unique_user_reactions: Record<string, boolean>;
@@ -21,8 +23,9 @@ export class ReactionStatistics {
     user_id: string;
 
     constructor(json: ReactionStatisticsJSON) {
-        this.feed = json.feed;
-        this.counts = json.counts;
+        this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
+        this.feed = json.feed ?? "";
+        this.counts = json.counts ?? {};
         this.unique_user_reactions = json.unique_user_reactions ?? {};
         this.activity_id = json.activity_id ?? "";
         this.reaction_id = json.reaction_id ?? "";

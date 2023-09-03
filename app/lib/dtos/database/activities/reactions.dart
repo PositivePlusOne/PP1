@@ -1,9 +1,9 @@
 // Package imports:
-import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/providers/events/content/activities.dart';
 
 part 'reactions.freezed.dart';

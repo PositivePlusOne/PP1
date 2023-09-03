@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { ReactionStatistics, ReactionStatisticsJSON, reactionStatisticsSchemaKey } from "../dto/reactions";
 
 import { DataService } from "./data_service";
-import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
+import { StreamFeed } from "getstream";
 import { ReactionService } from "./reaction_service";
 
 export namespace ReactionStatisticsService {
@@ -62,14 +62,18 @@ export namespace ReactionStatisticsService {
         return reactionStatistics;
     }
 
-    export async function updateReactionCountForActivity(client: StreamClient<DefaultGenerics>, feed: string, activity_id: string, kind: string, offset: number): Promise<void> {
+    export async function updateReactionCountForActivity(feed: string, activity_id: string, kind: string, offset: number): Promise<void> {
         if (!REACTION_COUNT_TARGETS.includes(kind)) {
             functions.logger.error(`Invalid reaction kind: ${kind}`);
             return;
         }
 
         const stats = await getReactionStatisticsForActivity(feed, activity_id);
+        functions.logger.info(`Updating reaction statistics`, { stats });
+
+        stats.counts ??= {};
         stats.counts[kind] = (stats.counts[kind] ?? 0) + offset;
+        functions.logger.info(`Kind: ${kind}, offset: ${offset}, new count: ${stats.counts[kind]}`);
 
         // This should never happen, but to be safe; lets clamp the value to 0.
         if (stats.counts[kind] < 0) {
@@ -78,7 +82,7 @@ export namespace ReactionStatisticsService {
 
         functions.logger.info(`Updating reaction statistics`, { stats });
 
-        const expectedKey = getExpectedKeyFromOptions(stats.feed, stats.activity_id, stats.reaction_id, stats.user_id);
+        const expectedKey = getExpectedKeyFromOptions(feed, stats.activity_id, stats.reaction_id, stats.user_id);
         await DataService.updateDocument({
             schemaKey: reactionStatisticsSchemaKey,
             entryId: expectedKey,

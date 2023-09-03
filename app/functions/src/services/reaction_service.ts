@@ -48,7 +48,7 @@ export namespace ReactionService {
         return FlamelinkHelpers.generateIdentifier();
     }
 
-    export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<any> {
+    export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<ReactionJSON> {
         if (!reaction.activity_id || !reaction.origin || !reaction.kind) {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
@@ -66,12 +66,13 @@ export namespace ReactionService {
             id: reactionId,
         });
 
-        await ReactionStatisticsService.updateReactionCountForActivity(client, reaction.origin, reaction.activity_id, reaction.kind, 1);
+        await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, 1);
+
         return DataService.updateDocument({
             schemaKey: reactionSchemaKey,
             entryId: response.id,
             data: reaction,
-        });
+        }) as ReactionJSON;
     }
 
     export async function getReaction(reactionId: string): Promise<ReactionJSON> {
@@ -97,7 +98,7 @@ export namespace ReactionService {
         }
 
         await client.reactions.delete(reaction.reaction_id);
-        await ReactionStatisticsService.updateReactionCountForActivity(client, reaction.origin, reaction.activity_id, reaction.kind, -1);
+        await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1);
 
         await DataService.deleteDocument({
             schemaKey: reactionSchemaKey,

@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
 
 class ReactionCreatedEvent {

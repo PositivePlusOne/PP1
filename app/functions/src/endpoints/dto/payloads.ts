@@ -9,7 +9,9 @@ import { DirectoryEntry, directorySchemaKey } from '../../dto/directory_entry';
 import { DataService } from '../../services/data_service';
 import { CacheService } from '../../services/cache_service';
 import { StringHelpers } from '../../helpers/string_helpers';
-import { Reaction, reactionSchemaKey } from '../../dto/reactions';
+import { Reaction, ReactionStatistics, reactionSchemaKey, reactionStatisticsSchemaKey } from '../../dto/reactions';
+import { ReactionStatisticsService } from '../../services/reaction_statistics_service';
+import { FeedService } from '../../services/feed_service';
 
 export type EndpointRequest = {
     sender: string;
@@ -58,6 +60,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "tags": [],
             "guidanceDirectoryEntries": [],
             "reactions": [],
+            "reactionStatistics": [],
         },
     } as EndpointResponse;
 
@@ -120,11 +123,24 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     }
                 }
                 break;
+            case reactionSchemaKey:
+                const userId = obj?.user_id || "";
+                const activityId = obj?.activity_id || "";
+                const origin = obj?.origin || "";
+                if (userId && userId !== sender) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(userId);
+                }
+
+                if (activityId && activityId.length > 0 && origin && origin.length > 0) {
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(origin, activityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
+                }
+                break;
             default:
                 break;
         }
     }
-    
+
     // Prepare Join
     const joinPromises = [] as Promise<any>[];
     const allFlamelinkIds = [];
@@ -149,8 +165,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }
     }
 
-    const cachedData = await CacheService.getMultipleFromCache(allFlamelinkIds);
-    functions.logger.debug(`Got ${cachedData.length} records from cache.`, { sender, allFlamelinkIds, cachedData });
+    let cachedData = [];
+    if (allFlamelinkIds.length > 0) {
+        cachedData = await CacheService.getMultipleFromCache(allFlamelinkIds);
+    }
 
     // Cache Join
     for (const obj of cachedData) {
@@ -252,8 +270,40 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case reactionSchemaKey:
                 responseData.data[schema].push(new Reaction(obj));
                 break;
+            case reactionStatisticsSchemaKey:
+                responseData.data[schema].push(new ReactionStatistics(obj));
+                break;
             default:
                 break;
+        }
+    }
+
+    // Enrich any statistics with user information
+    if (responseData.data[reactionStatisticsSchemaKey].length > 0 && sender && sender.length > 0) {
+        functions.logger.debug(`Enriching reaction statistics with user information.`, { sender });
+        const feedOrigin = responseData.data[reactionStatisticsSchemaKey][0].origin;
+        
+        if (feedOrigin || feedOrigin.length > 0 || feedOrigin.indexOf(":") > -1) {
+            const feedOriginSplit = feedOrigin.split(":");
+            const feedStr = feedOriginSplit[0];
+            const slugStr = feedOriginSplit[1];
+
+            const streamClient = FeedService.getFeedsClient();
+            const feed = streamClient.feed(feedStr, slugStr);
+
+            functions.logger.debug(`Enriching reaction statistics with user information.`, { sender, feedOrigin, feed });
+
+            const reactionStatistics = responseData.data[reactionStatisticsSchemaKey] as ReactionStatistics[];
+            populatePromises.push(ReactionStatisticsService.enrichReactionStatisticsWithUserInformation(feed, sender, reactionStatistics).then((enrichedReactionStatistics) => {
+                responseData.data[reactionStatisticsSchemaKey] = [];
+                for (const reactionStatistic of enrichedReactionStatistics) {
+                    if (reactionStatistic) {
+                        responseData.data[reactionStatisticsSchemaKey].push(reactionStatistic);
+                    }
+                }
+            }));
+        } else {
+            functions.logger.warn(`Unable to enrich reaction statistics with user information.`, { sender, feedOrigin });
         }
     }
 

@@ -1,8 +1,10 @@
 // Dart imports:
 
 // Package imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+// Project imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 
 class PositiveReactionsState {
   PositiveReactionsState({
