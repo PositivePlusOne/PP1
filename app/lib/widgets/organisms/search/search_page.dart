@@ -9,12 +9,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/content/topic.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/topics_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
@@ -46,11 +46,18 @@ class SearchPage extends ConsumerWidget {
     final SearchTab currentTab = ref.watch(searchViewModelProvider.select((value) => value.currentTab));
     final bool isBusy = ref.watch(searchViewModelProvider.select((value) => value.isBusy));
     final bool isSearching = ref.watch(searchViewModelProvider.select((value) => value.isSearching));
-    final bool canDisplaySearchResults = ref.watch(searchViewModelProvider.select((value) => value.shouldDisplaySearchResults));
 
     final List<Profile> searchUserResults = ref.watch(searchViewModelProvider.select((value) => value.searchUsersResults));
     final List<Activity> searchPostsResults = ref.watch(searchViewModelProvider.select((value) => value.searchPostsResults));
     final List<Activity> searchEventsResults = ref.watch(searchViewModelProvider.select((value) => value.searchEventsResults));
+    final List<Tag> searchTagResults = ref.watch(searchViewModelProvider.select((value) => value.searchTagResults));
+
+    final bool canDisplaySearchResults = switch (currentTab) {
+      SearchTab.users => searchUserResults.isNotEmpty,
+      SearchTab.posts => searchPostsResults.isNotEmpty,
+      SearchTab.events => searchEventsResults.isNotEmpty,
+      SearchTab.topics => searchTagResults.isNotEmpty,
+    };
 
     return PositiveScaffold(
       isBusy: isBusy,

@@ -13,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/guidance/guidance_category.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/search_api_service.dart';
 import 'package:app/widgets/organisms/guidance/builders/guidance_article_builder.dart';
 import 'package:app/widgets/organisms/guidance/builders/guidance_category_builder.dart';
 import '../../dtos/database/guidance/guidance_article.dart';
@@ -32,6 +33,7 @@ class GuidanceControllerState with _$GuidanceControllerState {
   const factory GuidanceControllerState({
     @Default(false) bool isBusy,
     @Default(null) GuidanceSection? guidanceSection,
+    @Default('') guidanceDirectorySearchTerm,
   }) = _GuidanceControllerState;
 
   factory GuidanceControllerState.initialState() => const GuidanceControllerState();
@@ -120,10 +122,12 @@ class GuidanceController extends _$GuidanceController {
     }
   }
 
-  Future<void> Function(String, TextEditingController) get onSearch {
+  FutureOr<void> Function(String, TextEditingController) get onSearch {
     switch (state.guidanceSection) {
       case GuidanceSection.guidance:
         return searchGuidance;
+      case GuidanceSection.directory:
+        return searchDirectory;
       case GuidanceSection.appHelp:
         return searchAppHelp;
       default:
@@ -131,9 +135,51 @@ class GuidanceController extends _$GuidanceController {
     }
   }
 
+  Future<void> searchDirectory(String term, TextEditingController controller) => _searchDirectory(term, controller);
+
   Future<void> searchGuidance(String term, TextEditingController controller) => _searchGuidance(term, "guidance", controller);
 
   Future<void> searchAppHelp(String term, TextEditingController controller) => _searchGuidance(term, "appHelp", controller);
+
+  Future<void> _searchDirectory(String term, TextEditingController controller) async {
+    if (term.trim().isEmpty) {
+      return;
+    }
+
+    try {
+      state = state.copyWith(isBusy: true);
+      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+      final String cacheKey = buildCacheKey(searchQuery: term);
+      final GuidanceSearchResultsBuilder? cachedResponse = cacheController.getFromCache(cacheKey);
+      if (cachedResponse != null) {
+        state = state.copyWith(isBusy: false);
+        await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
+        return;
+      }
+
+      final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
+      final SearchResult<GuidanceDirectoryEntry> response = await searchApiService.search(
+        query: term,
+        fromJson: (json) => GuidanceDirectoryEntry.fromJson(json),
+        index: "guidanceDirectoryEntries",
+      );
+
+      if (response.results.isEmpty) {
+        return;
+      }
+
+      final GuidanceSearchResultsBuilder resBuilder = GuidanceSearchResultsBuilder([], [], response.results, this, state);
+
+      cacheController.addToCache(key: cacheKey, value: resBuilder);
+      state = state.copyWith(isBusy: false);
+      controller.clear();
+
+      state = state.copyWith(isBusy: false);
+      await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
 
   Future<void> _searchGuidance(String term, String guidanceType, TextEditingController controller) async {
     if (term.trim().isEmpty) {
@@ -162,7 +208,7 @@ class GuidanceController extends _$GuidanceController {
       final catQuery = categoryIndex.query(term).filters('guidanceType:"$guidanceType"');
       final categorySnap = await catQuery.getObjects();
       final categories = GuidanceCategory.listFromAlgoliaSnap(categorySnap.hits);
-      final resBuilder = GuidanceSearchResultsBuilder(categories, articles, this, state);
+      final resBuilder = GuidanceSearchResultsBuilder(categories, articles, [], this, state);
 
       cacheController.addToCache(key: cacheKey, value: resBuilder);
       state = state.copyWith(isBusy: false);

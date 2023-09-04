@@ -53,49 +53,45 @@ class GuidanceDirectoryPage extends ConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
-    return Stack(
-      children: [
-        PositiveScaffold(
-          isBusy: state.isBusy,
-          bottomNavigationBar: PositiveNavigationBar(
-            mediaQuery: mediaQuery,
-            index: NavigationBarIndex.guidance,
+    return PositiveScaffold(
+      isBusy: state.isBusy,
+      bottomNavigationBar: PositiveNavigationBar(
+        mediaQuery: mediaQuery,
+        index: NavigationBarIndex.guidance,
+      ),
+      headingWidgets: [
+        SliverPinnedHeader(
+          child: GuidanceSearchBar(
+            onSubmitted: controller.onSearch,
+            onBackSelected: () => context.router.pop(),
+            isEnabled: !state.isBusy,
+            initialText: '',
+            hintText: searchHintText(controller.guidanceSection),
           ),
-          headingWidgets: [
-            SliverPinnedHeader(
-              child: GuidanceSearchBar(
-                onSubmitted: controller.onSearch,
-                onBackSelected: () => context.router.pop(),
-                isEnabled: false,
-                initialText: '',
-                hintText: searchHintText(controller.guidanceSection),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingMedium),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Directory',
-                      style: typography.styleHero.copyWith(color: colors.black),
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    Text(
-                      'Find companies and charities that are helping to support people impacted by HIV.',
-                      style: typography.styleSubtitle.copyWith(color: colors.black),
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                  ],
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Directory',
+                  style: typography.styleHero.copyWith(color: colors.black),
                 ),
-              ),
+                const SizedBox(height: kPaddingMedium),
+                Text(
+                  'Find companies and charities that are helping to support people impacted by HIV.',
+                  style: typography.styleSubtitle.copyWith(color: colors.black),
+                ),
+                const SizedBox(height: kPaddingMedium),
+              ],
             ),
-            const SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              sliver: PositiveDirectoryPaginationBehaviour(),
-            ),
-          ],
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+          sliver: PositiveDirectoryPaginationBehaviour(isBusy: state.isBusy),
         ),
       ],
     );

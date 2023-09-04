@@ -68,21 +68,6 @@ final relationshipApiServiceProvider =
 );
 
 typedef RelationshipApiServiceRef = FutureProviderRef<RelationshipApiService>;
-String _$searchApiServiceHash() => r'9006527dd29c511d81e299d1607e613ef9587906';
-
-/// See also [searchApiService].
-@ProviderFor(searchApiService)
-final searchApiServiceProvider = FutureProvider<SearchApiService>.internal(
-  searchApiService,
-  name: r'searchApiServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$searchApiServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef SearchApiServiceRef = FutureProviderRef<SearchApiService>;
 String _$conversationApiServiceHash() =>
     r'e5f16a2ca70f4ea7fc5a95d50d472767a2251a6d';
 

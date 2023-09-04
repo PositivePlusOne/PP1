@@ -1,15 +1,14 @@
 // Dart imports:
-import 'dart:convert';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/services/api.dart';
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/services/search_api_service.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../gen/app_router.dart';
@@ -24,14 +23,18 @@ part 'search_view_model.g.dart';
 @freezed
 class SearchViewModelState with _$SearchViewModelState {
   const factory SearchViewModelState({
+    @Default(false) bool isBusy,
+    @Default(false) bool isSearching,
     @Default('') String searchQuery,
+    @Default(SearchTab.posts) SearchTab currentTab,
     @Default([]) List<Profile> searchUsersResults,
     @Default([]) List<Activity> searchPostsResults,
     @Default([]) List<Activity> searchEventsResults,
-    @Default(false) bool isBusy,
-    @Default(false) bool isSearching,
-    @Default(false) bool shouldDisplaySearchResults,
-    @Default(SearchTab.posts) SearchTab currentTab,
+    @Default([]) List<Tag> searchTagResults,
+    @Default('') String searchUsersCursor,
+    @Default('') String searchPostsCursor,
+    @Default('') String searchEventsCursor,
+    @Default('') String searchTagsCursor,
   }) = _SearchViewModelState;
 
   factory SearchViewModelState.initialState() => const SearchViewModelState();
@@ -81,113 +84,63 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     logger.i('Searching for $searchTerm');
     state = state.copyWith(
       isSearching: true,
-      shouldDisplaySearchResults: false,
       searchQuery: searchTerm,
+      // We don't support pagination for now
       searchUsersResults: [],
+      searchUsersCursor: '',
+      searchPostsResults: [],
+      searchPostsCursor: '',
+      searchEventsResults: [],
+      searchEventsCursor: '',
+      searchTagResults: [],
+      searchTagsCursor: '',
     );
 
     try {
-      final List<Map<String, Object?>> response = await searchApiService.search(
+      final SearchResult<Object> response = await searchApiService.search(
         query: searchTerm,
         index: state.currentTab.searchIndex,
+        pagination: Pagination(
+          cursor: switch (state.currentTab) {
+            SearchTab.users => state.searchUsersCursor,
+            SearchTab.posts => state.searchPostsCursor,
+            SearchTab.events => state.searchEventsCursor,
+            SearchTab.topics => state.searchTagsCursor,
+          },
+        ),
+        fromJson: switch (state.currentTab) {
+          SearchTab.users => (json) => Profile.fromJson(json),
+          SearchTab.posts => (json) => Activity.fromJson(json),
+          SearchTab.events => (json) => Activity.fromJson(json),
+          SearchTab.topics => (json) => Tag.fromJson(json),
+        },
       );
 
-      if (response.isEmpty) {
+      if (response.results.isEmpty) {
         logger.w('Search response data is null');
         return;
       }
 
       switch (state.currentTab) {
         case SearchTab.users:
-          parseUserSearchData(response);
+          final List<Profile> results = response.results.cast<Profile>();
+          state = state.copyWith(searchUsersCursor: response.cursor, searchUsersResults: state.searchUsersResults + results);
           break;
         case SearchTab.events:
-          parseActivitySearchData(response);
+          final List<Activity> results = response.results.cast<Activity>();
+          state = state.copyWith(searchEventsCursor: response.cursor, searchEventsResults: state.searchEventsResults + results);
           break;
         case SearchTab.topics:
+          final List<Tag> results = response.results.cast<Tag>();
+          state = state.copyWith(searchTagsCursor: response.cursor, searchTagResults: state.searchTagResults + results);
           break;
-        default:
-          parseActivitySearchData(response);
+        case SearchTab.posts:
+          final List<Activity> results = response.results.cast<Activity>();
+          state = state.copyWith(searchPostsCursor: response.cursor, searchPostsResults: state.searchPostsResults + results);
           break;
       }
-
-      state = state.copyWith(shouldDisplaySearchResults: true);
     } finally {
       state = state.copyWith(isSearching: false);
-    }
-  }
-
-  void parseUserSearchData(List<Map<String, dynamic>> response) {
-    final Logger logger = ref.read(loggerProvider);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
-
-    final String userId = auth.currentUser?.uid ?? '';
-    final List<Profile> profiles = response.map((Map<String, dynamic> profile) => Profile.fromJson(profile)).toList();
-    final List<Profile> newProfiles = [];
-
-    for (int i = 0; i < profiles.length; i++) {
-      final Profile profile = profiles[i];
-
-      try {
-        logger.d('requestNextTimelinePage() - parsing profile: $profile');
-        final String profileId = profile.flMeta?.id ?? '';
-        if (profileId.isEmpty || profileId == userId) {
-          continue;
-        }
-
-        newProfiles.add(profile);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
-      }
-    }
-
-    state = state.copyWith(searchUsersResults: newProfiles);
-  }
-
-  void parseActivitySearchData(List<Map<String, dynamic>> response) {
-    final Logger logger = ref.read(loggerProvider);
-
-    final List<dynamic> activities = response.map((dynamic activity) => json.decodeSafe(activity)).toList();
-    final List<Activity> newActivities = [];
-
-    for (final dynamic activity in activities) {
-      try {
-        logger.d('requestNextTimelinePage() - parsing activity: $activity');
-        final Activity newActivity = Activity.fromJson(activity);
-        final String activityId = newActivity.flMeta?.id ?? '';
-        if (activityId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to cache activity: $activity');
-          continue;
-        }
-
-        newActivity.generalConfiguration!.type.when(post: () {
-          if (state.currentTab == SearchTab.posts) {
-            newActivities.add(newActivity);
-          }
-        }, event: () {
-          if (state.currentTab == SearchTab.events) {
-            newActivities.add(newActivity);
-          }
-        }, clip: () {
-          if (state.currentTab == SearchTab.posts) {
-            newActivities.add(newActivity);
-          }
-        }, repost: () {
-          if (state.currentTab == SearchTab.posts) {
-            newActivities.add(newActivity);
-          }
-        });
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
-      }
-    }
-
-    switch (state.currentTab) {
-      case SearchTab.posts:
-        state = state.copyWith(searchPostsResults: newActivities);
-        break;
-      default:
-        state = state.copyWith(searchEventsResults: newActivities);
     }
   }
 

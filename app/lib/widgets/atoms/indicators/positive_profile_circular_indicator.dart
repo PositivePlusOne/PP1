@@ -112,14 +112,15 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
       return;
     }
 
-    final Color? dominantColor = getMostCommonColor(bytes);
-    if (dominantColor == null) {
-      logger.w('Could not get dominant color for ${widget.imageOverridePath}');
-      return;
-    }
-
-    logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final Color? dominantColor = getMostCommonColor(bytes);
+      if (dominantColor == null) {
+        logger.w('Could not get dominant color for ${widget.imageOverridePath}');
+        return;
+      }
+
+      logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
+
       setState(() => ringColor = dominantColor);
     });
   }

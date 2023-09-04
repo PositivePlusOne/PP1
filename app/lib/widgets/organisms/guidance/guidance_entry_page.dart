@@ -24,7 +24,6 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
-import 'guidance_page.dart';
 
 @RoutePage()
 class GuidanceEntryPage extends HookConsumerWidget {
@@ -53,28 +52,24 @@ class GuidanceEntryPage extends HookConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
-    return Stack(
-      children: [
-        PositiveScaffold(
-          bottomNavigationBar: PositiveNavigationBar(
-            mediaQuery: mediaQuery,
-            index: NavigationBarIndex.guidance,
+    return PositiveScaffold(
+      isBusy: gcs.isBusy,
+      bottomNavigationBar: PositiveNavigationBar(
+        mediaQuery: mediaQuery,
+        index: NavigationBarIndex.guidance,
+      ),
+      headingWidgets: <Widget>[
+        SliverPinnedHeader(
+          child: GuidanceSearchBar(
+            onSubmitted: gc.onSearch,
+            onBackSelected: () => context.router.pop(),
+            initialText: searchTerm,
+            hintText: searchHintText(gc.guidanceSection),
           ),
-          headingWidgets: [
-            SliverPinnedHeader(
-              child: GuidanceSearchBar(
-                onSubmitted: gc.onSearch,
-                onBackSelected: () => context.router.pop(),
-                initialText: searchTerm,
-                hintText: searchHintText(gc.guidanceSection),
-              ),
-            ),
-            if (builder != null) ...<Widget>[
-              SliverToBoxAdapter(child: builder.build()),
-            ],
-          ],
         ),
-        if (gcs.isBusy) ...[const GuidanceLoadingIndicator()],
+        if (builder != null) ...<Widget>[
+          SliverToBoxAdapter(child: builder.build()),
+        ],
       ],
     );
   }

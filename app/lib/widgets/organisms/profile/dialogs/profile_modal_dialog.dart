@@ -196,7 +196,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
             context: context,
             useSafeArea: false,
             title: localizations.shared_profile_report_modal_title(widget.profile.displayName.asHandle),
-            child: PostReportDialog(targetPost: widget.postID!, currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
+            child: PostReportDialog(targetPost: widget.postID, currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
           );
           break;
       }

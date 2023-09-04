@@ -1,26 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_view_model.dart';
+part of 'search_api_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatViewModelHash() => r'e36d2a733f8dacf5796e76aeea1ddb4224fd4a05';
+String _$searchApiServiceHash() => r'9006527dd29c511d81e299d1607e613ef9587906';
 
-/// See also [ChatViewModel].
-@ProviderFor(ChatViewModel)
-final chatViewModelProvider =
-    NotifierProvider<ChatViewModel, ChatViewModelState>.internal(
-  ChatViewModel.new,
-  name: r'chatViewModelProvider',
+/// See also [searchApiService].
+@ProviderFor(searchApiService)
+final searchApiServiceProvider = FutureProvider<SearchApiService>.internal(
+  searchApiService,
+  name: r'searchApiServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$chatViewModelHash,
+      : _$searchApiServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatViewModel = Notifier<ChatViewModelState>;
+typedef SearchApiServiceRef = FutureProviderRef<SearchApiService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

@@ -17,7 +17,6 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 
@@ -588,52 +587,6 @@ class RelationshipApiService {
         'target': uid,
       },
     );
-  }
-}
-
-@Riverpod(keepAlive: true)
-FutureOr<SearchApiService> searchApiService(SearchApiServiceRef ref) async {
-  return SearchApiService();
-}
-
-class SearchApiService {
-  FutureOr<List<Map<String, Object?>>> search({
-    required String query,
-    required String index,
-    Pagination? pagination,
-  }) async {
-    final requestPayload = buildRequestPayload(name: 'search-search', pagination: pagination, parameters: {
-      'query': query,
-      'index': index,
-    });
-
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final String cacheKey = json.encode(requestPayload);
-
-    final cachedResponse = cacheController.getFromCache(cacheKey);
-    if (cachedResponse != null) {
-      logger.d('[SearchApiService] Found cached response for $cacheKey');
-      return cachedResponse;
-    }
-
-    final response = await getHttpsCallableResult(
-      name: 'search-search',
-      pagination: pagination,
-      selector: (response) => response.data[index] as List<dynamic>,
-      cacheOverwriteSchemaKeys: const {"users": false},
-      parameters: {
-        'query': query,
-        'index': index,
-      },
-    );
-
-    final List<Map<String, Object?>> responsePayload = response.map((e) => json.decodeSafe(e)).toList();
-
-    logger.d('[SearchApiService] Adding response to cache for $cacheKey');
-    cacheController.addToCache(key: cacheKey, value: responsePayload);
-
-    return responsePayload;
   }
 }
 

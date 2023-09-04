@@ -18,7 +18,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
-import 'package:app/services/api.dart';
+import 'package:app/services/search_api_service.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -70,16 +70,18 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
     final String formattedSearchString = searchString.asTagKey;
 
-    final List<Map<String, Object?>> response = await searchApiService.search(
+    final SearchResult<Tag> response = await searchApiService.search<Tag>(
       query: searchString,
       index: "tags",
+      fromJson: (json) => Tag.fromJson(json),
       pagination: Pagination(
         // cursor: , for additional pagination
         limit: maxTagsPerPage,
       ),
     );
+
     filteredTags.clear();
-    filteredTags.addAll(response.map((Map<String, dynamic> tag) => Tag.fromJson(tag)).toList());
+    filteredTags.addAll(response.results);
 
     if (!filteredTags.any((element) => element.key == formattedSearchString)) {
       if (!selectedTags.any((element) => element.key == formattedSearchString)) {
