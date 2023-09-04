@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/dialogs/post_report_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +24,7 @@ import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/organisms/profile/dialogs/post_report_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/system/design_controller.dart';

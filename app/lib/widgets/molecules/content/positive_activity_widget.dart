@@ -2,12 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -38,6 +37,7 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';

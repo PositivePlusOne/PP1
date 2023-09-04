@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 // Package imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';

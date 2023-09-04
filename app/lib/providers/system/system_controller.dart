@@ -156,17 +156,28 @@ class SystemController extends _$SystemController {
     final Map<String, Object?> payload = endpointResponse.data;
     logger.d('updateSystemConfiguration: $payload');
 
-    interestsController.onInterestsUpdated(payload['interests'] as Map<dynamic, dynamic>);
-    genderController.onGendersUpdated(payload['genders'] as List<dynamic>);
-    hivStatusController.onHivStatusesUpdated(payload['medicalConditions'] as List<dynamic>);
-    tagsController.updatePopularTags(payload['popularTags'] as List<dynamic>);
-    tagsController.updateRecentTags(payload['recentTags'] as List<dynamic>);
-    tagsController.updateTopicTags(payload['topicTags'] as List<dynamic>);
+    final Map interests = payload.containsKey('interests') && payload['interests'] is Map<dynamic, dynamic> ? payload['interests'] as Map<dynamic, dynamic> : {};
+    final List genders = payload.containsKey('genders') && payload['genders'] is List<dynamic> ? payload['genders'] as List<dynamic> : [];
+    final List hivStatuses = payload.containsKey('medicalConditions') && payload['medicalConditions'] is List<dynamic> ? payload['medicalConditions'] as List<dynamic> : [];
+    final Set<String> supportedProfiles = (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic> ? payload['supportedProfiles'] as List<dynamic> : []).whereType<String>().toSet();
 
-    if (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic>) {
-      final Set<String> supportedProfiles = (payload['supportedProfiles'] as List<dynamic>).cast<String>().where((element) => element.isNotEmpty).toSet();
-      profileController.onSupportedProfilesUpdated(supportedProfiles);
+    final List popularTags = payload.containsKey('popularTags') && payload['popularTags'] is List<dynamic> ? payload['popularTags'] as List<dynamic> : [];
+    final List recentTags = payload.containsKey('recentTags') && payload['recentTags'] is List<dynamic> ? payload['recentTags'] as List<dynamic> : [];
+    final List topicTags = payload.containsKey('topicTags') && payload['topicTags'] is List<dynamic> ? payload['topicTags'] as List<dynamic> : [];
+
+    if (interests.isEmpty || genders.isEmpty || hivStatuses.isEmpty) {
+      throw Exception('Failed to load initial data from backend');
     }
+
+    interestsController.onInterestsUpdated(interests);
+    genderController.onGendersUpdated(genders);
+    hivStatusController.onHivStatusesUpdated(hivStatuses);
+
+    tagsController.updatePopularTags(popularTags);
+    tagsController.updateRecentTags(recentTags);
+    tagsController.updateTopicTags(topicTags);
+
+    profileController.onSupportedProfilesUpdated(supportedProfiles);
 
     state = state.copyWith(hasPerformedInitialSetup: true);
     logger.i('updateSystemConfiguration: Completed');
