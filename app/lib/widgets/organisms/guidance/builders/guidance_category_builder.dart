@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:app/providers/guidance/guidance_controller.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/guidance/builders/builder.dart';
 import '../../../../dtos/database/guidance/guidance_article.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
@@ -22,6 +23,9 @@ class GuidanceCategoryListBuilder implements ContentBuilder {
   final List<GuidanceArticle> articles;
   final GuidanceController controller;
   final bool isBusy;
+
+  @override
+  List<PositiveScaffoldDecoration> get decorations => [];
 
   @override
   Widget build() => GuidanceCategoryList(

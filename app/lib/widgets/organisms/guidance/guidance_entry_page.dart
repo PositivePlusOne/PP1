@@ -54,6 +54,7 @@ class GuidanceEntryPage extends HookConsumerWidget {
 
     return PositiveScaffold(
       isBusy: gcs.isBusy,
+      decorations: builder?.decorations ?? [],
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.guidance,
