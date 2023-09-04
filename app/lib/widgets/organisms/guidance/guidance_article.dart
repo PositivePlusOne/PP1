@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,11 +24,13 @@ enum GuidanceArticleListType {
 
 class GuidanceArticleTile extends ConsumerWidget {
   final GuidanceArticle article;
-  final VoidCallback onTap;
+  final FutureOr<void> Function(BuildContext context) onTap;
+  final bool isBusy;
 
   const GuidanceArticleTile({
     required this.onTap,
     required this.article,
+    required this.isBusy,
     super.key,
   });
 
@@ -35,6 +39,7 @@ class GuidanceArticleTile extends ConsumerWidget {
     return PositiveListTile(
       title: article.title,
       onTap: onTap,
+      isBusy: isBusy,
     );
   }
 }

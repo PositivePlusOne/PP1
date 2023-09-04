@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/services/search_api_service.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -30,10 +32,15 @@ import '../../services/third_party.dart';
 class PositiveDirectoryPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveDirectoryPaginationBehaviour({
     this.windowSize = 10,
+    this.isBusy = false,
+    this.searchTerm = '',
     super.key,
   });
 
   final int windowSize;
+  final bool isBusy;
+
+  final String searchTerm;
 
   static const String kWidgetKey = 'PositiveDirectoryPaginationBehaviour';
 
@@ -43,6 +50,7 @@ class PositiveDirectoryPaginationBehaviour extends StatefulHookConsumerWidget {
 
 class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveDirectoryPaginationBehaviour> {
   final PagingController<String, GuidanceDirectoryEntry> pagingController = PagingController(firstPageKey: "");
+  bool isBusy = false;
 
   @override
   void initState() {
@@ -66,20 +74,61 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
 
   Future<void> onRequestPage(String pageKey) async {
     final Logger logger = ref.read(loggerProvider);
+    logger.i('onRequestPage: $pageKey');
+
+    if (isBusy) {
+      logger.i('onRequestPage: isBusy');
+      return;
+    }
+
+    isBusy = true;
 
     try {
-      final GuidanceApiService apiService = await providerContainer.read(guidanceApiServiceProvider.future);
-      final EndpointResponse response = await apiService.getDirectoryEntryWindow(cursor: pageKey);
-      final List<GuidanceDirectoryEntry> entries = (response.data['guidanceDirectoryEntries'] as List<dynamic>).map((dynamic e) => GuidanceDirectoryEntry.fromJson(e as Map<String, dynamic>)).toList();
-      if (entries.isEmpty || response.cursor == null) {
+      final List<GuidanceDirectoryEntry> entries = [];
+      String newCursor = '';
+
+      if (widget.searchTerm.isEmpty) {
+        final GuidanceApiService apiService = await providerContainer.read(guidanceApiServiceProvider.future);
+        final EndpointResponse response = await apiService.getDirectoryEntryWindow(cursor: pageKey);
+        final List<GuidanceDirectoryEntry> newEntries = (response.data['guidanceDirectoryEntries'] as List<dynamic>).map((dynamic e) => GuidanceDirectoryEntry.fromJson(e as Map<String, dynamic>)).toList();
+
+        newCursor = response.cursor ?? '';
+        entries.addAll(newEntries);
+      } else {
+        final SearchApiService apiService = await providerContainer.read(searchApiServiceProvider.future);
+        final SearchResult<GuidanceDirectoryEntry> response = await apiService.search(
+          query: widget.searchTerm,
+          fromJson: (json) => GuidanceDirectoryEntry.fromJson(json),
+          index: "guidanceDirectoryEntries",
+          pagination: Pagination(
+            cursor: pageKey,
+          ),
+        );
+
+        newCursor = response.cursor;
+        entries.addAll(response.results);
+      }
+
+      if (entries.isEmpty || newCursor.isEmpty) {
         pagingController.appendSafeLastPage(entries);
         return;
       }
 
-      pagingController.appendSafePage(entries, response.cursor ?? '');
+      pagingController.appendSafePage(entries, newCursor);
     } catch (e) {
       logger.e(e.toString());
       pagingController.error = e;
+    } finally {
+      isBusy = false;
+    }
+  }
+
+  @override
+  void didUpdateWidget(PositiveDirectoryPaginationBehaviour oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.searchTerm != widget.searchTerm) {
+      pagingController.refresh();
     }
   }
 
@@ -103,13 +152,13 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final GuidanceControllerState guidanceControllerState = ref.read(guidanceControllerProvider);
 
     final String id = item.flMeta?.id ?? '';
 
     return PositiveTapBehaviour(
       onTap: (_) => appRouter.push(GuidanceDirectoryEntryRoute(guidanceEntryId: id)),
-      isEnabled: !guidanceControllerState.isBusy,
+      isEnabled: !widget.isBusy && !isBusy,
+      showDisabledState: widget.isBusy || isBusy,
       child: Container(
         padding: const EdgeInsets.all(kPaddingMedium),
         decoration: BoxDecoration(

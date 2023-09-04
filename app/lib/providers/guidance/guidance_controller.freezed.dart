@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$GuidanceControllerState {
   bool get isBusy => throw _privateConstructorUsedError;
   GuidanceSection? get guidanceSection => throw _privateConstructorUsedError;
+  dynamic get guidanceDirectorySearchTerm => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GuidanceControllerStateCopyWith<GuidanceControllerState> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $GuidanceControllerStateCopyWith<$Res> {
           $Res Function(GuidanceControllerState) then) =
       _$GuidanceControllerStateCopyWithImpl<$Res, GuidanceControllerState>;
   @useResult
-  $Res call({bool isBusy, GuidanceSection? guidanceSection});
+  $Res call(
+      {bool isBusy,
+      GuidanceSection? guidanceSection,
+      dynamic guidanceDirectorySearchTerm});
 }
 
 /// @nodoc
@@ -49,6 +53,7 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
   $Res call({
     Object? isBusy = null,
     Object? guidanceSection = freezed,
+    Object? guidanceDirectorySearchTerm = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
@@ -59,6 +64,10 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
+      guidanceDirectorySearchTerm: freezed == guidanceDirectorySearchTerm
+          ? _value.guidanceDirectorySearchTerm
+          : guidanceDirectorySearchTerm // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -71,7 +80,10 @@ abstract class _$$_GuidanceControllerStateCopyWith<$Res>
       __$$_GuidanceControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, GuidanceSection? guidanceSection});
+  $Res call(
+      {bool isBusy,
+      GuidanceSection? guidanceSection,
+      dynamic guidanceDirectorySearchTerm});
 }
 
 /// @nodoc
@@ -88,6 +100,7 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
     Object? guidanceSection = freezed,
+    Object? guidanceDirectorySearchTerm = freezed,
   }) {
     return _then(_$_GuidanceControllerState(
       isBusy: null == isBusy
@@ -98,6 +111,9 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
           ? _value.guidanceSection
           : guidanceSection // ignore: cast_nullable_to_non_nullable
               as GuidanceSection?,
+      guidanceDirectorySearchTerm: freezed == guidanceDirectorySearchTerm
+          ? _value.guidanceDirectorySearchTerm!
+          : guidanceDirectorySearchTerm,
     ));
   }
 }
@@ -106,7 +122,9 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
 
 class _$_GuidanceControllerState implements _GuidanceControllerState {
   const _$_GuidanceControllerState(
-      {this.isBusy = false, this.guidanceSection = null});
+      {this.isBusy = false,
+      this.guidanceSection = null,
+      this.guidanceDirectorySearchTerm = ''});
 
   @override
   @JsonKey()
@@ -114,10 +132,13 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   @override
   @JsonKey()
   final GuidanceSection? guidanceSection;
+  @override
+  @JsonKey()
+  final dynamic guidanceDirectorySearchTerm;
 
   @override
   String toString() {
-    return 'GuidanceControllerState(isBusy: $isBusy, guidanceSection: $guidanceSection)';
+    return 'GuidanceControllerState(isBusy: $isBusy, guidanceSection: $guidanceSection, guidanceDirectorySearchTerm: $guidanceDirectorySearchTerm)';
   }
 
   @override
@@ -127,11 +148,15 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
             other is _$_GuidanceControllerState &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.guidanceSection, guidanceSection) ||
-                other.guidanceSection == guidanceSection));
+                other.guidanceSection == guidanceSection) &&
+            const DeepCollectionEquality().equals(
+                other.guidanceDirectorySearchTerm,
+                guidanceDirectorySearchTerm));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy, guidanceSection);
+  int get hashCode => Object.hash(runtimeType, isBusy, guidanceSection,
+      const DeepCollectionEquality().hash(guidanceDirectorySearchTerm));
 
   @JsonKey(ignore: true)
   @override
@@ -145,12 +170,15 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
 abstract class _GuidanceControllerState implements GuidanceControllerState {
   const factory _GuidanceControllerState(
       {final bool isBusy,
-      final GuidanceSection? guidanceSection}) = _$_GuidanceControllerState;
+      final GuidanceSection? guidanceSection,
+      final dynamic guidanceDirectorySearchTerm}) = _$_GuidanceControllerState;
 
   @override
   bool get isBusy;
   @override
   GuidanceSection? get guidanceSection;
+  @override
+  dynamic get guidanceDirectorySearchTerm;
   @override
   @JsonKey(ignore: true)
   _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>

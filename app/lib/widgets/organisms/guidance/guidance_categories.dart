@@ -23,6 +23,7 @@ class GuidanceCategoryList extends ConsumerWidget {
     required this.categories,
     required this.articles,
     required this.controller,
+    required this.isBusy,
     this.title,
     super.key,
   });
@@ -30,6 +31,8 @@ class GuidanceCategoryList extends ConsumerWidget {
   final List<GuidanceCategory> categories;
   final List<GuidanceArticle> articles;
   final GuidanceController controller;
+
+  final bool isBusy;
   final String? title;
 
   String getTitle(GuidanceSection? gs) {
@@ -90,7 +93,7 @@ class GuidanceCategoryList extends ConsumerWidget {
           ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              child: GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback),
+              child: GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback, isBusy: isBusy),
             ),
           ].spaceWithVertical(kPaddingVerySmall),
         if (categories.isEmpty && articles.isEmpty) ...[
@@ -115,7 +118,8 @@ class GuidanceCategoryList extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             child: GuidanceArticleTile(
               article: article,
-              onTap: () => controller.pushGuidanceArticle(article),
+              isBusy: isBusy,
+              onTap: (_) => controller.pushGuidanceArticle(article),
             ),
           ),
         ]
@@ -128,18 +132,21 @@ class GuidanceCategoryTile extends StatelessWidget {
   const GuidanceCategoryTile({
     required this.category,
     required this.onCategorySelected,
+    required this.isBusy,
     super.key,
   });
 
   final GuidanceCategory category;
   final GuidanceCategoryCallback onCategorySelected;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
     return PositiveListTile(
       title: category.title,
       subtitle: category.body,
-      onTap: () => onCategorySelected(category),
+      isBusy: isBusy,
+      onTap: (_) => onCategorySelected(category),
     );
   }
 }

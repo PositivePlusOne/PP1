@@ -11,7 +11,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/banners/positive_banner.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../providers/guidance/guidance_controller.dart';
@@ -41,39 +40,34 @@ class GuidancePage extends ConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
-    return Stack(
-      children: [
-        PositiveScaffold(
-          isBusy: state.isBusy,
-          bottomNavigationBar: PositiveNavigationBar(
-            mediaQuery: mediaQuery,
-            index: NavigationBarIndex.guidance,
-          ),
-          appBar: PositiveAppBar(
-            applyLeadingandTrailingPadding: true,
-            safeAreaQueryData: mediaQuery,
-            foregroundColor: colors.black,
-            backgroundColor: colors.colorGray1,
-            trailType: PositiveAppBarTrailType.convex,
-            trailing: actions,
-          ),
-          headingWidgets: [
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  buildRootGuidanceContent(controller),
-                ),
-              ),
+    return PositiveScaffold(
+      isBusy: state.isBusy,
+      bottomNavigationBar: PositiveNavigationBar(
+        mediaQuery: mediaQuery,
+        index: NavigationBarIndex.guidance,
+      ),
+      appBar: PositiveAppBar(
+        applyLeadingandTrailingPadding: true,
+        safeAreaQueryData: mediaQuery,
+        foregroundColor: colors.black,
+        backgroundColor: colors.colorGray1,
+        trailType: PositiveAppBarTrailType.convex,
+        trailing: actions,
+      ),
+      headingWidgets: [
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(
+              buildRootGuidanceContent(controller, state.isBusy),
             ),
-          ],
+          ),
         ),
-        if (state.isBusy) ...[const GuidanceLoadingIndicator()],
       ],
     );
   }
 
-  List<Widget> buildRootGuidanceContent(GuidanceController controller) {
+  List<Widget> buildRootGuidanceContent(GuidanceController controller, bool isBusy) {
     final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     final colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
@@ -91,7 +85,8 @@ class GuidancePage extends ConsumerWidget {
         body: 'View our guidance to get the support you deserve.',
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type1,
-        onTapped: () {
+        isEnabled: !isBusy,
+        onTapped: (_) {
           controller.selectGuidanceSection(GuidanceSection.guidance);
           controller.loadGuidanceCategories(null);
         },
@@ -101,7 +96,8 @@ class GuidancePage extends ConsumerWidget {
         body: 'View the companies and charities that are involved with Positive+1 and HIV.',
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type2,
-        onTapped: () {
+        isEnabled: !isBusy,
+        onTapped: (_) {
           controller.selectDirectorySection();
         },
       ),
@@ -110,32 +106,12 @@ class GuidancePage extends ConsumerWidget {
         body: 'Get wider help and information about the Positive+1 app.',
         buttonText: 'View',
         bannerDecoration: BannerDecoration.type3,
-        onTapped: () {
+        isEnabled: !isBusy,
+        onTapped: (_) {
           controller.selectGuidanceSection(GuidanceSection.appHelp);
           controller.loadAppHelpCategories(null);
         },
       ),
     ].spaceWithVertical(kPaddingMedium);
-  }
-}
-
-class GuidanceLoadingIndicator extends StatelessWidget {
-  const GuidanceLoadingIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Center(
-          child: PositiveLoadingIndicator(),
-        ),
-      ),
-    );
   }
 }

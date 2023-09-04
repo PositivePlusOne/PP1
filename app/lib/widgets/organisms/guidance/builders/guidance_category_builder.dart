@@ -14,12 +14,14 @@ class GuidanceCategoryListBuilder implements ContentBuilder {
     required this.categories,
     required this.articles,
     required this.controller,
+    this.isBusy = false,
   });
 
   final String? title;
   final List<GuidanceCategory> categories;
   final List<GuidanceArticle> articles;
   final GuidanceController controller;
+  final bool isBusy;
 
   @override
   Widget build() => GuidanceCategoryList(
@@ -27,5 +29,6 @@ class GuidanceCategoryListBuilder implements ContentBuilder {
         categories: categories,
         controller: controller,
         title: title,
+        isBusy: isBusy,
       );
 }

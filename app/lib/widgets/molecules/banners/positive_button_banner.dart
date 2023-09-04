@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,13 +22,16 @@ class PositiveButtonBanner extends ConsumerWidget {
     required this.body,
     required this.buttonText,
     required this.onTapped,
+    required this.isEnabled,
     this.bannerDecoration = BannerDecoration.type1,
   });
 
   final String heading;
   final String body;
   final String buttonText;
-  final FutureOr<void> Function() onTapped;
+  final FutureOr<void> Function(BuildContext context) onTapped;
+  final bool isEnabled;
+
   final BannerDecoration bannerDecoration;
 
   @override
@@ -35,15 +39,17 @@ class PositiveButtonBanner extends ConsumerWidget {
     final typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final colors = ref.watch(designControllerProvider.select((design) => design.colors));
 
-    return GestureDetector(
+    return PositiveTapBehaviour(
+      isEnabled: isEnabled,
       onTap: onTapped,
+      showDisabledState: !isEnabled,
       child: PositiveBanner(
         key: key,
         colors: colors,
         typography: typography,
         bannerDecoration: bannerDecoration,
         child: Row(
-          children: [
+          children: <Widget>[
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,12 +72,15 @@ class PositiveButtonBanner extends ConsumerWidget {
               ),
             ),
             kPaddingMedium.asHorizontalBox,
-            PositiveButton(
-              colors: colors,
-              onTapped: onTapped,
-              label: buttonText,
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            IgnorePointer(
+              child: PositiveButton(
+                colors: colors,
+                onTapped: () {},
+                isDisabled: !isEnabled,
+                label: buttonText,
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+              ),
             )
           ],
         ),

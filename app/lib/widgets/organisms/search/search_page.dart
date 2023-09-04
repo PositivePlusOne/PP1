@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -46,11 +47,18 @@ class SearchPage extends ConsumerWidget {
     final SearchTab currentTab = ref.watch(searchViewModelProvider.select((value) => value.currentTab));
     final bool isBusy = ref.watch(searchViewModelProvider.select((value) => value.isBusy));
     final bool isSearching = ref.watch(searchViewModelProvider.select((value) => value.isSearching));
-    final bool canDisplaySearchResults = ref.watch(searchViewModelProvider.select((value) => value.shouldDisplaySearchResults));
 
     final List<Profile> searchUserResults = ref.watch(searchViewModelProvider.select((value) => value.searchUsersResults));
     final List<Activity> searchPostsResults = ref.watch(searchViewModelProvider.select((value) => value.searchPostsResults));
     final List<Activity> searchEventsResults = ref.watch(searchViewModelProvider.select((value) => value.searchEventsResults));
+    final List<Tag> searchTagResults = ref.watch(searchViewModelProvider.select((value) => value.searchTagResults));
+
+    final bool canDisplaySearchResults = switch (currentTab) {
+      SearchTab.users => searchUserResults.isNotEmpty,
+      SearchTab.posts => searchPostsResults.isNotEmpty,
+      SearchTab.events => searchEventsResults.isNotEmpty,
+      SearchTab.topics => searchTagResults.isNotEmpty,
+    };
 
     return PositiveScaffold(
       isBusy: isBusy,

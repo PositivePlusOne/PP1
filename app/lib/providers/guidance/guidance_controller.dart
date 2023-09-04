@@ -32,6 +32,7 @@ class GuidanceControllerState with _$GuidanceControllerState {
   const factory GuidanceControllerState({
     @Default(false) bool isBusy,
     @Default(null) GuidanceSection? guidanceSection,
+    @Default('') guidanceDirectorySearchTerm,
   }) = _GuidanceControllerState;
 
   factory GuidanceControllerState.initialState() => const GuidanceControllerState();
@@ -120,15 +121,21 @@ class GuidanceController extends _$GuidanceController {
     }
   }
 
-  Future<void> Function(String, TextEditingController) get onSearch {
+  FutureOr<void> Function(String, TextEditingController) get onSearch {
     switch (state.guidanceSection) {
       case GuidanceSection.guidance:
+        return searchGuidance;
+      case GuidanceSection.directory:
         return searchGuidance;
       case GuidanceSection.appHelp:
         return searchAppHelp;
       default:
         return (_, __) async {};
     }
+  }
+
+  void searchDirectory(String term, TextEditingController controller) async {
+    state = state.copyWith(guidanceDirectorySearchTerm: term);
   }
 
   Future<void> searchGuidance(String term, TextEditingController controller) => _searchGuidance(term, "guidance", controller);

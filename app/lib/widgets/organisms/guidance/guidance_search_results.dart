@@ -49,7 +49,7 @@ class GuidanceSearchResults extends ConsumerWidget {
             ),
           ],
           for (final category in categories) ...[
-            GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback),
+            GuidanceCategoryTile(category: category, onCategorySelected: controller.guidanceCategoryCallback, isBusy: state.isBusy),
           ],
           if (articles.isNotEmpty) ...[
             Text(
@@ -60,7 +60,8 @@ class GuidanceSearchResults extends ConsumerWidget {
           for (final article in articles) ...[
             GuidanceArticleTile(
               article: article,
-              onTap: () => controller.pushGuidanceArticle(article),
+              isBusy: state.isBusy,
+              onTap: (_) => controller.pushGuidanceArticle(article),
             ),
           ],
           if (categories.isEmpty && articles.isEmpty) ...[

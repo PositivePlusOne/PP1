@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,11 +14,14 @@ import '../../../providers/system/design_controller.dart';
 class PositiveListTile extends ConsumerWidget {
   final String title;
   final String? subtitle;
-  final void Function() onTap;
+  final bool isBusy;
+
+  final FutureOr<void> Function(BuildContext context) onTap;
 
   const PositiveListTile({
     required this.title,
     required this.onTap,
+    this.isBusy = false,
     this.subtitle,
     super.key,
   });
@@ -27,8 +33,9 @@ class PositiveListTile extends ConsumerWidget {
     final typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
-    return GestureDetector(
+    return PositiveTapBehaviour(
       onTap: onTap,
+      isEnabled: !isBusy,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kBorderRadius),
         child: Container(
