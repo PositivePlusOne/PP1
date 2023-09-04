@@ -10,6 +10,9 @@ import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/main.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/guidance/guidance_directory.dart';
 import '../../../../dtos/database/guidance/guidance_category.dart';
 import '../../../../providers/guidance/guidance_controller.dart';
@@ -41,68 +44,105 @@ class GuidanceSearchResults extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    return ListView(
-      padding: const EdgeInsets.all(kPaddingMedium),
-      shrinkWrap: true,
-      children: [
-        if (categories.isNotEmpty) ...[
-          Text(
-            'Categories',
-            style: typography.styleHeroMedium.copyWith(color: colors.black),
-          ),
-          for (final category in categories) ...[
-            GuidanceCategoryTile(
-              category: category,
-              onCategorySelected: controller.guidanceCategoryCallback,
-              isBusy: false,
+    final GuidanceSection? section = state.guidanceSection;
+
+    final String emptyTitle = switch (section) {
+      GuidanceSection.directory => 'No organisations found',
+      (_) => 'No guidance found',
+    };
+
+    final String emptyBody = switch (section) {
+      GuidanceSection.directory => 'We couldn\'t find anything in our Directory matching your search term',
+      (_) => 'We couldn\'t find anything in our Guidance matching your search term',
+    };
+
+    return Padding(
+      padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: kPaddingExtraSmall),
+          if (categories.isNotEmpty) ...[
+            Text(
+              'Categories',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
+            for (final category in categories) ...[
+              GuidanceCategoryTile(
+                category: category,
+                onCategorySelected: controller.guidanceCategoryCallback,
+                isBusy: false,
+              ),
+            ],
           ],
-        ],
-        if (articles.isNotEmpty) ...[
-          Text(
-            'Articles',
-            style: typography.styleHeroMedium.copyWith(color: colors.black),
-          ),
-          for (final article in articles) ...[
-            GuidanceArticleTile(
-              article: article,
-              isBusy: false,
-              onTap: (_) => controller.pushGuidanceArticle(article),
+          if (articles.isNotEmpty) ...[
+            Text(
+              'Articles',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
+            for (final article in articles) ...[
+              GuidanceArticleTile(
+                article: article,
+                isBusy: false,
+                onTap: (_) => controller.pushGuidanceArticle(article),
+              ),
+            ],
           ],
-        ],
-        if (directoryEntries.isNotEmpty) ...<Widget>[
-          Text(
-            'Directory Entries',
-            style: typography.styleHeroMedium.copyWith(color: colors.black),
-          ),
-          for (final directoryEntry in directoryEntries) ...[
-            GuidanceDirectoryTile(
-              entry: directoryEntry,
-              isBusy: false,
+          if (directoryEntries.isNotEmpty) ...<Widget>[
+            Text(
+              'Directory Entries',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
+            for (final directoryEntry in directoryEntries) ...[
+              GuidanceDirectoryTile(
+                entry: directoryEntry,
+                isBusy: false,
+              ),
+            ],
           ],
-        ],
-        if (categories.isEmpty && articles.isEmpty && directoryEntries.isEmpty) ...[
-          Text(
-            'Hmmmmm, there seems to be nothing here. Sorry about that!',
-            style: typography.styleBody.copyWith(color: colors.black),
-            textAlign: TextAlign.left,
-          ),
-        ]
-      ].spaceWithVertical(kPaddingMedium),
+          if (categories.isEmpty && articles.isEmpty && directoryEntries.isEmpty) ...[
+            Text(
+              emptyTitle,
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            Text(
+              emptyBody,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+          ]
+        ].spaceWithVertical(kPaddingMedium),
+      ),
     );
   }
 }
 
 class GuidanceSearchResultsBuilder implements ContentBuilder {
+  const GuidanceSearchResultsBuilder({
+    required this.controller,
+    required this.state,
+    this.categories = const [],
+    this.articles = const [],
+    this.directoryEntries = const [],
+  });
+
   final List<GuidanceCategory> categories;
   final List<GuidanceArticle> articles;
   final List<GuidanceDirectoryEntry> directoryEntries;
+
   final GuidanceController controller;
   final GuidanceControllerState state;
 
-  const GuidanceSearchResultsBuilder(this.categories, this.articles, this.directoryEntries, this.controller, this.state);
+  bool get isEmpty => categories.isEmpty && articles.isEmpty && directoryEntries.isEmpty;
+
+  @override
+  List<PositiveScaffoldDecoration> get decorations {
+    if (isEmpty) {
+      final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+      return buildType1ScaffoldDecorations(colors);
+    }
+
+    return [];
+  }
 
   @override
   Widget build() => GuidanceSearchResults(

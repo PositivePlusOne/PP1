@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:app/dtos/database/guidance/guidance_article.dart';
 import 'package:app/providers/guidance/guidance_controller.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/guidance/builders/builder.dart';
 import 'package:app/widgets/organisms/guidance/guidance_article.dart';
 
@@ -15,6 +16,9 @@ class GuidanceArticleBuilder implements ContentBuilder {
 
   final GuidanceArticle article;
   final GuidanceController controller;
+
+  @override
+  List<PositiveScaffoldDecoration> get decorations => [];
 
   @override
   Widget build() => GuidanceArticleContent(article);

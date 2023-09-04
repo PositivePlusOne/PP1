@@ -164,11 +164,11 @@ class GuidanceController extends _$GuidanceController {
         index: "guidanceDirectoryEntries",
       );
 
-      if (response.results.isEmpty) {
-        return;
-      }
-
-      final GuidanceSearchResultsBuilder resBuilder = GuidanceSearchResultsBuilder([], [], response.results, this, state);
+      final GuidanceSearchResultsBuilder resBuilder = GuidanceSearchResultsBuilder(
+        controller: this,
+        state: state,
+        directoryEntries: response.results,
+      );
 
       cacheController.addToCache(key: cacheKey, value: resBuilder);
       state = state.copyWith(isBusy: false);
@@ -208,7 +208,12 @@ class GuidanceController extends _$GuidanceController {
       final catQuery = categoryIndex.query(term).filters('guidanceType:"$guidanceType"');
       final categorySnap = await catQuery.getObjects();
       final categories = GuidanceCategory.listFromAlgoliaSnap(categorySnap.hits);
-      final resBuilder = GuidanceSearchResultsBuilder(categories, articles, [], this, state);
+      final resBuilder = GuidanceSearchResultsBuilder(
+        categories: categories,
+        articles: articles,
+        controller: this,
+        state: state,
+      );
 
       cacheController.addToCache(key: cacheKey, value: resBuilder);
       state = state.copyWith(isBusy: false);
