@@ -26,7 +26,7 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveChannelListTile extends ConsumerWidget {
   const PositiveChannelListTile({
-    required this.channel,
+    this.channel,
     this.isEnabled = true,
     this.onTap,
     this.isSelected,
@@ -34,7 +34,7 @@ class PositiveChannelListTile extends ConsumerWidget {
     super.key,
   });
 
-  final Channel channel;
+  final Channel? channel;
   final bool isEnabled;
   final void Function(BuildContext context)? onTap;
 
@@ -49,12 +49,12 @@ class PositiveChannelListTile extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final String? currentUserId = ref.read(firebaseAuthProvider).currentUser?.uid;
-    final List<Member> members = channel.state?.members.toList() ?? [];
+    final List<Member> members = channel?.state?.members.toList() ?? [];
     final List<Profile> profiles = members.map((e) => cacheController.getFromCache<Profile>(e.userId!)).nonNulls.toList();
     final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
 
-    final Message? latestMessage = channel.state?.messages.reversed.firstOrNull;
-    final bool isOneToOne = channel.state?.members.length == 2;
+    final Message? latestMessage = channel?.state?.messages.reversed.firstOrNull;
+    final bool isOneToOne = channel?.state?.members.length == 2;
 
     String title = '';
     String description = '';
@@ -115,7 +115,7 @@ class PositiveChannelListTile extends ConsumerWidget {
 
     indicatorWidth = indicatorWidth.clamp(kIconHuge, kIconHuge * 3.0);
 
-    final ValueKey<String> valueKey = ValueKey('pp1-channel-list-tile-${members.length}-${channel.id}-${latestMessage?.id}');
+    final ValueKey<String> valueKey = ValueKey('pp1-channel-list-tile-${members.length}-${channel?.id}-${latestMessage?.id}');
 
     return PositiveTapBehaviour(
       key: valueKey,

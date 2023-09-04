@@ -135,7 +135,7 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
 
     final Media? media = widget.hasOverrideImage ? Media.fromImageUrl(widget.imageOverridePath) : widget.profile?.profileImage;
     if (media == null) {
-      actualRingColor = colours.black;
+      actualRingColor = colours.colorGray2;
     }
 
     final Widget child = Stack(

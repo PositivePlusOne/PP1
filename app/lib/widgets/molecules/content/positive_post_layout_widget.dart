@@ -445,7 +445,9 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     //TODO(S): Reenable when other info available
     final Profile? userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
-    final bool isPublic = widget.postContent.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.public();
+    final ActivitySecurityConfigurationMode commentShareMode = widget.postContent.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
+
+    final bool isPublic = commentShareMode == const ActivitySecurityConfigurationMode.public();
     final bool isOwner = userProfile?.flMeta?.id != null && widget.postContent.publisherInformation?.publisherId == userProfile?.flMeta?.id;
 
     return Padding(
