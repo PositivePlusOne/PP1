@@ -62,7 +62,14 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   Future<bool> onWillPopScope() async {
     onCurrentChannelPopped();
-    return true;
+
+    final AppRouter router = ref.read(appRouterProvider);
+    final logger = ref.read(loggerProvider);
+
+    logger.i("Pop chat page, push Home page");
+    router.removeWhere((route) => true);
+    router.push(const HomeRoute());
+    return false;
   }
 
   @override
