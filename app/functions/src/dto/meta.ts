@@ -7,8 +7,8 @@ export interface FlMetaJSON {
     locale?: string;
     schema?: string;
     schemaRefId?: string;
-    updatedBy?: string;
-    updatedDate?: string;
+    lastModifiedBy?: string;
+    lastModifiedDate?: string;
 }
 
 export class FlMeta {
@@ -20,8 +20,8 @@ export class FlMeta {
     locale = 'en';
     schema = '';
     schemaRefId?: string;
-    updatedBy?: string;
-    updatedDate?: string;
+    lastModifiedBy?: string;
+    lastModifiedDate?: string;
 
     constructor(json: FlMetaJSON) {
         this.createdBy = json.createdBy;
@@ -32,8 +32,8 @@ export class FlMeta {
         this.locale = json.locale || 'en';
         this.schema = json.schema || '';
         this.schemaRefId = json.schemaRefId;
-        this.updatedBy = json.updatedBy;
-        this.updatedDate = json.updatedDate;
+        this.lastModifiedBy = json.lastModifiedBy || '';
+        this.lastModifiedDate = json.lastModifiedDate || '';
     }
 
     static fromJSON(json: FlMetaJSON): FlMeta {
@@ -50,8 +50,8 @@ export class FlMeta {
             locale: this.locale,
             schema: this.schema,
             schemaRefId: this.schemaRefId,
-            updatedBy: this.updatedBy,
-            updatedDate: this.updatedDate,
+            lastModifiedBy: this.lastModifiedBy,
+            lastModifiedDate: this.lastModifiedDate,
         };
     }
 }
