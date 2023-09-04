@@ -1,13 +1,17 @@
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
+import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
-import 'package:logger/logger.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'search_api_service.g.dart';
 
@@ -39,8 +43,8 @@ class SearchApiService {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final String cacheKey = json.encode(requestPayload);
 
-    final cachedResponse = cacheController.getFromCache(cacheKey);
-    if (cachedResponse != null) {
+    final SearchResult<T>? cachedResponse = cacheController.getFromCache(cacheKey);
+    if (cachedResponse != null && cachedResponse.results.isNotEmpty) {
       logger.d('[SearchApiService] Found cached response for $cacheKey');
       return cachedResponse;
     }
@@ -78,8 +82,9 @@ class SearchApiService {
     }
 
     logger.d('[SearchApiService] Adding response to cache for $cacheKey');
-    cacheController.addToCache(key: cacheKey, value: responseData);
+    final SearchResult<T> result = SearchResult<T>(results: responseData, cursor: response.cursor ?? '');
+    cacheController.addToCache(key: cacheKey, value: result);
 
-    return SearchResult<T>(results: responseData, cursor: response.cursor ?? '');
+    return result;
   }
 }

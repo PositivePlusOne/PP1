@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/pagination/pagination.dart';
-import 'package:app/services/search_api_service.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,19 +12,14 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/paging_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/guidance/guidance_controller.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/services/search_api_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/organisms/guidance/guidance_directory.dart';
 import '../../services/third_party.dart';
 
 class PositiveDirectoryPaginationBehaviour extends StatefulHookConsumerWidget {
@@ -149,46 +142,9 @@ class _PositiveDirectoryPaginationBehaviourState extends ConsumerState<PositiveD
   }
 
   Widget buildItem(BuildContext context, GuidanceDirectoryEntry item, int index) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    final String id = item.flMeta?.id ?? '';
-
-    return PositiveTapBehaviour(
-      onTap: (_) => appRouter.push(GuidanceDirectoryEntryRoute(guidanceEntryId: id)),
-      isEnabled: !widget.isBusy && !isBusy,
-      showDisabledState: widget.isBusy || isBusy,
-      child: Container(
-        padding: const EdgeInsets.all(kPaddingMedium),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-          color: colors.white,
-        ),
-        child: Row(
-          children: <Widget>[
-            if (item.logoUrl.isNotEmpty) ...<Widget>[
-              PositiveMediaImage(
-                media: Media.fromImageUrl(item.logoUrl),
-                isEnabled: false,
-                fit: BoxFit.contain,
-                width: kIconHuge,
-                height: kIconHuge,
-              ),
-              const SizedBox(width: kPaddingMedium),
-            ],
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(item.title, style: typography.styleHeroSmall.copyWith(color: colors.black)),
-                  Text(item.description, style: typography.styleSubtitle.copyWith(color: colors.black)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    return GuidanceDirectoryTile(
+      entry: item,
+      isBusy: widget.isBusy || isBusy,
     );
   }
 }

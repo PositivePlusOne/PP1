@@ -1,18 +1,14 @@
 // Dart imports:
-import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/dtos/database/pagination/pagination.dart';
-import 'package:app/services/search_api_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/services/api.dart';
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/services/search_api_service.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/profile/profile.dart';
 import '../../../../gen/app_router.dart';
@@ -90,9 +86,13 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       isSearching: true,
       searchQuery: searchTerm,
       // We don't support pagination for now
+      searchUsersResults: [],
       searchUsersCursor: '',
+      searchPostsResults: [],
       searchPostsCursor: '',
+      searchEventsResults: [],
       searchEventsCursor: '',
+      searchTagResults: [],
       searchTagsCursor: '',
     );
 

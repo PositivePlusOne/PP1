@@ -1,7 +1,12 @@
 import * as functions from "firebase-functions";
 import algoliasearch, { SearchClient, SearchIndex } from "algoliasearch";
+import { CacheService } from "./cache_service";
 
 export namespace SearchService {
+
+  // 5 minutes, we might want to make this longer
+  export const SEARCH_CACHE_DURATION = 60 * 5;
+
   /**
    * Returns an Algolia client.
    * @return {SearchClient} an Algolia client.
@@ -143,6 +148,16 @@ export namespace SearchService {
       index: index.indexName,
     });
 
+    const cacheKey = `search:${index.indexName}:${query}:${page}:${limit}:${actualFilters}`;
+    const cachedResults = await CacheService.getFromCache(cacheKey);
+    if (cachedResults) {
+      functions.logger.info("Got cached search results", {
+        structuredData: true,
+      });
+
+      return cachedResults;
+    }
+
     const searchResponse = await index.search(query, {
       hitsPerPage: limit,
       page: page,
@@ -153,6 +168,10 @@ export namespace SearchService {
     });
 
     functions.logger.info("Got search response", searchResponse);
+
+    if (searchResponse.hits.length > 0) {
+      CacheService.setInCache(cacheKey, searchResponse.hits, SEARCH_CACHE_DURATION);
+    }
 
     return searchResponse.hits;
   }

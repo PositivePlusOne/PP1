@@ -24,7 +24,6 @@ import '../../../constants/design_constants.dart';
 import '../../../providers/profiles/profile_controller.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
-import 'guidance_page.dart';
 
 @RoutePage()
 class GuidanceEntryPage extends HookConsumerWidget {
@@ -59,7 +58,7 @@ class GuidanceEntryPage extends HookConsumerWidget {
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.guidance,
       ),
-      headingWidgets: [
+      headingWidgets: <Widget>[
         SliverPinnedHeader(
           child: GuidanceSearchBar(
             onSubmitted: gc.onSearch,

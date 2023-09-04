@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/services/search_api_service.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,7 +18,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
-import 'package:app/services/api.dart';
+import 'package:app/services/search_api_service.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
