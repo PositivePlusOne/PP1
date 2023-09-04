@@ -305,11 +305,29 @@ class PositiveMediaImageState extends State<PositiveMediaImage> {
     }
   }
 
+  static String buildCacheKey(Media media, PositiveThumbnailTargetSize? thumbnailTargetSize) {
+    return 'image_provider:${Media.getKey(media, thumbnailTargetSize)}';
+  }
+
+  static void clearCacheProvidersForMedia(Media media) {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    final List<String> cacheKeys = [
+      'image_provider:${Media.getKey(media, null)}',
+      for (final PositiveThumbnailTargetSize size in PositiveThumbnailTargetSize.values) 'image_provider:${Media.getKey(media, size)}',
+    ];
+
+    logger.d('Clearing media cache for ${media.name} with keys: $cacheKeys');
+    cacheController.removeMultipleFromCache(cacheKeys);
+  }
+
   Future<void> onForceMediaFetchCalled(ForceMediaFetchEvent event) async {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final String expectedCacheKey = 'bytes:${Media.getKey(widget.media, widget.thumbnailTargetSize)}';
+    final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
 
-    _imageProvider = PositiveMediaImageProvider(
+    _imageProvider = cacheController.getFromCache(expectedCacheKey);
+    _imageProvider ??= PositiveMediaImageProvider(
       media: widget.media,
       useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
       thumbnailTargetSize: widget.thumbnailTargetSize,
@@ -339,7 +357,7 @@ class PositiveMediaImageState extends State<PositiveMediaImage> {
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final String expectedCacheKey = 'bytes:${Media.getKey(widget.media, widget.thumbnailTargetSize)}';
+    final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
 
     this.bytes = bytes;
     isSvg = mimeType == 'image/svg+xml';
@@ -347,19 +365,6 @@ class PositiveMediaImageState extends State<PositiveMediaImage> {
 
     setStateIfMounted();
     cacheController.addToCache(key: expectedCacheKey, value: bytes, ttl: kCacheTTLShort);
-  }
-
-  static void clearCacheDataForMedia(Media media) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Logger logger = providerContainer.read(loggerProvider);
-
-    final List<String> cacheKeys = [
-      'bytes:${Media.getKey(media, null)}',
-      for (final PositiveThumbnailTargetSize size in PositiveThumbnailTargetSize.values) 'bytes:${Media.getKey(media, size)}',
-    ];
-
-    logger.d('Clearing media cache for ${media.name} with keys: $cacheKeys');
-    cacheController.removeMultipleFromCache(cacheKeys);
   }
 
   @override

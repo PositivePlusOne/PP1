@@ -35,7 +35,6 @@ class SearchPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
-    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
 
     final TopicsController topicsController = ref.watch(topicsControllerProvider.notifier);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));

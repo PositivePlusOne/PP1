@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -254,5 +255,18 @@ class CacheController extends _$CacheController {
 
   bool isCached(String key) {
     return state.cacheData.containsKey(key);
+  }
+
+  List<T> getManyFromCache<T>(List<String> ids) {
+    final List<T> results = [];
+
+    for (final String id in ids) {
+      final T? result = getFromCache<T>(id);
+      if (result != null) {
+        results.add(result);
+      }
+    }
+
+    return results;
   }
 }

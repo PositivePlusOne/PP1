@@ -7,6 +7,7 @@ import { SystemService } from "./system_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
 import { QueryOptions, UpdateOptions } from "./types/query_options";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace DataService {
 
@@ -188,8 +189,7 @@ export namespace DataService {
       // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
       // to ensure that the document is updated in the cache.
       if (options.data._fl_meta_) {
-        const timeSecondsInteger = Math.floor(new Date().getTime() / 1000);
-        options.data._fl_meta_.lastModifiedDate = new Timestamp(timeSecondsInteger, 0);
+        options.data._fl_meta_.lastModifiedDate = StreamHelpers.getCurrentTimestamp();
       }
 
       data = { ...document, ...options.data };

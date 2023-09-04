@@ -3,6 +3,10 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/communities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,36 +48,31 @@ class CreateConversationPage extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations locale = AppLocalizations.of(context)!;
 
-    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final String currentUserProfileId = profileControllerState.currentProfile?.flMeta?.id ?? '';
 
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
 
     useLifecycleHook(chatViewModel);
 
-    final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
-    final Channel? currentChannel = chatViewModelState.currentChannel;
-    final Iterable<String> currentChannelMembers = currentChannel != null ? [currentChannel].members.userIds : [];
-    final List<Channel> displayedChannels = [];
+    final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
 
-    if (currentChannel != null) {
-      displayedChannels.addAll(allChannels.onlyOneOnOneMessages.withValidRelationships.where((element) {
-        final String? targetMember = [element].members.userIds.firstWhereOrNull((element) => element != profileController.currentProfileId);
-        if (targetMember == null) {
-          return false;
-        }
+    final Set<String> connectedProfileIds = communitiesControllerState.connectedProfileIds;
+    final bool hasConnectedProfiles = connectedProfileIds.isNotEmpty;
 
-        return !currentChannelMembers.contains(targetMember);
-      }));
-    } else {
-      displayedChannels.addAll(allChannels.onlyOneOnOneMessages.withValidRelationships);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final List<Profile> connectedProfiles = cacheController.getManyFromCache<Profile>(connectedProfileIds.toList());
+
+    if (chatViewModelState.searchQuery.isNotEmpty) {
+      connectedProfiles.removeWhere((Profile profile) => !profile.matchesStringSearch(chatViewModelState.searchQuery));
     }
 
-    final bool hasValidChannels = displayedChannels.isNotEmpty;
-    if (chatViewModelState.searchQuery.isNotEmpty) {
-      final List<Channel> searchedChannels = displayedChannels.withProfileTextSearch(chatViewModelState.searchQuery).toList();
-      displayedChannels.clear();
-      displayedChannels.addAll(searchedChannels);
+    final Channel? currentChannel = chatViewModelState.currentChannel;
+    if (currentChannel != null) {
+      final List<Member> members = currentChannel.state?.members.toList() ?? [];
+      final List<String> memberIds = members.map((e) => e.userId ?? '').where((element) => element.isNotEmpty).toList();
+      connectedProfiles.removeWhere((Profile profile) => memberIds.contains(profile.flMeta?.id));
     }
 
     return PositiveScaffold(
@@ -104,14 +103,14 @@ class CreateConversationPage extends HookConsumerWidget {
                     hintText: locale.shared_search_people_hint,
                     onCancel: () => chatViewModel.setSearchQuery(''),
                     onChange: chatViewModel.setSearchQuery,
-                    isEnabled: hasValidChannels,
+                    isEnabled: hasConnectedProfiles,
                   ),
                 ),
               ],
             ),
           ),
         ),
-        if (!hasValidChannels) ...<Widget>[
+        if (!hasConnectedProfiles) ...<Widget>[
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverToBoxAdapter(
@@ -133,15 +132,19 @@ class CreateConversationPage extends HookConsumerWidget {
               ),
             ),
           ),
-        ] else if (hasValidChannels) ...<Widget>[
+        ] else if (hasConnectedProfiles) ...<Widget>[
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverList.separated(
-              itemCount: displayedChannels.length,
+              itemCount: connectedProfiles.length,
               itemBuilder: (context, index) {
-                final String otherMemberId = (displayedChannels[index].state?.members ?? []).firstWhere((element) => element.userId != profileController.currentProfileId).userId!;
+                final Profile profile = connectedProfiles[index];
+                final String otherMemberId = profile.flMeta!.id!;
+                final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+                final Channel? channel = getStreamController.getChannelForMembers([currentUserProfileId, otherMemberId]);
+
                 return PositiveChannelListTile(
-                  channel: displayedChannels[index],
+                  channel: channel,
                   onTap: (_) => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
                   isSelected: chatViewModelState.selectedMembers.contains(otherMemberId),
                   showProfileTagline: true,
@@ -156,9 +159,9 @@ class CreateConversationPage extends HookConsumerWidget {
         PositiveGlassSheet(
           children: [
             PositiveButton(
-              isDisabled: !hasValidChannels || chatViewModelState.selectedMembers.isEmpty,
+              isDisabled: !hasConnectedProfiles || chatViewModelState.selectedMembers.isEmpty,
               colors: colors,
-              style: !hasValidChannels ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
+              style: !hasConnectedProfiles ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
               label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
               onTapped: () => chatViewModel.onCurrentChannelMembersConfirmed(context),
               size: PositiveButtonSize.large,

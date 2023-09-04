@@ -286,7 +286,7 @@ class MessageInputContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall),
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colors.white,
         borderRadius: BorderRadius.circular(kBorderRadiusMassive),
@@ -298,8 +298,8 @@ class MessageInputContainer extends StatelessWidget {
       ),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(
-        kPaddingSmallMedium - 8 - kBorderThicknessSmall,
-      ), //? Subtract the hard coded 8 padding as found in streamchats message input
+        kPaddingSmallMedium - 9 - kBorderThicknessSmall,
+      ), //? Subtract the hard coded 8 padding as found in streamchats message input (round to 9 for sub pixel clipping)
       child: const MessageInput(),
     );
   }
@@ -334,18 +334,21 @@ Widget buildAttachmentButton({
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-  return PositiveButton(
-    colors: colors,
-    primaryColor: colors.black,
-    onTapped: onPressed,
-    isActive: isActive,
-    label: localisations.page_chat_add_attachment,
-    tooltip: localisations.page_chat_add_attachment,
-    icon: UniconsLine.plus_circle,
-    style: PositiveButtonStyle.primary,
-    layout: PositiveButtonLayout.iconOnly,
-    borderWidth: kBorderThicknessNone,
-    size: PositiveButtonSize.large,
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: PositiveButton(
+      colors: colors,
+      primaryColor: colors.black,
+      onTapped: onPressed,
+      isActive: isActive,
+      label: localisations.page_chat_add_attachment,
+      tooltip: localisations.page_chat_add_attachment,
+      icon: UniconsLine.plus_circle,
+      style: PositiveButtonStyle.primary,
+      layout: PositiveButtonLayout.iconOnly,
+      borderWidth: kBorderThicknessNone,
+      size: PositiveButtonSize.large,
+    ),
   );
 }
 
