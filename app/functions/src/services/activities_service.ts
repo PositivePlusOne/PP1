@@ -7,11 +7,11 @@ import { Activity, ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
-import { TagsService } from "./tags_service";
 import { FeedName } from "../constants/default_feeds";
 import { FeedEntry } from "../dto/stream";
 import { ReactionStatisticsJSON } from "../dto/reactions";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace ActivitiesService {
   /**
@@ -130,22 +130,6 @@ export namespace ActivitiesService {
     });
 
     const activityObjectForeignId = uuidv1();
-    const targets = [] as string[];
-
-    if (activity.securityConfiguration?.viewMode === "private") {
-      throw new functions.https.HttpsError("permission-denied", "You do not have permission to post this activity.");
-    }
-
-    if (activity.securityConfiguration?.viewMode === "public") {
-      functions.logger.info("Adding tags to public activity", {
-        tags: activity.enrichmentConfiguration?.tags,
-      });
-
-      activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-        await TagsService.createTagIfNonexistant(tag);
-        targets.push(`${FeedName.Tags}:${tag}`);
-      });
-    }
 
     const feedClient = FeedService.getFeedsUserClient(userID);
     const feed = feedClient.feed(feedName, userID);
@@ -156,7 +140,6 @@ export namespace ActivitiesService {
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
       time: activity?._fl_meta_?.createdDate ?? new Date().toISOString(),
-      to: targets,
     };
     
     await feed.addActivity(getStreamActivity);
@@ -168,6 +151,78 @@ export namespace ActivitiesService {
     }) as ActivityJSON;
     
     return activityResponse;
+  }
+
+  export async function updateTagFeedsForActivity(activity: ActivityJSON): Promise<void> {
+    const activityId = activity?._fl_meta_?.fl_id ?? "";
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
+    }
+
+    // Get a list of all places the activity is currently posted
+    const feedsClient = FeedService.getFeedsClient();
+    const activitiesQuery = await feedsClient.getActivities({
+      ids: [activityId],
+    });
+
+    // Get a list of all the tags the activity should be posted to
+    const isPublic = activity.securityConfiguration?.viewMode === "public";
+    const expectedTags = isPublic ? activity.enrichmentConfiguration?.tags ?? [] : [];
+
+    // Get a list of all the tags the activity is currently posted to
+    const currentTags = [];
+    for (const result of activitiesQuery.results) {
+      const origin = result.origin;
+      if (!origin) {
+        continue;
+      }
+
+      const slug = StreamHelpers.getSlugFromOrigin(origin);
+      const feed = StreamHelpers.getFeedFromOrigin(origin);
+      if (!slug || feed !== FeedName.Tags) {
+        continue;
+      }
+
+      currentTags.push(slug);
+    }
+
+    functions.logger.info("Updating tag feeds for activity", {
+      activityId,
+      expectedTags,
+      currentTags,
+    });
+
+    // Loop through all the old tags and remove the activity from the feed
+    const tagUpdatePromises = [];
+    for (const tag of currentTags) {
+      if (!expectedTags.includes(tag)) {
+        functions.logger.info("Removing activity from tag feed", {
+          activityId,
+          tag,
+        });
+
+        tagUpdatePromises.push(removeActivityFromFeed(FeedName.Tags, tag, activityId));
+      }
+    }
+
+    // Loop through all the new tags and add the activity to the feed
+    for (const tag of expectedTags) {
+      if (!currentTags.includes(tag)) {
+        functions.logger.info("Adding activity to tag feed", {
+          activityId,
+          tag,
+        });
+
+        tagUpdatePromises.push(postActivityToFeed(FeedName.Tags, tag, activityId));
+      }
+    }
+
+    await Promise.all(tagUpdatePromises);
+    functions.logger.info("Updated tag feeds for activity", {
+      activityId,
+      expectedTags,
+      currentTags,
+    });
   }
 
   /**
@@ -195,7 +250,6 @@ export namespace ActivitiesService {
       object: activityId,
       foreign_id: activityId,
     };
-
 
     await feed.addActivity(getStreamActivity);
   }

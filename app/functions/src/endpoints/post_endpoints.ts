@@ -215,8 +215,9 @@ export namespace PostEndpoints {
     } as ActivityJSON;
 
     const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
+    await ActivitiesService.updateTagFeedsForActivity(userActivity);
+    
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
-
     return buildEndpointResponse(context, {
       sender: uid,
       data: [userActivity],
@@ -244,13 +245,7 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
     }
 
-    functions.logger.info(`Deleting activity`, { uid, activityId });
-
-    activity.enrichmentConfiguration?.tags?.forEach(async (tag) => {
-      await ActivitiesService.removeActivityFromFeed("tags", tag, activityId);
-      functions.logger.info("Removed tag activity", { tag });
-    });
-
+    await ActivitiesService.updateTagFeedsForActivity(activity);
     await ActivitiesService.removeActivityFromFeed("user", uid, activityId);
 
     await DataService.deleteDocument({
@@ -345,27 +340,7 @@ export namespace PostEndpoints {
       data: activity,
     });
 
-    //? Tags to remove are the previous tags that are not in the new validated tags
-    const newValidatedTags = [...validatedTags];
-    const tagsToRemove = new Array<string>();
-
-    for (const tag of validatedTags) {
-      if (!previousTags.includes(tag)) {
-        newValidatedTags.push(tag);
-      }
-    }
-
-    for (const tag of previousTags) {
-      if (!newValidatedTags.includes(tag)) {
-        tagsToRemove.push(tag);
-      }
-    }
-
-    // remove tags that are no longer needed from the activity
-    tagsToRemove.forEach(async (tag: string) => {
-      await ActivitiesService.removeActivityFromFeed("tags", tag, activityId);
-      functions.logger.info("Removed tag activity", { tag });
-    });
+    await ActivitiesService.updateTagFeedsForActivity(activity);
 
     functions.logger.info("Updated user activity", { feedActivity: activity });
     return buildEndpointResponse(context, {
