@@ -96,7 +96,6 @@ abstract class NotificationHandler {
     // Default to background notification if no context is available
     if (context == null) {
       logger.w('displayForegroundNotification: Unable to display notification: $payload');
-      await displayBackgroundNotification(payload);
       return;
     }
 
