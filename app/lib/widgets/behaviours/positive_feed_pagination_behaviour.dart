@@ -116,7 +116,6 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     logger.d('setupFeedState() - Loading state for ${widget.feed}');
-    // feeds:timeline-AZk68qtxPmgjrpaZSMcUkmS1i443
     final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
     if (cachedFeedState != null) {
       logger.d('setupFeedState() - Found cached state for ${widget.feed}');
@@ -241,13 +240,18 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
   void onActivityDeleted(ActivityDeletedEvent event) {
     final Logger logger = providerContainer.read(loggerProvider);
+    final String id = event.activity.flMeta?.id ?? '';
+    if (id.isEmpty) {
+      return;
+    }
+
     if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == event.activityId) ?? -1;
+      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == id) ?? -1;
       if (index >= 0) {
         feedState.pagingController.itemList?.removeAt(index);
         feedState.pagingController.itemList = feedState.pagingController.itemList;
 
-        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - activityId: ${event.activityId}');
+        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - activityId: ${event.activity}');
         setStateIfMounted();
       }
     }

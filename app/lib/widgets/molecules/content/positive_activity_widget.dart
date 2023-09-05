@@ -310,7 +310,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         ...widget.activity.tagTargetFeeds,
       ];
 
-      eventBus.fire(ActivityDeletedEvent(targets: targetFeeds, activityId: widget.activity.flMeta!.id!));
+      eventBus.fire(ActivityDeletedEvent(targets: targetFeeds, activity: widget.activity));
     } catch (e) {
       logger.e("Error deleting activity: $e");
 

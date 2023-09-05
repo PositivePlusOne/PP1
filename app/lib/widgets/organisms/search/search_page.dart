@@ -56,7 +56,7 @@ class SearchPage extends ConsumerWidget {
       SearchTab.users => searchUserResults.isNotEmpty,
       SearchTab.posts => searchPostsResults.isNotEmpty,
       SearchTab.events => searchEventsResults.isNotEmpty,
-      SearchTab.topics => true,
+      SearchTab.tags => true,
     };
 
     return PositiveScaffold(
@@ -134,7 +134,7 @@ class SearchPage extends ConsumerWidget {
                       PositiveActivityWidget(activity: activity),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (canDisplaySearchResults && currentTab == SearchTab.topics && searchTagResults.isEmpty)
+                if (canDisplaySearchResults && currentTab == SearchTab.tags && searchTagResults.isEmpty)
                   StaggeredGrid.count(
                     crossAxisCount: 2,
                     crossAxisSpacing: kPaddingSmall,
@@ -150,7 +150,7 @@ class SearchPage extends ConsumerWidget {
                       ],
                     ],
                   )
-                else
+                else if (!canDisplaySearchResults && currentTab == SearchTab.tags && searchTagResults.isNotEmpty)
                   ...<Widget>[
                     for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
                       PositiveTopicTile(

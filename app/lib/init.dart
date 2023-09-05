@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -52,6 +53,7 @@ Future<void> setupApplication() async {
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+  final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -101,6 +103,7 @@ Future<void> setupApplication() async {
   await profileController.setupListeners();
   await galleryController.setupListeners();
   await cacheController.setupListeners();
+  await tagsController.setupListeners();
 
   await systemController.preloadPackageInformation();
 

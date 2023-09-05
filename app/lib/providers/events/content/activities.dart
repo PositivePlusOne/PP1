@@ -46,11 +46,11 @@ class ActivityUpdatedEvent {
 class ActivityDeletedEvent {
   const ActivityDeletedEvent({
     required this.targets,
-    required this.activityId,
+    required this.activity,
   });
 
   final List<TargetFeed> targets;
-  final String activityId;
+  final Activity activity;
 }
 
 class ActivityReactionsUpdatedEvent {
