@@ -268,9 +268,7 @@ export namespace ActivitiesService {
       activityId,
     });
 
-    const feed = FeedService.getFeedsUserClient(actorId).feed(feedName, actorId);
-
-
+    const feed = FeedService.getFeedsClient().feed(feedName, actorId);
     await feed.removeActivity({ foreign_id: activityId });
   }
 
