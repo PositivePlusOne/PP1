@@ -82,9 +82,9 @@ abstract class NotificationHandler {
 
     if (isForeground) {
       displayForegroundNotification(payload);
-    } else {
-      displayBackgroundNotification(payload);
     }
+
+    displayBackgroundNotification(payload);
   }
 
   Future<void> displayForegroundNotification(NotificationPayload payload) async {

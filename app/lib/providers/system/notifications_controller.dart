@@ -162,18 +162,8 @@ class NotificationsController extends _$NotificationsController {
     final AndroidFlutterLocalNotificationsPlugin? pluginSettings = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
     if (!state.localNotificationsInitialized) {
-      const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
-      final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(onDidReceiveLocalNotification: onLocalNotificationReceived);
-      const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(defaultActionName: 'Open notification');
-      final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsDarwin, macOS: initializationSettingsDarwin, linux: initializationSettingsLinux);
-      final bool? initializedSuccessfully = await flutterLocalNotificationsPlugin.initialize(
-        initializationSettings,
-        onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
-        onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
-      );
-
-      state = state.copyWith(localNotificationsInitialized: initializedSuccessfully ?? false);
-      logger.d('setupPushNotificationListeners: Initialized local notifications: $initializedSuccessfully');
+      await setupLocalNotifications();
+      logger.d('setupPushNotificationListeners: Initialized local notifications');
     }
 
     if (!state.remoteNotificationsInitialized) {
@@ -199,6 +189,24 @@ class NotificationsController extends _$NotificationsController {
       logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
       state = state.copyWith(remoteNotificationsInitialized: true);
     }
+  }
+
+  Future<void> setupLocalNotifications() async {
+    final logger = ref.read(loggerProvider);
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
+
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(onDidReceiveLocalNotification: onLocalNotificationReceived);
+    const LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(defaultActionName: 'Open notification');
+    final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsDarwin, macOS: initializationSettingsDarwin, linux: initializationSettingsLinux);
+    final bool? initializedSuccessfully = await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
+
+    state = state.copyWith(localNotificationsInitialized: initializedSuccessfully ?? false);
+    logger.d('setupPushNotificationListeners: Initialized local notifications: $initializedSuccessfully');
   }
 
   Future<void> toggleTopicPreferences(bool shouldEnable) async {
@@ -235,6 +243,8 @@ class NotificationsController extends _$NotificationsController {
     if (payload != null) {
       logger.d('onRemoteNotificationReceived: Positive notification, handling');
       handleNotification(payload, isForeground: true);
+    } else {
+      logger.w('onRemoteNotificationReceived: Unknown notification, skipping: $event');
     }
   }
 
