@@ -211,13 +211,16 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     }
 
     await Promise.all(joinPromises);
-    const populatePromises = [] as Promise<any>[];
-
+    functions.logger.debug(`Fetched joined data.`, { sender, data, allFlamelinkIds });
+    
     // Populate
+    const populatePromises = [] as Promise<any>[];
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
         const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
         const isCurrentDocument = sender && sender.length > 0 && flamelinkId === sender;
+
+        functions.logger.debug(`Populating object data.`, { sender, flamelinkId, schema, isCurrentDocument, obj });
 
         // Skip if no flamelink id or schema
         if (!flamelinkId || !schema) {
