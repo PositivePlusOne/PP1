@@ -238,7 +238,7 @@ export namespace ActivitiesService {
       actorId,
     });
 
-    const feed = FeedService.getFeedsUserClient(actorId).feed(feedName, actorId);
+    const feed = FeedService.getFeedsClient().feed(feedName, actorId);
 
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
