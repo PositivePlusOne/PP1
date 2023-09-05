@@ -19,7 +19,7 @@ extension ActivityExt on Activity {
     final List<TargetFeed> targetFeeds = <TargetFeed>[];
     if (enrichmentConfiguration?.tags != null) {
       for (final String tag in enrichmentConfiguration!.tags) {
-        targetFeeds.add(TargetFeed('tag', tag));
+        targetFeeds.add(TargetFeed('tags', tag));
       }
     }
 

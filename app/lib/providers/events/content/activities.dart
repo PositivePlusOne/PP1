@@ -7,6 +7,7 @@ class TargetFeed {
   TargetFeed(this.feed, this.slug);
 
   static TargetFeed fromTag(Tag tag) => TargetFeed('tags', tag.key);
+
   static String toOrigin(TargetFeed targetFeed) {
     String feed = targetFeed.feed;
 
