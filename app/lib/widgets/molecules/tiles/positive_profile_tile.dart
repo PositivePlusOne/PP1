@@ -24,6 +24,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
     this.metadata = const <String, String>{},
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
     this.imageOverridePath = '',
+    this.enableProfileImageFullscreen = false,
     super.key,
   });
 
@@ -36,6 +37,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
 
   //* This is used to override the image path for the profile image, for example when the user is uploading a new image
   final String imageOverridePath;
+  final bool enableProfileImageFullscreen;
 
   static const double kTaglineAreaHeight = 60.0;
 
@@ -92,7 +94,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                   size: kIconHeader,
                   complimentRingColorForBackground: true,
                   imageOverridePath: imageOverridePath,
-                  onTap: () => profile.profileImage != null ? appRouter.push(MediaRoute(media: profile.profileImage!)) : () {},
+                  onTap: () => enableProfileImageFullscreen && profile.profileImage != null ? appRouter.push(MediaRoute(media: profile.profileImage!)) : () {},
                 ),
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
