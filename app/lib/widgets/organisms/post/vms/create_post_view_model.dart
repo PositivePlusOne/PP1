@@ -73,20 +73,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<bool> onWillPopScope() async {
-    switch (state.currentCreatePostPage) {
-      case CreatePostCurrentPage.camera:
-        break;
-      default:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.camera,
-          currentPostType: PostType.text,
-          activeButton: PositivePostNavigationActiveButton.post,
-        );
-
-        return false;
+    final bool canPop = state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing;
+    if (!canPop) {
+      state = state.copyWith(
+        currentCreatePostPage: CreatePostCurrentPage.camera,
+        currentPostType: PostType.text,
+        activeButton: PositivePostNavigationActiveButton.post,
+      );
     }
 
-    return true;
+    return canPop;
   }
 
   Future<void> initCamera(BuildContext context) async {

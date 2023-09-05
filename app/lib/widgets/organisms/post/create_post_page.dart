@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -55,6 +56,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
     final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
     final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     return WillPopScope(
       onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
@@ -81,7 +83,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       active: true,
                       onTap: (context) => viewModel.showCreateTextPost(context),
                     ),
-                    onTapClose: (_) => viewModel.onWillPopScope(),
+                    onTapClose: (_) => appRouter.pop(),
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
                     //! Flash controlls in FlutterAwesome do not seem to be working
                     // enableFlashControlls: true,
