@@ -1,11 +1,9 @@
 // Dart imports:
 
-// Package imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/providers/events/content/activities.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
+// Package imports:
 import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,10 +11,13 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 
 part 'tags_controller.freezed.dart';
 part 'tags_controller.g.dart';

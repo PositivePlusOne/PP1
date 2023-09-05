@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,6 +16,7 @@ import 'package:logger/logger.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';

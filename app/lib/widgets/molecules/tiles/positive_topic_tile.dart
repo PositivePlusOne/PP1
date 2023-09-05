@@ -1,8 +1,8 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/extensions/color_extensions.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';

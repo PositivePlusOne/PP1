@@ -29,14 +29,15 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
-
-// ignore: unused_import
 import 'package:stream_chat/src/client/retry_policy.dart';
+import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 
 // Project imports:
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/system_controller.dart';
+
+// ignore: unused_import
+
 
 part 'third_party.g.dart';
 

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,6 +15,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
