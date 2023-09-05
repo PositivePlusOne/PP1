@@ -31,6 +31,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 
+// ignore: unused_import
+import 'package:stream_chat/src/client/retry_policy.dart';
+
 // Project imports:
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -159,6 +162,15 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin(FlutterLocalNoti
 
 @Riverpod(keepAlive: true)
 StreamChatClient streamChatClient(StreamChatClientRef ref) {
+  final RetryPolicy retryPolicy = RetryPolicy(
+    maxRetryAttempts: 3,
+    delayFactor: const Duration(seconds: 1),
+    maxDelay: const Duration(seconds: 5),
+    shouldRetry: (client, count, error) {
+      return false;
+    },
+  );
+
   final SystemController systemController = ref.read(systemControllerProvider.notifier);
   late final StreamChatClient client;
   switch (systemController.environment) {
@@ -169,6 +181,7 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
         'hxhyhpru9ze8',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
+        retryPolicy: retryPolicy,
       );
       break;
     case SystemEnvironment.develop:
@@ -176,6 +189,7 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
         'pw32v2pqjetx',
         connectTimeout: const Duration(seconds: 300),
         receiveTimeout: const Duration(seconds: 300),
+        retryPolicy: retryPolicy,
       );
       break;
   }

@@ -102,8 +102,11 @@ class AsyncSecurityController extends _$AsyncSecurityController {
       watcherMail: 'admin@positiveplusone.com',
     );
 
-    // TODO(ryan): Hook in the threat callback
-    await talsec.start(config);
+    try {
+      await talsec.start(config);
+    } catch (e) {
+      ref.read(loggerProvider).e(e);
+    }
   }
 
   Future<void> onDebuggerDetected() async {

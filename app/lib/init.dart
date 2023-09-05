@@ -8,6 +8,8 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
@@ -112,4 +114,10 @@ Future<void> setupApplication() async {
 
   //* Lock rotation of the application to portrait
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Set Photo Picker support for Image Picker
+  final ImagePickerPlatform imagePickerImplementation = ImagePickerPlatform.instance;
+  if (imagePickerImplementation is ImagePickerAndroid) {
+    imagePickerImplementation.useAndroidPhotoPicker = true;
+  }
 }
