@@ -82,9 +82,9 @@ abstract class NotificationHandler {
 
     if (isForeground) {
       displayForegroundNotification(payload);
-    } else {
-      displayBackgroundNotification(payload);
     }
+
+    displayBackgroundNotification(payload);
   }
 
   Future<void> displayForegroundNotification(NotificationPayload payload) async {
@@ -96,7 +96,6 @@ abstract class NotificationHandler {
     // Default to background notification if no context is available
     if (context == null) {
       logger.w('displayForegroundNotification: Unable to display notification: $payload');
-      await displayBackgroundNotification(payload);
       return;
     }
 
