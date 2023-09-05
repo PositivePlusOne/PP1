@@ -184,6 +184,8 @@ export namespace PostEndpoints {
     }
 
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    const tagObjects = await TagsService.getOrCreateTags(validatedTags);
+
     functions.logger.info(`Got validated tags`, { validatedTags });
 
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
@@ -220,7 +222,7 @@ export namespace PostEndpoints {
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [userActivity],
+      data: [userActivity, ...tagObjects],
     });
   });
 
@@ -300,12 +302,7 @@ export namespace PostEndpoints {
     // validate updated set of tags and replace activity tags
     // Validated tags are the new tags provided by the user, minus any restricted tags
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
-
-    // create a copy of the previous tags
-    const previousTags = [] as string[];
-    if (activity.enrichmentConfiguration?.tags) {
-      previousTags.push(...activity.enrichmentConfiguration!.tags);
-    }
+    const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });
     if (validatedTags) {
@@ -345,7 +342,7 @@ export namespace PostEndpoints {
     functions.logger.info("Updated user activity", { feedActivity: activity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [activity],
+      data: [activity, ...tagObjects],
     });
   });
 }
