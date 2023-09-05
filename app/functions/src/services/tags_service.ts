@@ -80,7 +80,7 @@ export namespace TagsService {
     }
 
     return tagData;
-  };
+  }
 
   /**
    * Gets multiple tags.
