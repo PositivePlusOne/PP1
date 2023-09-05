@@ -36,12 +36,24 @@ class TagLocalization with _$TagLocalization {
     @Default('') String value,
   }) = _TagLocalization;
 
-  static List<TagLocalization> fromJsonLocalizations(List<dynamic> json) {
+  static List<TagLocalization> fromJsonLocalizations(dynamic json) {
+    if (json is! Iterable || json.isEmpty) {
+      return [];
+    }
+
     return json.map((e) => TagLocalization.fromJson(e)).toList();
   }
 
   static String toJsonLocalizations(List<TagLocalization> localizations) {
     return jsonEncode(localizations.map((e) => e.toJson()).toList());
+  }
+
+  static TagLocalization fromJsonSafe(Map json) {
+    if (json.isEmpty) {
+      return const TagLocalization();
+    }
+
+    return TagLocalization.fromJson(json as Map<String, dynamic>);
   }
 
   factory TagLocalization.fromJson(Map<String, dynamic> json) => _$TagLocalizationFromJson(json);
@@ -58,7 +70,13 @@ class TagTopic with _$TagTopic {
   factory TagTopic.fromJson(Map<String, dynamic> json) => _$TagTopicFromJson(json);
   factory TagTopic.empty() => const TagTopic();
 
-  static List<TagTopic> fromJsonList(List<dynamic> json) => json.map((e) => TagTopic.fromJson(e)).toList();
+  static List<TagTopic> fromJsonList(dynamic json) {
+    if (json is! Iterable || json.isEmpty) {
+      return [];
+    }
+
+    return json.map((e) => TagTopic.fromJson(e)).toList();
+  }
 }
 
 class TagHelpers {

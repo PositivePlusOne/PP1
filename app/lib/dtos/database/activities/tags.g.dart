@@ -16,8 +16,7 @@ _$_Tag _$$_TagFromJson(Map<String, dynamic> json) => _$_Tag(
       promoted: json['promoted'] as bool? ?? false,
       localizations: json['localizations'] == null
           ? const []
-          : TagLocalization.fromJsonLocalizations(
-              json['localizations'] as List),
+          : TagLocalization.fromJsonLocalizations(json['localizations']),
       topic: json['topic'] == null
           ? null
           : TagTopic.fromJson(json['topic'] as Map<String, dynamic>),
@@ -50,8 +49,7 @@ _$_TagTopic _$$_TagTopicFromJson(Map<String, dynamic> json) => _$_TagTopic(
       fallback: json['fallback'] as String? ?? '',
       localizations: json['localizations'] == null
           ? const []
-          : TagLocalization.fromJsonLocalizations(
-              json['localizations'] as List),
+          : TagLocalization.fromJsonLocalizations(json['localizations']),
       isEnabled: json['isEnabled'] as bool? ?? false,
     );
 
