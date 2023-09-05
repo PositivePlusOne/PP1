@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -180,8 +179,6 @@ class PositiveNavigationBarContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final bool isUserLoggedIn = userController.currentUser != null;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(PositiveNavigationBar.kBottomNavigationBarBorderRadius),

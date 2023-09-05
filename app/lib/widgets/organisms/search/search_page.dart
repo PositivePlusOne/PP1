@@ -1,21 +1,21 @@
 // Flutter imports:
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/dtos/database/content/topic.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/profiles/topics_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
@@ -36,7 +36,7 @@ class SearchPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
 
-    final TopicsController topicsController = ref.watch(topicsControllerProvider.notifier);
+    final List<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags));
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -56,7 +56,7 @@ class SearchPage extends ConsumerWidget {
       SearchTab.users => searchUserResults.isNotEmpty,
       SearchTab.posts => searchPostsResults.isNotEmpty,
       SearchTab.events => searchEventsResults.isNotEmpty,
-      SearchTab.topics => searchTagResults.isNotEmpty,
+      SearchTab.topics => true,
     };
 
     return PositiveScaffold(
@@ -134,13 +134,29 @@ class SearchPage extends ConsumerWidget {
                       PositiveActivityWidget(activity: activity),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (canDisplaySearchResults && currentTab == SearchTab.topics)
+                if (canDisplaySearchResults && currentTab == SearchTab.topics && searchTagResults.isEmpty)
+                  StaggeredGrid.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: kPaddingSmall,
+                    mainAxisSpacing: kPaddingSmall,
+                    axisDirection: AxisDirection.down,
+                    children: [
+                      for (final Tag tag in tags) ...<Widget>[
+                        PositiveTopicTile(
+                          colors: colors,
+                          typography: typography,
+                          tag: tag,
+                        ),
+                      ],
+                    ],
+                  )
+                else
                   ...<Widget>[
-                    for (final Topic topic in topicsController.state.topics) ...<Widget>[
+                    for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
                       PositiveTopicTile(
                         colors: colors,
                         typography: typography,
-                        topic: topic,
+                        tag: tag,
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
