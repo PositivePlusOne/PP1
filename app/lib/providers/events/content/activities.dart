@@ -7,6 +7,7 @@ class TargetFeed {
   TargetFeed(this.feed, this.slug);
 
   static TargetFeed fromTag(Tag tag) => TargetFeed('tags', tag.key);
+
   static String toOrigin(TargetFeed targetFeed) {
     String feed = targetFeed.feed;
 
@@ -45,11 +46,11 @@ class ActivityUpdatedEvent {
 class ActivityDeletedEvent {
   const ActivityDeletedEvent({
     required this.targets,
-    required this.activityId,
+    required this.activity,
   });
 
   final List<TargetFeed> targets;
-  final String activityId;
+  final Activity activity;
 }
 
 class ActivityReactionsUpdatedEvent {

@@ -44,7 +44,7 @@ enum SearchTab {
   posts(0, 'activities'),
   users(1, 'users'),
   events(2, 'activities'),
-  topics(3, 'topics');
+  tags(3, 'tags');
 
   final int pageIndex;
   final String searchIndex;
@@ -105,14 +105,14 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
             SearchTab.users => state.searchUsersCursor,
             SearchTab.posts => state.searchPostsCursor,
             SearchTab.events => state.searchEventsCursor,
-            SearchTab.topics => state.searchTagsCursor,
+            SearchTab.tags => state.searchTagsCursor,
           },
         ),
         fromJson: switch (state.currentTab) {
           SearchTab.users => (json) => Profile.fromJson(json),
           SearchTab.posts => (json) => Activity.fromJson(json),
           SearchTab.events => (json) => Activity.fromJson(json),
-          SearchTab.topics => (json) => Tag.fromJson(json),
+          SearchTab.tags => (json) => Tag.fromJson(json),
         },
       );
 
@@ -130,7 +130,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           final List<Activity> results = response.results.cast<Activity>();
           state = state.copyWith(searchEventsCursor: response.cursor, searchEventsResults: state.searchEventsResults + results);
           break;
-        case SearchTab.topics:
+        case SearchTab.tags:
           final List<Tag> results = response.results.cast<Tag>();
           state = state.copyWith(searchTagsCursor: response.cursor, searchTagResults: state.searchTagResults + results);
           break;

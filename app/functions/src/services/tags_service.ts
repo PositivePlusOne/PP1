@@ -49,6 +49,39 @@ export namespace TagsService {
     return tagData;
   }
 
+  export async function getOrCreateTags(validatedTags: string[]) : Promise<TagJSON[]> {
+    const promises = [] as Promise<TagJSON>[];
+    for (const tag of validatedTags) {
+      const formattedTag = formatTag(tag);
+      promises.push(getOrCreateTag(formattedTag));
+    }
+
+    const tags = await Promise.all(promises);
+    return tags;
+  }
+
+  export async function getOrCreateTag(key: string): Promise<TagJSON> {
+    const formattedKey = formatTag(key);
+    functions.logger.info("Getting or creating tag", { formattedKey });
+
+    if (!formattedKey || formattedKey.length === 0) {
+      functions.logger.error("Invalid tag key", { key });
+      return {};
+    }
+
+    const tagData = await DataService.getDocument({
+      schemaKey: "tags",
+      entryId: formattedKey,
+    });
+
+    if (!tagData) {
+      const tag = await createTag(key);
+      return tag;
+    }
+
+    return tagData;
+  }
+
   /**
    * Gets multiple tags.
    * @param {string[]} keys the tag keys.

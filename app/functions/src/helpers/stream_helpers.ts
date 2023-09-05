@@ -17,6 +17,24 @@ export namespace StreamHelpers {
     return `${feed.slug}:${feed.userId}`;
   }
 
+  export function getFeedFromOrigin(origin: string): string {
+    const parts = origin.split(":");
+    if (parts.length !== 2) {
+      return ""; 
+    }
+
+    return parts[0];
+  }
+
+  export function getSlugFromOrigin(origin: string): string {
+    const parts = origin.split(":");
+    if (parts.length !== 2) {
+      return "";
+    }
+
+    return parts[1];
+  }
+
   export function getTimestampForDate(date: Date) {
     return `${date.getFullYear()}-` +
       `${String(date.getMonth() + 1).padStart(2, '0')}-` +

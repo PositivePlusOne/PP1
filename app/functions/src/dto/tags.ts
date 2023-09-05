@@ -101,7 +101,7 @@ export class TagTopic {
 
   constructor(json: TagTopicJSON) {
     this.fallback = json.fallback || "";
-    this.localizations = json.localizations?.map((e) => new TagLocalization(e)) || [];
+    this.localizations = json.localizations && Array.isArray(json.localizations) ? json.localizations?.map((e) => new TagLocalization(e)) : [];
     this.isEnabled = json.isEnabled || false;
   }
 }

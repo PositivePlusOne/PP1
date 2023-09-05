@@ -179,8 +179,6 @@ class PositiveNavigationBarContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final bool isUserLoggedIn = userController.currentUser != null;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(PositiveNavigationBar.kBottomNavigationBarBorderRadius),

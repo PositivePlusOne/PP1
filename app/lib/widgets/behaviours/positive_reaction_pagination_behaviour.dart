@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -358,25 +359,28 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
             newPageErrorIndicatorBuilder: (context) => const SizedBox(),
             noItemsFoundIndicatorBuilder: (context) => Container(
               decoration: BoxDecoration(color: colours.white),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
-                    child: Text(
-                      "Be the first to leave a comment",
-                      textAlign: TextAlign.left,
-                      style: typography.styleHeroMedium,
+              child: PositiveTileEntryAnimation(
+                direction: AxisDirection.down,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
+                      child: Text(
+                        "Be the first to leave a comment",
+                        textAlign: TextAlign.left,
+                        style: typography.styleHeroMedium,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: screenSize.width,
-                    height: screenSize.width,
-                    child: Stack(
-                      children: buildType5ScaffoldDecorations(colours),
+                    SizedBox(
+                      width: screenSize.width,
+                      height: screenSize.width,
+                      child: Stack(
+                        children: buildType5ScaffoldDecorations(colours),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             noMoreItemsIndicatorBuilder: (context) => const SizedBox(),

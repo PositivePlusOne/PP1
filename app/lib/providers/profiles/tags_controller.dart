@@ -1,16 +1,23 @@
 // Dart imports:
 
+// Dart imports:
+import 'dart:async';
+
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 
 part 'tags_controller.freezed.dart';
 part 'tags_controller.g.dart';
@@ -28,6 +35,10 @@ class TagsControllerState with _$TagsControllerState {
 
 @Riverpod(keepAlive: true)
 class TagsController extends _$TagsController {
+  StreamSubscription<ActivityCreatedEvent>? _onActivityCreatedSubscription;
+  StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
+  StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
+
   @override
   TagsControllerState build() {
     return TagsControllerState.initialState();
@@ -44,6 +55,63 @@ class TagsController extends _$TagsController {
 
   bool tagExists(String key) {
     return allTags.any((Tag tag) => tag.key == key);
+  }
+
+  Future<void> setupListeners() async {
+    await _onActivityCreatedSubscription?.cancel();
+    await _onActivityUpdatedSubscription?.cancel();
+    await _onActivityDeletedSubscription?.cancel();
+
+    final EventBus eventBus = providerContainer.read(eventBusProvider);
+
+    _onActivityCreatedSubscription = eventBus.on<ActivityCreatedEvent>().listen(onActivityCreated);
+    _onActivityUpdatedSubscription = eventBus.on<ActivityUpdatedEvent>().listen(onActivityUpdated);
+    _onActivityDeletedSubscription = eventBus.on<ActivityDeletedEvent>().listen(onActivityDeleted);
+  }
+
+  void onActivityCreated(ActivityCreatedEvent event) {
+    addActivityToTagFeeds(event.activity);
+  }
+
+  void onActivityUpdated(ActivityUpdatedEvent event) {
+    removeActivityFromTagFeeds(event.activity);
+    addActivityToTagFeeds(event.activity);
+  }
+
+  void onActivityDeleted(ActivityDeletedEvent event) {
+    removeActivityFromTagFeeds(event.activity);
+  }
+
+  void addActivityToTagFeeds(Activity activity) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<String> tags = activity.enrichmentConfiguration?.tags ?? [];
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    logger.i('Adding activity to tag feeds: $tags');
+
+    for (final String tag in tags) {
+      final String expectedCacheKey = 'feeds:tags-$tag';
+      final PositiveFeedState? feedState = cacheController.getFromCache<PositiveFeedState>(expectedCacheKey);
+      if (feedState != null) {
+        logger.d('Adding activity to tag feed $tag');
+        feedState.pagingController.itemList?.insert(0, activity);
+      }
+    }
+  }
+
+  void removeActivityFromTagFeeds(Activity activity) {
+    final Logger logger = ref.read(loggerProvider);
+    final List<String> tags = activity.enrichmentConfiguration?.tags ?? [];
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    logger.i('Removing activity from tag feeds: $tags');
+
+    for (final String tag in tags) {
+      final String expectedCacheKey = 'feeds:tags-$tag';
+      final PositiveFeedState? feedState = cacheController.getFromCache<PositiveFeedState>(expectedCacheKey);
+      if (feedState != null) {
+        logger.d('Removing activity from tag feed $tag');
+        feedState.pagingController.itemList?.removeWhere((Activity a) => a.flMeta?.id == activity.flMeta?.id);
+      }
+    }
   }
 
   void updatePopularTags(List<dynamic> rawStatuses) {

@@ -1076,7 +1076,7 @@ packages:
     source: hosted
     version: "2.0.0"
   flutter_staggered_grid_view:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_staggered_grid_view
       sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
@@ -1401,10 +1401,10 @@ packages:
     dependency: "direct main"
     description:
       name: image_picker
-      sha256: "841837258e0b42c80946c43443054fc726f5e8aa84a97f363eb9ef0d45b33c14"
+      sha256: "7d7f2768df2a8b0a3cefa5ef4f84636121987d403130e70b17ef7e2cf650ba84"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.4"
   image_picker_android:
     dependency: transitive
     description:
@@ -2286,26 +2286,26 @@ packages:
     dependency: transitive
     description:
       name: stream_chat
-      sha256: "87cbb5a2fc43e52554a89e50803762bf9645214ae8c8d459c41b4b4fddb35726"
+      sha256: "24de5829c18d1e47e7410d0fa53fdf8275966fb221e3c15b3c740c425a87a89c"
       url: "https://pub.dev"
     source: hosted
-    version: "6.8.0"
+    version: "7.0.0-beta.3"
   stream_chat_flutter:
     dependency: "direct main"
     description:
       name: stream_chat_flutter
-      sha256: "16619e6e117ee9da88e0944c3f2f73aeabfc98d87b53a9233addb6867fde3389"
+      sha256: ed5eab6ef7e70745bad6c6d8890b789404f4171cc2092add3aa1d71109092025
       url: "https://pub.dev"
     source: hosted
-    version: "6.9.0"
+    version: "7.0.0-beta.4"
   stream_chat_flutter_core:
     dependency: transitive
     description:
       name: stream_chat_flutter_core
-      sha256: f7971b7500954e70c0058689038e86ee7635a56e097fe3fa66fe3f84fe4c4c98
+      sha256: "8a59a33cd92eb030eea3010844cac8037d1d84402ace85d0f12e59125a731b3e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.8.0"
+    version: "7.0.0-beta.3"
   stream_transform:
     dependency: transitive
     description:
@@ -2747,5 +2747,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.1.0-185.0.dev <4.0.0"
+  dart: ">=3.1.0 <4.0.0"
   flutter: ">=3.13.0"

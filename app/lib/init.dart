@@ -8,12 +8,15 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker_android/image_picker_android.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -50,6 +53,7 @@ Future<void> setupApplication() async {
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+  final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -99,6 +103,7 @@ Future<void> setupApplication() async {
   await profileController.setupListeners();
   await galleryController.setupListeners();
   await cacheController.setupListeners();
+  await tagsController.setupListeners();
 
   await systemController.preloadPackageInformation();
 
@@ -112,4 +117,10 @@ Future<void> setupApplication() async {
 
   //* Lock rotation of the application to portrait
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Set Photo Picker support for Image Picker
+  final ImagePickerPlatform imagePickerImplementation = ImagePickerPlatform.instance;
+  if (imagePickerImplementation is ImagePickerAndroid) {
+    imagePickerImplementation.useAndroidPhotoPicker = true;
+  }
 }

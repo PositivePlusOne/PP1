@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/formatter_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -135,6 +136,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
               initialText: state.name,
               onTextChanged: controller.onNameChanged,
               onTextSubmitted: (_) => controller.onNameConfirmed(),
+              inputformatters: [removeNumbersFormatter()],
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
