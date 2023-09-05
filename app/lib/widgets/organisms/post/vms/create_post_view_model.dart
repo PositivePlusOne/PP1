@@ -72,6 +72,23 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
+  Future<bool> onWillPopScope() async {
+    switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.camera:
+        break;
+      default:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.camera,
+          currentPostType: PostType.text,
+          activeButton: PositivePostNavigationActiveButton.post,
+        );
+
+        return false;
+    }
+
+    return true;
+  }
+
   Future<void> initCamera(BuildContext context) async {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
@@ -411,32 +428,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     } finally {
       state = state.copyWith(isBusy: false);
     }
-  }
-
-  Future<bool> onWillPopScope() async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-
-    if (state.isEditing) {
-      router.removeLast();
-    }
-
-    switch (state.currentCreatePostPage) {
-      case CreatePostCurrentPage.camera:
-        logger.i("Pop Create Post page, push Home page");
-        router.removeWhere((route) => true);
-        router.push(const HomeRoute());
-        break;
-      default:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.camera,
-          currentPostType: PostType.text,
-          activeButton: PositivePostNavigationActiveButton.post,
-        );
-        break;
-    }
-
-    return false;
   }
 
   void onFilterSelected(AwesomeFilter filter) {
