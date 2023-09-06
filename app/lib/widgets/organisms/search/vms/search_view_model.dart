@@ -1,7 +1,9 @@
 // Dart imports:
 
-// Package imports:
+// Flutter imports:
 import 'package:flutter/widgets.dart';
+
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -30,11 +32,9 @@ class SearchViewModelState with _$SearchViewModelState {
     @Default('') String searchQuery,
     @Default([]) List<Profile> searchUsersResults,
     @Default([]) List<Activity> searchPostsResults,
-    @Default([]) List<Activity> searchEventsResults,
     @Default([]) List<Tag> searchTagResults,
     @Default('') String searchUsersCursor,
     @Default('') String searchPostsCursor,
-    @Default('') String searchEventsCursor,
     @Default('') String searchTagsCursor,
   }) = _SearchViewModelState;
 
@@ -46,8 +46,7 @@ class SearchViewModelState with _$SearchViewModelState {
 enum SearchTab {
   posts(0, 'activities'),
   users(1, 'users'),
-  events(2, 'activities'),
-  tags(3, 'tags');
+  tags(2, 'tags');
 
   final int pageIndex;
   final String searchIndex;
@@ -73,6 +72,21 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   }
 
   Future<void> onSearchChanged(String searchTerm) async {
+    if (searchTerm.isEmpty) {
+      state = state.copyWith(
+        searchQuery: searchTerm,
+        searchUsersResults: [],
+        searchUsersCursor: '',
+        searchPostsResults: [],
+        searchPostsCursor: '',
+        searchEventsResults: [],
+        searchEventsCursor: '',
+        searchTagResults: [],
+        searchTagsCursor: '',
+      );
+      return;
+    }
+
     state = state.copyWith(searchQuery: searchTerm);
   }
 
@@ -107,14 +121,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           cursor: switch (state.currentTab) {
             SearchTab.users => state.searchUsersCursor,
             SearchTab.posts => state.searchPostsCursor,
-            SearchTab.events => state.searchEventsCursor,
             SearchTab.tags => state.searchTagsCursor,
           },
         ),
         fromJson: switch (state.currentTab) {
           SearchTab.users => (json) => Profile.fromJson(json),
           SearchTab.posts => (json) => Activity.fromJson(json),
-          SearchTab.events => (json) => Activity.fromJson(json),
           SearchTab.tags => (json) => Tag.fromJson(json),
         },
       );
@@ -128,10 +140,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         case SearchTab.users:
           final List<Profile> results = response.results.cast<Profile>();
           state = state.copyWith(searchUsersCursor: response.cursor, searchUsersResults: state.searchUsersResults + results);
-          break;
-        case SearchTab.events:
-          final List<Activity> results = response.results.cast<Activity>();
-          state = state.copyWith(searchEventsCursor: response.cursor, searchEventsResults: state.searchEventsResults + results);
           break;
         case SearchTab.tags:
           final List<Tag> results = response.results.cast<Tag>();

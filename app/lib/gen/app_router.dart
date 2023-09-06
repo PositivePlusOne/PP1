@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -42,6 +41,7 @@ import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/organisms/shared/tag_feed_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/auth_setup_guard.dart';

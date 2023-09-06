@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
+import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/splash/embrace_positivity_placeholder.dart';
 import 'package:app/widgets/molecules/splash/lets_keep_it_real_placeholder.dart';

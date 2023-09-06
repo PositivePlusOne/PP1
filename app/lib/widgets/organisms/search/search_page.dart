@@ -55,13 +55,11 @@ class SearchPage extends ConsumerWidget {
 
     final List<Profile> searchUserResults = ref.watch(provider.select((value) => value.searchUsersResults));
     final List<Activity> searchPostsResults = ref.watch(provider.select((value) => value.searchPostsResults));
-    final List<Activity> searchEventsResults = ref.watch(provider.select((value) => value.searchEventsResults));
     final List<Tag> searchTagResults = ref.watch(provider.select((value) => value.searchTagResults));
 
     final bool canDisplaySearchResults = switch (currentTab) {
       SearchTab.users => searchUserResults.isNotEmpty,
       SearchTab.posts => searchPostsResults.isNotEmpty,
-      SearchTab.events => searchEventsResults.isNotEmpty,
       SearchTab.tags => true,
     };
 
@@ -90,7 +88,11 @@ class SearchPage extends ConsumerWidget {
           ),
         ),
         SliverPadding(
-          padding: EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingMedium + mediaQuery.padding.bottom),
+          padding: EdgeInsets.only(
+            left: kPaddingMedium,
+            right: kPaddingMedium,
+            bottom: kPaddingMedium + mediaQuery.padding.bottom,
+          ),
           sliver: SliverToBoxAdapter(
             child: Column(
               children: <Widget>[
@@ -101,13 +103,13 @@ class SearchPage extends ConsumerWidget {
                   tabColours: <Color>[
                     colors.green,
                     colors.yellow,
-                    colors.teal,
+                    // colors.teal,
                     colors.purple,
                   ],
                   tabs: const <String>[
                     'Posts',
                     'People',
-                    'Events',
+                    // 'Events',
                     'Tags',
                   ],
                 ),
@@ -128,26 +130,20 @@ class SearchPage extends ConsumerWidget {
                       PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
-                if (canDisplaySearchResults && currentTab == SearchTab.events)
-                  ...<Widget>[
-                    for (final Activity activity in searchEventsResults) ...<Widget>[
-                      PositiveActivityWidget(activity: activity),
-                    ],
-                  ].spaceWithVertical(kPaddingSmall),
                 if (canDisplaySearchResults && currentTab == SearchTab.posts)
                   ...<Widget>[
                     for (final Activity activity in searchPostsResults) ...<Widget>[
                       PositiveActivityWidget(activity: activity),
                     ],
-                  ].spaceWithVertical(kPaddingSmall),
-                if (canDisplaySearchResults && currentTab == SearchTab.tags && searchTagResults.isEmpty)
+                  ].spaceWithVertical(kPaddingMedium),
+                if (canDisplaySearchResults && currentTab == SearchTab.tags) ...<Widget>[
                   StaggeredGrid.count(
                     crossAxisCount: 2,
                     crossAxisSpacing: kPaddingSmall,
                     mainAxisSpacing: kPaddingSmall,
                     axisDirection: AxisDirection.down,
-                    children: [
-                      for (final Tag tag in tags) ...<Widget>[
+                    children: <Widget>[
+                      for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
                         PositiveTopicTile(
                           colors: colors,
                           typography: typography,
@@ -156,18 +152,8 @@ class SearchPage extends ConsumerWidget {
                         ),
                       ],
                     ],
-                  )
-                else if (!canDisplaySearchResults && currentTab == SearchTab.tags && searchTagResults.isNotEmpty)
-                  ...<Widget>[
-                    for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
-                      PositiveTopicTile(
-                        colors: colors,
-                        typography: typography,
-                        tag: tag,
-                        onTap: (context) => viewModel.onTopicSelected(context, tag),
-                      ),
-                    ],
-                  ].spaceWithVertical(kPaddingSmall),
+                  ),
+                ],
               ],
             ),
           ),
