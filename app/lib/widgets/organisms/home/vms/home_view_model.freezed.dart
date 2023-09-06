@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeViewModelState {
   bool get isRefreshing => throw _privateConstructorUsedError;
+  bool get hasDoneInitialChecks => throw _privateConstructorUsedError;
   dynamic get currentTabIndex => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +31,8 @@ abstract class $HomeViewModelStateCopyWith<$Res> {
           HomeViewModelState value, $Res Function(HomeViewModelState) then) =
       _$HomeViewModelStateCopyWithImpl<$Res, HomeViewModelState>;
   @useResult
-  $Res call({bool isRefreshing, dynamic currentTabIndex});
+  $Res call(
+      {bool isRefreshing, bool hasDoneInitialChecks, dynamic currentTabIndex});
 }
 
 /// @nodoc
@@ -47,12 +49,17 @@ class _$HomeViewModelStateCopyWithImpl<$Res, $Val extends HomeViewModelState>
   @override
   $Res call({
     Object? isRefreshing = null,
+    Object? hasDoneInitialChecks = null,
     Object? currentTabIndex = freezed,
   }) {
     return _then(_value.copyWith(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasDoneInitialChecks: null == hasDoneInitialChecks
+          ? _value.hasDoneInitialChecks
+          : hasDoneInitialChecks // ignore: cast_nullable_to_non_nullable
               as bool,
       currentTabIndex: freezed == currentTabIndex
           ? _value.currentTabIndex
@@ -70,7 +77,8 @@ abstract class _$$_HomeViewModelStateCopyWith<$Res>
       __$$_HomeViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isRefreshing, dynamic currentTabIndex});
+  $Res call(
+      {bool isRefreshing, bool hasDoneInitialChecks, dynamic currentTabIndex});
 }
 
 /// @nodoc
@@ -85,12 +93,17 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isRefreshing = null,
+    Object? hasDoneInitialChecks = null,
     Object? currentTabIndex = freezed,
   }) {
     return _then(_$_HomeViewModelState(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasDoneInitialChecks: null == hasDoneInitialChecks
+          ? _value.hasDoneInitialChecks
+          : hasDoneInitialChecks // ignore: cast_nullable_to_non_nullable
               as bool,
       currentTabIndex: freezed == currentTabIndex
           ? _value.currentTabIndex!
@@ -103,18 +116,23 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
 
 class _$_HomeViewModelState implements _HomeViewModelState {
   const _$_HomeViewModelState(
-      {this.isRefreshing = false, this.currentTabIndex = 0});
+      {this.isRefreshing = false,
+      this.hasDoneInitialChecks = false,
+      this.currentTabIndex = 0});
 
   @override
   @JsonKey()
   final bool isRefreshing;
   @override
   @JsonKey()
+  final bool hasDoneInitialChecks;
+  @override
+  @JsonKey()
   final dynamic currentTabIndex;
 
   @override
   String toString() {
-    return 'HomeViewModelState(isRefreshing: $isRefreshing, currentTabIndex: $currentTabIndex)';
+    return 'HomeViewModelState(isRefreshing: $isRefreshing, hasDoneInitialChecks: $hasDoneInitialChecks, currentTabIndex: $currentTabIndex)';
   }
 
   @override
@@ -124,12 +142,17 @@ class _$_HomeViewModelState implements _HomeViewModelState {
             other is _$_HomeViewModelState &&
             (identical(other.isRefreshing, isRefreshing) ||
                 other.isRefreshing == isRefreshing) &&
+            (identical(other.hasDoneInitialChecks, hasDoneInitialChecks) ||
+                other.hasDoneInitialChecks == hasDoneInitialChecks) &&
             const DeepCollectionEquality()
                 .equals(other.currentTabIndex, currentTabIndex));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isRefreshing,
+  int get hashCode => Object.hash(
+      runtimeType,
+      isRefreshing,
+      hasDoneInitialChecks,
       const DeepCollectionEquality().hash(currentTabIndex));
 
   @JsonKey(ignore: true)
@@ -143,10 +166,13 @@ class _$_HomeViewModelState implements _HomeViewModelState {
 abstract class _HomeViewModelState implements HomeViewModelState {
   const factory _HomeViewModelState(
       {final bool isRefreshing,
+      final bool hasDoneInitialChecks,
       final dynamic currentTabIndex}) = _$_HomeViewModelState;
 
   @override
   bool get isRefreshing;
+  @override
+  bool get hasDoneInitialChecks;
   @override
   dynamic get currentTabIndex;
   @override

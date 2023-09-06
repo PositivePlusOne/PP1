@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,6 +31,7 @@ import 'package:app/providers/events/content/reactions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';

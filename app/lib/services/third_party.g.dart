@@ -294,7 +294,7 @@ final flutterLocalNotificationsPluginProvider =
 
 typedef FlutterLocalNotificationsPluginRef
     = ProviderRef<FlutterLocalNotificationsPlugin>;
-String _$streamChatClientHash() => r'ef398e9b2af36bcbdfc9eeaba4669c8d86e7ea75';
+String _$streamChatClientHash() => r'b18f53f43ab369a1238352025de2d2705a08d7b1';
 
 /// See also [streamChatClient].
 @ProviderFor(streamChatClient)

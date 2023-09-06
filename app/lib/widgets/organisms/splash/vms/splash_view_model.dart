@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -136,7 +137,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       nextRoute = const HomeRoute();
     }
 
-    router.removeWhere((route) => true);
-    await router.push(nextRoute);
+    // Add a delay so that the futures can complete and settle
+    await Future<void>.delayed(kAnimationDurationFast);
+    await router.replace(nextRoute);
   }
 }

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -104,10 +105,13 @@ class SplashPage extends HookConsumerWidget with LifecycleMixin {
                     left: kPaddingExtraLarge,
                     bottom: kPaddingExtraLarge + mediaQuery.padding.bottom,
                   ),
-                  child: SvgPicture.asset(
-                    SvgImages.logosFooter,
-                    colorFilter: ColorFilter.mode(colors.black, BlendMode.srcIn),
-                    width: kLogoMaximumWidth,
+                  child: Hero(
+                    tag: PositiveAppBar.kPositiveLogoTag,
+                    child: SvgPicture.asset(
+                      SvgImages.logosFooter,
+                      colorFilter: ColorFilter.mode(colors.black, BlendMode.srcIn),
+                      width: kLogoMaximumWidth,
+                    ),
                   ),
                 ),
               ),

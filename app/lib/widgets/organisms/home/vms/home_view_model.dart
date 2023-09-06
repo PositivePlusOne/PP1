@@ -27,6 +27,7 @@ part 'home_view_model.g.dart';
 class HomeViewModelState with _$HomeViewModelState {
   const factory HomeViewModelState({
     @Default(false) bool isRefreshing,
+    @Default(false) bool hasDoneInitialChecks,
     @Default(0) currentTabIndex,
   }) = _HomeViewModelState;
 
@@ -45,7 +46,10 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFirstRender()');
 
-    unawaited(performProfileChecks());
+    // Add a bit of time before performing the profile checks
+    Future.delayed(const Duration(seconds: 5)).then((_) {
+      performProfileChecks();
+    });
   }
 
   Future<void> performProfileChecks() async {
@@ -53,22 +57,25 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
 
+    if (state.hasDoneInitialChecks) {
+      logger.d('performProfileChecks() - state.hasDoneInitialChecks is true');
+      return;
+    }
+
     if (profileController.currentProfileId == null) {
       logger.d('onRefresh() - profileController.currentProfileId is null');
       return;
     }
 
     logger.d('performProfileChecks()');
-
     try {
-      await Future.wait([
-        onRefresh(),
-        profileController.updatePhoneNumber(),
-        profileController.updateEmailAddress(),
-        profileController.updateFirebaseMessagingToken(),
-        notificationsController.setupPushNotificationListeners(),
-      ]);
-    } finally {}
+      await profileController.updatePhoneNumber();
+      await profileController.updateEmailAddress();
+      await profileController.updateFirebaseMessagingToken();
+      await notificationsController.setupPushNotificationListeners();
+    } finally {
+      state = state.copyWith(hasDoneInitialChecks: true);
+    }
   }
 
   Future<void> onRefresh() async {
