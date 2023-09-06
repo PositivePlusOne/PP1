@@ -17,6 +17,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
     this.topics = const <Tag>[],
     this.margin = const EdgeInsets.all(kPaddingMedium),
     this.onTopicSelected,
+    this.onSeeMoreTopicsSelected,
     this.index = -1,
     super.key,
   });
@@ -28,6 +29,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   final List<Color> tabColours;
 
   final void Function(BuildContext context, Tag tag)? onTopicSelected;
+  final void Function(BuildContext context)? onSeeMoreTopicsSelected;
 
   final EdgeInsets? margin;
 
@@ -58,6 +60,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
           PositiveRecommendedTopics(
             tags: topics,
             onTagSelected: (context, tag) => onTopicSelected?.call(context, tag),
+            onSeeMoreSelected: (context) => onSeeMoreTopicsSelected?.call(context),
           ),
         },
         const SizedBox(height: kPaddingMedium),

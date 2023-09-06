@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -136,7 +137,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
         routeInfo = const ChatConversationsRoute();
         break;
       case NavigationBarIndex.search:
-        routeInfo = const SearchRoute();
+        routeInfo = SearchRoute(defaultTab: SearchTab.tags);
         break;
       case NavigationBarIndex.hub:
       default:

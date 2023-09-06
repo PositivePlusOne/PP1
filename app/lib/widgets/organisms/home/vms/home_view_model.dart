@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 // Package imports:
@@ -134,5 +135,13 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     logger.d('onTopicSelected() - tag: ${tag.fallback}');
     await appRouter.push(TagFeedRoute(tag: tag));
+  }
+
+  Future<void> onSeeMoreTopicsSelected(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onSeeMoreTopicsSelected()');
+    await appRouter.push(SearchRoute(defaultTab: SearchTab.tags));
   }
 }

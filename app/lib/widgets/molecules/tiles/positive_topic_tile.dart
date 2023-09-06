@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
@@ -14,38 +15,43 @@ class PositiveTopicTile extends StatelessWidget {
     required this.colors,
     required this.typography,
     required this.tag,
+    required this.onTap,
   });
 
   final DesignColorsModel colors;
   final DesignTypographyModel typography;
   final Tag tag;
+  final void Function(BuildContext context) onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.0),
-        color: colors.white,
-      ),
-      padding: const EdgeInsets.all(kPaddingMedium),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            '#',
-            style: typography.styleTopic.copyWith(
-              color: colors.white.complimentTextColor.withOpacity(0.15),
+    return PositiveTapBehaviour(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0),
+          color: colors.white,
+        ),
+        padding: const EdgeInsets.all(kPaddingMedium),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              '#',
+              style: typography.styleTopic.copyWith(
+                color: colors.white.complimentTextColor.withOpacity(0.15),
+              ),
             ),
-          ),
-          const SizedBox(height: kPaddingSmall),
-          Text(
-            tag.topic?.fallback ?? tag.fallback,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 4,
-            style: typography.styleTopic.copyWith(color: colors.white.complimentTextColor),
-          ),
-        ],
+            const SizedBox(height: kPaddingSmall),
+            Text(
+              tag.topic?.fallback ?? tag.fallback,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+              style: typography.styleTopic.copyWith(color: colors.white.complimentTextColor),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -79,6 +79,7 @@ class HomePage extends HookConsumerWidget {
               onTapped: viewModel.onTabSelected,
               topics: tagsControllerState.topicTags,
               onTopicSelected: viewModel.onTopicSelected,
+              onSeeMoreTopicsSelected: viewModel.onSeeMoreTopicsSelected,
               tabColours: <Color>[
                 colors.green,
                 // colors.yellow,

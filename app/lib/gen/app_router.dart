@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

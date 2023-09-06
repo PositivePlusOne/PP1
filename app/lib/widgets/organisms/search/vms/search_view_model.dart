@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,10 +24,10 @@ part 'search_view_model.g.dart';
 @freezed
 class SearchViewModelState with _$SearchViewModelState {
   const factory SearchViewModelState({
+    required SearchTab currentTab,
     @Default(false) bool isBusy,
     @Default(false) bool isSearching,
     @Default('') String searchQuery,
-    @Default(SearchTab.posts) SearchTab currentTab,
     @Default([]) List<Profile> searchUsersResults,
     @Default([]) List<Activity> searchPostsResults,
     @Default([]) List<Activity> searchEventsResults,
@@ -37,7 +38,9 @@ class SearchViewModelState with _$SearchViewModelState {
     @Default('') String searchTagsCursor,
   }) = _SearchViewModelState;
 
-  factory SearchViewModelState.initialState() => const SearchViewModelState();
+  factory SearchViewModelState.initialState(SearchTab tab) => SearchViewModelState(
+        currentTab: tab,
+      );
 }
 
 enum SearchTab {
@@ -55,8 +58,8 @@ enum SearchTab {
 @Riverpod(keepAlive: true)
 class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   @override
-  SearchViewModelState build() {
-    return SearchViewModelState.initialState();
+  SearchViewModelState build(SearchTab tab) {
+    return SearchViewModelState.initialState(tab);
   }
 
   Future<bool> onWillPopScope() async {
@@ -150,5 +153,13 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     state = state.copyWith(currentTab: newTab);
+  }
+
+  Future<void> onTopicSelected(BuildContext context, Tag tag) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onTopicSelected() - tag: ${tag.fallback}');
+    await appRouter.push(TagFeedRoute(tag: tag));
   }
 }

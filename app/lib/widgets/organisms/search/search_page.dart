@@ -29,12 +29,18 @@ import '../../molecules/tiles/positive_topic_tile.dart';
 
 @RoutePage()
 class SearchPage extends ConsumerWidget {
-  const SearchPage({super.key});
+  const SearchPage({
+    required this.defaultTab,
+    super.key,
+  });
+
+  final SearchTab defaultTab;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final SearchViewModel viewModel = ref.read(searchViewModelProvider.notifier);
+    final SearchViewModelProvider provider = searchViewModelProvider(defaultTab);
+    final SearchViewModel viewModel = ref.read(provider.notifier);
 
     final List<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags));
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -42,15 +48,15 @@ class SearchPage extends ConsumerWidget {
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final String searchQuery = ref.watch(searchViewModelProvider.select((value) => value.searchQuery));
-    final SearchTab currentTab = ref.watch(searchViewModelProvider.select((value) => value.currentTab));
-    final bool isBusy = ref.watch(searchViewModelProvider.select((value) => value.isBusy));
-    final bool isSearching = ref.watch(searchViewModelProvider.select((value) => value.isSearching));
+    final String searchQuery = ref.watch(provider.select((value) => value.searchQuery));
+    final SearchTab currentTab = ref.watch(provider.select((value) => value.currentTab));
+    final bool isBusy = ref.watch(provider.select((value) => value.isBusy));
+    final bool isSearching = ref.watch(provider.select((value) => value.isSearching));
 
-    final List<Profile> searchUserResults = ref.watch(searchViewModelProvider.select((value) => value.searchUsersResults));
-    final List<Activity> searchPostsResults = ref.watch(searchViewModelProvider.select((value) => value.searchPostsResults));
-    final List<Activity> searchEventsResults = ref.watch(searchViewModelProvider.select((value) => value.searchEventsResults));
-    final List<Tag> searchTagResults = ref.watch(searchViewModelProvider.select((value) => value.searchTagResults));
+    final List<Profile> searchUserResults = ref.watch(provider.select((value) => value.searchUsersResults));
+    final List<Activity> searchPostsResults = ref.watch(provider.select((value) => value.searchPostsResults));
+    final List<Activity> searchEventsResults = ref.watch(provider.select((value) => value.searchEventsResults));
+    final List<Tag> searchTagResults = ref.watch(provider.select((value) => value.searchTagResults));
 
     final bool canDisplaySearchResults = switch (currentTab) {
       SearchTab.users => searchUserResults.isNotEmpty,
@@ -146,6 +152,7 @@ class SearchPage extends ConsumerWidget {
                           colors: colors,
                           typography: typography,
                           tag: tag,
+                          onTap: (context) => viewModel.onTopicSelected(context, tag),
                         ),
                       ],
                     ],
@@ -157,6 +164,7 @@ class SearchPage extends ConsumerWidget {
                         colors: colors,
                         typography: typography,
                         tag: tag,
+                        onTap: (context) => viewModel.onTopicSelected(context, tag),
                       ),
                     ],
                   ].spaceWithVertical(kPaddingSmall),
