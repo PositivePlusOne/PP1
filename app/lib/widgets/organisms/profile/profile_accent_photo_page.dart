@@ -59,7 +59,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
     final Color currentAccentColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final bool hasAccentColorChanged = currentAccentColor != accentColor;
-    final bool hasImageChanged = state.newProfileImagePath.isNotEmpty;
+    final bool hasImageChanged = state.newProfileImage != null && state.newProfileImage!.path.isNotEmpty;
 
     return PositiveScaffold(
       backgroundColor: colors.black,
@@ -127,7 +127,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                             size: kIconMassive,
                             borderThickness: kBorderThicknessMedium,
                             ringColorOverride: colorHex.toSafeColorFromHex(defaultColor: colors.teal),
-                            imageOverridePath: state.newProfileImagePath,
+                            imageOverridePath: state.newProfileImage?.path ?? "",
                           ),
                         ),
                       ),
@@ -151,7 +151,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
               children: <Widget>[
                 PositiveProfileTile(
                   profile: userProfile,
-                  imageOverridePath: state.newProfileImagePath,
+                  imageOverridePath: state.newProfileImage?.path ?? "",
                   metadata: {
                     'Followers': '${userProfile.statistics.followers}',
                     'Following': '${userProfile.statistics.following}',
