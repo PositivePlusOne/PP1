@@ -7,7 +7,7 @@ part of 'profile_form_controller.dart';
 // **************************************************************************
 
 String _$profileFormControllerHash() =>
-    r'a72322d07c85f85624edb5b2bb3600210a327d0d';
+    r'033870eaf643d5861c882443eb907260b8bbd760';
 
 /// See also [ProfileFormController].
 @ProviderFor(ProfileFormController)

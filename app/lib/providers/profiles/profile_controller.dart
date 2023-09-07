@@ -459,15 +459,14 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(currentProfile: profile);
   }
 
-  Future<void> updateProfileImage(String imagePath) async {
+  Future<void> updateProfileImage(XFile image) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
-    final File picture = File(imagePath);
 
     final Uint8List imageData = await Isolate.run(() async {
-      final Uint8List imageAsUint8List = await picture.readAsBytes();
+      final Uint8List imageAsUint8List = await image.readAsBytes();
       final img.Image? decodedImage = img.decodeImage(imageAsUint8List);
       if (decodedImage == null) {
         return Uint8List(0);
