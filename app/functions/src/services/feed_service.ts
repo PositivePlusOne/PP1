@@ -4,7 +4,7 @@ import { DefaultGenerics, NewActivity, StreamClient, StreamFeed, connect } from 
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequest } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
-import { ActivityActionVerb } from "../dto/activities";
+import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace FeedService {
@@ -176,12 +176,19 @@ export namespace FeedService {
    * Adds an activity to a feed.
    * @param {StreamFeed<DefaultGenerics>} feed the feed to add the activity to.
    */
-  export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activityId: string): Promise<any> {
+  export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activity: ActivityJSON): Promise<any> {
+    const activityId = activity._fl_meta_?.fl_id ?? "";
+    const createTime = activity._fl_meta_?.createdDate ?? "";
+    if (!activityId || !createTime) {
+      throw new Error("Missing activity ID or create time");
+    }
+
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Share,
       object: activityId,
       foreign_id: activityId,
+      time: createTime,
     };
     
     return senderUserFeed.addActivity(getStreamActivity);

@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { v1 as uuidv1 } from "uuid";
 
-import { DefaultGenerics, NewActivity } from "getstream";
+import { DefaultGenerics, ForeignIDTimes, NewActivity } from "getstream";
 import { Activity, ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
@@ -153,6 +153,19 @@ export namespace ActivitiesService {
     return activityResponse;
   }
 
+  export async function getForeignIdTimeForActivity(activity: ActivityJSON): Promise<ForeignIDTimes> {
+    const activityId = activity?._fl_meta_?.fl_id ?? "";
+    const createTime = activity?._fl_meta_?.createdDate ?? new Date().toISOString();
+    if (!activityId) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
+    }
+
+    return {
+      foreignID: activityId,
+      time: createTime,
+    };
+  }
+
   export async function updateTagFeedsForActivity(activity: ActivityJSON): Promise<void> {
     const activityId = activity?._fl_meta_?.fl_id ?? "";
     if (!activityId) {
@@ -161,8 +174,14 @@ export namespace ActivitiesService {
 
     // Get a list of all places the activity is currently posted
     const feedsClient = FeedService.getFeedsClient();
+    const foreignTimes = await getForeignIdTimeForActivity(activity);
     const activitiesQuery = await feedsClient.getActivities({
-      ids: [activityId],
+      foreignIDTimes: [foreignTimes],
+    });
+
+    functions.logger.info("Got query result for tag updates", {
+      activityId,
+      activitiesQuery,
     });
 
     // Get a list of all the tags the activity should be posted to
@@ -172,6 +191,11 @@ export namespace ActivitiesService {
     // Get a list of all the tags the activity is currently posted to
     const currentTags = [];
     for (const result of activitiesQuery.results) {
+      functions.logger.info("Checking activity result", {
+        activityId,
+        result,
+      });
+
       const origin = result.origin;
       if (!origin) {
         continue;
@@ -213,7 +237,7 @@ export namespace ActivitiesService {
           tag,
         });
 
-        tagUpdatePromises.push(postActivityToFeed(FeedName.Tags, tag, activityId));
+        tagUpdatePromises.push(postActivityToFeed(FeedName.Tags, tag, activity));
       }
     }
 
@@ -232,23 +256,25 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is posted.
    */
-  export async function postActivityToFeed(feedName: string, actorId: string, activityId: string): Promise<void> {
+  export async function postActivityToFeed(feedName: string, actorId: string, activity: ActivityJSON): Promise<void> {
     functions.logger.info("Unposting activity", {
       feedName,
       actorId,
     });
 
-    const feed = FeedService.getFeedsClient().feed(feedName, actorId);
-
+    const activityId = activity?._fl_meta_?.fl_id ?? "";
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
     }
+
+    const feed = FeedService.getFeedsClient().feed(feedName, actorId);
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: actorId,
       verb: ActivityActionVerb.Post,
       object: activityId,
       foreign_id: activityId,
+      time: activity?._fl_meta_?.createdDate ?? new Date().toISOString(),
     };
 
     await feed.addActivity(getStreamActivity);

@@ -20,7 +20,6 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { ReactionStatisticsService } from "../services/reaction_statistics_service";
-import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -42,8 +41,8 @@ export namespace PostEndpoints {
     
         // Convert window results to a list of IDs
         let activities = await ActivitiesService.getActivityFeedWindow(window.results);
-        let statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(feedId, activities.map((activity) => FlamelinkHelpers.getFlamelinkIdFromObject(activity)!));
-        statistics = await ReactionStatisticsService.enrichReactionStatisticsWithUserInformation(feed, uid, statistics);
+        const statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(activities);
+        // statistics = await ReactionStatisticsService.enrichReactionStatisticsWithUserInformation(feed, uid, statistics);
         activities = ActivitiesService.enrichActivitiesWithReactionStatistics(activities, statistics);
 
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
@@ -105,7 +104,7 @@ export namespace PostEndpoints {
     const streamClient = FeedService.getFeedsUserClient(uid);
     const senderUserFeed = streamClient.feed(feed, uid);
     
-    await FeedService.shareActivityToFeed(uid, senderUserFeed, activityId);
+    await FeedService.shareActivityToFeed(uid, senderUserFeed, activity);
     functions.logger.info(`Shared activity to feed`, { uid, activityId, feed });
 
     return buildEndpointResponse(context, {
