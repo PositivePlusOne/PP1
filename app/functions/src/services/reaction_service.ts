@@ -1,3 +1,5 @@
+import * as functions from "firebase-functions";
+
 import { ReactionJSON, reactionSchemaKey } from "../dto/reactions";
 import { DataService } from "./data_service";
 import { StreamClient, DefaultGenerics, StreamFeed, ReactionFilterConditions } from "getstream";
@@ -57,7 +59,7 @@ export namespace ReactionService {
             kind: reaction.kind,
             activity_id: reaction.activity_id,
             user_id: reaction.user_id,
-            time: new Date().toISOString(),
+            time: StreamHelpers.getCurrentTimestamp(),
         } as ReactionEntryJSON;
 
         const reactionId = generateReactionId(reaction);
@@ -66,11 +68,12 @@ export namespace ReactionService {
             id: reactionId,
         });
 
+        functions.logger.info("Added reaction", { response, reactionId });
         await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, 1);
 
         return DataService.updateDocument({
             schemaKey: reactionSchemaKey,
-            entryId: response.id,
+            entryId: reactionId,
             data: reaction,
         }) as ReactionJSON;
     }
@@ -150,13 +153,9 @@ export namespace ReactionService {
             }
         }
 
-        // Fetch the reactions
-        const reactions = await DataService.getBatchDocuments({
+        return await DataService.getBatchDocuments({
             schemaKey: reactionSchemaKey,
             entryIds: reactionIds,
         }) as ReactionJSON[];
-        
-        // Filter out the reactions that don't exist
-        return reactions.filter((reaction) => reaction !== null);
     }
 }

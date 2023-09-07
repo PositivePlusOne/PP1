@@ -102,7 +102,7 @@ class PostViewModel extends _$PostViewModel {
         activityId: activityId,
         userId: profileController.currentProfileId!,
         origin: TargetFeed.toOrigin(state.targetFeed),
-        reactionType: 'reaction',
+        reactionType: 'comment',
         offset: 1,
       );
 
