@@ -922,7 +922,7 @@ class ProfileFormController extends _$ProfileFormController {
           profileController.updateAccentColor(state.accentColor),
         ],
         if (shouldUpdateProfileImage) ...<Future<void>>[
-          profileController.updateProfileImage(state.newProfileImage),
+          profileController.updateProfileImage(state.newProfileImage!),
         ],
       ];
 
