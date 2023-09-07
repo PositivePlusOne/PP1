@@ -22,11 +22,9 @@ mixin _$SearchViewModelState {
   String get searchQuery => throw _privateConstructorUsedError;
   List<Profile> get searchUsersResults => throw _privateConstructorUsedError;
   List<Activity> get searchPostsResults => throw _privateConstructorUsedError;
-  List<Activity> get searchEventsResults => throw _privateConstructorUsedError;
   List<Tag> get searchTagResults => throw _privateConstructorUsedError;
   String get searchUsersCursor => throw _privateConstructorUsedError;
   String get searchPostsCursor => throw _privateConstructorUsedError;
-  String get searchEventsCursor => throw _privateConstructorUsedError;
   String get searchTagsCursor => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -47,11 +45,9 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
       String searchQuery,
       List<Profile> searchUsersResults,
       List<Activity> searchPostsResults,
-      List<Activity> searchEventsResults,
       List<Tag> searchTagResults,
       String searchUsersCursor,
       String searchPostsCursor,
-      String searchEventsCursor,
       String searchTagsCursor});
 }
 
@@ -75,11 +71,9 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
     Object? searchQuery = null,
     Object? searchUsersResults = null,
     Object? searchPostsResults = null,
-    Object? searchEventsResults = null,
     Object? searchTagResults = null,
     Object? searchUsersCursor = null,
     Object? searchPostsCursor = null,
-    Object? searchEventsCursor = null,
     Object? searchTagsCursor = null,
   }) {
     return _then(_value.copyWith(
@@ -107,10 +101,6 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.searchPostsResults
           : searchPostsResults // ignore: cast_nullable_to_non_nullable
               as List<Activity>,
-      searchEventsResults: null == searchEventsResults
-          ? _value.searchEventsResults
-          : searchEventsResults // ignore: cast_nullable_to_non_nullable
-              as List<Activity>,
       searchTagResults: null == searchTagResults
           ? _value.searchTagResults
           : searchTagResults // ignore: cast_nullable_to_non_nullable
@@ -122,10 +112,6 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
       searchPostsCursor: null == searchPostsCursor
           ? _value.searchPostsCursor
           : searchPostsCursor // ignore: cast_nullable_to_non_nullable
-              as String,
-      searchEventsCursor: null == searchEventsCursor
-          ? _value.searchEventsCursor
-          : searchEventsCursor // ignore: cast_nullable_to_non_nullable
               as String,
       searchTagsCursor: null == searchTagsCursor
           ? _value.searchTagsCursor
@@ -150,11 +136,9 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
       String searchQuery,
       List<Profile> searchUsersResults,
       List<Activity> searchPostsResults,
-      List<Activity> searchEventsResults,
       List<Tag> searchTagResults,
       String searchUsersCursor,
       String searchPostsCursor,
-      String searchEventsCursor,
       String searchTagsCursor});
 }
 
@@ -175,11 +159,9 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
     Object? searchQuery = null,
     Object? searchUsersResults = null,
     Object? searchPostsResults = null,
-    Object? searchEventsResults = null,
     Object? searchTagResults = null,
     Object? searchUsersCursor = null,
     Object? searchPostsCursor = null,
-    Object? searchEventsCursor = null,
     Object? searchTagsCursor = null,
   }) {
     return _then(_$_SearchViewModelState(
@@ -207,10 +189,6 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value._searchPostsResults
           : searchPostsResults // ignore: cast_nullable_to_non_nullable
               as List<Activity>,
-      searchEventsResults: null == searchEventsResults
-          ? _value._searchEventsResults
-          : searchEventsResults // ignore: cast_nullable_to_non_nullable
-              as List<Activity>,
       searchTagResults: null == searchTagResults
           ? _value._searchTagResults
           : searchTagResults // ignore: cast_nullable_to_non_nullable
@@ -222,10 +200,6 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
       searchPostsCursor: null == searchPostsCursor
           ? _value.searchPostsCursor
           : searchPostsCursor // ignore: cast_nullable_to_non_nullable
-              as String,
-      searchEventsCursor: null == searchEventsCursor
-          ? _value.searchEventsCursor
-          : searchEventsCursor // ignore: cast_nullable_to_non_nullable
               as String,
       searchTagsCursor: null == searchTagsCursor
           ? _value.searchTagsCursor
@@ -245,15 +219,12 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       this.searchQuery = '',
       final List<Profile> searchUsersResults = const [],
       final List<Activity> searchPostsResults = const [],
-      final List<Activity> searchEventsResults = const [],
       final List<Tag> searchTagResults = const [],
       this.searchUsersCursor = '',
       this.searchPostsCursor = '',
-      this.searchEventsCursor = '',
       this.searchTagsCursor = ''})
       : _searchUsersResults = searchUsersResults,
         _searchPostsResults = searchPostsResults,
-        _searchEventsResults = searchEventsResults,
         _searchTagResults = searchTagResults;
 
   @override
@@ -287,16 +258,6 @@ class _$_SearchViewModelState implements _SearchViewModelState {
     return EqualUnmodifiableListView(_searchPostsResults);
   }
 
-  final List<Activity> _searchEventsResults;
-  @override
-  @JsonKey()
-  List<Activity> get searchEventsResults {
-    if (_searchEventsResults is EqualUnmodifiableListView)
-      return _searchEventsResults;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_searchEventsResults);
-  }
-
   final List<Tag> _searchTagResults;
   @override
   @JsonKey()
@@ -315,14 +276,11 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   final String searchPostsCursor;
   @override
   @JsonKey()
-  final String searchEventsCursor;
-  @override
-  @JsonKey()
   final String searchTagsCursor;
 
   @override
   String toString() {
-    return 'SearchViewModelState(currentTab: $currentTab, isBusy: $isBusy, isSearching: $isSearching, searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchEventsResults: $searchEventsResults, searchTagResults: $searchTagResults, searchUsersCursor: $searchUsersCursor, searchPostsCursor: $searchPostsCursor, searchEventsCursor: $searchEventsCursor, searchTagsCursor: $searchTagsCursor)';
+    return 'SearchViewModelState(currentTab: $currentTab, isBusy: $isBusy, isSearching: $isSearching, searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchTagResults: $searchTagResults, searchUsersCursor: $searchUsersCursor, searchPostsCursor: $searchPostsCursor, searchTagsCursor: $searchTagsCursor)';
   }
 
   @override
@@ -342,15 +300,11 @@ class _$_SearchViewModelState implements _SearchViewModelState {
             const DeepCollectionEquality()
                 .equals(other._searchPostsResults, _searchPostsResults) &&
             const DeepCollectionEquality()
-                .equals(other._searchEventsResults, _searchEventsResults) &&
-            const DeepCollectionEquality()
                 .equals(other._searchTagResults, _searchTagResults) &&
             (identical(other.searchUsersCursor, searchUsersCursor) ||
                 other.searchUsersCursor == searchUsersCursor) &&
             (identical(other.searchPostsCursor, searchPostsCursor) ||
                 other.searchPostsCursor == searchPostsCursor) &&
-            (identical(other.searchEventsCursor, searchEventsCursor) ||
-                other.searchEventsCursor == searchEventsCursor) &&
             (identical(other.searchTagsCursor, searchTagsCursor) ||
                 other.searchTagsCursor == searchTagsCursor));
   }
@@ -364,11 +318,9 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       searchQuery,
       const DeepCollectionEquality().hash(_searchUsersResults),
       const DeepCollectionEquality().hash(_searchPostsResults),
-      const DeepCollectionEquality().hash(_searchEventsResults),
       const DeepCollectionEquality().hash(_searchTagResults),
       searchUsersCursor,
       searchPostsCursor,
-      searchEventsCursor,
       searchTagsCursor);
 
   @JsonKey(ignore: true)
@@ -387,11 +339,9 @@ abstract class _SearchViewModelState implements SearchViewModelState {
       final String searchQuery,
       final List<Profile> searchUsersResults,
       final List<Activity> searchPostsResults,
-      final List<Activity> searchEventsResults,
       final List<Tag> searchTagResults,
       final String searchUsersCursor,
       final String searchPostsCursor,
-      final String searchEventsCursor,
       final String searchTagsCursor}) = _$_SearchViewModelState;
 
   @override
@@ -407,15 +357,11 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   @override
   List<Activity> get searchPostsResults;
   @override
-  List<Activity> get searchEventsResults;
-  @override
   List<Tag> get searchTagResults;
   @override
   String get searchUsersCursor;
   @override
   String get searchPostsCursor;
-  @override
-  String get searchEventsCursor;
   @override
   String get searchTagsCursor;
   @override

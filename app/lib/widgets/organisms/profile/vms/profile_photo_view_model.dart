@@ -53,20 +53,16 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     logger.d("onSelectCamera");
     await appRouter.pop();
 
-    final dynamic result = await showCupertinoDialog(
+    final XFile result = await showCupertinoDialog(
       context: context,
       builder: (_) => const PositiveCameraDialog(),
     );
-
-    if (result == null || result is! String || result.isEmpty) {
-      logger.d("onSelectCamera: result is null or not a string");
-      return;
-    }
 
     logger.d("onSelectCamera: result is $result");
     state = state.copyWith(isBusy: true);
 
     try {
+      print("object");
       await profileController.updateProfileImage(result);
       state = state.copyWith(isBusy: false);
 
@@ -95,7 +91,7 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
         return;
       }
 
-      await profileController.updateProfileImage(picture.path);
+      await profileController.updateProfileImage(picture);
       state = state.copyWith(isBusy: false);
 
       appRouter.removeWhere((route) => true);

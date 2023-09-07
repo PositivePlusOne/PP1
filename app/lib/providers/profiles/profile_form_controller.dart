@@ -58,7 +58,7 @@ class ProfileFormState with _$ProfileFormState {
     required bool isBusy,
     required FormMode formMode,
     required Map<String, bool> visibilityFlags,
-    required String newProfileImagePath,
+    required XFile? newProfileImage,
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromProfile(Profile? profile, FormMode formMode) {
@@ -78,7 +78,7 @@ class ProfileFormState with _$ProfileFormState {
       isBusy: false,
       formMode: formMode,
       visibilityFlags: visibilityFlags,
-      newProfileImagePath: '',
+      newProfileImage: null,
     );
   }
 }
@@ -912,7 +912,7 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(isBusy: true);
     logger.i('Saving accent color');
 
-    final bool shouldUpdateProfileImage = state.formMode == FormMode.edit && state.newProfileImagePath.isNotEmpty;
+    final bool shouldUpdateProfileImage = state.formMode == FormMode.edit && state.newProfileImage != null;
     final bool shouldUpdateAccentColor = state.formMode == FormMode.edit && state.accentColor.isNotEmpty && state.accentColor != profileController.state.currentProfile?.accentColor;
 
     try {
@@ -922,7 +922,7 @@ class ProfileFormController extends _$ProfileFormController {
           profileController.updateAccentColor(state.accentColor),
         ],
         if (shouldUpdateProfileImage) ...<Future<void>>[
-          profileController.updateProfileImage(state.newProfileImagePath),
+          profileController.updateProfileImage(state.newProfileImage),
         ],
       ];
 
@@ -994,7 +994,7 @@ class ProfileFormController extends _$ProfileFormController {
     }
 
     logger.d("onSelectCamera: result is $result");
-    state = state.copyWith(newProfileImagePath: result.path);
+    state = state.copyWith(newProfileImage: result);
   }
 
   Future<void> onChangeImageFromPickerSelected(BuildContext context) async {
@@ -1014,7 +1014,7 @@ class ProfileFormController extends _$ProfileFormController {
         return;
       }
 
-      state = state.copyWith(newProfileImagePath: picture.path);
+      state = state.copyWith(newProfileImage: picture);
     } finally {
       state = state.copyWith(isBusy: false);
     }
