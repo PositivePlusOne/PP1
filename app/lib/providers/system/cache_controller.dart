@@ -210,6 +210,17 @@ class CacheController extends _$CacheController {
     }
   }
 
+  Iterable<T> getAllFromCache<T>() {
+    final List<T> results = [];
+    for (final CacheRecord record in state.cacheData.values) {
+      if (record.value is T) {
+        results.add(record.value as T);
+      }
+    }
+
+    return results;
+  }
+
   void processEvents(CacheRecord record) {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);

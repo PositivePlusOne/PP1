@@ -52,20 +52,14 @@ class ReactionType with _$ReactionType {
   }
 
   static String toJson(ReactionType reactionType) {
-    switch (reactionType) {
-      case ReactionType.like:
-        return 'like';
-      case ReactionType.dislike:
-        return 'dislike';
-      case ReactionType.comment:
-        return 'comment';
-      case ReactionType.bookmark:
-        return 'bookmark';
-      case ReactionType.share:
-        return 'share';
-      default:
-        return 'unknownReaction';
-    }
+    return reactionType.when(
+      unknownReaction: () => 'unknownReaction',
+      like: () => 'like',
+      dislike: () => 'dislike',
+      comment: () => 'comment',
+      bookmark: () => 'bookmark',
+      share: () => 'share',
+    );
   }
 }
 

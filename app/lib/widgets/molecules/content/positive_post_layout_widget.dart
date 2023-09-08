@@ -13,13 +13,11 @@ import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/sharing_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -39,19 +37,22 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
-    this.reactionStatistics,
     this.feed,
     this.isShortformPost = true,
     this.sidePadding = kPaddingSmall,
     this.isBusy = false,
     this.onImageTap,
-    this.onBookmark,
+    required this.isLiked,
+    required this.onLike,
+    required this.totalLikes,
+    required this.onBookmark,
+    required this.isBookmarked,
+    required this.totalComments,
     this.onPostPageRequested,
     super.key,
   });
 
   final Activity postContent;
-  final ReactionStatistics? reactionStatistics;
   final String? feed;
 
   final Profile? publisher;
@@ -63,7 +64,15 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   final FutureOr<void> Function(BuildContext context)? onPostPageRequested;
 
   final void Function(Media media)? onImageTap;
+
+  final bool isLiked;
+  final int totalLikes;
+  final Future<void> Function(BuildContext context)? onLike;
+
+  final bool isBookmarked;
   final Future<void> Function(BuildContext context)? onBookmark;
+
+  final int totalComments;
 
   @override
   ConsumerState<PositivePostLayoutWidget> createState() => _PositivePostLayoutWidgetState();
@@ -443,32 +452,28 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postActions() {
     //TODO(S): Reenable when other info available
-    final Profile? userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
-
-    final ActivitySecurityConfigurationMode commentShareMode = widget.postContent.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
-
-    final bool isPublic = commentShareMode == const ActivitySecurityConfigurationMode.public();
-    final bool isOwner = userProfile?.flMeta?.id != null && widget.postContent.publisherInformation?.publisherId == userProfile?.flMeta?.id;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
-        likes: widget.reactionStatistics?.counts['like'] ?? 0,
-        likeEnabled: isPublic || isOwner,
-        onLike: (_) {},
+        isLiked: widget.isLiked,
+        likes: widget.totalLikes,
+        likesEnabled: !widget.isBusy,
+        onLike: widget.onLike,
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: !isOwner,
+        shareEnabled: false,
         onShare: onShareSelected,
 
         //TODO(S): comment enabled and on comment functionality here
-        comments: widget.reactionStatistics?.counts['comment'] ?? 0,
-        commentsEnabled: isPublic || isOwner,
+        comments: widget.totalComments,
+        commentsEnabled: !widget.isBusy,
         onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarked: isPublic || isOwner,
+        bookmarkEnabled: !widget.isBusy,
+        bookmarked: widget.isBookmarked,
         onBookmark: widget.onBookmark,
       ),
     );

@@ -281,35 +281,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }
     }
 
-    // Enrich any statistics with user information
-    // if (responseData.data[reactionStatisticsSchemaKey].length > 0 && sender && sender.length > 0) {
-    //     functions.logger.debug(`Enriching reaction statistics with user information.`, { sender });
-    //     const feedOrigin = responseData.data[reactionStatisticsSchemaKey][0].origin;
-        
-    //     if (feedOrigin || feedOrigin.length > 0 || feedOrigin.indexOf(":") > -1) {
-    //         const feedOriginSplit = feedOrigin.split(":");
-    //         const feedStr = feedOriginSplit[0];
-    //         const slugStr = feedOriginSplit[1];
-
-    //         const streamClient = FeedService.getFeedsClient();
-    //         const feed = streamClient.feed(feedStr, slugStr);
-
-    //         functions.logger.debug(`Enriching reaction statistics with user information.`, { sender, feedOrigin, feed });
-
-    //         const reactionStatistics = responseData.data[reactionStatisticsSchemaKey] as ReactionStatistics[];
-    //         populatePromises.push(ReactionStatisticsService.enrichReactionStatisticsWithUserInformation(feed, sender, reactionStatistics).then((enrichedReactionStatistics) => {
-    //             responseData.data[reactionStatisticsSchemaKey] = [];
-    //             for (const reactionStatistic of enrichedReactionStatistics) {
-    //                 if (reactionStatistic) {
-    //                     responseData.data[reactionStatisticsSchemaKey].push(reactionStatistic);
-    //                 }
-    //             }
-    //         }));
-    //     } else {
-    //         functions.logger.warn(`Unable to enrich reaction statistics with user information.`, { sender, feedOrigin });
-    //     }
-    // }
-
     await Promise.all(populatePromises);
 
     functions.logger.debug(`Built endpoint response.`, { sender, responseData });

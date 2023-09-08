@@ -52,7 +52,7 @@ enum ShareTarget {
   post,
 }
 
-typedef SharePostOptions = (Activity activity, String feed);
+typedef SharePostOptions = (Activity activity, String origin);
 typedef ShareMessage = (String title, String message);
 
 @Riverpod(keepAlive: true)
@@ -172,12 +172,12 @@ class SharingController extends _$SharingController implements ISharingControlle
   }
 
   @override
-  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String feed, List<String> profileIds) async {
+  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String origin, List<String> profileIds) async {
     final Logger logger = ref.read(loggerProvider);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
 
     logger.d('Sharing via connection chat');
-    final SharePostOptions postOptions = (activity, feed);
+    final SharePostOptions postOptions = (activity, origin);
     final ShareMessage message = getShareMessage(context, ShareTarget.post, postOptions: postOptions);
 
     final String title = message.$1;
@@ -185,7 +185,7 @@ class SharingController extends _$SharingController implements ISharingControlle
 
     await reactionApiService.sharePostToConversations(
       activityId: activity.flMeta!.id!,
-      feed: feed,
+      origin: origin,
       targets: profileIds,
       title: title,
       description: text,
@@ -204,7 +204,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     logger.d('Sharing to feed');
     await reactionApiService.sharePostToFeed(
       activityId: postOptions.$1.flMeta!.id!,
-      feed: postOptions.$2,
+      origin: postOptions.$2,
     );
 
     Navigator.of(context).pop();

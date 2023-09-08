@@ -2,16 +2,17 @@ import * as functions from "firebase-functions";
 
 import { ReactionJSON, reactionSchemaKey } from "../dto/reactions";
 import { DataService } from "./data_service";
-import { StreamClient, DefaultGenerics, StreamFeed, ReactionFilterConditions } from "getstream";
+import { StreamClient, DefaultGenerics, ReactionFilterConditions } from "getstream";
 import { ReactionEntryJSON } from "../dto/stream";
 import { ReactionStatisticsService } from "./reaction_statistics_service";
-import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace ReactionService {
     
-    export const VALID_REACTIONS = ["like", "dislike", "bookmark", "comment", "share"];
-    export const UNIQUE_REACTIONS = ["like", "dislike", "bookmark", "share"];
+    export const VALID_FEEDS = ["user", "timeline", "notification", "tags", "aggregated", "notification_aggregated"];
+    export const VALID_REACTIONS = ["like", "bookmark", "comment", "share"];
+    export const UNIQUE_REACTIONS = ["like", "bookmark"];
 
     export function isUniqueReactionKind(kind: string) {
         return UNIQUE_REACTIONS.includes(kind);
@@ -28,26 +29,17 @@ export namespace ReactionService {
             throw new Error(`Invalid feed or user ID: ${feed}, ${userId}`);
         }
 
+        // Check the feed is valid
+        if (!VALID_FEEDS.includes(feed)) {
+            throw new Error(`Invalid feed: ${feed}`);
+        }
+
         // We convert the timeline feed to a user feed as having two feeds for the same user is confusing.
         if (feed === "timeline") {
             feed = "user";
         }
 
         return `${feed}:${userId}`;
-    }
-
-    export function generateReactionId(reaction: ReactionJSON): string {
-        if (!reaction.kind || !reaction.activity_id || !reaction.user_id) {
-            throw new Error(`Invalid reaction, cannot generate ID.`);
-        }
-
-        // Unique reactions have a fixed ID.
-        // This way we can check if a user has already reacted to an activity without relying on the Stream API.
-        if (isUniqueReactionKind(reaction.kind)) {
-            return `${reaction.kind}:${reaction.activity_id ?? ""}:${reaction.user_id ?? ""}:${reaction.reaction_id ?? ""}:${reaction.origin ?? ""}`;
-        }
-        
-        return FlamelinkHelpers.generateIdentifier();
     }
 
     export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<ReactionJSON> {
@@ -62,18 +54,16 @@ export namespace ReactionService {
             time: StreamHelpers.getCurrentTimestamp(),
         } as ReactionEntryJSON;
 
-        const reactionId = generateReactionId(reaction);
         const response = await client.reactions.add(reaction.kind!, reaction.activity_id!, reactionEntry, {
             userId: reaction.user_id,
-            id: reactionId,
         });
 
-        functions.logger.info("Added reaction", { response, reactionId });
+        functions.logger.info("Added reaction", { response });
         await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, 1);
 
         return DataService.updateDocument({
             schemaKey: reactionSchemaKey,
-            entryId: reactionId,
+            entryId: response.id,
             data: reaction,
         }) as ReactionJSON;
     }
@@ -96,16 +86,17 @@ export namespace ReactionService {
     }
 
     export async function deleteReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<void> {
-        if (!reaction.activity_id || !reaction.origin || !reaction.kind || !reaction.reaction_id) {
+        const id = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
+        if (!id || !reaction.activity_id || !reaction.origin || !reaction.kind) {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
 
-        await client.reactions.delete(reaction.reaction_id);
+        await client.reactions.delete(id);
         await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1);
 
         await DataService.deleteDocument({
             schemaKey: reactionSchemaKey,
-            entryId: reaction.reaction_id,
+            entryId: id,
         });
     }
 
@@ -135,27 +126,54 @@ export namespace ReactionService {
      * @param userId The user ID to fetch reactions for.
      * @returns The unique reactions for the activities and user.
      */
-    export async function listUniqueReactionsForActivitiesAndUser(feed: StreamFeed, activityIds: string[], userId: string): Promise<ReactionJSON[]> {
-        const reactionIds: string[] = [];
-        for (const kind in UNIQUE_REACTIONS) {
-            for (const activityId in activityIds) {
-                const origin = StreamHelpers.getOriginFromFeed(feed);
-                const expectedReactionJson = {
-                    kind,
-                    activity_id: activityId,
-                    user_id: userId,
-                    origin,
-                    reaction_id: "",
-                } as ReactionJSON;
+    export async function listUniqueReactionsForActivitiesAndUser(origin: string, activityIds: string[], userId: string): Promise<ReactionJSON[]> {
+        const reactions = [] as ReactionJSON[];
+        const windowPromises: Promise<ReactionJSON[]>[] = [];
+        if (!activityIds || activityIds.length === 0 || !userId || !origin) {
+            functions.logger.info("No activities or user ID provided", { activityIds, userId });
+            return reactions;
+        }
 
-                const reactionId = generateReactionId(expectedReactionJson);
-                reactionIds.push(reactionId);
+        for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
+            const kind = UNIQUE_REACTIONS[index];
+            if (!kind) {
+                continue;
+            }
+
+            // We probably need to find a way to make this less read hungry.
+            // But for now, we'll just fetch the first reaction for each kind.
+            functions.logger.info("Generating expected key for unique reaction kind", { kind });
+            windowPromises.push(DataService.getDocumentWindowRaw({
+                schemaKey: reactionSchemaKey,
+                limit: 1,
+                where: [
+                    { fieldPath: "kind", op: "==", value: kind },
+                    { fieldPath: "user_id", op: "==", value: userId },
+                    { fieldPath: "activity_id", op: "in", value: activityIds },
+                    { fieldPath: "origin", op: "==", value: origin },
+                ],
+            }));
+        }
+
+        const reactionWindows = await Promise.all(windowPromises);
+        for (let index = 0; index < reactionWindows.length; index++) {
+            const window = reactionWindows[index] as ReactionJSON[];
+            if (!window || window.length === 0) {
+                continue;
+            }
+
+            // Push all from the window to the reactions array if it is valid
+            for (let index = 0; index < window.length; index++) {
+                const reaction = window[index] as ReactionJSON;
+                if (!reaction) {
+                    continue;
+                }
+
+                reactions.push(reaction);
             }
         }
 
-        return await DataService.getBatchDocuments({
-            schemaKey: reactionSchemaKey,
-            entryIds: reactionIds,
-        }) as ReactionJSON[];
+        functions.logger.info("Unique reactions for activities and user", { activityIds, userId, reactions });
+        return reactions;
     }
 }

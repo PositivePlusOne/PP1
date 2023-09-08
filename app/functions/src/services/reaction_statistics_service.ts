@@ -1,9 +1,8 @@
 import * as functions from "firebase-functions";
 
-import { ReactionStatistics, ReactionStatisticsJSON, reactionStatisticsSchemaKey } from "../dto/reactions";
+import { ReactionJSON, ReactionStatistics, ReactionStatisticsJSON, reactionStatisticsSchemaKey } from "../dto/reactions";
 
 import { DataService } from "./data_service";
-import { StreamFeed } from "getstream";
 import { ReactionService } from "./reaction_service";
 import { ActivityJSON } from "../dto/activities";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
@@ -26,6 +25,10 @@ export namespace ReactionStatisticsService {
 
         const expectedKeys = [];
         for (const activity of activities) {
+            if (!activity) {
+                continue;
+            }
+
             const id = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
             if (!id || !activity.publisherInformation?.originFeed) {
                 functions.logger.error("Invalid activity", { activity });
@@ -59,35 +62,29 @@ export namespace ReactionStatisticsService {
         }) as ReactionStatisticsJSON;
     }
 
-    export async function enrichReactionStatisticsWithUserInformation(feed: StreamFeed, userId: string, reactionStatistics: ReactionStatisticsJSON[]): Promise<ReactionStatisticsJSON[]> {
-        const activityIds = reactionStatistics.map((stats) => stats?.activity_id ?? null);
-        activityIds.filter((activityId) => typeof activityId === "string" && activityId.length > 0);
-
-        if (activityIds.length === 0) {
-            functions.logger.info("No activity ids to enrich with user information");
+    export async function getUniqueReactionsForUserInFeedActivity(origin: string, userId: string, reactionStatistics: ReactionJSON[]): Promise<ReactionStatisticsJSON[]> {
+        functions.logger.info("Enriching reaction statistics with user information", { origin, userId, reactionStatistics });
+        if (!reactionStatistics || reactionStatistics.length === 0) {
+            functions.logger.info("No reaction statistics to enrich with user information");
             return reactionStatistics;
         }
 
-        functions.logger.info("Enriching reaction statistics with user information", { activityIds });
+        // Remove all non ReactionJSON objects from the array.
+        reactionStatistics = reactionStatistics.filter((stats) => stats !== null) as ReactionStatisticsJSON[];
+        functions.logger.info("Filtered reaction statistics", { reactionStatistics });
 
-        const uniqueReactions = await ReactionService.listUniqueReactionsForActivitiesAndUser(feed, activityIds as string[], userId);
-        functions.logger.info("Unique reactions", { uniqueReactions });
-
+        const activityIds = [];
         for (const stats of reactionStatistics) {
-            if (!stats) {
+            if (!stats || !stats.activity_id) {
+                functions.logger.error("Invalid reaction statistics", { stats });
                 continue;
             }
-            
-            stats.unique_user_reactions ??= {};
-            for (const reaction of uniqueReactions) {
-                if (reaction.kind && reaction.activity_id === stats.activity_id) {
-                    stats.unique_user_reactions[reaction.kind] = true;
-                }
-            }
+
+            activityIds.push(stats.activity_id);
         }
 
-        functions.logger.info("Enriched reaction statistics with user information", { reactionStatistics });
-        return reactionStatistics;
+        functions.logger.info("Got activity IDs", { activityIds });
+        return await ReactionService.listUniqueReactionsForActivitiesAndUser(origin, activityIds, userId);
     }
 
     export async function updateReactionCountForActivity(feed: string, activity_id: string, kind: string, offset: number): Promise<void> {

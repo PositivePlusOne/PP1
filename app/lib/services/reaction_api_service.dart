@@ -21,13 +21,13 @@ FutureOr<ReactionApiService> reactionApiService(ReactionApiServiceRef ref) async
 class ReactionApiService {
   FutureOr<EndpointResponse> sharePostToFeed({
     required String activityId,
-    required String feed,
+    required String origin,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-shareActivityToFeed',
       parameters: {
         'activityId': activityId,
-        'feed': feed,
+        'origin': origin,
       },
     );
   }
@@ -37,14 +37,14 @@ class ReactionApiService {
     required List<String> targets,
     required String title,
     required String description,
-    String? feed,
+    String? origin,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-shareActivityToConversations',
       parameters: {
         'activityId': activityId,
         'targets': targets,
-        'feed': feed,
+        'origin': origin,
         'title': title,
         'description': description,
       },
@@ -53,6 +53,7 @@ class ReactionApiService {
 
   FutureOr<Reaction> postReaction({
     required String activityId,
+    required String origin,
     required String kind,
     String text = '',
   }) async {
@@ -61,6 +62,7 @@ class ReactionApiService {
       selector: (response) => Reaction.fromJson(json.decodeSafe((response.data['reactions'] as Iterable).first)),
       parameters: {
         'activityId': activityId,
+        'origin': origin,
         'kind': kind,
         'text': text,
       },

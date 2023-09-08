@@ -9,7 +9,7 @@ import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 import { FeedName } from "../constants/default_feeds";
 import { FeedEntry } from "../dto/stream";
-import { ReactionStatisticsJSON } from "../dto/reactions";
+import { ReactionJSON, ReactionStatisticsJSON } from "../dto/reactions";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { StreamHelpers } from "../helpers/stream_helpers";
 
@@ -294,8 +294,49 @@ export namespace ActivitiesService {
       activityId,
     });
 
+    if (!activityId || !actorId || !feedName) {
+      functions.logger.error("Invalid arguments for unposting activity", {
+        feedName,
+        actorId,
+        activityId,
+      });
+
+      return Promise.resolve();
+    }
+
     const feed = FeedService.getFeedsClient().feed(feedName, actorId);
     await feed.removeActivity({ foreign_id: activityId });
+  }
+
+  export function enrichActivitiesWithUniqueReactions(activities: ActivityJSON[], reactions: ReactionJSON[]): ActivityJSON[] {
+    if (!reactions || reactions.length === 0) {
+      return activities;
+    }
+
+    return activities.map((activity) => {
+      const id = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
+      if (!id) {
+        return activity;
+      }
+
+      activity.enrichmentConfiguration ??= {};
+      for (let index = 0; index < reactions.length; index++) {
+        const reaction = reactions[index];
+        if (!reaction || reaction.activity_id !== id) {
+          continue;
+        }
+
+        const reactionType = reaction.kind;
+        if (!reactionType) {
+          continue;
+        }
+
+        activity.enrichmentConfiguration.uniqueUserReactions ??= {};
+        activity.enrichmentConfiguration.uniqueUserReactions[reactionType] = true;
+      }
+
+      return activity;
+    }).filter((activity) => activity);
   }
 
   export function enrichActivitiesWithReactionStatistics(activities: ActivityJSON[], statistics: ReactionStatisticsJSON[]): ActivityJSON[] {
@@ -323,6 +364,6 @@ export namespace ActivitiesService {
       }
 
       return activity;
-    });
+    }).filter((activity) => activity);
   }
 }

@@ -79,8 +79,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         searchUsersCursor: '',
         searchPostsResults: [],
         searchPostsCursor: '',
-        // searchEventsResults: [],
-        // searchEventsCursor: '',
         searchTagResults: [],
         searchTagsCursor: '',
       );
@@ -107,8 +105,6 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       searchUsersCursor: '',
       searchPostsResults: [],
       searchPostsCursor: '',
-      // searchEventsResults: [],
-      // searchEventsCursor: '',
       searchTagResults: [],
       searchTagsCursor: '',
     );
