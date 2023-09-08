@@ -7,7 +7,7 @@ part of 'reactions_controller.dart';
 // **************************************************************************
 
 String _$reactionsControllerHash() =>
-    r'd9d72679333d2d24312e94460749474271492967';
+    r'e41ad9919fc9fd62ad27bdb76b4fc14d23212acd';
 
 /// See also [ReactionsController].
 @ProviderFor(ReactionsController)
