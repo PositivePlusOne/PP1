@@ -5,7 +5,6 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { UserService } from "../services/user_service";
 import { ActivitiesService } from "../services/activities_service";
 import { ReactionService } from "../services/reaction_service";
-import { FeedName } from "../constants/default_feeds";
 import { ReactionJSON } from "../dto/reactions";
 import { FeedService } from "../services/feed_service";
 import { CommentHelpers } from "../helpers/comment_helpers";
@@ -13,10 +12,14 @@ import { CommentHelpers } from "../helpers/comment_helpers";
 export namespace ReactionEndpoints {
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
-        const feed = request.data.feed || FeedName.User;
+        const origin = request.data.origin;
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const text = request.data.text || "";
+
+        if (!origin || !activityId || !kind) {
+            throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
+        }
 
         // If text is supplied, we need to verify it is not empty and above the maximum length
         if (text) {
@@ -30,7 +33,6 @@ export namespace ReactionEndpoints {
         ReactionService.verifyReactionKind(kind);
 
         // Build reaction
-        const origin = ReactionService.getOriginFromFeedStringAndUserId(feed, uid);
         const reactionJSON = {
             activity_id: activityId,
             origin,
@@ -43,8 +45,8 @@ export namespace ReactionEndpoints {
         const isUniqueReaction = ReactionService.isUniqueReactionKind(kind);
         if (isUniqueReaction) {
             functions.logger.debug("Checking meets unique reaction criteria");
-            const uniqueReactions = await ReactionService.listUniqueReactionsForActivitiesAndUser(feed, [activityId], uid);
-            const uniqueReactionKind = uniqueReactions.find((reaction) => reaction.kind === kind);
+            const uniqueReactions = await ReactionService.listUniqueReactionsForActivitiesAndUser(origin, [activityId], uid);
+            const uniqueReactionKind = uniqueReactions.find((reaction) => reaction?.kind === kind);
             if (uniqueReactionKind) {
                 throw new functions.https.HttpsError("already-exists", "Reaction already exists");
             }
@@ -103,7 +105,7 @@ export namespace ReactionEndpoints {
 
         functions.logger.info("Deleting reaction", { reactionId });
         const streamClient = FeedService.getFeedsUserClient(uid);
-        await ReactionService.deleteReaction(streamClient, reactionId);
+        await ReactionService.deleteReaction(streamClient, reaction);
 
         functions.logger.info("Reaction deleted", { reactionId });
         return buildEndpointResponse(context, {

@@ -199,20 +199,20 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     final List<Reaction> newReactions = [];
     final List<dynamic> reactions = (data.containsKey('reactions') ? data['reactions'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
-    for (final dynamic activity in reactions) {
+    for (final dynamic reaction in reactions) {
       try {
-        logger.d('requestNextTimelinePage() - parsing activity: $activity');
-        final Reaction newReaction = Reaction.fromJson(activity);
+        logger.d('requestNextTimelinePage() - parsing reaction: $reaction');
+        final Reaction newReaction = Reaction.fromJson(reaction);
         final String reactionId = newReaction.flMeta?.id ?? '';
 
         if (reactionId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to parse activity: $activity');
+          logger.e('requestNextTimelinePage() - Failed to parse reaction: $reaction');
           continue;
         }
 
         newReactions.add(newReaction);
       } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
+        logger.e('requestNextTimelinePage() - Failed to parse reaction: $reaction - ex: $ex');
       }
     }
 

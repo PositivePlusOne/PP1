@@ -1,5 +1,7 @@
 // Dart imports:
 
+// Dart imports:
+
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -8,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 
@@ -23,9 +26,34 @@ class ReactionsControllerState with _$ReactionsControllerState {
 
 @Riverpod(keepAlive: true)
 class ReactionsController extends _$ReactionsController {
+  static const List<String> kUniqueReactionTypes = <String>["like", "bookmark"];
+  static const List<String> kAllReactionTypes = <String>[
+    "like",
+    "bookmark",
+    "comment",
+    "share",
+  ];
+
   @override
   ReactionsControllerState build() {
     return ReactionsControllerState.initialState();
+  }
+
+  List<Reaction> getOwnReactionsForFeedActivity({
+    required String activityId,
+    required String origin,
+    String? kind,
+  }) {
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final String userId = profileController.currentProfileId!;
+    final List<Reaction> cachedReactions = cacheController.getAllFromCache<Reaction>().toList();
+    final Iterable<Reaction> targetReactions = cachedReactions.where((element) {
+      final String expectedKind = ReactionType.toJson(element.kind);
+      return element.activityId == activityId && element.origin == origin && element.userId == userId && (kind == null || expectedKind == kind);
+    });
+
+    return targetReactions.toList();
   }
 
   ReactionStatistics getStatisticsForActivity(String activityId, String origin) {
@@ -69,8 +97,13 @@ class ReactionsController extends _$ReactionsController {
     final Map<String, int> newCounts = Map<String, int>.from(statistics.counts);
     final Map<String, bool> newUniqueUserReactions = Map<String, bool>.from(statistics.uniqueUserReactions);
 
+    // Add defaults for each unique reaction kind
+    for (final String kind in kUniqueReactionTypes) {
+      newUniqueUserReactions[kind] = newUniqueUserReactions[kind] ?? false;
+    }
+
     final bool newUniqueFlag = offset > 0;
-    newUniqueUserReactions[userId] = newUniqueFlag;
+    newUniqueUserReactions[reactionType] = newUniqueFlag;
     newCounts[reactionType] = (newCounts[reactionType] ?? 0) + offset;
 
     statistics = statistics.copyWith(

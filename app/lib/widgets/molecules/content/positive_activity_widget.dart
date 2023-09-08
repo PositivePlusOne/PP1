@@ -79,6 +79,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   Profile? publisher;
 
   bool _isBookmarking = false;
+  bool _isLiking = false;
 
   @override
   void initState() {
@@ -346,7 +347,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
     final String? id = widget.activity.flMeta?.id;
-    final String feed = TargetFeed.toOrigin(widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''));
+    final String origin = TargetFeed.toOrigin(widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''));
 
     if (id == null || userController.currentUser == null) {
       throw Exception('Invalid activity or user');
@@ -356,12 +357,56 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       _isBookmarking = true;
       setStateIfMounted();
 
-      await communitiesController.bookmarkActivity(feed: feed, activityId: id);
+      final bool isBookmarked = communitiesController.isActivityBookmarked(id, origin);
+      if (isBookmarked) {
+        await communitiesController.removeBookmarkActivity(origin: origin, activityId: id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
+        );
+        return;
+      }
+
+      await communitiesController.bookmarkActivity(origin: origin, activityId: id);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
     } finally {
       _isBookmarking = false;
+      setStateIfMounted();
+    }
+  }
+
+  Future<void> onPostLiked(BuildContext context) async {
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final String? id = widget.activity.flMeta?.id;
+    final String origin = TargetFeed.toOrigin(widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''));
+    final AppRouter router = ref.read(appRouterProvider);
+
+    if (id == null || userController.currentUser == null) {
+      throw Exception('Invalid activity or user');
+    }
+
+    try {
+      _isLiking = true;
+      setStateIfMounted();
+
+      final bool isLiked = communitiesController.isActivityLiked(id, origin);
+      if (isLiked) {
+        await communitiesController.unlikeActivity(origin: origin, activityId: id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
+        );
+        return;
+      }
+
+      await communitiesController.likeActivity(origin: origin, activityId: id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
+      );
+    } finally {
+      _isLiking = false;
       setStateIfMounted();
     }
   }
@@ -439,8 +484,24 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
+    final Profile? userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final ActivitySecurityConfigurationMode commentSecurityMode = widget.activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
+    final ActivitySecurityConfigurationMode shareSecurityMode = widget.activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.public();
+    final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.public();
+
+    const bool canComment = true;
+    const bool canShare = true;
+    const bool canView = true;
+
+    final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
+    final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;
+    final bool isBusy = _isBookmarking || _isLiking || !widget.isEnabled;
+
+    final int totalLikes = reactionStatistics?.counts["like"] ?? 0;
+    final int totalComments = reactionStatistics?.counts["comment"] ?? 0;
+
     return IgnorePointer(
-      ignoring: !widget.isEnabled,
+      ignoring: isBusy,
       child: Column(
         children: <Widget>[
           PositiveTapBehaviour(
@@ -454,12 +515,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           const SizedBox(height: kPaddingExtraSmall),
           PositivePostLayoutWidget(
             postContent: widget.activity,
-            reactionStatistics: reactionStatistics,
             publisher: publisher,
             isShortformPost: !widget.isFullscreen,
             onImageTap: onInternalMediaTap,
+            onLike: onPostLiked,
+            isLiked: isLiked,
+            totalLikes: totalLikes,
+            totalComments: totalComments,
+            isBookmarked: isBookmarked,
             onBookmark: onPostBookmarked,
-            isBusy: !widget.isEnabled || _isBookmarking,
+            isBusy: isBusy,
             feed: widget.targetFeed?.feed,
             onPostPageRequested: requestPostRoute,
           ),

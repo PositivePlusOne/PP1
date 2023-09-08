@@ -7,7 +7,7 @@ part of 'communities_controller.dart';
 // **************************************************************************
 
 String _$communitiesControllerHash() =>
-    r'25c90260a25420703ceba8566ad7193b9fd8aa92';
+    r'd2d4624bcba407da6c20da6e23e280609d99d65f';
 
 /// See also [CommunitiesController].
 @ProviderFor(CommunitiesController)

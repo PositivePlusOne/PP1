@@ -94,6 +94,7 @@ class PostViewModel extends _$PostViewModel {
       logger.i('Posting comment');
       final Reaction reaction = await reactionApiService.postReaction(
         activityId: state.activityId,
+        origin: TargetFeed.toOrigin(state.targetFeed),
         kind: 'comment',
         text: trimmedString,
       );

@@ -37,19 +37,21 @@ export namespace PostEndpoints {
     
         const feedsClient = FeedService.getFeedsClient();
         const feed = feedsClient.feed(feedId, slugId);
+        const origin = StreamHelpers.getOriginFromFeed(feed);
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
     
         // Convert window results to a list of IDs
         let activities = await ActivitiesService.getActivityFeedWindow(window.results);
         const statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(activities);
-        // statistics = await ReactionStatisticsService.enrichReactionStatisticsWithUserInformation(feed, uid, statistics);
+        const reactions = await ReactionStatisticsService.getUniqueReactionsForUserInFeedActivity(origin, uid, statistics);
         activities = ActivitiesService.enrichActivitiesWithReactionStatistics(activities, statistics);
+        activities = ActivitiesService.enrichActivitiesWithUniqueReactions(activities, reactions);
 
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
     
         return buildEndpointResponse(context, {
           sender: uid,
-          data: [...activities],
+          data: [...activities, ...statistics, ...reactions],
           limit: limit,
           cursor: paginationToken,
           seedData: {
