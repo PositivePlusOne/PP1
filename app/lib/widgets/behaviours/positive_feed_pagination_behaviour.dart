@@ -188,26 +188,13 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     feedState.currentPaginationKey = nextPageKey;
     logger.i('requestNextTimelinePage() - nextPageKey: $nextPageKey - currentPaginationKey: ${feedState.currentPaginationKey}');
 
-    final List<Activity> newActivities = [];
-    final List<dynamic> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
+    final List<Activity> activities = (data.containsKey('activities') ? data['activities'] : []).map((dynamic activity) => Activity.fromJson(json.decodeSafe(activity))).toList();
+    final List<String> windowIds = (data.containsKey('windowIds') ? data['windowIds'] : []).map((dynamic windowId) => windowId.toString()).toList();
+
+    // Remove all activities that are not included in the windowIds
+    // This is to prevent showing reposts that are not in the windowIds
+    final List<Activity> newActivities = activities.where((element) => windowIds.contains(element.flMeta?.id)).toList();
     final bool hasNext = nextPageKey.isNotEmpty && activities.isNotEmpty;
-
-    for (final dynamic activity in activities) {
-      try {
-        logger.d('requestNextTimelinePage() - parsing activity: $activity');
-        final Activity newActivity = Activity.fromJson(activity);
-        final String activityId = newActivity.flMeta?.id ?? '';
-
-        if (activityId.isEmpty || !newActivity.hasContentToDisplay) {
-          logger.e('requestNextTimelinePage() - Failed to parse activity: $activity');
-          continue;
-        }
-
-        newActivities.add(newActivity);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to parse activity: $activity - ex: $ex');
-      }
-    }
 
     logger.d('requestNextTimelinePage() - newActivities: $newActivities');
 

@@ -91,6 +91,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const isRepost = activity.generalConfiguration?.repostActivityId && activity.generalConfiguration?.repostActivityPublisherId;
                 const isReposter = sender && sender === activity.generalConfiguration?.repostActivityPublisherId;
                 if (isRepost && !isReposter) {
+                    joinedDataRecords.get(activitySchemaKey)?.add(activity.generalConfiguration!.repostActivityId!);
                     joinedDataRecords.get(profileSchemaKey)?.add(activity.generalConfiguration!.repostActivityPublisherId!);
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, activity.generalConfiguration!.repostActivityPublisherId!]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);

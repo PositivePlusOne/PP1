@@ -42,13 +42,14 @@ export namespace PostEndpoints {
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
     
         // Convert window results to a list of IDs
-        let activities = await ActivitiesService.getActivityFeedWindow(window.results);
+        let activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
         const statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(activities);
         const reactions = await ReactionStatisticsService.getUniqueReactionsForUserInFeedActivity(origin, uid, statistics);
         activities = ActivitiesService.enrichActivitiesWithReactionStatistics(activities, statistics);
         activities = ActivitiesService.enrichActivitiesWithUniqueReactions(activities, reactions);
 
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+        const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
     
         return buildEndpointResponse(context, {
           sender: uid,
@@ -59,6 +60,7 @@ export namespace PostEndpoints {
             next: paginationToken,
             unread: window.unread,
             unseen: window.unseen,
+            windowIds,  // We supply this so we can support reposts
           },
         });
       });
@@ -324,7 +326,7 @@ export namespace PostEndpoints {
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
-    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || activity?.generalConfiguration?.reportActivityId;
+    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || (activity?.generalConfiguration?.repostActivityId && activity?.generalConfiguration?.repostActivityPublisherId);
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
