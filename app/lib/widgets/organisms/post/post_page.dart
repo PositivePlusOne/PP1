@@ -14,6 +14,7 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -63,7 +64,19 @@ class PostPage extends HookConsumerWidget {
     final bool commentsDisabled = updatedActivity.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
     final String activityId = updatedActivity.flMeta?.id ?? '';
 
+    final bool canView = viewModel.checkCanView();
     final bool canComment = viewModel.checkCanComment();
+
+    PreferredSizeWidget? bottomNavigationBar;
+    if (!commentsDisabled && canComment) {
+      bottomNavigationBar = PostCommentBox(
+        mediaQuery: mediaQuery,
+        commentTextController: viewModel.commentTextController,
+        onCommentChanged: viewModel.onCommentTextChanged,
+        onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
+        isBusy: state.isBusy,
+      );
+    }
 
     return PositiveScaffold(
       isBusy: state.isBusy,
@@ -72,17 +85,9 @@ class PostPage extends HookConsumerWidget {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
       },
-      decorationColor: colors.white,
+      decorations: !canView ? buildType3ScaffoldDecorations(colors) : [],
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: !commentsDisabled && canComment
-          ? PostCommentBox(
-              mediaQuery: MediaQuery.of(context),
-              commentTextController: viewModel.commentTextController,
-              onCommentChanged: viewModel.onCommentTextChanged,
-              onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
-              isBusy: state.isBusy,
-            )
-          : null,
+      bottomNavigationBar: bottomNavigationBar,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           horizontalPadding: kPaddingNone,
@@ -112,7 +117,7 @@ class PostPage extends HookConsumerWidget {
             ),
           ],
         ),
-        if (activityId.isNotEmpty) ...<Widget>[
+        if (canView) ...<Widget>[
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(
             child: Align(

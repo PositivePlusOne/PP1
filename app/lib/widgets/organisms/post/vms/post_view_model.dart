@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/extensions/activity_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,9 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/reactions_controller.dart';

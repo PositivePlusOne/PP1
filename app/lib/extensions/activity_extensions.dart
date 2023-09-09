@@ -1,3 +1,6 @@
+// Package imports:
+import 'package:logger/logger.dart';
+
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -7,7 +10,6 @@ import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:logger/logger.dart';
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
 
