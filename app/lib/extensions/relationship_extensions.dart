@@ -1,4 +1,6 @@
 // Package imports:
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:collection/collection.dart';
 
 // Project imports:
@@ -21,6 +23,15 @@ enum RelationshipState {
 extension RelationshipStateExt on Relationship {
   bool get isFullyConnected {
     return members.every((element) => element.hasConnected);
+  }
+
+  bool get hasHiddenPostsOfTarget {
+    final String? currentUserId = providerContainer.read(profileControllerProvider.select((value) => value.currentProfile?.flMeta?.id));
+    if (currentUserId == null) {
+      return false;
+    }
+
+    return members.firstWhereOrNull((element) => element.memberId == currentUserId)?.hasHidden ?? false;
   }
 
   Set<RelationshipState> relationshipStatesForEntity(String entityId) {

@@ -159,22 +159,30 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptionType.follow:
           var following = relationshipStates.contains(RelationshipState.sourceFollowed);
           following ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
+          await appRouter.pop();
           ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following ${widget.profile.displayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.connect:
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
+          await appRouter.pop();
           break;
         case ProfileModalDialogOptionType.message:
           await getStreamController.createConversation([flamelinkId], shouldPopDialog: true);
           break;
         case ProfileModalDialogOptionType.block:
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
+          await appRouter.pop();
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} ${widget.profile.displayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.mute:
           relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(flamelinkId) : await relationshipController.muteRelationship(flamelinkId);
+          await appRouter.pop();
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} ${widget.profile.displayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.hidePosts:
           relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(flamelinkId) : await relationshipController.hideRelationship(flamelinkId);
+          await appRouter.pop();
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} ${widget.profile.displayName.asHandle}\'s posts'));
           break;
         case ProfileModalDialogOptionType.report:
           await appRouter.pop();
@@ -190,8 +198,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
             await appRouter.pop();
             break;
           }
-          await appRouter.pop();
 
+          await appRouter.pop();
           await PositiveDialog.show(
             context: context,
             useSafeArea: false,
