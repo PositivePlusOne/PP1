@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,7 +34,7 @@ import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
 import '../../../providers/profiles/profile_controller.dart';
 
 @RoutePage()
-class PostPage extends ConsumerWidget {
+class PostPage extends HookConsumerWidget {
   const PostPage({
     required this.activity,
     required this.feed,
@@ -49,13 +50,12 @@ class PostPage extends ConsumerWidget {
     final AppRouter router = ref.read(appRouterProvider);
 
     final PostViewModelProvider provider = postViewModelProvider(activity.flMeta!.id!, feed);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
+    useLifecycleHook(viewModel);
 
-    final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final User? user = userController.currentUser;
+    final Activity updatedActivity = state.activity ?? activity;
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final List<Widget> actions = [];
@@ -64,42 +64,13 @@ class PostPage extends ConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
-    final String publisherID = activity.publisherInformation?.publisherId ?? '';
-    final String userID = profileControllerState.currentProfile?.flMeta?.id ?? '';
-
-    final List<String> members = [publisherID, userID];
-    final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
-
-    late bool isCommentsEnabled;
-    late bool isUserAbleToComment;
-
-    switch (activity.securityConfiguration?.commentMode) {
-      case const ActivitySecurityConfigurationMode.public():
-      case const ActivitySecurityConfigurationMode.signedIn():
-        isUserAbleToComment = user != null;
-        isCommentsEnabled = true;
-        break;
-      case const ActivitySecurityConfigurationMode.connections():
-        isUserAbleToComment = relationship.isFullyConnected;
-        isCommentsEnabled = true;
-        break;
-      case const ActivitySecurityConfigurationMode.followersAndConnections():
-        isUserAbleToComment = relationship.isFullyConnected || relationship.following;
-        isCommentsEnabled = true;
-        break;
-      default:
-        isUserAbleToComment = false;
-        isCommentsEnabled = false;
-    }
-
-    // Revert enabled flags if the user is the publisher
-    if (activity.publisherInformation?.publisherId == user?.uid) {
-      isUserAbleToComment = true;
-      isCommentsEnabled = true;
-    }
-
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
+
+    final bool commentsDisabled = updatedActivity.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
+    final String activityId = updatedActivity.flMeta?.id ?? '';
+
+    final bool canComment = viewModel.checkCanComment();
 
     return PositiveScaffold(
       isBusy: state.isBusy,
@@ -110,7 +81,7 @@ class PostPage extends ConsumerWidget {
       },
       decorationColor: colors.white,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: isCommentsEnabled && isUserAbleToComment
+      bottomNavigationBar: !commentsDisabled && canComment
           ? PostCommentBox(
               mediaQuery: MediaQuery.of(context),
               commentTextController: viewModel.commentTextController,
@@ -139,7 +110,7 @@ class PostPage extends ConsumerWidget {
           ],
           children: <Widget>[
             PositiveActivityWidget(
-              activity: activity,
+              activity: updatedActivity,
               targetFeed: feed,
               isFullscreen: true,
               isEnabled: !state.isBusy,
@@ -148,7 +119,7 @@ class PostPage extends ConsumerWidget {
             ),
           ],
         ),
-        if ((activity.flMeta?.id?.isNotEmpty ?? false) && isCommentsEnabled) ...<Widget>[
+        if (activityId.isNotEmpty) ...<Widget>[
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(
             child: Align(
@@ -168,8 +139,8 @@ class PostPage extends ConsumerWidget {
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
           PositiveReactionPaginationBehaviour(
             kind: 'comment',
-            reactionMode: activity.securityConfiguration?.commentMode,
-            activityId: activity.flMeta!.id!,
+            reactionMode: updatedActivity.securityConfiguration?.commentMode,
+            activityId: activityId,
             feed: feed,
           ),
 

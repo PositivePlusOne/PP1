@@ -48,7 +48,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.tags = const [],
     this.trailingWidget,
     this.initialValueSharingVisibility = const ActivitySecurityConfigurationMode.public(),
-    this.initialValueAllowComments = const ActivitySecurityConfigurationMode.signedIn(),
+    this.initialValueAllowComments = const ActivitySecurityConfigurationMode.public(),
     super.key,
   });
 
@@ -199,7 +199,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_visibility,
                 values: ActivitySecurityConfigurationMode.orderedVisibilityModes,
-                initialValue: ActivitySecurityConfigurationMode.orderedVisibilityModes.first,
+                initialValue: initialValueSharingVisibility,
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
                 onValueChanged: (type) => onUpdateVisibleTo!(type),
@@ -220,7 +220,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_comments,
                 values: ActivitySecurityConfigurationMode.orderedCommentModes,
-                initialValue: ActivitySecurityConfigurationMode.orderedCommentModes.first,
+                initialValue: initialValueAllowComments,
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
                 onValueChanged: (type) => onUpdateAllowComments!(type),
@@ -333,7 +333,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                       labelText: localisations.page_create_post_visibility,
                       onValueChanged: (type) => onUpdateVisibleTo!(type),
                       values: ActivitySecurityConfigurationMode.orderedVisibilityModes,
-                      initialValue: ActivitySecurityConfigurationMode.orderedVisibilityModes.first,
+                      initialValue: initialValueSharingVisibility,
                       labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
                       valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
                       placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
@@ -351,7 +351,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                       labelText: localisations.page_create_post_comments,
                       values: ActivitySecurityConfigurationMode.orderedCommentModes,
-                      initialValue: ActivitySecurityConfigurationMode.orderedCommentModes.first,
+                      initialValue: initialValueAllowComments,
                       valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
                       placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
                       onValueChanged: (type) => onUpdateAllowComments!(type),

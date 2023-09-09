@@ -1,4 +1,12 @@
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,6 +35,7 @@ part 'post_view_model.g.dart';
 class PostViewModelState with _$PostViewModelState {
   const factory PostViewModelState({
     required String activityId,
+    Activity? activity,
     required TargetFeed targetFeed,
     @Default('') currentCommentText,
     @Default(false) bool isBusy,
@@ -44,12 +53,45 @@ class PostViewModelState with _$PostViewModelState {
 }
 
 @riverpod
-class PostViewModel extends _$PostViewModel {
+class PostViewModel extends _$PostViewModel with LifecycleMixin {
   final TextEditingController commentTextController = TextEditingController();
+
+  StreamSubscription<ActivityCreatedEvent>? _activityCreatedEventSubscription;
+  StreamSubscription<ActivityUpdatedEvent>? _activityUpdatedEventSubscription;
+  StreamSubscription<ActivityDeletedEvent>? _activityDeletedEventSubscription;
 
   @override
   PostViewModelState build(String activityId, TargetFeed feed) {
     return PostViewModelState.fromActivity(activityId: activityId, targetFeed: feed);
+  }
+
+  @override
+  void onFirstRender() {
+    super.onFirstRender();
+    setupListeners();
+  }
+
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
+
+    await _activityCreatedEventSubscription?.cancel();
+    await _activityUpdatedEventSubscription?.cancel();
+    await _activityDeletedEventSubscription?.cancel();
+
+    logger.i('[PostViewModel] setupListeners() - Setting up listeners');
+    _activityCreatedEventSubscription = eventBus.on<ActivityCreatedEvent>().listen((_) => updateActivity());
+    _activityUpdatedEventSubscription = eventBus.on<ActivityUpdatedEvent>().listen((_) => updateActivity());
+    _activityDeletedEventSubscription = eventBus.on<ActivityDeletedEvent>().listen((_) => updateActivity());
+  }
+
+  void updateActivity() {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+
+    state = state.copyWith(activity: activity);
+    logger.i('[PostViewModel] updateActivity() - activity: $activity');
   }
 
   Future<bool> onWillPopScope() async {
@@ -68,6 +110,53 @@ class PostViewModel extends _$PostViewModel {
 
   void onCommentTextChanged(String str) {
     state = state.copyWith(currentCommentText: str.trim());
+  }
+
+  bool checkCanComment() {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
+
+    if (activity == null || currentProfileId.isEmpty || publisherProfileId.isEmpty) {
+      logger.e('checkCanComment() - currentProfileId or publisherProfileId is empty');
+      return false;
+    }
+
+    final ActivitySecurityConfigurationMode commentMode = activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
+    if (commentMode == const ActivitySecurityConfigurationMode.disabled()) {
+      logger.d('checkCanComment() - commentMode is disabled');
+      return false;
+    }
+
+    if (commentMode == const ActivitySecurityConfigurationMode.public() || (commentMode == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
+      return true;
+    }
+
+    final String relationshipId = [currentProfileId, publisherProfileId].asGUID;
+    final Relationship? relationship = cacheController.getFromCache<Relationship>(relationshipId);
+
+    if (relationship == null) {
+      logger.e('checkCanComment() - relationship is null');
+      return false;
+    }
+
+    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
+    final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
+
+    if (commentMode == const ActivitySecurityConfigurationMode.connections()) {
+      return isConnected;
+    }
+
+    if (commentMode == const ActivitySecurityConfigurationMode.followersAndConnections()) {
+      return isConnected || isFollowing;
+    }
+
+    return true;
   }
 
   Future<void> onPostCommentRequested() async {

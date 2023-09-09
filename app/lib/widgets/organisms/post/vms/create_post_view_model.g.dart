@@ -7,7 +7,7 @@ part of 'create_post_view_model.dart';
 // **************************************************************************
 
 String _$createPostViewModelHash() =>
-    r'4f14546b4109babc0b57759ad7e32e5f6e63c8b4';
+    r'299a5c93e2e6095eeebf2998dc49500034eb80d9';
 
 /// See also [CreatePostViewModel].
 @ProviderFor(CreatePostViewModel)
