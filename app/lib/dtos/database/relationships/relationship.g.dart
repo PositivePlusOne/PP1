@@ -16,7 +16,6 @@ _$_Relationship _$$_RelationshipFromJson(Map<String, dynamic> json) =>
       connected: json['connected'] as bool? ?? false,
       following: json['following'] as bool? ?? false,
       hidden: json['hidden'] as bool? ?? false,
-      id: json['id'] as String? ?? '',
       muted: json['muted'] as bool? ?? false,
       members: (json['members'] as List<dynamic>?)
               ?.map(
@@ -33,7 +32,6 @@ Map<String, dynamic> _$$_RelationshipToJson(_$_Relationship instance) =>
       'connected': instance.connected,
       'following': instance.following,
       'hidden': instance.hidden,
-      'id': instance.id,
       'muted': instance.muted,
       'members': instance.members.map((e) => e.toJson()).toList(),
     };

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -13,6 +14,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/common/events/force_feed_rebuild_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -116,6 +118,7 @@ class RelationshipController extends _$RelationshipController {
   Future<void> blockRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
     if (profileController.currentProfileId == null || uid.isEmpty) {
       logger.d('[Profile Service] - Cannot block user: $uid');
       return;
@@ -130,38 +133,48 @@ class RelationshipController extends _$RelationshipController {
       return;
     }
 
-    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     logger.d('[Profile Service] - Blocking user: $uid');
-
+    final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
     await relationshipApiService.blockRelationship(uid: uid);
+
     logger.i('[Profile Service] - Blocked user: $uid');
+    eventBus.fire(ForceFeedRebuildEvent());
   }
 
   Future<void> unblockRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
-    logger.d('[Profile Service] - Unblocking user: $uid');
+    final EventBus eventBus = ref.read(eventBusProvider);
 
+    logger.d('[Profile Service] - Unblocking user: $uid');
     await relationshipApiService.unblockRelationship(uid: uid);
+
     logger.d('[Profile Service] - Unblocked user: $uid');
+    eventBus.fire(ForceFeedRebuildEvent());
   }
 
   Future<void> connectRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
-    logger.d('[Profile Service] - Connecting user: $uid');
+    final EventBus eventBus = ref.read(eventBusProvider);
 
+    logger.d('[Profile Service] - Connecting user: $uid');
     await relationshipApiService.connectRelationship(uid: uid);
+
+    eventBus.fire(ForceFeedRebuildEvent());
     logger.i('[Profile Service] - Connected user: $uid');
   }
 
   Future<void> disconnectRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
-    logger.d('[Profile Service] - Disconnecting user: $uid');
+    final EventBus eventBus = ref.read(eventBusProvider);
 
+    logger.d('[Profile Service] - Disconnecting user: $uid');
     await relationshipApiService.disconnectRelationship(uid: uid);
+
     logger.i('[Profile Service] - Disconnected user: $uid');
+    eventBus.fire(ForceFeedRebuildEvent());
   }
 
   Future<void> followRelationship(String uid) async {
@@ -203,18 +216,24 @@ class RelationshipController extends _$RelationshipController {
   Future<void> hideRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
-    logger.d('[Profile Service] - Hiding user: $uid');
+    final EventBus eventBus = ref.read(eventBusProvider);
 
+    logger.d('[Profile Service] - Hiding user: $uid');
     await relationshipApiService.hideRelationship(uid: uid);
+
     logger.i('[Profile Service] - Hid user: $uid');
+    eventBus.fire(ForceFeedRebuildEvent());
   }
 
   Future<void> unhideRelationship(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final RelationshipApiService relationshipApiService = await ref.read(relationshipApiServiceProvider.future);
-    logger.d('[Profile Service] - Unhiding user: $uid');
+    final EventBus eventBus = ref.read(eventBusProvider);
 
+    logger.d('[Profile Service] - Unhiding user: $uid');
     await relationshipApiService.unhideRelationship(uid: uid);
+
     logger.i('[Profile Service] - Unhid user: $uid');
+    eventBus.fire(ForceFeedRebuildEvent());
   }
 }

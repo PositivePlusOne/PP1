@@ -18,7 +18,6 @@ class Relationship with _$Relationship {
     @Default(false) bool connected,
     @Default(false) bool following,
     @Default(false) bool hidden,
-    @Default('') String id,
     @Default(false) bool muted,
     @Default([]) List<RelationshipMember> members,
   }) = _Relationship;
@@ -27,6 +26,19 @@ class Relationship with _$Relationship {
     return Relationship(
       flMeta: FlMeta.empty(members.asGUID, 'relationships'),
       members: members.where((element) => element.isNotEmpty).map((String memberId) => RelationshipMember(memberId: memberId)).toList(),
+    );
+  }
+
+  factory Relationship.owner(List<String> members) {
+    return Relationship(
+      flMeta: FlMeta.empty(members.asGUID, 'relationships'),
+      members: members.map((e) => RelationshipMember.owner(e)).toList(),
+      channelId: '',
+      connected: true,
+      following: true,
+      blocked: false,
+      hidden: false,
+      muted: false,
     );
   }
 
