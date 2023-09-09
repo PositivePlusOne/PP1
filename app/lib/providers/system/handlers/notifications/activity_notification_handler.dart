@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
@@ -16,7 +15,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/services/third_party.dart';

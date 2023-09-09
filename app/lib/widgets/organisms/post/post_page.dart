@@ -149,9 +149,7 @@ class PostPage extends ConsumerWidget {
           ],
         ),
         if ((activity.flMeta?.id?.isNotEmpty ?? false) && isCommentsEnabled) ...<Widget>[
-          const SliverToBoxAdapter(
-            child: SizedBox(height: kPaddingSmall),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(
             child: Align(
               alignment: Alignment.center,

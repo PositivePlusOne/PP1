@@ -41,13 +41,12 @@ extension ActivityExt on Activity {
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
     // Check if we have hidden the posts, or if the publisher has blocked us
-    // TODO(ryan): Check if us blocking the publisher should prevent us from seeing their posts
     if (states.contains(RelationshipState.sourceHidden) || states.contains(RelationshipState.targetBlocked)) {
       return false;
     }
 
     // This logic needs to take into account the current user's relationship with the publisher and the security modes of the activities
-    final ActivitySecurityConfigurationMode viewMode = securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.public();
+    final ActivitySecurityConfigurationMode viewMode = securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
 
     return viewMode.when(
       public: () => true,
@@ -55,6 +54,7 @@ extension ActivityExt on Activity {
       connections: () => hasFullyConnected,
       signedIn: () => profileController.currentProfileId != null,
       private: () => false,
+      disabled: () => false,
     );
   }
 

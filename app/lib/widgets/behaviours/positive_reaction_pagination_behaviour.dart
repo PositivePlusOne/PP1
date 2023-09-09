@@ -3,6 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -271,57 +274,70 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     }
   }
 
-  // Currently comments are the only reaction type supported.
-  String buildCommentHeaderText() {
+  bool checkCanComment() {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
-    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
+    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
     final String publisherId = activity?.publisherInformation?.publisherId ?? '';
     final String currentUserId = profileController.currentProfileId ?? '';
+    if (publisherId.isEmpty) {
+      return false;
+    }
 
-    bool isPermittedToComment = false;
+    final bool isPublisher = publisherId == currentUserId;
+    if (isPublisher) {
+      return true;
+    }
 
-    // TODO(ryan): Figure out what these strings are
+    final String relationshipGuid = [publisherId, currentUserId].asGUID;
+    final Relationship? relationship = cacheController.getFromCache(relationshipGuid);
+    final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentUserId) ?? {};
+    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
+    final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
 
-    return 'Be the first to leave a comment';
+    return commentMode.when(
+      public: () => true,
+      signedIn: () => currentUserId.isNotEmpty,
+      followersAndConnections: () => isConnected || isFollowing,
+      connections: () => isConnected,
+      private: () => isPublisher,
+      disabled: () => false,
+    );
+  }
+
+  // Currently comments are the only reaction type supported.
+  String buildCommentHeaderText(AppLocalizations localizations) {
+    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool isDisabled = commentMode == const ActivitySecurityConfigurationMode.disabled();
+    return isDisabled ? 'Comments are disabled for this post' : 'Be the first to leave a comment';
+  }
+
+  String buildCommentVisibilityPillText(AppLocalizations localizations) {
+    final ActivitySecurityConfigurationMode reactionMode = widget.reactionMode ?? const ActivitySecurityConfigurationMode.disabled();
+    return reactionMode.when(
+      public: () => localizations.shared_reaction_type_generic_everyone,
+      followersAndConnections: () => localizations.shared_reaction_type_generic_followers,
+      connections: () => localizations.shared_reaction_type_generic_connections,
+      signedIn: () => localizations.shared_reaction_type_generic_signed_in,
+      private: () => localizations.shared_reaction_type_generic_me,
+      disabled: () => localizations.shared_reaction_type_generic_disabled,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-
-    String reactionShareType = "";
-
-    if (widget.reactionMode != null) {
-      widget.reactionMode!.when(
-        public: () {
-          reactionShareType = localisations.shared_reaction_type_generic_everyone;
-        },
-        followersAndConnections: () {
-          reactionShareType = localisations.shared_reaction_type_generic_followers;
-        },
-        connections: () {
-          reactionShareType = localisations.shared_reaction_type_generic_connections;
-        },
-        private: () {
-          reactionShareType = localisations.shared_reaction_type_generic_me;
-        },
-        signedIn: () {
-          reactionShareType = localisations.shared_reaction_type_generic_signed_in;
-        },
-      );
-    }
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     final Widget loadingIndicator = Container(
       alignment: Alignment.center,
       color: colours.white,
       child: const PositiveLoadingIndicator(),
     );
+
+    final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: buildCommentHeaderText(localizations));
 
     return MultiSliver(
       children: <Widget>[
@@ -337,7 +353,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  localisations.shared_comments_heading, //! This will need to be dynamic if we support listing more reaction types.
+                  localizations.shared_comments_heading, //! This will need to be dynamic if we support listing more reaction types.
                   style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
                 ),
                 if (widget.reactionMode != null)
@@ -359,7 +375,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
                         ),
                         const SizedBox(width: kPaddingExtraSmall),
                         Text(
-                          reactionShareType,
+                          buildCommentVisibilityPillText(localizations),
                           style: typography.styleButtonBold.copyWith(color: colours.colorGray6),
                         ),
                       ],
@@ -385,35 +401,55 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
             noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),
             firstPageProgressIndicatorBuilder: (_) => loadingIndicator,
             newPageProgressIndicatorBuilder: (_) => loadingIndicator,
-            noItemsFoundIndicatorBuilder: (_) => Container(
-              decoration: BoxDecoration(color: colours.white),
-              child: PositiveTileEntryAnimation(
-                direction: AxisDirection.down,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
-                      child: Text(
-                        buildCommentHeaderText(),
-                        textAlign: TextAlign.left,
-                        style: typography.styleHeroMedium,
-                      ),
-                    ),
-                    SizedBox(
-                      width: screenSize.width,
-                      height: screenSize.width,
-                      child: Stack(
-                        children: buildType5ScaffoldDecorations(colours),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            noItemsFoundIndicatorBuilder: (_) => commentPlaceholder,
           ),
         ),
       ],
+    );
+  }
+}
+
+class ReactionPlaceholderWidget extends ConsumerWidget {
+  const ReactionPlaceholderWidget({
+    super.key,
+    required this.headerText,
+  });
+
+  final String headerText;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
+
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+
+    return Container(
+      decoration: BoxDecoration(color: colours.white),
+      child: PositiveTileEntryAnimation(
+        direction: AxisDirection.down,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
+              child: Text(
+                headerText,
+                textAlign: TextAlign.left,
+                style: typography.styleHeroMedium,
+              ),
+            ),
+            SizedBox(
+              width: screenSize.width,
+              height: screenSize.width,
+              child: Stack(
+                children: buildType5ScaffoldDecorations(colours),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

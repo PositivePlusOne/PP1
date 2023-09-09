@@ -266,12 +266,12 @@ export namespace PostEndpoints {
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
 
-    const allowSharing = request.data.allowSharing ? "public" : "private" as ActivitySecurityConfigurationMode;
+    const allowSharing = request.data.allowSharing ? "public" : "disabled" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
-    const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
+    const allowComments = request.data.allowComments || "disabled" as ActivitySecurityConfigurationMode;
     
-    const allowLikes = request.data.allowLikes || "public" as ActivitySecurityConfigurationMode;
-    const allowBookmarks = request.data.allowBookmarks || "public" as ActivitySecurityConfigurationMode;
+    const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
+    const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
 
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");

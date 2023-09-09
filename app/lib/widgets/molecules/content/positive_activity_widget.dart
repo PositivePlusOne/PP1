@@ -484,15 +484,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
-    final Profile? userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
-    final ActivitySecurityConfigurationMode commentSecurityMode = widget.activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
-    final ActivitySecurityConfigurationMode shareSecurityMode = widget.activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.public();
-    final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.public();
-
-    const bool canComment = true;
-    const bool canShare = true;
-    const bool canView = true;
-
     final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
     final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;
     final bool isBusy = _isBookmarking || _isLiking || !widget.isEnabled;

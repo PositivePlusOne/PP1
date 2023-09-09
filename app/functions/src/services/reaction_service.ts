@@ -43,11 +43,11 @@ export namespace ReactionService {
 
         // Check flags on the activity 
         const relationshipStates = RelationshipService.relationshipStatesForEntity(userId, relationship);
-        const viewMode = activity?.securityConfiguration?.viewMode || "public";
-        const likesMode = activity?.securityConfiguration?.likesMode || "public";
-        const commentMode = activity?.securityConfiguration?.commentMode || "public";
-        const shareMode = activity?.securityConfiguration?.shareMode || "public";
-        const bookmarksMode = activity?.securityConfiguration?.bookmarksMode || "public";
+        const viewMode = activity?.securityConfiguration?.viewMode || "disabled";
+        const likesMode = activity?.securityConfiguration?.likesMode || "disabled";
+        const commentMode = activity?.securityConfiguration?.commentMode || "disabled";
+        const shareMode = activity?.securityConfiguration?.shareMode || "disabled";
+        const bookmarksMode = activity?.securityConfiguration?.bookmarksMode || "disabled";
 
         const isFullyConnected = relationshipStates.has(RelationshipState.sourceConnected) && relationshipStates.has(RelationshipState.targetConnected);
         const isBlocked = relationshipStates.has(RelationshipState.targetBlocked);
@@ -79,8 +79,8 @@ export namespace ReactionService {
                 break;
         }
 
-        if (currentMode === "private") {
-            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity, it is private");
+        if (currentMode === "private" || currentMode === "disabled") {
+            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity. The reaction mode is private or disabled");
         }
 
         // Check if we are following (find sourceFollowed in the set of relationship states)

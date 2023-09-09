@@ -118,6 +118,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
   const factory ActivitySecurityConfigurationMode.connections() = _ActivitySecurityConfigurationModeConnections;
   const factory ActivitySecurityConfigurationMode.private() = _ActivitySecurityConfigurationModePrivate;
   const factory ActivitySecurityConfigurationMode.signedIn() = _ActivitySecurityConfigurationModeSignedIn;
+  const factory ActivitySecurityConfigurationMode.disabled() = _ActivitySecurityConfigurationModeDisabled;
 
   static String toJson(ActivitySecurityConfigurationMode mode) {
     return mode.when(
@@ -126,6 +127,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
       connections: () => 'connections',
       private: () => 'private',
       signedIn: () => 'signed_in',
+      disabled: () => 'disabled',
     );
   }
 
@@ -135,6 +137,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
     ActivitySecurityConfigurationMode.connections(),
     ActivitySecurityConfigurationMode.private(),
     ActivitySecurityConfigurationMode.signedIn(),
+    ActivitySecurityConfigurationMode.disabled(),
   ];
 
   static String toLocale(ActivitySecurityConfigurationMode mode, AppLocalizations localisations) {
@@ -144,6 +147,49 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
       connections: () => localisations.shared_user_type_generic_connections,
       private: () => localisations.shared_user_type_generic_me,
       signedIn: () => localisations.shared_user_type_generic_signed_in,
+      disabled: () => localisations.shared_user_type_generic_disabled,
+    );
+  }
+
+  static List<ActivitySecurityConfigurationMode> get orderedVisibilityModes {
+    return <ActivitySecurityConfigurationMode>[
+      const ActivitySecurityConfigurationMode.public(),
+      const ActivitySecurityConfigurationMode.connections(),
+      const ActivitySecurityConfigurationMode.followersAndConnections(),
+      const ActivitySecurityConfigurationMode.private(),
+      const ActivitySecurityConfigurationMode.disabled(),
+    ];
+  }
+
+  static String toVisibilityLocale(ActivitySecurityConfigurationMode mode, AppLocalizations localisations) {
+    return mode.when(
+      public: () => 'Everyone',
+      followersAndConnections: () => 'Followers',
+      connections: () => 'Connections',
+      private: () => 'Only Me',
+      signedIn: () => 'Signed in Users',
+      disabled: () => 'Disabled',
+    );
+  }
+
+  static List<ActivitySecurityConfigurationMode> get orderedCommentModes {
+    return <ActivitySecurityConfigurationMode>[
+      const ActivitySecurityConfigurationMode.public(),
+      const ActivitySecurityConfigurationMode.connections(),
+      const ActivitySecurityConfigurationMode.followersAndConnections(),
+      const ActivitySecurityConfigurationMode.private(),
+      const ActivitySecurityConfigurationMode.disabled(),
+    ];
+  }
+
+  static String toCommentLocale(ActivitySecurityConfigurationMode mode, AppLocalizations localisations) {
+    return mode.when(
+      public: () => 'Everyone',
+      followersAndConnections: () => 'Followers',
+      connections: () => 'Connections',
+      private: () => 'Only Me',
+      signedIn: () => 'Signed in Users',
+      disabled: () => 'Disabled',
     );
   }
 
@@ -159,6 +205,8 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
         return const _ActivitySecurityConfigurationModePrivate();
       case 'signed_in':
         return const _ActivitySecurityConfigurationModeSignedIn();
+      case 'disabled':
+        return const _ActivitySecurityConfigurationModeDisabled();
       default:
         throw ArgumentError('Invalid value for ActivitySecurityConfigurationMode: $value');
     }

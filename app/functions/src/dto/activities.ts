@@ -149,7 +149,7 @@ export class ActivityGeneralConfiguration {
  * @property {string} Private Private
  * @property {string} SignedIn signed_in
  */
-export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private' | 'signed_in';
+export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private' | 'signed_in' | 'disabled';
 
 /**
  * The JSON representation of an activity security configuration
