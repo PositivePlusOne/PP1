@@ -39,6 +39,31 @@ export namespace RelationshipService {
     });
   }
 
+  export function relationshipStatesForEntity(entityId: string, relationship: RelationshipJSON): Set<RelationshipState> {
+    const member = relationship.members?.find(m => m.memberId === entityId);
+    const otherMembers = relationship.members?.filter(m => m.memberId !== entityId);
+
+    if (!member || !otherMembers || otherMembers.length === 0) {
+        return new Set();
+    }
+
+    const relationshipStates = new Set<RelationshipState>();
+
+    if (member.hasBlocked) relationshipStates.add(RelationshipState.sourceBlocked);
+    if (member.hasConnected) relationshipStates.add(RelationshipState.sourceConnected);
+    if (member.hasFollowed) relationshipStates.add(RelationshipState.sourceFollowed);
+    if (member.hasHidden) relationshipStates.add(RelationshipState.sourceHidden);
+    if (member.hasMuted) relationshipStates.add(RelationshipState.sourceMuted);
+    if (otherMembers.some(element => element.hasBlocked)) relationshipStates.add(RelationshipState.targetBlocked);
+    if (otherMembers.some(element => element.hasConnected)) relationshipStates.add(RelationshipState.targetConnected);
+    if (otherMembers.some(element => element.hasFollowed)) relationshipStates.add(RelationshipState.targetFollowing);
+    if (otherMembers.some(element => element.hasHidden)) relationshipStates.add(RelationshipState.targetHidden);
+    if (otherMembers.some(element => element.hasMuted)) relationshipStates.add(RelationshipState.targetMuted);
+
+    return relationshipStates;
+}
+
+
   /**
    * Checks if the given relationship is connected.
    * @param {any} relationship the relationship to check.

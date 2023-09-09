@@ -8,6 +8,7 @@ import { ReactionService } from "../services/reaction_service";
 import { ReactionJSON } from "../dto/reactions";
 import { FeedService } from "../services/feed_service";
 import { CommentHelpers } from "../helpers/comment_helpers";
+import { RelationshipService } from "../services/relationship_service";
 
 export namespace ReactionEndpoints {
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -27,10 +28,15 @@ export namespace ReactionEndpoints {
         }
 
         // Activity verification
-        await ActivitiesService.verifyActivityExists(activityId);
+        const activity = await ActivitiesService.getActivity(activityId);
+        const publisher = activity?.publisherInformation?.publisherId || "";
+        if (!activity || !publisher) {
+            throw new functions.https.HttpsError("not-found", "Activity not found");
+        }
 
         // Reaction verification
-        ReactionService.verifyReactionKind(kind);
+        const relationship = await RelationshipService.getRelationship([uid, publisher]);
+        await ReactionService.verifyReactionKind(kind, uid, activity, relationship);
 
         // Build reaction
         const reactionJSON = {
