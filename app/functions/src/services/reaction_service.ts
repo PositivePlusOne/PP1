@@ -11,6 +11,10 @@ import { RelationshipJSON } from "../dto/relationships";
 import { ActivityJSON } from "../dto/activities";
 import { RelationshipService } from "./relationship_service";
 import { RelationshipState } from "./types/relationship_state";
+import { ReactionCommentNotification } from "./builders/notifications/activities/reaction_comment_notification";
+import { ProfileService } from "./profile_service";
+import { ProfileJSON } from "../dto/profile";
+import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
 
 export namespace ReactionService {
     
@@ -88,6 +92,40 @@ export namespace ReactionService {
         if (currentMode == "connections" && !isFullyConnected) {
             throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity, you are not connected to the publisher");
         }
+    }
+
+    export async function processNotifications(kind: string, userId: string, activity: ActivityJSON, reaction: ReactionJSON): Promise<void> {
+        functions.logger.info("Processing notifications", { kind, userId, activity });
+
+        const publisherId = activity?.publisherInformation?.publisherId || "";
+        const profiles = await ProfileService.getMultipleProfiles([userId, publisherId]);
+
+        const userProfile = profiles.find((profile: ProfileJSON) => profile?._fl_meta_?.fl_id === userId);
+        const publisherProfile = profiles.find((profile: ProfileJSON) => profile?._fl_meta_?.fl_id === publisherId);
+
+        if (!userProfile || !publisherProfile) {
+            functions.logger.error("Unable to find user or publisher profile", { userId, publisherId, userProfile, publisherProfile });
+            return;
+        }
+
+        // TODO, add publisher check as to not send notifications to the publisher
+        if (userProfile._fl_meta_.fl_id === publisherProfile._fl_meta_.fl_id) {
+            functions.logger.info("Cannot send content notifications to yourself", { userId, publisherId, userProfile, publisherProfile });
+            return;
+        }
+
+        switch (kind) {
+            case "comment":
+                await ReactionCommentNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
+                break;
+            case "like":
+                await ReactionLikeNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
+                break;
+            default:
+                break;
+        }
+
+        functions.logger.info("Finished processing notifications", { kind, userId, activity });
     }
 
     export function getOriginFromFeedStringAndUserId(feed: string, userId: string): string {

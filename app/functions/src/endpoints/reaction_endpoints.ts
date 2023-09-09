@@ -35,7 +35,7 @@ export namespace ReactionEndpoints {
         }
 
         // Reaction verification
-        const relationship = await RelationshipService.getRelationship([uid, publisher]);
+        const relationship = await RelationshipService.getRelationship([uid, publisher], true);
         await ReactionService.verifyReactionKind(kind, uid, activity, relationship);
 
         // Build reaction
@@ -61,11 +61,13 @@ export namespace ReactionEndpoints {
         } 
 
         const streamClient = FeedService.getFeedsUserClient(uid);
-        const responseReaction = await ReactionService.addReaction(streamClient, reactionJSON);
+        const reaction = await ReactionService.addReaction(streamClient, reactionJSON);
+
+        await ReactionService.processNotifications(kind, uid, activity, reaction);
 
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [responseReaction],
+            data: [reaction],
         });
     });
 

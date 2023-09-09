@@ -28,6 +28,7 @@ import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/events/content/reactions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
@@ -76,6 +77,8 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
   static String buildCacheKey(String kind, String activityId) {
     return 'reactions:$kind:$activityId';
   }
+
+  Activity? get activity => ref.read(cacheControllerProvider.notifier).getFromCache(widget.activityId);
 
   @override
   void initState() {
@@ -268,6 +271,22 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     }
   }
 
+  // Currently comments are the only reaction type supported.
+  String buildCommentHeaderText() {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
+    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
+    final String publisherId = activity?.publisherInformation?.publisherId ?? '';
+    final String currentUserId = profileController.currentProfileId ?? '';
+
+    bool isPermittedToComment = false;
+
+    // TODO(ryan): Figure out what these strings are
+
+    return 'Be the first to leave a comment';
+  }
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -298,14 +317,20 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
       );
     }
 
+    final Widget loadingIndicator = Container(
+      alignment: Alignment.center,
+      color: colours.white,
+      child: const PositiveLoadingIndicator(),
+    );
+
     return MultiSliver(
-      children: [
+      children: <Widget>[
         //? Reactions header
         SliverToBoxAdapter(
           child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
+            decoration: BoxDecoration(
+              color: colours.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
             ),
             padding: const EdgeInsets.all(kPaddingMedium),
             child: Row(
@@ -355,9 +380,12 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
             itemBuilder: (_, reaction, index) {
               return PositiveComment(comment: reaction, isFirst: index == 0);
             },
-            firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
-            newPageErrorIndicatorBuilder: (context) => const SizedBox(),
-            noItemsFoundIndicatorBuilder: (context) => Container(
+            firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
+            newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
+            noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),
+            firstPageProgressIndicatorBuilder: (_) => loadingIndicator,
+            newPageProgressIndicatorBuilder: (_) => loadingIndicator,
+            noItemsFoundIndicatorBuilder: (_) => Container(
               decoration: BoxDecoration(color: colours.white),
               child: PositiveTileEntryAnimation(
                 direction: AxisDirection.down,
@@ -367,7 +395,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
                     Padding(
                       padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, top: kPaddingSmallMedium),
                       child: Text(
-                        "Be the first to leave a comment",
+                        buildCommentHeaderText(),
                         textAlign: TextAlign.left,
                         style: typography.styleHeroMedium,
                       ),
@@ -383,25 +411,6 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
                 ),
               ),
             ),
-            noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
-            firstPageProgressIndicatorBuilder: (context) => const SizedBox(),
-            newPageProgressIndicatorBuilder: (context) {
-              return Container(
-                padding: const EdgeInsets.only(top: kBorderThicknessMedium),
-                decoration: BoxDecoration(
-                  color: colours.white,
-                  borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(kBorderRadiusLarge),
-                  ),
-                ),
-                height: kCommentFooter,
-                alignment: Alignment.center,
-                child: const PositiveLoadingIndicator(
-                  circleRadius: 5,
-                  width: 40,
-                ),
-              );
-            },
           ),
         ),
       ],

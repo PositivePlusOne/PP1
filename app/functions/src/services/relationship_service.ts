@@ -26,8 +26,42 @@ export namespace RelationshipService {
    * @param {string[]} members the members of the relationship.
    * @return {any} the relationship between the two users.
    */
-  export async function getRelationship(members: string[]): Promise<any> {
+  export async function getRelationship(members: string[], allowSoloRelationships = false): Promise<any> {
+    // Remove any null or duplicate members
+    members = members.filter((member) => typeof member === "string" && member !== "").sort();
+    members = [...new Set(members)];
+
+    functions.logger.info("Getting relationship", {
+      members,
+    });
+
+    // Check if members is one person, if so return an open relationship
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
+
+    if (members.length === 1 && allowSoloRelationships) {
+      functions.logger.info("Returning solo relationship; this will not be persisted", {
+        members,
+      });
+
+      return {
+        blocked: false,
+        muted: false,
+        connected: true,
+        followed: true,
+        hidden: false,
+        searchIndexRelationships: members,
+        members: [
+          {
+            memberId: members[0],
+            hasBlocked: false,
+            hasMuted: false,
+            hasConnected: true,
+            hasFollowed: true,
+            hasHidden: false,
+          },
+        ],
+      };
+    }
 
     // Check if members is empty or contains duplicates
     if (members.length === 0 || new Set(members).size !== members.length) {

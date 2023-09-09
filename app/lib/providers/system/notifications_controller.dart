@@ -24,6 +24,7 @@ import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/handlers/notifications/activity_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/default_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/new_message_notification_handler.dart';
@@ -66,6 +67,7 @@ class NotificationsController extends _$NotificationsController {
     ConnectionRequestNotificationHandler(),
     RelationshipNotificationHandler(),
     NewMessageNotificationHandler(),
+    ActivityNotificationHandler(),
     TestNotificationHandler(),
   ];
 
