@@ -1,4 +1,4 @@
-enum RelationshipState {
+export enum RelationshipState {
     sourceBlocked,
     sourceConnected,
     sourceFollowed,

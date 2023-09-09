@@ -9,6 +9,7 @@ import { Pagination, PaginationResult } from "../helpers/pagination";
 import { ConversationService } from "./conversation_service";
 import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
 import { CacheService } from "./cache_service";
+import { RelationshipState } from "./types/relationship_state";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
