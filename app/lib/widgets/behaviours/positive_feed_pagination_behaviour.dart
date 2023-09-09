@@ -17,12 +17,17 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/common/events/force_feed_rebuild_event.dart';
 import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
@@ -64,6 +69,8 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
   StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
 
+  StreamSubscription<ForceFeedRebuildEvent>? _onForceFeedRebuildSubscription;
+
   String get expectedCacheKey => 'feeds:${widget.feed.feed}-${widget.feed.slug}';
 
   @override
@@ -95,10 +102,12 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     await _onActivityCreatedSubscription?.cancel();
     await _onActivityUpdatedSubscription?.cancel();
     await _onActivityDeletedSubscription?.cancel();
+    await _onForceFeedRebuildSubscription?.cancel();
 
     _onActivityCreatedSubscription = eventBus.on<ActivityCreatedEvent>().listen(onActivityCreated);
     _onActivityUpdatedSubscription = eventBus.on<ActivityUpdatedEvent>().listen(onActivityUpdated);
     _onActivityDeletedSubscription = eventBus.on<ActivityDeletedEvent>().listen(onActivityDeleted);
+    _onForceFeedRebuildSubscription = eventBus.on<ForceFeedRebuildEvent>().listen((_) => setStateIfMounted());
   }
 
   Future<void> disposeListeners() async {
@@ -267,35 +276,29 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     }
   }
 
-  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
-    return PagedListView.separated(
-      pagingController: feedState.pagingController,
-      separatorBuilder: (_, __) => const SizedBox(height: kPaddingLarge),
-      builderDelegate: PagedChildBuilderDelegate<Activity>(
-        animateTransitions: true,
-        transitionDuration: kAnimationDurationRegular,
-        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
-      ),
-    );
-  }
+  Widget buildSeparator(BuildContext context, int index) {
+    final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
+    if (activity == null) {
+      return const SizedBox(height: kPaddingLarge);
+    }
 
-  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
-    return PagedSliverList.separated(
-      pagingController: feedState.pagingController,
-      separatorBuilder: (_, __) => const SizedBox(height: kPaddingLarge),
-      builderDelegate: PagedChildBuilderDelegate<Activity>(
-        animateTransitions: true,
-        transitionDuration: kAnimationDurationRegular,
-        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
-      ),
-    );
+    // Remove the separator if we can't display the activity
+    final bool canDisplay = activity.canDisplayOnFeed ?? false;
+    if (!canDisplay) {
+      return const SizedBox.shrink();
+    }
+
+    return const SizedBox(height: kPaddingLarge);
   }
 
   Widget buildItem(BuildContext context, Activity item, int index) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final bool canDisplay = item.canDisplayOnFeed;
+    if (!canDisplay) {
+      logger.d('buildItem() - Skipping activity: ${item.flMeta?.id} - canDisplay: $canDisplay');
+      return const SizedBox.shrink();
+    }
+
     return PositiveActivityWidget(
       key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
       onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
@@ -303,6 +306,69 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
       activity: item,
       targetFeed: widget.feed,
       index: index,
+    );
+  }
+
+  // Since we can display an entire users feed, if we were to hide posts; then that will hide the entire feed
+  // This will cause the pagination to loop forever, so we need to disable the presentation of the sliver feed
+  bool get canDisplaySliverFeed {
+    final bool isUserFeed = widget.feed.feed == 'users';
+    if (!isUserFeed) {
+      return true;
+    }
+
+    final String userId = widget.feed.slug;
+    final String currentUserId = providerContainer.read(profileControllerProvider.select((value) => value.currentProfile?.flMeta?.id)) ?? '';
+    if (currentUserId.isEmpty) {
+      return true;
+    }
+
+    final String guid = [userId, currentUserId].asGUID;
+    final Relationship? relationship = providerContainer.read(cacheControllerProvider.notifier).getFromCache(guid);
+    if (relationship == null) {
+      return true;
+    }
+
+    // If the target has blocked us, or we have hidden their posts; then we can't display the feed
+    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentUserId);
+    return !states.contains(RelationshipState.targetBlocked) && !states.contains(RelationshipState.sourceHidden);
+  }
+
+  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
+    final bool canDisplay = canDisplaySliverFeed;
+    if (!canDisplay) {
+      return const SizedBox.shrink();
+    }
+
+    return PagedSliverList.separated(
+      pagingController: feedState.pagingController,
+      separatorBuilder: buildSeparator,
+      builderDelegate: PagedChildBuilderDelegate<Activity>(
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
+      ),
+    );
+  }
+
+  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
+    final bool canDisplay = canDisplaySliverFeed;
+    if (!canDisplay) {
+      return const SizedBox.shrink();
+    }
+
+    return PagedListView.separated(
+      pagingController: feedState.pagingController,
+      separatorBuilder: buildSeparator,
+      builderDelegate: PagedChildBuilderDelegate<Activity>(
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
+      ),
     );
   }
 }

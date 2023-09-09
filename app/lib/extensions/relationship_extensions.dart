@@ -1,10 +1,10 @@
 // Package imports:
-import 'package:app/main.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:collection/collection.dart';
 
 // Project imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 
 enum RelationshipState {
   targetBlocked,

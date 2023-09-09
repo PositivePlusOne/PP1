@@ -27,7 +27,6 @@ mixin _$Relationship {
   bool get connected => throw _privateConstructorUsedError;
   bool get following => throw _privateConstructorUsedError;
   bool get hidden => throw _privateConstructorUsedError;
-  String get id => throw _privateConstructorUsedError;
   bool get muted => throw _privateConstructorUsedError;
   List<RelationshipMember> get members => throw _privateConstructorUsedError;
 
@@ -50,7 +49,6 @@ abstract class $RelationshipCopyWith<$Res> {
       bool connected,
       bool following,
       bool hidden,
-      String id,
       bool muted,
       List<RelationshipMember> members});
 
@@ -76,7 +74,6 @@ class _$RelationshipCopyWithImpl<$Res, $Val extends Relationship>
     Object? connected = null,
     Object? following = null,
     Object? hidden = null,
-    Object? id = null,
     Object? muted = null,
     Object? members = null,
   }) {
@@ -105,10 +102,6 @@ class _$RelationshipCopyWithImpl<$Res, $Val extends Relationship>
           ? _value.hidden
           : hidden // ignore: cast_nullable_to_non_nullable
               as bool,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       muted: null == muted
           ? _value.muted
           : muted // ignore: cast_nullable_to_non_nullable
@@ -148,7 +141,6 @@ abstract class _$$_RelationshipCopyWith<$Res>
       bool connected,
       bool following,
       bool hidden,
-      String id,
       bool muted,
       List<RelationshipMember> members});
 
@@ -173,7 +165,6 @@ class __$$_RelationshipCopyWithImpl<$Res>
     Object? connected = null,
     Object? following = null,
     Object? hidden = null,
-    Object? id = null,
     Object? muted = null,
     Object? members = null,
   }) {
@@ -202,10 +193,6 @@ class __$$_RelationshipCopyWithImpl<$Res>
           ? _value.hidden
           : hidden // ignore: cast_nullable_to_non_nullable
               as bool,
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
       muted: null == muted
           ? _value.muted
           : muted // ignore: cast_nullable_to_non_nullable
@@ -228,7 +215,6 @@ class _$_Relationship implements _Relationship {
       this.connected = false,
       this.following = false,
       this.hidden = false,
-      this.id = '',
       this.muted = false,
       final List<RelationshipMember> members = const []})
       : _members = members;
@@ -256,9 +242,6 @@ class _$_Relationship implements _Relationship {
   final bool hidden;
   @override
   @JsonKey()
-  final String id;
-  @override
-  @JsonKey()
   final bool muted;
   final List<RelationshipMember> _members;
   @override
@@ -271,7 +254,7 @@ class _$_Relationship implements _Relationship {
 
   @override
   String toString() {
-    return 'Relationship(flMeta: $flMeta, blocked: $blocked, channelId: $channelId, connected: $connected, following: $following, hidden: $hidden, id: $id, muted: $muted, members: $members)';
+    return 'Relationship(flMeta: $flMeta, blocked: $blocked, channelId: $channelId, connected: $connected, following: $following, hidden: $hidden, muted: $muted, members: $members)';
   }
 
   @override
@@ -288,7 +271,6 @@ class _$_Relationship implements _Relationship {
             (identical(other.following, following) ||
                 other.following == following) &&
             (identical(other.hidden, hidden) || other.hidden == hidden) &&
-            (identical(other.id, id) || other.id == id) &&
             (identical(other.muted, muted) || other.muted == muted) &&
             const DeepCollectionEquality().equals(other._members, _members));
   }
@@ -303,7 +285,6 @@ class _$_Relationship implements _Relationship {
       connected,
       following,
       hidden,
-      id,
       muted,
       const DeepCollectionEquality().hash(_members));
 
@@ -329,7 +310,6 @@ abstract class _Relationship implements Relationship {
       final bool connected,
       final bool following,
       final bool hidden,
-      final String id,
       final bool muted,
       final List<RelationshipMember> members}) = _$_Relationship;
 
@@ -349,8 +329,6 @@ abstract class _Relationship implements Relationship {
   bool get following;
   @override
   bool get hidden;
-  @override
-  String get id;
   @override
   bool get muted;
   @override
