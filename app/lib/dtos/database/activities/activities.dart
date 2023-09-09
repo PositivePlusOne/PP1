@@ -37,7 +37,8 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default(ActivityGeneralConfigurationType.post()) @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type,
     @Default(ActivityGeneralConfigurationStyle.text()) @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style,
     @Default('') String content,
-    @Default('') String reportActivityId,
+    @Default('') String repostActivityId,
+    @Default('') String repostActivityPublisherId,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);
@@ -289,7 +290,6 @@ class ActivityPublisherInformation with _$ActivityPublisherInformation {
   const factory ActivityPublisherInformation({
     @Default('') String originFeed,
     @Default('') String publisherId,
-    @Default('') String actorId,
   }) = _ActivityPublisherInformation;
 
   factory ActivityPublisherInformation.fromJson(Map<String, dynamic> json) => _$ActivityPublisherInformationFromJson(json);

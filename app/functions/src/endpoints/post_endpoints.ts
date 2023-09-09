@@ -20,7 +20,6 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { ReactionStatisticsService } from "../services/reaction_statistics_service";
-import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { SecurityHelpers } from "../helpers/security_helpers";
 
 export namespace PostEndpoints {
@@ -97,6 +96,11 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
+    const isRepost = activity.generalConfiguration?.type === "repost";
+    if (isRepost) {
+      throw new functions.https.HttpsError("invalid-argument", "Cannot share a repost");
+    }
+
     const publisherId = activity.publisherInformation?.publisherId || "";
     const relationship = await RelationshipService.getRelationship([uid, publisherId], true) as RelationshipJSON;
     const shareMode = activity.securityConfiguration?.shareMode || "disabled";
@@ -116,7 +120,8 @@ export namespace PostEndpoints {
       },
       generalConfiguration: {
         type: "repost",
-        reportActivityId: activityId,
+        repostActivityId: activityId,
+        repostActivityPublisherId: publisherId,
       },
       enrichmentConfiguration: {
         tags: validatedTags,

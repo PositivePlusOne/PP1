@@ -87,32 +87,7 @@ export namespace ActivitiesService {
    */
   export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<any[]> {
     const activities = await getActivities(entrys.map((entry) => entry.object));
-    for (const activity of activities) {
-      const entry = entrys.find((entry) => entry.object === activity?._fl_meta_?.fl_id);
-      if (!entry) {
-        continue;
-      }
-
-      switch (entry.verb) {
-        case ActivityActionVerb.Post:
-          break;
-        default:
-          const actorId = entry.actor;
-          if (!activity.publisherInformation) {
-            activity.publisherInformation = {};
-          }
-
-          if (!activity.generalConfiguration) {
-            activity.generalConfiguration = {};
-          }
-          
-          activity.publisherInformation.actorId = actorId;
-          activity.generalConfiguration.reactionType = entry.verb as ActivityActionVerb;
-          break;
-      }
-    }
-
-    return activities.filter((activity) => activity);
+    return activities.filter((activity) => activity?._fl_meta_?.fl_id);
   }
 
   /**

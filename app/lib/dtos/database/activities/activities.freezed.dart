@@ -458,7 +458,8 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
-  String get reportActivityId => throw _privateConstructorUsedError;
+  String get repostActivityId => throw _privateConstructorUsedError;
+  String get repostActivityPublisherId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -484,7 +485,8 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
       String content,
-      String reportActivityId});
+      String repostActivityId,
+      String repostActivityPublisherId});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
@@ -507,7 +509,8 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     Object? type = null,
     Object? style = null,
     Object? content = null,
-    Object? reportActivityId = null,
+    Object? repostActivityId = null,
+    Object? repostActivityPublisherId = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -522,9 +525,13 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      reportActivityId: null == reportActivityId
-          ? _value.reportActivityId
-          : reportActivityId // ignore: cast_nullable_to_non_nullable
+      repostActivityId: null == repostActivityId
+          ? _value.repostActivityId
+          : repostActivityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      repostActivityPublisherId: null == repostActivityPublisherId
+          ? _value.repostActivityPublisherId
+          : repostActivityPublisherId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -567,7 +574,8 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
       String content,
-      String reportActivityId});
+      String repostActivityId,
+      String repostActivityPublisherId});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
@@ -591,7 +599,8 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
     Object? type = null,
     Object? style = null,
     Object? content = null,
-    Object? reportActivityId = null,
+    Object? repostActivityId = null,
+    Object? repostActivityPublisherId = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
@@ -606,9 +615,13 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
-      reportActivityId: null == reportActivityId
-          ? _value.reportActivityId
-          : reportActivityId // ignore: cast_nullable_to_non_nullable
+      repostActivityId: null == repostActivityId
+          ? _value.repostActivityId
+          : repostActivityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      repostActivityPublisherId: null == repostActivityPublisherId
+          ? _value.repostActivityPublisherId
+          : repostActivityPublisherId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -627,7 +640,8 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
       this.content = '',
-      this.reportActivityId = ''});
+      this.repostActivityId = '',
+      this.repostActivityPublisherId = ''});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -647,11 +661,14 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   final String content;
   @override
   @JsonKey()
-  final String reportActivityId;
+  final String repostActivityId;
+  @override
+  @JsonKey()
+  final String repostActivityPublisherId;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, reportActivityId: $reportActivityId)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, repostActivityId: $repostActivityId, repostActivityPublisherId: $repostActivityPublisherId)';
   }
 
   @override
@@ -662,14 +679,17 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.style, style) || other.style == style) &&
             (identical(other.content, content) || other.content == content) &&
-            (identical(other.reportActivityId, reportActivityId) ||
-                other.reportActivityId == reportActivityId));
+            (identical(other.repostActivityId, repostActivityId) ||
+                other.repostActivityId == repostActivityId) &&
+            (identical(other.repostActivityPublisherId,
+                    repostActivityPublisherId) ||
+                other.repostActivityPublisherId == repostActivityPublisherId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, type, style, content, reportActivityId);
+  int get hashCode => Object.hash(runtimeType, type, style, content,
+      repostActivityId, repostActivityPublisherId);
 
   @JsonKey(ignore: true)
   @override
@@ -689,16 +709,18 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
 abstract class _ActivityGeneralConfiguration
     implements ActivityGeneralConfiguration {
   const factory _ActivityGeneralConfiguration(
-      {@JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      final ActivityGeneralConfigurationType type,
-      @JsonKey(
-          fromJson: ActivityGeneralConfigurationStyle.fromJson,
-          toJson: ActivityGeneralConfigurationStyle.toJson)
-      final ActivityGeneralConfigurationStyle style,
-      final String content,
-      final String reportActivityId}) = _$_ActivityGeneralConfiguration;
+          {@JsonKey(
+              fromJson: ActivityGeneralConfigurationType.fromJson,
+              toJson: ActivityGeneralConfigurationType.toJson)
+          final ActivityGeneralConfigurationType type,
+          @JsonKey(
+              fromJson: ActivityGeneralConfigurationStyle.fromJson,
+              toJson: ActivityGeneralConfigurationStyle.toJson)
+          final ActivityGeneralConfigurationStyle style,
+          final String content,
+          final String repostActivityId,
+          final String repostActivityPublisherId}) =
+      _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -716,7 +738,9 @@ abstract class _ActivityGeneralConfiguration
   @override
   String get content;
   @override
-  String get reportActivityId;
+  String get repostActivityId;
+  @override
+  String get repostActivityPublisherId;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>
@@ -4048,7 +4072,6 @@ ActivityPublisherInformation _$ActivityPublisherInformationFromJson(
 mixin _$ActivityPublisherInformation {
   String get originFeed => throw _privateConstructorUsedError;
   String get publisherId => throw _privateConstructorUsedError;
-  String get actorId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -4064,7 +4087,7 @@ abstract class $ActivityPublisherInformationCopyWith<$Res> {
       _$ActivityPublisherInformationCopyWithImpl<$Res,
           ActivityPublisherInformation>;
   @useResult
-  $Res call({String originFeed, String publisherId, String actorId});
+  $Res call({String originFeed, String publisherId});
 }
 
 /// @nodoc
@@ -4083,7 +4106,6 @@ class _$ActivityPublisherInformationCopyWithImpl<$Res,
   $Res call({
     Object? originFeed = null,
     Object? publisherId = null,
-    Object? actorId = null,
   }) {
     return _then(_value.copyWith(
       originFeed: null == originFeed
@@ -4093,10 +4115,6 @@ class _$ActivityPublisherInformationCopyWithImpl<$Res,
       publisherId: null == publisherId
           ? _value.publisherId
           : publisherId // ignore: cast_nullable_to_non_nullable
-              as String,
-      actorId: null == actorId
-          ? _value.actorId
-          : actorId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -4111,7 +4129,7 @@ abstract class _$$_ActivityPublisherInformationCopyWith<$Res>
       __$$_ActivityPublisherInformationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String originFeed, String publisherId, String actorId});
+  $Res call({String originFeed, String publisherId});
 }
 
 /// @nodoc
@@ -4129,7 +4147,6 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
   $Res call({
     Object? originFeed = null,
     Object? publisherId = null,
-    Object? actorId = null,
   }) {
     return _then(_$_ActivityPublisherInformation(
       originFeed: null == originFeed
@@ -4140,10 +4157,6 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
           ? _value.publisherId
           : publisherId // ignore: cast_nullable_to_non_nullable
               as String,
-      actorId: null == actorId
-          ? _value.actorId
-          : actorId // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -4152,7 +4165,7 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
   const _$_ActivityPublisherInformation(
-      {this.originFeed = '', this.publisherId = '', this.actorId = ''});
+      {this.originFeed = '', this.publisherId = ''});
 
   factory _$_ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityPublisherInformationFromJson(json);
@@ -4163,13 +4176,10 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
   @override
   @JsonKey()
   final String publisherId;
-  @override
-  @JsonKey()
-  final String actorId;
 
   @override
   String toString() {
-    return 'ActivityPublisherInformation(originFeed: $originFeed, publisherId: $publisherId, actorId: $actorId)';
+    return 'ActivityPublisherInformation(originFeed: $originFeed, publisherId: $publisherId)';
   }
 
   @override
@@ -4180,14 +4190,12 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
             (identical(other.originFeed, originFeed) ||
                 other.originFeed == originFeed) &&
             (identical(other.publisherId, publisherId) ||
-                other.publisherId == publisherId) &&
-            (identical(other.actorId, actorId) || other.actorId == actorId));
+                other.publisherId == publisherId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, originFeed, publisherId, actorId);
+  int get hashCode => Object.hash(runtimeType, originFeed, publisherId);
 
   @JsonKey(ignore: true)
   @override
@@ -4208,8 +4216,7 @@ abstract class _ActivityPublisherInformation
     implements ActivityPublisherInformation {
   const factory _ActivityPublisherInformation(
       {final String originFeed,
-      final String publisherId,
-      final String actorId}) = _$_ActivityPublisherInformation;
+      final String publisherId}) = _$_ActivityPublisherInformation;
 
   factory _ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =
       _$_ActivityPublisherInformation.fromJson;
@@ -4218,8 +4225,6 @@ abstract class _ActivityPublisherInformation
   String get originFeed;
   @override
   String get publisherId;
-  @override
-  String get actorId;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation>

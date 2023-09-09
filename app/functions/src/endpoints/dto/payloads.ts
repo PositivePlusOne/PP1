@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
-import { Activity, activitySchemaKey } from '../../dto/activities';
+import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
 import { Profile, profileSchemaKey } from '../../dto/profile';
 import { Relationship, RelationshipJSON, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
@@ -79,20 +79,24 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
         switch (schema) {
             case activitySchemaKey:
-                const foreignKey = obj.publisherInformation?.foreignKey;
-                const isActivityPublisher = sender === foreignKey;
-                if (foreignKey && !isActivityPublisher) {
-                    joinedDataRecords.get(profileSchemaKey)?.add(obj.publisherInformation!.foreignKey!);
-
-                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, obj.publisherInformation!.foreignKey!]);
+                const activity = obj as ActivityJSON;
+                const publisherId = activity.publisherInformation?.publisherId || "";
+                const isActivityPublisher = sender && sender === publisherId;
+                if (publisherId && !isActivityPublisher) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(activity.publisherInformation!.publisherId!);
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, publisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
-                const tags = obj.enrichmentConfiguration?.tags || [] as string[];
-                if (tags.length > 0) {
-                    functions.logger.debug(`Found ${tags.length} tags on activity.`, { sender, tags });
+                const isRepost = activity.generalConfiguration?.repostActivityId && activity.generalConfiguration?.repostActivityPublisherId;
+                const isReposter = sender && sender === activity.generalConfiguration?.repostActivityPublisherId;
+                if (isRepost && !isReposter) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(activity.generalConfiguration!.repostActivityPublisherId!);
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, activity.generalConfiguration!.repostActivityPublisherId!]);
+                    joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
+                const tags = activity.enrichmentConfiguration?.tags || [] as string[];
                 for (const tag of tags) {
                     joinedDataRecords.get(tagSchemaKey)?.add(tag);
                 }

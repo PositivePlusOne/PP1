@@ -113,7 +113,8 @@ export interface ActivityGeneralConfigurationJSON {
   type?: ActivityGeneralConfigurationType;
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
-  reportActivityId?: string;
+  repostActivityId?: string;
+  repostActivityPublisherId?: string;
 }
 
 /**
@@ -128,13 +129,15 @@ export class ActivityGeneralConfiguration {
   type: ActivityGeneralConfigurationType;
   style: ActivityGeneralConfigurationStyle;
   content: string;
-  repostActivityId?: string;
+  repostActivityId: string;
+  repostActivityPublisherId: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
-    this.repostActivityId = json.reportActivityId;
+    this.repostActivityId = json.repostActivityId || '';
+    this.repostActivityPublisherId = json.repostActivityPublisherId || '';
   }
 }
 
@@ -363,7 +366,6 @@ export class ActivityPricingInformation {
 export interface ActivityPublisherInformationJSON {
   originFeed?: string;
   publisherId?: string;
-  actorId?: string;
 }
 
 /**
@@ -374,12 +376,10 @@ export interface ActivityPublisherInformationJSON {
 export class ActivityPublisherInformation {
   originFeed: string;
   publisherId: string;
-  actorId: string;
 
   constructor(json: ActivityPublisherInformationJSON) {
     this.originFeed = json.originFeed || '';
     this.publisherId = json.publisherId || '';
-    this.actorId = json.actorId || '';
   }
 }
 
