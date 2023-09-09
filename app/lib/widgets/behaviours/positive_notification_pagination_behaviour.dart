@@ -17,8 +17,11 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/notification_api_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
@@ -46,6 +49,8 @@ class PositiveNotificationsPaginationBehaviour extends StatefulHookConsumerWidge
 class PositiveNotificationsPaginationBehaviourState extends ConsumerState<PositiveNotificationsPaginationBehaviour> {
   late PositiveNotificationsState notificationsState;
 
+  final Map<String, bool> busyNotifications = {};
+
   static String getExpectedCacheKey(String uid) => 'notifications:$uid';
 
   @override
@@ -67,6 +72,10 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
       disposeNotificationsState();
       setupNotificationsState();
     }
+  }
+
+  bool isNotificationEnabled(NotificationPayload notification) {
+    return busyNotifications.containsKey(notification.id) ? !busyNotifications[notification.id]! : true;
   }
 
   void disposeNotificationsState() {
@@ -180,6 +189,33 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     saveNotificationsState();
   }
 
+  FutureOr<void> onNotificationSelected(BuildContext context, NotificationPayload payload) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+    logger.i('onNotificationSelected() - payload: $payload');
+
+    if (payload.id.isEmpty) {
+      logger.e('onNotificationSelected() - Invalid notification payload: $payload');
+      return;
+    }
+
+    if (busyNotifications.containsKey(payload.id)) {
+      logger.d('onNotificationSelected() - Notification is already being processed: $payload');
+      return;
+    }
+
+    busyNotifications[payload.id] = true;
+    setStateIfMounted();
+
+    try {
+      final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+      await handler.onNotificationSelected(payload, context);
+    } finally {
+      busyNotifications.remove(payload.id);
+      setStateIfMounted();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
@@ -192,7 +228,11 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
         itemBuilder: (_, notification, __) {
-          return PositiveNotificationTile(notification: notification);
+          return PositiveNotificationTile(
+            notification: notification,
+            isEnabled: isNotificationEnabled(notification),
+            onNotificationSelected: onNotificationSelected,
+          );
         },
         firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
         newPageErrorIndicatorBuilder: (context) => const SizedBox(),

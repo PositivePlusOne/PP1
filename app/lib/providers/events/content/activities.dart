@@ -8,6 +8,14 @@ class TargetFeed {
 
   static TargetFeed fromTag(Tag tag) => TargetFeed('tags', tag.key);
 
+  static TargetFeed fromOrigin(String origin) {
+    final List<String> parts = origin.split(':');
+    final String feed = parts[0];
+    final String slug = parts[1];
+
+    return TargetFeed(feed, slug);
+  }
+
   static String toOrigin(TargetFeed targetFeed) {
     String feed = targetFeed.feed;
 
