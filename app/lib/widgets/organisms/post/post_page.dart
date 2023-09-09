@@ -1,29 +1,22 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/annotations.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';

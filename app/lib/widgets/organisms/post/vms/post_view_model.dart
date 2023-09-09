@@ -1,12 +1,7 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,8 +11,13 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/events/content/reactions.dart';
@@ -132,7 +132,18 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
       return false;
     }
 
+    if (commentMode == const ActivitySecurityConfigurationMode.private() && currentProfileId == publisherProfileId) {
+      logger.d('checkCanComment() - commentMode is private and currentProfileId is not the publisherProfileId');
+      return true;
+    }
+
+    if (commentMode == const ActivitySecurityConfigurationMode.private()) {
+      logger.d('checkCanComment() - commentMode is private and currentProfileId is not the publisherProfileId');
+      return false;
+    }
+
     if (commentMode == const ActivitySecurityConfigurationMode.public() || (commentMode == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
+      logger.d('checkCanComment() - commentMode is public or signedIn and currentProfileId is not empty');
       return true;
     }
 
