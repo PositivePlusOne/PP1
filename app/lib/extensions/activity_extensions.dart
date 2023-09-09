@@ -110,7 +110,7 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final String currentProfileId = profileController.currentProfileId ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
-    if (activity == null || currentProfileId.isEmpty || publisherProfileId.isEmpty) {
+    if (activity == null || publisherProfileId.isEmpty) {
       logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');
       return false;
     }

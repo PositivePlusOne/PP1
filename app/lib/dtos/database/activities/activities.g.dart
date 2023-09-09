@@ -57,24 +57,20 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
       type: json['type'] == null
           ? const ActivityGeneralConfigurationType.post()
           : ActivityGeneralConfigurationType.fromJson(json['type'] as String),
-      reactionType: json['reactionType'] == null
-          ? const ActivityGeneralConfigurationType.post()
-          : ActivityGeneralConfigurationType.fromJson(
-              json['reactionType'] as String),
       style: json['style'] == null
           ? const ActivityGeneralConfigurationStyle.text()
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
+      reportActivityId: json['reportActivityId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
         _$_ActivityGeneralConfiguration instance) =>
     <String, dynamic>{
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
-      'reactionType':
-          ActivityGeneralConfigurationType.toJson(instance.reactionType),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
+      'reportActivityId': instance.reportActivityId,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(

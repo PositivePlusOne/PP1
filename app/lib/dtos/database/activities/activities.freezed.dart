@@ -453,16 +453,12 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationType get type =>
       throw _privateConstructorUsedError;
   @JsonKey(
-      fromJson: ActivityGeneralConfigurationType.fromJson,
-      toJson: ActivityGeneralConfigurationType.toJson)
-  ActivityGeneralConfigurationType get reactionType =>
-      throw _privateConstructorUsedError;
-  @JsonKey(
       fromJson: ActivityGeneralConfigurationStyle.fromJson,
       toJson: ActivityGeneralConfigurationStyle.toJson)
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  String get reportActivityId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -484,17 +480,13 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           toJson: ActivityGeneralConfigurationType.toJson)
       ActivityGeneralConfigurationType type,
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      ActivityGeneralConfigurationType reactionType,
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content});
+      String content,
+      String reportActivityId});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
-  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
 }
 
@@ -513,18 +505,14 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
   @override
   $Res call({
     Object? type = null,
-    Object? reactionType = null,
     Object? style = null,
     Object? content = null,
+    Object? reportActivityId = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as ActivityGeneralConfigurationType,
-      reactionType: null == reactionType
-          ? _value.reactionType
-          : reactionType // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfigurationType,
       style: null == style
           ? _value.style
@@ -533,6 +521,10 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      reportActivityId: null == reportActivityId
+          ? _value.reportActivityId
+          : reportActivityId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -543,15 +535,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.type,
         (value) {
       return _then(_value.copyWith(type: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType {
-    return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.reactionType,
-        (value) {
-      return _then(_value.copyWith(reactionType: value) as $Val);
     });
   }
 
@@ -580,19 +563,14 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           toJson: ActivityGeneralConfigurationType.toJson)
       ActivityGeneralConfigurationType type,
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      ActivityGeneralConfigurationType reactionType,
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content});
+      String content,
+      String reportActivityId});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
-  @override
-  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType;
   @override
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
 }
@@ -611,18 +589,14 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = null,
-    Object? reactionType = null,
     Object? style = null,
     Object? content = null,
+    Object? reportActivityId = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as ActivityGeneralConfigurationType,
-      reactionType: null == reactionType
-          ? _value.reactionType
-          : reactionType // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfigurationType,
       style: null == style
           ? _value.style
@@ -631,6 +605,10 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      reportActivityId: null == reportActivityId
+          ? _value.reportActivityId
+          : reportActivityId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -645,14 +623,11 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           toJson: ActivityGeneralConfigurationType.toJson)
       this.type = const ActivityGeneralConfigurationType.post(),
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      this.reactionType = const ActivityGeneralConfigurationType.post(),
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
-      this.content = ''});
+      this.content = '',
+      this.reportActivityId = ''});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -664,21 +639,19 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   final ActivityGeneralConfigurationType type;
   @override
   @JsonKey(
-      fromJson: ActivityGeneralConfigurationType.fromJson,
-      toJson: ActivityGeneralConfigurationType.toJson)
-  final ActivityGeneralConfigurationType reactionType;
-  @override
-  @JsonKey(
       fromJson: ActivityGeneralConfigurationStyle.fromJson,
       toJson: ActivityGeneralConfigurationStyle.toJson)
   final ActivityGeneralConfigurationStyle style;
   @override
   @JsonKey()
   final String content;
+  @override
+  @JsonKey()
+  final String reportActivityId;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, reactionType: $reactionType, style: $style, content: $content)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, reportActivityId: $reportActivityId)';
   }
 
   @override
@@ -687,16 +660,16 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
         (other.runtimeType == runtimeType &&
             other is _$_ActivityGeneralConfiguration &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.reactionType, reactionType) ||
-                other.reactionType == reactionType) &&
             (identical(other.style, style) || other.style == style) &&
-            (identical(other.content, content) || other.content == content));
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.reportActivityId, reportActivityId) ||
+                other.reportActivityId == reportActivityId));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, type, reactionType, style, content);
+      Object.hash(runtimeType, type, style, content, reportActivityId);
 
   @JsonKey(ignore: true)
   @override
@@ -721,14 +694,11 @@ abstract class _ActivityGeneralConfiguration
           toJson: ActivityGeneralConfigurationType.toJson)
       final ActivityGeneralConfigurationType type,
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      final ActivityGeneralConfigurationType reactionType,
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       final ActivityGeneralConfigurationStyle style,
-      final String content}) = _$_ActivityGeneralConfiguration;
+      final String content,
+      final String reportActivityId}) = _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -740,16 +710,13 @@ abstract class _ActivityGeneralConfiguration
   ActivityGeneralConfigurationType get type;
   @override
   @JsonKey(
-      fromJson: ActivityGeneralConfigurationType.fromJson,
-      toJson: ActivityGeneralConfigurationType.toJson)
-  ActivityGeneralConfigurationType get reactionType;
-  @override
-  @JsonKey(
       fromJson: ActivityGeneralConfigurationStyle.fromJson,
       toJson: ActivityGeneralConfigurationStyle.toJson)
   ActivityGeneralConfigurationStyle get style;
   @override
   String get content;
+  @override
+  String get reportActivityId;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>

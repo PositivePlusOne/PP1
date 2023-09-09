@@ -90,7 +90,7 @@ export class Activity {
  * @property {string} Clip A clip
  * @property {string} Repost A repost
  */
-export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost' | 'comment' | 'like' | 'share' | 'bookmark';
+export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost';
 
 /**
  * The style of activity
@@ -111,9 +111,9 @@ export type ActivityGeneralConfigurationStyle = 'markdown' | 'text';
  */
 export interface ActivityGeneralConfigurationJSON {
   type?: ActivityGeneralConfigurationType;
-  reactionType?: ActivityGeneralConfigurationType;
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
+  reportActivityId?: string;
 }
 
 /**
@@ -126,15 +126,15 @@ export interface ActivityGeneralConfigurationJSON {
  */
 export class ActivityGeneralConfiguration {
   type: ActivityGeneralConfigurationType;
-  reactionType: ActivityGeneralConfigurationType;
   style: ActivityGeneralConfigurationStyle;
   content: string;
+  repostActivityId?: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
-    this.reactionType = json.reactionType || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
+    this.repostActivityId = json.reportActivityId;
   }
 }
 
