@@ -6,6 +6,8 @@ import 'package:app/main.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/third_party.dart';
+import 'package:logger/logger.dart';
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
 
@@ -81,5 +83,76 @@ extension ActivityExt on Activity {
     }
 
     return Relationship.empty(<String>[publisherId, currentUserId]);
+  }
+}
+
+extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigurationMode {
+  bool get isPublic => this == const ActivitySecurityConfigurationMode.public();
+  bool get isFollowersAndConnections => this == const ActivitySecurityConfigurationMode.followersAndConnections();
+  bool get isConnections => this == const ActivitySecurityConfigurationMode.connections();
+  bool get isSignedIn => this == const ActivitySecurityConfigurationMode.signedIn();
+  bool get isPrivate => this == const ActivitySecurityConfigurationMode.private();
+  bool get isDisabled => this == const ActivitySecurityConfigurationMode.disabled();
+
+  bool canActOnActivity(String activityId) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (activityId.isEmpty) {
+      logger.e('canActOnSecurityMode() - activityId is empty');
+      return false;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final Activity? activity = cacheController.getFromCache<Activity>(activityId);
+
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
+
+    if (activity == null || currentProfileId.isEmpty || publisherProfileId.isEmpty) {
+      logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');
+      return false;
+    }
+
+    if (this == const ActivitySecurityConfigurationMode.disabled()) {
+      logger.d('canActOnSecurityMode() - mode is disabled');
+      return false;
+    }
+
+    if (this == const ActivitySecurityConfigurationMode.private() && currentProfileId == publisherProfileId) {
+      logger.d('canActOnSecurityMode() - mode is private and currentProfileId is not the publisherProfileId');
+      return true;
+    }
+
+    if (this == const ActivitySecurityConfigurationMode.private()) {
+      logger.d('canActOnSecurityMode() - mode is private and currentProfileId is not the publisherProfileId');
+      return false;
+    }
+
+    if (this == const ActivitySecurityConfigurationMode.public() || (this == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
+      logger.d('canActOnSecurityMode() - mode is public or signedIn and currentProfileId is not empty');
+      return true;
+    }
+
+    final String relationshipId = [currentProfileId, publisherProfileId].asGUID;
+    final Relationship? relationship = cacheController.getFromCache<Relationship>(relationshipId);
+
+    if (relationship == null) {
+      logger.e('canActOnSecurityMode() - relationship is null');
+      return false;
+    }
+
+    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
+    final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
+
+    if (this == const ActivitySecurityConfigurationMode.connections()) {
+      return isConnected;
+    }
+
+    if (this == const ActivitySecurityConfigurationMode.followersAndConnections()) {
+      return isConnected || isFollowing;
+    }
+
+    return true;
   }
 }

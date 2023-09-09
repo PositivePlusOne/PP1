@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -491,6 +492,12 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final int totalLikes = reactionStatistics?.counts["like"] ?? 0;
     final int totalComments = reactionStatistics?.counts["comment"] ?? 0;
 
+    final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool canView = viewMode.canActOnActivity(widget.activity.flMeta?.id ?? '');
+
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
     return IgnorePointer(
       ignoring: isBusy,
       child: Column(
@@ -504,21 +511,34 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             ),
           ),
           const SizedBox(height: kPaddingExtraSmall),
-          PositivePostLayoutWidget(
-            postContent: widget.activity,
-            publisher: publisher,
-            isShortformPost: !widget.isFullscreen,
-            onImageTap: onInternalMediaTap,
-            onLike: onPostLiked,
-            isLiked: isLiked,
-            totalLikes: totalLikes,
-            totalComments: totalComments,
-            isBookmarked: isBookmarked,
-            onBookmark: onPostBookmarked,
-            isBusy: isBusy,
-            feed: widget.targetFeed?.feed,
-            onPostPageRequested: requestPostRoute,
-          ),
+          if (canView) ...<Widget>[
+            PositivePostLayoutWidget(
+              postContent: widget.activity,
+              publisher: publisher,
+              isShortformPost: !widget.isFullscreen,
+              onImageTap: onInternalMediaTap,
+              onLike: onPostLiked,
+              isLiked: isLiked,
+              totalLikes: totalLikes,
+              totalComments: totalComments,
+              isBookmarked: isBookmarked,
+              onBookmark: onPostBookmarked,
+              isBusy: isBusy,
+              feed: widget.targetFeed?.feed,
+              onPostPageRequested: requestPostRoute,
+            ),
+          ] else ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kPaddingMedium,
+                vertical: kPaddingSmall,
+              ),
+              child: Text(
+                'The author of this post has limited it\'s visibility. Why not explore some of their other content?',
+                style: typography.styleBody.copyWith(color: colors.black),
+              ),
+            ),
+          ],
         ],
       ),
     );

@@ -463,7 +463,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         onLike: widget.onLike,
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: false,
+        shareEnabled: !widget.isBusy,
         onShare: onShareSelected,
 
         //TODO(S): comment enabled and on comment functionality here
@@ -546,7 +546,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     return PositiveTapBehaviour(
       onTap: widget.onPostPageRequested,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
+        padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
         child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
       ),
     );

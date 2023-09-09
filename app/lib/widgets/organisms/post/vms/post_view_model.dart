@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -112,62 +113,18 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
     state = state.copyWith(currentCommentText: str.trim());
   }
 
-  bool checkCanComment() {
-    final Logger logger = ref.read(loggerProvider);
+  bool checkCanView() {
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
     final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
-    final String currentProfileId = profileController.currentProfileId ?? '';
-    final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
+    final ActivitySecurityConfigurationMode viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    return viewMode.canActOnActivity(state.activityId);
+  }
 
-    if (activity == null || currentProfileId.isEmpty || publisherProfileId.isEmpty) {
-      logger.e('checkCanComment() - currentProfileId or publisherProfileId is empty');
-      return false;
-    }
-
-    final ActivitySecurityConfigurationMode commentMode = activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
-    if (commentMode == const ActivitySecurityConfigurationMode.disabled()) {
-      logger.d('checkCanComment() - commentMode is disabled');
-      return false;
-    }
-
-    if (commentMode == const ActivitySecurityConfigurationMode.private() && currentProfileId == publisherProfileId) {
-      logger.d('checkCanComment() - commentMode is private and currentProfileId is not the publisherProfileId');
-      return true;
-    }
-
-    if (commentMode == const ActivitySecurityConfigurationMode.private()) {
-      logger.d('checkCanComment() - commentMode is private and currentProfileId is not the publisherProfileId');
-      return false;
-    }
-
-    if (commentMode == const ActivitySecurityConfigurationMode.public() || (commentMode == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
-      logger.d('checkCanComment() - commentMode is public or signedIn and currentProfileId is not empty');
-      return true;
-    }
-
-    final String relationshipId = [currentProfileId, publisherProfileId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache<Relationship>(relationshipId);
-
-    if (relationship == null) {
-      logger.e('checkCanComment() - relationship is null');
-      return false;
-    }
-
-    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
-    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
-    final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
-
-    if (commentMode == const ActivitySecurityConfigurationMode.connections()) {
-      return isConnected;
-    }
-
-    if (commentMode == const ActivitySecurityConfigurationMode.followersAndConnections()) {
-      return isConnected || isFollowing;
-    }
-
-    return true;
+  bool checkCanComment() {
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
+    return checkCanView() && commentMode.canActOnActivity(state.activityId);
   }
 
   Future<void> onPostCommentRequested() async {
