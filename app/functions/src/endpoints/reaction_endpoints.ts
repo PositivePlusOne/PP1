@@ -34,6 +34,11 @@ export namespace ReactionEndpoints {
             throw new functions.https.HttpsError("not-found", "Activity not found");
         }
 
+        // Prevent likes on your own activity
+        if (uid === publisher && kind === "like") {
+            throw new functions.https.HttpsError("permission-denied", "Cannot like your own activity");
+        }
+
         // Reaction verification
         const relationship = await RelationshipService.getRelationship([uid, publisher], true);
         await ReactionService.verifyReactionKind(kind, uid, activity, relationship);

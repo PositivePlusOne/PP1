@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/activity_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -453,17 +455,27 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   Widget _postActions() {
     //TODO(S): Reenable when other info available
 
+    final Activity activity = widget.postContent;
+    final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
+    final String publisherId = activity.publisherInformation?.publisherId ?? '';
+
+    final ActivitySecurityConfigurationMode shareMode = activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+
+    final bool canActShare = shareMode.canActOnActivity(activity.flMeta?.id ?? '');
+    final bool isPublisher = currentProfileId == publisherId;
+    final bool canShare = canActShare && !isPublisher;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
         isLiked: widget.isLiked,
         likes: widget.totalLikes,
-        likesEnabled: !widget.isBusy,
+        likesEnabled: !widget.isBusy && !isPublisher,
         onLike: widget.onLike,
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: !widget.isBusy,
+        shareEnabled: !widget.isBusy && canShare,
         onShare: onShareSelected,
 
         //TODO(S): comment enabled and on comment functionality here
