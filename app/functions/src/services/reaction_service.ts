@@ -10,6 +10,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipJSON } from "../dto/relationships";
 import { ActivityJSON } from "../dto/activities";
 import { RelationshipService } from "./relationship_service";
+import { RelationshipState } from "./types/relationship_state";
 
 export namespace ReactionService {
     
