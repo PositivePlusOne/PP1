@@ -18,7 +18,6 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/profile_helpers.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../molecules/banners/premium_membership_banner.dart';
 import 'components/account_options_pane.dart';
 import 'components/account_profile_banner.dart';
 

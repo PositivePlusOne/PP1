@@ -18,7 +18,6 @@ import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_floating_button.dart';
-import '../shared/components/positive_post_navigation_bar.dart';
 
 @RoutePage()
 class CreatePostPage extends ConsumerStatefulWidget {
