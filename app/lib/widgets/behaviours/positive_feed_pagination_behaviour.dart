@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -18,17 +20,21 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/common/events/force_feed_rebuild_event.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -72,6 +78,8 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   StreamSubscription<ForceFeedRebuildEvent>? _onForceFeedRebuildSubscription;
 
   String get expectedCacheKey => 'feeds:${widget.feed.feed}-${widget.feed.slug}';
+
+  bool requestedFirstWindow = false;
 
   @override
   void initState() {
@@ -129,6 +137,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     if (cachedFeedState != null) {
       logger.d('setupFeedState() - Found cached state for ${widget.feed}');
       feedState = cachedFeedState;
+      requestedFirstWindow = true;
       feedState.pagingController.addPageRequestListener(requestNextPage);
       return;
     }
@@ -174,8 +183,9 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         next = '';
       }
 
-      appendActivityPage(data, next);
+      requestedFirstWindow = true;
       widget.onPageLoaded?.call(data);
+      appendActivityPage(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       feedState.pagingController.error = ex;
@@ -269,8 +279,63 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     }
   }
 
+  bool checkShouldDisplayNoPosts() {
+    if (!requestedFirstWindow) {
+      return false;
+    }
+
+    final Iterable<Activity>? activities = feedState.pagingController.itemList;
+    final bool canDisplayAny = activities?.any((element) => element.canDisplayOnFeed) ?? false;
+
+    return !canDisplayAny;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+    final double decorationBoxSize = min(screenSize.height / 2, 400);
+
+    final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts();
+    if (shouldDisplayNoPosts) {
+      return SliverStack(
+        positionedAlignment: Alignment.bottomCenter,
+        children: <Widget>[
+          SliverPositioned(
+            left: 0.0,
+            right: 0.0,
+            top: kPaddingSmall,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 120.0),
+                child: Text(
+                  'No Posts to Display',
+                  textAlign: TextAlign.center,
+                  style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
+                ),
+              ),
+            ),
+          ),
+          SliverFillRemaining(
+            fillOverscroll: false,
+            hasScrollBody: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: decorationBoxSize,
+                width: decorationBoxSize,
+                child: Stack(children: buildType2ScaffoldDecorations(colors)),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     if (widget.isSliver) {
       return buildSliverFeed(context, loadingIndicator);
@@ -286,7 +351,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     }
 
     // Remove the separator if we can't display the activity
-    final bool canDisplay = activity.canDisplayOnFeed ?? false;
+    final bool canDisplay = activity.canDisplayOnFeed;
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
