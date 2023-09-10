@@ -89,7 +89,8 @@ export namespace PostEndpoints {
     }
 
     const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
-    if (!activity) {
+    const activityOriginFeed = activity.publisherInformation?.originFeed || "";
+    if (!activity || !activityOriginFeed) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
@@ -119,6 +120,7 @@ export namespace PostEndpoints {
         type: "repost",
         repostActivityId: activityId,
         repostActivityPublisherId: publisherId,
+        repostActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,

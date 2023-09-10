@@ -264,10 +264,31 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     }
                 }
 
+                // Nested statistics
+                const repostActivityId = activity.generalConfiguration?.repostActivityId || "";
+                const repostActivityPublisherId = activity.generalConfiguration?.repostActivityPublisherId || "";
+                const repostActivityOriginFeed = activity.generalConfiguration?.repostActivityOriginFeed || "";
+                if (repostActivityId && repostActivityPublisherId && repostActivityOriginFeed) {
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostActivityOriginFeed, repostActivityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
+
+                    // Unique reactions
+                    if (sender) {
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostActivityOriginFeed, repostActivityId, sender);
+                        for (const expectedReactionKey of expectedReactionKeys) {
+                            joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
+                        }
+                    }
+                }
+
                 responseData.data[activitySchemaKey].push(activity);
                 break;
             case profileSchemaKey:
                 const profile = new Profile(obj);
+                if (!profile._fl_meta_?.fl_id) {
+                    break;
+                }
+                
                 if (!isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;

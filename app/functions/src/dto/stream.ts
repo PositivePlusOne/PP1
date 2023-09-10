@@ -30,7 +30,6 @@ export type ReactionEntryJSON = {
   kind: string;
   activity_id: string;
   user_id: string;
-  foreign_id: string;
   data: any;
   tags: string[];
   time: string;

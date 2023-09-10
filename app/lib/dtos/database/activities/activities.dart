@@ -39,6 +39,7 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default('') String content,
     @Default('') String repostActivityId,
     @Default('') String repostActivityPublisherId,
+    @Default('') String repostActivityOriginFeed,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);

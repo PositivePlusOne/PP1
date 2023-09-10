@@ -64,6 +64,8 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
       repostActivityId: json['repostActivityId'] as String? ?? '',
       repostActivityPublisherId:
           json['repostActivityPublisherId'] as String? ?? '',
+      repostActivityOriginFeed:
+          json['repostActivityOriginFeed'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
@@ -74,6 +76,7 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'content': instance.content,
       'repostActivityId': instance.repostActivityId,
       'repostActivityPublisherId': instance.repostActivityPublisherId,
+      'repostActivityOriginFeed': instance.repostActivityOriginFeed,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(

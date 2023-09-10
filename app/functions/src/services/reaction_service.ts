@@ -168,10 +168,15 @@ export namespace ReactionService {
         }
 
         const expectedKey = getExpectedKeyFromOptions(reaction);
+        const expectedOrigin = reaction.origin;
+        const expectedActivityId = reaction.activity_id;
+        const expectedUserId = reaction.user_id;
+        const expectedKind = reaction.kind;
+
         const reactionEntry = {
-            kind: reaction.kind,
-            activity_id: reaction.activity_id,
-            user_id: reaction.user_id,
+            kind: expectedKind,
+            activity_id: expectedActivityId,
+            user_id: expectedUserId,
             time: StreamHelpers.getCurrentTimestamp(),
         } as ReactionEntryJSON;
 
@@ -179,15 +184,19 @@ export namespace ReactionService {
             userId: reaction.user_id,
         });
 
-        functions.logger.info("Added reaction", { response, reaction });
-        reactionEntry.foreign_id = response.id;
-
-        await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, 1);
-        return DataService.updateDocument({
+        reaction.foreign_id = response.id;
+        reaction = await DataService.updateDocument({
             schemaKey: reactionSchemaKey,
             entryId: expectedKey,
-            data: reaction,
+            data: {
+                ...reaction,
+            },
         }) as ReactionJSON;
+
+        functions.logger.info("Added reaction", { response, reaction });
+        await ReactionStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1);
+
+        return reaction;
     }
 
     export async function getReaction(reactionId: string): Promise<ReactionJSON> {
@@ -240,6 +249,33 @@ export namespace ReactionService {
         }) as Promise<ReactionJSON[]>;
     }
 
+    export function buildUniqueReactionKeysForOptions(originFeed: string, activityId: string, userId: string): string[] {
+        const expectedKeys = [] as string[];
+        for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
+            const kind = UNIQUE_REACTIONS[index];
+            if (!kind) {
+                continue;
+            }
+
+            const expectedReactionJson = {
+                activity_id: activityId,
+                user_id: userId,
+                kind: kind,
+                origin: originFeed,
+            } as ReactionJSON;
+
+            const key = getExpectedKeyFromOptions(expectedReactionJson);
+            if (expectedKeys.includes(key) || !key.startsWith(kind)) {
+                functions.logger.warn("Skipping expected key for unique reaction kind", { kind, key });
+                continue;
+            }
+
+            expectedKeys.push(key);
+        }
+
+        return expectedKeys;
+    }
+
     export function buildUniqueReactionKeysForActivitiesAndUser(activities: ActivityJSON[], userId: string): string[] {
         if (!activities || activities.length === 0 || !userId) {
             functions.logger.info("No activities or user ID provided", { activities, userId });
@@ -247,8 +283,6 @@ export namespace ReactionService {
         }
         
         const expectedKeys = [] as string[];
-        functions.logger.info("Fetching unique reactions for activities and user", { activities, userId, origin });
-
         for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
             const kind = UNIQUE_REACTIONS[index];
             if (!kind) {
@@ -258,8 +292,8 @@ export namespace ReactionService {
             for (let index = 0; index < activities.length; index++) {
                 const activity = activities[index] as ActivityJSON;
                 const activityId = activity?._fl_meta_?.fl_id ?? "";
-                const origin = activity?.publisherInformation?.originFeed ?? "";
-                if (!activityId || !origin) {
+                const originFeed = activity?.publisherInformation?.originFeed ?? "";
+                if (!activityId || !originFeed) {
                     functions.logger.warn("Skipping activity with invalid ID or origin", { activityId, origin });
                     continue;
                 }
@@ -268,7 +302,7 @@ export namespace ReactionService {
                     activity_id: activityId,
                     user_id: userId,
                     kind: kind,
-                    origin: activity.publisherInformation?.originFeed,
+                    origin: originFeed,
                 } as ReactionJSON;
 
                 const key = getExpectedKeyFromOptions(expectedReactionJson);

@@ -115,6 +115,7 @@ export interface ActivityGeneralConfigurationJSON {
   content?: string;
   repostActivityId?: string;
   repostActivityPublisherId?: string;
+  repostActivityOriginFeed?: string;
 }
 
 /**
@@ -131,6 +132,7 @@ export class ActivityGeneralConfiguration {
   content: string;
   repostActivityId: string;
   repostActivityPublisherId: string;
+  repostActivityOriginFeed: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
@@ -138,6 +140,7 @@ export class ActivityGeneralConfiguration {
     this.content = json.content || '';
     this.repostActivityId = json.repostActivityId || '';
     this.repostActivityPublisherId = json.repostActivityPublisherId || '';
+    this.repostActivityOriginFeed = json.repostActivityOriginFeed || '';
   }
 }
 

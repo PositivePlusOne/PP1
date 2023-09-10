@@ -109,7 +109,7 @@ export namespace ReactionStatisticsService {
             stats.counts[kind] = 0;
         }
 
-        const expectedKey = getExpectedKeyFromOptions(feed, stats.activity_id, stats.reaction_id, stats.user_id);
+        const expectedKey = getExpectedKeyFromOptions(feed, stats.activity_id);
         functions.logger.info(`Updating reaction statistics`, { stats, expectedKey });
 
         return await DataService.updateDocument({
