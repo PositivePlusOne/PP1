@@ -48,24 +48,28 @@ export namespace ReactionStatisticsService {
 
     export function enrichStatisticsWithUniqueUserReactions(stats: ReactionStatisticsJSON[], reactions: ReactionJSON[]): ReactionStatisticsJSON[] {
         if (!reactions || reactions.length === 0) {
+            functions.logger.info("No reactions to enrich statistics with unique user reactions");
             return stats;
         }
 
         return stats.map((stat) => {
             const id = FlamelinkHelpers.getFlamelinkIdFromObject(stat);
             if (!id) {
+                functions.logger.error("Invalid reaction statistics", { stat });
                 return stat;
             }
 
             stat.unique_user_reactions ??= {};
             for (let index = 0; index < reactions.length; index++) {
-                const reaction = reactions[index];
-                if (!reaction || reaction.activity_id !== id) {
+                const reaction = reactions[index] as ReactionJSON;
+                if (!reaction || !reaction.activity_id || reaction.activity_id !== id) {
+                    functions.logger.error("Invalid reaction", { reaction });
                     continue;
                 }
 
                 const reactionType = reaction.kind;
                 if (!reactionType) {
+                    functions.logger.error("Invalid reaction type", { reactionType });
                     continue;
                 }
 

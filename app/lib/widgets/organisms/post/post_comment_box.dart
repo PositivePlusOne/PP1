@@ -79,7 +79,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
             top: kPaddingMedium,
             left: kPaddingSmall,
             right: kPaddingSmall,
-            bottom: kPaddingMedium + PostCommentBox.bottomPadding(mediaQuery),
+            bottom: kPaddingLarge + PostCommentBox.bottomPadding(mediaQuery),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Container(

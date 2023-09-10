@@ -222,7 +222,10 @@ export namespace ReactionService {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
 
-        await client.reactions.delete(id);
+        if (reaction.foreign_id) {
+            await client.reactions.delete(reaction.foreign_id);
+        }
+        
         await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1);
 
         await DataService.deleteDocument({
