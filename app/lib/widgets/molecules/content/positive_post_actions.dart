@@ -107,17 +107,18 @@ class PositivePostActions extends HookConsumerWidget {
             ),
           ),
           const Spacer(),
-          PositiveTapBehaviour(
-            onTap: onBookmark,
-            isEnabled: bookmarkEnabled,
-            showDisabledState: !bookmarkEnabled,
-            child: Icon(
-              bookmarked ? UniconsSolid.bookmark : UniconsLine.bookmark,
-              color: colours.colorGray6,
-              size: kIconSmall,
-            ),
-          ),
-          const SizedBox(width: kPaddingMedium),
+          //! PP1-984
+          // PositiveTapBehaviour(
+          //   onTap: onBookmark,
+          //   isEnabled: bookmarkEnabled,
+          //   showDisabledState: !bookmarkEnabled,
+          //   child: Icon(
+          //     bookmarked ? UniconsSolid.bookmark : UniconsLine.bookmark,
+          //     color: colours.colorGray6,
+          //     size: kIconSmall,
+          //   ),
+          // ),
+          // const SizedBox(width: kPaddingMedium),
           PositiveTapBehaviour(
             onTap: onShare,
             isEnabled: shareEnabled,

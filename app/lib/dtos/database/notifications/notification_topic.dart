@@ -42,7 +42,8 @@ class NotificationTopic with _$NotificationTopic {
         const NotificationTopic.newComment(),
         const NotificationTopic.newMessage(),
         const NotificationTopic.postShared(),
-        const NotificationTopic.sharedEvent(),
+        //! PP1-984
+        // const NotificationTopic.sharedEvent(),
       };
 
   static String toJson(NotificationTopic type) {

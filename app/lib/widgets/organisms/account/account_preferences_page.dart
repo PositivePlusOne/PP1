@@ -76,15 +76,16 @@ class AccountPreferencesPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveGlassSheet(
               children: <Widget>[
-                PositiveCheckboxButton(
-                  icon: UniconsLine.eye_slash,
-                  label: 'Incognito mode',
-                  value: state.isIncognitoEnabled,
-                  onTapped: viewModel.toggleIncognitoMode,
-                  isBusy: state.isBusy,
-                  showDisabledState: state.isBusy,
-                ),
-                const SizedBox(height: kPaddingMedium),
+                //! PP1-984
+                // PositiveCheckboxButton(
+                //   icon: UniconsLine.eye_slash,
+                //   label: 'Incognito mode',
+                //   value: state.isIncognitoEnabled,
+                //   onTapped: viewModel.toggleIncognitoMode,
+                //   isBusy: state.isBusy,
+                //   showDisabledState: state.isBusy,
+                // ),
+                // const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
                   icon: UniconsLine.lock_access,
                   label: 'Biometrics',
@@ -93,15 +94,16 @@ class AccountPreferencesPage extends HookConsumerWidget {
                   isBusy: state.isBusy,
                   showDisabledState: state.isBusy,
                 ),
-                const SizedBox(height: kPaddingMedium),
-                PositiveCheckboxButton(
-                  icon: UniconsLine.envelope_check,
-                  label: 'Marketing emails',
-                  value: state.areMarketingEmailsEnabled,
-                  onTapped: viewModel.toggleMarketingEmails,
-                  isBusy: state.isBusy,
-                  showDisabledState: state.isBusy,
-                ),
+                //! PP1-984
+                // const SizedBox(height: kPaddingMedium),
+                // PositiveCheckboxButton(
+                //   icon: UniconsLine.envelope_check,
+                //   label: 'Marketing emails',
+                //   value: state.areMarketingEmailsEnabled,
+                //   onTapped: viewModel.toggleMarketingEmails,
+                //   isBusy: state.isBusy,
+                //   showDisabledState: state.isBusy,
+                // ),
               ],
             ),
             const SizedBox(height: kPaddingMedium),
