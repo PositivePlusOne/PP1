@@ -68,5 +68,20 @@ export const enTranslations = {
       title: "Connection request sent",
       body: "You have sent a new connection request to @{{displayName}}.",
     },
+    post_comment: {
+      title: "New comment",
+      body: "@{{displayName}} commented on @{{shortBody}}.",
+      body_empty: "@{{displayName}} commented on your post.",
+    },
+    post_liked: {
+      title: "New like",
+      body: "@{{displayName}} liked {{shortBody}}.",
+      body_empty: "@{{displayName}} liked your post.",
+    },
+    post_shared: {
+      title: "New share",
+      body: "@{{displayName}} shared {{shortBody}}.",
+      body_empty: "@{{displayName}} shared your post.",
+    },
   },
 };

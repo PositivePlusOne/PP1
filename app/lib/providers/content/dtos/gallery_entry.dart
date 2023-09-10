@@ -45,7 +45,7 @@ class GalleryEntry {
     }
   }
 
-  Future<Media> createMedia({AwesomeFilter? filter}) async {
+  Future<Media> createMedia({AwesomeFilter? filter, String altText = ''}) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('createMedia() checking if uploaded');
 
@@ -58,6 +58,7 @@ class GalleryEntry {
     logger.i('createMedia() creating media');
     return Media(
       name: fileName,
+      altText: altText,
       priority: kMediaPriorityDefault,
       bucketPath: reference!.fullPath,
       type: MediaType.fromMimeType('', storedInBucket: true),

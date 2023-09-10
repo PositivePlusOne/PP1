@@ -57,24 +57,23 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
       type: json['type'] == null
           ? const ActivityGeneralConfigurationType.post()
           : ActivityGeneralConfigurationType.fromJson(json['type'] as String),
-      reactionType: json['reactionType'] == null
-          ? const ActivityGeneralConfigurationType.post()
-          : ActivityGeneralConfigurationType.fromJson(
-              json['reactionType'] as String),
       style: json['style'] == null
           ? const ActivityGeneralConfigurationStyle.text()
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
+      repostActivityId: json['repostActivityId'] as String? ?? '',
+      repostActivityPublisherId:
+          json['repostActivityPublisherId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
         _$_ActivityGeneralConfiguration instance) =>
     <String, dynamic>{
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
-      'reactionType':
-          ActivityGeneralConfigurationType.toJson(instance.reactionType),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
+      'repostActivityId': instance.repostActivityId,
+      'repostActivityPublisherId': instance.repostActivityPublisherId,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(
@@ -192,7 +191,6 @@ _$_ActivityPublisherInformation _$$_ActivityPublisherInformationFromJson(
     _$_ActivityPublisherInformation(
       originFeed: json['originFeed'] as String? ?? '',
       publisherId: json['publisherId'] as String? ?? '',
-      actorId: json['actorId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityPublisherInformationToJson(
@@ -200,7 +198,6 @@ Map<String, dynamic> _$$_ActivityPublisherInformationToJson(
     <String, dynamic>{
       'originFeed': instance.originFeed,
       'publisherId': instance.publisherId,
-      'actorId': instance.actorId,
     };
 
 _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(

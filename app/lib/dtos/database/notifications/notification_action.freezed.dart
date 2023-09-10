@@ -24,6 +24,9 @@ mixin _$NotificationAction {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -35,6 +38,9 @@ mixin _$NotificationAction {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -46,6 +52,9 @@ mixin _$NotificationAction {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) =>
@@ -62,6 +71,9 @@ mixin _$NotificationAction {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -76,6 +88,9 @@ mixin _$NotificationAction {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -90,6 +105,9 @@ mixin _$NotificationAction {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) =>
@@ -156,6 +174,9 @@ class _$None implements None {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return none();
@@ -170,6 +191,9 @@ class _$None implements None {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return none?.call();
@@ -184,6 +208,9 @@ class _$None implements None {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -206,6 +233,9 @@ class _$None implements None {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return none(this);
@@ -223,6 +253,9 @@ class _$None implements None {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return none?.call(this);
@@ -240,6 +273,9 @@ class _$None implements None {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -296,6 +332,9 @@ class _$Test implements Test {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return test();
@@ -310,6 +349,9 @@ class _$Test implements Test {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return test?.call();
@@ -324,6 +366,9 @@ class _$Test implements Test {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -346,6 +391,9 @@ class _$Test implements Test {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return test(this);
@@ -363,6 +411,9 @@ class _$Test implements Test {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return test?.call(this);
@@ -380,6 +431,9 @@ class _$Test implements Test {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -440,6 +494,9 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestAccepted();
@@ -454,6 +511,9 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestAccepted?.call();
@@ -468,6 +528,9 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -490,6 +553,9 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestAccepted(this);
@@ -507,6 +573,9 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestAccepted?.call(this);
@@ -524,6 +593,9 @@ class _$ConnectionRequestAccepted implements ConnectionRequestAccepted {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -584,6 +656,9 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestRejected();
@@ -598,6 +673,9 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestRejected?.call();
@@ -612,6 +690,9 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -634,6 +715,9 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestRejected(this);
@@ -651,6 +735,9 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestRejected?.call(this);
@@ -668,6 +755,9 @@ class _$ConnectionRequestRejected implements ConnectionRequestRejected {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -726,6 +816,9 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestSent();
@@ -740,6 +833,9 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestSent?.call();
@@ -754,6 +850,9 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -776,6 +875,9 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestSent(this);
@@ -793,6 +895,9 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestSent?.call(this);
@@ -810,6 +915,9 @@ class _$ConnectionRequestSent implements ConnectionRequestSent {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -870,6 +978,9 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestReceived();
@@ -884,6 +995,9 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestReceived?.call();
@@ -898,6 +1012,9 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -920,6 +1037,9 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestReceived(this);
@@ -937,6 +1057,9 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestReceived?.call(this);
@@ -954,6 +1077,9 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -966,6 +1092,486 @@ class _$ConnectionRequestReceived implements ConnectionRequestReceived {
 
 abstract class ConnectionRequestReceived implements NotificationAction {
   const factory ConnectionRequestReceived() = _$ConnectionRequestReceived;
+}
+
+/// @nodoc
+abstract class _$$PostCommentedCopyWith<$Res> {
+  factory _$$PostCommentedCopyWith(
+          _$PostCommented value, $Res Function(_$PostCommented) then) =
+      __$$PostCommentedCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostCommentedCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostCommented>
+    implements _$$PostCommentedCopyWith<$Res> {
+  __$$PostCommentedCopyWithImpl(
+      _$PostCommented _value, $Res Function(_$PostCommented) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostCommented implements PostCommented {
+  const _$PostCommented();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postCommented()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostCommented);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postCommented();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postCommented?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postCommented != null) {
+      return postCommented();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postCommented(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postCommented?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postCommented != null) {
+      return postCommented(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostCommented implements NotificationAction {
+  const factory PostCommented() = _$PostCommented;
+}
+
+/// @nodoc
+abstract class _$$PostLikedCopyWith<$Res> {
+  factory _$$PostLikedCopyWith(
+          _$PostLiked value, $Res Function(_$PostLiked) then) =
+      __$$PostLikedCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostLikedCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostLiked>
+    implements _$$PostLikedCopyWith<$Res> {
+  __$$PostLikedCopyWithImpl(
+      _$PostLiked _value, $Res Function(_$PostLiked) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostLiked implements PostLiked {
+  const _$PostLiked();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postLiked()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostLiked);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postLiked();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postLiked?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postLiked != null) {
+      return postLiked();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postLiked(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postLiked?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postLiked != null) {
+      return postLiked(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostLiked implements NotificationAction {
+  const factory PostLiked() = _$PostLiked;
+}
+
+/// @nodoc
+abstract class _$$PostSharedCopyWith<$Res> {
+  factory _$$PostSharedCopyWith(
+          _$PostShared value, $Res Function(_$PostShared) then) =
+      __$$PostSharedCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostSharedCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostShared>
+    implements _$$PostSharedCopyWith<$Res> {
+  __$$PostSharedCopyWithImpl(
+      _$PostShared _value, $Res Function(_$PostShared) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostShared implements PostShared {
+  const _$PostShared();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postShared()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostShared);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postShared();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postShared?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postShared != null) {
+      return postShared();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postShared(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postShared?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postShared != null) {
+      return postShared(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostShared implements NotificationAction {
+  const factory PostShared() = _$PostShared;
 }
 
 /// @nodoc
@@ -1012,6 +1618,9 @@ class _$RelationshipUpdated implements RelationshipUpdated {
     required TResult Function() connectionRequestRejected,
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postLiked,
+    required TResult Function() postShared,
     required TResult Function() relationshipUpdated,
   }) {
     return relationshipUpdated();
@@ -1026,6 +1635,9 @@ class _$RelationshipUpdated implements RelationshipUpdated {
     TResult? Function()? connectionRequestRejected,
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postLiked,
+    TResult? Function()? postShared,
     TResult? Function()? relationshipUpdated,
   }) {
     return relationshipUpdated?.call();
@@ -1040,6 +1652,9 @@ class _$RelationshipUpdated implements RelationshipUpdated {
     TResult Function()? connectionRequestRejected,
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postLiked,
+    TResult Function()? postShared,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1062,6 +1677,9 @@ class _$RelationshipUpdated implements RelationshipUpdated {
         connectionRequestSent,
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostShared value) postShared,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return relationshipUpdated(this);
@@ -1079,6 +1697,9 @@ class _$RelationshipUpdated implements RelationshipUpdated {
     TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostShared value)? postShared,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return relationshipUpdated?.call(this);
@@ -1096,6 +1717,9 @@ class _$RelationshipUpdated implements RelationshipUpdated {
     TResult Function(ConnectionRequestSent value)? connectionRequestSent,
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostShared value)? postShared,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {

@@ -173,7 +173,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       // Upload gallery entries
-      final List<Media> media = await Future.wait(galleryEntries.map((e) => e.createMedia(filter: state.currentFilter)));
+      final List<Media> media = await Future.wait(galleryEntries.map(
+        (e) => e.createMedia(
+          filter: state.currentFilter,
+          altText: altTextController.text.trim(),
+        ),
+      ));
 
       if (!state.isEditing) {
         activity = await activityController.postActivity(
@@ -249,14 +254,15 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       eventBus.fire(ActivityCreatedEvent(targets: targets, activity: activity));
     }
 
-    if (router.navigatorKey.currentContext != null) {
-      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
-    }
-
     state = state.copyWith(isBusy: false);
+    router.removeLast();
 
-    router.removeWhere((route) => true);
-    router.push(const HomeRoute());
+    // Wait for the page to pop before pushing the snackbar
+    await Future.delayed(kAnimationDurationEntry);
+    if (router.navigatorKey.currentContext != null) {
+      final ScaffoldMessengerState messenger = ScaffoldMessenger.of(router.navigatorKey.currentContext!);
+      messenger.showSnackBar(snackBar);
+    }
   }
 
   Future<void> onTagsPressed(BuildContext context) async {

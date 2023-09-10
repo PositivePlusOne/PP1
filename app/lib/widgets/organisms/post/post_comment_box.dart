@@ -69,9 +69,9 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
       child: Stack(
         children: <Widget>[
           Positioned(
-            left: 0,
-            right: 0,
-            bottom: PostCommentBox.bottomPadding(mediaQuery),
+            left: 0.0,
+            right: 0.0,
+            bottom: 0.0,
             top: mediaQuery.size.height - PostCommentBox.calculateHeight(mediaQuery),
             child: const PositiveNavigationBarShade(),
           ),
@@ -85,9 +85,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
               child: Container(
                 decoration: BoxDecoration(
                   color: colours.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(kBorderRadiusMassive),
-                  ),
+                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
                 ),
                 padding: const EdgeInsets.all(kPaddingSmallMedium),
                 child: PositiveTextField(

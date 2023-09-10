@@ -118,17 +118,16 @@ class PositivePostActions extends HookConsumerWidget {
             ),
           ),
           const SizedBox(width: kPaddingMedium),
-          if (onShare != null && shareEnabled)
-            PositiveTapBehaviour(
-              onTap: onShare,
-              isEnabled: shareEnabled,
-              showDisabledState: !shareEnabled,
-              child: Icon(
-                UniconsLine.message,
-                color: colours.colorGray6,
-                size: kIconSmall,
-              ),
+          PositiveTapBehaviour(
+            onTap: onShare,
+            isEnabled: shareEnabled,
+            showDisabledState: !shareEnabled,
+            child: Icon(
+              UniconsLine.message,
+              color: colours.colorGray6,
+              size: kIconSmall,
             ),
+          ),
         ],
       ),
     );

@@ -453,16 +453,13 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationType get type =>
       throw _privateConstructorUsedError;
   @JsonKey(
-      fromJson: ActivityGeneralConfigurationType.fromJson,
-      toJson: ActivityGeneralConfigurationType.toJson)
-  ActivityGeneralConfigurationType get reactionType =>
-      throw _privateConstructorUsedError;
-  @JsonKey(
       fromJson: ActivityGeneralConfigurationStyle.fromJson,
       toJson: ActivityGeneralConfigurationStyle.toJson)
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  String get repostActivityId => throw _privateConstructorUsedError;
+  String get repostActivityPublisherId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -484,17 +481,14 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           toJson: ActivityGeneralConfigurationType.toJson)
       ActivityGeneralConfigurationType type,
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      ActivityGeneralConfigurationType reactionType,
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content});
+      String content,
+      String repostActivityId,
+      String repostActivityPublisherId});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
-  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
 }
 
@@ -513,18 +507,15 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
   @override
   $Res call({
     Object? type = null,
-    Object? reactionType = null,
     Object? style = null,
     Object? content = null,
+    Object? repostActivityId = null,
+    Object? repostActivityPublisherId = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as ActivityGeneralConfigurationType,
-      reactionType: null == reactionType
-          ? _value.reactionType
-          : reactionType // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfigurationType,
       style: null == style
           ? _value.style
@@ -533,6 +524,14 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      repostActivityId: null == repostActivityId
+          ? _value.repostActivityId
+          : repostActivityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      repostActivityPublisherId: null == repostActivityPublisherId
+          ? _value.repostActivityPublisherId
+          : repostActivityPublisherId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -543,15 +542,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.type,
         (value) {
       return _then(_value.copyWith(type: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType {
-    return $ActivityGeneralConfigurationTypeCopyWith<$Res>(_value.reactionType,
-        (value) {
-      return _then(_value.copyWith(reactionType: value) as $Val);
     });
   }
 
@@ -580,19 +570,15 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           toJson: ActivityGeneralConfigurationType.toJson)
       ActivityGeneralConfigurationType type,
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      ActivityGeneralConfigurationType reactionType,
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
-      String content});
+      String content,
+      String repostActivityId,
+      String repostActivityPublisherId});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
-  @override
-  $ActivityGeneralConfigurationTypeCopyWith<$Res> get reactionType;
   @override
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
 }
@@ -611,18 +597,15 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
   @override
   $Res call({
     Object? type = null,
-    Object? reactionType = null,
     Object? style = null,
     Object? content = null,
+    Object? repostActivityId = null,
+    Object? repostActivityPublisherId = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as ActivityGeneralConfigurationType,
-      reactionType: null == reactionType
-          ? _value.reactionType
-          : reactionType // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfigurationType,
       style: null == style
           ? _value.style
@@ -631,6 +614,14 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      repostActivityId: null == repostActivityId
+          ? _value.repostActivityId
+          : repostActivityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      repostActivityPublisherId: null == repostActivityPublisherId
+          ? _value.repostActivityPublisherId
+          : repostActivityPublisherId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -645,14 +636,12 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           toJson: ActivityGeneralConfigurationType.toJson)
       this.type = const ActivityGeneralConfigurationType.post(),
       @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      this.reactionType = const ActivityGeneralConfigurationType.post(),
-      @JsonKey(
           fromJson: ActivityGeneralConfigurationStyle.fromJson,
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
-      this.content = ''});
+      this.content = '',
+      this.repostActivityId = '',
+      this.repostActivityPublisherId = ''});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -664,21 +653,22 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   final ActivityGeneralConfigurationType type;
   @override
   @JsonKey(
-      fromJson: ActivityGeneralConfigurationType.fromJson,
-      toJson: ActivityGeneralConfigurationType.toJson)
-  final ActivityGeneralConfigurationType reactionType;
-  @override
-  @JsonKey(
       fromJson: ActivityGeneralConfigurationStyle.fromJson,
       toJson: ActivityGeneralConfigurationStyle.toJson)
   final ActivityGeneralConfigurationStyle style;
   @override
   @JsonKey()
   final String content;
+  @override
+  @JsonKey()
+  final String repostActivityId;
+  @override
+  @JsonKey()
+  final String repostActivityPublisherId;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, reactionType: $reactionType, style: $style, content: $content)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, repostActivityId: $repostActivityId, repostActivityPublisherId: $repostActivityPublisherId)';
   }
 
   @override
@@ -687,16 +677,19 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
         (other.runtimeType == runtimeType &&
             other is _$_ActivityGeneralConfiguration &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.reactionType, reactionType) ||
-                other.reactionType == reactionType) &&
             (identical(other.style, style) || other.style == style) &&
-            (identical(other.content, content) || other.content == content));
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.repostActivityId, repostActivityId) ||
+                other.repostActivityId == repostActivityId) &&
+            (identical(other.repostActivityPublisherId,
+                    repostActivityPublisherId) ||
+                other.repostActivityPublisherId == repostActivityPublisherId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, type, reactionType, style, content);
+  int get hashCode => Object.hash(runtimeType, type, style, content,
+      repostActivityId, repostActivityPublisherId);
 
   @JsonKey(ignore: true)
   @override
@@ -716,19 +709,18 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
 abstract class _ActivityGeneralConfiguration
     implements ActivityGeneralConfiguration {
   const factory _ActivityGeneralConfiguration(
-      {@JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      final ActivityGeneralConfigurationType type,
-      @JsonKey(
-          fromJson: ActivityGeneralConfigurationType.fromJson,
-          toJson: ActivityGeneralConfigurationType.toJson)
-      final ActivityGeneralConfigurationType reactionType,
-      @JsonKey(
-          fromJson: ActivityGeneralConfigurationStyle.fromJson,
-          toJson: ActivityGeneralConfigurationStyle.toJson)
-      final ActivityGeneralConfigurationStyle style,
-      final String content}) = _$_ActivityGeneralConfiguration;
+          {@JsonKey(
+              fromJson: ActivityGeneralConfigurationType.fromJson,
+              toJson: ActivityGeneralConfigurationType.toJson)
+          final ActivityGeneralConfigurationType type,
+          @JsonKey(
+              fromJson: ActivityGeneralConfigurationStyle.fromJson,
+              toJson: ActivityGeneralConfigurationStyle.toJson)
+          final ActivityGeneralConfigurationStyle style,
+          final String content,
+          final String repostActivityId,
+          final String repostActivityPublisherId}) =
+      _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -740,16 +732,15 @@ abstract class _ActivityGeneralConfiguration
   ActivityGeneralConfigurationType get type;
   @override
   @JsonKey(
-      fromJson: ActivityGeneralConfigurationType.fromJson,
-      toJson: ActivityGeneralConfigurationType.toJson)
-  ActivityGeneralConfigurationType get reactionType;
-  @override
-  @JsonKey(
       fromJson: ActivityGeneralConfigurationStyle.fromJson,
       toJson: ActivityGeneralConfigurationStyle.toJson)
   ActivityGeneralConfigurationStyle get style;
   @override
   String get content;
+  @override
+  String get repostActivityId;
+  @override
+  String get repostActivityPublisherId;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>
@@ -1948,6 +1939,7 @@ mixin _$ActivitySecurityConfigurationMode {
     required TResult Function() connections,
     required TResult Function() private,
     required TResult Function() signedIn,
+    required TResult Function() disabled,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1957,6 +1949,7 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult? Function()? connections,
     TResult? Function()? private,
     TResult? Function()? signedIn,
+    TResult? Function()? disabled,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1966,6 +1959,7 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult Function()? connections,
     TResult Function()? private,
     TResult Function()? signedIn,
+    TResult Function()? disabled,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1983,6 +1977,8 @@ mixin _$ActivitySecurityConfigurationMode {
         private,
     required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
         signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1996,6 +1992,8 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -2009,6 +2007,8 @@ mixin _$ActivitySecurityConfigurationMode {
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -2083,6 +2083,7 @@ class _$_ActivitySecurityConfigurationModePublic
     required TResult Function() connections,
     required TResult Function() private,
     required TResult Function() signedIn,
+    required TResult Function() disabled,
   }) {
     return public();
   }
@@ -2095,6 +2096,7 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult? Function()? connections,
     TResult? Function()? private,
     TResult? Function()? signedIn,
+    TResult? Function()? disabled,
   }) {
     return public?.call();
   }
@@ -2107,6 +2109,7 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult Function()? connections,
     TResult Function()? private,
     TResult Function()? signedIn,
+    TResult Function()? disabled,
     required TResult orElse(),
   }) {
     if (public != null) {
@@ -2130,6 +2133,8 @@ class _$_ActivitySecurityConfigurationModePublic
         private,
     required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
         signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
   }) {
     return public(this);
   }
@@ -2146,6 +2151,8 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
   }) {
     return public?.call(this);
   }
@@ -2162,6 +2169,8 @@ class _$_ActivitySecurityConfigurationModePublic
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
     required TResult orElse(),
   }) {
     if (public != null) {
@@ -2234,6 +2243,7 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     required TResult Function() connections,
     required TResult Function() private,
     required TResult Function() signedIn,
+    required TResult Function() disabled,
   }) {
     return followersAndConnections();
   }
@@ -2246,6 +2256,7 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult? Function()? connections,
     TResult? Function()? private,
     TResult? Function()? signedIn,
+    TResult? Function()? disabled,
   }) {
     return followersAndConnections?.call();
   }
@@ -2258,6 +2269,7 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult Function()? connections,
     TResult Function()? private,
     TResult Function()? signedIn,
+    TResult Function()? disabled,
     required TResult orElse(),
   }) {
     if (followersAndConnections != null) {
@@ -2281,6 +2293,8 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
         private,
     required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
         signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
   }) {
     return followersAndConnections(this);
   }
@@ -2297,6 +2311,8 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
   }) {
     return followersAndConnections?.call(this);
   }
@@ -2313,6 +2329,8 @@ class _$_ActivitySecurityConfigurationModeFollowersAndConnections
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
     required TResult orElse(),
   }) {
     if (followersAndConnections != null) {
@@ -2376,6 +2394,7 @@ class _$_ActivitySecurityConfigurationModeConnections
     required TResult Function() connections,
     required TResult Function() private,
     required TResult Function() signedIn,
+    required TResult Function() disabled,
   }) {
     return connections();
   }
@@ -2388,6 +2407,7 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult? Function()? connections,
     TResult? Function()? private,
     TResult? Function()? signedIn,
+    TResult? Function()? disabled,
   }) {
     return connections?.call();
   }
@@ -2400,6 +2420,7 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult Function()? connections,
     TResult Function()? private,
     TResult Function()? signedIn,
+    TResult Function()? disabled,
     required TResult orElse(),
   }) {
     if (connections != null) {
@@ -2423,6 +2444,8 @@ class _$_ActivitySecurityConfigurationModeConnections
         private,
     required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
         signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
   }) {
     return connections(this);
   }
@@ -2439,6 +2462,8 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
   }) {
     return connections?.call(this);
   }
@@ -2455,6 +2480,8 @@ class _$_ActivitySecurityConfigurationModeConnections
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
     required TResult orElse(),
   }) {
     if (connections != null) {
@@ -2518,6 +2545,7 @@ class _$_ActivitySecurityConfigurationModePrivate
     required TResult Function() connections,
     required TResult Function() private,
     required TResult Function() signedIn,
+    required TResult Function() disabled,
   }) {
     return private();
   }
@@ -2530,6 +2558,7 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult? Function()? connections,
     TResult? Function()? private,
     TResult? Function()? signedIn,
+    TResult? Function()? disabled,
   }) {
     return private?.call();
   }
@@ -2542,6 +2571,7 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult Function()? connections,
     TResult Function()? private,
     TResult Function()? signedIn,
+    TResult Function()? disabled,
     required TResult orElse(),
   }) {
     if (private != null) {
@@ -2565,6 +2595,8 @@ class _$_ActivitySecurityConfigurationModePrivate
         private,
     required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
         signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
   }) {
     return private(this);
   }
@@ -2581,6 +2613,8 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
   }) {
     return private?.call(this);
   }
@@ -2597,6 +2631,8 @@ class _$_ActivitySecurityConfigurationModePrivate
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
     required TResult orElse(),
   }) {
     if (private != null) {
@@ -2660,6 +2696,7 @@ class _$_ActivitySecurityConfigurationModeSignedIn
     required TResult Function() connections,
     required TResult Function() private,
     required TResult Function() signedIn,
+    required TResult Function() disabled,
   }) {
     return signedIn();
   }
@@ -2672,6 +2709,7 @@ class _$_ActivitySecurityConfigurationModeSignedIn
     TResult? Function()? connections,
     TResult? Function()? private,
     TResult? Function()? signedIn,
+    TResult? Function()? disabled,
   }) {
     return signedIn?.call();
   }
@@ -2684,6 +2722,7 @@ class _$_ActivitySecurityConfigurationModeSignedIn
     TResult Function()? connections,
     TResult Function()? private,
     TResult Function()? signedIn,
+    TResult Function()? disabled,
     required TResult orElse(),
   }) {
     if (signedIn != null) {
@@ -2707,6 +2746,8 @@ class _$_ActivitySecurityConfigurationModeSignedIn
         private,
     required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
         signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
   }) {
     return signedIn(this);
   }
@@ -2723,6 +2764,8 @@ class _$_ActivitySecurityConfigurationModeSignedIn
     TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
   }) {
     return signedIn?.call(this);
   }
@@ -2739,6 +2782,8 @@ class _$_ActivitySecurityConfigurationModeSignedIn
     TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
     TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
         signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
     required TResult orElse(),
   }) {
     if (signedIn != null) {
@@ -2752,6 +2797,157 @@ abstract class _ActivitySecurityConfigurationModeSignedIn
     implements ActivitySecurityConfigurationMode {
   const factory _ActivitySecurityConfigurationModeSignedIn() =
       _$_ActivitySecurityConfigurationModeSignedIn;
+}
+
+/// @nodoc
+abstract class _$$_ActivitySecurityConfigurationModeDisabledCopyWith<$Res> {
+  factory _$$_ActivitySecurityConfigurationModeDisabledCopyWith(
+          _$_ActivitySecurityConfigurationModeDisabled value,
+          $Res Function(_$_ActivitySecurityConfigurationModeDisabled) then) =
+      __$$_ActivitySecurityConfigurationModeDisabledCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_ActivitySecurityConfigurationModeDisabledCopyWithImpl<$Res>
+    extends _$ActivitySecurityConfigurationModeCopyWithImpl<$Res,
+        _$_ActivitySecurityConfigurationModeDisabled>
+    implements _$$_ActivitySecurityConfigurationModeDisabledCopyWith<$Res> {
+  __$$_ActivitySecurityConfigurationModeDisabledCopyWithImpl(
+      _$_ActivitySecurityConfigurationModeDisabled _value,
+      $Res Function(_$_ActivitySecurityConfigurationModeDisabled) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_ActivitySecurityConfigurationModeDisabled
+    implements _ActivitySecurityConfigurationModeDisabled {
+  const _$_ActivitySecurityConfigurationModeDisabled();
+
+  @override
+  String toString() {
+    return 'ActivitySecurityConfigurationMode.disabled()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivitySecurityConfigurationModeDisabled);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() public,
+    required TResult Function() followersAndConnections,
+    required TResult Function() connections,
+    required TResult Function() private,
+    required TResult Function() signedIn,
+    required TResult Function() disabled,
+  }) {
+    return disabled();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? public,
+    TResult? Function()? followersAndConnections,
+    TResult? Function()? connections,
+    TResult? Function()? private,
+    TResult? Function()? signedIn,
+    TResult? Function()? disabled,
+  }) {
+    return disabled?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? public,
+    TResult Function()? followersAndConnections,
+    TResult Function()? connections,
+    TResult Function()? private,
+    TResult Function()? signedIn,
+    TResult Function()? disabled,
+    required TResult orElse(),
+  }) {
+    if (disabled != null) {
+      return disabled();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ActivitySecurityConfigurationModePublic value)
+        public,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)
+        followersAndConnections,
+    required TResult Function(
+            _ActivitySecurityConfigurationModeConnections value)
+        connections,
+    required TResult Function(_ActivitySecurityConfigurationModePrivate value)
+        private,
+    required TResult Function(_ActivitySecurityConfigurationModeSignedIn value)
+        signedIn,
+    required TResult Function(_ActivitySecurityConfigurationModeDisabled value)
+        disabled,
+  }) {
+    return disabled(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ActivitySecurityConfigurationModePublic value)? public,
+    TResult? Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult? Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
+    TResult? Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult? Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
+    TResult? Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
+  }) {
+    return disabled?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ActivitySecurityConfigurationModePublic value)? public,
+    TResult Function(
+            _ActivitySecurityConfigurationModeFollowersAndConnections value)?
+        followersAndConnections,
+    TResult Function(_ActivitySecurityConfigurationModeConnections value)?
+        connections,
+    TResult Function(_ActivitySecurityConfigurationModePrivate value)? private,
+    TResult Function(_ActivitySecurityConfigurationModeSignedIn value)?
+        signedIn,
+    TResult Function(_ActivitySecurityConfigurationModeDisabled value)?
+        disabled,
+    required TResult orElse(),
+  }) {
+    if (disabled != null) {
+      return disabled(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ActivitySecurityConfigurationModeDisabled
+    implements ActivitySecurityConfigurationMode {
+  const factory _ActivitySecurityConfigurationModeDisabled() =
+      _$_ActivitySecurityConfigurationModeDisabled;
 }
 
 ActivityEventConfiguration _$ActivityEventConfigurationFromJson(
@@ -3876,7 +4072,6 @@ ActivityPublisherInformation _$ActivityPublisherInformationFromJson(
 mixin _$ActivityPublisherInformation {
   String get originFeed => throw _privateConstructorUsedError;
   String get publisherId => throw _privateConstructorUsedError;
-  String get actorId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -3892,7 +4087,7 @@ abstract class $ActivityPublisherInformationCopyWith<$Res> {
       _$ActivityPublisherInformationCopyWithImpl<$Res,
           ActivityPublisherInformation>;
   @useResult
-  $Res call({String originFeed, String publisherId, String actorId});
+  $Res call({String originFeed, String publisherId});
 }
 
 /// @nodoc
@@ -3911,7 +4106,6 @@ class _$ActivityPublisherInformationCopyWithImpl<$Res,
   $Res call({
     Object? originFeed = null,
     Object? publisherId = null,
-    Object? actorId = null,
   }) {
     return _then(_value.copyWith(
       originFeed: null == originFeed
@@ -3921,10 +4115,6 @@ class _$ActivityPublisherInformationCopyWithImpl<$Res,
       publisherId: null == publisherId
           ? _value.publisherId
           : publisherId // ignore: cast_nullable_to_non_nullable
-              as String,
-      actorId: null == actorId
-          ? _value.actorId
-          : actorId // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -3939,7 +4129,7 @@ abstract class _$$_ActivityPublisherInformationCopyWith<$Res>
       __$$_ActivityPublisherInformationCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String originFeed, String publisherId, String actorId});
+  $Res call({String originFeed, String publisherId});
 }
 
 /// @nodoc
@@ -3957,7 +4147,6 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
   $Res call({
     Object? originFeed = null,
     Object? publisherId = null,
-    Object? actorId = null,
   }) {
     return _then(_$_ActivityPublisherInformation(
       originFeed: null == originFeed
@@ -3968,10 +4157,6 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
           ? _value.publisherId
           : publisherId // ignore: cast_nullable_to_non_nullable
               as String,
-      actorId: null == actorId
-          ? _value.actorId
-          : actorId // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -3980,7 +4165,7 @@ class __$$_ActivityPublisherInformationCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
   const _$_ActivityPublisherInformation(
-      {this.originFeed = '', this.publisherId = '', this.actorId = ''});
+      {this.originFeed = '', this.publisherId = ''});
 
   factory _$_ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityPublisherInformationFromJson(json);
@@ -3991,13 +4176,10 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
   @override
   @JsonKey()
   final String publisherId;
-  @override
-  @JsonKey()
-  final String actorId;
 
   @override
   String toString() {
-    return 'ActivityPublisherInformation(originFeed: $originFeed, publisherId: $publisherId, actorId: $actorId)';
+    return 'ActivityPublisherInformation(originFeed: $originFeed, publisherId: $publisherId)';
   }
 
   @override
@@ -4008,14 +4190,12 @@ class _$_ActivityPublisherInformation implements _ActivityPublisherInformation {
             (identical(other.originFeed, originFeed) ||
                 other.originFeed == originFeed) &&
             (identical(other.publisherId, publisherId) ||
-                other.publisherId == publisherId) &&
-            (identical(other.actorId, actorId) || other.actorId == actorId));
+                other.publisherId == publisherId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, originFeed, publisherId, actorId);
+  int get hashCode => Object.hash(runtimeType, originFeed, publisherId);
 
   @JsonKey(ignore: true)
   @override
@@ -4036,8 +4216,7 @@ abstract class _ActivityPublisherInformation
     implements ActivityPublisherInformation {
   const factory _ActivityPublisherInformation(
       {final String originFeed,
-      final String publisherId,
-      final String actorId}) = _$_ActivityPublisherInformation;
+      final String publisherId}) = _$_ActivityPublisherInformation;
 
   factory _ActivityPublisherInformation.fromJson(Map<String, dynamic> json) =
       _$_ActivityPublisherInformation.fromJson;
@@ -4046,8 +4225,6 @@ abstract class _ActivityPublisherInformation
   String get originFeed;
   @override
   String get publisherId;
-  @override
-  String get actorId;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityPublisherInformationCopyWith<_$_ActivityPublisherInformation>

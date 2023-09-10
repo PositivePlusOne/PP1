@@ -11,19 +11,29 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
 import 'package:app/constants/cache_constants.dart';
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 
 enum PositiveThumbnailTargetSize {
   small(128),
@@ -240,7 +250,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
   String toString() => '${objectRuntimeType(this, 'PositiveMediaImageProvider')}(${media.url})';
 }
 
-class PositiveMediaImage extends StatefulWidget {
+class PositiveMediaImage extends ConsumerStatefulWidget {
   const PositiveMediaImage({
     required this.media,
     this.backgroundColor = Colors.transparent,
@@ -274,10 +284,10 @@ class PositiveMediaImage extends StatefulWidget {
   final PositiveThumbnailTargetSize? thumbnailTargetSize;
 
   @override
-  State<PositiveMediaImage> createState() => PositiveMediaImageState();
+  ConsumerState<PositiveMediaImage> createState() => PositiveMediaImageState();
 }
 
-class PositiveMediaImageState extends State<PositiveMediaImage> {
+class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   PositiveMediaImageProvider? _imageProvider;
   Uint8List bytes = Uint8List(0);
   StreamSubscription<ForceMediaFetchEvent>? _forceMediaFetchSubscription;
@@ -369,6 +379,8 @@ class PositiveMediaImageState extends State<PositiveMediaImage> {
 
   @override
   Widget build(BuildContext context) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+
     Widget child = widget.placeholderBuilder?.call(context) ?? SizedBox(height: widget.height, width: widget.width);
     if (bytes.isNotEmpty) {
       if (isSvg) {
@@ -388,6 +400,27 @@ class PositiveMediaImageState extends State<PositiveMediaImage> {
           gaplessPlayback: true,
         );
       }
+    }
+
+    // If bytes are available and alt text is available, wrap the image in a tooltip
+    if (bytes.isNotEmpty && widget.media.altText.isNotEmpty) {
+      child = Stack(
+        children: <Widget>[
+          child,
+          Positioned(
+            bottom: kPaddingSmall,
+            left: kPaddingSmall,
+            child: PositiveButton(
+              label: 'Alt Text',
+              colors: colors,
+              size: PositiveButtonSize.medium,
+              style: PositiveButtonStyle.outline,
+              layout: PositiveButtonLayout.textOnly,
+              onTapped: onAltTextSelected,
+            ),
+          ),
+        ],
+      );
     }
 
     return PositiveTapBehaviour(
@@ -412,5 +445,25 @@ class PositiveMediaImageState extends State<PositiveMediaImage> {
 
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     await appRouter.push(MediaRoute(media: widget.media));
+  }
+
+  FutureOr<void> onAltTextSelected() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+
+    logger.i('Showing alt text dialog');
+    await PositiveDialog.show(
+      context: context,
+      title: 'Alt Text',
+      barrierDismissible: true,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          widget.media.altText,
+          style: typography.styleBody.copyWith(color: colors.white),
+        ),
+      ),
+    );
   }
 }

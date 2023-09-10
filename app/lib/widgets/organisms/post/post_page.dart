@@ -5,35 +5,32 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/annotations.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/post/post_comment_box.dart';
 import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
 import '../../../providers/profiles/profile_controller.dart';
 
 @RoutePage()
-class PostPage extends ConsumerWidget {
+class PostPage extends HookConsumerWidget {
   const PostPage({
     required this.activity,
     required this.feed,
@@ -49,13 +46,12 @@ class PostPage extends ConsumerWidget {
     final AppRouter router = ref.read(appRouterProvider);
 
     final PostViewModelProvider provider = postViewModelProvider(activity.flMeta!.id!, feed);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
+    useLifecycleHook(viewModel);
 
-    final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final User? user = userController.currentUser;
+    final Activity updatedActivity = state.activity ?? activity;
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final List<Widget> actions = [];
@@ -64,61 +60,39 @@ class PostPage extends ConsumerWidget {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
 
-    final String publisherID = activity.publisherInformation?.publisherId ?? '';
-    final String userID = profileControllerState.currentProfile?.flMeta?.id ?? '';
-
-    final List<String> members = [publisherID, userID];
-    final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
-
-    late bool isCommentsEnabled;
-    late bool isUserAbleToComment;
-
-    switch (activity.securityConfiguration?.commentMode) {
-      case const ActivitySecurityConfigurationMode.public():
-      case const ActivitySecurityConfigurationMode.signedIn():
-        isUserAbleToComment = user != null;
-        isCommentsEnabled = true;
-        break;
-      case const ActivitySecurityConfigurationMode.connections():
-        isUserAbleToComment = relationship.isFullyConnected;
-        isCommentsEnabled = true;
-        break;
-      case const ActivitySecurityConfigurationMode.followersAndConnections():
-        isUserAbleToComment = relationship.isFullyConnected || relationship.following;
-        isCommentsEnabled = true;
-        break;
-      default:
-        isUserAbleToComment = false;
-        isCommentsEnabled = false;
-    }
-
-    // Revert enabled flags if the user is the publisher
-    if (activity.publisherInformation?.publisherId == user?.uid) {
-      isUserAbleToComment = true;
-      isCommentsEnabled = true;
-    }
-
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
+
+    final bool commentsDisabled = updatedActivity.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
+    final String activityId = updatedActivity.flMeta?.id ?? '';
+
+    final bool canView = viewModel.checkCanView();
+    final bool canComment = viewModel.checkCanComment();
+
+    final List<PositiveScaffoldDecoration> decorations = canView ? [] : buildType3ScaffoldDecorations(colors);
+
+    final Widget commentBox = Align(
+      alignment: Alignment.bottomCenter,
+      child: PostCommentBox(
+        mediaQuery: mediaQuery,
+        commentTextController: viewModel.commentTextController,
+        onCommentChanged: viewModel.onCommentTextChanged,
+        onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
+        isBusy: state.isBusy,
+      ),
+    );
 
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
+      overlayWidgets: <Widget>[
+        if (canComment && !commentsDisabled) commentBox,
+      ],
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
-        PositiveScaffoldComponent.decorationWidget,
       },
-      decorationColor: colors.white,
+      decorations: decorations,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: isCommentsEnabled && isUserAbleToComment
-          ? PostCommentBox(
-              mediaQuery: MediaQuery.of(context),
-              commentTextController: viewModel.commentTextController,
-              onCommentChanged: viewModel.onCommentTextChanged,
-              onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
-              isBusy: state.isBusy,
-            )
-          : null,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           horizontalPadding: kPaddingNone,
@@ -139,7 +113,7 @@ class PostPage extends ConsumerWidget {
           ],
           children: <Widget>[
             PositiveActivityWidget(
-              activity: activity,
+              activity: updatedActivity,
               targetFeed: feed,
               isFullscreen: true,
               isEnabled: !state.isBusy,
@@ -148,35 +122,48 @@ class PostPage extends ConsumerWidget {
             ),
           ],
         ),
-        if ((activity.flMeta?.id?.isNotEmpty ?? false) && isCommentsEnabled) ...<Widget>[
-          const SliverToBoxAdapter(
-            child: SizedBox(height: kPaddingSmall),
-          ),
-          SliverToBoxAdapter(
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: colors.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(kBorderRadiusMassive),
-                  ),
+        if (canView) ...<Widget>[
+          const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
+          SliverStack(
+            children: <Widget>[
+              SliverFillRemaining(
+                fillOverscroll: true,
+                hasScrollBody: false,
+                child: Container(
+                  color: canView ? colors.white : colors.transparent,
+                  height: double.infinity,
                 ),
-                width: kPaddingMassive,
-                height: kPaddingExtraSmall,
               ),
-            ),
+              MultiSliver(
+                pushPinnedChildren: true,
+                children: <Widget>[
+                  SliverToBoxAdapter(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: colors.white,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(kBorderRadiusMassive),
+                          ),
+                        ),
+                        width: kPaddingMassive,
+                        height: kPaddingExtraSmall,
+                      ),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
+                  PositiveReactionPaginationBehaviour(
+                    kind: 'comment',
+                    reactionMode: updatedActivity.securityConfiguration?.commentMode,
+                    activityId: activityId,
+                    feed: feed,
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),
+                ],
+              ),
+            ],
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
-          PositiveReactionPaginationBehaviour(
-            kind: 'comment',
-            reactionMode: activity.securityConfiguration?.commentMode,
-            activityId: activity.flMeta!.id!,
-            feed: feed,
-          ),
-
-          //! Apply extra padding for the comment box assuming one line height.
-          SliverToBoxAdapter(child: Container(height: maxSafePadding + kPaddingMedium, color: colors.white)),
         ],
       ],
     );

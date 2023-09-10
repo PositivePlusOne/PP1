@@ -26,6 +26,7 @@ class Media with _$Media {
     @Default('') String name,
     @Default('') String bucketPath,
     @Default('') String url,
+    @Default('') String altText,
     @Default([]) List<MediaThumbnail> thumbnails,
     @Default(MediaType.unknown) MediaType type,
     @Default(kMediaPriorityDefault) int priority,

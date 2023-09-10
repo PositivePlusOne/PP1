@@ -26,10 +26,19 @@ import 'package:app/widgets/organisms/notifications/components/positive_notifica
 abstract class NotificationHandler {
   Logger get logger => providerContainer.read(loggerProvider);
 
-  bool canHandlePayload(NotificationPayload payload, bool isForeground);
   Future<bool> canStorePayload(NotificationPayload payload, bool isForeground) async => isForeground;
+
+  // Handling is the ability for the handler to process the payload
+  bool canHandlePayload(NotificationPayload payload, bool isForeground);
+
+  // Display is the ability for the app to show the notification
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground);
+
+  // Trigger is the ability for the app to trigger the notification when it is received
   Future<bool> canTriggerPayload(NotificationPayload payload, bool isForeground) async => true;
+
+  // This is called when the notification is selected from the in app feed
+  FutureOr<void> onNotificationSelected(NotificationPayload payload, BuildContext context) async => true;
 
   Color getBackgroundColor(NotificationPayload payload) {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.white));
@@ -37,6 +46,10 @@ abstract class NotificationHandler {
 
   Color getForegroundColor(NotificationPayload payload) {
     return providerContainer.read(designControllerProvider.select((value) => value.colors.black));
+  }
+
+  bool includeTimestampOnFeed(NotificationPayload payload) {
+    return false;
   }
 
   List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {

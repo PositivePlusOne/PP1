@@ -18,6 +18,7 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -34,6 +35,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/content/positive_post_actions.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
@@ -50,9 +52,10 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
     this.targetFeed,
     this.index = -1,
     this.isEnabled = true,
-    this.isFullscreen = false,
     this.onHeaderTapped,
     this.onImageTapped,
+    this.isFullscreen = false,
+    this.isShared = false,
     super.key,
   });
 
@@ -65,6 +68,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
   final void Function(Media media)? onImageTapped;
 
   final bool isFullscreen;
+  final bool isShared;
 
   @override
   ConsumerState<PositiveActivityWidget> createState() => _PositiveActivityWidgetState();
@@ -342,14 +346,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     await router.pop();
   }
 
-  Future<void> onPostBookmarked(BuildContext context) async {
+  Future<void> onPostBookmarked(BuildContext context, Activity activity) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
-    final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final String? id = widget.activity.flMeta?.id;
-    final String origin = TargetFeed.toOrigin(widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''));
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
-    if (id == null || userController.currentUser == null) {
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    final String activityId = activity.flMeta?.id ?? '';
+    final String origin = activity.publisherInformation?.originFeed ?? '';
+
+    if (currentProfileId.isEmpty || activityId.isEmpty || origin.isEmpty) {
       throw Exception('Invalid activity or user');
     }
 
@@ -357,16 +363,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       _isBookmarking = true;
       setStateIfMounted();
 
-      final bool isBookmarked = communitiesController.isActivityBookmarked(id, origin);
+      final bool isBookmarked = communitiesController.isActivityBookmarked(activityId, origin);
       if (isBookmarked) {
-        await communitiesController.removeBookmarkActivity(origin: origin, activityId: id);
+        await communitiesController.removeBookmarkActivity(origin: origin, activityId: activityId);
         ScaffoldMessenger.of(context).showSnackBar(
           PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
         );
         return;
       }
 
-      await communitiesController.bookmarkActivity(origin: origin, activityId: id);
+      await communitiesController.bookmarkActivity(origin: origin, activityId: activityId);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
@@ -376,15 +382,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     }
   }
 
-  Future<void> onPostLiked(BuildContext context) async {
+  Future<void> onPostLiked(BuildContext context, Activity activity) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
-    final UserController userController = providerContainer.read(userControllerProvider.notifier);
-    final String? id = widget.activity.flMeta?.id;
-    final String origin = TargetFeed.toOrigin(widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''));
-    final AppRouter router = ref.read(appRouterProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
-    if (id == null || userController.currentUser == null) {
+    final String profileId = profileController.currentProfileId ?? '';
+    final String activityId = activity.flMeta?.id ?? '';
+    final String origin = activity.publisherInformation?.originFeed ?? '';
+
+    if (profileId.isEmpty || activityId.isEmpty || origin.isEmpty) {
       throw Exception('Invalid activity or user');
     }
 
@@ -392,16 +399,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       _isLiking = true;
       setStateIfMounted();
 
-      final bool isLiked = communitiesController.isActivityLiked(id, origin);
+      final bool isLiked = communitiesController.isActivityLiked(activityId, origin);
       if (isLiked) {
-        await communitiesController.unlikeActivity(origin: origin, activityId: id);
+        await communitiesController.unlikeActivity(origin: origin, activityId: activityId);
         ScaffoldMessenger.of(context).showSnackBar(
           PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
         );
         return;
       }
 
-      await communitiesController.likeActivity(origin: origin, activityId: id);
+      await communitiesController.likeActivity(origin: origin, activityId: activityId);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
@@ -424,14 +431,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         activityData: ActivityData(
           activityID: widget.activity.flMeta!.id,
           content: widget.activity.generalConfiguration?.content ?? "",
-          //TODO alt text
-          // altText: widget.activity.altText,
           tags: widget.activity.enrichmentConfiguration?.tags ?? const [],
           postType: PostType.getPostTypeFromActivity(widget.activity),
           media: widget.activity.media,
           commentPermissionMode: widget.activity.securityConfiguration?.commentMode,
           visibilityMode: widget.activity.securityConfiguration?.viewMode,
           allowSharing: widget.activity.securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),
+          //! This is currently shared between ALL media!
+          altText: widget.activity.media.any((element) => element.altText.isNotEmpty) ? widget.activity.media.firstWhere((element) => element.altText.isNotEmpty).altText : '',
         ),
         isEditPage: true,
       ),
@@ -484,21 +491,80 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
-    final Profile? userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
-    final ActivitySecurityConfigurationMode commentSecurityMode = widget.activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.public();
-    final ActivitySecurityConfigurationMode shareSecurityMode = widget.activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.public();
-    final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.public();
-
-    const bool canComment = true;
-    const bool canShare = true;
-    const bool canView = true;
-
     final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
     final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;
     final bool isBusy = _isBookmarking || _isLiking || !widget.isEnabled;
 
     final int totalLikes = reactionStatistics?.counts["like"] ?? 0;
     final int totalComments = reactionStatistics?.counts["comment"] ?? 0;
+
+    final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool canView = viewMode.canActOnActivity(widget.activity.flMeta?.id ?? '');
+
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final String repostOriginalPublisherId = widget.activity.generalConfiguration?.repostActivityPublisherId ?? '';
+    final Profile? repostOriginalPublisher = repostOriginalPublisherId.isEmpty ? null : cacheController.getFromCache(repostOriginalPublisherId);
+    final String repostOriginalActivityId = widget.activity.generalConfiguration?.repostActivityId ?? '';
+    final Activity? repostOriginalActivity = repostOriginalActivityId.isEmpty ? null : cacheController.getFromCache(repostOriginalActivityId);
+
+    final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
+    final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';
+    final String activityID = widget.activity.flMeta?.id ?? '';
+
+    final ActivitySecurityConfigurationMode shareMode = widget.activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+
+    final bool canActShare = shareMode.canActOnActivity(activityID);
+    final bool isPublisher = currentProfileId == publisherId;
+    final bool canShare = canActShare && !isPublisher;
+
+    final bool isRepost = repostOriginalPublisher != null && repostOriginalActivity != null;
+    if (isRepost) {
+      return Column(
+        children: <Widget>[
+          PositiveTapBehaviour(
+            onTap: onInternalHeaderTap,
+            child: ActivityPostHeadingWidget(
+              flMetaData: widget.activity.flMeta,
+              publisher: publisher,
+              onOptions: onPostOptionsSelected,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
+            margin: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall, vertical: kPaddingSmall),
+            decoration: BoxDecoration(
+              color: colors.white,
+              borderRadius: BorderRadius.circular(kBorderRadiusSmall),
+            ),
+            child: PositiveActivityWidget(
+              activity: repostOriginalActivity,
+              index: widget.index,
+              isEnabled: widget.isEnabled,
+              isFullscreen: widget.isFullscreen,
+              targetFeed: TargetFeed.fromOrigin(repostOriginalActivity.publisherInformation?.originFeed ?? ''),
+              isShared: true,
+            ),
+          ),
+          PositivePostActions(
+            isLiked: isLiked,
+            likes: totalLikes,
+            likesEnabled: !isBusy && !isPublisher,
+            onLike: (context) => onPostLiked(context, widget.activity),
+            shareEnabled: !isBusy && canShare,
+            onShare: (_) {},
+            comments: totalComments,
+            commentsEnabled: !isBusy,
+            onComment: (_) {},
+            bookmarkEnabled: !isBusy,
+            bookmarked: isBookmarked,
+            onBookmark: (context) => onPostBookmarked(context, widget.activity),
+          ),
+        ],
+      );
+    }
 
     return IgnorePointer(
       ignoring: isBusy,
@@ -510,24 +576,39 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
               flMetaData: widget.activity.flMeta,
               publisher: publisher,
               onOptions: onPostOptionsSelected,
+              isShared: widget.isShared,
             ),
           ),
-          const SizedBox(height: kPaddingExtraSmall),
-          PositivePostLayoutWidget(
-            postContent: widget.activity,
-            publisher: publisher,
-            isShortformPost: !widget.isFullscreen,
-            onImageTap: onInternalMediaTap,
-            onLike: onPostLiked,
-            isLiked: isLiked,
-            totalLikes: totalLikes,
-            totalComments: totalComments,
-            isBookmarked: isBookmarked,
-            onBookmark: onPostBookmarked,
-            isBusy: isBusy,
-            feed: widget.targetFeed?.feed,
-            onPostPageRequested: requestPostRoute,
-          ),
+          if (canView) ...<Widget>[
+            PositivePostLayoutWidget(
+              postContent: widget.activity,
+              publisher: publisher,
+              isShortformPost: !widget.isFullscreen,
+              sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
+              onImageTap: onInternalMediaTap,
+              onLike: (context) => onPostLiked(context, widget.activity),
+              isLiked: isLiked,
+              totalLikes: totalLikes,
+              totalComments: totalComments,
+              isBookmarked: isBookmarked,
+              onBookmark: (context) => onPostBookmarked(context, widget.activity),
+              isBusy: isBusy,
+              origin: widget.targetFeed != null ? TargetFeed.toOrigin(widget.targetFeed!) : null,
+              onPostPageRequested: requestPostRoute,
+              isShared: widget.isShared,
+            ),
+          ] else ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kPaddingMedium,
+                vertical: kPaddingSmall,
+              ),
+              child: Text(
+                'The author of this post has limited it\'s visibility. Why not explore some of their other content?',
+                style: typography.styleBody.copyWith(color: colors.black),
+              ),
+            ),
+          ],
         ],
       ),
     );

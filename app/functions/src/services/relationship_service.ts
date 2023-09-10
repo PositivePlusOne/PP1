@@ -9,6 +9,7 @@ import { Pagination, PaginationResult } from "../helpers/pagination";
 import { ConversationService } from "./conversation_service";
 import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
 import { CacheService } from "./cache_service";
+import { RelationshipState } from "./types/relationship_state";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -25,8 +26,42 @@ export namespace RelationshipService {
    * @param {string[]} members the members of the relationship.
    * @return {any} the relationship between the two users.
    */
-  export async function getRelationship(members: string[]): Promise<any> {
+  export async function getRelationship(members: string[], allowSoloRelationships = false): Promise<any> {
+    // Remove any null or duplicate members
+    members = members.filter((member) => typeof member === "string" && member !== "").sort();
+    members = [...new Set(members)];
+
+    functions.logger.info("Getting relationship", {
+      members,
+    });
+
+    // Check if members is one person, if so return an open relationship
     const documentName = StringHelpers.generateDocumentNameFromGuids(members);
+
+    if (members.length === 1 && allowSoloRelationships) {
+      functions.logger.info("Returning solo relationship; this will not be persisted", {
+        members,
+      });
+
+      return {
+        blocked: false,
+        muted: false,
+        connected: true,
+        followed: true,
+        hidden: false,
+        searchIndexRelationships: members,
+        members: [
+          {
+            memberId: members[0],
+            hasBlocked: false,
+            hasMuted: false,
+            hasConnected: true,
+            hasFollowed: true,
+            hasHidden: false,
+          },
+        ],
+      };
+    }
 
     // Check if members is empty or contains duplicates
     if (members.length === 0 || new Set(members).size !== members.length) {
@@ -38,6 +73,31 @@ export namespace RelationshipService {
       entryId: documentName,
     });
   }
+
+  export function relationshipStatesForEntity(entityId: string, relationship: RelationshipJSON): Set<RelationshipState> {
+    const member = relationship.members?.find(m => m.memberId === entityId);
+    const otherMembers = relationship.members?.filter(m => m.memberId !== entityId);
+
+    if (!member || !otherMembers || otherMembers.length === 0) {
+        return new Set();
+    }
+
+    const relationshipStates = new Set<RelationshipState>();
+
+    if (member.hasBlocked) relationshipStates.add(RelationshipState.sourceBlocked);
+    if (member.hasConnected) relationshipStates.add(RelationshipState.sourceConnected);
+    if (member.hasFollowed) relationshipStates.add(RelationshipState.sourceFollowed);
+    if (member.hasHidden) relationshipStates.add(RelationshipState.sourceHidden);
+    if (member.hasMuted) relationshipStates.add(RelationshipState.sourceMuted);
+    if (otherMembers.some(element => element.hasBlocked)) relationshipStates.add(RelationshipState.targetBlocked);
+    if (otherMembers.some(element => element.hasConnected)) relationshipStates.add(RelationshipState.targetConnected);
+    if (otherMembers.some(element => element.hasFollowed)) relationshipStates.add(RelationshipState.targetFollowing);
+    if (otherMembers.some(element => element.hasHidden)) relationshipStates.add(RelationshipState.targetHidden);
+    if (otherMembers.some(element => element.hasMuted)) relationshipStates.add(RelationshipState.targetMuted);
+
+    return relationshipStates;
+}
+
 
   /**
    * Checks if the given relationship is connected.

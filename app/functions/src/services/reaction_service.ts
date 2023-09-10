@@ -7,6 +7,14 @@ import { ReactionEntryJSON } from "../dto/stream";
 import { ReactionStatisticsService } from "./reaction_statistics_service";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { RelationshipJSON } from "../dto/relationships";
+import { ActivityJSON } from "../dto/activities";
+import { RelationshipService } from "./relationship_service";
+import { RelationshipState } from "./types/relationship_state";
+import { ReactionCommentNotification } from "./builders/notifications/activities/reaction_comment_notification";
+import { ProfileService } from "./profile_service";
+import { ProfileJSON } from "../dto/profile";
+import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
 
 export namespace ReactionService {
     
@@ -18,10 +26,106 @@ export namespace ReactionService {
         return UNIQUE_REACTIONS.includes(kind);
     }
 
-    export function verifyReactionKind(kind: string) {
+    export async function verifyReactionKind(kind: string, userId: string, activity: ActivityJSON, relationship: RelationshipJSON) : Promise<void> {
         if (!VALID_REACTIONS.includes(kind)) {
-            throw new Error(`Invalid reaction type: ${kind}`);
+            throw new functions.https.HttpsError("invalid-argument", "Invalid reaction kind");
         }
+
+        const publisherId = activity?.publisherInformation?.publisherId || "";
+        if (!publisherId) {
+            throw new functions.https.HttpsError("not-found", "Activity publisher not found");
+        }
+
+        // Skip verification if the user is the publisher
+        if (userId === publisherId) {
+            return;
+        }
+
+        // Check flags on the activity 
+        const relationshipStates = RelationshipService.relationshipStatesForEntity(userId, relationship);
+        const viewMode = activity?.securityConfiguration?.viewMode || "disabled";
+        const likesMode = activity?.securityConfiguration?.likesMode || "disabled";
+        const commentMode = activity?.securityConfiguration?.commentMode || "disabled";
+        const shareMode = activity?.securityConfiguration?.shareMode || "disabled";
+        const bookmarksMode = activity?.securityConfiguration?.bookmarksMode || "disabled";
+
+        const isFullyConnected = relationshipStates.has(RelationshipState.sourceConnected) && relationshipStates.has(RelationshipState.targetConnected);
+        const isBlocked = relationshipStates.has(RelationshipState.targetBlocked);
+        const isFollowing = relationshipStates.has(RelationshipState.sourceFollowed);
+
+        // Check if we are blocked (find targetBlocked in the set of relationship states)
+        if (isBlocked) {
+            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity, you are blocked");
+        }
+
+        if (viewMode === "private") {
+            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity, view mode is private");
+        }
+
+        // Check the different mode flags
+        let currentMode = "public";
+        switch (kind) {
+            case "like":
+                currentMode = likesMode;
+                break;
+            case "comment":
+                currentMode = commentMode;
+                break;
+            case "share":
+                currentMode = shareMode;
+                break;
+            case "bookmark":
+                currentMode = bookmarksMode;
+                break;
+        }
+
+        if (currentMode === "private" || currentMode === "disabled") {
+            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity. The reaction mode is private or disabled");
+        }
+
+        // Check if we are following (find sourceFollowed in the set of relationship states)
+        if (currentMode == "followers_and_connections" && (!isFollowing || !isFullyConnected)) {
+            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity, you are not following the publisher");
+        }
+
+        // Check if we are connected (find sourceConnected in the set of relationship states)
+        if (currentMode == "connections" && !isFullyConnected) {
+            throw new functions.https.HttpsError("permission-denied", "You cannot react to this activity, you are not connected to the publisher");
+        }
+    }
+
+    export async function processNotifications(kind: string, userId: string, activity: ActivityJSON, reaction: ReactionJSON): Promise<void> {
+        functions.logger.info("Processing notifications", { kind, userId, activity });
+
+        const publisherId = activity?.publisherInformation?.publisherId || "";
+        const profiles = await ProfileService.getMultipleProfiles([userId, publisherId]);
+
+        const userProfile = profiles.find((profile: ProfileJSON) => profile?._fl_meta_?.fl_id === userId);
+        const publisherProfile = profiles.find((profile: ProfileJSON) => profile?._fl_meta_?.fl_id === publisherId);
+
+        if (!userProfile || !publisherProfile) {
+            functions.logger.error("Unable to find user or publisher profile", { userId, publisherId, userProfile, publisherProfile });
+            return;
+        }
+
+        // TODO, add publisher check as to not send notifications to the publisher
+        if (userProfile._fl_meta_.fl_id === publisherProfile._fl_meta_.fl_id) {
+            functions.logger.info("Cannot send content notifications to yourself", { userId, publisherId, userProfile, publisherProfile });
+            return;
+        }
+
+        switch (kind) {
+            case "comment":
+                await ReactionCommentNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
+                break;
+            case "like":
+                await ReactionLikeNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
+                break;
+            default:
+                break;
+        }
+
+        functions.logger.info("Finished processing notifications", { kind, userId, activity });
     }
 
     export function getOriginFromFeedStringAndUserId(feed: string, userId: string): string {

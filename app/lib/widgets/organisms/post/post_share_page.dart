@@ -19,10 +19,14 @@ import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
 
 @RoutePage()
 class PostSharePage extends StatefulHookConsumerWidget {
-  const PostSharePage({super.key, required this.activity, required this.feed});
+  const PostSharePage({
+    super.key,
+    required this.activity,
+    required this.origin,
+  });
 
   final Activity activity;
-  final String feed;
+  final String origin;
 
   @override
   ConsumerState<PostSharePage> createState() => _PostSharePageState();
@@ -44,7 +48,7 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
     setStateIfMounted(callback: () => isBusy = true);
 
     try {
-      await sharingController.shareViaConnectionChat(context, widget.activity, widget.feed, selectedCommunityIds);
+      await sharingController.shareViaConnectionChat(context, widget.activity, widget.origin, selectedCommunityIds);
       appRouter.removeLast();
 
       Future<void>.delayed(kAnimationDurationDebounce, () {

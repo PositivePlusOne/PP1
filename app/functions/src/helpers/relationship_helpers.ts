@@ -295,6 +295,38 @@ export namespace RelationshipHelpers {
     return false;
   }
 
+  export function isUserFollowing(uid: string, relationship: any): boolean {
+    if (!relationship) {
+      return false;
+    }
+
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid && member.hasFollowed) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  export function isUserNotFollowing(uid: string, relationship: any): boolean {
+    if (!relationship) {
+      return false;
+    }
+
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid && !member.hasFollowed) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   /**
    * Checks if the given user has blocked the relationship.
    * @param {string} uid the user id.

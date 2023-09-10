@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -8,8 +11,11 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/events/content/reactions.dart';
@@ -27,6 +33,7 @@ part 'post_view_model.g.dart';
 class PostViewModelState with _$PostViewModelState {
   const factory PostViewModelState({
     required String activityId,
+    Activity? activity,
     required TargetFeed targetFeed,
     @Default('') currentCommentText,
     @Default(false) bool isBusy,
@@ -44,12 +51,45 @@ class PostViewModelState with _$PostViewModelState {
 }
 
 @riverpod
-class PostViewModel extends _$PostViewModel {
+class PostViewModel extends _$PostViewModel with LifecycleMixin {
   final TextEditingController commentTextController = TextEditingController();
+
+  StreamSubscription<ActivityCreatedEvent>? _activityCreatedEventSubscription;
+  StreamSubscription<ActivityUpdatedEvent>? _activityUpdatedEventSubscription;
+  StreamSubscription<ActivityDeletedEvent>? _activityDeletedEventSubscription;
 
   @override
   PostViewModelState build(String activityId, TargetFeed feed) {
     return PostViewModelState.fromActivity(activityId: activityId, targetFeed: feed);
+  }
+
+  @override
+  void onFirstRender() {
+    super.onFirstRender();
+    setupListeners();
+  }
+
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
+
+    await _activityCreatedEventSubscription?.cancel();
+    await _activityUpdatedEventSubscription?.cancel();
+    await _activityDeletedEventSubscription?.cancel();
+
+    logger.i('[PostViewModel] setupListeners() - Setting up listeners');
+    _activityCreatedEventSubscription = eventBus.on<ActivityCreatedEvent>().listen((_) => updateActivity());
+    _activityUpdatedEventSubscription = eventBus.on<ActivityUpdatedEvent>().listen((_) => updateActivity());
+    _activityDeletedEventSubscription = eventBus.on<ActivityDeletedEvent>().listen((_) => updateActivity());
+  }
+
+  void updateActivity() {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+
+    state = state.copyWith(activity: activity);
+    logger.i('[PostViewModel] updateActivity() - activity: $activity');
   }
 
   Future<bool> onWillPopScope() async {
@@ -68,6 +108,20 @@ class PostViewModel extends _$PostViewModel {
 
   void onCommentTextChanged(String str) {
     state = state.copyWith(currentCommentText: str.trim());
+  }
+
+  bool checkCanView() {
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+    final ActivitySecurityConfigurationMode viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    return viewMode.canActOnActivity(state.activityId);
+  }
+
+  bool checkCanComment() {
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
+    return checkCanView() && commentMode.canActOnActivity(state.activityId);
   }
 
   Future<void> onPostCommentRequested() async {

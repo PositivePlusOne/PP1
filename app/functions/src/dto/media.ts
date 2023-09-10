@@ -3,6 +3,7 @@ export interface MediaJSON {
     type?: string;
     bucketPath?: string;
     url?: string;
+    altText?: string;
     thumbnails?: MediaThumbnailJSON[];
     priority?: number;
     isSensitive?: boolean;
@@ -14,6 +15,7 @@ export class Media {
     type: string;
     bucketPath: string;
     url: string;
+    altText: string;
     thumbnails: MediaThumbnail[];
     priority: number;
     isSensitive: boolean;
@@ -24,6 +26,7 @@ export class Media {
         this.type = json.type || '';
         this.bucketPath = json.bucketPath || '';
         this.url = json.url || '';
+        this.altText = json.altText || '';
         this.thumbnails = MediaThumbnail.fromJsonArray(json.thumbnails || []);
         this.priority = json.priority || kMediaPriorityDefault;
         this.isSensitive = json.isSensitive || false;

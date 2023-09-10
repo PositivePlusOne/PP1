@@ -34,6 +34,7 @@ class PositiveScaffold extends ConsumerWidget {
     this.headingWidgets = const <Widget>[],
     this.trailingWidgets = const <Widget>[],
     this.footerWidgets = const <Widget>[],
+    this.overlayWidgets = const <Widget>[],
     this.decorationWidget,
     this.controller,
     this.appBar,
@@ -60,6 +61,8 @@ class PositiveScaffold extends ConsumerWidget {
   final List<Widget> headingWidgets;
   final List<Widget> trailingWidgets;
   final List<Widget> footerWidgets;
+  final List<Widget> overlayWidgets;
+
   final Set<PositiveScaffoldComponent> visibleComponents;
 
   final Widget? decorationWidget;
@@ -128,62 +131,26 @@ class PositiveScaffold extends ConsumerWidget {
               extendBody: extendBody,
               appBar: appBar,
               bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
-              body: CustomScrollView(
-                controller: controller,
-                physics: physics,
-                slivers: <Widget>[
-                  if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
-                    ...headingWidgets,
-                  ],
-                  if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
-                    SliverToBoxAdapter(
-                      child: Container(height: kPaddingMedium, color: decorationColor ?? Colors.transparent),
+              body: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: PositiveScaffoldContent(
+                      controller: controller,
+                      physics: physics,
+                      visibleComponents: visibleComponents,
+                      headingWidgets: headingWidgets,
+                      decorationColor: decorationColor,
+                      decorations: decorations,
+                      decorationBoxSize: decorationBoxSize,
+                      decorationWidget: decorationWidget,
+                      trailingWidgets: trailingWidgets,
+                      footerWidgets: footerWidgets,
+                      isBusy: isBusy,
+                      bottomPadding: bottomPadding,
                     ),
-                    SliverStack(
-                      positionedAlignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                          SliverFillRemaining(
-                            fillOverscroll: true,
-                            hasScrollBody: false,
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: SizedBox(
-                                height: decorationBoxSize,
-                                width: decorationBoxSize,
-                                child: Stack(children: decorations),
-                              ),
-                            ),
-                          ),
-                        ],
-                        if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                          SliverFillRemaining(
-                            fillOverscroll: true,
-                            hasScrollBody: false,
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: SizedBox(
-                                height: decorationBoxSize,
-                                width: decorationBoxSize,
-                                child: decorationWidget!,
-                              ),
-                            ),
-                          ),
-                        ],
-                        SliverFillRemaining(
-                          fillOverscroll: true,
-                          hasScrollBody: false,
-                          child: ScaffoldTrailingContent(
-                            decorationColor: decorationColor,
-                            trailingWidgets: trailingWidgets,
-                            visibleComponents: visibleComponents,
-                            footerWidgets: footerWidgets,
-                            isBusy: isBusy,
-                            bottomPadding: bottomPadding,
-                          ),
-                        ),
-                      ],
-                    ),
+                  ),
+                  if (overlayWidgets.isNotEmpty) ...<Widget>[
+                    ...overlayWidgets,
                   ],
                 ],
               ),
@@ -191,6 +158,100 @@ class PositiveScaffold extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class PositiveScaffoldContent extends StatelessWidget {
+  const PositiveScaffoldContent({
+    super.key,
+    required this.controller,
+    required this.physics,
+    required this.visibleComponents,
+    required this.headingWidgets,
+    required this.decorationColor,
+    required this.decorations,
+    required this.decorationBoxSize,
+    required this.decorationWidget,
+    required this.trailingWidgets,
+    required this.footerWidgets,
+    required this.isBusy,
+    required this.bottomPadding,
+  });
+
+  final ScrollController? controller;
+  final ScrollPhysics physics;
+  final Set<PositiveScaffoldComponent> visibleComponents;
+  final List<Widget> headingWidgets;
+  final Color? decorationColor;
+  final List<PositiveScaffoldDecoration> decorations;
+  final double decorationBoxSize;
+  final Widget? decorationWidget;
+  final List<Widget> trailingWidgets;
+  final List<Widget> footerWidgets;
+  final bool isBusy;
+  final double bottomPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      controller: controller,
+      physics: physics,
+      slivers: <Widget>[
+        if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
+          ...headingWidgets,
+        ],
+        if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
+          SliverToBoxAdapter(
+            child: Container(height: kPaddingMedium, color: decorationColor ?? Colors.transparent),
+          ),
+          SliverStack(
+            positionedAlignment: Alignment.bottomCenter,
+            children: <Widget>[
+              if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                SliverFillRemaining(
+                  fillOverscroll: true,
+                  hasScrollBody: false,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      height: decorationBoxSize,
+                      width: decorationBoxSize,
+                      child: Stack(children: decorations),
+                    ),
+                  ),
+                ),
+              ],
+              if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                SliverFillRemaining(
+                  fillOverscroll: true,
+                  hasScrollBody: false,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      height: decorationBoxSize,
+                      width: decorationBoxSize,
+                      child: decorationWidget!,
+                    ),
+                  ),
+                ),
+              ],
+              SliverFillRemaining(
+                fillOverscroll: true,
+                hasScrollBody: false,
+                child: ScaffoldTrailingContent(
+                  decorationColor: decorationColor,
+                  trailingWidgets: trailingWidgets,
+                  visibleComponents: visibleComponents,
+                  footerWidgets: footerWidgets,
+                  isBusy: isBusy,
+                  bottomPadding: bottomPadding,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }

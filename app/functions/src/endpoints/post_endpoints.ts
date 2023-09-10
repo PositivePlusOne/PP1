@@ -20,6 +20,7 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { ReactionStatisticsService } from "../services/reaction_statistics_service";
+import { SecurityHelpers } from "../helpers/security_helpers";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -41,13 +42,16 @@ export namespace PostEndpoints {
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
     
         // Convert window results to a list of IDs
-        let activities = await ActivitiesService.getActivityFeedWindow(window.results);
+        let activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
         const statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(activities);
         const reactions = await ReactionStatisticsService.getUniqueReactionsForUserInFeedActivity(origin, uid, statistics);
         activities = ActivitiesService.enrichActivitiesWithReactionStatistics(activities, statistics);
         activities = ActivitiesService.enrichActivitiesWithUniqueReactions(activities, reactions);
 
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+
+        // We supply this so we can support reposts and the client can filter out the nested activity
+        const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
     
         return buildEndpointResponse(context, {
           sender: uid,
@@ -58,6 +62,7 @@ export namespace PostEndpoints {
             next: paginationToken,
             unread: window.unread,
             unseen: window.unseen,
+            windowIds,
           },
         });
       });
@@ -84,34 +89,61 @@ export namespace PostEndpoints {
   export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
-    const feed = request.data.feed || FeedName.User;
+    const origin = request.data.origin || FeedName.User;
 
-    if (!activityId || !feed) {
+    if (!activityId || !origin) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
     }
 
     const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
-    if (!activity || !activity.publisherInformation?.publisherId) {
+    if (!activity) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
-    const isConnected = RelationshipService.isConnected([uid, activity.publisherInformation?.publisherId || '']);
-    const isPublic = activity.securityConfiguration?.shareMode === "public";
-    const isConnections = activity.securityConfiguration?.shareMode?.includes("connections");
-
-    if (!isPublic || (isConnections && !isConnected)) {
-      throw new functions.https.HttpsError("permission-denied", "Cannot share with unconnected users");
+    const isRepost = activity.generalConfiguration?.type === "repost";
+    if (isRepost) {
+      throw new functions.https.HttpsError("invalid-argument", "Cannot share a repost");
     }
 
-    const streamClient = FeedService.getFeedsUserClient(uid);
-    const senderUserFeed = streamClient.feed(feed, uid);
-    
-    await FeedService.shareActivityToFeed(uid, senderUserFeed, activity);
-    functions.logger.info(`Shared activity to feed`, { uid, activityId, feed });
+    const publisherId = activity.publisherInformation?.publisherId || "";
+    const relationship = await RelationshipService.getRelationship([uid, publisherId], true) as RelationshipJSON;
+    const shareMode = activity.securityConfiguration?.shareMode || "disabled";
 
+    const canAct = SecurityHelpers.canActOnActivity(activity, relationship, uid, shareMode);
+    if (!canAct) {
+      throw new functions.https.HttpsError("permission-denied", "User cannot share activity");
+    }
+
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(activity.enrichmentConfiguration?.tags || []);
+    const tagObjects = await TagsService.getOrCreateTags(validatedTags);
+
+    const activityRequest = {
+      publisherInformation: {
+        publisherId: uid,
+        feed: `${origin}:${uid}`,
+      },
+      generalConfiguration: {
+        type: "repost",
+        repostActivityId: activityId,
+        repostActivityPublisherId: publisherId,
+      },
+      enrichmentConfiguration: {
+        tags: validatedTags,
+      },
+      securityConfiguration: {
+        viewMode: "public",
+        commentMode: "public",
+        shareMode: "public",
+      },
+    } as ActivityJSON;
+
+    const userActivity = await ActivitiesService.postActivity(uid, origin, activityRequest);
+    await ActivitiesService.updateTagFeedsForActivity(userActivity);
+    
+    functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [],
+      data: [userActivity, ...tagObjects],
     });
   });
 
@@ -199,7 +231,7 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        originFeed: `${feed}:${uid}`,
+        feed: `${feed}:${uid}`,
       },
       generalConfiguration: {
         content: content,
@@ -263,15 +295,16 @@ export namespace PostEndpoints {
 
     const activityId = request.data.postId || "" as string;
     const content = request.data.content || "";
+
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
 
-    const allowSharing = request.data.allowSharing ? "public" : "private" as ActivitySecurityConfigurationMode;
+    const allowSharing = request.data.allowSharing ? "public" : "disabled" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
-    const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
+    const allowComments = request.data.allowComments || "disabled" as ActivitySecurityConfigurationMode;
     
-    const allowLikes = request.data.allowLikes || "public" as ActivitySecurityConfigurationMode;
-    const allowBookmarks = request.data.allowBookmarks || "public" as ActivitySecurityConfigurationMode;
+    const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
+    const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
 
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
@@ -295,7 +328,7 @@ export namespace PostEndpoints {
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
-    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0;
+    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || (activity?.generalConfiguration?.repostActivityId && activity?.generalConfiguration?.repostActivityPublisherId);
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }

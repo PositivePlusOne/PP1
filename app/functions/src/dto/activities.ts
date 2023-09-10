@@ -90,7 +90,7 @@ export class Activity {
  * @property {string} Clip A clip
  * @property {string} Repost A repost
  */
-export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost' | 'comment' | 'like' | 'share' | 'bookmark';
+export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost';
 
 /**
  * The style of activity
@@ -111,9 +111,10 @@ export type ActivityGeneralConfigurationStyle = 'markdown' | 'text';
  */
 export interface ActivityGeneralConfigurationJSON {
   type?: ActivityGeneralConfigurationType;
-  reactionType?: ActivityGeneralConfigurationType;
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
+  repostActivityId?: string;
+  repostActivityPublisherId?: string;
 }
 
 /**
@@ -126,15 +127,17 @@ export interface ActivityGeneralConfigurationJSON {
  */
 export class ActivityGeneralConfiguration {
   type: ActivityGeneralConfigurationType;
-  reactionType: ActivityGeneralConfigurationType;
   style: ActivityGeneralConfigurationStyle;
   content: string;
+  repostActivityId: string;
+  repostActivityPublisherId: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
-    this.reactionType = json.reactionType || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
+    this.repostActivityId = json.repostActivityId || '';
+    this.repostActivityPublisherId = json.repostActivityPublisherId || '';
   }
 }
 
@@ -149,7 +152,7 @@ export class ActivityGeneralConfiguration {
  * @property {string} Private Private
  * @property {string} SignedIn signed_in
  */
-export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private' | 'signed_in';
+export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private' | 'signed_in' | 'disabled';
 
 /**
  * The JSON representation of an activity security configuration
@@ -363,7 +366,6 @@ export class ActivityPricingInformation {
 export interface ActivityPublisherInformationJSON {
   originFeed?: string;
   publisherId?: string;
-  actorId?: string;
 }
 
 /**
@@ -374,12 +376,10 @@ export interface ActivityPublisherInformationJSON {
 export class ActivityPublisherInformation {
   originFeed: string;
   publisherId: string;
-  actorId: string;
 
   constructor(json: ActivityPublisherInformationJSON) {
     this.originFeed = json.originFeed || '';
     this.publisherId = json.publisherId || '';
-    this.actorId = json.actorId || '';
   }
 }
 

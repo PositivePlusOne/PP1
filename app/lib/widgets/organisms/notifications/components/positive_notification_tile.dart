@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -23,15 +23,21 @@ import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../../providers/system/design_controller.dart';
 
 class PositiveNotificationTile extends StatefulHookConsumerWidget {
   const PositiveNotificationTile({
     required this.notification,
+    this.isEnabled = true,
+    this.onNotificationSelected,
     super.key,
   });
 
   final NotificationPayload notification;
+
+  final bool isEnabled;
+  final FutureOr<void> Function(BuildContext context, NotificationPayload payload)? onNotificationSelected;
 
   static const double kMinimumHeight = 62.0;
 
@@ -117,7 +123,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   }
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final String senderStr = widget.notification.sender;
     final String receiverStr = widget.notification.userId;
     bool shouldReload = false;
@@ -144,10 +150,12 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
 
   @override
   Widget build(BuildContext context) {
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final logger = ref.read(loggerProvider);
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final NotificationPayload payload = presenter.payload;
     final NotificationHandler handler = presenter.handler;
+    final bool includeTimestamp = handler.includeTimestampOnFeed(payload);
 
     final Color backgroundColor = handler.getBackgroundColor(payload);
     final Color foregroundColor = handler.getForegroundColor(payload);
@@ -155,31 +163,54 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     final Widget leading = handler.buildNotificationLeading(this);
     final List<Widget> trailing = handler.buildNotificationTrailing(this);
 
-    return Container(
-      padding: const EdgeInsets.all(kPaddingSmall),
-      constraints: const BoxConstraints(minHeight: PositiveNotificationTile.kMinimumHeight),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(kBorderRadiusMassive),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          leading,
-          const SizedBox(width: kPaddingSmall),
-          Expanded(
-            child: AutoSizeText(
-              payload.body,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: typography.styleNotification.copyWith(color: foregroundColor),
+    // Once we're live and have more time, we need to find a nice way to localize this
+    // As when we go to the African market, this might go haywire.
+    String body = payload.body;
+    if (includeTimestamp && payload.createdAt != null) {
+      try {
+        // Remove full stop from end of body if it exists
+        if (body.endsWith('.')) {
+          body = body.substring(0, body.length - 1);
+        }
+
+        final Jiffy createdAt = Jiffy.parse(payload.createdAt!);
+        final String timeAgo = createdAt.fromNow();
+        body = '$body $timeAgo.';
+      } catch (ex) {
+        logger.e('Failed to parse createdAt: ${payload.createdAt} - ex: $ex');
+      }
+    }
+
+    return PositiveTapBehaviour(
+      onTap: (context) => widget.onNotificationSelected?.call(context, payload),
+      isEnabled: widget.isEnabled,
+      showDisabledState: !widget.isEnabled,
+      child: Container(
+        padding: const EdgeInsets.all(kPaddingSmall),
+        constraints: const BoxConstraints(minHeight: PositiveNotificationTile.kMinimumHeight),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            leading,
+            const SizedBox(width: kPaddingSmall),
+            Expanded(
+              child: AutoSizeText(
+                body,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: typography.styleNotification.copyWith(color: foregroundColor),
+              ),
             ),
-          ),
-          if (trailing.isNotEmpty) ...<Widget>[
-            const SizedBox(width: kPaddingExtraSmall),
-            ...trailing.spaceWithHorizontal(kPaddingExtraSmall),
+            if (trailing.isNotEmpty) ...<Widget>[
+              const SizedBox(width: kPaddingExtraSmall),
+              ...trailing.spaceWithHorizontal(kPaddingExtraSmall),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
