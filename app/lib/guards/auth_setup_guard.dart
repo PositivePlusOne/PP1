@@ -38,12 +38,12 @@ class AuthSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    if (profileController.state.currentProfile?.phoneNumber.isEmpty ?? true) {
-      router.removeWhere((route) => true);
-      router.push(const RegistrationPhoneEntryRoute());
-      resolver.next(false);
-      return;
-    }
+    // if (profileController.state.currentProfile?.phoneNumber.isEmpty ?? true) {
+    //   router.removeWhere((route) => true);
+    //   router.push(const RegistrationPhoneEntryRoute());
+    //   resolver.next(false);
+    //   return;
+    // }
 
     resolver.next(true);
   }
