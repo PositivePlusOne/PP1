@@ -3,7 +3,6 @@ import * as functions from "firebase-functions";
 import { ReactionJSON, ReactionStatistics, ReactionStatisticsJSON, reactionStatisticsSchemaKey } from "../dto/reactions";
 
 import { DataService } from "./data_service";
-import { ReactionService } from "./reaction_service";
 import { ActivityJSON } from "../dto/activities";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
@@ -15,7 +14,7 @@ export namespace ReactionStatisticsService {
             throw new Error(`Invalid feed: ${origin} cannot generate expected key.`);
         }
 
-        return `${origin}:${activity_id ?? ""}:${reaction_id ?? ""}:${user_id ?? ""}`;
+        return `statistics:${origin}:${activity_id ?? ""}:${reaction_id ?? ""}:${user_id ?? ""}`;
     }
 
     export async function getReactionStatisticsForActivityArray(activities: ActivityJSON[]): Promise<ReactionStatisticsJSON[]> {
@@ -47,6 +46,37 @@ export namespace ReactionStatisticsService {
         }) as ReactionStatisticsJSON[];
     }
 
+    export function enrichStatisticsWithUniqueUserReactions(stats: ReactionStatisticsJSON[], reactions: ReactionJSON[]): ReactionStatisticsJSON[] {
+        if (!reactions || reactions.length === 0) {
+            return stats;
+        }
+
+        return stats.map((stat) => {
+            const id = FlamelinkHelpers.getFlamelinkIdFromObject(stat);
+            if (!id) {
+                return stat;
+            }
+
+            stat.unique_user_reactions ??= {};
+            for (let index = 0; index < reactions.length; index++) {
+                const reaction = reactions[index];
+                if (!reaction || reaction.activity_id !== id) {
+                    continue;
+                }
+
+                const reactionType = reaction.kind;
+                if (!reactionType) {
+                    continue;
+                }
+
+                stat.unique_user_reactions ??= {};
+                stat.unique_user_reactions[reactionType] = true;
+            }
+
+            return stat;
+        }).filter((stat) => stat);
+    }
+
     export async function getReactionStatisticsForActivity(feed: string, activity_id: string): Promise<ReactionStatisticsJSON> {
         functions.logger.info("Getting reaction statistics", { feed, activity_id });
         const expectedStats = new ReactionStatistics({
@@ -62,37 +92,11 @@ export namespace ReactionStatisticsService {
         }) as ReactionStatisticsJSON;
     }
 
-    export async function getUniqueReactionsForUserInFeedActivity(origin: string, userId: string, reactionStatistics: ReactionJSON[]): Promise<ReactionStatisticsJSON[]> {
-        functions.logger.info("Enriching reaction statistics with user information", { origin, userId, reactionStatistics });
-        if (!reactionStatistics || reactionStatistics.length === 0) {
-            functions.logger.info("No reaction statistics to enrich with user information");
-            return reactionStatistics;
-        }
-
-        // Remove all non ReactionJSON objects from the array.
-        reactionStatistics = reactionStatistics.filter((stats) => stats !== null) as ReactionStatisticsJSON[];
-        functions.logger.info("Filtered reaction statistics", { reactionStatistics });
-
-        const activityIds = [];
-        for (const stats of reactionStatistics) {
-            if (!stats || !stats.activity_id) {
-                functions.logger.error("Invalid reaction statistics", { stats });
-                continue;
-            }
-
-            activityIds.push(stats.activity_id);
-        }
-
-        functions.logger.info("Got activity IDs", { activityIds });
-        return await ReactionService.listUniqueReactionsForActivitiesAndUser(origin, activityIds, userId);
-    }
-
-    export async function updateReactionCountForActivity(feed: string, activity_id: string, kind: string, offset: number): Promise<void> {
+    export async function updateReactionCountForActivity(feed: string, activity_id: string, kind: string, offset: number): Promise<ReactionStatisticsJSON> {
         functions.logger.info(`Updating reaction count for activity`, { feed, activity_id, kind, offset });
-
         if (!REACTION_COUNT_TARGETS.includes(kind)) {
             functions.logger.error(`Invalid reaction kind: ${kind}`);
-            return;
+            return {};
         }
 
         const stats = await getReactionStatisticsForActivity(feed, activity_id);
@@ -108,7 +112,7 @@ export namespace ReactionStatisticsService {
         const expectedKey = getExpectedKeyFromOptions(feed, stats.activity_id, stats.reaction_id, stats.user_id);
         functions.logger.info(`Updating reaction statistics`, { stats, expectedKey });
 
-        await DataService.updateDocument({
+        return await DataService.updateDocument({
             schemaKey: reactionStatisticsSchemaKey,
             entryId: expectedKey,
             data: stats,

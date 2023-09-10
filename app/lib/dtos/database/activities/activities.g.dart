@@ -210,16 +210,6 @@ _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
       mentions: json['mentions'] == null
           ? const []
           : Mention.fromJsonList(json['mentions'] as List),
-      originFeed: json['originFeed'] as String? ?? '',
-      reactionCounts: (json['reactionCounts'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as int),
-          ) ??
-          const {},
-      uniqueUserReactions:
-          (json['uniqueUserReactions'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry(k, e as bool),
-              ) ??
-              const {},
     );
 
 Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
@@ -230,7 +220,4 @@ Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
       'isSensitive': instance.isSensitive,
       'publishLocation': instance.publishLocation,
       'mentions': Mention.toJsonList(instance.mentions),
-      'originFeed': instance.originFeed,
-      'reactionCounts': instance.reactionCounts,
-      'uniqueUserReactions': instance.uniqueUserReactions,
     };
