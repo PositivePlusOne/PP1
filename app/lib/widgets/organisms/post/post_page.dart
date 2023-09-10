@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -24,6 +23,7 @@ import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.da
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/post/post_comment_box.dart';
 import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
 import '../../../providers/profiles/profile_controller.dart';
