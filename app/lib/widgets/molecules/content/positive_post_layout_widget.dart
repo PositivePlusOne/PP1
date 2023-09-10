@@ -99,7 +99,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
 
     final SharingController sharingController = ref.read(sharingControllerProvider.notifier);
     final Activity activity = widget.postContent;
-    final String feed = widget.feed ?? activity.publisherInformation?.originFeed ?? '';
+    final String feed = widget.feed ?? activity.publisherInformation?.feed ?? '';
     final (Activity activity, String feed) postOptions = (activity, feed);
 
     if (feed.isEmpty) {

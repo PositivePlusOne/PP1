@@ -1,4 +1,12 @@
 // Flutter imports:
+import 'dart:convert';
+
+import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,7 +53,7 @@ abstract class ISharingController {
   Future<void> shareExternally(BuildContext context, ShareTarget target, Rect origin, {SharePostOptions? postOptions});
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions});
   Future<void> shareViaConnections(BuildContext context, {SharePostOptions? postOptions});
-  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String feed, List<String> profileIds);
+  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String origin, List<String> profileIds);
 }
 
 enum ShareTarget {
@@ -167,7 +175,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     Navigator.of(context).pop();
 
     Future<void>.delayed(kAnimationDurationDebounce, () {
-      appRouter.push(PostShareRoute(activity: postOptions!.$1, feed: postOptions.$2));
+      appRouter.push(PostShareRoute(activity: postOptions!.$1, origin: postOptions.$2));
     });
   }
 
@@ -177,7 +185,8 @@ class SharingController extends _$SharingController implements ISharingControlle
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
 
     logger.d('Sharing via connection chat');
-    final SharePostOptions postOptions = (activity, origin);
+    final String feed = TargetFeed.fromOrigin(origin).feed;
+    final SharePostOptions postOptions = (activity, feed);
     final ShareMessage message = getShareMessage(context, ShareTarget.post, postOptions: postOptions);
 
     final String title = message.$1;
@@ -185,7 +194,7 @@ class SharingController extends _$SharingController implements ISharingControlle
 
     await reactionApiService.sharePostToConversations(
       activityId: activity.flMeta!.id!,
-      origin: origin,
+      feed: feed,
       targets: profileIds,
       title: title,
       description: text,
@@ -202,10 +211,36 @@ class SharingController extends _$SharingController implements ISharingControlle
     }
 
     logger.d('Sharing to feed');
-    await reactionApiService.sharePostToFeed(
-      activityId: postOptions.$1.flMeta!.id!,
-      origin: postOptions.$2,
+    final String profileId = postOptions.$1.flMeta!.id!;
+    final TargetFeed targetFeed = TargetFeed.fromOrigin(postOptions.$2);
+    final EndpointResponse response = await reactionApiService.sharePostToFeed(
+      activityId: profileId,
+      feed: targetFeed.feed,
     );
+
+    final List windowIdRaw = response.data.containsKey('windowIds') ? response.data['windowIds'] as List<dynamic> : [];
+    final List<String> windowIds = windowIdRaw.map((dynamic id) => id is String ? id : id.toString()).toList();
+    final String expectedWindowId = windowIds.firstOrNull ?? '';
+
+    final List activityDataRaw = response.data.containsKey('activities') ? response.data['activities'] as List<dynamic> : [];
+    final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
+    final Activity? sharedActivity = activities.firstWhereOrNull((element) => expectedWindowId.isNotEmpty && element.flMeta?.id == expectedWindowId);
+
+    // Add the data to the user feed
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final String expectedUserFeedCacheKey = 'feeds:user-$profileId';
+    final String expectedTimelineFeedCacheKey = 'feeds:timeline-$profileId';
+
+    final PositiveFeedState? userFeedState = cacheController.getFromCache(expectedUserFeedCacheKey);
+    final PositiveFeedState? timelineFeedState = cacheController.getFromCache(expectedTimelineFeedCacheKey);
+
+    if (userFeedState != null && sharedActivity != null) {
+      userFeedState.pagingController.itemList?.insert(0, sharedActivity);
+    }
+
+    if (timelineFeedState != null && sharedActivity != null) {
+      timelineFeedState.pagingController.itemList?.insert(0, sharedActivity);
+    }
 
     Navigator.of(context).pop();
     Future<void>.delayed(kAnimationDurationDebounce, () {

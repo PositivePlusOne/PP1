@@ -89,9 +89,9 @@ export namespace PostEndpoints {
   export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
-    const feed = request.data.feed || FeedName.User;
+    const origin = request.data.origin || FeedName.User;
 
-    if (!activityId || !feed) {
+    if (!activityId || !origin) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
     }
 
@@ -120,7 +120,7 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        originFeed: `${feed}:${uid}`,
+        feed: `${origin}:${uid}`,
       },
       generalConfiguration: {
         type: "repost",
@@ -137,7 +137,7 @@ export namespace PostEndpoints {
       },
     } as ActivityJSON;
 
-    const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
+    const userActivity = await ActivitiesService.postActivity(uid, origin, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
     
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
@@ -231,7 +231,7 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        originFeed: `${feed}:${uid}`,
+        feed: `${feed}:${uid}`,
       },
       generalConfiguration: {
         content: content,

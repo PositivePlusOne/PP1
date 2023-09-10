@@ -315,7 +315,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: PostSharePage(
           key: args.key,
           activity: args.activity,
-          feed: args.feed,
+          origin: args.origin,
         ),
       );
     },
@@ -1376,14 +1376,14 @@ class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
   PostShareRoute({
     Key? key,
     required Activity activity,
-    required String feed,
+    required String origin,
     List<PageRouteInfo>? children,
   }) : super(
           PostShareRoute.name,
           args: PostShareRouteArgs(
             key: key,
             activity: activity,
-            feed: feed,
+            origin: origin,
           ),
           initialChildren: children,
         );
@@ -1398,18 +1398,18 @@ class PostShareRouteArgs {
   const PostShareRouteArgs({
     this.key,
     required this.activity,
-    required this.feed,
+    required this.origin,
   });
 
   final Key? key;
 
   final Activity activity;
 
-  final String feed;
+  final String origin;
 
   @override
   String toString() {
-    return 'PostShareRouteArgs{key: $key, activity: $activity, feed: $feed}';
+    return 'PostShareRouteArgs{key: $key, activity: $activity, origin: $origin}';
   }
 }
 
