@@ -265,8 +265,7 @@ export namespace ReactionService {
             } as ReactionJSON;
 
             const key = getExpectedKeyFromOptions(expectedReactionJson);
-            if (expectedKeys.includes(key) || !key.startsWith(kind)) {
-                functions.logger.warn("Skipping expected key for unique reaction kind", { kind, key });
+            if (expectedKeys.includes(key)) {
                 continue;
             }
 
@@ -294,7 +293,7 @@ export namespace ReactionService {
                 const activityId = activity?._fl_meta_?.fl_id ?? "";
                 const originFeed = activity?.publisherInformation?.originFeed ?? "";
                 if (!activityId || !originFeed) {
-                    functions.logger.warn("Skipping activity with invalid ID or origin", { activityId, origin });
+                    functions.logger.error("Missing activity ID or origin feed", { activityId, originFeed, activity });
                     continue;
                 }
 
@@ -307,7 +306,6 @@ export namespace ReactionService {
 
                 const key = getExpectedKeyFromOptions(expectedReactionJson);
                 if (expectedKeys.includes(key) || !key.startsWith(kind)) {
-                    functions.logger.warn("Skipping expected key for unique reaction kind", { kind, key });
                     continue;
                 }
 

@@ -61,9 +61,7 @@ export namespace ReactionEndpoints {
             if (existingReaction) {
                 throw new functions.https.HttpsError("already-exists", "Unique reaction already exists for this activity and user");
             }
-        } else {
-            functions.logger.debug("Reaction is not unique, skipping unique reaction check");
-        } 
+        }
 
         const streamClient = FeedService.getFeedsUserClient(uid);
         const reaction = await ReactionService.addReaction(streamClient, reactionJSON);

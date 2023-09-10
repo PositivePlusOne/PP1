@@ -9,7 +9,7 @@ import { DirectoryEntry, directorySchemaKey } from '../../dto/directory_entry';
 import { DataService } from '../../services/data_service';
 import { CacheService } from '../../services/cache_service';
 import { StringHelpers } from '../../helpers/string_helpers';
-import { Reaction, ReactionStatistics, reactionSchemaKey, reactionStatisticsSchemaKey } from '../../dto/reactions';
+import { Reaction, ReactionJSON, ReactionStatistics, ReactionStatisticsJSON, reactionSchemaKey, reactionStatisticsSchemaKey } from '../../dto/reactions';
 import { ReactionStatisticsService } from '../../services/reaction_statistics_service';
 import { ReactionService } from '../../services/reaction_service';
 // import { FeedService } from '../../services/feed_service';
@@ -68,6 +68,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
     const joinedDataRecords = new Map<string, Set<string>>();
     joinedDataRecords.set(profileSchemaKey, new Set<string>());
+    joinedDataRecords.set(activitySchemaKey, new Set<string>());
+    joinedDataRecords.set(reactionSchemaKey, new Set<string>());
+    joinedDataRecords.set(reactionStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(relationshipSchemaKey, new Set<string>());
     joinedDataRecords.set(tagSchemaKey, new Set<string>());
 
@@ -83,20 +86,61 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case activitySchemaKey:
                 const activity = obj as ActivityJSON;
                 const publisherId = activity.publisherInformation?.publisherId || "";
+                const originFeed = activity.publisherInformation?.originFeed || "";
+                const activityId = activity._fl_meta_?.fl_id || "";
                 const isActivityPublisher = sender && sender === publisherId;
+
                 if (publisherId && !isActivityPublisher) {
                     joinedDataRecords.get(profileSchemaKey)?.add(activity.publisherInformation!.publisherId!);
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, publisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
-                const isRepost = activity.generalConfiguration?.repostActivityId && activity.generalConfiguration?.repostActivityPublisherId;
-                const isReposter = sender && sender === activity.generalConfiguration?.repostActivityPublisherId;
+                // Overall statistics
+                if (originFeed && activityId) {
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(originFeed, activityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
+
+                    // Unique reactions
+                    if (sender) {
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForActivitiesAndUser([activity], sender);
+                        functions.logger.info("Unique reaction keys", { expectedReactionKeys });
+                        for (const expectedReactionKey of expectedReactionKeys) {
+                            if (expectedReactionKey) {
+                                joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
+                            }
+                        }
+                    }
+                }
+
+                const repostActivityId = activity.generalConfiguration?.repostActivityId || "";
+                const repostActivityPublisherId = activity.generalConfiguration?.repostActivityPublisherId || "";
+                const repostActivityOriginFeed = activity.generalConfiguration?.repostActivityOriginFeed || "";
+                const isRepost = repostActivityId && repostActivityPublisherId && repostActivityOriginFeed;
+                const isReposter = sender && sender === repostActivityPublisherId;
+
                 if (isRepost && !isReposter) {
-                    joinedDataRecords.get(activitySchemaKey)?.add(activity.generalConfiguration!.repostActivityId!);
-                    joinedDataRecords.get(profileSchemaKey)?.add(activity.generalConfiguration!.repostActivityPublisherId!);
-                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, activity.generalConfiguration!.repostActivityPublisherId!]);
+                    joinedDataRecords.get(activitySchemaKey)?.add(repostActivityId);
+                    joinedDataRecords.get(profileSchemaKey)?.add(repostActivityPublisherId);
+
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostActivityPublisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
+                }
+
+                if (isRepost) {
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostActivityOriginFeed, repostActivityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
+
+                    // Unique reactions
+                    if (sender) {
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostActivityOriginFeed, repostActivityId, sender);
+                        functions.logger.info("Unique nested reaction keys", { expectedReactionKeys });
+                        for (const expectedReactionKey of expectedReactionKeys) {
+                            if (expectedReactionKey) {
+                                joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
+                            }
+                        }
+                    }
                 }
 
                 const tags = activity.enrichmentConfiguration?.tags || [] as string[];
@@ -201,7 +245,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 continue;
             }
 
-            functions.logger.debug(`ID not found in cache. Fetching from Flamelink.`, { sender, flamelinkId, schemaKey });
             joinPromises.push(DataService.getDocument({
                 schemaKey: schemaKey,
                 entryId: flamelinkId,
@@ -215,16 +258,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
     // Stage 6: Wait for all joins to complete
     await Promise.all(joinPromises);
-    functions.logger.debug(`Fetched joined data.`, { sender, data, allFlamelinkIds });
-    
+
     // Stage 7: Build response
     const populatePromises = [] as Promise<any>[];
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
         const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
         const isCurrentDocument = sender && sender.length > 0 && flamelinkId === sender;
-
-        functions.logger.debug(`Populating object data.`, { sender, flamelinkId, schema, isCurrentDocument, obj });
 
         // Skip if no flamelink id or schema
         if (!flamelinkId || !schema) {
@@ -247,40 +287,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
 
                 const activity = new Activity(obj);
-                const origin = activity.publisherInformation?.originFeed || "";
-                const activityId = activity._fl_meta_?.fl_id || "";
-
-                // Overall statistics
-                if (origin && activityId) {
-                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(origin, activityId);
-                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
-
-                    // Unique reactions
-                    if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForActivitiesAndUser([activity], sender);
-                        for (const expectedReactionKey of expectedReactionKeys) {
-                            joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
-                        }
-                    }
-                }
-
-                // Nested statistics
-                const repostActivityId = activity.generalConfiguration?.repostActivityId || "";
-                const repostActivityPublisherId = activity.generalConfiguration?.repostActivityPublisherId || "";
-                const repostActivityOriginFeed = activity.generalConfiguration?.repostActivityOriginFeed || "";
-                if (repostActivityId && repostActivityPublisherId && repostActivityOriginFeed) {
-                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostActivityOriginFeed, repostActivityId);
-                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
-
-                    // Unique reactions
-                    if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostActivityOriginFeed, repostActivityId, sender);
-                        for (const expectedReactionKey of expectedReactionKeys) {
-                            joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
-                        }
-                    }
-                }
-
                 responseData.data[activitySchemaKey].push(activity);
                 break;
             case profileSchemaKey:
@@ -288,7 +294,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (!profile._fl_meta_?.fl_id) {
                     break;
                 }
-                
+
                 if (!isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
@@ -327,13 +333,21 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     await Promise.all(populatePromises);
 
     // Stage 9: Enrich response
-    if (responseData.data[reactionSchemaKey] && responseData.data[reactionStatisticsSchemaKey]) {
-        functions.logger.debug(`Enriching reaction statistics with unique user reactions.`, { sender });
-        const reactions = responseData.data[reactionSchemaKey] as Reaction[];
-        const reactionStatistics = responseData.data[reactionStatisticsSchemaKey] as ReactionStatistics[];
-        const newStatistics = ReactionStatisticsService.enrichStatisticsWithUniqueUserReactions(reactions, reactionStatistics);
+    const reactions = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionSchemaKey) as ReactionJSON[];
+    const reactionStatistics = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionStatisticsSchemaKey) as ReactionStatisticsJSON[];
 
-        responseData.data[reactionStatisticsSchemaKey] = newStatistics;
+    if (reactions && reactions.length > 0 && reactionStatistics && reactionStatistics.length > 0) {
+        const newStatistics = ReactionStatisticsService.enrichStatisticsWithUniqueUserReactions(reactionStatistics, reactions);
+        if (newStatistics) {
+            responseData.data[reactionStatisticsSchemaKey] = [];
+            for (const stat of newStatistics) {
+                if (!stat) {
+                    continue;
+                }
+
+                responseData.data[reactionStatisticsSchemaKey].push(new ReactionStatistics(stat));
+            }
+        }
     }
 
     // Stage 10: Return response
