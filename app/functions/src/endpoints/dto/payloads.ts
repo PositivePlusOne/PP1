@@ -133,6 +133,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case reactionSchemaKey:
                 const userId = obj?.user_id || "";
                 if (userId && userId !== sender) {
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, userId]);
+                    joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     joinedDataRecords.get(profileSchemaKey)?.add(userId);
                 }
                 break;
