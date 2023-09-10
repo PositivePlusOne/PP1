@@ -62,8 +62,9 @@ class AccountPage extends ConsumerWidget {
           horizontalPadding: kPaddingSmall,
           children: <Widget>[
             AccountOptionsPane(colors: colors),
-            const SizedBox(height: kPaddingMedium),
-            PremiumMembershipBanner(colors: colors, typography: typography),
+            //! PP1-984
+            // const SizedBox(height: kPaddingMedium),
+            // PremiumMembershipBanner(colors: colors, typography: typography),
           ],
         ),
       ],
