@@ -85,9 +85,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
               child: Container(
                 decoration: BoxDecoration(
                   color: colours.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(kBorderRadiusMassive),
-                  ),
+                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
                 ),
                 padding: const EdgeInsets.all(kPaddingSmallMedium),
                 child: PositiveTextField(

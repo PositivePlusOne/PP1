@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:logger/logger.dart';
 
@@ -6,6 +9,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -34,6 +38,18 @@ extension ActivityExt on Activity {
     }
 
     return targetFeeds;
+  }
+
+  Future<void> share(BuildContext context) async {
+    final SharingController sharingController = providerContainer.read(sharingControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (publisherInformation?.originFeed.isEmpty ?? true == true) {
+      logger.e('share() - originFeed is empty');
+      return;
+    }
+
+    final (Activity activity, String feed) postOptions = (this, publisherInformation!.originFeed);
+    await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
   bool get canDisplayOnFeed {

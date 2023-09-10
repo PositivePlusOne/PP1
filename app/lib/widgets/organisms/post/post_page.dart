@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/annotations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -68,28 +69,30 @@ class PostPage extends HookConsumerWidget {
     final bool canView = viewModel.checkCanView();
     final bool canComment = viewModel.checkCanComment();
 
-    PreferredSizeWidget? bottomNavigationBar;
-    if (!commentsDisabled && canComment) {
-      bottomNavigationBar = PostCommentBox(
+    final List<PositiveScaffoldDecoration> decorations = canView ? [] : buildType3ScaffoldDecorations(colors);
+
+    final Widget commentBox = Align(
+      alignment: Alignment.bottomCenter,
+      child: PostCommentBox(
         mediaQuery: mediaQuery,
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,
         onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
         isBusy: state.isBusy,
-      );
-    }
-
-    final List<PositiveScaffoldDecoration> decorations = canView ? [] : buildType3ScaffoldDecorations(colors);
+      ),
+    );
 
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
+      overlayWidgets: <Widget>[
+        if (canComment && !commentsDisabled) commentBox,
+      ],
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
       },
       decorations: decorations,
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: bottomNavigationBar,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           horizontalPadding: kPaddingNone,
@@ -121,41 +124,45 @@ class PostPage extends HookConsumerWidget {
         ),
         if (canView) ...<Widget>[
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
-          SliverToBoxAdapter(
-            child: Align(
-              alignment: Alignment.center,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: colors.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(kBorderRadiusMassive),
+          SliverStack(
+            children: <Widget>[
+              SliverFillRemaining(
+                fillOverscroll: true,
+                hasScrollBody: false,
+                child: Container(
+                  color: canView ? colors.white : colors.transparent,
+                  height: double.infinity,
+                ),
+              ),
+              MultiSliver(
+                pushPinnedChildren: true,
+                children: <Widget>[
+                  SliverToBoxAdapter(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: colors.white,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(kBorderRadiusMassive),
+                          ),
+                        ),
+                        width: kPaddingMassive,
+                        height: kPaddingExtraSmall,
+                      ),
+                    ),
                   ),
-                ),
-                width: kPaddingMassive,
-                height: kPaddingExtraSmall,
+                  const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
+                  PositiveReactionPaginationBehaviour(
+                    kind: 'comment',
+                    reactionMode: updatedActivity.securityConfiguration?.commentMode,
+                    activityId: activityId,
+                    feed: feed,
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),
+                ],
               ),
-            ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
-          PositiveReactionPaginationBehaviour(
-            kind: 'comment',
-            reactionMode: updatedActivity.securityConfiguration?.commentMode,
-            activityId: activityId,
-            feed: feed,
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            fillOverscroll: false,
-            child: Transform.translate(
-              offset: const Offset(0.0, -2.0), // This is a hack the subpixel rendering of the sliver fill remaining is off by 2 pixels
-              child: Container(
-                color: canView ? colors.white : colors.transparent,
-                height: double.infinity,
-                constraints: BoxConstraints(
-                  minHeight: maxSafePadding + kPaddingMedium,
-                ),
-              ),
-            ),
+            ],
           ),
         ],
       ],

@@ -18,13 +18,12 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/content/positive_post_actions.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
-import 'package:app/widgets/molecules/content/postitive_post_actions.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/database/profile/profile.dart';
@@ -39,8 +38,9 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
     required this.publisher,
-    this.feed,
+    this.origin,
     this.isShortformPost = true,
+    this.isShared = false,
     this.sidePadding = kPaddingSmall,
     this.isBusy = false,
     this.onImageTap,
@@ -55,10 +55,11 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   });
 
   final Activity postContent;
-  final String? feed;
+  final String? origin;
 
   final Profile? publisher;
   final bool isShortformPost;
+  final bool isShared;
   final double sidePadding;
 
   final bool isBusy;
@@ -90,23 +91,6 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   void initState() {
     super.initState();
     sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
-  }
-
-  Future<void> onShareSelected(BuildContext context) async {
-    if (!mounted) {
-      return;
-    }
-
-    final SharingController sharingController = ref.read(sharingControllerProvider.notifier);
-    final Activity activity = widget.postContent;
-    final String feed = widget.feed ?? activity.publisherInformation?.feed ?? '';
-    final (Activity activity, String feed) postOptions = (activity, feed);
-
-    if (feed.isEmpty) {
-      throw Exception('Feed is empty, cannot share');
-    }
-
-    await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
   @override
@@ -181,13 +165,14 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (widget.postContent.media.length == 1) ...[
+        if (widget.postContent.media.isNotEmpty) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (widget.postContent.media.length == 1 || !widget.isShortformPost) ..._postListAttachedImages(),
+        if (widget.postContent.media.length == 1 || !widget.isShortformPost) ...<Widget>[
+          ..._postListAttachedImages(),
+        ],
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
         if (widget.postContent.media.length > 1 && widget.isShortformPost) ...[
-          const SizedBox(height: kPaddingSmall),
           LayoutBuilder(
             builder: (context, constraints) {
               return _postCarouselAttachedImages(context, constraints);
@@ -453,7 +438,10 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-  Action Bar, likes, comments bookmark, link, -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postActions() {
-    //TODO(S): Reenable when other info available
+    final bool isShared = widget.isShared;
+    if (isShared) {
+      return const SizedBox.shrink();
+    }
 
     final Activity activity = widget.postContent;
     final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
@@ -476,7 +464,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
 
         //TODO(S): share enabled and on share functionality here
         shareEnabled: !widget.isBusy && canShare,
-        onShare: onShareSelected,
+        onShare: (context) => widget.postContent.share(context),
 
         //TODO(S): comment enabled and on comment functionality here
         comments: widget.totalComments,

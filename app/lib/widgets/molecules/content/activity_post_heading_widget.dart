@@ -26,12 +26,14 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     required this.flMetaData,
     required this.publisher,
     required this.onOptions,
+    this.isShared = false,
     super.key,
   });
 
   final FlMeta? flMetaData;
   final Profile? publisher;
   final Function onOptions;
+  final bool isShared;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,7 +62,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       type: MaterialType.canvas,
       color: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        padding: EdgeInsets.symmetric(horizontal: isShared ? kPaddingMediumLarge : kPaddingMedium),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -108,14 +110,15 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                 ],
               ),
             ),
-            // if (userController.currentUser!.uid == publisher!.flMeta!.id)
-            PositiveButton.appBarIcon(
-              colors: colours,
-              icon: UniconsLine.ellipsis_h,
-              style: PositiveButtonStyle.text,
-              size: PositiveButtonSize.medium,
-              onTapped: () => onOptions(context),
-            ),
+            if (!isShared) ...<Widget>[
+              PositiveButton.appBarIcon(
+                colors: colours,
+                icon: UniconsLine.ellipsis_h,
+                style: PositiveButtonStyle.text,
+                size: PositiveButtonSize.medium,
+                onTapped: () => onOptions(context),
+              ),
+            ],
           ],
         ),
       ),

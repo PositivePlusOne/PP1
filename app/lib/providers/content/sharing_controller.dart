@@ -1,15 +1,11 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:convert';
 
-import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/extensions/json_extensions.dart';
-import 'package:app/providers/events/content/activities.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
-import 'package:collection/collection.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,12 +15,16 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
+import 'package:app/providers/events/content/activities.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
@@ -32,6 +32,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 
 part 'sharing_controller.freezed.dart';
 part 'sharing_controller.g.dart';
@@ -154,13 +155,14 @@ class SharingController extends _$SharingController implements ISharingControlle
   Future<void> shareExternally(BuildContext context, ShareTarget target, Rect origin, {SharePostOptions? postOptions}) async {
     final Logger logger = ref.read(loggerProvider);
     final ShareMessage message = getShareMessage(context, target, postOptions: postOptions);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     final String title = message.$1;
     final String text = message.$2;
 
-    Navigator.of(context).pop();
-
     logger.i('Sharing externally');
+    await appRouter.pop();
+
     Future<void>.delayed(kAnimationDurationDebounce, () {
       Share.share(text, subject: title, sharePositionOrigin: origin);
     });
@@ -172,8 +174,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final Logger logger = ref.read(loggerProvider);
     logger.d('Sharing via connections');
 
-    Navigator.of(context).pop();
-
+    await appRouter.pop();
     Future<void>.delayed(kAnimationDurationDebounce, () {
       appRouter.push(PostShareRoute(activity: postOptions!.$1, origin: postOptions.$2));
     });
@@ -205,44 +206,49 @@ class SharingController extends _$SharingController implements ISharingControlle
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {
     final Logger logger = ref.read(loggerProvider);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     if (postOptions == null) {
       throw Exception('Post options must be provided');
     }
 
     logger.d('Sharing to feed');
-    final String profileId = postOptions.$1.flMeta!.id!;
+    final String activityId = postOptions.$1.flMeta?.id ?? '';
+    if (activityId.isEmpty) {
+      throw Exception('Activity is missing an ID');
+    }
+
     final TargetFeed targetFeed = TargetFeed.fromOrigin(postOptions.$2);
     final EndpointResponse response = await reactionApiService.sharePostToFeed(
-      activityId: profileId,
+      activityId: activityId,
       feed: targetFeed.feed,
     );
 
-    final List windowIdRaw = response.data.containsKey('windowIds') ? response.data['windowIds'] as List<dynamic> : [];
-    final List<String> windowIds = windowIdRaw.map((dynamic id) => id is String ? id : id.toString()).toList();
-    final String expectedWindowId = windowIds.firstOrNull ?? '';
-
     final List activityDataRaw = response.data.containsKey('activities') ? response.data['activities'] as List<dynamic> : [];
     final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
-    final Activity? sharedActivity = activities.firstWhereOrNull((element) => expectedWindowId.isNotEmpty && element.flMeta?.id == expectedWindowId);
+    final Activity? sharedActivity = activities.firstOrNull;
 
     // Add the data to the user feed
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final String expectedUserFeedCacheKey = 'feeds:user-$profileId';
-    final String expectedTimelineFeedCacheKey = 'feeds:timeline-$profileId';
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String expectedUserFeedCacheKey = 'feeds:user-${profileController.currentProfileId ?? ''}';
+    final String expectedTimelineFeedCacheKey = 'feeds:timeline-${profileController.currentProfileId ?? ''}';
 
     final PositiveFeedState? userFeedState = cacheController.getFromCache(expectedUserFeedCacheKey);
     final PositiveFeedState? timelineFeedState = cacheController.getFromCache(expectedTimelineFeedCacheKey);
 
     if (userFeedState != null && sharedActivity != null) {
+      logger.i('Adding shared activity to user feed');
       userFeedState.pagingController.itemList?.insert(0, sharedActivity);
     }
 
     if (timelineFeedState != null && sharedActivity != null) {
+      logger.i('Adding shared activity to timeline feed');
       timelineFeedState.pagingController.itemList?.insert(0, sharedActivity);
     }
 
-    Navigator.of(context).pop();
+    await appRouter.pop();
+
     Future<void>.delayed(kAnimationDurationDebounce, () {
       ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text('Post shared to your feed')));
     });
