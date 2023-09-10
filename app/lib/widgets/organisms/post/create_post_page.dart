@@ -39,14 +39,16 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
-      if (widget.isEditPage) {
-        ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
-      } else {
-        ref.read(createPostViewModelProvider.notifier).initCamera(context);
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
+  }
+
+  void onFirstRender(Duration timeStamp) {
+    ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
+    if (widget.isEditPage && widget.activityData != null) {
+      ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
+    } else {
+      ref.read(createPostViewModelProvider.notifier).initCamera(context);
+    }
   }
 
   @override

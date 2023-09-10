@@ -173,7 +173,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       // Upload gallery entries
-      final List<Media> media = await Future.wait(galleryEntries.map((e) => e.createMedia(filter: state.currentFilter)));
+      final List<Media> media = await Future.wait(galleryEntries.map(
+        (e) => e.createMedia(
+          filter: state.currentFilter,
+          altText: altTextController.text.trim(),
+        ),
+      ));
 
       if (!state.isEditing) {
         activity = await activityController.postActivity(

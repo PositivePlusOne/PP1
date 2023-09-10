@@ -425,14 +425,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         activityData: ActivityData(
           activityID: widget.activity.flMeta!.id,
           content: widget.activity.generalConfiguration?.content ?? "",
-          //TODO alt text
-          // altText: widget.activity.altText,
           tags: widget.activity.enrichmentConfiguration?.tags ?? const [],
           postType: PostType.getPostTypeFromActivity(widget.activity),
           media: widget.activity.media,
           commentPermissionMode: widget.activity.securityConfiguration?.commentMode,
           visibilityMode: widget.activity.securityConfiguration?.viewMode,
           allowSharing: widget.activity.securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),
+          //! This is currently shared between ALL media!
+          altText: widget.activity.media.any((element) => element.altText.isNotEmpty) ? widget.activity.media.firstWhere((element) => element.altText.isNotEmpty).altText : '',
         ),
         isEditPage: true,
       ),

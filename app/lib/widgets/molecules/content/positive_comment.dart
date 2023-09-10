@@ -56,7 +56,7 @@ class PositiveComment extends ConsumerWidget {
               ),
               const SizedBox(height: kPaddingSmall),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                 child: Text(
                   comment.text,
                   textAlign: TextAlign.left,

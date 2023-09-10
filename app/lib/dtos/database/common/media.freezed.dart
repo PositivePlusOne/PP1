@@ -23,6 +23,7 @@ mixin _$Media {
   String get name => throw _privateConstructorUsedError;
   String get bucketPath => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
+  String get altText => throw _privateConstructorUsedError;
   List<MediaThumbnail> get thumbnails => throw _privateConstructorUsedError;
   MediaType get type => throw _privateConstructorUsedError;
   int get priority => throw _privateConstructorUsedError;
@@ -43,6 +44,7 @@ abstract class $MediaCopyWith<$Res> {
       {String name,
       String bucketPath,
       String url,
+      String altText,
       List<MediaThumbnail> thumbnails,
       MediaType type,
       int priority,
@@ -66,6 +68,7 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
     Object? name = null,
     Object? bucketPath = null,
     Object? url = null,
+    Object? altText = null,
     Object? thumbnails = null,
     Object? type = null,
     Object? priority = null,
@@ -84,6 +87,10 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      altText: null == altText
+          ? _value.altText
+          : altText // ignore: cast_nullable_to_non_nullable
               as String,
       thumbnails: null == thumbnails
           ? _value.thumbnails
@@ -119,6 +126,7 @@ abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
       {String name,
       String bucketPath,
       String url,
+      String altText,
       List<MediaThumbnail> thumbnails,
       MediaType type,
       int priority,
@@ -138,6 +146,7 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
     Object? name = null,
     Object? bucketPath = null,
     Object? url = null,
+    Object? altText = null,
     Object? thumbnails = null,
     Object? type = null,
     Object? priority = null,
@@ -156,6 +165,10 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      altText: null == altText
+          ? _value.altText
+          : altText // ignore: cast_nullable_to_non_nullable
               as String,
       thumbnails: null == thumbnails
           ? _value._thumbnails
@@ -182,6 +195,7 @@ class _$_Media implements _Media {
       {this.name = '',
       this.bucketPath = '',
       this.url = '',
+      this.altText = '',
       final List<MediaThumbnail> thumbnails = const [],
       this.type = MediaType.unknown,
       this.priority = kMediaPriorityDefault,
@@ -201,6 +215,9 @@ class _$_Media implements _Media {
   @override
   @JsonKey()
   final String url;
+  @override
+  @JsonKey()
+  final String altText;
   final List<MediaThumbnail> _thumbnails;
   @override
   @JsonKey()
@@ -225,7 +242,7 @@ class _$_Media implements _Media {
 
   @override
   String toString() {
-    return 'Media(name: $name, bucketPath: $bucketPath, url: $url, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
+    return 'Media(name: $name, bucketPath: $bucketPath, url: $url, altText: $altText, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
   }
 
   @override
@@ -237,6 +254,7 @@ class _$_Media implements _Media {
             (identical(other.bucketPath, bucketPath) ||
                 other.bucketPath == bucketPath) &&
             (identical(other.url, url) || other.url == url) &&
+            (identical(other.altText, altText) || other.altText == altText) &&
             const DeepCollectionEquality()
                 .equals(other._thumbnails, _thumbnails) &&
             (identical(other.type, type) || other.type == type) &&
@@ -254,6 +272,7 @@ class _$_Media implements _Media {
       name,
       bucketPath,
       url,
+      altText,
       const DeepCollectionEquality().hash(_thumbnails),
       type,
       priority,
@@ -279,6 +298,7 @@ abstract class _Media implements Media {
       {final String name,
       final String bucketPath,
       final String url,
+      final String altText,
       final List<MediaThumbnail> thumbnails,
       final MediaType type,
       final int priority,
@@ -293,6 +313,8 @@ abstract class _Media implements Media {
   String get bucketPath;
   @override
   String get url;
+  @override
+  String get altText;
   @override
   List<MediaThumbnail> get thumbnails;
   @override
