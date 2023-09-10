@@ -218,12 +218,7 @@ class SharingController extends _$SharingController implements ISharingControlle
       throw Exception('Activity is missing an ID');
     }
 
-    final TargetFeed targetFeed = TargetFeed.fromOrigin(postOptions.$2);
-    final EndpointResponse response = await reactionApiService.sharePostToFeed(
-      activityId: activityId,
-      feed: targetFeed.feed,
-    );
-
+    final EndpointResponse response = await reactionApiService.sharePostToFeed(activityId: activityId);
     final List activityDataRaw = response.data.containsKey('activities') ? response.data['activities'] as List<dynamic> : [];
     final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
     final Activity? sharedActivity = activities.firstOrNull;
