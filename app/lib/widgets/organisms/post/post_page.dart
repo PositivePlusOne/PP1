@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -78,14 +79,15 @@ class PostPage extends HookConsumerWidget {
       );
     }
 
+    final List<PositiveScaffoldDecoration> decorations = canView ? [] : buildType3ScaffoldDecorations(colors);
+
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
-        PositiveScaffoldComponent.decorationWidget,
       },
-      decorations: !canView ? buildType3ScaffoldDecorations(colors) : [],
+      decorations: decorations,
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: bottomNavigationBar,
       headingWidgets: <Widget>[
@@ -141,9 +143,20 @@ class PostPage extends HookConsumerWidget {
             activityId: activityId,
             feed: feed,
           ),
-
-          //! Apply extra padding for the comment box assuming one line height.
-          SliverToBoxAdapter(child: Container(height: maxSafePadding + kPaddingMedium, color: colors.white)),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            fillOverscroll: false,
+            child: Transform.translate(
+              offset: const Offset(0.0, -2.0), // This is a hack the subpixel rendering of the sliver fill remaining is off by 2 pixels
+              child: Container(
+                color: canView ? colors.white : colors.transparent,
+                height: double.infinity,
+                constraints: BoxConstraints(
+                  minHeight: maxSafePadding + kPaddingMedium,
+                ),
+              ),
+            ),
+          ),
         ],
       ],
     );

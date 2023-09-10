@@ -49,6 +49,8 @@ export namespace PostEndpoints {
         activities = ActivitiesService.enrichActivitiesWithUniqueReactions(activities, reactions);
 
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+
+        // We supply this so we can support reposts and the client can filter out the nested activity
         const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
     
         return buildEndpointResponse(context, {
@@ -60,7 +62,7 @@ export namespace PostEndpoints {
             next: paginationToken,
             unread: window.unread,
             unseen: window.unseen,
-            windowIds,  // We supply this so we can support reposts
+            windowIds,
           },
         });
       });

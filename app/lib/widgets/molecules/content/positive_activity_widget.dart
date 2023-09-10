@@ -495,10 +495,21 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
     final bool canView = viewMode.canActOnActivity(widget.activity.flMeta?.id ?? '');
 
+    // If we get this far, I'm impressed.
+    final bool isRepost = widget.activity.generalConfiguration?.repostActivityId.isNotEmpty == true && widget.activity.generalConfiguration?.repostActivityPublisherId != null;
+    if (isRepost) {
+      return Container(
+        height: 200.0,
+        width: double.infinity,
+        color: Colors.pink,
+        child: const Text('I\'m a god'),
+      );
+    }
+
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    return IgnorePointer(
+    final Widget child = IgnorePointer(
       ignoring: isBusy,
       child: Column(
         children: <Widget>[
@@ -542,5 +553,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         ],
       ),
     );
+
+    return child;
   }
 }
