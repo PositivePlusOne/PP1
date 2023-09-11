@@ -54,7 +54,6 @@ export namespace SystemService {
 
     // Check if the claims have changed.
     if (!customClaims || JSON.stringify(userRecord.customClaims) === JSON.stringify(customClaims)) {
-      functions.logger.info("User claims have not changed or are empty, skipping update");
       return;
     }
 

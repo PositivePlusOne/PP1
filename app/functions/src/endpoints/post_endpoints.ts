@@ -19,7 +19,6 @@ import { ProfileJSON } from "../dto/profile";
 import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
-import { ReactionStatisticsService } from "../services/reaction_statistics_service";
 import { SecurityHelpers } from "../helpers/security_helpers";
 
 export namespace PostEndpoints {
@@ -38,16 +37,10 @@ export namespace PostEndpoints {
     
         const feedsClient = FeedService.getFeedsClient();
         const feed = feedsClient.feed(feedId, slugId);
-        const origin = StreamHelpers.getOriginFromFeed(feed);
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
     
         // Convert window results to a list of IDs
-        let activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
-        const statistics = await ReactionStatisticsService.getReactionStatisticsForActivityArray(activities);
-        const reactions = await ReactionStatisticsService.getUniqueReactionsForUserInFeedActivity(origin, uid, statistics);
-        activities = ActivitiesService.enrichActivitiesWithReactionStatistics(activities, statistics);
-        activities = ActivitiesService.enrichActivitiesWithUniqueReactions(activities, reactions);
-
+        const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
 
         // We supply this so we can support reposts and the client can filter out the nested activity
@@ -55,7 +48,7 @@ export namespace PostEndpoints {
     
         return buildEndpointResponse(context, {
           sender: uid,
-          data: [...activities, ...statistics, ...reactions],
+          data: [...activities],
           limit: limit,
           cursor: paginationToken,
           seedData: {
@@ -89,14 +82,14 @@ export namespace PostEndpoints {
   export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
-    const origin = request.data.origin || FeedName.User;
 
     if (!activityId || !origin) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
     }
 
     const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
-    if (!activity) {
+    const activityOriginFeed = activity.publisherInformation?.originFeed || "";
+    if (!activity || !activityOriginFeed) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
@@ -120,12 +113,13 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        feed: `${origin}:${uid}`,
+        feed: `user:${uid}`,
       },
       generalConfiguration: {
         type: "repost",
         repostActivityId: activityId,
         repostActivityPublisherId: publisherId,
+        repostActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,

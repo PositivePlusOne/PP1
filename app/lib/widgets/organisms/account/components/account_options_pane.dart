@@ -40,16 +40,17 @@ class AccountOptionsPane extends ConsumerWidget {
           label: localizations.page_account_actions_details,
           onTapped: viewModel.onAccountDetailsButtonSelected,
         ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
-          icon: UniconsLine.bookmark,
-          style: PositiveButtonStyle.ghost,
-          primaryColor: colors.colorGray1,
-          label: localizations.page_account_actions_bookmarks,
-          onTapped: () {},
-          isDisabled: true,
-        ),
+        //! PP1-984
+        // const SizedBox(height: kPaddingMedium),
+        // PositiveButton(
+        //   colors: colors,
+        //   icon: UniconsLine.bookmark,
+        //   style: PositiveButtonStyle.ghost,
+        //   primaryColor: colors.colorGray1,
+        //   label: localizations.page_account_actions_bookmarks,
+        //   onTapped: () {},
+        //   isDisabled: true,
+        // ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,

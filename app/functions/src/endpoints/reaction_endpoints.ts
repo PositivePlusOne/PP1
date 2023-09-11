@@ -13,12 +13,12 @@ import { RelationshipService } from "../services/relationship_service";
 export namespace ReactionEndpoints {
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
-        const origin = request.data.origin;
+        const expectedOrigin = request.data.origin;
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const text = request.data.text || "";
 
-        if (!origin || !activityId || !kind) {
+        if (!expectedOrigin || !activityId || !kind) {
             throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
         }
 
@@ -46,7 +46,7 @@ export namespace ReactionEndpoints {
         // Build reaction
         const reactionJSON = {
             activity_id: activityId,
-            origin,
+            origin: expectedOrigin,
             reaction_id: "",
             user_id: uid,
             kind: kind,
@@ -56,14 +56,12 @@ export namespace ReactionEndpoints {
         const isUniqueReaction = ReactionService.isUniqueReactionKind(kind);
         if (isUniqueReaction) {
             functions.logger.debug("Checking meets unique reaction criteria");
-            const uniqueReactions = await ReactionService.listUniqueReactionsForActivitiesAndUser(origin, [activityId], uid);
-            const uniqueReactionKind = uniqueReactions.find((reaction) => reaction?.kind === kind);
-            if (uniqueReactionKind) {
-                throw new functions.https.HttpsError("already-exists", "Reaction already exists");
+            const expectedReactionKey = ReactionService.getExpectedKeyFromOptions(reactionJSON);
+            const existingReaction = await ReactionService.getReaction(expectedReactionKey);
+            if (existingReaction) {
+                throw new functions.https.HttpsError("already-exists", "Unique reaction already exists for this activity and user");
             }
-        } else {
-            functions.logger.debug("Reaction is not unique, skipping unique reaction check");
-        } 
+        }
 
         const streamClient = FeedService.getFeedsUserClient(uid);
         const reaction = await ReactionService.addReaction(streamClient, reactionJSON);
@@ -72,7 +70,7 @@ export namespace ReactionEndpoints {
 
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [reaction],
+            data: [activity, reaction],
         });
     });
 
@@ -87,8 +85,13 @@ export namespace ReactionEndpoints {
         }
 
         let reaction = await ReactionService.getReaction(reactionId);
-        if (!reaction) {
+        if (!reaction || !reaction.activity_id) {
             throw new functions.https.HttpsError("not-found", "Reaction not found");
+        }
+
+        const activity = await ActivitiesService.getActivity(reaction.activity_id);
+        if (!activity) {
+            throw new functions.https.HttpsError("not-found", "Activity not found");
         }
 
         if (reaction.user_id !== uid) {
@@ -98,7 +101,7 @@ export namespace ReactionEndpoints {
         reaction = await ReactionService.updateReaction(reactionId, text);
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [reaction],
+            data: [reaction, activity],
         });
     });
 
@@ -108,8 +111,13 @@ export namespace ReactionEndpoints {
         const reactionId = request.data.reactionId;
 
         const reaction = await ReactionService.getReaction(reactionId);
-        if (!reaction) {
+        if (!reaction || !reaction.activity_id) {
             throw new functions.https.HttpsError("not-found", "Reaction not found");
+        }
+
+        const activity = await ActivitiesService.getActivity(reaction.activity_id);
+        if (!activity) {
+            throw new functions.https.HttpsError("not-found", "Activity not found");
         }
 
         if (reaction.user_id !== uid) {
@@ -123,7 +131,7 @@ export namespace ReactionEndpoints {
         functions.logger.info("Reaction deleted", { reactionId });
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [],
+            data: [activity],
         });
     });
 
@@ -148,7 +156,7 @@ export namespace ReactionEndpoints {
 
         return buildEndpointResponse(context, {
             sender: uid,
-            data: reactions,
+            data: [...reactions],
             cursor,
             limit,
         });

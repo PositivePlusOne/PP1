@@ -64,6 +64,8 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
       repostActivityId: json['repostActivityId'] as String? ?? '',
       repostActivityPublisherId:
           json['repostActivityPublisherId'] as String? ?? '',
+      repostActivityOriginFeed:
+          json['repostActivityOriginFeed'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
@@ -74,6 +76,7 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'content': instance.content,
       'repostActivityId': instance.repostActivityId,
       'repostActivityPublisherId': instance.repostActivityPublisherId,
+      'repostActivityOriginFeed': instance.repostActivityOriginFeed,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(
@@ -210,16 +213,6 @@ _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
       mentions: json['mentions'] == null
           ? const []
           : Mention.fromJsonList(json['mentions'] as List),
-      originFeed: json['originFeed'] as String? ?? '',
-      reactionCounts: (json['reactionCounts'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as int),
-          ) ??
-          const {},
-      uniqueUserReactions:
-          (json['uniqueUserReactions'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry(k, e as bool),
-              ) ??
-              const {},
     );
 
 Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
@@ -230,7 +223,4 @@ Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
       'isSensitive': instance.isSensitive,
       'publishLocation': instance.publishLocation,
       'mentions': Mention.toJsonList(instance.mentions),
-      'originFeed': instance.originFeed,
-      'reactionCounts': instance.reactionCounts,
-      'uniqueUserReactions': instance.uniqueUserReactions,
     };

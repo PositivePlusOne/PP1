@@ -134,7 +134,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   void loadActivityData() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     publisherRelationship = null;
     publisher = null;
@@ -159,13 +159,19 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     publisher = publisherProfile;
     logger.i('Loaded publisher profile for $publisherKey');
 
-    if (userController.currentUser!.uid == publisherKey) {
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
+      logger.w('[loadActivityData] Current profile id is empty');
+      return;
+    }
+
+    if (currentProfileId == publisherKey) {
       logger.i('Publisher is current user, skipping relationship load');
       return;
     }
 
     // Load the relationship.
-    final Set<String> members = {userController.currentUser!.uid, publisherKey};
+    final Set<String> members = {currentProfileId, publisherKey};
     if (members.length != 2) {
       logger.w('Invalid members for $publisherKey');
       return;
@@ -178,7 +184,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     }
 
     publisherRelationship = relationship;
-    relationshipStates.addAll(relationship.relationshipStatesForEntity(userController.currentUser!.uid));
+    relationshipStates.addAll(relationship.relationshipStatesForEntity(currentProfileId));
 
     logger.i('Loaded relationship for $relationship');
     setStateIfMounted();

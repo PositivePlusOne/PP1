@@ -39,6 +39,7 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default('') String content,
     @Default('') String repostActivityId,
     @Default('') String repostActivityPublisherId,
+    @Default('') String repostActivityOriginFeed,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);
@@ -303,9 +304,6 @@ class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
     @Default(false) bool isSensitive,
     @Default('') String publishLocation,
     @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
-    @Default('') String originFeed,
-    @Default({}) Map<String, int> reactionCounts,
-    @Default({}) Map<String, bool> uniqueUserReactions,
   }) = _ActivityEnrichmentConfiguration;
 
   factory ActivityEnrichmentConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityEnrichmentConfigurationFromJson(json);

@@ -17,7 +17,7 @@ import { ProfileJSON } from "../dto/profile";
 import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
 
 export namespace ReactionService {
-    
+
     export const VALID_FEEDS = ["user", "timeline", "notification", "tags", "aggregated", "notification_aggregated"];
     export const VALID_REACTIONS = ["like", "bookmark", "comment", "share"];
     export const UNIQUE_REACTIONS = ["like", "bookmark"];
@@ -26,7 +26,23 @@ export namespace ReactionService {
         return UNIQUE_REACTIONS.includes(kind);
     }
 
-    export async function verifyReactionKind(kind: string, userId: string, activity: ActivityJSON, relationship: RelationshipJSON) : Promise<void> {
+
+    export function getExpectedKeyFromOptions(reaction: ReactionJSON): string {
+        if (!reaction.origin || !reaction.activity_id || !reaction.user_id || !reaction.kind) {
+            functions.logger.error("Invalid reaction key", { reaction });
+            return FlamelinkHelpers.generateIdentifier();
+        }
+
+        // Check if it is a unique reaction
+        // If so, we can determine the reaction ID from the kind
+        if (isUniqueReactionKind(reaction.kind)) {
+            return `reaction:${reaction.kind}:${reaction.origin}:${reaction.activity_id}:${reaction.reaction_id ?? ''}:${reaction.user_id}`;
+        }
+
+        return FlamelinkHelpers.generateIdentifier();
+    }
+
+    export async function verifyReactionKind(kind: string, userId: string, activity: ActivityJSON, relationship: RelationshipJSON): Promise<void> {
         if (!VALID_REACTIONS.includes(kind)) {
             throw new functions.https.HttpsError("invalid-argument", "Invalid reaction kind");
         }
@@ -147,14 +163,20 @@ export namespace ReactionService {
     }
 
     export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<ReactionJSON> {
-        if (!reaction.activity_id || !reaction.origin || !reaction.kind) {
-            throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
+        if (!reaction.activity_id || !reaction.origin || !reaction.kind || !reaction.user_id) {
+            throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
         }
 
+        const expectedKey = getExpectedKeyFromOptions(reaction);
+        const expectedOrigin = reaction.origin;
+        const expectedActivityId = reaction.activity_id;
+        const expectedUserId = reaction.user_id;
+        const expectedKind = reaction.kind;
+
         const reactionEntry = {
-            kind: reaction.kind,
-            activity_id: reaction.activity_id,
-            user_id: reaction.user_id,
+            kind: expectedKind,
+            activity_id: expectedActivityId,
+            user_id: expectedUserId,
             time: StreamHelpers.getCurrentTimestamp(),
         } as ReactionEntryJSON;
 
@@ -162,14 +184,19 @@ export namespace ReactionService {
             userId: reaction.user_id,
         });
 
-        functions.logger.info("Added reaction", { response });
-        await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, 1);
-
-        return DataService.updateDocument({
+        reaction.foreign_id = response.id;
+        reaction = await DataService.updateDocument({
             schemaKey: reactionSchemaKey,
-            entryId: response.id,
-            data: reaction,
+            entryId: expectedKey,
+            data: {
+                ...reaction,
+            },
         }) as ReactionJSON;
+
+        functions.logger.info("Added reaction", { response, reaction });
+        await ReactionStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1);
+
+        return reaction;
     }
 
     export async function getReaction(reactionId: string): Promise<ReactionJSON> {
@@ -195,7 +222,10 @@ export namespace ReactionService {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
 
-        await client.reactions.delete(id);
+        if (reaction.foreign_id) {
+            await client.reactions.delete(reaction.foreign_id);
+        }
+        
         await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1);
 
         await DataService.deleteDocument({
@@ -222,62 +252,70 @@ export namespace ReactionService {
         }) as Promise<ReactionJSON[]>;
     }
 
-    /**
-     * Fetches the unique reactions for a list of activities and a user.
-     * 
-     * @param feed The feed to use for the origin.
-     * @param activityIds The activity IDs to fetch reactions for.
-     * @param userId The user ID to fetch reactions for.
-     * @returns The unique reactions for the activities and user.
-     */
-    export async function listUniqueReactionsForActivitiesAndUser(origin: string, activityIds: string[], userId: string): Promise<ReactionJSON[]> {
-        const reactions = [] as ReactionJSON[];
-        const windowPromises: Promise<ReactionJSON[]>[] = [];
-        if (!activityIds || activityIds.length === 0 || !userId || !origin) {
-            functions.logger.info("No activities or user ID provided", { activityIds, userId });
-            return reactions;
-        }
-
+    export function buildUniqueReactionKeysForOptions(originFeed: string, activityId: string, userId: string): string[] {
+        const expectedKeys = [] as string[];
         for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
             const kind = UNIQUE_REACTIONS[index];
             if (!kind) {
                 continue;
             }
 
-            // We probably need to find a way to make this less read hungry.
-            // But for now, we'll just fetch the first reaction for each kind.
-            functions.logger.info("Generating expected key for unique reaction kind", { kind });
-            windowPromises.push(DataService.getDocumentWindowRaw({
-                schemaKey: reactionSchemaKey,
-                limit: 1,
-                where: [
-                    { fieldPath: "kind", op: "==", value: kind },
-                    { fieldPath: "user_id", op: "==", value: userId },
-                    { fieldPath: "activity_id", op: "in", value: activityIds },
-                    { fieldPath: "origin", op: "==", value: origin },
-                ],
-            }));
-        }
+            const expectedReactionJson = {
+                activity_id: activityId,
+                user_id: userId,
+                kind: kind,
+                origin: originFeed,
+            } as ReactionJSON;
 
-        const reactionWindows = await Promise.all(windowPromises);
-        for (let index = 0; index < reactionWindows.length; index++) {
-            const window = reactionWindows[index] as ReactionJSON[];
-            if (!window || window.length === 0) {
+            const key = getExpectedKeyFromOptions(expectedReactionJson);
+            if (expectedKeys.includes(key)) {
                 continue;
             }
 
-            // Push all from the window to the reactions array if it is valid
-            for (let index = 0; index < window.length; index++) {
-                const reaction = window[index] as ReactionJSON;
-                if (!reaction) {
+            expectedKeys.push(key);
+        }
+
+        return expectedKeys;
+    }
+
+    export function buildUniqueReactionKeysForActivitiesAndUser(activities: ActivityJSON[], userId: string): string[] {
+        if (!activities || activities.length === 0 || !userId) {
+            functions.logger.info("No activities or user ID provided", { activities, userId });
+            return [];
+        }
+        
+        const expectedKeys = [] as string[];
+        for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
+            const kind = UNIQUE_REACTIONS[index];
+            if (!kind) {
+                continue;
+            }
+
+            for (let index = 0; index < activities.length; index++) {
+                const activity = activities[index] as ActivityJSON;
+                const activityId = activity?._fl_meta_?.fl_id ?? "";
+                const originFeed = activity?.publisherInformation?.originFeed ?? "";
+                if (!activityId || !originFeed) {
+                    functions.logger.error("Missing activity ID or origin feed", { activityId, originFeed, activity });
                     continue;
                 }
 
-                reactions.push(reaction);
+                const expectedReactionJson = {
+                    activity_id: activityId,
+                    user_id: userId,
+                    kind: kind,
+                    origin: originFeed,
+                } as ReactionJSON;
+
+                const key = getExpectedKeyFromOptions(expectedReactionJson);
+                if (expectedKeys.includes(key) || !key.startsWith(kind)) {
+                    continue;
+                }
+
+                expectedKeys.push(key);
             }
         }
 
-        functions.logger.info("Unique reactions for activities and user", { activityIds, userId, reactions });
-        return reactions;
+        return expectedKeys;
     }
 }

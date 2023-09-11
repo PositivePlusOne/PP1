@@ -11,6 +11,7 @@ import { CacheService } from '../../services/cache_service';
 import { StringHelpers } from '../../helpers/string_helpers';
 import { Reaction, ReactionStatistics, reactionSchemaKey, reactionStatisticsSchemaKey } from '../../dto/reactions';
 import { ReactionStatisticsService } from '../../services/reaction_statistics_service';
+import { ReactionService } from '../../services/reaction_service';
 // import { FeedService } from '../../services/feed_service';
 
 export type EndpointRequest = {
@@ -41,6 +42,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     limit?: number;
     sender: string;
 }): Promise<string> {
+    // Stage 0: Prepare
     functions.logger.info(`Building endpoint response for ${context.rawRequest.url}.`, {
         sender,
         data,
@@ -66,10 +68,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
     const joinedDataRecords = new Map<string, Set<string>>();
     joinedDataRecords.set(profileSchemaKey, new Set<string>());
+    joinedDataRecords.set(activitySchemaKey, new Set<string>());
+    joinedDataRecords.set(reactionSchemaKey, new Set<string>());
+    joinedDataRecords.set(reactionStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(relationshipSchemaKey, new Set<string>());
     joinedDataRecords.set(tagSchemaKey, new Set<string>());
 
-    // Prepare join
+    // Stage 1: Prepare join record keys
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
         const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
@@ -81,20 +86,61 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case activitySchemaKey:
                 const activity = obj as ActivityJSON;
                 const publisherId = activity.publisherInformation?.publisherId || "";
+                const originFeed = activity.publisherInformation?.originFeed || "";
+                const activityId = activity._fl_meta_?.fl_id || "";
                 const isActivityPublisher = sender && sender === publisherId;
+
                 if (publisherId && !isActivityPublisher) {
                     joinedDataRecords.get(profileSchemaKey)?.add(activity.publisherInformation!.publisherId!);
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, publisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
-                const isRepost = activity.generalConfiguration?.repostActivityId && activity.generalConfiguration?.repostActivityPublisherId;
-                const isReposter = sender && sender === activity.generalConfiguration?.repostActivityPublisherId;
+                // Overall statistics
+                if (originFeed && activityId) {
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(originFeed, activityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
+
+                    // Unique reactions
+                    if (sender) {
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForActivitiesAndUser([activity], sender);
+                        functions.logger.info("Unique reaction keys", { expectedReactionKeys });
+                        for (const expectedReactionKey of expectedReactionKeys) {
+                            if (expectedReactionKey) {
+                                joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
+                            }
+                        }
+                    }
+                }
+
+                const repostActivityId = activity.generalConfiguration?.repostActivityId || "";
+                const repostActivityPublisherId = activity.generalConfiguration?.repostActivityPublisherId || "";
+                const repostActivityOriginFeed = activity.generalConfiguration?.repostActivityOriginFeed || "";
+                const isRepost = repostActivityId && repostActivityPublisherId && repostActivityOriginFeed;
+                const isReposter = sender && sender === repostActivityPublisherId;
+
                 if (isRepost && !isReposter) {
-                    joinedDataRecords.get(activitySchemaKey)?.add(activity.generalConfiguration!.repostActivityId!);
-                    joinedDataRecords.get(profileSchemaKey)?.add(activity.generalConfiguration!.repostActivityPublisherId!);
-                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, activity.generalConfiguration!.repostActivityPublisherId!]);
+                    joinedDataRecords.get(activitySchemaKey)?.add(repostActivityId);
+                    joinedDataRecords.get(profileSchemaKey)?.add(repostActivityPublisherId);
+
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostActivityPublisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
+                }
+
+                if (isRepost) {
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostActivityOriginFeed, repostActivityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
+
+                    // Unique reactions
+                    if (sender) {
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostActivityOriginFeed, repostActivityId, sender);
+                        functions.logger.info("Unique nested reaction keys", { expectedReactionKeys });
+                        for (const expectedReactionKey of expectedReactionKeys) {
+                            if (expectedReactionKey) {
+                                joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
+                            }
+                        }
+                    }
                 }
 
                 const tags = activity.enrichmentConfiguration?.tags || [] as string[];
@@ -130,15 +176,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case reactionSchemaKey:
                 const userId = obj?.user_id || "";
-                const activityId = obj?.activity_id || "";
-                const origin = obj?.origin || "";
                 if (userId && userId !== sender) {
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, userId]);
+                    joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     joinedDataRecords.get(profileSchemaKey)?.add(userId);
-                }
-
-                if (activityId && activityId.length > 0 && origin && origin.length > 0) {
-                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(origin, activityId);
-                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
                 }
                 break;
             default:
@@ -146,7 +187,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }
     }
 
-    // Prepare Join
+    // Stage 2: Prepare join promises
     const joinPromises = [] as Promise<any>[];
     const allFlamelinkIds = [];
 
@@ -170,12 +211,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }
     }
 
+    // Stage 3: Fetch from cache
     let cachedData = [];
     if (allFlamelinkIds.length > 0) {
         cachedData = await CacheService.getMultipleFromCache(allFlamelinkIds);
     }
 
-    // Cache Join
+    // Stage 4: Insert cached data
     for (const obj of cachedData) {
         if (!obj) {
             continue;
@@ -191,7 +233,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         joinedDataRecords.get(schema)?.delete(flamelinkId);
     }
 
-    // Fetch Join
+    // Stage 5: Fetch from Redis/Firestore
     for (const [schemaKey, flamelinkIds] of joinedDataRecords.entries()) {
         for (const flamelinkId of flamelinkIds) {
             if (schemaKey && data.find((obj) => obj && obj?._fl_meta_?.fl_id === flamelinkId)) {
@@ -203,7 +245,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 continue;
             }
 
-            functions.logger.debug(`ID not found in cache. Fetching from Flamelink.`, { sender, flamelinkId, schemaKey });
             joinPromises.push(DataService.getDocument({
                 schemaKey: schemaKey,
                 entryId: flamelinkId,
@@ -215,17 +256,15 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }
     }
 
+    // Stage 6: Wait for all joins to complete
     await Promise.all(joinPromises);
-    functions.logger.debug(`Fetched joined data.`, { sender, data, allFlamelinkIds });
-    
-    // Populate
+
+    // Stage 7: Build response
     const populatePromises = [] as Promise<any>[];
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
         const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
         const isCurrentDocument = sender && sender.length > 0 && flamelinkId === sender;
-
-        functions.logger.debug(`Populating object data.`, { sender, flamelinkId, schema, isCurrentDocument, obj });
 
         // Skip if no flamelink id or schema
         if (!flamelinkId || !schema) {
@@ -252,6 +291,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case profileSchemaKey:
                 const profile = new Profile(obj);
+                if (!profile._fl_meta_?.fl_id) {
+                    break;
+                }
+
                 if (!isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
@@ -286,8 +329,28 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         }
     }
 
+    // Stage 8: Wait for all population to complete
     await Promise.all(populatePromises);
 
-    functions.logger.debug(`Built endpoint response.`, { sender, responseData });
+    // For now, the client will handle this.
+    // Stage 9: Enrich response
+    // const reactions = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionSchemaKey) as ReactionJSON[];
+    // const reactionStatistics = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionStatisticsSchemaKey) as ReactionStatisticsJSON[];
+
+    // if (reactions && reactions.length > 0 && reactionStatistics && reactionStatistics.length > 0) {
+    //     const newStatistics = ReactionStatisticsService.enrichStatisticsWithUniqueUserReactions(reactionStatistics, reactions);
+    //     if (newStatistics) {
+    //         responseData.data[reactionStatisticsSchemaKey] = [];
+    //         for (const stat of newStatistics) {
+    //             if (!stat) {
+    //                 continue;
+    //             }
+
+    //             responseData.data[reactionStatisticsSchemaKey].push(new ReactionStatistics(stat));
+    //         }
+    //     }
+    // }
+
+    // Stage 10: Return response
     return safeJsonStringify(responseData);
 }

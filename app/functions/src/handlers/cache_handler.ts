@@ -38,7 +38,6 @@ export namespace CacheHandler {
     const flamelinkId = creationFlamelinkId || deletionFlamelinkId;
 
     if (!flamelinkId) {
-      functions.logger.info("No flamelink id found, skipping cache cleanup");
       return;
     }
 

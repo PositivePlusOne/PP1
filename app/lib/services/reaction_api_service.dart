@@ -21,13 +21,11 @@ FutureOr<ReactionApiService> reactionApiService(ReactionApiServiceRef ref) async
 class ReactionApiService {
   FutureOr<EndpointResponse> sharePostToFeed({
     required String activityId,
-    required String feed,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-shareActivityToFeed',
       parameters: {
         'activityId': activityId,
-        'feed': feed,
       },
     );
   }

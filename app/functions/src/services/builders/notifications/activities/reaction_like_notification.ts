@@ -33,9 +33,9 @@ export namespace ReactionLikeNotification {
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
     const activityId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
     const reactionId = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
-    const origin = reaction.origin;
+    const originFeed = reaction.origin;
 
-    if (!senderId || !receiverId || !activityId || !reactionId || !origin) {
+    if (!senderId || !receiverId || !activityId || !reactionId || !originFeed) {
         throw new Error("Unable to generate notification payload");
     }
 
@@ -49,7 +49,7 @@ export namespace ReactionLikeNotification {
       extra_data: {
         activity_id: activityId,
         reaction_id: reactionId,
-        origin,
+        origin: originFeed,
       },
       topic: NotificationTopic.POST_LIKE,
       action: NotificationAction.POST_LIKED,

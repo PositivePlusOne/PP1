@@ -354,6 +354,12 @@ class GetStreamController extends _$GetStreamController {
       accentColor: accentColor,
     );
 
+    // Check if user is disconnected, so we don't call connectUser() twice
+    if (streamChatClient.wsConnectionStatus != ConnectionStatus.disconnected) {
+      log.w('[GetStreamController] onUserChanged() user is not disconnected');
+      return;
+    }
+
     final User chatUser = buildStreamChatUser(id: uid, extraData: userData);
     await streamChatClient.connectUser(chatUser, token);
   }

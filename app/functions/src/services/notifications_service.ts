@@ -32,7 +32,6 @@ export namespace NotificationsService {
   export async function sendPayloadToUserIfTokenSet(token: string, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to send payload to user: ${notification.user_id}`);
     if (!token || token.length === 0) {
-      functions.logger.info(`User does not have a FCM token, skipping notification: ${notification.user_id}`);
       return;
     }
 
@@ -57,8 +56,7 @@ export namespace NotificationsService {
   export async function postNotificationPayloadToUserFeed(uid: string, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to post notification payload to user feed: ${uid}`);
     if (!uid || !notification || !notification.id) {
-      functions.logger.info(`No uid or notification provided, skipping post notification payload to user feed`);
-      throw new Error("No uid or notification provided, skipping post notification payload to user feed");
+      throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
 
     const client = FeedService.getFeedsClient();
@@ -76,7 +74,6 @@ export namespace NotificationsService {
     const payloadResponse = new NotificationPayloadResponse();
 
     if (!uid || uid.length === 0) {
-      functions.logger.info(`No uid provided, skipping list notification window`);
       return payloadResponse;
     }
 
@@ -138,7 +135,6 @@ export namespace NotificationsService {
   export async function markAllNotificationsReadAndSeen(client: StreamClient<DefaultGenerics>, uid: string): Promise<void> {
     functions.logger.info(`Attempting to mark all notifications read for user: ${uid}`);
     if (!uid || uid.length === 0) {
-      functions.logger.info(`No uid provided, skipping mark all notifications read`);
       return;
     }
 

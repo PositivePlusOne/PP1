@@ -18,7 +18,6 @@ import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_floating_button.dart';
-import '../shared/components/positive_post_navigation_bar.dart';
 
 @RoutePage()
 class CreatePostPage extends ConsumerStatefulWidget {
@@ -146,15 +145,17 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 height: kCreatePostNavigationHeight,
                 left: kPaddingSmall,
                 right: kPaddingSmall,
-                child: PositivePostNavigationBar(
-                  onTapPost: (_) {},
-                  onTapClip: (_) {},
-                  onTapEvent: (_) {},
-                  onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
-                  activeButton: state.activeButton,
-                  flexCaption: state.activeButtonFlexText,
-                  isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
-                ),
+                child: const SizedBox.shrink(),
+                //! PP1-984
+                // child: PositivePostNavigationBar(
+                //   onTapPost: (_) {},
+                //   onTapClip: (_) {},
+                //   onTapEvent: (_) {},
+                //   onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
+                //   activeButton: state.activeButton,
+                //   flexCaption: state.activeButtonFlexText,
+                //   isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
+                // ),
               ),
             ],
           ),

@@ -135,20 +135,14 @@ void cacheReactionData(Map<String, dynamic> data, bool overwriteCache) {
 }
 
 void cacheReactionStatisticsData(Map<String, dynamic> data, bool overwriteCache) {
-  final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
 
-  final List<dynamic> reactionStatistics = (data.containsKey('reactionStatistics') ? data['reactionStatistics'] : []).map((dynamic reactionStatistic) => json.decodeSafe(reactionStatistic)).toList();
+  final List<dynamic> reactionStatisticsRaw = (data.containsKey('reactionStatistics') ? data['reactionStatistics'] : []).map((dynamic reactionStatistic) => json.decodeSafe(reactionStatistic)).toList();
+  final List<ReactionStatistics> reactionStatistics = reactionStatisticsRaw.map((dynamic stat) => ReactionStatistics.fromJson(stat)).toList();
 
-  for (final dynamic reactionStatistic in reactionStatistics) {
-    try {
-      logger.d('requestNextTimelinePage() - parsing reactionStatistic: $reactionStatistic');
-      final ReactionStatistics newReactionStatistic = ReactionStatistics.fromJson(reactionStatistic);
-      final String cacheKey = ReactionStatistics.buildCacheKey(newReactionStatistic);
-      cacheController.addToCache(key: cacheKey, value: newReactionStatistic, overwrite: overwriteCache);
-    } catch (ex) {
-      logger.e('requestNextTimelinePage() - Failed to cache reactionStatistic: $reactionStatistic - ex: $ex');
-    }
+  for (ReactionStatistics reactionStatistic in reactionStatistics) {
+    final String cacheKey = ReactionStatistics.buildCacheKey(reactionStatistic);
+    cacheController.addToCache(key: cacheKey, value: reactionStatistic, overwrite: overwriteCache);
   }
 }
 
