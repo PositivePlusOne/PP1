@@ -321,13 +321,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   bool get isNavigationEnabled {
-    //TODO(Remove later)
-    if (captionController.text.isNotEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
