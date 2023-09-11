@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/shared/components/positive_post_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -145,8 +146,20 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 height: kCreatePostNavigationHeight,
                 left: kPaddingSmall,
                 right: kPaddingSmall,
-                child: const SizedBox.shrink(),
                 //! PP1-984
+                child: AnimatedOpacity(
+                  opacity: state.activeButton == PositivePostNavigationActiveButton.flex ? 1.0 : 0.01,
+                  duration: kAnimationDurationRegular,
+                  child: PositivePostNavigationBar(
+                    onTapPost: (_) {},
+                    onTapClip: (_) {},
+                    onTapEvent: (_) {},
+                    onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
+                    activeButton: PositivePostNavigationActiveButton.flex,
+                    flexCaption: state.activeButtonFlexText,
+                    isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
+                  ),
+                ),
                 // child: PositivePostNavigationBar(
                 //   onTapPost: (_) {},
                 //   onTapClip: (_) {},

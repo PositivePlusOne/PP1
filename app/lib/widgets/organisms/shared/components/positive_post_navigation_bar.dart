@@ -16,6 +16,9 @@ import '../../../../dtos/system/design_typography_model.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../post/vms/create_post_data_structures.dart';
 
+//TODO(S): Fix the animation error when the user moves from a main screen to a create post screen
+//TODO(S): Additionally since the create post dialoge button state is now dissabled another graphical issue occures due to missmatched button states
+
 class PositivePostNavigationBar extends HookConsumerWidget {
   const PositivePostNavigationBar({
     required this.onTapPost,
@@ -100,7 +103,8 @@ class PositivePostNavigationBar extends HookConsumerWidget {
     );
 
     final Widget animatedPadding = AnimatedSize(
-      duration: kAnimationDurationRegular,
+      duration: Duration.zero,
+      // duration: kAnimationDurationRegular,
       child: SizedBox(width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : kPaddingExtraSmall),
     );
 
@@ -161,7 +165,8 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
       onTap: onTap,
       isEnabled: isEnabled,
       child: AnimatedContainer(
-        duration: kAnimationDurationRegular,
+        duration: Duration.zero,
+        // duration: kAnimationDurationRegular,
         height: kPaddingLarge,
         width: width,
         decoration: BoxDecoration(

@@ -406,15 +406,19 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     if (bytes.isNotEmpty && widget.media.altText.isNotEmpty) {
       child = Stack(
         children: <Widget>[
-          child,
+          Positioned.fill(
+            child: child,
+          ),
           Positioned(
             bottom: kPaddingSmall,
             left: kPaddingSmall,
             child: PositiveButton(
-              label: 'Alt Text',
+              label: 'Alt',
               colors: colors,
+              primaryColor: colors.white.withOpacity(0.07),
+              fontColorOverride: colors.white,
               size: PositiveButtonSize.medium,
-              style: PositiveButtonStyle.outline,
+              style: PositiveButtonStyle.primary,
               layout: PositiveButtonLayout.textOnly,
               onTapped: onAltTextSelected,
             ),
