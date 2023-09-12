@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,29 +15,27 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 class PositiveNotificationsButton extends ConsumerWidget {
   const PositiveNotificationsButton({
     this.color,
+    this.isDisabled = false,
     super.key,
   });
 
   final Color? color;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    // final NotificationsControllerState notificationsState = ref.watch(notificationsControllerProvider);
     final AppRouter router = ref.read(appRouterProvider);
 
     //! TODO Get this number when we get reaction counts from get stream!
     const bool includeBadge = false;
-
-    // If the route is the notifications route, then we want to disable the notifications button
-    final bool disableNotifications = router.current.name == NotificationsRoute.name;
 
     return PositiveButton.appBarIcon(
       icon: UniconsLine.bell,
       colors: colors,
       primaryColor: color ?? colors.black,
       onTapped: () => router.push(const NotificationsRoute()),
-      isDisabled: disableNotifications,
+      isDisabled: isDisabled,
       includeBadge: includeBadge,
     );
   }

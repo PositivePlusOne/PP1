@@ -60,7 +60,7 @@ extension UserProfileExtensions on Profile {
 
     if (profileController.hasSetupProfile) {
       children.addAll([
-        PositiveNotificationsButton(color: color),
+        PositiveNotificationsButton(color: color, isDisabled: disableNotifications),
         PositiveButton.appBarIcon(
           colors: colors,
           primaryColor: color,
