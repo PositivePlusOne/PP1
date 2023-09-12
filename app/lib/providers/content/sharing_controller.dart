@@ -104,29 +104,29 @@ class SharingController extends _$SharingController implements ISharingControlle
   @override
   List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions postOptions) {
     final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    // final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
     final bool hasConnections = communitiesController.state.connectedProfileIds.isNotEmpty;
-    final bool hasValidProfile = profileController.state.currentProfile != null;
+    // final bool hasValidProfile = profileController.state.currentProfile != null;
 
     return [
-      if (hasValidProfile) ...<Widget>[
-        PositiveButton.standardPrimaryWithIcon(
-          colors: colors,
-          label: 'Repost on Your Feed',
-          icon: UniconsLine.file_share_alt,
-          onTapped: () => shareToFeed(context, postOptions: postOptions),
-        ),
-      ],
-      if (hasConnections) ...<Widget>[
-        PositiveButton.standardPrimaryWithIcon(
-          colors: colors,
-          label: 'Share with a Connection',
-          icon: UniconsLine.chat_bubble_user,
-          onTapped: () => shareViaConnections(context, postOptions: postOptions),
-        ),
-      ],
+      // if (hasValidProfile) ...<Widget>[
+      //   PositiveButton.standardPrimaryWithIcon(
+      //     colors: colors,
+      //     label: 'Repost on Your Feed',
+      //     icon: UniconsLine.file_share_alt,
+      //     onTapped: () => shareToFeed(context, postOptions: postOptions),
+      //   ),
+      // ],
+      // if (hasConnections) ...<Widget>[
+      //   PositiveButton.standardPrimaryWithIcon(
+      //     colors: colors,
+      //     label: 'Share with a Connection',
+      //     icon: UniconsLine.chat_bubble_user,
+      //     onTapped: () => shareViaConnections(context, postOptions: postOptions),
+      //   ),
+      // ],
       PositiveButton.standardPrimaryWithIcon(
         colors: colors,
         label: 'Share Via...',
