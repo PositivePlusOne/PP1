@@ -44,8 +44,8 @@ extension ActivityExt on Activity {
     final SharingController sharingController = providerContainer.read(sharingControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
     if (publisherInformation?.originFeed.isEmpty ?? true == true) {
-      logger.e('share() - originFeed is empty');
-      return;
+      logger.e('publisherInformation.originFeed is empty');
+      throw Exception('publisherInformation.originFeed is empty');
     }
 
     final (Activity activity, String feed) postOptions = (this, publisherInformation!.originFeed);

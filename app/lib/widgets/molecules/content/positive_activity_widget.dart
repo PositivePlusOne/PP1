@@ -524,9 +524,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
     final bool canActShare = shareMode.canActOnActivity(activityID);
     final bool isPublisher = currentProfileId == publisherId;
-    final bool canShare = canActShare && !isPublisher;
-
     final bool isRepost = repostOriginalPublisher != null && repostOriginalActivity != null;
+
     if (isRepost) {
       return Column(
         children: <Widget>[
@@ -559,7 +558,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             likes: totalLikes,
             likesEnabled: !isBusy && !isPublisher,
             onLike: (context) => onPostLiked(context, widget.activity),
-            shareEnabled: !isBusy && canShare,
+            shareEnabled: !isBusy && canActShare,
             onShare: (_) {},
             comments: totalComments,
             commentsEnabled: !isBusy,

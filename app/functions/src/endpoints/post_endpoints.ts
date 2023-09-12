@@ -113,7 +113,7 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        feed: `user:${uid}`,
+        originFeed: `user:${uid}`,
       },
       generalConfiguration: {
         type: "repost",

@@ -451,7 +451,6 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
 
     final bool canActShare = shareMode.canActOnActivity(activity.flMeta?.id ?? '');
     final bool isPublisher = currentProfileId == publisherId;
-    final bool canShare = canActShare && !isPublisher;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
@@ -463,7 +462,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         onLike: widget.onLike,
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: !widget.isBusy && canShare,
+        shareEnabled: !widget.isBusy && canActShare,
         onShare: (context) => widget.postContent.share(context),
 
         //TODO(S): comment enabled and on comment functionality here
