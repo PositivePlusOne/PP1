@@ -72,11 +72,11 @@ class NewAccountValidator extends AbstractValidator<AccountFormState> {
     ruleFor((e) => e.pin, key: 'pin').length(6, 6);
 
     if (currentEmailAddress.isNotEmpty) {
-      ruleFor((e) => e.emailAddress, key: 'email').notEqual(currentEmailAddress);
+      ruleFor((e) => e.emailAddress, key: 'email');
     }
 
     if (currentPhoneNumber.isNotEmpty) {
-      ruleFor((e) => e.phoneNumber.buildPhoneNumber(e.country), key: 'phone').notEqual(currentPhoneNumber);
+      ruleFor((e) => e.phoneNumber.buildPhoneNumber(e.country), key: 'phone');
     }
   }
 
@@ -108,6 +108,8 @@ class AccountFormController extends _$AccountFormController {
   bool get isPhoneValid {
     return (phoneValidationResults.isEmpty && state.phoneNumber.length >= 7 && state.phoneNumber.length <= 11);
   }
+
+  bool get doesNewPhoneNumberMatchCurrent => state.phoneNumber.buildPhoneNumber(state.country) == providerContainer.read(profileControllerProvider).currentProfile?.phoneNumber;
 
   List<ValidationError> get pinValidationResults => validator.validate(state).getErrorList('pin');
   bool get isPinValid => pinValidationResults.isEmpty;
@@ -152,7 +154,25 @@ class AccountFormController extends _$AccountFormController {
 
     state = AccountFormState.initialState(locale: locale, formMode: formMode, editTarget: editTarget);
     if (formMode == FormMode.edit) {
-      // TODO: Preload details (optional)
+      String country = '';
+      String phoneNumber = '';
+      if (profileController.state.currentProfile?.phoneNumber.isNotEmpty == true) {
+        (String, String) numberComponents = (profileController.state.currentProfile!.phoneNumber).formatPhoneNumberIntoComponents();
+        country = numberComponents.$1;
+        phoneNumber = numberComponents.$2;
+      }
+
+      state = state.copyWith(
+        emailAddress: profileController.state.currentProfile!.email,
+        phoneNumber: phoneNumber,
+        country: Country.fromPhoneCode(country) ?? Country.fromLocale(locale),
+      );
+    } else {
+      state = state.copyWith(
+        emailAddress: '',
+        phoneNumber: '',
+        country: Country.fromLocale(locale),
+      );
     }
   }
 
@@ -325,7 +345,6 @@ class AccountFormController extends _$AccountFormController {
 
   Future<void> onChangePhoneNumberRequested() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -339,8 +358,6 @@ class AccountFormController extends _$AccountFormController {
 
     try {
       final String phoneNumber = buildPhoneNumber();
-
-      await userController.updatePhoneNumber(phoneNumber);
       await profileController.updatePhoneNumber(phoneNumber: phoneNumber);
 
       final AccountUpdatedRoute route = AccountUpdatedRoute(

@@ -31,7 +31,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
   const AccountUpdatePhoneNumberPage({super.key});
 
   Color getTextFieldTintColor(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.phoneNumber.isEmpty) {
+    if (controller.state.phoneNumber.isEmpty || controller.doesNewPhoneNumberMatchCurrent) {
       return colors.purple;
     }
 
@@ -39,7 +39,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(AccountFormController controller, DesignColorsModel colors) {
-    if (controller.state.phoneNumber.isEmpty) {
+    if (controller.state.phoneNumber.isEmpty || controller.doesNewPhoneNumberMatchCurrent) {
       return null;
     }
 
@@ -68,6 +68,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
 
     final String errorMessage = localisations.fromValidationErrorList(controller.phoneValidationResults);
     final bool shouldDisplayErrorMessage = state.phoneNumber.isNotEmpty && errorMessage.isNotEmpty;
+    final bool matchesCurrentPhoneNumber = controller.doesNewPhoneNumberMatchCurrent;
 
     final List<Widget> hints = <Widget>[
       if (shouldDisplayErrorMessage) ...<Widget>[
@@ -108,7 +109,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
               textInputType: TextInputType.phone,
               prefixIcon: PositiveTextFieldPrefixDropdown<Country?>(
                 onValueChanged: (Country? c) => controller.onCountryChanged(c),
-                initialValue: Country.fromContext(context),
+                initialValue: state.country,
                 valueStringBuilder: (value) => '${value?.name} (+${value?.phoneCode})',
                 placeholderStringBuilder: (value) => '+${value?.phoneCode}',
                 values: kCountryListSortedWithTargetsFirst,
@@ -123,7 +124,7 @@ class AccountUpdatePhoneNumberPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onChangePhoneNumberRequested,
-          isDisabled: !controller.isPhoneValid || state.isBusy,
+          isDisabled: !controller.isPhoneValid || state.isBusy || matchesCurrentPhoneNumber,
           label: controller.state.formMode == FormMode.edit ? localisations.shared_actions_update : localisations.shared_actions_continue,
         ),
       ],
