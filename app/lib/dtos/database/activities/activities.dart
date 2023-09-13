@@ -156,10 +156,10 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
   static List<ActivitySecurityConfigurationMode> get orderedVisibilityModes {
     return <ActivitySecurityConfigurationMode>[
       const ActivitySecurityConfigurationMode.public(),
+      const ActivitySecurityConfigurationMode.signedIn(),
       const ActivitySecurityConfigurationMode.connections(),
       const ActivitySecurityConfigurationMode.followersAndConnections(),
       const ActivitySecurityConfigurationMode.private(),
-      const ActivitySecurityConfigurationMode.disabled(),
     ];
   }
 
@@ -179,7 +179,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
       const ActivitySecurityConfigurationMode.public(),
       const ActivitySecurityConfigurationMode.connections(),
       const ActivitySecurityConfigurationMode.followersAndConnections(),
-      const ActivitySecurityConfigurationMode.private(),
+      // const ActivitySecurityConfigurationMode.private(),
       const ActivitySecurityConfigurationMode.disabled(),
     ];
   }
