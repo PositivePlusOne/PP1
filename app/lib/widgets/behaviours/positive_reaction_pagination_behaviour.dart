@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -24,6 +22,7 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -36,6 +35,7 @@ import 'package:app/providers/events/content/reactions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
