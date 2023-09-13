@@ -306,6 +306,15 @@
     "page_create_post_additional_tags": "+{tags}",
     "page_create_post_edited": "Post Saved",
 
+    "post_comments_public_header": "Be the first to leave a comment",
+    "post_comments_followers_connections_header": "You must be following to comment",
+    "post_comments_connections_header": "You must be connected to comment",
+    "post_comments_signed_in_header": "You must have an account to comment",
+    "post_comments_signed_in_followers_header": "You must have an account and be following to comment",
+    "post_comments_signed_in_connections_header": "You must have an account and be connected to comment",
+    "post_comments_private_header": "Comments have been disabled",
+    "post_comments_disabled_header": "Comments have been disabled",
+
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",
