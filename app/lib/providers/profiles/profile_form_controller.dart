@@ -154,6 +154,10 @@ class ProfileFormController extends _$ProfileFormController {
   }
 
   Future<bool> onBackSelected(Type type) async {
+    if (state.isBusy) {
+      return false;
+    }
+
     if (state.formMode == FormMode.edit) {
       return await onBackEdit();
     }

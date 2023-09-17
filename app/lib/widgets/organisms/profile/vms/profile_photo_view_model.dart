@@ -62,7 +62,6 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     state = state.copyWith(isBusy: true);
 
     try {
-      print("object");
       await profileController.updateProfileImage(result);
       state = state.copyWith(isBusy: false);
 

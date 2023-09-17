@@ -25,6 +25,7 @@ import '../../molecules/layouts/positive_basic_sliver_list.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @RoutePage()
 class AccountPreferencesPage extends HookConsumerWidget {
@@ -40,6 +41,8 @@ class AccountPreferencesPage extends HookConsumerWidget {
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final List<Widget> actions = [];
     if (profileControllerState.currentProfile != null) {
@@ -88,7 +91,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
                 // const SizedBox(height: kPaddingMedium),
                 PositiveCheckboxButton(
                   icon: UniconsLine.lock_access,
-                  label: 'Biometrics',
+                  label: localizations.page_profile_biometrics_title,
                   value: state.areBiometricsEnabled,
                   onTapped: viewModel.toggleBiometrics,
                   isBusy: state.isBusy,

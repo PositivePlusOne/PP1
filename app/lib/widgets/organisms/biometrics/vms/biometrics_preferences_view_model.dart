@@ -1,4 +1,9 @@
 // Package imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
@@ -7,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:unicons/unicons.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/analytics/analytic_events.dart';
@@ -35,6 +41,8 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
     final AppRouter appRouter = ref.read(appRouterProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final AppRouter router = ref.read(appRouterProvider);
 
     logger.d('BiometricsPreferencesViewModel.onPermitSelected');
 
@@ -44,13 +52,33 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
 
     bool hasAuthenticated = false;
     if (canAuthenticate) {
-      hasAuthenticated = await localAuthentication.authenticate(
-        localizedReason: 'Please authenticate to confirm biometric usage.',
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          useErrorDialogs: true,
-        ),
-      );
+      try {
+        hasAuthenticated = await localAuthentication.authenticate(
+          localizedReason: 'Please authenticate to confirm biometric usage.',
+          options: const AuthenticationOptions(
+            stickyAuth: true,
+            useErrorDialogs: true,
+          ),
+        );
+      } catch (e) {
+        late final PositiveSnackBar snackBar;
+        if (e is PlatformException && e.code == 'NotAvailable') {
+          snackBar = PositiveGenericSnackBar(
+            title: "Biometrics is not available or permission have not been granted.",
+            icon: UniconsLine.envelope_exclamation,
+            backgroundColour: colours.black,
+          );
+        } else {
+          snackBar = PositiveGenericSnackBar(
+            title: "An unknown error has occurred",
+            icon: UniconsLine.envelope_exclamation,
+            backgroundColour: colours.black,
+          );
+        }
+        if (router.navigatorKey.currentContext != null) {
+          ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+        }
+      }
     }
 
     if (!hasAuthenticated) {
