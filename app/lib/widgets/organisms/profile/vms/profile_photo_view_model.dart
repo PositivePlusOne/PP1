@@ -34,6 +34,13 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     return ProfilePhotoViewModelState.initialState();
   }
 
+  Future<bool> onWillPopScope() async {
+    if (state.isBusy) {
+      return false;
+    }
+    return true;
+  }
+
   void onCancelSelectCamera() {
     final AppRouter appRouter = ref.read(appRouterProvider);
     appRouter.pop();
@@ -53,13 +60,14 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     logger.d("onSelectCamera");
     await appRouter.pop();
 
+    state = state.copyWith(isBusy: true);
+
     final XFile result = await showCupertinoDialog(
       context: context,
       builder: (_) => const PositiveCameraDialog(),
     );
 
     logger.d("onSelectCamera: result is $result");
-    state = state.copyWith(isBusy: true);
 
     try {
       await profileController.updateProfileImage(result);

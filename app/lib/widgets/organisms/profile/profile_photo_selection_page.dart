@@ -46,6 +46,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
+      onWillPopScope: viewModel.onWillPopScope,
       decorationWidget: Image.asset(
         MockImages.bike,
         fit: BoxFit.cover,
