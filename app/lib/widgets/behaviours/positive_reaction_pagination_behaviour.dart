@@ -22,6 +22,7 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -34,6 +35,7 @@ import 'package:app/providers/events/content/reactions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
@@ -322,8 +324,42 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
   // Currently comments are the only reaction type supported.
   String buildCommentHeaderText(AppLocalizations localizations) {
     final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
-    final bool isDisabled = commentMode == const ActivitySecurityConfigurationMode.disabled();
-    return isDisabled ? 'Comments are disabled for this post' : 'Be the first to leave a comment';
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+
+    final bool loggedIn = userController.isUserLoggedIn;
+    final Relationship? relationship = activity?.getRelationship();
+    final bool isFollowing = relationship?.following ?? false;
+    final bool isConnected = relationship?.isValidConnectedRelationship ?? false;
+    final bool isBlocked = relationship?.blocked ?? false;
+
+    if (isBlocked) {
+      return localizations.post_comments_disabled_header;
+    }
+
+    late String commentHeaderText;
+
+    commentMode.when(
+      public: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
+      signedIn: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
+      followersAndConnections: () {
+        if (loggedIn) {
+          return commentHeaderText = (isFollowing || isConnected) ? localizations.post_comments_public_header : localizations.post_comments_followers_connections_header;
+        } else {
+          return commentHeaderText = localizations.post_comments_signed_in_followers_header;
+        }
+      },
+      connections: () {
+        if (loggedIn) {
+          return commentHeaderText = (isFollowing || isConnected) ? localizations.post_comments_public_header : localizations.post_comments_connections_header;
+        } else {
+          return commentHeaderText = localizations.post_comments_signed_in_connections_header;
+        }
+      },
+      private: () => commentHeaderText = localizations.post_comments_private_header,
+      disabled: () => commentHeaderText = localizations.post_comments_disabled_header,
+    );
+
+    return commentHeaderText;
   }
 
   String buildCommentVisibilityPillText(AppLocalizations localizations) {

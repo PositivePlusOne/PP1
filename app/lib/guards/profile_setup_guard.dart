@@ -32,20 +32,20 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    // final bool hasName = profileController.state.currentProfile?.name.isNotEmpty ?? false;
-    // if (!hasName) {
-    //   profileFormController.resetState(FormMode.create);
+    final bool hasName = profileController.state.currentProfile?.name.isNotEmpty ?? false;
+    if (!hasName) {
+      profileFormController.resetState(FormMode.create);
 
-    //   // Get the user's name from the user object if it exists
-    //   if (user.providerName != null) {
-    //     profileFormController.onNameChanged(user.providerName!);
-    //   }
+      //   // Get the user's name from the user object if it exists
+      //   if (user.providerName != null) {
+      //     profileFormController.onNameChanged(user.providerName!);
+      //   }
 
-    //   router.removeWhere((route) => true);
-    //   router.push(const RegistrationAccountSetupRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+      router.removeWhere((route) => true);
+      router.push(const RegistrationAccountSetupRoute());
+      resolver.next(false);
+      return;
+    }
 
     final bool hasDisplayName = profileController.state.currentProfile?.displayName.isNotEmpty ?? false;
     if (!hasDisplayName) {
@@ -56,14 +56,14 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    // final bool hasBirthday = profileController.state.currentProfile?.birthday.isNotEmpty ?? false;
-    // if (!hasBirthday) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileBirthdayEntryRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasBirthday = profileController.state.currentProfile?.birthday.isNotEmpty ?? false;
+    if (!hasBirthday) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileBirthdayEntryRoute());
+      resolver.next(false);
+      return;
+    }
 
     // final bool hasSetGender = profileController.state.currentProfile?.genders.isNotEmpty ?? false;
     // final bool hasGendersInState = genderControllerState.options.isNotEmpty;
@@ -105,14 +105,14 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    // final bool hasProfileReferenceImage = profileController.state.currentProfile?.referenceImage != null;
-    // if (!hasProfileReferenceImage) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileReferenceImageWelcomeRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final bool hasProfileReferenceImage = profileController.state.currentProfile?.referenceImage != null;
+    if (!hasProfileReferenceImage) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileReferenceImageWelcomeRoute());
+      resolver.next(false);
+      return;
+    }
 
     final bool hasProfileImage = profileController.state.currentProfile?.profileImage != null;
     if (!hasProfileImage) {

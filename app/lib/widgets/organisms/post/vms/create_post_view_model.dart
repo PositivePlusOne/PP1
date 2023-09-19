@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -54,11 +55,13 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default("") String activeButtonFlexText,
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
+    required ActivityData previousActivity,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
   }) = _CreatePostViewModelState;
 
   factory CreatePostViewModelState.initialState() => CreatePostViewModelState(
         currentFilter: AwesomeFilter.None,
+        previousActivity: ActivityData(),
       );
 }
 
@@ -132,6 +135,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         currentPostType: currentPostType,
         activeButton: PositivePostNavigationActiveButton.flex,
         activeButtonFlexText: localisations.post_dialogue_update_post,
+        previousActivity: activityData,
       );
 
       final List<Future<GalleryEntry>> galleryEntriesFutures = activityData.media?.map((e) async => await Media.toGalleryEntry(media: e)).toList() ?? [];
@@ -321,10 +325,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   bool get isNavigationEnabled {
+    final bool hasChanged = state.isEditing ? hasPostBeenUpdated : true;
+
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
-        if (captionController.text.isNotEmpty) {
+        if (captionController.text.isNotEmpty && hasChanged) {
           return true;
         } else {
           return false;
@@ -333,6 +339,17 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       default:
         return true;
     }
+  }
+
+  bool get hasPostBeenUpdated {
+    if (captionController.text != state.previousActivity.content) return true;
+    if (altTextController.text != state.previousActivity.altText) return true;
+    if (state.allowComments != state.previousActivity.commentPermissionMode) return true;
+    if (state.visibleTo != state.previousActivity.visibilityMode) return true;
+    if (state.allowSharing != state.previousActivity.allowSharing) return true;
+    if (!listEquals(state.tags, state.previousActivity.tags)) return true;
+
+    return false;
   }
 
   void showCreateTextPost(BuildContext context) {

@@ -154,6 +154,10 @@ class ProfileFormController extends _$ProfileFormController {
   }
 
   Future<bool> onBackSelected(Type type) async {
+    if (state.isBusy) {
+      return false;
+    }
+
     if (state.formMode == FormMode.edit) {
       return await onBackEdit();
     }
@@ -981,12 +985,16 @@ class ProfileFormController extends _$ProfileFormController {
     logger.d("onSelectCamera");
     await appRouter.pop();
 
+    state = state.copyWith(isBusy: true);
+
     final XFile? result = await showCupertinoDialog(
       context: context,
       builder: (_) {
         return const PositiveCameraDialog();
       },
     );
+
+    state = state.copyWith(isBusy: false);
 
     if (result == null || result.path.isEmpty) {
       logger.d("onSelectCamera: result is null or not a string");

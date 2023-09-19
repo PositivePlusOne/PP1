@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/shared/components/positive_post_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,6 +14,7 @@ import 'package:app/widgets/organisms/post/component/positive_image_editor.dart'
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
+import 'package:app/widgets/organisms/shared/components/positive_post_navigation_bar.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';

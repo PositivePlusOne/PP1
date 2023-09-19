@@ -46,6 +46,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
+      onWillPopScope: viewModel.onWillPopScope,
       decorationWidget: Image.asset(
         MockImages.bike,
         fit: BoxFit.cover,
@@ -60,6 +61,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
                   onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfilePhotoSelectionRoute),
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
+                  isDisabled: state.isBusy,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,

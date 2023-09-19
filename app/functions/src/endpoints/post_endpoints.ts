@@ -225,7 +225,7 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        feed: `${feed}:${uid}`,
+        originFeed: `${feed}:${uid}`,
       },
       generalConfiguration: {
         content: content,
