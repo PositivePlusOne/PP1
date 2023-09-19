@@ -61,6 +61,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
                   onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfilePhotoSelectionRoute),
                   label: localizations.shared_actions_back,
                   primaryColor: colors.black,
+                  isDisabled: state.isBusy,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
