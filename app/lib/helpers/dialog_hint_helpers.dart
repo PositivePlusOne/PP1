@@ -18,20 +18,22 @@ HintDialogRoute buildProfileInterestsHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 
   return fromTitleAndBulletPoints(
-    localizations.page_profile_interests_hint_title,
+    localizations.page_onboarding_terms_interests_how_we_use,
     [
-      localizations.page_profile_interests_hint_bullet_one,
+      localizations.page_onboarding_terms_interests_one,
+      localizations.page_onboarding_terms_interests_two,
     ],
   );
 }
 
 HintDialogRoute buildProfileGenderHint(BuildContext context) {
-  final AppLocalizations localizations = AppLocalizations.of(context)!;
-
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
   return fromTitleAndBulletPoints(
-    localizations.page_profile_gender_hint_title,
+    localisations.page_onboarding_terms_identity_how_we_use,
     [
-      localizations.page_profile_gender_hint_bullet_one,
+      localisations.page_onboarding_terms_identity_one,
+      localisations.page_onboarding_terms_identity_two,
+      localisations.page_onboarding_terms_identity_three,
     ],
   );
 }
@@ -40,39 +42,43 @@ HintDialogRoute buildProfileLocationHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 
   return fromTitleAndBulletPoints(
-    localizations.page_profile_location_hint_title,
+    localizations.page_onboarding_terms_interests_how_we_use,
     [
-      localizations.page_profile_location_hint_bullet_one,
-      localizations.page_profile_location_hint_bullet_two,
+      localizations.page_onboarding_terms_location_one,
+      localizations.page_onboarding_terms_location_two,
     ],
   );
 }
 
 HintDialogRoute buildProfileHivStatusHint(BuildContext context) {
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
   return fromTitleAndBulletPoints(
-    "Your HIV Status",
+    localisations.page_onboarding_terms_hiv_how_we_use,
     [
-      "This is a community for people living with, working in, and affected by HIV. To create a safe and open environment it is important that each of us shares our HIV status",
-      "Positive+1 will not share your HIV status outside of the platform",
-      "If you need to change your HIV status at a later date you can do this via your Profile",
+      localisations.page_onboarding_terms_hiv_one,
+      localisations.page_onboarding_terms_hiv_two,
+      localisations.page_onboarding_terms_hiv_three,
+      localisations.page_onboarding_terms_hiv_four,
     ],
   );
 }
 
 HintDialogRoute buildProfileBirthdayHint(BuildContext context) {
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
   return fromTitleAndBulletPoints(
-    "Why we need your birthday",
+    localisations.page_onboarding_terms_birthday_how_we_use,
     [
-      "We use this to identify you",
-      "We can tailor content to your age",
-      "The app can restrict access to content due to your age",
-      "You can choose to present your age and birthday to other users",
-      "You will have to request to change this at a later date if you input this incorrectly",
+      localisations.page_onboarding_terms_birthday_one,
+      localisations.page_onboarding_terms_birthday_two,
+      localisations.page_onboarding_terms_birthday_three,
+      localisations.page_onboarding_terms_birthday_four,
+      localisations.page_onboarding_terms_birthday_five,
     ],
   );
 }
 
 HintDialogRoute buildProfileDisplayNameHint(BuildContext context) {
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
   return fromTitleAndBulletPoints(
     "What is your display name",
     [
@@ -84,14 +90,19 @@ HintDialogRoute buildProfileDisplayNameHint(BuildContext context) {
 }
 
 HintDialogRoute buildProfileNameHint(BuildContext context) {
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
   return fromTitleAndBulletPoints(
     "What your name is used for",
-    ["Your name is stored against your account for security purposes", "You can choose to display your name within the app to other people", "You can change this setting at any time based on your personal preferences"],
+    [
+      "Your name is stored against your account for security purposes",
+      "You can choose to display your name within the app to other people",
+      "You can change this setting at any time based on your personal preferences",
+    ],
   );
 }
 
 HintDialogRoute buildReferencePhotoHint(BuildContext context) {
-  // final AppLocalizations localizations = AppLocalizations.of(context)!;
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
 
   return fromTitleAndBulletPoints(
     "copy goes here",
@@ -100,27 +111,32 @@ HintDialogRoute buildReferencePhotoHint(BuildContext context) {
 }
 
 HintDialogRoute buildProfilePhotoHint(BuildContext context) {
-  // final AppLocalizations localizations = AppLocalizations.of(context)!;
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
 
   return fromTitleAndBulletPoints(
-    "copy goes here",
-    [""],
-  );
-}
-
-HintDialogRoute buildAccountPhoneHint(BuildContext context) {
-  return fromTitleAndBulletPoints(
-    'How we use your number',
+    localisations.page_onboarding_terms_reference_how_we_use,
     [
-      'Your number will never be displayed to other users.',
-      'Your number will never be used to send marketing messages to.',
-      'Your mobile number will be used to send you an account verification code.',
-      'Your account verification code connects your mobile number, to your account, to your mobile device.',
+      localisations.page_onboarding_terms_reference_one,
+      localisations.page_onboarding_terms_reference_two,
     ],
   );
 }
 
-HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints) {
+HintDialogRoute buildAccountPhoneHint(BuildContext context) {
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
+  return fromTitleAndBulletPoints(
+    localisations.page_onboarding_terms_number_how_we_use,
+    [
+      localisations.page_onboarding_terms_number_one,
+      localisations.page_onboarding_terms_number_two,
+      localisations.page_onboarding_terms_number_three,
+      localisations.page_onboarding_terms_number_four,
+    ],
+    trailingText: localisations.page_onboarding_terms_trust,
+  );
+}
+
+HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints, {String? trailingText}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
@@ -134,11 +150,18 @@ HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints
       ...bulletPoints
           .map(
             (e) => PositiveBulletedText(
-              text: Text(e, style: typography.styleSubtitle.copyWith(color: colors.red)),
+              text: Text(e, style: typography.styleSubtitle.copyWith(color: colors.white)),
             ),
           )
           .toList()
           .spaceWithVertical(kPaddingSmall),
+      if (trailingText != null) ...[
+        const SizedBox(height: kPaddingMedium),
+        Text(
+          trailingText,
+          style: typography.styleHero.copyWith(color: colors.red),
+        ),
+      ]
     ],
   );
 }

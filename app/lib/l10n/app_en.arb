@@ -55,6 +55,44 @@
     "page_onboarding_your_pledge_action_accept": "I've read and agree to the pledge",
     "page_onboarding_your_pledge_action_terms": "Read more of our [App Terms and Conditions](https://www.positiveplusone.com)",
 
+    "page_onboarding_terms_and_conditions": "TERMS & CONDITIONS",
+    "page_onboarding_terms_trust": "Trust us, your privacy is our biggest priority!",
+    "page_onboarding_terms_number_how_we_use": "HOW WE USE YOUR NUMBER",
+    "page_onboarding_terms_number_one": "Your number stays incognito - other users won't be able to see it. Ever.",
+    "page_onboarding_terms_number_two": "We promise, no annoying marketing blabber will be sent your way.",
+    "page_onboarding_terms_number_three": "That magic number you'll get? It's just your account verification code, nothing more.",
+    "page_onboarding_terms_number_four": "This snazzy code links your mobile number to your account, making sure it's really you.",
+    
+    "page_onboarding_terms_birthday_how_we_use": "WHY WE NEED YOUR BIRTHDAY",
+    "page_onboarding_terms_birthday_one": "Your age helps us identify and celebrate the unique individual that you are.",
+    "page_onboarding_terms_birthday_two": "Age is more than just a number! It lets us curate content that perfectly matches your interests and preferences, making your Positive+1 experience tailor-made for you.",
+    "page_onboarding_terms_birthday_three": "Some things are age-sensitive, and we've got your back on that. We'll ensure age-appropriate access to certain content, keeping things fun, safe, and suitable for you.",
+    "page_onboarding_terms_birthday_four": "It's your choice to reveal your age to other users. Share the joy of getting older (and wiser) with your Positive+1 pals!",
+    "page_onboarding_terms_birthday_five": "⌛Remember, if you accidentally put in the wrong age, no worries! Just give us a shout, and we'll help you correct it.",
+    
+    "page_onboarding_terms_identity_how_we_use": "WHY YOUR IDENTITY IS IMPORTANT",
+    "page_onboarding_terms_identity_one": "We want to celebrate who you are! Letting us know how you identify helps us create an inclusive and accepting community.",
+    "page_onboarding_terms_identity_two": "Finding like-minded folks is easier when we understand your identity. It helps us match you with awesome people who get you.",
+    "page_onboarding_terms_identity_three": "Your identity shapes your Positive+1 journey. We'll personalize the app just for you, making it a perfect fit for your unique self.",
+
+    "page_onboarding_terms_hiv_how_we_use": "WHY YOUR IDENTITY IS IMPORTANT",
+    "page_onboarding_terms_hiv_one": "This community is for individuals living with, working in, and affected by HIV. To foster a safe and open environment, we encourage users to share their HIV status with one another.",
+    "page_onboarding_terms_hiv_two": "Not comfortable doing that? Totally okay. You can choose not display your HIV status if you prefer. Whatever makes you feel most comfortable.",
+    "page_onboarding_terms_hiv_three": "Rest assured that Positive Plus One respects your privacy. Your HIV status will never be shared outside of the platform.",
+    "page_onboarding_terms_hiv_four": "Should you need to change your HIV status in the future, you can easily do so by accessing your Profile settings. Your control over your information is important to us",
+
+    "page_onboarding_terms_interests_how_we_use": "YOUR INTERESTS",
+    "page_onboarding_terms_interests_one": "Your interests help us customise the Positive+1 experience just for you.",
+    "page_onboarding_terms_interests_two": "We're better at matchmaking when we understand your interests. It lets us connect you with like-minded individuals.",
+    
+    "page_onboarding_terms_location_how_we_use": "YOUR LOCATION",
+    "page_onboarding_terms_location_one": "Let us know where you are, and we'll find some fab folks nearby who just might be your kind of crowd.",
+    "page_onboarding_terms_location_two": "Curious about the local buzz? We'll let you know what's happening in your area.",
+    
+    "page_onboarding_terms_reference_how_we_use": "YOUR VISUAL IDENTITY",
+    "page_onboarding_terms_reference_one": "Taking a selfie helps us ensure authenticity and prevent false identities within our community.",
+    "page_onboarding_terms_reference_two": "By confirming your real self through a selfie, we create a safer environment for all Positive+1 members.",
+
     "page_registration_create_account_title": "Create an Account",
     "page_registration_create_account_body": "Let's create a Positive+1 Account.",
     "page_registration_create_account_action_continue_google": "Continue with Google",
@@ -90,17 +128,7 @@
     "page_profile_name_entry_description": "Let us know your name",
     "page_profile_name_entry_input_label": "Your Name",
 
-    "page_profile_name_hint_title": "What your name is used for",
-    "page_profile_name_hint_bullet_one": "Your name is stored against your account for security purposes",
-    "page_profile_name_hint_bullet_two": "You can choose to display your name within the app to other people",
-    "page_profile_name_hint_bullet_three": "You can change this setting at any time based on your personal preferences",
-
     "page_profile_display_name_entry_description": "How would you like to be known?",
-
-    "page_profile_display_name_hint_title": "What is your display name used for?",
-    "page_profile_display_name_hint_bullet_one": "Your display name is how you are identified to us and other people across Positive+1",
-    "page_profile_display_name_hint_bullet_two": "It keeps you unique and can be anything you like (within reason)",
-    "page_profile_display_name_hint_bullet_three": "We have some small rules: No profanity or at risk terms",
 
     "page_profile_birthday_title": "Your Birthday",
     "page_profile_birthday_description": "Let us know how old you are",
@@ -110,27 +138,12 @@
     "page_profile_delete_account_title": "Hope to see you again",
     "page_profile_delete_account_body": "Thank you for your interest in Positive+1. While we cannot get you on our full experience for now, you can use our app as an unregistered user to view content that has been marked as suitable for your age.\n\nWe understand that this may be disappointing, but we take the safety and privacy of our users very seriously. We hope you'll consider signing up when you're eligible.",
 
-    "page_profile_birthday_hint_title": "Why we need your birthday",
-    "page_profile_birthday_hint_bullet_one": "We use this to identify you",
-    "page_profile_birthday_hint_bullet_two": "We can tailor content to your age",
-    "page_profile_birthday_hint_bullet_three": "The app can restrict access to content due to your age",
-    "page_profile_birthday_hint_bullet_four": "You can choose to present your age and birthday to other users",
-    "page_profile_birthday_hint_bullet_five": "You will have to request to change this at a later date if you input this incorrectly",
-
     "page_profile_interests_title": "Your Interests",
     "page_profile_interests_description": "Why do you want to join Positive+1?",
-
-    "page_profile_interests_hint_title": "Your interests",
-    "page_profile_interests_hint_bullet_one": "",
 
     "page_registration_hiv_status_title": "HIV and you",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",
     "page_registration_hiv_status_option_title": "How would you describe your HIV status?",
-
-    "page_profile_hiv_status_hint_title": "Your HIV Status",
-    "page_profile_hiv_status_hint_bullet_one": "This is a community for people living with, working in, and affected by HIV. To create a safe and open environment it is important that each of us shares our HIV status",
-    "page_profile_hiv_status_hint_bullet_two": "Positive+1 will not share your HIV status outside of the platform",
-    "page_profile_hiv_status_hint_bullet_three": "If you need to change your HIV status at a later date you can do this via your Profile",
 
     "page_profile_hiv_status_thanks_desc": "Your HIV Status has been changed",
 
@@ -140,13 +153,6 @@
 
     "page_registration_welcome_back": "Welcome Back",
     "page_registration_welcome_back_body": "To continue with your registration, please press continue below",
-
-    "page_profile_gender_hint_title": "Why your identity is important",
-    "page_profile_gender_hint_bullet_one": "",
-
-    "page_profile_location_hint_title": "Your location",
-    "page_profile_location_hint_bullet_one": "Your",
-    "page_profile_location_hint_bullet_two": "Location",
 
     "page_profile_interest_title": "Your interests",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
