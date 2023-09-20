@@ -112,11 +112,6 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: kPaddingMedium),
-                Text(
-                  localizations.page_onboarding_your_pledge_body,
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingMedium),
                 PositiveBulletedText(
                   text: Text(
                     localizations.page_onboarding_your_pledge_bullet_one,
@@ -141,6 +136,13 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                 PositiveBulletedText(
                   text: Text(
                     localizations.page_onboarding_your_pledge_bullet_four,
+                    style: typography.styleBody.copyWith(color: colors.black),
+                  ),
+                ),
+                const SizedBox(height: kPaddingMedium),
+                PositiveBulletedText(
+                  text: Text(
+                    localizations.page_onboarding_your_pledge_bullet_five,
                     style: typography.styleBody.copyWith(color: colors.black),
                   ),
                 ),

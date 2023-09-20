@@ -109,11 +109,6 @@ class OnboardingOurPledgePage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: kPaddingMedium),
-                Text(
-                  localizations.page_onboarding_our_pledge_body,
-                  style: typography.styleBody.copyWith(color: colors.black),
-                ),
-                const SizedBox(height: kPaddingMedium),
                 PositiveBulletedText(
                   text: Text(
                     localizations.page_onboarding_our_pledge_bullet_one,
