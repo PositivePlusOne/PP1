@@ -108,6 +108,10 @@ extension UserProfileExtensions on Profile {
     };
   }
 
+  bool get isVerified {
+    return featureFlags.contains(kFeatureFlagVerified);
+  }
+
   int get age {
     if (birthday.isEmpty) {
       return 0;
