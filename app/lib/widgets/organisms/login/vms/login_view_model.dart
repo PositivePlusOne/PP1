@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +19,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:unicons/unicons.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';
@@ -112,11 +115,12 @@ class LoginViewModel extends _$LoginViewModel {
 
   Future<void> onLoginWithAppleSelected() async {
     state = state.copyWith(isBusy: true);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
-      final AppRouter appRouter = ref.read(appRouterProvider);
 
       final UserCredential? credential = await userController.registerAppleProvider();
       if (credential == null) {
@@ -128,6 +132,16 @@ class LoginViewModel extends _$LoginViewModel {
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
       appRouter.push(const HomeRoute());
+    } catch (e) {
+      final SnackBar snackBar = PositiveGenericSnackBar(
+        title: "Login Failed",
+        icon: UniconsLine.envelope_exclamation,
+        backgroundColour: colours.black,
+      );
+
+      if (appRouter.navigatorKey.currentContext != null) {
+        ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(snackBar);
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
