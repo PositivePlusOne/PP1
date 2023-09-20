@@ -219,9 +219,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
   @override
   Widget build(BuildContext context) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
-    return PagedListView.separated(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
+    return PagedSliverList.separated(
       pagingController: notificationsState.pagingController,
       separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
       builderDelegate: PagedChildBuilderDelegate<NotificationPayload>(

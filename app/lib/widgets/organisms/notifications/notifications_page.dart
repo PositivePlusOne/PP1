@@ -32,18 +32,22 @@ class NotificationsPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      visibleComponents: const {
+        PositiveScaffoldComponent.headingWidgets,
+        PositiveScaffoldComponent.decorationWidget,
+        PositiveScaffoldComponent.footerPadding,
+      },
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarTrailing: actions,
           appBarSpacing: kPaddingSmall,
-          children: <Widget>[
-            if (profileId.isNotEmpty) ...<Widget>[
-              PositiveNotificationsPaginationBehaviour(uid: profileId),
-              const SizedBox(height: kPaddingSmall),
-              SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData)),
-            ],
-          ],
         ),
+        if (profileId.isNotEmpty) ...<Widget>[
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+            sliver: PositiveNotificationsPaginationBehaviour(uid: profileId),
+          ),
+        ],
       ],
     );
   }

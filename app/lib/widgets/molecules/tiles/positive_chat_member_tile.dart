@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,6 +46,9 @@ class PositiveChatMemberTile extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final String tagline = profile.getTagline(localizations);
 
+    final Color accentColor = profile.accentColor.toColorFromHex();
+    final Color complementaryColor = accentColor.complimentTextColor;
+
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: isEnabled,
@@ -62,8 +67,18 @@ class PositiveChatMemberTile extends ConsumerWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(profile.displayName.asHandle, style: typography.styleTitle),
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(profile.displayName.asHandle, style: typography.styleTitle),
+                      ),
+                      if (profile.isVerified) ...<Widget>[
+                        const SizedBox(width: kPaddingSmall),
+                        PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
+                      ],
+                    ],
+                  ),
                   Text(tagline, style: typography.styleSubtext.copyWith(color: colors.colorGray3)),
                 ],
               ),

@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
+import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -117,6 +119,15 @@ class PositiveChannelListTile extends ConsumerWidget {
 
     final ValueKey<String> valueKey = ValueKey('pp1-channel-list-tile-${members.length}-${channel?.id}-${latestMessage?.id}');
 
+    bool isVerified = false;
+    Color accentColor = colors.teal;
+    Color complementaryColor = accentColor.complimentTextColor;
+    if (otherProfiles.length == 1) {
+      isVerified = otherProfiles.first.isVerified;
+      accentColor = otherProfiles.first.accentColor.toColorFromHex();
+      complementaryColor = accentColor.complimentTextColor;
+    }
+
     return PositiveTapBehaviour(
       key: valueKey,
       isEnabled: isEnabled,
@@ -151,16 +162,20 @@ class PositiveChannelListTile extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: kPaddingMassive),
-                        child: Text(
-                          title,
-                          maxLines: 2,
-                          style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                    Row(
+                      children: <Widget>[
+                        Flexible(
+                          child: Text(
+                            title,
+                            maxLines: 2,
+                            style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                          ),
                         ),
-                      ),
+                        if (isVerified) ...<Widget>[
+                          const SizedBox(width: kPaddingSmall),
+                          PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
+                        ],
+                      ],
                     ),
                     Row(
                       children: <Widget>[

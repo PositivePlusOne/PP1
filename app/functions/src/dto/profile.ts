@@ -127,7 +127,6 @@ export class Profile {
 
     removeFlaggedData(isConnected: boolean): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
-        const featureFlags = Array.from(this.featureFlags);
         const hideInfo = this.isIncognito() && !isConnected;
 
         if (hideInfo || !visibilityFlags.includes(visibilityFlagName)) {
@@ -163,12 +162,6 @@ export class Profile {
             this.placeSkipped = false;
             this.biography = '';
             this.media = [];
-            this.featureFlags = new Set(featureFlags.filter((flag) => flag !== featureFlagIncognito));
-
-            // ? Not sure if this should be removed or not
-            // this.organisationConfiguration = json.organisationConfiguration && new ProfileOrganisationConfiguration(json.organisationConfiguration);
-            // this.featureFlags.delete(featureFlagOrganisationControls);
-            // this.featureFlags.delete(featureFlagMarketing);
         }
     }
 

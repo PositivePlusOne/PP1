@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -7,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -58,6 +60,8 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       }
     }
 
+    final bool isVerified = (publisher?.isVerified ?? false) == true;
+
     return Material(
       type: MaterialType.canvas,
       color: Colors.transparent,
@@ -85,21 +89,10 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: kPaddingSmall),
-                      Container(
-                        width: kIconSmall,
-                        height: kIconSmall,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-                          color: accentColor,
-                        ),
-                        alignment: Alignment.center,
-                        child: Icon(
-                          UniconsLine.check,
-                          size: kIconExtraSmall,
-                          color: complementaryColor,
-                        ),
-                      ),
+                      if (isVerified) ...<Widget>[
+                        const SizedBox(width: kPaddingSmall),
+                        PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
+                      ],
                     ],
                   ),
                   const SizedBox(height: kPaddingThin),
