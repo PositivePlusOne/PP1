@@ -315,6 +315,9 @@
     "post_comments_private_header": "Comments have been disabled",
     "post_comments_disabled_header": "Comments have been disabled",
 
+    "post_report_dialog_title": "Report Post",
+    "post_report_dialog_body": "If you believe this post is breaking the Positive +1 rules, please complete a report and we will investigate.",
+
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",
@@ -417,7 +420,6 @@
     "shared_ui_posts":"Posts",
     "shared_ui_gallery":"Gallery",
     "shared_hashtag": "#",
-
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",

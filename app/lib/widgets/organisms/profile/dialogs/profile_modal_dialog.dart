@@ -203,7 +203,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           await PositiveDialog.show(
             context: context,
             useSafeArea: false,
-            title: localizations.shared_profile_report_modal_title(widget.profile.displayName.asHandle),
+            title: localizations.post_report_dialog_title,
             child: PostReportDialog(targetPost: widget.postID, currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
           );
           break;

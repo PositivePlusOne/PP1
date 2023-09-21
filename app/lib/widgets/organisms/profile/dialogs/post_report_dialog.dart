@@ -15,7 +15,6 @@ import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -53,7 +52,7 @@ class PostReportDialog extends ConsumerWidget {
     return Column(
       children: [
         Text(
-          localizations.shared_profile_report_modal_subtitle,
+          localizations.post_report_dialog_body,
           style: typography.styleSubtitle.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
@@ -94,7 +93,7 @@ class PostReportDialog extends ConsumerWidget {
             reporter: currentUserProfile,
           ),
           icon: UniconsLine.exclamation_octagon,
-          label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
+          label: localizations.post_report_dialog_title,
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
           isDisabled: !isValid || state.isBusy,
