@@ -8,6 +8,7 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -26,6 +27,7 @@ extension ProviderContainerExt on ProviderContainer {
     cacheRelationshipData(data, overwriteCache["relationships"] ?? true);
     cacheTagData(data, overwriteCache["tags"] ?? true);
     cacheGuidanceDirectoryEntries(data, overwriteCache["guidanceDirectoryEntries"] ?? true);
+    cachePromotionData(data, overwriteCache["promotions"] ?? true);
   }
 }
 
@@ -38,6 +40,7 @@ extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
     cacheRelationshipData(data, overwriteCache);
     cacheTagData(data, overwriteCache);
     cacheGuidanceDirectoryEntries(data, overwriteCache);
+    cachePromotionData(data, overwriteCache);
   }
 }
 
@@ -50,6 +53,7 @@ extension NotifierProviderRefExt on NotifierProviderRef {
     cacheRelationshipData(data, overwriteCache);
     cacheTagData(data, overwriteCache);
     cacheGuidanceDirectoryEntries(data, overwriteCache);
+    cachePromotionData(data, overwriteCache);
   }
 }
 
@@ -62,6 +66,7 @@ extension WidgetRefExt on WidgetRef {
     cacheRelationshipData(data, overwriteCache);
     cacheTagData(data, overwriteCache);
     cacheGuidanceDirectoryEntries(data, overwriteCache);
+    cachePromotionData(data, overwriteCache);
   }
 }
 
@@ -211,6 +216,29 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCach
       cacheController.addToCache(key: entryId, value: newEntry, overwrite: overwriteCache);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');
+    }
+  }
+}
+
+void cachePromotionData(Map<String, dynamic> data, bool overwriteCache) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+
+  final List<dynamic> promotions = (data.containsKey('promotions') ? data['promotions'] : []).map((dynamic promotion) => json.decodeSafe(promotion)).toList();
+
+  for (final dynamic promotion in promotions) {
+    try {
+      logger.d('requestNextTimelinePage() - parsing promotion: $promotion');
+      final Promotion newPromotion = Promotion.fromJson(promotion);
+      final String promotionId = newPromotion.flMeta?.id ?? '';
+      if (promotionId.isEmpty) {
+        logger.e('requestNextTimelinePage() - Failed to cache promotion: $promotion');
+        continue;
+      }
+
+      cacheController.addToCache(key: promotionId, value: newPromotion, overwrite: overwriteCache);
+    } catch (ex) {
+      logger.e('requestNextTimelinePage() - Failed to cache promotion: $promotion - ex: $ex');
     }
   }
 }
