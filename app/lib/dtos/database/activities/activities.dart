@@ -37,6 +37,7 @@ class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
     @Default(ActivityGeneralConfigurationType.post()) @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type,
     @Default(ActivityGeneralConfigurationStyle.text()) @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style,
     @Default('') String content,
+    @Default(false) bool isSensitive,
     @Default('') String repostActivityId,
     @Default('') String repostActivityPublisherId,
     @Default('') String repostActivityOriginFeed,
@@ -299,9 +300,7 @@ class ActivityPublisherInformation with _$ActivityPublisherInformation {
 @freezed
 class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
   const factory ActivityEnrichmentConfiguration({
-    @Default('') String title,
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> tags,
-    @Default(false) bool isSensitive,
     @Default('') String publishLocation,
     @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
   }) = _ActivityEnrichmentConfiguration;

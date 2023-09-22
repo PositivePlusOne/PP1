@@ -113,6 +113,7 @@ export interface ActivityGeneralConfigurationJSON {
   type?: ActivityGeneralConfigurationType;
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
+  isSensitive?: boolean;
   repostActivityId?: string;
   repostActivityPublisherId?: string;
   repostActivityOriginFeed?: string;
@@ -130,6 +131,7 @@ export class ActivityGeneralConfiguration {
   type: ActivityGeneralConfigurationType;
   style: ActivityGeneralConfigurationStyle;
   content: string;
+  isSensitive: boolean;
   repostActivityId: string;
   repostActivityPublisherId: string;
   repostActivityOriginFeed: string;
@@ -138,6 +140,7 @@ export class ActivityGeneralConfiguration {
     this.type = json.type || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
+    this.isSensitive = json.isSensitive || false;
     this.repostActivityId = json.repostActivityId || '';
     this.repostActivityPublisherId = json.repostActivityPublisherId || '';
     this.repostActivityOriginFeed = json.repostActivityOriginFeed || '';
@@ -390,16 +393,12 @@ export class ActivityPublisherInformation {
  * The JSON representation of an activity enrichment configuration
  * @export
  * @interface ActivityEnrichmentConfigurationJSON
- * @property {string} [title]
  * @property {string[]} [tags]
- * @property {boolean} [isSensitive]
  * @property {string} [publishLocation]
  * @property {MentionJSON[]} [mentions]
  */
 export interface ActivityEnrichmentConfigurationJSON {
-  title?: string;
   tags?: string[];
-  isSensitive?: boolean;
   publishLocation?: string;
   mentions?: MentionJSON[];
 
@@ -412,16 +411,12 @@ export interface ActivityEnrichmentConfigurationJSON {
  * Enrichment configuration for an activity
  * @export
  * @class ActivityEnrichmentConfiguration
- * @property {string} title
  * @property {string[]} tags
- * @property {boolean} isSensitive
  * @property {string} publishLocation
  * @property {Mention[]} mentions
  */
 export class ActivityEnrichmentConfiguration {
-  title: string;
   tags: string[];
-  isSensitive: boolean;
   publishLocation: string;
   mentions: Mention[];
   originFeed: string;
@@ -429,9 +424,7 @@ export class ActivityEnrichmentConfiguration {
   uniqueUserReactions: Record<string, boolean>;
 
   constructor(json: ActivityEnrichmentConfigurationJSON) {
-    this.title = json.title || '';
     this.tags = json.tags || [];
-    this.isSensitive = json.isSensitive || false;
     this.publishLocation = json.publishLocation || '';
     this.mentions = json.mentions ? json.mentions.map((m) => new Mention(m)) : [];
     this.originFeed = json.originFeed || '';

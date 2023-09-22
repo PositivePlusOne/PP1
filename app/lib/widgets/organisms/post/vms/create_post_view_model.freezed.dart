@@ -339,7 +339,9 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CreatePostViewModelState implements _CreatePostViewModelState {
+class _$_CreatePostViewModelState
+    with DiagnosticableTreeMixin
+    implements _CreatePostViewModelState {
   const _$_CreatePostViewModelState(
       {this.isBusy = false,
       this.currentPostType = PostType.image,
@@ -429,8 +431,31 @@ class _$_CreatePostViewModelState implements _CreatePostViewModelState {
   final PositivePostNavigationActiveButton activeButton;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, activeButton: $activeButton)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'CreatePostViewModelState'))
+      ..add(DiagnosticsProperty('isBusy', isBusy))
+      ..add(DiagnosticsProperty('currentPostType', currentPostType))
+      ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
+      ..add(DiagnosticsProperty('isEditing', isEditing))
+      ..add(DiagnosticsProperty('currentActivityID', currentActivityID))
+      ..add(DiagnosticsProperty('galleryEntries', galleryEntries))
+      ..add(DiagnosticsProperty('editingGalleryEntry', editingGalleryEntry))
+      ..add(DiagnosticsProperty('tags', tags))
+      ..add(DiagnosticsProperty('allowSharing', allowSharing))
+      ..add(DiagnosticsProperty('visibleTo', visibleTo))
+      ..add(DiagnosticsProperty('allowComments', allowComments))
+      ..add(DiagnosticsProperty('activeButtonFlexText', activeButtonFlexText))
+      ..add(DiagnosticsProperty('saveToGallery', saveToGallery))
+      ..add(DiagnosticsProperty('currentFilter', currentFilter))
+      ..add(DiagnosticsProperty('previousActivity', previousActivity))
+      ..add(DiagnosticsProperty('activeButton', activeButton));
   }
 
   @override
