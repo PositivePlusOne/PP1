@@ -176,6 +176,7 @@ export namespace ReactionService {
         const reactionEntry = {
             kind: expectedKind,
             activity_id: expectedActivityId,
+            source_reaction_id: expectedKey,
             user_id: expectedUserId,
             time: StreamHelpers.getCurrentTimestamp(),
         } as ReactionEntryJSON;
@@ -184,7 +185,11 @@ export namespace ReactionService {
             userId: reaction.user_id,
         });
 
-        reaction.foreign_id = response.id;
+        reaction.entry_id = response?.id ?? "";
+        if (!reaction.entry_id) {
+            throw new functions.https.HttpsError("internal", "Unable to add reaction");
+        }
+        
         reaction = await DataService.updateDocument({
             schemaKey: reactionSchemaKey,
             entryId: expectedKey,
@@ -222,8 +227,8 @@ export namespace ReactionService {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
 
-        if (reaction.foreign_id) {
-            await client.reactions.delete(reaction.foreign_id);
+        if (reaction.entry_id) {
+            await client.reactions.delete(reaction.entry_id);
         }
         
         await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1);
@@ -244,12 +249,17 @@ export namespace ReactionService {
 
         const response = await client.reactions.filter(params);
         const results = response.results;
-        const reactionIds = results.map((reaction: any) => reaction.id);
+        functions.logger.info("Reactions for activity", { activity_id, kind, limit, cursor, response, results });
+        
+        const reactionIds = results.map((reaction: any) => reaction?.source_reaction_id ?? "").filter((id: string) => id !== "");
 
-        return DataService.getBatchDocuments({
+        const reactions = await DataService.getBatchDocuments({
             schemaKey: reactionSchemaKey,
             entryIds: reactionIds,
-        }) as Promise<ReactionJSON[]>;
+        }) as ReactionJSON[];
+
+        // Remove any null values
+        return reactions.filter((reaction: ReactionJSON) => reaction !== null);
     }
 
     export function buildUniqueReactionKeysForOptions(originFeed: string, activityId: string, userId: string): string[] {

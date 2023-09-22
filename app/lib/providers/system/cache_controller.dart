@@ -14,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import '../../constants/cache_constants.dart';
 import '../../services/third_party.dart';

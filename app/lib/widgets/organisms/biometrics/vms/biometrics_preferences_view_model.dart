@@ -1,18 +1,20 @@
-// Package imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:unicons/unicons.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/analytics/analytic_events.dart';

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,17 +7,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/positive_button.dart';

@@ -22,6 +22,7 @@ import '../widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 MarkdownWidget buildMarkdownWidgetFromBody(
   String str, {
   List<Tag> tags = const [],
+  EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
 }) {
   //! Add the tags to the start of the markdown as bolded text
@@ -37,7 +38,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
     selectable: false,
     config: MarkdownConfig(configs: buildMmarkdownWidgetConfig(onTapLink: onTapLink)),
     markdownGeneratorConfig: MarkdownGeneratorConfig(
-      linesMargin: const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
+      linesMargin: lineMargin,
     ),
   );
 }

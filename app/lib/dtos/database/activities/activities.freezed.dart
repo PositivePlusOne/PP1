@@ -458,6 +458,7 @@ mixin _$ActivityGeneralConfiguration {
   ActivityGeneralConfigurationStyle get style =>
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  bool get isSensitive => throw _privateConstructorUsedError;
   String get repostActivityId => throw _privateConstructorUsedError;
   String get repostActivityPublisherId => throw _privateConstructorUsedError;
   String get repostActivityOriginFeed => throw _privateConstructorUsedError;
@@ -486,6 +487,7 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
       String content,
+      bool isSensitive,
       String repostActivityId,
       String repostActivityPublisherId,
       String repostActivityOriginFeed});
@@ -511,6 +513,7 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     Object? type = null,
     Object? style = null,
     Object? content = null,
+    Object? isSensitive = null,
     Object? repostActivityId = null,
     Object? repostActivityPublisherId = null,
     Object? repostActivityOriginFeed = null,
@@ -528,6 +531,10 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      isSensitive: null == isSensitive
+          ? _value.isSensitive
+          : isSensitive // ignore: cast_nullable_to_non_nullable
+              as bool,
       repostActivityId: null == repostActivityId
           ? _value.repostActivityId
           : repostActivityId // ignore: cast_nullable_to_non_nullable
@@ -581,6 +588,7 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
       String content,
+      bool isSensitive,
       String repostActivityId,
       String repostActivityPublisherId,
       String repostActivityOriginFeed});
@@ -607,6 +615,7 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
     Object? type = null,
     Object? style = null,
     Object? content = null,
+    Object? isSensitive = null,
     Object? repostActivityId = null,
     Object? repostActivityPublisherId = null,
     Object? repostActivityOriginFeed = null,
@@ -624,6 +633,10 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      isSensitive: null == isSensitive
+          ? _value.isSensitive
+          : isSensitive // ignore: cast_nullable_to_non_nullable
+              as bool,
       repostActivityId: null == repostActivityId
           ? _value.repostActivityId
           : repostActivityId // ignore: cast_nullable_to_non_nullable
@@ -653,6 +666,7 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
       this.content = '',
+      this.isSensitive = false,
       this.repostActivityId = '',
       this.repostActivityPublisherId = '',
       this.repostActivityOriginFeed = ''});
@@ -675,6 +689,9 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   final String content;
   @override
   @JsonKey()
+  final bool isSensitive;
+  @override
+  @JsonKey()
   final String repostActivityId;
   @override
   @JsonKey()
@@ -685,7 +702,7 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, repostActivityId: $repostActivityId, repostActivityPublisherId: $repostActivityPublisherId, repostActivityOriginFeed: $repostActivityOriginFeed)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, isSensitive: $isSensitive, repostActivityId: $repostActivityId, repostActivityPublisherId: $repostActivityPublisherId, repostActivityOriginFeed: $repostActivityOriginFeed)';
   }
 
   @override
@@ -696,6 +713,8 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.style, style) || other.style == style) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.isSensitive, isSensitive) ||
+                other.isSensitive == isSensitive) &&
             (identical(other.repostActivityId, repostActivityId) ||
                 other.repostActivityId == repostActivityId) &&
             (identical(other.repostActivityPublisherId,
@@ -708,8 +727,15 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, type, style, content,
-      repostActivityId, repostActivityPublisherId, repostActivityOriginFeed);
+  int get hashCode => Object.hash(
+      runtimeType,
+      type,
+      style,
+      content,
+      isSensitive,
+      repostActivityId,
+      repostActivityPublisherId,
+      repostActivityOriginFeed);
 
   @JsonKey(ignore: true)
   @override
@@ -738,6 +764,7 @@ abstract class _ActivityGeneralConfiguration
           toJson: ActivityGeneralConfigurationStyle.toJson)
       final ActivityGeneralConfigurationStyle style,
       final String content,
+      final bool isSensitive,
       final String repostActivityId,
       final String repostActivityPublisherId,
       final String repostActivityOriginFeed}) = _$_ActivityGeneralConfiguration;
@@ -757,6 +784,8 @@ abstract class _ActivityGeneralConfiguration
   ActivityGeneralConfigurationStyle get style;
   @override
   String get content;
+  @override
+  bool get isSensitive;
   @override
   String get repostActivityId;
   @override
@@ -4260,10 +4289,9 @@ ActivityEnrichmentConfiguration _$ActivityEnrichmentConfigurationFromJson(
 
 /// @nodoc
 mixin _$ActivityEnrichmentConfiguration {
-  String get title => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringListFromJson)
   List<String> get tags => throw _privateConstructorUsedError;
-  bool get isSensitive => throw _privateConstructorUsedError;
+  String get promotionKey => throw _privateConstructorUsedError;
   String get publishLocation => throw _privateConstructorUsedError;
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions => throw _privateConstructorUsedError;
@@ -4283,9 +4311,8 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
           ActivityEnrichmentConfiguration>;
   @useResult
   $Res call(
-      {String title,
-      @JsonKey(fromJson: stringListFromJson) List<String> tags,
-      bool isSensitive,
+      {@JsonKey(fromJson: stringListFromJson) List<String> tags,
+      String promotionKey,
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions});
@@ -4305,25 +4332,20 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
     Object? tags = null,
-    Object? isSensitive = null,
+    Object? promotionKey = null,
     Object? publishLocation = null,
     Object? mentions = null,
   }) {
     return _then(_value.copyWith(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
       tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      isSensitive: null == isSensitive
-          ? _value.isSensitive
-          : isSensitive // ignore: cast_nullable_to_non_nullable
-              as bool,
+      promotionKey: null == promotionKey
+          ? _value.promotionKey
+          : promotionKey // ignore: cast_nullable_to_non_nullable
+              as String,
       publishLocation: null == publishLocation
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
@@ -4346,9 +4368,8 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String title,
-      @JsonKey(fromJson: stringListFromJson) List<String> tags,
-      bool isSensitive,
+      {@JsonKey(fromJson: stringListFromJson) List<String> tags,
+      String promotionKey,
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions});
@@ -4367,25 +4388,20 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
     Object? tags = null,
-    Object? isSensitive = null,
+    Object? promotionKey = null,
     Object? publishLocation = null,
     Object? mentions = null,
   }) {
     return _then(_$_ActivityEnrichmentConfiguration(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
       tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      isSensitive: null == isSensitive
-          ? _value.isSensitive
-          : isSensitive // ignore: cast_nullable_to_non_nullable
-              as bool,
+      promotionKey: null == promotionKey
+          ? _value.promotionKey
+          : promotionKey // ignore: cast_nullable_to_non_nullable
+              as String,
       publishLocation: null == publishLocation
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
@@ -4403,9 +4419,9 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
 class _$_ActivityEnrichmentConfiguration
     implements _ActivityEnrichmentConfiguration {
   const _$_ActivityEnrichmentConfiguration(
-      {this.title = '',
-      @JsonKey(fromJson: stringListFromJson) final List<String> tags = const [],
-      this.isSensitive = false,
+      {@JsonKey(fromJson: stringListFromJson)
+      final List<String> tags = const [],
+      this.promotionKey = '',
       this.publishLocation = '',
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions = const []})
@@ -4416,9 +4432,6 @@ class _$_ActivityEnrichmentConfiguration
           Map<String, dynamic> json) =>
       _$$_ActivityEnrichmentConfigurationFromJson(json);
 
-  @override
-  @JsonKey()
-  final String title;
   final List<String> _tags;
   @override
   @JsonKey(fromJson: stringListFromJson)
@@ -4430,7 +4443,7 @@ class _$_ActivityEnrichmentConfiguration
 
   @override
   @JsonKey()
-  final bool isSensitive;
+  final String promotionKey;
   @override
   @JsonKey()
   final String publishLocation;
@@ -4445,7 +4458,7 @@ class _$_ActivityEnrichmentConfiguration
 
   @override
   String toString() {
-    return 'ActivityEnrichmentConfiguration(title: $title, tags: $tags, isSensitive: $isSensitive, publishLocation: $publishLocation, mentions: $mentions)';
+    return 'ActivityEnrichmentConfiguration(tags: $tags, promotionKey: $promotionKey, publishLocation: $publishLocation, mentions: $mentions)';
   }
 
   @override
@@ -4453,10 +4466,9 @@ class _$_ActivityEnrichmentConfiguration
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ActivityEnrichmentConfiguration &&
-            (identical(other.title, title) || other.title == title) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
-            (identical(other.isSensitive, isSensitive) ||
-                other.isSensitive == isSensitive) &&
+            (identical(other.promotionKey, promotionKey) ||
+                other.promotionKey == promotionKey) &&
             (identical(other.publishLocation, publishLocation) ||
                 other.publishLocation == publishLocation) &&
             const DeepCollectionEquality().equals(other._mentions, _mentions));
@@ -4466,9 +4478,8 @@ class _$_ActivityEnrichmentConfiguration
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      title,
       const DeepCollectionEquality().hash(_tags),
-      isSensitive,
+      promotionKey,
       publishLocation,
       const DeepCollectionEquality().hash(_mentions));
 
@@ -4491,9 +4502,8 @@ class _$_ActivityEnrichmentConfiguration
 abstract class _ActivityEnrichmentConfiguration
     implements ActivityEnrichmentConfiguration {
   const factory _ActivityEnrichmentConfiguration(
-      {final String title,
-      @JsonKey(fromJson: stringListFromJson) final List<String> tags,
-      final bool isSensitive,
+      {@JsonKey(fromJson: stringListFromJson) final List<String> tags,
+      final String promotionKey,
       final String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions}) = _$_ActivityEnrichmentConfiguration;
@@ -4502,12 +4512,10 @@ abstract class _ActivityEnrichmentConfiguration
       _$_ActivityEnrichmentConfiguration.fromJson;
 
   @override
-  String get title;
-  @override
   @JsonKey(fromJson: stringListFromJson)
   List<String> get tags;
   @override
-  bool get isSensitive;
+  String get promotionKey;
   @override
   String get publishLocation;
   @override

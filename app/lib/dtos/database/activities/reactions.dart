@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
-import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/events/content/activity_events.dart';
 
 part 'reactions.freezed.dart';
 part 'reactions.g.dart';
@@ -15,6 +15,7 @@ class Reaction with _$Reaction {
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
+    @Default('') @JsonKey(name: 'entry_id') String entryId,
     @Default('') @JsonKey(name: 'user_id') String userId,
     @Default(ReactionType.unknownReaction()) @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson) ReactionType kind,
     @Default('') @JsonKey(name: 'text') String text,

@@ -59,7 +59,7 @@ export interface ReactionJSON {
     _fl_meta_?: FlMetaJSON;
     activity_id?: string;
     reaction_id?: string;
-    foreign_id?: string;
+    entry_id?: string;
     user_id?: string;
     kind?: string;
     origin?: string;
@@ -71,7 +71,7 @@ export class Reaction {
     _fl_meta_?: FlMeta;
     activity_id?: string;
     reaction_id?: string;
-    foreign_id?: string;
+    entry_id?: string;
     user_id?: string;
     kind?: string;
     origin?: string;
@@ -82,7 +82,7 @@ export class Reaction {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
         this.activity_id = json.activity_id;
         this.reaction_id = json.reaction_id;
-        this.foreign_id = json.foreign_id;
+        this.entry_id = json.entry_id;
         this.user_id = json.user_id;
         this.kind = json.kind;
         this.origin = json.origin;
@@ -95,6 +95,7 @@ export class Reaction {
             _fl_meta_: this._fl_meta_ ? this._fl_meta_.toJSON() : undefined,
             activity_id: this.activity_id,
             reaction_id: this.reaction_id,
+            entry_id: this.entry_id,
             user_id: this.user_id,
             kind: this.kind,
             origin: this.origin,

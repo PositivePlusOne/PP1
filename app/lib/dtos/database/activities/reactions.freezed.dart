@@ -26,6 +26,8 @@ mixin _$Reaction {
   String get activityId => throw _privateConstructorUsedError;
   @JsonKey(name: 'reaction_id')
   String get reactionId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'entry_id')
+  String get entryId => throw _privateConstructorUsedError;
   @JsonKey(name: 'user_id')
   String get userId => throw _privateConstructorUsedError;
   @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
@@ -52,6 +54,7 @@ abstract class $ReactionCopyWith<$Res> {
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'activity_id') String activityId,
       @JsonKey(name: 'reaction_id') String reactionId,
+      @JsonKey(name: 'entry_id') String entryId,
       @JsonKey(name: 'user_id') String userId,
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       ReactionType kind,
@@ -79,6 +82,7 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
     Object? flMeta = freezed,
     Object? activityId = null,
     Object? reactionId = null,
+    Object? entryId = null,
     Object? userId = null,
     Object? kind = null,
     Object? text = null,
@@ -97,6 +101,10 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
       reactionId: null == reactionId
           ? _value.reactionId
           : reactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      entryId: null == entryId
+          ? _value.entryId
+          : entryId // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -153,6 +161,7 @@ abstract class _$$_ReactionCopyWith<$Res> implements $ReactionCopyWith<$Res> {
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'activity_id') String activityId,
       @JsonKey(name: 'reaction_id') String reactionId,
+      @JsonKey(name: 'entry_id') String entryId,
       @JsonKey(name: 'user_id') String userId,
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       ReactionType kind,
@@ -180,6 +189,7 @@ class __$$_ReactionCopyWithImpl<$Res>
     Object? flMeta = freezed,
     Object? activityId = null,
     Object? reactionId = null,
+    Object? entryId = null,
     Object? userId = null,
     Object? kind = null,
     Object? text = null,
@@ -198,6 +208,10 @@ class __$$_ReactionCopyWithImpl<$Res>
       reactionId: null == reactionId
           ? _value.reactionId
           : reactionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      entryId: null == entryId
+          ? _value.entryId
+          : entryId // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -230,6 +244,7 @@ class _$_Reaction implements _Reaction {
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       @JsonKey(name: 'activity_id') this.activityId = '',
       @JsonKey(name: 'reaction_id') this.reactionId = '',
+      @JsonKey(name: 'entry_id') this.entryId = '',
       @JsonKey(name: 'user_id') this.userId = '',
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       this.kind = const ReactionType.unknownReaction(),
@@ -250,6 +265,9 @@ class _$_Reaction implements _Reaction {
   @override
   @JsonKey(name: 'reaction_id')
   final String reactionId;
+  @override
+  @JsonKey(name: 'entry_id')
+  final String entryId;
   @override
   @JsonKey(name: 'user_id')
   final String userId;
@@ -273,7 +291,7 @@ class _$_Reaction implements _Reaction {
 
   @override
   String toString() {
-    return 'Reaction(flMeta: $flMeta, activityId: $activityId, reactionId: $reactionId, userId: $userId, kind: $kind, text: $text, origin: $origin, tags: $tags)';
+    return 'Reaction(flMeta: $flMeta, activityId: $activityId, reactionId: $reactionId, entryId: $entryId, userId: $userId, kind: $kind, text: $text, origin: $origin, tags: $tags)';
   }
 
   @override
@@ -286,6 +304,7 @@ class _$_Reaction implements _Reaction {
                 other.activityId == activityId) &&
             (identical(other.reactionId, reactionId) ||
                 other.reactionId == reactionId) &&
+            (identical(other.entryId, entryId) || other.entryId == entryId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.kind, kind) || other.kind == kind) &&
             (identical(other.text, text) || other.text == text) &&
@@ -295,8 +314,17 @@ class _$_Reaction implements _Reaction {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, flMeta, activityId, reactionId,
-      userId, kind, text, origin, const DeepCollectionEquality().hash(_tags));
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      activityId,
+      reactionId,
+      entryId,
+      userId,
+      kind,
+      text,
+      origin,
+      const DeepCollectionEquality().hash(_tags));
 
   @JsonKey(ignore: true)
   @override
@@ -317,6 +345,7 @@ abstract class _Reaction implements Reaction {
       {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       @JsonKey(name: 'activity_id') final String activityId,
       @JsonKey(name: 'reaction_id') final String reactionId,
+      @JsonKey(name: 'entry_id') final String entryId,
       @JsonKey(name: 'user_id') final String userId,
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       final ReactionType kind,
@@ -335,6 +364,9 @@ abstract class _Reaction implements Reaction {
   @override
   @JsonKey(name: 'reaction_id')
   String get reactionId;
+  @override
+  @JsonKey(name: 'entry_id')
+  String get entryId;
   @override
   @JsonKey(name: 'user_id')
   String get userId;

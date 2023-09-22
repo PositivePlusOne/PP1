@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -18,6 +17,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
@@ -39,7 +39,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   final bool isEnabled;
   final FutureOr<void> Function(BuildContext context, NotificationPayload payload)? onNotificationSelected;
 
-  static const double kMinimumHeight = 62.0;
+  static const double kConstrainedHeight = 62.0;
 
   @override
   ConsumerState<PositiveNotificationTile> createState() => PositiveNotificationTileState();
@@ -187,7 +187,10 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       showDisabledState: !widget.isEnabled,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
-        constraints: const BoxConstraints(minHeight: PositiveNotificationTile.kMinimumHeight),
+        constraints: const BoxConstraints(
+          minHeight: PositiveNotificationTile.kConstrainedHeight,
+          maxHeight: PositiveNotificationTile.kConstrainedHeight,
+        ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(kBorderRadiusMassive),
@@ -198,11 +201,13 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
             leading,
             const SizedBox(width: kPaddingSmall),
             Expanded(
-              child: AutoSizeText(
-                body,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: typography.styleNotification.copyWith(color: foregroundColor),
+              child: IgnorePointer(
+                ignoring: true,
+                child: buildMarkdownWidgetFromBody(
+                  body,
+                  lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
+                  onTapLink: (_) {},
+                ),
               ),
             ),
             if (trailing.isNotEmpty) ...<Widget>[

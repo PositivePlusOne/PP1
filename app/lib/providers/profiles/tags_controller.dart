@@ -14,7 +14,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';

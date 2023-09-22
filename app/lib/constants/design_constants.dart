@@ -33,6 +33,7 @@ const Curve kAnimationCurveDefault = Curves.easeInOut;
 // Paddings and margins
 const double kPaddingNone = 0.0;
 const double kPaddingThin = 1.0;
+const double kPaddingSuperSmall = 2.5;
 const double kPaddingExtraSmall = 5.0;
 const double kPaddingVerySmall = 7.0;
 const double kPaddingSmall = 10.0;

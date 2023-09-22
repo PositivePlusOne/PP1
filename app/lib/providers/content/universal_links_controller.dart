@@ -11,7 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
-import 'package:app/providers/events/content/activities.dart';
+import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 

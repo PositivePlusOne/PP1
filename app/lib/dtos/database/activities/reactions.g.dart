@@ -12,6 +12,7 @@ _$_Reaction _$$_ReactionFromJson(Map<String, dynamic> json) => _$_Reaction(
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       activityId: json['activity_id'] as String? ?? '',
       reactionId: json['reaction_id'] as String? ?? '',
+      entryId: json['entry_id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
       kind: json['kind'] == null
           ? const ReactionType.unknownReaction()
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$_ReactionToJson(_$_Reaction instance) =>
       '_fl_meta_': instance.flMeta?.toJson(),
       'activity_id': instance.activityId,
       'reaction_id': instance.reactionId,
+      'entry_id': instance.entryId,
       'user_id': instance.userId,
       'kind': ReactionType.toJson(instance.kind),
       'text': instance.text,

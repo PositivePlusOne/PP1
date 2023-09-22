@@ -61,6 +61,7 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
           ? const ActivityGeneralConfigurationStyle.text()
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
+      isSensitive: json['isSensitive'] as bool? ?? false,
       repostActivityId: json['repostActivityId'] as String? ?? '',
       repostActivityPublisherId:
           json['repostActivityPublisherId'] as String? ?? '',
@@ -74,6 +75,7 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
+      'isSensitive': instance.isSensitive,
       'repostActivityId': instance.repostActivityId,
       'repostActivityPublisherId': instance.repostActivityPublisherId,
       'repostActivityOriginFeed': instance.repostActivityOriginFeed,
@@ -206,9 +208,8 @@ Map<String, dynamic> _$$_ActivityPublisherInformationToJson(
 _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
         Map<String, dynamic> json) =>
     _$_ActivityEnrichmentConfiguration(
-      title: json['title'] as String? ?? '',
       tags: json['tags'] == null ? const [] : stringListFromJson(json['tags']),
-      isSensitive: json['isSensitive'] as bool? ?? false,
+      promotionKey: json['promotionKey'] as String? ?? '',
       publishLocation: json['publishLocation'] as String? ?? '',
       mentions: json['mentions'] == null
           ? const []
@@ -218,9 +219,8 @@ _$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
 Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
         _$_ActivityEnrichmentConfiguration instance) =>
     <String, dynamic>{
-      'title': instance.title,
       'tags': instance.tags,
-      'isSensitive': instance.isSensitive,
+      'promotionKey': instance.promotionKey,
       'publishLocation': instance.publishLocation,
       'mentions': Mention.toJsonList(instance.mentions),
     };
