@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
@@ -16,11 +17,12 @@ class HomeLoginPromptPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     return PositiveGenericPage(
-      title: 'Thanks for showing an interest in Positive+1',
-      body: 'To be able to create content, view profiles and connect with people you\'ll need to sign in or register for an account.',
-      buttonText: 'Sign In / Register',
+      title: localisations.page_home_blocker_title,
+      body: localisations.page_home_blocker_body,
+      buttonText: localisations.shared_actions_sign_up,
       isBusy: false,
       style: PositiveGenericPageStyle.imaged,
       onContinueSelected: () => appRouter.push(LoginRoute(senderRoute: HomeRoute)),
