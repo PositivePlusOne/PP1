@@ -19,6 +19,7 @@ mixin _$LoginViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  String get serverError => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LoginViewModelStateCopyWith<LoginViewModelState> get copyWith =>
@@ -31,7 +32,7 @@ abstract class $LoginViewModelStateCopyWith<$Res> {
           LoginViewModelState value, $Res Function(LoginViewModelState) then) =
       _$LoginViewModelStateCopyWithImpl<$Res, LoginViewModelState>;
   @useResult
-  $Res call({bool isBusy, String email, String password});
+  $Res call({bool isBusy, String email, String password, String serverError});
 }
 
 /// @nodoc
@@ -50,6 +51,7 @@ class _$LoginViewModelStateCopyWithImpl<$Res, $Val extends LoginViewModelState>
     Object? isBusy = null,
     Object? email = null,
     Object? password = null,
+    Object? serverError = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
@@ -64,6 +66,10 @@ class _$LoginViewModelStateCopyWithImpl<$Res, $Val extends LoginViewModelState>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      serverError: null == serverError
+          ? _value.serverError
+          : serverError // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -76,7 +82,7 @@ abstract class _$$_LoginViewModelStateCopyWith<$Res>
       __$$_LoginViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, String email, String password});
+  $Res call({bool isBusy, String email, String password, String serverError});
 }
 
 /// @nodoc
@@ -93,6 +99,7 @@ class __$$_LoginViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? email = null,
     Object? password = null,
+    Object? serverError = null,
   }) {
     return _then(_$_LoginViewModelState(
       isBusy: null == isBusy
@@ -107,6 +114,10 @@ class __$$_LoginViewModelStateCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      serverError: null == serverError
+          ? _value.serverError
+          : serverError // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -115,7 +126,10 @@ class __$$_LoginViewModelStateCopyWithImpl<$Res>
 
 class _$_LoginViewModelState implements _LoginViewModelState {
   const _$_LoginViewModelState(
-      {this.isBusy = false, this.email = '', this.password = ''});
+      {this.isBusy = false,
+      this.email = '',
+      this.password = '',
+      this.serverError = ''});
 
   @override
   @JsonKey()
@@ -126,10 +140,13 @@ class _$_LoginViewModelState implements _LoginViewModelState {
   @override
   @JsonKey()
   final String password;
+  @override
+  @JsonKey()
+  final String serverError;
 
   @override
   String toString() {
-    return 'LoginViewModelState(isBusy: $isBusy, email: $email, password: $password)';
+    return 'LoginViewModelState(isBusy: $isBusy, email: $email, password: $password, serverError: $serverError)';
   }
 
   @override
@@ -140,11 +157,14 @@ class _$_LoginViewModelState implements _LoginViewModelState {
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
-                other.password == password));
+                other.password == password) &&
+            (identical(other.serverError, serverError) ||
+                other.serverError == serverError));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy, email, password);
+  int get hashCode =>
+      Object.hash(runtimeType, isBusy, email, password, serverError);
 
   @JsonKey(ignore: true)
   @override
@@ -158,7 +178,8 @@ abstract class _LoginViewModelState implements LoginViewModelState {
   const factory _LoginViewModelState(
       {final bool isBusy,
       final String email,
-      final String password}) = _$_LoginViewModelState;
+      final String password,
+      final String serverError}) = _$_LoginViewModelState;
 
   @override
   bool get isBusy;
@@ -166,6 +187,8 @@ abstract class _LoginViewModelState implements LoginViewModelState {
   String get email;
   @override
   String get password;
+  @override
+  String get serverError;
   @override
   @JsonKey(ignore: true)
   _$$_LoginViewModelStateCopyWith<_$_LoginViewModelState> get copyWith =>

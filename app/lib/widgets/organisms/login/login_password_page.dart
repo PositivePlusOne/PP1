@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,7 +34,7 @@ class LoginPasswordPage extends ConsumerWidget {
       return colors.purple;
     }
 
-    return controller.passwordValidationResults.isNotEmpty ? colors.red : colors.green;
+    return passwordValidation(controller) ? colors.red : colors.green;
   }
 
   PositiveTextFieldIcon? getTextFieldSuffixIcon(LoginViewModel controller, DesignColorsModel colors) {
@@ -41,11 +42,15 @@ class LoginPasswordPage extends ConsumerWidget {
       return null;
     }
 
-    return controller.passwordValidationResults.isNotEmpty
+    return passwordValidation(controller)
         ? PositiveTextFieldIcon.error(
             backgroundColor: colors.red,
           )
         : PositiveTextFieldIcon.success(backgroundColor: colors.green);
+  }
+
+  bool passwordValidation(LoginViewModel controller) {
+    return controller.passwordValidationResults.isNotEmpty || controller.state.serverError.isNotEmpty;
   }
 
   @override
@@ -61,13 +66,17 @@ class LoginPasswordPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(viewModel, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(viewModel, colors);
 
-    final String errorMessage = localizations.fromValidationErrorList(viewModel.emailValidationResults);
+    final String errorMessage = localizations.fromValidationErrorList(viewModel.passwordValidationResults);
     final bool shouldDisplayErrorMessage = state.password.isNotEmpty && errorMessage.isNotEmpty;
 
     final List<Widget> hints = <Widget>[
-      if (shouldDisplayErrorMessage) ...<Widget>[
-        PositiveHint.fromError(errorMessage, colors),
+      if (state.serverError.isNotEmpty) ...<Widget>[
         const SizedBox(height: kPaddingMedium),
+        PositiveHint.fromError(state.serverError, colors),
+      ],
+      if (shouldDisplayErrorMessage) ...<Widget>[
+        const SizedBox(height: kPaddingMedium),
+        PositiveHint.fromError(errorMessage, colors),
       ],
     ];
 
@@ -110,24 +119,26 @@ class LoginPasswordPage extends ConsumerWidget {
               initialText: state.password,
               textInputType: TextInputType.text,
               onTextChanged: viewModel.updatePassword,
-              onTextSubmitted: (_) => viewModel.onPasswordSubmitted(),
+              onTextSubmitted: (_) => viewModel.onPasswordSubmitted(context),
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
               autocorrect: false,
               autofocus: true,
             ),
+            PositiveExpandableWidget(
+              collapsedChild: const SizedBox.shrink(),
+              expandedChild: Column(children: hints),
+              isExpanded: hints.isNotEmpty,
+            ),
           ],
         ),
-      ],
-      trailingWidgets: <Widget>[
-        ...hints,
       ],
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: viewModel.onPasswordSubmitted,
+          onTapped: () => viewModel.onPasswordSubmitted(context),
           label: localizations.shared_actions_continue,
           style: PositiveButtonStyle.primary,
           isDisabled: state.isBusy,

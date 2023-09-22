@@ -25,6 +25,11 @@
     "page_splash_section_tomorrow_starts_now_second_line": "Starts",
     "page_splash_section_tomorrow_starts_now_third_line": "Now",
 
+    "page_welcome_back_title":"Welcome Back",
+    "page_welcome_back_message_one":"Where've you been? We missed you.",
+    "page_welcome_back_message_two":"Glad you're back. Ready to dive back in?",
+    "page_welcome_back_message_three":"Your community has been waiting for you!",
+
     "page_onboarding_welcome_heading_first_line": "Think.",
     "page_onboarding_welcome_heading_second_line": "Feel.",
     "page_onboarding_welcome_heading_third_line": "Live.",
@@ -116,9 +121,18 @@
     "page_registration_new_number": "What is your new phone number?",
     "page_registration_change_number": "Change Phone Number",
 
-    "page_login_password_enter": "Please enter your password to sign in",
+    "page_account_recovery_title": "Account Recovery",
+    "page_account_recovery_body": "Don't worry. It happens. We'll send a recovery link to the email address linked to your account. No biggie.",
+    "page_account_recovery_started_title": "Recovery Started",
+    "page_account_recovery_started_body": "Okay! We've sent the link. Check your email account to see if you've received it.",
+
+    "page_account_recovery_new_password_title": "Create A New Password",
+    "page_account_recovery_new_password_body": "New password, new you",
+
+    "page_login_password_enter": "Enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",
     "page_login_password_forgotten_body": "We have sent reset instructions to your email address!",
+    "page_login_password_error": "Hi there! We don't recognise the login details you're using. Please double-check your email address and password, or use the Forgotten Password link above.",
     
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",
@@ -357,6 +371,7 @@
     "shared_phone_number": "Phone Number",
 
     "shared_actions_sign_up": "Sign In / Register",
+    "shared_actions_sign_in": "Sign In",
     "shared_characters_remaining": "remaining",
     "shared_actions_continue": "Continue",
     "shared_actions_continue_with_location": "Continue With Location",
@@ -474,7 +489,7 @@
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",
     "shared_errors_not_max_length": "The value supplied is too long",
-    "shared_errors_invalid_email": "The email you have entered is invalid",
+    "shared_errors_invalid_email": "Please enter a valid email address",
     "shared_errors_invalid_phone": "The phone number you have entered is incorrect",
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",
     "shared_errors_user_not_found": "The user account was not found",

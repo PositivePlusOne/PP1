@@ -33,6 +33,7 @@ class LoginViewModelState with _$LoginViewModelState {
     @Default(false) bool isBusy,
     @Default('') String email,
     @Default('') String password,
+    @Default("") String serverError,
   }) = _LoginViewModelState;
 
   factory LoginViewModelState.initialState() => const LoginViewModelState();
@@ -180,12 +181,15 @@ class LoginViewModel extends _$LoginViewModel {
     await appRouter.push(const LoginPasswordRoute());
   }
 
-  Future<void> onPasswordSubmitted() async {
+  Future<void> onPasswordSubmitted(BuildContext context) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+
+    state = state.copyWith(serverError: "");
 
     if (!isPasswordValid) {
       logger.d('Invalid password');
@@ -205,6 +209,10 @@ class LoginViewModel extends _$LoginViewModel {
       state = state.copyWith(isBusy: false);
       appRouter.removeWhere((route) => true);
       appRouter.push(const HomeRoute());
+    } catch (e) {
+      if (e is FirebaseAuthException && (e.code == 'wrong-password' || e.code == 'user-not-found')) {
+        state = state.copyWith(serverError: localisations.page_login_password_error);
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }

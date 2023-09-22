@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/router_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -46,8 +47,7 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
   Future<bool> onBackSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    appRouter.removeWhere((route) => true);
-    unawaited(appRouter.push(const HomeRoute()));
+    appRouter.removeLastOrHome();
 
     return false;
   }
