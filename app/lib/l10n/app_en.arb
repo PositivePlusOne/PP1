@@ -272,13 +272,13 @@
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
-    "page_search_posts_not_found_title": "No Posts Found",
+    "page_search_posts_not_found_title": "No Posts\nFound",
     "page_search_posts_not_found_body": "We couldn’t find any Posts matching your search term",
-    "page_search_people_not_found_title": "No People Found",
+    "page_search_people_not_found_title": "No People\nFound",
     "page_search_people_not_found_body": "We couldn’t find anybody matching your search term",
-    "page_search_events_not_found_title": "No Events Found",
+    "page_search_events_not_found_title": "No Events\nFound",
     "page_search_events_not_found_body": "We couldn’t find any Events matching your search term",
-    "page_search_tags_not_found_title": "No Tags Found",
+    "page_search_tags_not_found_title": "No Tags\nFound",
     "page_search_tags_not_found_body": "We couldn’t find any Tags matching your search term",
 
     "page_chat_lock_dialog_title": "Leave and Lock Conversation",
