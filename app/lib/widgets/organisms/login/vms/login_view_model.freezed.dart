@@ -129,7 +129,7 @@ class _$_LoginViewModelState implements _LoginViewModelState {
       {this.isBusy = false,
       this.email = '',
       this.password = '',
-      this.serverError = ''});
+      this.serverError = ""});
 
   @override
   @JsonKey()

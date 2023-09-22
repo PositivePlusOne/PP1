@@ -3,7 +3,9 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/typography/positive_title_body_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -219,23 +221,33 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
   @override
   Widget build(BuildContext context) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
-    return PagedSliverList.separated(
-      pagingController: notificationsState.pagingController,
-      separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
-      builderDelegate: PagedChildBuilderDelegate<NotificationPayload>(
-        animateTransitions: true,
-        transitionDuration: kAnimationDurationRegular,
-        itemBuilder: (_, notification, __) {
-          return PositiveNotificationTile(
-            notification: notification,
-            isEnabled: isNotificationEnabled(notification),
-            onNotificationSelected: onNotificationSelected,
-          );
-        },
-        firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
-        newPageErrorIndicatorBuilder: (context) => const SizedBox(),
-        noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
-        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+      sliver: PagedSliverList.separated(
+        pagingController: notificationsState.pagingController,
+        separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),
+        shrinkWrapFirstPageIndicators: true,
+        builderDelegate: PagedChildBuilderDelegate<NotificationPayload>(
+          animateTransitions: true,
+          transitionDuration: kAnimationDurationRegular,
+          itemBuilder: (_, notification, __) {
+            return PositiveNotificationTile(
+              notification: notification,
+              isEnabled: isNotificationEnabled(notification),
+              onNotificationSelected: onNotificationSelected,
+            );
+          },
+          firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
+          newPageErrorIndicatorBuilder: (context) => const SizedBox(),
+          noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
+          noItemsFoundIndicatorBuilder: (context) => PositiaveTitleBodyWidget(
+            title: localisations.page_notifications_empty_title,
+            body: localisations.page_notifications_empty_body,
+          ),
+          firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        ),
       ),
     );
   }

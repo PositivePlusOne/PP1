@@ -210,12 +210,12 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                 ),
               ),
             ),
-            if (trailing.isNotEmpty) ...<Widget>[
-              const SizedBox(width: kPaddingExtraSmall),
-              ...trailing.spaceWithHorizontal(kPaddingExtraSmall),
-            ],
+          ),
+          if (trailing.isNotEmpty) ...<Widget>[
+            const SizedBox(width: kPaddingExtraSmall),
+            ...trailing.spaceWithHorizontal(kPaddingExtraSmall),
           ],
-        ),
+        ],
       ),
     );
   }

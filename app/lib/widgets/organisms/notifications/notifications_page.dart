@@ -1,4 +1,9 @@
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/state/positive_notifications_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +28,7 @@ class NotificationsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final String profileId = currentProfile?.flMeta?.id ?? '';
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     final List<Widget> actions = [];
     if (currentProfile != null) {
@@ -30,23 +36,29 @@ class NotificationsPage extends ConsumerWidget {
     }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final String notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(profileId);
+    final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(notificationCacheKey);
+    final bool hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
-      visibleComponents: const {
+      visibleComponents: {
         PositiveScaffoldComponent.headingWidgets,
-        PositiveScaffoldComponent.decorationWidget,
-        PositiveScaffoldComponent.footerPadding,
+        if (!hasNotifications) PositiveScaffoldComponent.decorationWidget,
       },
+      decorations: buildType3ScaffoldDecorations(colours),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarTrailing: actions,
           appBarSpacing: kPaddingSmall,
+          children: const <Widget>[],
         ),
         if (profileId.isNotEmpty) ...<Widget>[
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
-            sliver: PositiveNotificationsPaginationBehaviour(uid: profileId),
-          ),
+          PositiveNotificationsPaginationBehaviour(uid: profileId),
+          const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
+          SliverToBoxAdapter(child: SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData))),
         ],
       ],
     );

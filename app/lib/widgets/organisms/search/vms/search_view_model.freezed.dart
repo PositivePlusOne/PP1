@@ -26,6 +26,9 @@ mixin _$SearchViewModelState {
   String get searchUsersCursor => throw _privateConstructorUsedError;
   String get searchPostsCursor => throw _privateConstructorUsedError;
   String get searchTagsCursor => throw _privateConstructorUsedError;
+  bool get hasSearchedTags => throw _privateConstructorUsedError;
+  bool get hasSearchedPosts => throw _privateConstructorUsedError;
+  bool get hasSearchedUsers => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchViewModelStateCopyWith<SearchViewModelState> get copyWith =>
@@ -48,7 +51,10 @@ abstract class $SearchViewModelStateCopyWith<$Res> {
       List<Tag> searchTagResults,
       String searchUsersCursor,
       String searchPostsCursor,
-      String searchTagsCursor});
+      String searchTagsCursor,
+      bool hasSearchedTags,
+      bool hasSearchedPosts,
+      bool hasSearchedUsers});
 }
 
 /// @nodoc
@@ -75,6 +81,9 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
     Object? searchUsersCursor = null,
     Object? searchPostsCursor = null,
     Object? searchTagsCursor = null,
+    Object? hasSearchedTags = null,
+    Object? hasSearchedPosts = null,
+    Object? hasSearchedUsers = null,
   }) {
     return _then(_value.copyWith(
       currentTab: null == currentTab
@@ -117,6 +126,18 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
           ? _value.searchTagsCursor
           : searchTagsCursor // ignore: cast_nullable_to_non_nullable
               as String,
+      hasSearchedTags: null == hasSearchedTags
+          ? _value.hasSearchedTags
+          : hasSearchedTags // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasSearchedPosts: null == hasSearchedPosts
+          ? _value.hasSearchedPosts
+          : hasSearchedPosts // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasSearchedUsers: null == hasSearchedUsers
+          ? _value.hasSearchedUsers
+          : hasSearchedUsers // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -139,7 +160,10 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
       List<Tag> searchTagResults,
       String searchUsersCursor,
       String searchPostsCursor,
-      String searchTagsCursor});
+      String searchTagsCursor,
+      bool hasSearchedTags,
+      bool hasSearchedPosts,
+      bool hasSearchedUsers});
 }
 
 /// @nodoc
@@ -163,6 +187,9 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
     Object? searchUsersCursor = null,
     Object? searchPostsCursor = null,
     Object? searchTagsCursor = null,
+    Object? hasSearchedTags = null,
+    Object? hasSearchedPosts = null,
+    Object? hasSearchedUsers = null,
   }) {
     return _then(_$_SearchViewModelState(
       currentTab: null == currentTab
@@ -205,6 +232,18 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
           ? _value.searchTagsCursor
           : searchTagsCursor // ignore: cast_nullable_to_non_nullable
               as String,
+      hasSearchedTags: null == hasSearchedTags
+          ? _value.hasSearchedTags
+          : hasSearchedTags // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasSearchedPosts: null == hasSearchedPosts
+          ? _value.hasSearchedPosts
+          : hasSearchedPosts // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasSearchedUsers: null == hasSearchedUsers
+          ? _value.hasSearchedUsers
+          : hasSearchedUsers // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -222,7 +261,10 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       final List<Tag> searchTagResults = const [],
       this.searchUsersCursor = '',
       this.searchPostsCursor = '',
-      this.searchTagsCursor = ''})
+      this.searchTagsCursor = '',
+      this.hasSearchedTags = false,
+      this.hasSearchedPosts = false,
+      this.hasSearchedUsers = false})
       : _searchUsersResults = searchUsersResults,
         _searchPostsResults = searchPostsResults,
         _searchTagResults = searchTagResults;
@@ -277,10 +319,19 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   @override
   @JsonKey()
   final String searchTagsCursor;
+  @override
+  @JsonKey()
+  final bool hasSearchedTags;
+  @override
+  @JsonKey()
+  final bool hasSearchedPosts;
+  @override
+  @JsonKey()
+  final bool hasSearchedUsers;
 
   @override
   String toString() {
-    return 'SearchViewModelState(currentTab: $currentTab, isBusy: $isBusy, isSearching: $isSearching, searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchTagResults: $searchTagResults, searchUsersCursor: $searchUsersCursor, searchPostsCursor: $searchPostsCursor, searchTagsCursor: $searchTagsCursor)';
+    return 'SearchViewModelState(currentTab: $currentTab, isBusy: $isBusy, isSearching: $isSearching, searchQuery: $searchQuery, searchUsersResults: $searchUsersResults, searchPostsResults: $searchPostsResults, searchTagResults: $searchTagResults, searchUsersCursor: $searchUsersCursor, searchPostsCursor: $searchPostsCursor, searchTagsCursor: $searchTagsCursor, hasSearchedTags: $hasSearchedTags, hasSearchedPosts: $hasSearchedPosts, hasSearchedUsers: $hasSearchedUsers)';
   }
 
   @override
@@ -306,7 +357,13 @@ class _$_SearchViewModelState implements _SearchViewModelState {
             (identical(other.searchPostsCursor, searchPostsCursor) ||
                 other.searchPostsCursor == searchPostsCursor) &&
             (identical(other.searchTagsCursor, searchTagsCursor) ||
-                other.searchTagsCursor == searchTagsCursor));
+                other.searchTagsCursor == searchTagsCursor) &&
+            (identical(other.hasSearchedTags, hasSearchedTags) ||
+                other.hasSearchedTags == hasSearchedTags) &&
+            (identical(other.hasSearchedPosts, hasSearchedPosts) ||
+                other.hasSearchedPosts == hasSearchedPosts) &&
+            (identical(other.hasSearchedUsers, hasSearchedUsers) ||
+                other.hasSearchedUsers == hasSearchedUsers));
   }
 
   @override
@@ -321,7 +378,10 @@ class _$_SearchViewModelState implements _SearchViewModelState {
       const DeepCollectionEquality().hash(_searchTagResults),
       searchUsersCursor,
       searchPostsCursor,
-      searchTagsCursor);
+      searchTagsCursor,
+      hasSearchedTags,
+      hasSearchedPosts,
+      hasSearchedUsers);
 
   @JsonKey(ignore: true)
   @override
@@ -342,7 +402,10 @@ abstract class _SearchViewModelState implements SearchViewModelState {
       final List<Tag> searchTagResults,
       final String searchUsersCursor,
       final String searchPostsCursor,
-      final String searchTagsCursor}) = _$_SearchViewModelState;
+      final String searchTagsCursor,
+      final bool hasSearchedTags,
+      final bool hasSearchedPosts,
+      final bool hasSearchedUsers}) = _$_SearchViewModelState;
 
   @override
   SearchTab get currentTab;
@@ -364,6 +427,12 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   String get searchPostsCursor;
   @override
   String get searchTagsCursor;
+  @override
+  bool get hasSearchedTags;
+  @override
+  bool get hasSearchedPosts;
+  @override
+  bool get hasSearchedUsers;
   @override
   @JsonKey(ignore: true)
   _$$_SearchViewModelStateCopyWith<_$_SearchViewModelState> get copyWith =>

@@ -170,7 +170,7 @@
     "page_registration_gender_no_results": "No Matching gender",
 
     "page_registration_welcome_back": "Welcome Back",
-    "page_registration_welcome_back_body": "To continue with your registration, please press continue below",
+    "page_registration_welcome_back_body": "Ready to keep going? Tap 'Continue' below and let's complete your profile!",
 
     "page_profile_interest_title": "Your interests",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
@@ -244,6 +244,9 @@
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
 
+    "page_notifications_empty_title":"You’re all caught up",
+    "page_notifications_empty_body":"Nothing to do here, go and enjoy your day!",
+
     "page_account_verify_account_title": "Verify Account",
     "page_account_verify_account_body": "You have not logged on recently. Can we confirm your password so we know that it is you!",
     "page_account_verify_account_password_forgotten": "Forgotten Password",
@@ -263,6 +266,15 @@
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
+    "page_search_posts_not_found_title": "No Posts Found",
+    "page_search_posts_not_found_body": "We couldn’t find any Posts matching your search term",
+    "page_search_people_not_found_title": "No People Found",
+    "page_search_people_not_found_body": "We couldn’t find anybody matching your search term",
+    "page_search_events_not_found_title": "No Events Found",
+    "page_search_events_not_found_body": "We couldn’t find any Events matching your search term",
+    "page_search_tags_not_found_title": "No Tags Found",
+    "page_search_tags_not_found_body": "We couldn’t find any Tags matching your search term",
+
     "page_chat_lock_dialog_title": "Leave and Lock Conversation",
     "page_chat_lock_dialog_desc": "Locked conversations still appear in the chat lists of all participants, but further messages cannot be added.",
 

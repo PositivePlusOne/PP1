@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/widgets/atoms/typography/positive_title_body_widget.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,12 +40,12 @@ class SearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
     final SearchViewModelProvider provider = searchViewModelProvider(defaultTab);
     final SearchViewModel viewModel = ref.read(provider.notifier);
 
     final List<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags));
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -63,9 +65,93 @@ class SearchPage extends ConsumerWidget {
       SearchTab.tags => true,
     };
 
+    final List<Widget> searchResultWidgets = [];
+
+    if (!canDisplaySearchResults) {
+      if (isSearching) {
+        searchResultWidgets.addAll(
+          [
+            const PositiveLoadingIndicator(),
+            const SizedBox(height: kPaddingSmall),
+          ],
+        );
+      } else {
+        if (viewModel.hasSearched) {
+          searchResultWidgets.addAll(
+            [
+              const SizedBox(height: kPaddingExtraLarge),
+              PositiaveTitleBodyWidget(
+                title: viewModel.searchNotFoundTitle(localisations),
+                body: viewModel.searchNotFoundBody(localisations),
+              ),
+            ],
+          );
+        } else {
+          searchResultWidgets.addAll(
+            [
+              Text(
+                localisations.page_search_subtitle_pending,
+                style: typography.styleSubtext.copyWith(color: colours.colorGray7),
+              ),
+            ],
+          );
+        }
+      }
+    }
+
+    if (canDisplaySearchResults) {
+      switch (currentTab) {
+        case SearchTab.users:
+          searchResultWidgets.addAll([
+            for (final Profile profile in searchUserResults) ...<Widget>[
+              PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
+            ],
+          ].spaceWithVertical(kPaddingSmall));
+          break;
+
+        case SearchTab.posts:
+          searchResultWidgets.addAll([
+            for (final Activity activity in searchPostsResults) ...<Widget>[
+              PositiveActivityWidget(activity: activity),
+            ],
+          ].spaceWithVertical(kPaddingMedium));
+          break;
+
+        case SearchTab.tags:
+          searchResultWidgets.addAll(
+            [
+              StaggeredGrid.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: kPaddingSmall,
+                mainAxisSpacing: kPaddingSmall,
+                axisDirection: AxisDirection.down,
+                children: <Widget>[
+                  for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
+                    PositiveTopicTile(
+                      colors: colours,
+                      typography: typography,
+                      tag: tag,
+                      onTap: (context) => viewModel.onTopicSelected(context, tag),
+                    ),
+                  ],
+                ],
+              )
+            ],
+          );
+          break;
+
+        default:
+      }
+    }
+
     return PositiveScaffold(
       isBusy: isBusy,
       onWillPopScope: viewModel.onWillPopScope,
+      visibleComponents: {
+        PositiveScaffoldComponent.headingWidgets,
+        if (!canDisplaySearchResults && viewModel.hasSearched && !isSearching) PositiveScaffoldComponent.decorationWidget,
+      },
+      decorations: buildType1ScaffoldDecorations(colours),
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQuery,
         index: NavigationBarIndex.search,
@@ -101,10 +187,10 @@ class SearchPage extends ConsumerWidget {
                   onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
                   margin: EdgeInsets.zero,
                   tabColours: <Color>[
-                    colors.green,
-                    colors.yellow,
-                    // colors.teal,
-                    colors.purple,
+                    colours.green,
+                    colours.yellow,
+                    // colours.teal,
+                    colours.purple,
                   ],
                   tabs: const <String>[
                     'Posts',
@@ -114,46 +200,7 @@ class SearchPage extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: kPaddingSmall),
-                if (isSearching && !canDisplaySearchResults) ...<Widget>[
-                  const PositiveLoadingIndicator(),
-                  const SizedBox(height: kPaddingSmall),
-                ],
-                if (!isSearching && !canDisplaySearchResults) ...<Widget>[
-                  Text(
-                    localizations.page_search_subtitle_pending,
-                    style: typography.styleSubtext.copyWith(color: colors.colorGray7),
-                  ),
-                ],
-                if (canDisplaySearchResults && currentTab == SearchTab.users)
-                  ...<Widget>[
-                    for (final Profile profile in searchUserResults) ...<Widget>[
-                      PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
-                    ],
-                  ].spaceWithVertical(kPaddingSmall),
-                if (canDisplaySearchResults && currentTab == SearchTab.posts)
-                  ...<Widget>[
-                    for (final Activity activity in searchPostsResults) ...<Widget>[
-                      PositiveActivityWidget(activity: activity),
-                    ],
-                  ].spaceWithVertical(kPaddingMedium),
-                if (canDisplaySearchResults && currentTab == SearchTab.tags) ...<Widget>[
-                  StaggeredGrid.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: kPaddingSmall,
-                    mainAxisSpacing: kPaddingSmall,
-                    axisDirection: AxisDirection.down,
-                    children: <Widget>[
-                      for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
-                        PositiveTopicTile(
-                          colors: colors,
-                          typography: typography,
-                          tag: tag,
-                          onTap: (context) => viewModel.onTopicSelected(context, tag),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
+                ...searchResultWidgets,
               ],
             ),
           ),
