@@ -94,22 +94,22 @@
     "page_onboarding_terms_reference_two": "By confirming your real self through a selfie, we create a safer environment for all Positive+1 members.",
 
     "page_registration_create_account_title": "Create an Account",
-    "page_registration_create_account_body": "Let's create a Positive+1 Account.",
+    "page_registration_create_account_body": "Ready to join the club?",
     "page_registration_create_account_action_continue_google": "Continue with Google",
     "page_registration_create_account_action_continue_apple": "Continue with Apple",
     "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
     "page_registration_create_account_action_continue_email": "Continue with Email",
     "page_registration_create_account_action_continue_login": "Already on Positive+1?",
     "page_registration_account_setup": "Account Created!",
-    "page_registration_account_setup_body": "Let’s take a breather, from here we will ask for you to complete your profile before you can access Positive+1",
+    "page_registration_account_setup_body": "Almost there! We just need a little more info to personalize your Positive+1 experience. Complete your profile to get access to Positive+1.",
     "page_registration_account_setup_continue": "Let's Continue",
 
     "page_registration_email_entry_title": "Your Email",
-    "page_registration_email_entry_body": "Let's get started!",
+    "page_registration_email_entry_body": "Enter your email to get started",
 
     "page_registration_password_label": "Password",
     "page_registration_create_password": "Create Password",
-    "page_registration_create_password_tooltip": "Create a secure, non-repetitive password.",
+    "page_registration_create_password_tooltip": "Whip up a strong password to keep your account safe and secure",
 
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
@@ -125,10 +125,10 @@
     "page_home_post_event": "Event",
 
     "page_profile_name_entry_title": "Your Name",
-    "page_profile_name_entry_description": "Let us know your name",
+    "page_profile_name_entry_description": "Let us know your full name",
     "page_profile_name_entry_input_label": "Your Name",
 
-    "page_profile_display_name_entry_description": "How would you like to be known?",
+    "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
 
     "page_profile_birthday_title": "Your Birthday",
     "page_profile_birthday_description": "Let us know how old you are",
@@ -161,9 +161,9 @@
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
 
     "page_profile_location_title": "Where are you?",
-    "page_profile_location_subtitle": "Search for your location, or press the find me button",
+    "page_profile_location_subtitle": "Where in the world are you? Search your location or kick back and let us find you.",
     "page_profile_location_action_find": "Find Me",
-    "page_profile_location_instruction": "Search for your location, or press the find me button",
+    "page_profile_location_instruction": "Where in the world are you? Search your location or kick back and let us find you.",
     "page_profile_location_not_set": "Location not provided",
     "page_profile_location_dialog_title": "Results",
     "page_profile_location_errors_search_failed": "We couldn’t find that location. Please try again or use the Find Me button above.",
@@ -177,15 +177,15 @@
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
 
-    "page_profile_photo_title": "Now your profile photo",
-    "page_profile_photo_body": "Let's get a photo of you!",
+    "page_profile_photo_title": "Selfie Time!",
+    "page_profile_photo_body": "Time to get a photo of that pretty face.",
     "page_profile_photo_continue": "Select a Photo",
     
     "page_profile_photo_dialogue_take": "Take a Fresh Photo",
     "page_profile_photo_dialogue_camera_roll": "Select from Camera Roll",
 
-    "page_profile_image_completion_title": "Thanks for that!",
-    "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
+    "page_profile_image_completion_title": "Done!",
+    "page_profile_image_completion_body": "We're good to go. Let's keep going.",
 
     "page_profile_edit_about_you": "About you",
     "page_profile_edit_about_you_desc": "Say something about yourself",
@@ -430,6 +430,12 @@
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
     "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
+
+    
+    "shared_get_notified_title": "Get Notified",
+    "shared_get_notified_refuse": "I do not want to be notified",
+    "shared_get_notified_turn_on": "Turn On Notifications",
+    "shared_get_notified_body": "Stay in the loop! From sizzling conversations to the freshest events, we'll bring all the good stuff straight to your phone. Never miss a beat with Positive+1!",
 
     "shared_promotions_premium_account": "Premium Account",
     "shared_promotions_premium_account_description": "Sign up to Positive+1 Premium",

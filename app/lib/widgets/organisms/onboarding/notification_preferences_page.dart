@@ -10,6 +10,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/notifications/vms/notification_preferences_view_model.dart';
@@ -27,6 +28,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final NotificationPreferencesViewModel viewModel = ref.watch(notificationPreferencesViewModelProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
@@ -38,7 +40,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: viewModel.onPermitSelected,
-          label: 'Turn On Notifications',
+          label: localisations.shared_get_notified_turn_on,
         ),
       ],
       headingWidgets: <Widget>[
@@ -55,7 +57,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  'Get Notified',
+                  localisations.shared_get_notified_title,
                   style: typography.styleHero.copyWith(
                     color: colors.black,
                   ),
@@ -64,7 +66,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Get updates on your conversations, new events and much more directly to your phone',
+              localisations.shared_get_notified_body,
               style: typography.styleBody.copyWith(
                 color: colors.black,
               ),
@@ -76,7 +78,7 @@ class NotificationPreferencesPage extends ConsumerWidget {
                   colors: colors,
                   primaryColor: colors.black,
                   onTapped: viewModel.onDenySelected,
-                  label: 'I do not want to be notified',
+                  label: localisations.shared_get_notified_refuse,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
