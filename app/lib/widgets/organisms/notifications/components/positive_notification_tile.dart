@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,7 +40,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   final bool isEnabled;
   final FutureOr<void> Function(BuildContext context, NotificationPayload payload)? onNotificationSelected;
 
-  static const double kMinimumHeight = 62.0;
+  static const double kConstrainedHeight = 62.0;
 
   @override
   ConsumerState<PositiveNotificationTile> createState() => PositiveNotificationTileState();
@@ -187,7 +188,10 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       showDisabledState: !widget.isEnabled,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
-        constraints: const BoxConstraints(minHeight: PositiveNotificationTile.kMinimumHeight),
+        constraints: const BoxConstraints(
+          minHeight: PositiveNotificationTile.kConstrainedHeight,
+          maxHeight: PositiveNotificationTile.kConstrainedHeight,
+        ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(kBorderRadiusMassive),
@@ -198,11 +202,13 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
             leading,
             const SizedBox(width: kPaddingSmall),
             Expanded(
-              child: AutoSizeText(
-                body,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: typography.styleNotification.copyWith(color: foregroundColor),
+              child: IgnorePointer(
+                ignoring: true,
+                child: buildMarkdownWidgetFromBody(
+                  body,
+                  lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
+                  onTapLink: (_) {},
+                ),
               ),
             ),
             if (trailing.isNotEmpty) ...<Widget>[

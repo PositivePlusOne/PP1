@@ -75,8 +75,12 @@ export namespace RelationshipService {
   }
 
   export function relationshipStatesForEntity(entityId: string, relationship: RelationshipJSON): Set<RelationshipState> {
-    const member = relationship.members?.find(m => m.memberId === entityId);
-    const otherMembers = relationship.members?.filter(m => m.memberId !== entityId);
+    if (!entityId || !relationship || !relationship.members || relationship.members.length === 0) {
+        return new Set();
+    }
+
+    const member = relationship?.members?.find(m => m.memberId === entityId);
+    const otherMembers = relationship?.members?.filter(m => m.memberId !== entityId);
 
     if (!member || !otherMembers || otherMembers.length === 0) {
         return new Set();

@@ -29,6 +29,8 @@ export type FeedEntry = {
 export type ReactionEntryJSON = {
   kind: string;
   activity_id: string;
+  source_reaction_id: string;
+  target_reaction_id: string;
   user_id: string;
   data: any;
   tags: string[];

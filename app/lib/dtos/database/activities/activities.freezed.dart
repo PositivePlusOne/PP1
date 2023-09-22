@@ -4291,6 +4291,7 @@ ActivityEnrichmentConfiguration _$ActivityEnrichmentConfigurationFromJson(
 mixin _$ActivityEnrichmentConfiguration {
   @JsonKey(fromJson: stringListFromJson)
   List<String> get tags => throw _privateConstructorUsedError;
+  String get promotionKey => throw _privateConstructorUsedError;
   String get publishLocation => throw _privateConstructorUsedError;
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions => throw _privateConstructorUsedError;
@@ -4311,6 +4312,7 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(fromJson: stringListFromJson) List<String> tags,
+      String promotionKey,
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions});
@@ -4331,6 +4333,7 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
   @override
   $Res call({
     Object? tags = null,
+    Object? promotionKey = null,
     Object? publishLocation = null,
     Object? mentions = null,
   }) {
@@ -4339,6 +4342,10 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      promotionKey: null == promotionKey
+          ? _value.promotionKey
+          : promotionKey // ignore: cast_nullable_to_non_nullable
+              as String,
       publishLocation: null == publishLocation
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
@@ -4362,6 +4369,7 @@ abstract class _$$_ActivityEnrichmentConfigurationCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(fromJson: stringListFromJson) List<String> tags,
+      String promotionKey,
       String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions});
@@ -4381,6 +4389,7 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
   @override
   $Res call({
     Object? tags = null,
+    Object? promotionKey = null,
     Object? publishLocation = null,
     Object? mentions = null,
   }) {
@@ -4389,6 +4398,10 @@ class __$$_ActivityEnrichmentConfigurationCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      promotionKey: null == promotionKey
+          ? _value.promotionKey
+          : promotionKey // ignore: cast_nullable_to_non_nullable
+              as String,
       publishLocation: null == publishLocation
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
@@ -4408,6 +4421,7 @@ class _$_ActivityEnrichmentConfiguration
   const _$_ActivityEnrichmentConfiguration(
       {@JsonKey(fromJson: stringListFromJson)
       final List<String> tags = const [],
+      this.promotionKey = '',
       this.publishLocation = '',
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions = const []})
@@ -4429,6 +4443,9 @@ class _$_ActivityEnrichmentConfiguration
 
   @override
   @JsonKey()
+  final String promotionKey;
+  @override
+  @JsonKey()
   final String publishLocation;
   final List<Mention> _mentions;
   @override
@@ -4441,7 +4458,7 @@ class _$_ActivityEnrichmentConfiguration
 
   @override
   String toString() {
-    return 'ActivityEnrichmentConfiguration(tags: $tags, publishLocation: $publishLocation, mentions: $mentions)';
+    return 'ActivityEnrichmentConfiguration(tags: $tags, promotionKey: $promotionKey, publishLocation: $publishLocation, mentions: $mentions)';
   }
 
   @override
@@ -4450,6 +4467,8 @@ class _$_ActivityEnrichmentConfiguration
         (other.runtimeType == runtimeType &&
             other is _$_ActivityEnrichmentConfiguration &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.promotionKey, promotionKey) ||
+                other.promotionKey == promotionKey) &&
             (identical(other.publishLocation, publishLocation) ||
                 other.publishLocation == publishLocation) &&
             const DeepCollectionEquality().equals(other._mentions, _mentions));
@@ -4460,6 +4479,7 @@ class _$_ActivityEnrichmentConfiguration
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_tags),
+      promotionKey,
       publishLocation,
       const DeepCollectionEquality().hash(_mentions));
 
@@ -4483,6 +4503,7 @@ abstract class _ActivityEnrichmentConfiguration
     implements ActivityEnrichmentConfiguration {
   const factory _ActivityEnrichmentConfiguration(
       {@JsonKey(fromJson: stringListFromJson) final List<String> tags,
+      final String promotionKey,
       final String publishLocation,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions}) = _$_ActivityEnrichmentConfiguration;
@@ -4493,6 +4514,8 @@ abstract class _ActivityEnrichmentConfiguration
   @override
   @JsonKey(fromJson: stringListFromJson)
   List<String> get tags;
+  @override
+  String get promotionKey;
   @override
   String get publishLocation;
   @override

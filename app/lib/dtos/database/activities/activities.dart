@@ -301,6 +301,7 @@ class ActivityPublisherInformation with _$ActivityPublisherInformation {
 class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
   const factory ActivityEnrichmentConfiguration({
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> tags,
+    @Default('') String promotionKey,
     @Default('') String publishLocation,
     @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
   }) = _ActivityEnrichmentConfiguration;
