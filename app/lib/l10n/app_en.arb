@@ -141,6 +141,9 @@
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",
     "page_home_post_event": "Event",
+    
+    "page_home_banner_sign_in_title": "Activate your account",
+    "page_home_banner_sign_in_body": "Engage and connect with the community",
 
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your full name",
