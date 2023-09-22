@@ -145,6 +145,9 @@
     "page_home_banner_sign_in_title": "Activate your account",
     "page_home_banner_sign_in_body": "Engage and connect with the community",
 
+    "page_home_blocker_title": "Thanks for showing an interest in Positive+1",
+    "page_home_blocker_body": "To be able to create content, view profiles and connect with people you'll need to sign in or register for an account.",
+    
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your full name",
     "page_profile_name_entry_input_label": "Your Name",
