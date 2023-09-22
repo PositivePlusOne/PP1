@@ -2,12 +2,10 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/converters/date_converters.dart';
-import 'package:app/dtos/converters/firestore_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/extensions/json_extensions.dart';
 

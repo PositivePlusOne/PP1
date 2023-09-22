@@ -1,5 +1,7 @@
 import { FlMeta, FlMetaJSON } from "./meta";
 
+export const promotionsSchemaKey = "promotions";
+
 export interface PromotionOwnerJSON {
     profileId?: string;
     role?: string;
