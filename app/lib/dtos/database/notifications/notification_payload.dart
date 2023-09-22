@@ -9,18 +9,6 @@ import 'package:app/dtos/database/notifications/notification_topic.dart';
 part 'notification_payload.freezed.dart';
 part 'notification_payload.g.dart';
 
-// public id = '';
-//     public user_id = '';
-//     public sender = '';
-//     public title = '';
-//     public body = '';
-//     public icon = '';
-//     public created_at = '';
-//     public extra_data: Record<string, any> = {};
-//     public topic: NotificationTopic = NotificationTopic.OTHER;
-//     public action: NotificationAction = NotificationAction.NONE;
-//     public priority: NotificationPriority | null = NotificationPriority.PRIORITY_HIGH;
-
 @freezed
 abstract class NotificationPayload with _$NotificationPayload {
   const factory NotificationPayload({

@@ -1,6 +1,11 @@
-import 'package:app/constants/design_constants.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:unicons/unicons.dart';
+
+// Project imports:
+import 'package:app/constants/design_constants.dart';
 
 class PositiveVerifiedBadge extends StatelessWidget {
   const PositiveVerifiedBadge({
