@@ -22,7 +22,8 @@ class Promotion with _$Promotion {
     @Default('') String descriptionMarkdown,
     @Default('') String link,
     @Default('') String linkText,
-    @Default(null) @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson) DocumentReference? owner,
+    @Default([]) List<PromotionOwner> owners,
+    @Default([]) List<PromotedActivity> promotedActivities,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? startTime,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? endTime,
   }) = _Promotion;
@@ -34,6 +35,40 @@ class Promotion with _$Promotion {
   }
 
   static List<Map<String, dynamic>> toJsonList(List<Promotion> data) {
+    return data.map((e) => e.toJson()).toList();
+  }
+}
+
+@freezed
+class PromotionOwner with _$PromotionOwner {
+  const factory PromotionOwner({
+    @Default('') String activityId,
+  }) = _PromotionOwner;
+
+  factory PromotionOwner.fromJson(Map<String, dynamic> json) => _$PromotionOwnerFromJson(json);
+
+  static List<PromotionOwner> fromJsonList(List<dynamic> data) {
+    return data.map((e) => PromotionOwner.fromJson(json.decodeSafe(e))).toList();
+  }
+
+  static List<Map<String, dynamic>> toJsonList(List<PromotionOwner> data) {
+    return data.map((e) => e.toJson()).toList();
+  }
+}
+
+@freezed
+class PromotedActivity with _$PromotedActivity {
+  const factory PromotedActivity({
+    @Default('') String activityId,
+  }) = _PromotedActivity;
+
+  factory PromotedActivity.fromJson(Map<String, dynamic> json) => _$PromotedActivityFromJson(json);
+
+  static List<PromotedActivity> fromJsonList(List<dynamic> data) {
+    return data.map((e) => PromotedActivity.fromJson(json.decodeSafe(e))).toList();
+  }
+
+  static List<Map<String, dynamic>> toJsonList(List<PromotedActivity> data) {
     return data.map((e) => e.toJson()).toList();
   }
 }

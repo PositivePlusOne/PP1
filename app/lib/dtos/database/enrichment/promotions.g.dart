@@ -14,8 +14,14 @@ _$_Promotion _$$_PromotionFromJson(Map<String, dynamic> json) => _$_Promotion(
       descriptionMarkdown: json['descriptionMarkdown'] as String? ?? '',
       link: json['link'] as String? ?? '',
       linkText: json['linkText'] as String? ?? '',
-      owner:
-          json['owner'] == null ? null : firestoreDocRefFromJson(json['owner']),
+      owners: (json['owners'] as List<dynamic>?)
+              ?.map((e) => PromotionOwner.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      promotedActivities: (json['promotedActivities'] as List<dynamic>?)
+              ?.map((e) => PromotedActivity.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       startTime: dateFromUnknown(json['startTime']),
       endTime: dateFromUnknown(json['endTime']),
     );
@@ -27,7 +33,29 @@ Map<String, dynamic> _$$_PromotionToJson(_$_Promotion instance) =>
       'descriptionMarkdown': instance.descriptionMarkdown,
       'link': instance.link,
       'linkText': instance.linkText,
-      'owner': firestoreDocRefToJson(instance.owner),
+      'owners': instance.owners.map((e) => e.toJson()).toList(),
+      'promotedActivities':
+          instance.promotedActivities.map((e) => e.toJson()).toList(),
       'startTime': dateToUnknown(instance.startTime),
       'endTime': dateToUnknown(instance.endTime),
+    };
+
+_$_PromotionOwner _$$_PromotionOwnerFromJson(Map<String, dynamic> json) =>
+    _$_PromotionOwner(
+      activityId: json['activityId'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$$_PromotionOwnerToJson(_$_PromotionOwner instance) =>
+    <String, dynamic>{
+      'activityId': instance.activityId,
+    };
+
+_$_PromotedActivity _$$_PromotedActivityFromJson(Map<String, dynamic> json) =>
+    _$_PromotedActivity(
+      activityId: json['activityId'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$$_PromotedActivityToJson(_$_PromotedActivity instance) =>
+    <String, dynamic>{
+      'activityId': instance.activityId,
     };
