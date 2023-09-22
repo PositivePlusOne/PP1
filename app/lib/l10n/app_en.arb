@@ -104,6 +104,7 @@
     "page_registration_create_account_action_continue_apple": "Continue with Apple",
     "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
     "page_registration_create_account_action_continue_email": "Continue with Email",
+    "page_registration_create_account_action_need_account": "Need to Make an Account?",
     "page_registration_create_account_action_continue_login": "Already on Positive+1?",
     "page_registration_account_setup": "Account Created!",
     "page_registration_account_setup_body": "Almost there! We just need a little more info to personalize your Positive+1 experience. Complete your profile to get access to Positive+1.",
@@ -111,6 +112,9 @@
 
     "page_registration_email_entry_title": "Your Email",
     "page_registration_email_entry_body": "Enter your email to get started",
+
+    "page_registration_email_forgotten": "Forgotten Email",
+    "page_registration_email_forgotten_body": "Continue with Email",
 
     "page_registration_password_label": "Password",
     "page_registration_create_password": "Create Password",
@@ -132,7 +136,7 @@
     "page_login_password_enter": "Enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",
     "page_login_password_forgotten_body": "We have sent reset instructions to your email address!",
-    "page_login_password_error": "Hi there! We don't recognise the login details you're using. Please double-check your email address and password, or use the Forgotten Password link above.",
+    "page_login_password_error": "Hi there! We don't recognise the sign in details you're using. Please double-check your email address and password, or use the Forgotten Password link above.",
     
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",

@@ -67,12 +67,12 @@ class LoginPage extends HookConsumerWidget {
     final LoginViewModel viewModel = ref.watch(loginViewModelProvider.notifier);
     final LoginViewModelState state = ref.watch(loginViewModelProvider);
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final Color tintColor = getTextFieldTintColor(viewModel, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(viewModel, colors);
 
-    final String errorMessage = localizations.fromValidationErrorList(viewModel.emailValidationResults);
+    final String errorMessage = localisations.fromValidationErrorList(viewModel.emailValidationResults);
     final bool shouldDisplayErrorMessage = state.email.isNotEmpty && errorMessage.isNotEmpty;
 
     final List<Widget> hints = <Widget>[
@@ -96,7 +96,7 @@ class LoginPage extends HookConsumerWidget {
                   primaryColor: colors.black,
                   isDisabled: false,
                   onTapped: viewModel.onBackSelected,
-                  label: localizations.shared_actions_back,
+                  label: localisations.shared_actions_back,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,
                   size: PositiveButtonSize.small,
@@ -117,7 +117,7 @@ class LoginPage extends HookConsumerWidget {
           primaryColor: colors.black,
           isDisabled: viewModel.state.isBusy,
           onTapped: viewModel.onLoginWithGoogleSelected,
-          label: localizations.page_registration_create_account_action_continue_google,
+          label: localisations.page_registration_create_account_action_continue_google,
           icon: UniconsLine.google,
           layout: PositiveButtonLayout.iconLeft,
           style: PositiveButtonStyle.primary,
@@ -129,7 +129,7 @@ class LoginPage extends HookConsumerWidget {
           primaryColor: colors.black,
           isDisabled: viewModel.state.isBusy,
           onTapped: viewModel.onLoginWithAppleSelected,
-          label: localizations.page_registration_create_account_action_continue_apple,
+          label: localisations.page_registration_create_account_action_continue_apple,
           icon: UniconsLine.apple,
           layout: PositiveButtonLayout.iconLeft,
           style: PositiveButtonStyle.primary,
@@ -150,7 +150,7 @@ class LoginPage extends HookConsumerWidget {
         // ),
         const SizedBox(height: kPaddingMedium),
         PositiveTextField(
-          labelText: 'Continue With Email',
+          labelText: localisations.page_registration_create_account_action_continue_email,
           initialText: state.email,
           textInputType: TextInputType.emailAddress,
           textInputAction: TextInputAction.go,
@@ -169,7 +169,7 @@ class LoginPage extends HookConsumerWidget {
               colors: colors,
               primaryColor: colors.black,
               onTapped: viewModel.onAccountRecoverySelected,
-              label: 'Forgotten Email',
+              label: localisations.page_registration_email_forgotten,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.text,
               size: PositiveButtonSize.medium,
@@ -181,7 +181,7 @@ class LoginPage extends HookConsumerWidget {
         PositiveButton(
           colors: colors,
           onTapped: () => viewModel.onSignUpRequested(senderRoute),
-          label: 'Need to Make an Account?',
+          label: localisations.page_registration_create_account_action_need_account,
           layout: PositiveButtonLayout.iconLeft,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.yellow,
