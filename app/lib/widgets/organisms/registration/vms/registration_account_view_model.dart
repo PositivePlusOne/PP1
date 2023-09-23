@@ -2,6 +2,9 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +18,7 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
+import 'package:unicons/unicons.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/user/account_form_controller.dart';
@@ -74,11 +78,12 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
   Future<void> onLoginWithAppleSelected() async {
     state = state.copyWith(isBusy: true);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     try {
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
       final UserController userController = ref.read(userControllerProvider.notifier);
-      final AppRouter appRouter = ref.read(appRouterProvider);
 
       final credentials = await userController.registerAppleProvider();
       await systemController.updateSystemConfiguration();
@@ -90,6 +95,16 @@ class RegistrationAccountViewModel extends _$RegistrationAccountViewModel with L
 
       appRouter.removeWhere((route) => true);
       await appRouter.push(const HomeRoute());
+    } catch (e) {
+      final SnackBar snackBar = PositiveGenericSnackBar(
+        title: "Login Failed",
+        icon: UniconsLine.envelope_exclamation,
+        backgroundColour: colours.black,
+      );
+
+      if (appRouter.navigatorKey.currentContext != null) {
+        ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(snackBar);
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }

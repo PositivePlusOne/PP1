@@ -2,6 +2,9 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +21,7 @@ import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
+import 'package:unicons/unicons.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_details_view_model.freezed.dart';
@@ -198,6 +202,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     logger.d('onConnectAppleUserRequested');
     state = state.copyWith(isBusy: true);
@@ -216,6 +221,15 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       ));
     } catch (e) {
       logger.e('onConnectAppleUserRequested: $e');
+      final SnackBar snackBar = PositiveGenericSnackBar(
+        title: "Login Failed",
+        icon: UniconsLine.envelope_exclamation,
+        backgroundColour: colours.black,
+      );
+
+      if (appRouter.navigatorKey.currentContext != null) {
+        ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(snackBar);
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
