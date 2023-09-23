@@ -2,6 +2,8 @@ import * as functions from "firebase-functions";
 import { ProfileService } from "./profile_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { adminApp } from "..";
+import { RelationshipService } from "./relationship_service";
+import { ProfileJSON } from "../dto/profile";
 
 export namespace UserService {
   /**
@@ -22,42 +24,22 @@ export namespace UserService {
       return uid;
     }
 
-    // Attempt to get the profile and check the managers
-    const [userProfile, requestProfile] = await Promise.all([
-      ProfileService.getProfile(uid),
-      ProfileService.getProfile(requestId),
+    const [relationship, targetProfile] = await Promise.all([
+      RelationshipService.getRelationship([uid, requestId]),
+      ProfileService.getProfile(requestId)
     ]);
 
-    const requestProfileId = FlamelinkHelpers.getFlamelinkIdFromObject(requestProfile);
-    if (requestProfileId !== requestId) {
-      throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
+    if (!relationship || !targetProfile) {
+      functions.logger.info(`Authenticated as: ${uid}`);
+      return uid;
     }
 
-    const managerReferences = requestProfile?.organisationConfiguration?.members || [];
-    const userProfileId = userProfile?.id || "";
-    if (!userProfileId) {
-      throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
-    }
+    const isManageRelationshipFlag = relationship?.flags?.includes("managedRelationship") || false;
+    const hasManageTargetFlag = targetProfile?.featureFlags?.includes("manageTarget") || false;
 
-    const firestore = adminApp.firestore();
-
-    // Check if iterable or single
-    if (!Array.isArray(managerReferences)) {
-      const managerReferenceDoc = firestore.doc(managerReferences.path);
-      const managerDocId = managerReferenceDoc.id;
-      if (managerDocId === userProfileId) {
-        functions.logger.info(`Authenticated as: ${uid}`);
-        return uid;
-      }
-    } else {
-      for (const managerReference of managerReferences) {
-        const managerReferenceDoc = firestore.doc(managerReference.path);
-        const managerDocId = managerReferenceDoc.id;
-        if (managerDocId === userProfileId) {
-          functions.logger.info(`Authenticated as: ${uid}`);
-          return uid;
-        }
-      }
+    if (isManageRelationshipFlag && hasManageTargetFlag) {
+      functions.logger.info(`Authenticated as: ${uid}`);
+      return uid;
     }
 
     throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
