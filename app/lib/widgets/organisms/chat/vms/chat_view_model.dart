@@ -385,4 +385,14 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     return relationships.firstWhereOrNull((element) => element.members.length == 2 && element.members.any((m) => m.memberId == profileId));
   }
+
+  Relationship? getRelationshipForMessage(Message message) {
+    final String? profileId = message.user?.id;
+    if (profileId == null) {
+      return null;
+    }
+
+    final List<Relationship> relationships = getCachedMemberRelationships();
+    return relationships.firstWhereOrNull((element) => element.members.length == 2 && element.members.any((m) => m.memberId == profileId));
+  }
 }
