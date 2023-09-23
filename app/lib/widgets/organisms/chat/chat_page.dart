@@ -2,9 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,9 +18,11 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
@@ -40,6 +39,7 @@ import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
