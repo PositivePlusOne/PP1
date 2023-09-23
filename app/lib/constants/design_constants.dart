@@ -70,6 +70,7 @@ const double kOpacityFaint = 0.1;
 const double kOpacityQuarter = 0.25;
 const double kOpacityBarrier = 0.4;
 const double kOpacityHalf = 0.5;
+const double kOpacityVignette = 0.7;
 const double kOpacityFull = 1.0;
 
 // Sizes

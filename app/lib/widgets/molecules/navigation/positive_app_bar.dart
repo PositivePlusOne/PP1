@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -30,6 +32,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
     this.foregroundColor = Colors.black,
     this.backgroundColor = Colors.transparent,
     this.decorationColor = Colors.white,
+    this.backgroundImage,
     this.applyLeadingandTrailingPadding = false,
     this.safeAreaQueryData,
     this.trailType = PositiveAppBarTrailType.none,
@@ -42,6 +45,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final Color foregroundColor;
   final Color backgroundColor;
   final Color decorationColor;
+  final Media? backgroundImage;
 
   final bool applyLeadingandTrailingPadding;
   final MediaQueryData? safeAreaQueryData;
@@ -82,44 +86,67 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
     return SizedBox(
       height: preferredSize.height,
       width: preferredSize.width,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Expanded(
-            child: _PositiveAppBarContent(
-              title: title,
-              titleStyle: typography.styleTitleTwo.copyWith(color: foregroundColor),
-              backgroundColor: backgroundColor,
-              applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
-              safeAreaQueryData: safeAreaQueryData,
-              foregroundColor: foregroundColor,
-              leading: leading,
-              trailing: trailing,
-              includeLogoWherePossible: includeLogoWherePossible,
-            ),
-          ),
-          if (bottom != null) ...<Widget>[
-            AnimatedContainer(
-              color: backgroundColor,
-              duration: kAnimationDurationRegular,
-              padding: const EdgeInsets.only(top: kPaddingSmall),
-              child: bottom,
+      child: Container(
+        decoration: BoxDecoration(color: backgroundColor),
+        child: Stack(
+          children: <Widget>[
+            if (backgroundImage != null) ...<Widget>[
+              Positioned.fill(
+                child: PositiveMediaImage(
+                  media: backgroundImage!,
+                  fit: BoxFit.cover,
+                  thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+                ),
+              ),
+              //* Use the background color as a darkening overlay
+              //! TODO(ryan): Chat to Chris about how this needs to appear. (Color burns, requirements, etc).
+              Positioned.fill(
+                child: Container(
+                  color: backgroundColor.withOpacity(kOpacityVignette),
+                ),
+              ),
+            ],
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Expanded(
+                  child: _PositiveAppBarContent(
+                    title: title,
+                    titleStyle: typography.styleTitleTwo.copyWith(color: foregroundColor),
+                    backgroundColor: Colors.transparent,
+                    applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
+                    safeAreaQueryData: safeAreaQueryData,
+                    foregroundColor: foregroundColor,
+                    leading: leading,
+                    trailing: trailing,
+                    includeLogoWherePossible: includeLogoWherePossible,
+                  ),
+                ),
+                if (bottom != null) ...<Widget>[
+                  AnimatedContainer(
+                    color: Colors.transparent,
+                    duration: kAnimationDurationRegular,
+                    padding: const EdgeInsets.only(top: kPaddingSmall),
+                    child: bottom,
+                  ),
+                ],
+                if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
+                  _PositiveAppBarTrailConcave(
+                    backgroundColor: Colors.transparent,
+                    decorationColor: decorationColor,
+                    trailType: trailType,
+                  ),
+                ],
+                if (trailType == PositiveAppBarTrailType.convex) ...<Widget>[
+                  _PositiveAppBarTrailConvex(
+                    backgroundColor: Colors.transparent,
+                    trailType: trailType,
+                  ),
+                ],
+              ],
             ),
           ],
-          if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
-            _PositiveAppBarTrailConcave(
-              backgroundColor: backgroundColor,
-              decorationColor: decorationColor,
-              trailType: trailType,
-            ),
-          ],
-          if (trailType == PositiveAppBarTrailType.convex) ...<Widget>[
-            _PositiveAppBarTrailConvex(
-              backgroundColor: backgroundColor,
-              trailType: trailType,
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
