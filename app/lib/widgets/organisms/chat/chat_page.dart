@@ -256,33 +256,46 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
   }
 }
 
-StreamMessageThemeData buildStreamMessageThemeData(DesignTypographyModel typography, DesignColorsModel colors) {
+StreamMessageThemeData buildStreamMessageThemeData(DesignTypographyModel typography, DesignColorsModel colors, {bool isMyMessage = false}) {
+  final TextStyle chatTextStyle = TextStyle(
+    fontFamily: 'AlbertSans',
+    fontSize: 14.0,
+    fontWeight: FontWeight.w400,
+    color: colors.colorGray7,
+  );
+
   return StreamMessageThemeData(
     avatarTheme: const StreamAvatarThemeData(
       constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
     ),
-    messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
-    messageBackgroundColor: colors.black.withOpacity(0.05),
-    messageLinksStyle: typography.styleNotification.copyWith(color: colors.black, fontWeight: FontWeight.bold),
+    messageBackgroundColor: isMyMessage ? colors.teal : colors.black.withOpacity(0.05),
+    messageTextStyle: isMyMessage ? chatTextStyle.copyWith(color: colors.black) : chatTextStyle,
+    messageLinksStyle: isMyMessage ? chatTextStyle.copyWith(color: colors.black) : chatTextStyle,
+  );
+}
+
+StreamMessageThemeData buildStreamBottomRowThemeData(DesignTypographyModel typography, DesignColorsModel colors) {
+  return StreamMessageThemeData(
+    messageTextStyle: typography.styleButtonBold,
   );
 }
 
 Widget buildMessage(BuildContext context, MessageDetails details, List<Message> messages, StreamMessageWidget defaultMessageWidget, DesignColorsModel colors) {
-  final bool isMyMessage = false;
+  final bool isMyMessage = details.isMyMessage;
   final bool isOnlyEmoji = details.message.text?.isOnlyEmoji ?? false;
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+  final StreamMessageThemeData themeData = buildStreamMessageThemeData(typography, colors, isMyMessage: isMyMessage);
+  final StreamMessageThemeData bottomRowThemeData = buildStreamBottomRowThemeData(typography, colors);
 
   return StreamMessageWidget(
-    messageTheme: buildStreamMessageThemeData(typography, colors),
-    showReplyMessage: false,
-    showResendMessage: false,
-    showThreadReplyMessage: false,
-    showCopyMessage: false,
-    showDeleteMessage: false,
-    showEditMessage: false,
+    messageTheme: themeData,
+    bottomRowBuilderWithDefaultWidget: (context, message, widget) => widget.copyWith(
+      messageTheme: bottomRowThemeData,
+      showTimeStamp: false,
+      usernameBuilder: (context, message) => isMyMessage ? ChatSelfUsernameRow(typography: typography, colors: colors, message: message) : ChatMemberUsernameRow(typography: typography, colors: colors, message: message),
+    ),
     message: details.message,
     reverse: isMyMessage,
-    showUsername: !isMyMessage,
     padding: const EdgeInsets.all(8),
     showSendingIndicator: false,
     borderRadiusGeometry: BorderRadius.only(
@@ -298,6 +311,68 @@ Widget buildMessage(BuildContext context, MessageDetails details, List<Message> 
     showUserAvatar: isMyMessage ? DisplayWidget.gone : DisplayWidget.show,
     userAvatarBuilder: isMyMessage ? null : (context, user) => _buildUserAvatar(user, colors),
   );
+}
+
+class ChatSelfUsernameRow extends StatelessWidget {
+  const ChatSelfUsernameRow({
+    required this.typography,
+    required this.colors,
+    required this.message,
+    super.key,
+  });
+
+  final DesignColorsModel colors;
+  final DesignTypographyModel typography;
+  final Message message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
+          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+        ),
+        const SizedBox(width: kPaddingExtraSmall),
+      ],
+    );
+  }
+}
+
+class ChatMemberUsernameRow extends StatelessWidget {
+  const ChatMemberUsernameRow({
+    required this.typography,
+    required this.colors,
+    required this.message,
+    super.key,
+  });
+
+  final DesignColorsModel colors;
+  final DesignTypographyModel typography;
+  final Message message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(
+            message.user?.name ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+          ),
+        ),
+        const SizedBox(width: kPaddingExtraSmall),
+        Text(
+          Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
+          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+        ),
+        const SizedBox(width: kPaddingExtraSmall),
+      ],
+    );
+  }
 }
 
 PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors) {
