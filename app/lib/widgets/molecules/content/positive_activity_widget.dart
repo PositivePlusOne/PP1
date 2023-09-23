@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +16,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
