@@ -251,7 +251,7 @@ export namespace ReactionService {
         const results = response.results;
         functions.logger.info("Reactions for activity", { activity_id, kind, limit, cursor, response, results });
         
-        const reactionIds = results.map((reaction: any) => reaction?.source_reaction_id ?? "").filter((id: string) => id !== "");
+        const reactionIds = results.map((reaction: any) => reaction?.data?.source_reaction_id ?? "").filter((id: string) => id !== "");
 
         const reactions = await DataService.getBatchDocuments({
             schemaKey: reactionSchemaKey,

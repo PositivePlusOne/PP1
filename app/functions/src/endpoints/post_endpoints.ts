@@ -24,7 +24,8 @@ import { PromotionsService } from "../services/promotions_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = context.auth?.uid || "";
+        const uid = await UserService.verifyAuthenticated(context, request.sender);
+
         const feedId = request.data.feed || "";
         const slugId = request.data.options?.slug || "";
         const limit = request.limit || 25;

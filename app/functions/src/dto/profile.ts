@@ -19,18 +19,6 @@ export const featureFlagMarketing = 'marketing';
 export const featureFlagIncognito = 'incognito';
 export const featureFlagOrganisationControls = 'organisationControls';
 
-export interface ProfileOrganisationConfigurationJSON {
-    members?: any[];
-}
-
-export class ProfileOrganisationConfiguration {
-    members: any[];
-
-    constructor(json: ProfileOrganisationConfigurationJSON) {
-        this.members = json.members || [];
-    }
-}
-
 export interface ProfileStatisicsJSON {
     followers: number;
     following: number;
@@ -68,7 +56,6 @@ export interface ProfileJSON {
     referenceImage?: string;
     profileImage?: string;
     biography?: string;
-    organisationConfiguration?: ProfileOrganisationConfigurationJSON;
     media?: MediaJSON[];
     statistics?: ProfileStatisicsJSON;
 }
@@ -92,7 +79,6 @@ export class Profile {
     placeSkipped: boolean;
     place?: Place;
     biography: string;
-    organisationConfiguration?: ProfileOrganisationConfiguration;
     media: Media[];
     statistics?: ProfileStatisics;
 
@@ -115,7 +101,6 @@ export class Profile {
         this.placeSkipped = json.placeSkipped || false;
         this.place = json.place && new Place(json.place);
         this.biography = json.biography || '';
-        this.organisationConfiguration = json.organisationConfiguration && new ProfileOrganisationConfiguration(json.organisationConfiguration);
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
         this.statistics = json.statistics && new ProfileStatisics(json.statistics);
     }
