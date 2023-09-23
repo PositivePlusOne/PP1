@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -80,6 +81,11 @@ class ChatMembersPage extends HookConsumerWidget {
       otherUserProfiles.removeWhere((key, value) => !value.matchesStringSearch(searchQuery));
     }
 
+    // Check blocked users
+    final List<Relationship> relationships = chatViewModel.getCachedMemberRelationships();
+    final List<Relationship> blockedRelationships = chatViewModel.getCachedSourceBlockedMemberRelationships(relationships);
+    final bool hasSourceBlockedMembers = blockedRelationships.isNotEmpty;
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         SliverPadding(
@@ -91,31 +97,10 @@ class ChatMembersPage extends HookConsumerWidget {
           ),
           sliver: MultiSliver(
             children: <Widget>[
-              SliverToBoxAdapter(
-                child: Row(
-                  children: [
-                    PositiveButton(
-                      colors: colors,
-                      onTapped: () => context.router.pop(),
-                      icon: UniconsLine.angle_left,
-                      layout: PositiveButtonLayout.iconOnly,
-                      size: PositiveButtonSize.medium,
-                      primaryColor: colors.white,
-                    ),
-                    const SizedBox(width: kPaddingMedium),
-                    Expanded(
-                      child: PositiveSearchField(
-                        hintText: locale.page_chat_message_members_search_hint,
-                        onChange: chatViewModel.setSearchQuery,
-                        isEnabled: !isOneOnOneConversation,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ChatMemberHeader(colors: colors, locale: locale, chatViewModel: chatViewModel, isOneOnOneConversation: isOneOnOneConversation),
               SliverList(
                 delegate: SliverChildListDelegate(
-                  [
+                  <Widget>[
                     const SizedBox(height: kPaddingMedium),
                     for (final keyval in otherUserProfiles.entries) ...<Widget>[
                       PositiveChatMemberTile(
@@ -168,6 +153,47 @@ class ChatMembersPage extends HookConsumerWidget {
           onTapped: () => context.router.pop(),
         ),
       ].spaceWithVertical(kPaddingSmall),
+    );
+  }
+}
+
+class ChatMemberHeader extends StatelessWidget {
+  const ChatMemberHeader({
+    super.key,
+    required this.colors,
+    required this.locale,
+    required this.chatViewModel,
+    required this.isOneOnOneConversation,
+  });
+
+  final DesignColorsModel colors;
+  final AppLocalizations locale;
+  final ChatViewModel chatViewModel;
+  final bool isOneOnOneConversation;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Row(
+        children: <Widget>[
+          PositiveButton(
+            colors: colors,
+            onTapped: () => context.router.pop(),
+            icon: UniconsLine.angle_left,
+            layout: PositiveButtonLayout.iconOnly,
+            size: PositiveButtonSize.medium,
+            primaryColor: colors.white,
+          ),
+          const SizedBox(width: kPaddingMedium),
+          Expanded(
+            child: PositiveSearchField(
+              hintText: locale.page_chat_message_members_search_hint,
+              onChange: chatViewModel.setSearchQuery,
+              isEnabled: !isOneOnOneConversation,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

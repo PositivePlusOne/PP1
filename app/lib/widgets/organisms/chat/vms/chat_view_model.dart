@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -111,6 +113,54 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final logger = ref.read(loggerProvider);
     logger.i('ChatViewModel.resetState()');
     state = ChatViewModelState.initialState();
+  }
+
+  List<Relationship> getCachedSourceBlockedMemberRelationships(List<Relationship> relationships) {
+    final logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    logger.i('ChatViewModel.getCachedBlockedMemberRelationships()');
+    final List<Relationship> blockedRelationships = [];
+
+    // Get members from the current channel
+    if (currentProfileId.isNotEmpty) {
+      for (final Relationship relationship in relationships) {
+        final relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+        if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
+          blockedRelationships.add(relationship);
+        }
+      }
+    }
+
+    return blockedRelationships;
+  }
+
+  List<Relationship> getCachedMemberRelationships() {
+    final logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    logger.i('ChatViewModel.getCachedMemberRelationships()');
+    final List<Relationship> relationships = [];
+
+    // Get members from the current channel
+    if (currentProfileId.isNotEmpty && state.currentChannel?.state?.members != null) {
+      for (final Member member in state.currentChannel!.state!.members) {
+        if ((member.user?.id.isEmpty ?? true) || member.user?.id == currentProfileId) {
+          continue;
+        }
+
+        final String relationshipId = [currentProfileId, member.user!.id].asGUID;
+        final Relationship? relationship = cacheController.getFromCache(relationshipId);
+        if (relationship != null) {
+          relationships.add(relationship);
+        }
+      }
+    }
+
+    return relationships;
   }
 
   Future<void> setupListeners() async {
