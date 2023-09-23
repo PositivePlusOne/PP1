@@ -207,6 +207,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const HomePage(),
       );
     },
+    LoginAccountRecoveryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LoginAccountRecoveryPage(),
+      );
+    },
     LoginRoute.name: (routeData) {
       final args = routeData.argsAs<LoginRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -1060,6 +1066,20 @@ class HomeRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'HomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [LoginAccountRecoveryPage]
+class LoginAccountRecoveryRoute extends PageRouteInfo<void> {
+  const LoginAccountRecoveryRoute({List<PageRouteInfo>? children})
+      : super(
+          LoginAccountRecoveryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LoginAccountRecoveryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

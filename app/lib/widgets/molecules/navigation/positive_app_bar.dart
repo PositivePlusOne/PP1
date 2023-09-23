@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/common/media.dart';
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,9 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import '../../../../resources/resources.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';

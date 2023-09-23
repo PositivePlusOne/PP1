@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,13 +11,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/validator_extensions.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
-import 'package:unicons/unicons.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';
@@ -88,6 +88,14 @@ class LoginViewModel extends _$LoginViewModel {
     unawaited(appRouter.push(const HomeRoute()));
 
     return false;
+  }
+
+  Future<void> onAccountRecoverySelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onAccountRecoverySelected');
+    await appRouter.push(const LoginAccountRecoveryRoute());
   }
 
   Future<void> onLoginWithGoogleSelected() async {

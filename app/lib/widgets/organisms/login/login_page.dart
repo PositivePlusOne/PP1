@@ -168,8 +168,7 @@ class LoginPage extends HookConsumerWidget {
             child: PositiveButton(
               colors: colors,
               primaryColor: colors.black,
-              isDisabled: true,
-              onTapped: () async {},
+              onTapped: viewModel.onAccountRecoverySelected,
               label: 'Forgotten Email',
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.text,
