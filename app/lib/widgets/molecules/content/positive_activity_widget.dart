@@ -16,6 +16,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -497,6 +498,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   @override
   Widget build(BuildContext context) {
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    Promotion? promotion;
+    if (widget.activity.enrichmentConfiguration?.promotionKey != null) {
+      promotion = cacheController.getFromCache(widget.activity.enrichmentConfiguration!.promotionKey);
+    }
+
     final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
     final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;
     final bool isBusy = _isBookmarking || _isLiking || !widget.isEnabled;
@@ -507,10 +518,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
     final bool canView = viewMode.canActOnActivity(widget.activity.flMeta?.id ?? '');
 
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final String repostOriginalPublisherId = widget.activity.generalConfiguration?.repostActivityPublisherId ?? '';
     final Profile? repostOriginalPublisher = repostOriginalPublisherId.isEmpty ? null : cacheController.getFromCache(repostOriginalPublisherId);
     final String repostOriginalActivityId = widget.activity.generalConfiguration?.repostActivityId ?? '';
@@ -580,6 +587,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             child: ActivityPostHeadingWidget(
               flMetaData: widget.activity.flMeta,
               publisher: publisher,
+              promotion: promotion,
               onOptions: onPostOptionsSelected,
               isShared: widget.isShared,
             ),
@@ -588,6 +596,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             PositivePostLayoutWidget(
               postContent: widget.activity,
               publisher: publisher,
+              promotion: promotion,
               isShortformPost: !widget.isFullscreen,
               sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
               onImageTap: onInternalMediaTap,

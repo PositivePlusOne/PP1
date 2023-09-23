@@ -15,13 +15,20 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
 import '../../../constants/design_constants.dart';
@@ -37,7 +44,8 @@ import '../../atoms/indicators/positive_loading_indicator.dart';
 class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
-    required this.publisher,
+    this.publisher,
+    this.promotion,
     this.origin,
     this.isShortformPost = true,
     this.isShared = false,
@@ -58,6 +66,8 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   final String? origin;
 
   final Profile? publisher;
+  final Promotion? promotion;
+
   final bool isShortformPost;
   final bool isShared;
   final double sidePadding;
@@ -178,6 +188,11 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
               return _postCarouselAttachedImages(context, constraints);
             },
           ),
+        ],
+        //* -=-=-=- promotion banner -=-=-=- *\\
+        if (widget.promotion != null) ...[
+          const SizedBox(height: kPaddingSmall),
+          _promotionBanner(),
         ],
         //* -=-=-=- Post Actions -=-=-=- *\\
         _postActions(),
@@ -431,6 +446,39 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: const SizedBox(),
+    );
+  }
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  Widget _promotionBanner() {
+    if (widget.promotion == null) {
+      return const SizedBox();
+    }
+
+    final String link = widget.promotion!.link;
+    final String linkText = widget.promotion!.linkText;
+
+    if (link.isEmpty || linkText.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      child: PositiveGlassSheet(
+        children: <Widget>[
+          PositiveButton(
+            onTapped: () => link.attemptToLaunchURL(),
+            colors: colours,
+            primaryColor: colours.black,
+            label: linkText,
+            size: PositiveButtonSize.small,
+            style: PositiveButtonStyle.primary,
+            layout: PositiveButtonLayout.textOnly,
+          ),
+        ],
+      ),
     );
   }
 

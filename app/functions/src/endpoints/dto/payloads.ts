@@ -12,6 +12,7 @@ import { StringHelpers } from '../../helpers/string_helpers';
 import { Reaction, ReactionStatistics, reactionSchemaKey, reactionStatisticsSchemaKey } from '../../dto/reactions';
 import { ReactionStatisticsService } from '../../services/reaction_statistics_service';
 import { ReactionService } from '../../services/reaction_service';
+import { Promotion, promotionsSchemaKey } from '../../dto/promotions';
 // import { FeedService } from '../../services/feed_service';
 
 export type EndpointRequest = {
@@ -60,6 +61,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "users": [],
             "relationships": [],
             "tags": [],
+            "promotions": [],
             "guidanceDirectoryEntries": [],
             "reactions": [],
             "reactionStatistics": [],
@@ -146,6 +148,11 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const tags = activity.enrichmentConfiguration?.tags || [] as string[];
                 for (const tag of tags) {
                     joinedDataRecords.get(tagSchemaKey)?.add(tag);
+                }
+
+                if (activity.enrichmentConfiguration?.promotionKey) {
+                    functions.logger.info(`Promotion key: ${activity.enrichmentConfiguration?.promotionKey}`);
+                    joinedDataRecords.get(promotionsSchemaKey)?.add(activity.enrichmentConfiguration?.promotionKey);
                 }
                 break;
             case profileSchemaKey:
@@ -323,6 +330,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case reactionStatisticsSchemaKey:
                 responseData.data[schema].push(new ReactionStatistics(obj));
+                break;
+            case promotionsSchemaKey:
+                functions.logger.info("Promotion", { obj });
+                responseData.data[schema].push(new Promotion(obj));
                 break;
             default:
                 break;

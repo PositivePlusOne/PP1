@@ -26,8 +26,8 @@ mixin _$Promotion {
   String get descriptionMarkdown => throw _privateConstructorUsedError;
   String get link => throw _privateConstructorUsedError;
   String get linkText => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-  DocumentReference<Object?>? get owner => throw _privateConstructorUsedError;
+  List<PromotionOwner> get owners => throw _privateConstructorUsedError;
+  List<PromotedActivity> get activities => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get startTime => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -50,8 +50,8 @@ abstract class $PromotionCopyWith<$Res> {
       String descriptionMarkdown,
       String link,
       String linkText,
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      DocumentReference<Object?>? owner,
+      List<PromotionOwner> owners,
+      List<PromotedActivity> activities,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -78,7 +78,8 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
     Object? descriptionMarkdown = null,
     Object? link = null,
     Object? linkText = null,
-    Object? owner = freezed,
+    Object? owners = null,
+    Object? activities = null,
     Object? startTime = freezed,
     Object? endTime = freezed,
   }) {
@@ -103,10 +104,14 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
           ? _value.linkText
           : linkText // ignore: cast_nullable_to_non_nullable
               as String,
-      owner: freezed == owner
-          ? _value.owner
-          : owner // ignore: cast_nullable_to_non_nullable
-              as DocumentReference<Object?>?,
+      owners: null == owners
+          ? _value.owners
+          : owners // ignore: cast_nullable_to_non_nullable
+              as List<PromotionOwner>,
+      activities: null == activities
+          ? _value.activities
+          : activities // ignore: cast_nullable_to_non_nullable
+              as List<PromotedActivity>,
       startTime: freezed == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -144,8 +149,8 @@ abstract class _$$_PromotionCopyWith<$Res> implements $PromotionCopyWith<$Res> {
       String descriptionMarkdown,
       String link,
       String linkText,
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      DocumentReference<Object?>? owner,
+      List<PromotionOwner> owners,
+      List<PromotedActivity> activities,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -171,7 +176,8 @@ class __$$_PromotionCopyWithImpl<$Res>
     Object? descriptionMarkdown = null,
     Object? link = null,
     Object? linkText = null,
-    Object? owner = freezed,
+    Object? owners = null,
+    Object? activities = null,
     Object? startTime = freezed,
     Object? endTime = freezed,
   }) {
@@ -196,10 +202,14 @@ class __$$_PromotionCopyWithImpl<$Res>
           ? _value.linkText
           : linkText // ignore: cast_nullable_to_non_nullable
               as String,
-      owner: freezed == owner
-          ? _value.owner
-          : owner // ignore: cast_nullable_to_non_nullable
-              as DocumentReference<Object?>?,
+      owners: null == owners
+          ? _value._owners
+          : owners // ignore: cast_nullable_to_non_nullable
+              as List<PromotionOwner>,
+      activities: null == activities
+          ? _value._activities
+          : activities // ignore: cast_nullable_to_non_nullable
+              as List<PromotedActivity>,
       startTime: freezed == startTime
           ? _value.startTime
           : startTime // ignore: cast_nullable_to_non_nullable
@@ -221,10 +231,12 @@ class _$_Promotion implements _Promotion {
       this.descriptionMarkdown = '',
       this.link = '',
       this.linkText = '',
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      this.owner = null,
+      final List<PromotionOwner> owners = const [],
+      final List<PromotedActivity> activities = const [],
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.startTime,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.endTime});
+      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.endTime})
+      : _owners = owners,
+        _activities = activities;
 
   factory _$_Promotion.fromJson(Map<String, dynamic> json) =>
       _$$_PromotionFromJson(json);
@@ -244,9 +256,24 @@ class _$_Promotion implements _Promotion {
   @override
   @JsonKey()
   final String linkText;
+  final List<PromotionOwner> _owners;
   @override
-  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-  final DocumentReference<Object?>? owner;
+  @JsonKey()
+  List<PromotionOwner> get owners {
+    if (_owners is EqualUnmodifiableListView) return _owners;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_owners);
+  }
+
+  final List<PromotedActivity> _activities;
+  @override
+  @JsonKey()
+  List<PromotedActivity> get activities {
+    if (_activities is EqualUnmodifiableListView) return _activities;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_activities);
+  }
+
   @override
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   final String? startTime;
@@ -256,7 +283,7 @@ class _$_Promotion implements _Promotion {
 
   @override
   String toString() {
-    return 'Promotion(flMeta: $flMeta, title: $title, descriptionMarkdown: $descriptionMarkdown, link: $link, linkText: $linkText, owner: $owner, startTime: $startTime, endTime: $endTime)';
+    return 'Promotion(flMeta: $flMeta, title: $title, descriptionMarkdown: $descriptionMarkdown, link: $link, linkText: $linkText, owners: $owners, activities: $activities, startTime: $startTime, endTime: $endTime)';
   }
 
   @override
@@ -271,7 +298,9 @@ class _$_Promotion implements _Promotion {
             (identical(other.link, link) || other.link == link) &&
             (identical(other.linkText, linkText) ||
                 other.linkText == linkText) &&
-            (identical(other.owner, owner) || other.owner == owner) &&
+            const DeepCollectionEquality().equals(other._owners, _owners) &&
+            const DeepCollectionEquality()
+                .equals(other._activities, _activities) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime));
@@ -279,8 +308,17 @@ class _$_Promotion implements _Promotion {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, flMeta, title,
-      descriptionMarkdown, link, linkText, owner, startTime, endTime);
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      title,
+      descriptionMarkdown,
+      link,
+      linkText,
+      const DeepCollectionEquality().hash(_owners),
+      const DeepCollectionEquality().hash(_activities),
+      startTime,
+      endTime);
 
   @JsonKey(ignore: true)
   @override
@@ -303,8 +341,8 @@ abstract class _Promotion implements Promotion {
       final String descriptionMarkdown,
       final String link,
       final String linkText,
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      final DocumentReference<Object?>? owner,
+      final List<PromotionOwner> owners,
+      final List<PromotedActivity> activities,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       final String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -325,8 +363,9 @@ abstract class _Promotion implements Promotion {
   @override
   String get linkText;
   @override
-  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-  DocumentReference<Object?>? get owner;
+  List<PromotionOwner> get owners;
+  @override
+  List<PromotedActivity> get activities;
   @override
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get startTime;
@@ -336,5 +375,282 @@ abstract class _Promotion implements Promotion {
   @override
   @JsonKey(ignore: true)
   _$$_PromotionCopyWith<_$_Promotion> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PromotionOwner _$PromotionOwnerFromJson(Map<String, dynamic> json) {
+  return _PromotionOwner.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PromotionOwner {
+  String get activityId => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PromotionOwnerCopyWith<PromotionOwner> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PromotionOwnerCopyWith<$Res> {
+  factory $PromotionOwnerCopyWith(
+          PromotionOwner value, $Res Function(PromotionOwner) then) =
+      _$PromotionOwnerCopyWithImpl<$Res, PromotionOwner>;
+  @useResult
+  $Res call({String activityId});
+}
+
+/// @nodoc
+class _$PromotionOwnerCopyWithImpl<$Res, $Val extends PromotionOwner>
+    implements $PromotionOwnerCopyWith<$Res> {
+  _$PromotionOwnerCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? activityId = null,
+  }) {
+    return _then(_value.copyWith(
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_PromotionOwnerCopyWith<$Res>
+    implements $PromotionOwnerCopyWith<$Res> {
+  factory _$$_PromotionOwnerCopyWith(
+          _$_PromotionOwner value, $Res Function(_$_PromotionOwner) then) =
+      __$$_PromotionOwnerCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String activityId});
+}
+
+/// @nodoc
+class __$$_PromotionOwnerCopyWithImpl<$Res>
+    extends _$PromotionOwnerCopyWithImpl<$Res, _$_PromotionOwner>
+    implements _$$_PromotionOwnerCopyWith<$Res> {
+  __$$_PromotionOwnerCopyWithImpl(
+      _$_PromotionOwner _value, $Res Function(_$_PromotionOwner) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? activityId = null,
+  }) {
+    return _then(_$_PromotionOwner(
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_PromotionOwner implements _PromotionOwner {
+  const _$_PromotionOwner({this.activityId = ''});
+
+  factory _$_PromotionOwner.fromJson(Map<String, dynamic> json) =>
+      _$$_PromotionOwnerFromJson(json);
+
+  @override
+  @JsonKey()
+  final String activityId;
+
+  @override
+  String toString() {
+    return 'PromotionOwner(activityId: $activityId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_PromotionOwner &&
+            (identical(other.activityId, activityId) ||
+                other.activityId == activityId));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, activityId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_PromotionOwnerCopyWith<_$_PromotionOwner> get copyWith =>
+      __$$_PromotionOwnerCopyWithImpl<_$_PromotionOwner>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_PromotionOwnerToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PromotionOwner implements PromotionOwner {
+  const factory _PromotionOwner({final String activityId}) = _$_PromotionOwner;
+
+  factory _PromotionOwner.fromJson(Map<String, dynamic> json) =
+      _$_PromotionOwner.fromJson;
+
+  @override
+  String get activityId;
+  @override
+  @JsonKey(ignore: true)
+  _$$_PromotionOwnerCopyWith<_$_PromotionOwner> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PromotedActivity _$PromotedActivityFromJson(Map<String, dynamic> json) {
+  return _PromotedActivity.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PromotedActivity {
+  String get activityId => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $PromotedActivityCopyWith<PromotedActivity> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PromotedActivityCopyWith<$Res> {
+  factory $PromotedActivityCopyWith(
+          PromotedActivity value, $Res Function(PromotedActivity) then) =
+      _$PromotedActivityCopyWithImpl<$Res, PromotedActivity>;
+  @useResult
+  $Res call({String activityId});
+}
+
+/// @nodoc
+class _$PromotedActivityCopyWithImpl<$Res, $Val extends PromotedActivity>
+    implements $PromotedActivityCopyWith<$Res> {
+  _$PromotedActivityCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? activityId = null,
+  }) {
+    return _then(_value.copyWith(
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_PromotedActivityCopyWith<$Res>
+    implements $PromotedActivityCopyWith<$Res> {
+  factory _$$_PromotedActivityCopyWith(
+          _$_PromotedActivity value, $Res Function(_$_PromotedActivity) then) =
+      __$$_PromotedActivityCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String activityId});
+}
+
+/// @nodoc
+class __$$_PromotedActivityCopyWithImpl<$Res>
+    extends _$PromotedActivityCopyWithImpl<$Res, _$_PromotedActivity>
+    implements _$$_PromotedActivityCopyWith<$Res> {
+  __$$_PromotedActivityCopyWithImpl(
+      _$_PromotedActivity _value, $Res Function(_$_PromotedActivity) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? activityId = null,
+  }) {
+    return _then(_$_PromotedActivity(
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_PromotedActivity implements _PromotedActivity {
+  const _$_PromotedActivity({this.activityId = ''});
+
+  factory _$_PromotedActivity.fromJson(Map<String, dynamic> json) =>
+      _$$_PromotedActivityFromJson(json);
+
+  @override
+  @JsonKey()
+  final String activityId;
+
+  @override
+  String toString() {
+    return 'PromotedActivity(activityId: $activityId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_PromotedActivity &&
+            (identical(other.activityId, activityId) ||
+                other.activityId == activityId));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, activityId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_PromotedActivityCopyWith<_$_PromotedActivity> get copyWith =>
+      __$$_PromotedActivityCopyWithImpl<_$_PromotedActivity>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_PromotedActivityToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PromotedActivity implements PromotedActivity {
+  const factory _PromotedActivity({final String activityId}) =
+      _$_PromotedActivity;
+
+  factory _PromotedActivity.fromJson(Map<String, dynamic> json) =
+      _$_PromotedActivity.fromJson;
+
+  @override
+  String get activityId;
+  @override
+  @JsonKey(ignore: true)
+  _$$_PromotedActivityCopyWith<_$_PromotedActivity> get copyWith =>
       throw _privateConstructorUsedError;
 }

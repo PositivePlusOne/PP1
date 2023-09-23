@@ -20,6 +20,7 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
+import { PromotionsService } from "../services/promotions_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -45,10 +46,16 @@ export namespace PostEndpoints {
 
         // We supply this so we can support reposts and the client can filter out the nested activity
         const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
+
+        // Get promotions from activities where the promotion key is set
+        const promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
+        const promotions = await PromotionsService.getPromotions(promotionIds);
+
+        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds, promotions });
     
         return buildEndpointResponse(context, {
           sender: uid,
-          data: [...activities],
+          data: [...activities, ...promotions],
           limit: limit,
           cursor: paginationToken,
           seedData: {

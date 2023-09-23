@@ -9,6 +9,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
@@ -18,6 +19,7 @@ import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_promoted_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -25,8 +27,9 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
-    required this.flMetaData,
-    required this.publisher,
+    this.flMetaData,
+    this.publisher,
+    this.promotion,
     required this.onOptions,
     this.isShared = false,
     super.key,
@@ -34,6 +37,8 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
   final FlMeta? flMetaData;
   final Profile? publisher;
+  final Promotion? promotion;
+
   final Function onOptions;
   final bool isShared;
 
@@ -95,11 +100,17 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  const SizedBox(height: kPaddingThin),
-                  Text(
-                    postDateTooltip,
-                    style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
-                  ),
+                  if (promotion == null) ...<Widget>[
+                    const SizedBox(height: kPaddingThin),
+                    Text(
+                      postDateTooltip,
+                      style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
+                    ),
+                  ],
+                  if (promotion != null) ...<Widget>[
+                    const SizedBox(height: kPaddingSuperSmall),
+                    const PositivePromotedIndicator(),
+                  ],
                 ],
               ),
             ),
