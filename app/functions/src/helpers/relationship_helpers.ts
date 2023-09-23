@@ -121,12 +121,12 @@ export namespace RelationshipHelpers {
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === uid) {
-          return member.hasBlocked;
+          return !member.hasBlocked;
         }
       }
     }
 
-    return false;
+    return true;
   }
 
   export function hasMutedRelationship(uid: string, relationship: any) {

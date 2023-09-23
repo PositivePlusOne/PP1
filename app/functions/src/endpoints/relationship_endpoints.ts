@@ -106,6 +106,8 @@ export namespace RelationshipEndpoints {
     const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const isUnblocked = RelationshipHelpers.hasNotBlockedRelationship(uid, relationship);
     if (isUnblocked) {
+      functions.logger.info("User already unblocked", { uid, targetUid });
+      
       return buildEndpointResponse(context, {
         sender: uid,
         data: [relationship],
