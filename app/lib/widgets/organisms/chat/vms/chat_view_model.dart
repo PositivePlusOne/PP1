@@ -4,6 +4,7 @@ import 'dart:async';
 // Flutter imports:
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -374,5 +375,14 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
 
     await appRouter.push(const CreateConversationRoute());
+  }
+
+  Relationship? getRelationshipForProfile(List<Relationship> relationships, Profile value) {
+    final String? profileId = value.flMeta?.id;
+    if (profileId == null) {
+      return null;
+    }
+
+    return relationships.firstWhereOrNull((element) => element.members.length == 2 && element.members.any((m) => m.memberId == profileId));
   }
 }

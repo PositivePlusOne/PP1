@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -101,10 +102,20 @@ class ChatMembersPage extends HookConsumerWidget {
               SliverList(
                 delegate: SliverChildListDelegate(
                   <Widget>[
+                    if (hasSourceBlockedMembers) ...<Widget>[
+                      const SizedBox(height: kPaddingMedium),
+                      PositiveHint(
+                        label: locale.page_connections_list_blocked_user_notice,
+                        icon: UniconsLine.ban,
+                        iconColor: colors.black,
+                      ),
+                    ],
                     const SizedBox(height: kPaddingMedium),
                     for (final keyval in otherUserProfiles.entries) ...<Widget>[
                       PositiveChatMemberTile(
                         profile: keyval.value,
+                        currentProfileId: currentProfileId ?? '',
+                        relationship: chatViewModel.getRelationshipForProfile(relationships, keyval.value),
                         onTap: (_) => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
                         isSelected: chatViewModelState.selectedMembers.contains(keyval.value.flMeta!.id!),
                         displaySelectToggle: !isOneOnOneConversation && canUpdateMembers,
