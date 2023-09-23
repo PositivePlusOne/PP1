@@ -274,6 +274,9 @@
     "page_chat_empty_conversations_title": "Time to break the ice",
     "page_chat_empty_conversations_body": "No chats yet? That's okay. Let's get one started!",
     "page_chat_empty_conversations_start": "Start chatting",
+    
+    "page_chat_empty_connections_title": "You have no connections",
+    "page_chat_empty_connections_body": "To start a conversation you must have a connection within Positive+1",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
     "page_search_posts_not_found_title": "No Posts\nFound",

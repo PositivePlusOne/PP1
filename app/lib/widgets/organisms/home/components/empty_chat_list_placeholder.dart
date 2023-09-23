@@ -25,7 +25,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final AppLocalizations appLocalisations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
@@ -34,12 +34,12 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
         children: <Widget>[
           const SizedBox(height: kPaddingLarge),
           Text(
-            appLocalisations.page_chat_empty_conversations_title,
+            localisations.page_chat_empty_conversations_title,
             style: typography.styleHero.copyWith(color: colors.black),
           ),
           const SizedBox(height: kPaddingMedium),
           Text(
-            appLocalisations.page_chat_empty_conversations_body,
+            localisations.page_chat_empty_conversations_body,
             style: typography.styleBody.copyWith(color: colors.black),
           ),
           const SizedBox(height: kPaddingSmall),
@@ -47,7 +47,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
             child: PositiveButton(
               colors: colors,
               primaryColor: colors.teal,
-              label: appLocalisations.page_chat_empty_conversations_start,
+              label: localisations.page_chat_empty_conversations_start,
               icon: UniconsLine.comment_edit,
               size: PositiveButtonSize.large,
               style: PositiveButtonStyle.primary,
