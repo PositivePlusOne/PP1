@@ -107,6 +107,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
       currentPaginationKey: '',
       unreadCount: 0,
       unseenCount: 0,
+      hasFirstLoad: false,
     );
   }
 
@@ -187,6 +188,8 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     } else if (mounted) {
       notificationsState.pagingController.appendSafePage(newNotifications, nextPageKey);
     }
+
+    notificationsState.hasFirstLoad = true;
 
     saveNotificationsState();
   }

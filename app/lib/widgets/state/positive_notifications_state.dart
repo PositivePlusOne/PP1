@@ -13,6 +13,7 @@ class PositiveNotificationsState {
     required this.currentPaginationKey,
     required this.unreadCount,
     required this.unseenCount,
+    required this.hasFirstLoad,
   });
 
   final String uid;
@@ -20,4 +21,5 @@ class PositiveNotificationsState {
   String currentPaginationKey;
   int unreadCount;
   int unseenCount;
+  bool hasFirstLoad;
 }

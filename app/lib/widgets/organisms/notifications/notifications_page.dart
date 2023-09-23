@@ -1,8 +1,11 @@
 // Flutter imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/hooks/channel_hook.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +24,7 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class NotificationsPage extends ConsumerWidget {
+class NotificationsPage extends HookConsumerWidget {
   const NotificationsPage({super.key});
 
   @override
@@ -42,13 +45,15 @@ class NotificationsPage extends ConsumerWidget {
     final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(notificationCacheKey);
     final bool hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
 
+    useCacheHook(keys: [notificationCacheKey]);
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       visibleComponents: {
         PositiveScaffoldComponent.headingWidgets,
         if (!hasNotifications) PositiveScaffoldComponent.decorationWidget,
       },
-      decorations: buildType3ScaffoldDecorations(colours),
+      decorations: !hasNotifications ? buildType3ScaffoldDecorations(colours) : [],
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarTrailing: actions,
