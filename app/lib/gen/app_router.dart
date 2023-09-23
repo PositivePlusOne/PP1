@@ -25,6 +25,7 @@ import 'package:app/widgets/organisms/gallery/media_page.dart';
 import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
 import 'package:app/widgets/organisms/home/home_login_prompt_page.dart';
 import 'package:app/widgets/organisms/home/home_page.dart';
+import 'package:app/widgets/organisms/login/login_account_recovery_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
@@ -146,6 +147,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
         AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),
         AutoRoute(page: LoginWelcomeBackRoute.page, path: '/login/success'),
+        AutoRoute(page: LoginAccountRecoveryRoute.page, path: '/login/recovery'),
         //* User Preferences Configuration
         AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),

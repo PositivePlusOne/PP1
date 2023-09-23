@@ -109,7 +109,7 @@ class OnboardingEducationPage extends ConsumerWidget {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
