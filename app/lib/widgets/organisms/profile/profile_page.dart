@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/common/media.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -56,6 +57,9 @@ class ProfilePage extends HookConsumerWidget {
     final Profile targetProfile = state.profile ?? Profile.empty();
     final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
+    //* Check for a cover image
+    final Media? coverImage = targetProfile.coverImage;
+
     useLifecycleHook(viewModel);
     usePageRefreshHook();
 
@@ -94,6 +98,7 @@ class ProfilePage extends HookConsumerWidget {
           child: PositiveAppBar(
             includeLogoWherePossible: false,
             backgroundColor: viewModel.appBarColor,
+            backgroundImage: coverImage,
             trailType: PositiveAppBarTrailType.concave,
             decorationColor: colors.colorGray1,
             applyLeadingandTrailingPadding: true,

@@ -25,11 +25,15 @@ import '../widgets/atoms/buttons/positive_button.dart';
 
 extension UserProfileExtensions on Profile {
   Media? get profileImage {
-    return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/profile.jpeg'));
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/profile'));
+  }
+
+  Media? get coverImage {
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/cover'));
   }
 
   Media? get referenceImage {
-    return media.firstWhereOrNull((element) => element.bucketPath.contains('private/reference.jpeg'));
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('private/reference'));
   }
 
   bool matchesStringSearch(String str) {
