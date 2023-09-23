@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
