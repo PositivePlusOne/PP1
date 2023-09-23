@@ -257,7 +257,7 @@
     "page_account_verify_account_body": "You have not logged on recently. Can we confirm your password so we know that it is you!",
     "page_account_verify_account_password_forgotten": "Forgotten Password",
 
-    "page_chat_action_start_conversation": "Start Conversation",
+    "page_chat_action_start_conversation": "Start Chat",
 
     "page_chat_empty": "Get the conversation started! Write your first message to @{displayName}",
     "@page_chat_empty" : {
@@ -270,6 +270,10 @@
 
     "page_chat_empty_person": "Get the conversation started! Write your first message to {displayName}",
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
+    
+    "page_chat_empty_conversations_title": "Time to break the ice",
+    "page_chat_empty_conversations_body": "No chats yet? That's okay. Let's get one started!",
+    "page_chat_empty_conversations_start": "Start chatting",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
     "page_search_posts_not_found_title": "No Posts\nFound",
@@ -291,8 +295,8 @@
     "page_chat_message_members_search_hint": "Search People in Conversation",
     "page_chat_message_members_add_users": "Add Users",
     "page_chat_message_members_remove_users": "Remove Users",
-    "page_chat_message_members_continue": "Continue Conversation",
-    "page_chat_view_members_oto_placeholder": "If you wish to start a chat with more than just {displayName} please start a new chat",
+    "page_chat_message_members_continue": "Continue Chatting",
+    "page_chat_view_members_oto_placeholder": "Want a group conversation? You'll need to start a separate chat.",
     "page_chat_leave_group_system_message_own": "You are no longer in this conversation",
     "page_chat_leave_group_system_message": "@{id} left the conversation",
     "@page_chat_leave_group_system_message": {
@@ -492,8 +496,8 @@
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search Connections",
 
-    "shared_no_connections": "You have no\nconnections",
-    "shared_no_connections_subtitle": "To start a conversation you must have a connection within Positive+1",
+    "shared_no_connections": "No friends\nyet?",
+    "shared_no_connections_subtitle": "Remember, to start a conversation, first make a connection.",
 
     "shared_navigation_tooltips_notifications": "Notifications",
     "shared_navigation_tooltips_account": "Account Settings",

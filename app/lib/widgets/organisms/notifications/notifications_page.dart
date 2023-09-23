@@ -2,10 +2,8 @@
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
-import 'package:app/hooks/channel_hook.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import 'package:flutter/material.dart';
 
