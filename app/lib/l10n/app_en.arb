@@ -281,6 +281,8 @@
     "page_connections_list_add_dialog_members_system_join": "{count} joined the conversation",
     "page_connections_list_add_dialog_description": "All conversation history will be shared with users who are added",
 
+    "post_promoted_label": "Promoted",
+
     "post_dialogue_edit_post": "Edit Post",
     "post_dialogue_edit_post_fail": "Unable to update post",
     "post_dialogue_edit_post_success": "Post Saved",
@@ -417,7 +419,6 @@
     "shared_ui_posts":"Posts",
     "shared_ui_gallery":"Gallery",
     "shared_hashtag": "#",
-
 
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",

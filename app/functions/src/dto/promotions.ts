@@ -36,7 +36,7 @@ export interface PromotionJSON {
     link?: string;
     linkText?: string;
     owners?: PromotionOwnerJSON[];
-    promotedActivities?: PromotedActivityJSON[];
+    activities?: PromotedActivityJSON[];
     startTime?: string;
     endTime?: string;
 }
@@ -48,7 +48,7 @@ export class Promotion {
     link?: string;
     linkText?: string;
     owners?: PromotionOwner[];
-    promotedActivities?: PromotedActivity[];
+    activities?: PromotedActivity[];
     startTime?: string;
     endTime?: string;
 
@@ -59,7 +59,7 @@ export class Promotion {
         this.link = json.link;
         this.linkText = json.linkText;
         this.owners = json.owners && json.owners.map((owner) => new PromotionOwner(owner));
-        this.promotedActivities = json.promotedActivities && json.promotedActivities.map((activity) => new PromotedActivity(activity));
+        this.activities = json.activities && json.activities.map((activity) => new PromotedActivity(activity));
         this.startTime = json.startTime;
         this.endTime = json.endTime;
     }

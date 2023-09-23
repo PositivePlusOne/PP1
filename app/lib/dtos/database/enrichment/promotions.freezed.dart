@@ -27,8 +27,7 @@ mixin _$Promotion {
   String get link => throw _privateConstructorUsedError;
   String get linkText => throw _privateConstructorUsedError;
   List<PromotionOwner> get owners => throw _privateConstructorUsedError;
-  List<PromotedActivity> get promotedActivities =>
-      throw _privateConstructorUsedError;
+  List<PromotedActivity> get activities => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get startTime => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -52,7 +51,7 @@ abstract class $PromotionCopyWith<$Res> {
       String link,
       String linkText,
       List<PromotionOwner> owners,
-      List<PromotedActivity> promotedActivities,
+      List<PromotedActivity> activities,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -80,7 +79,7 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
     Object? link = null,
     Object? linkText = null,
     Object? owners = null,
-    Object? promotedActivities = null,
+    Object? activities = null,
     Object? startTime = freezed,
     Object? endTime = freezed,
   }) {
@@ -109,9 +108,9 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
           ? _value.owners
           : owners // ignore: cast_nullable_to_non_nullable
               as List<PromotionOwner>,
-      promotedActivities: null == promotedActivities
-          ? _value.promotedActivities
-          : promotedActivities // ignore: cast_nullable_to_non_nullable
+      activities: null == activities
+          ? _value.activities
+          : activities // ignore: cast_nullable_to_non_nullable
               as List<PromotedActivity>,
       startTime: freezed == startTime
           ? _value.startTime
@@ -151,7 +150,7 @@ abstract class _$$_PromotionCopyWith<$Res> implements $PromotionCopyWith<$Res> {
       String link,
       String linkText,
       List<PromotionOwner> owners,
-      List<PromotedActivity> promotedActivities,
+      List<PromotedActivity> activities,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -178,7 +177,7 @@ class __$$_PromotionCopyWithImpl<$Res>
     Object? link = null,
     Object? linkText = null,
     Object? owners = null,
-    Object? promotedActivities = null,
+    Object? activities = null,
     Object? startTime = freezed,
     Object? endTime = freezed,
   }) {
@@ -207,9 +206,9 @@ class __$$_PromotionCopyWithImpl<$Res>
           ? _value._owners
           : owners // ignore: cast_nullable_to_non_nullable
               as List<PromotionOwner>,
-      promotedActivities: null == promotedActivities
-          ? _value._promotedActivities
-          : promotedActivities // ignore: cast_nullable_to_non_nullable
+      activities: null == activities
+          ? _value._activities
+          : activities // ignore: cast_nullable_to_non_nullable
               as List<PromotedActivity>,
       startTime: freezed == startTime
           ? _value.startTime
@@ -233,11 +232,11 @@ class _$_Promotion implements _Promotion {
       this.link = '',
       this.linkText = '',
       final List<PromotionOwner> owners = const [],
-      final List<PromotedActivity> promotedActivities = const [],
+      final List<PromotedActivity> activities = const [],
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.endTime})
       : _owners = owners,
-        _promotedActivities = promotedActivities;
+        _activities = activities;
 
   factory _$_Promotion.fromJson(Map<String, dynamic> json) =>
       _$$_PromotionFromJson(json);
@@ -266,14 +265,13 @@ class _$_Promotion implements _Promotion {
     return EqualUnmodifiableListView(_owners);
   }
 
-  final List<PromotedActivity> _promotedActivities;
+  final List<PromotedActivity> _activities;
   @override
   @JsonKey()
-  List<PromotedActivity> get promotedActivities {
-    if (_promotedActivities is EqualUnmodifiableListView)
-      return _promotedActivities;
+  List<PromotedActivity> get activities {
+    if (_activities is EqualUnmodifiableListView) return _activities;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_promotedActivities);
+    return EqualUnmodifiableListView(_activities);
   }
 
   @override
@@ -285,7 +283,7 @@ class _$_Promotion implements _Promotion {
 
   @override
   String toString() {
-    return 'Promotion(flMeta: $flMeta, title: $title, descriptionMarkdown: $descriptionMarkdown, link: $link, linkText: $linkText, owners: $owners, promotedActivities: $promotedActivities, startTime: $startTime, endTime: $endTime)';
+    return 'Promotion(flMeta: $flMeta, title: $title, descriptionMarkdown: $descriptionMarkdown, link: $link, linkText: $linkText, owners: $owners, activities: $activities, startTime: $startTime, endTime: $endTime)';
   }
 
   @override
@@ -302,7 +300,7 @@ class _$_Promotion implements _Promotion {
                 other.linkText == linkText) &&
             const DeepCollectionEquality().equals(other._owners, _owners) &&
             const DeepCollectionEquality()
-                .equals(other._promotedActivities, _promotedActivities) &&
+                .equals(other._activities, _activities) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime));
@@ -318,7 +316,7 @@ class _$_Promotion implements _Promotion {
       link,
       linkText,
       const DeepCollectionEquality().hash(_owners),
-      const DeepCollectionEquality().hash(_promotedActivities),
+      const DeepCollectionEquality().hash(_activities),
       startTime,
       endTime);
 
@@ -344,7 +342,7 @@ abstract class _Promotion implements Promotion {
       final String link,
       final String linkText,
       final List<PromotionOwner> owners,
-      final List<PromotedActivity> promotedActivities,
+      final List<PromotedActivity> activities,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       final String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
@@ -367,7 +365,7 @@ abstract class _Promotion implements Promotion {
   @override
   List<PromotionOwner> get owners;
   @override
-  List<PromotedActivity> get promotedActivities;
+  List<PromotedActivity> get activities;
   @override
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get startTime;

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,7 +38,8 @@ import '../../atoms/indicators/positive_loading_indicator.dart';
 class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
-    required this.publisher,
+    this.publisher,
+    this.promotion,
     this.origin,
     this.isShortformPost = true,
     this.isShared = false,
@@ -58,6 +60,8 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
   final String? origin;
 
   final Profile? publisher;
+  final Promotion? promotion;
+
   final bool isShortformPost;
   final bool isShared;
   final double sidePadding;

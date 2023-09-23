@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/enrichment/promotions.dart';
+import 'package:app/widgets/atoms/indicators/positive_promoted_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,8 +27,9 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
-    required this.flMetaData,
-    required this.publisher,
+    this.flMetaData,
+    this.publisher,
+    this.promotion,
     required this.onOptions,
     this.isShared = false,
     super.key,
@@ -34,6 +37,8 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
   final FlMeta? flMetaData;
   final Profile? publisher;
+  final Promotion? promotion;
+
   final Function onOptions;
   final bool isShared;
 
@@ -95,11 +100,17 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  const SizedBox(height: kPaddingThin),
-                  Text(
-                    postDateTooltip,
-                    style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
-                  ),
+                  if (promotion == null) ...<Widget>[
+                    const SizedBox(height: kPaddingThin),
+                    Text(
+                      postDateTooltip,
+                      style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
+                    ),
+                  ],
+                  if (promotion != null) ...<Widget>[
+                    const SizedBox(height: kPaddingSuperSmall),
+                    const PositivePromotedIndicator(),
+                  ],
                 ],
               ),
             ),

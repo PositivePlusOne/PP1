@@ -151,6 +151,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
 
                 if (activity.enrichmentConfiguration?.promotionKey) {
+                    functions.logger.info(`Promotion key: ${activity.enrichmentConfiguration?.promotionKey}`);
                     joinedDataRecords.get(promotionsSchemaKey)?.add(activity.enrichmentConfiguration?.promotionKey);
                 }
                 break;
@@ -331,6 +332,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 responseData.data[schema].push(new ReactionStatistics(obj));
                 break;
             case promotionsSchemaKey:
+                functions.logger.info("Promotion", { obj });
                 responseData.data[schema].push(new Promotion(obj));
                 break;
             default:

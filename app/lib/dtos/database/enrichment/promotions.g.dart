@@ -18,7 +18,7 @@ _$_Promotion _$$_PromotionFromJson(Map<String, dynamic> json) => _$_Promotion(
               ?.map((e) => PromotionOwner.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      promotedActivities: (json['promotedActivities'] as List<dynamic>?)
+      activities: (json['activities'] as List<dynamic>?)
               ?.map((e) => PromotedActivity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
@@ -34,8 +34,7 @@ Map<String, dynamic> _$$_PromotionToJson(_$_Promotion instance) =>
       'link': instance.link,
       'linkText': instance.linkText,
       'owners': instance.owners.map((e) => e.toJson()).toList(),
-      'promotedActivities':
-          instance.promotedActivities.map((e) => e.toJson()).toList(),
+      'activities': instance.activities.map((e) => e.toJson()).toList(),
       'startTime': dateToUnknown(instance.startTime),
       'endTime': dateToUnknown(instance.endTime),
     };

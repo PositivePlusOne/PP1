@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -54,6 +55,7 @@ Future<void> setupApplication() async {
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
+  final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();

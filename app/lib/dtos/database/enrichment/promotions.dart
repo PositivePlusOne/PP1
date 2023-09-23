@@ -21,7 +21,7 @@ class Promotion with _$Promotion {
     @Default('') String link,
     @Default('') String linkText,
     @Default([]) List<PromotionOwner> owners,
-    @Default([]) List<PromotedActivity> promotedActivities,
+    @Default([]) List<PromotedActivity> activities,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? startTime,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? endTime,
   }) = _Promotion;
