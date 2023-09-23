@@ -136,14 +136,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                       child: StreamMessageText(
                         onLinkTap: onLinkTap,
                         message: message.copyWith(text: messageText),
-                        messageTheme: StreamMessageThemeData(
-                          avatarTheme: const StreamAvatarThemeData(
-                            constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
-                          ),
-                          messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
-                          messageBackgroundColor: colors.black.withOpacity(0.05),
-                          messageLinksStyle: typography.styleNotification.copyWith(color: colors.black, fontWeight: FontWeight.bold),
-                        ),
+                        messageTheme: buildStreamMessageThemeData(typography, colors),
                       ),
                     ),
                   ),
@@ -232,15 +225,10 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                     child: StreamMessageListView(
                       showFloatingDateDivider: false,
                       showScrollToBottom: false,
-                      // messageListBuilder: (context, messages) => ListView.builder(
-                      //   padding: const EdgeInsets.only(bottom: kPaddingSmall),
-                      //   itemCount: messages.length,
-                      //   itemBuilder: (context, index) => messages[index],
-                      // ),
                       messageFilter: !isArchived ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                       emptyBuilder: (context) => buildEmptyChatList(context, members, memberProfiles, locale),
                       systemMessageBuilder: (context, message) => buildSystemMessage(context, message, colors, typography, locale, currentStreamUser),
-                      // messageBuilder: (context, details, messages, defaultMessageWidget) => buildMessage(context, details, messages, defaultMessageWidget, colors),
+                      messageBuilder: (context, details, messages, defaultMessageWidget) => buildMessage(context, details, messages, defaultMessageWidget, colors),
                     ),
                   ),
                 ),
@@ -266,12 +254,56 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
       ),
     );
   }
+}
 
-  PositiveProfileCircularIndicator buildUserAvatar(User user, DesignColorsModel colors) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Profile? profile = cacheController.getFromCache<Profile>(user.id);
-    return PositiveProfileCircularIndicator(profile: profile);
-  }
+StreamMessageThemeData buildStreamMessageThemeData(DesignTypographyModel typography, DesignColorsModel colors) {
+  return StreamMessageThemeData(
+    avatarTheme: const StreamAvatarThemeData(
+      constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
+    ),
+    messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
+    messageBackgroundColor: colors.black.withOpacity(0.05),
+    messageLinksStyle: typography.styleNotification.copyWith(color: colors.black, fontWeight: FontWeight.bold),
+  );
+}
+
+Widget buildMessage(BuildContext context, MessageDetails details, List<Message> messages, StreamMessageWidget defaultMessageWidget, DesignColorsModel colors) {
+  final bool isMyMessage = false;
+  final bool isOnlyEmoji = details.message.text?.isOnlyEmoji ?? false;
+  final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+  return StreamMessageWidget(
+    messageTheme: buildStreamMessageThemeData(typography, colors),
+    showReplyMessage: false,
+    showResendMessage: false,
+    showThreadReplyMessage: false,
+    showCopyMessage: false,
+    showDeleteMessage: false,
+    showEditMessage: false,
+    message: details.message,
+    reverse: isMyMessage,
+    showUsername: !isMyMessage,
+    padding: const EdgeInsets.all(8),
+    showSendingIndicator: false,
+    borderRadiusGeometry: BorderRadius.only(
+      topLeft: const Radius.circular(16),
+      bottomLeft: isMyMessage ? const Radius.circular(16) : const Radius.circular(2),
+      topRight: const Radius.circular(16),
+      bottomRight: isMyMessage ? const Radius.circular(2) : const Radius.circular(16),
+    ),
+    textPadding: EdgeInsets.symmetric(
+      vertical: 8,
+      horizontal: isOnlyEmoji ? 0 : 16.0,
+    ),
+    showUserAvatar: isMyMessage ? DisplayWidget.gone : DisplayWidget.show,
+    userAvatarBuilder: isMyMessage ? null : (context, user) => _buildUserAvatar(user, colors),
+  );
+}
+
+PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors) {
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+  final Profile? profile = cacheController.getFromCache<Profile>(user.id);
+  return PositiveProfileCircularIndicator(profile: profile);
 }
 
 class MessageInputContainer extends StatelessWidget {

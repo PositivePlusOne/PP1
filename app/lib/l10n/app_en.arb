@@ -409,6 +409,8 @@
     "page_connections_list_add_dialog_members_system_join": "{count} joined the conversation",
     "page_connections_list_add_dialog_description": "All conversation history will be shared with users who are added",
 
+    "page_connections_list_blocked_user_notice": "This conversation includes users you have blocked. Blocked users can see messages you send, but cannot see your profile image, display name, or shared profile information.",
+
     "post_promoted_label": "Promoted",
 
     "post_dialogue_edit_post": "Edit Post",
