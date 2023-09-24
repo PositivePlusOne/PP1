@@ -19,8 +19,6 @@ import { ProfileJSON } from "../dto/profile";
 import { NotificationsService } from "../services/notifications_service";
 import { DEFAULT_PAGINATION_WINDOW_SIZE } from "../helpers/pagination";
 import { NotificationPayloadResponse } from "../services/types/notification_payload";
-// import { GetFeedWindowResult } from "../dto/stream";
-// import { ActivitiesService } from "../services/activities_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions

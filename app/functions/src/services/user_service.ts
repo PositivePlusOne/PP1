@@ -1,9 +1,6 @@
 import * as functions from "firebase-functions";
 import { ProfileService } from "./profile_service";
-import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
-import { adminApp } from "..";
 import { RelationshipService } from "./relationship_service";
-import { ProfileJSON } from "../dto/profile";
 
 export namespace UserService {
   /**
@@ -26,7 +23,7 @@ export namespace UserService {
 
     const [relationship, targetProfile] = await Promise.all([
       RelationshipService.getRelationship([uid, requestId]),
-      ProfileService.getProfile(requestId)
+      ProfileService.getProfile(requestId),
     ]);
 
     if (!relationship || !targetProfile) {
@@ -35,9 +32,9 @@ export namespace UserService {
     }
 
     const isManageRelationshipFlag = relationship?.flags?.includes("managedRelationship") || false;
-    const hasManageTargetFlag = targetProfile?.featureFlags?.includes("manageTarget") || false;
+    const hasManagedOrganisationTargetFlag = targetProfile?.featureFlags?.includes("manageTargetOrganisation") || false;
 
-    if (isManageRelationshipFlag && hasManageTargetFlag) {
+    if (isManageRelationshipFlag && hasManagedOrganisationTargetFlag) {
       functions.logger.info(`Authenticated as: ${uid}`);
       return uid;
     }
