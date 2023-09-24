@@ -459,6 +459,28 @@ export namespace RelationshipService {
     return relationships;
   }
 
+  export async function getManagedRelationships(uid: string): Promise<RelationshipJSON[]> {
+    functions.logger.info("Getting managed relationships", {
+      uid,
+    });
+
+    const managedRelationships = await DataService.getDocumentWindowRaw({
+      schemaKey: "relationships",
+      where: [
+        { fieldPath: "_fl_meta_.schema", op: "==", value: "relationships" },
+        { fieldPath: "searchIndexRelationshipManages", op: ">=", value: uid },
+        { fieldPath: "searchIndexRelationshipManages", op: "<=", value: uid + "\uf8ff" },
+        { fieldPath: "managed", op: "==", value: true },
+      ],
+    }) as RelationshipJSON[];
+
+    functions.logger.info("Managed relationships", {
+      managedRelationships,
+    });
+
+    return managedRelationships ?? [];
+  }
+
   /**
    * Unblocks a relationship from the given sender.
    * @param {string} sender the sender of the message.

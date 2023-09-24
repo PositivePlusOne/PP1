@@ -16,6 +16,8 @@ import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
 import { TagsService } from "../services/tags_service";
 import { ProfileJSON } from "../dto/profile";
+import { RelationshipJSON } from "../dto/relationships";
+import { RelationshipService } from "../services/relationship_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -55,7 +57,7 @@ export namespace SystemEndpoints {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managedRelationships] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -65,6 +67,7 @@ export namespace SystemEndpoints {
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("user", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
+      uid ? RelationshipService.getManagedRelationships(uid) : Promise.resolve([]),
     ]);
 
 
@@ -76,12 +79,12 @@ export namespace SystemEndpoints {
     });
 
     let profile = {} as ProfileJSON;
-    const supportedProfiles = [];
+    const supportedProfileIds = [] as string[];
+    const supportedProfiles = [] as ProfileJSON[];
 
     if (typeof uid === "string" && uid.length > 0) {
-      supportedProfiles.push(uid);
+      supportedProfileIds.push(uid);
 
-      // let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
       if (!userProfile) {
         functions.logger.info("Profile not found, creating...", { uid });
@@ -92,15 +95,44 @@ export namespace SystemEndpoints {
         userProfile = await ProfileService.createProfile(uid, email, phone, locale);
       }
 
-      functions.logger.info("Getting profile", { uid, userProfile });
       profile = userProfile as ProfileJSON;
     }
 
-    functions.logger.info(`Profile found, getting joins ${profile?._fl_meta_?.fl_id}`, { uid });
+    const managedProfileFetchPromises = [];
+    if (managedRelationships && managedRelationships.length > 0) {
+      for (const relationship of managedRelationships) {
+        if (!relationship) {
+          continue;
+        }
+
+        const members = (relationship as RelationshipJSON).members || [];
+        for (const member of members) {
+          if (!member?.memberId || supportedProfileIds.includes(member.memberId)) {
+            continue;
+          }
+
+          supportedProfileIds.push(member.memberId);
+          managedProfileFetchPromises.push(ProfileService.getProfile(member.memberId));
+        }
+      }
+    }
+
+    functions.logger.info("Prefetching managed IDs", { supportedProfileIds });
+
+    const managedProfiles = await Promise.all(managedProfileFetchPromises);
+    for (const managedProfile of managedProfiles) {
+      if (!managedProfile) {
+        continue;
+      }
+
+      supportedProfiles.push(managedProfile as ProfileJSON);
+    }
+
+    functions.logger.info("Fetched managed profiles", { supportedProfiles });
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [profile],
+      data: [profile, ...supportedProfiles],
       joins: joinRecords,
       seedData: {
         genders,
@@ -109,7 +141,7 @@ export namespace SystemEndpoints {
         popularTags,
         topicTags,
         recentTags,
-        supportedProfiles,
+        supportedProfiles: supportedProfileIds,
         // userFeedRecords: userFeedRecords,
         // timelineFeeduserFeedRecords: timelineFeedRecords,
       },

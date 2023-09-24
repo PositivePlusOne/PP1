@@ -17,18 +17,34 @@ export namespace RemoveOrganisationMemberAction {
         const targetProfileData = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'targetProfile') || {};
         const sourceProfileReference = (sourceProfileData?.profiles?.length ?? 0) > 0 ? sourceProfileData.profiles![0] : null as DocumentReference | null;
         const targetProfileReference = (targetProfileData?.profiles?.length ?? 0) > 0 ? targetProfileData.profiles![0] : null as DocumentReference | null;
-        const sourceProfileId = sourceProfileReference?.id ?? '';
-        const targetProfileId = targetProfileReference?.id ?? '';
+        const sourceProfileActualId = sourceProfileReference?.id ?? '';
+        const targetProfileActualId = targetProfileReference?.id ?? '';
+
+        if (!sourceProfileActualId || !targetProfileActualId) {
+            AdminQuickActionService.appendOutput(action, `No source or target profile ID specified.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
+        const [sourceProfileSnapshot, targetProfileSnapshot] = await Promise.all([
+            sourceProfileData.profiles![0].get(),
+            targetProfileData.profiles![0].get(),
+        ]);
+
+        const sourceProfile = sourceProfileSnapshot.data();
+        const targetProfile = targetProfileSnapshot.data();
+        const sourceProfileId = FlamelinkHelpers.getFlamelinkIdFromObject(sourceProfile);
+        const targetProfileId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
 
         if (!sourceProfileId || !targetProfileId) {
-            AdminQuickActionService.appendOutput(action, `No source or target profile specified.`);
+            AdminQuickActionService.appendOutput(action, `No source or target profile ID specified.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
 
         const relationship = await RelationshipService.getOrCreateRelationship([sourceProfileId, targetProfileId]);
         if (!relationship) {
-            AdminQuickActionService.appendOutput(action, `No relationship found.`);
+            AdminQuickActionService.appendOutput(action, `A relationship could not be created.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
@@ -38,6 +54,6 @@ export namespace RemoveOrganisationMemberAction {
         await RelationshipService.manageRelationship(sourceProfileId, relationship, false);
 
         AdminQuickActionService.updateStatus(action, 'success');
-        AdminQuickActionService.appendOutput(action, `Successfully removeed ${targetProfileId} from ${sourceProfileId}`);
+        AdminQuickActionService.appendOutput(action, `Successfully removed ${targetProfileId} from ${sourceProfileId}`);
     }
 }
