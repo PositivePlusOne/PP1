@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +12,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -28,7 +28,6 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/post/post_comment_box.dart';
 import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
-import '../../../providers/profiles/profile_controller.dart';
 
 @RoutePage()
 class PostPage extends HookConsumerWidget {
@@ -78,6 +77,10 @@ class PostPage extends HookConsumerWidget {
         mediaQuery: mediaQuery,
         currentProfile: currentProfile,
         canSwitchProfile: viewModel.canSwitchProfile,
+        onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
+          context,
+          updatedActivity.securityConfiguration?.commentMode,
+        ),
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,
         onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),

@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -23,6 +22,7 @@ import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/events/content/reaction_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';

@@ -4,8 +4,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,8 +12,10 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
@@ -27,6 +27,7 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
     required this.onCommentChanged,
     required this.onPostCommentRequested,
     required this.isBusy,
+    this.onSwitchProfileRequested,
     this.currentProfile,
     this.canSwitchProfile = false,
     Key? key,
@@ -35,6 +36,7 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
   final MediaQueryData mediaQuery;
   final Profile? currentProfile;
   final bool canSwitchProfile;
+  final VoidCallback? onSwitchProfileRequested;
 
   final TextEditingController commentTextController;
   final Function(String) onCommentChanged;
@@ -99,7 +101,11 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                     if (widget.canSwitchProfile) ...<Widget>[
                       Padding(
                         padding: const EdgeInsets.only(right: kPaddingSmall),
-                        child: PositiveProfileCircularIndicator(profile: widget.currentProfile),
+                        child: PositiveProfileCircularIndicator(
+                          profile: widget.currentProfile,
+                          onTap: widget.onSwitchProfileRequested,
+                          isEnabled: !widget.isBusy,
+                        ),
                       ),
                     ],
                     Expanded(

@@ -1,13 +1,24 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:event_bus/event_bus.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:event_bus/event_bus.dart';
-import 'package:logger/logger.dart';
+import 'package:app/widgets/atoms/pills/security_mode_pill.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/molecules/dialogs/positive_switch_profile_dialog.dart';
 
 /// This mixin is used to handle profile switching.
 /// e.g. sending a comment as a different profile such as an organization.
@@ -46,6 +57,33 @@ mixin ProfileSwitchMixin {
   bool get canSwitchProfile {
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     return profileControllerState.availableProfileIds.length > 1;
+  }
+
+  Future<void> requestSwitchProfileDialog(BuildContext context, ActivitySecurityConfigurationMode? mode) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - start');
+
+    final String? newProfileId = await PositiveDialog.show(
+      context: context,
+      title: 'Comment As',
+      style: PositiveDialogStyle.fullScreen,
+      hints: <Widget>[
+        if (mode != null) ...<Widget>[
+          const SecurityModePill(
+            reactionMode: ActivitySecurityConfigurationMode.public(),
+            brightness: Brightness.dark,
+          ),
+        ],
+      ],
+      child: PositiveSwitchProfileDialog(controller: this),
+    );
+
+    logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - end');
+
+    if (newProfileId != null) {
+      logger.d('[ProfileSwitchMixin.requestSwitchProfileDialog] - newProfileId: $newProfileId');
+      switchProfile(newProfileId);
+    }
   }
 
   void switchProfile(String profileId) {

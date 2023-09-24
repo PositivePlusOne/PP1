@@ -4,6 +4,7 @@ import 'dart:ui';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,25 +14,38 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
+
+enum PositiveDialogStyle {
+  overlay,
+  fullScreen,
+}
 
 class PositiveDialog extends ConsumerWidget {
   const PositiveDialog({
     required this.title,
     required this.child,
+    this.hints = const <Widget>[],
+    this.style = PositiveDialogStyle.overlay,
     this.backgroundOpacity = kBackgroundOpacity,
     this.isDisabled = false,
     this.heroTag = '',
-    this.barrierOpacity = kBarrierOpacity,
+    this.barrierOpacity = kBarrierOpacityOverlay,
     super.key,
   });
 
   final String title;
   final Widget child;
+
+  final List<Widget> hints;
+
+  final PositiveDialogStyle style;
 
   final bool isDisabled;
   final String heroTag;
@@ -43,7 +57,8 @@ class PositiveDialog extends ConsumerWidget {
   static const double kPadding = 20.0;
   static const double kMargin = 10.0;
   static const double kBackgroundOpacity = 0.15;
-  static const double kBarrierOpacity = 0.85;
+  static const double kBarrierOpacityOverlay = 0.85;
+  static const double kBarrierOpacityFullScreen = 1.0;
   static const double kCalandarOpacity = 0.95;
   static const double kSigmaBlur = 2.0;
 
@@ -58,13 +73,12 @@ class PositiveDialog extends ConsumerWidget {
     required BuildContext context,
     required Widget child,
     String title = '',
+    List<Widget> hints = const <Widget>[],
     bool barrierDismissible = true,
     bool useSafeArea = false,
-    double barrierOpacity = kBarrierOpacity,
     double backgroundOpacity = kBackgroundOpacity,
+    PositiveDialogStyle style = PositiveDialogStyle.overlay,
   }) async {
-    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
     return await showCupertinoDialog(
       context: context,
       barrierDismissible: barrierDismissible,
@@ -72,6 +86,9 @@ class PositiveDialog extends ConsumerWidget {
       builder: (_) => PositiveDialog(
         title: title,
         backgroundOpacity: backgroundOpacity,
+        barrierOpacity: style == PositiveDialogStyle.overlay ? kBarrierOpacityOverlay : kBarrierOpacityFullScreen,
+        style: style,
+        hints: hints,
         child: child,
       ),
     );
@@ -87,69 +104,48 @@ class PositiveDialog extends ConsumerWidget {
 
     final Widget child2 = Material(
       type: MaterialType.transparency,
-      // ScaffoldMessenger, Builder, and Scaffold are required for the snackbar to show on top of the modal (as opposed to behind it)
       child: ScaffoldMessenger(
         child: Builder(builder: (context) {
           return GestureDetector(
-            // Pop the page on background tap
             onTap: () => Navigator.of(context).pop(),
-            child: Scaffold(
-              backgroundColor: colors.black.withOpacity(barrierOpacity),
-              body: CustomScrollView(
-                slivers: <Widget>[
-                  SliverPadding(
-                    padding: EdgeInsets.only(bottom: bottomViewInsets),
-                    sliver: SliverFillRemaining(
-                      child: Padding(
-                        padding: const EdgeInsets.all(kMargin),
-                        child: Center(
-                          child: SingleChildScrollView(
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(kBorderRadius),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.all(kPadding),
-                                  decoration: BoxDecoration(
-                                    color: colors.colorGray3.withOpacity(backgroundOpacity),
-                                    borderRadius: BorderRadius.circular(kBorderRadius),
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: Text(
-                                              title,
-                                              style: typography.styleTitle.copyWith(color: colors.white),
-                                            ),
-                                          ),
-                                          const SizedBox(width: kPaddingMedium),
-                                          PositiveButton.appBarIcon(
-                                            colors: colors,
-                                            icon: UniconsLine.multiply,
-                                            primaryColor: title.isNotEmpty ? colors.white : colors.black,
-                                            size: PositiveButtonSize.small,
-                                            style: PositiveButtonStyle.text,
-                                            isDisabled: isDisabled,
-                                            onTapped: () => Navigator.of(context).pop(),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: kPaddingMedium),
-                                      child,
-                                    ],
-                                  ),
-                                ),
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: buildSystemUiOverlayStyle(appBarColor: colors.black, backgroundColor: colors.black),
+              child: Scaffold(
+                backgroundColor: colors.black.withOpacity(barrierOpacity),
+                body: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: EdgeInsets.only(bottom: bottomViewInsets),
+                      sliver: SliverFillRemaining(
+                        child: style == PositiveDialogStyle.overlay
+                            ? PositiveOverlayDialogContent(
+                                kBorderRadius: kBorderRadius,
+                                kSigmaBlur: kSigmaBlur,
+                                kPadding: kPadding,
+                                colors: colors,
+                                backgroundOpacity: backgroundOpacity,
+                                title: title,
+                                typography: typography,
+                                isDisabled: isDisabled,
+                                hints: hints,
+                                child: child,
+                              )
+                            : PositiveFullscreenDialogContent(
+                                kBorderRadius: kBorderRadius,
+                                kSigmaBlur: kSigmaBlur,
+                                kPadding: kPadding,
+                                colors: colors,
+                                backgroundOpacity: backgroundOpacity,
+                                title: title,
+                                typography: typography,
+                                isDisabled: isDisabled,
+                                hints: hints,
+                                child: child,
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -165,5 +161,169 @@ class PositiveDialog extends ConsumerWidget {
     }
 
     return child2;
+  }
+}
+
+class PositiveFullscreenDialogContent extends StatelessWidget {
+  const PositiveFullscreenDialogContent({
+    super.key,
+    required this.kBorderRadius,
+    required this.kSigmaBlur,
+    required this.kPadding,
+    required this.colors,
+    required this.backgroundOpacity,
+    required this.title,
+    required this.typography,
+    required this.isDisabled,
+    required this.hints,
+    required this.child,
+  });
+
+  final double kBorderRadius;
+  final double kSigmaBlur;
+  final double kPadding;
+  final DesignColorsModel colors;
+  final double backgroundOpacity;
+  final String title;
+  final DesignTypographyModel typography;
+  final bool isDisabled;
+  final List<Widget> hints;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + kPadding,
+        right: kPadding,
+        left: kPadding,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: PositiveButton(
+            colors: colors,
+            primaryColor: colors.white,
+            onTapped: () => Navigator.of(context).pop(),
+            style: PositiveButtonStyle.outline,
+            icon: UniconsLine.multiply,
+            size: PositiveButtonSize.medium,
+            isActive: true,
+            layout: PositiveButtonLayout.iconOnly,
+            label: '',
+          ),
+        ),
+        const SizedBox(height: kPaddingMassive),
+        Text(
+          title,
+          style: typography.styleHeroMedium.copyWith(color: colors.white),
+        ),
+        const SizedBox(height: kPaddingMedium),
+        if (hints.isNotEmpty) ...<Widget>[
+          Wrap(
+            alignment: WrapAlignment.start,
+            runAlignment: WrapAlignment.start,
+            spacing: kPaddingSmall,
+            runSpacing: kPaddingSmall,
+            children: hints,
+          ),
+          const SizedBox(height: kPaddingMedium),
+        ],
+        ClipRRect(
+          borderRadius: BorderRadius.circular(kBorderRadius),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(PositiveDialog.kPadding),
+              decoration: BoxDecoration(
+                color: colors.colorGray3.withOpacity(backgroundOpacity),
+                borderRadius: BorderRadius.circular(kBorderRadius),
+              ),
+              child: child,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class PositiveOverlayDialogContent extends StatelessWidget {
+  const PositiveOverlayDialogContent({
+    super.key,
+    required this.kBorderRadius,
+    required this.kSigmaBlur,
+    required this.kPadding,
+    required this.colors,
+    required this.backgroundOpacity,
+    required this.title,
+    required this.typography,
+    required this.isDisabled,
+    required this.hints,
+    required this.child,
+  });
+
+  final double kBorderRadius;
+  final double kSigmaBlur;
+  final double kPadding;
+  final DesignColorsModel colors;
+  final double backgroundOpacity;
+  final String title;
+  final DesignTypographyModel typography;
+  final bool isDisabled;
+  final List<Widget> hints;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(PositiveDialog.kMargin),
+      child: Center(
+        child: SingleChildScrollView(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(kBorderRadius),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(PositiveDialog.kPadding),
+                decoration: BoxDecoration(
+                  color: colors.colorGray3.withOpacity(backgroundOpacity),
+                  borderRadius: BorderRadius.circular(kBorderRadius),
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: typography.styleTitle.copyWith(color: colors.white),
+                          ),
+                        ),
+                        const SizedBox(width: kPaddingMedium),
+                        PositiveButton.appBarIcon(
+                          colors: colors,
+                          icon: UniconsLine.multiply,
+                          primaryColor: title.isNotEmpty ? colors.white : colors.black,
+                          size: PositiveButtonSize.small,
+                          style: PositiveButtonStyle.text,
+                          isDisabled: isDisabled,
+                          onTapped: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: kPaddingMedium),
+                    child,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
