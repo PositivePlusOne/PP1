@@ -17,7 +17,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 
 class PositiveSwitchProfileDialog extends HookConsumerWidget {
   const PositiveSwitchProfileDialog({
