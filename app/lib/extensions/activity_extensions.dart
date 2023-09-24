@@ -112,18 +112,23 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
   bool get isPrivate => this == const ActivitySecurityConfigurationMode.private();
   bool get isDisabled => this == const ActivitySecurityConfigurationMode.disabled();
 
-  bool canActOnActivity(String activityId) {
+  bool canActOnActivity(
+    String activityId, {
+    String currentProfileId = '',
+  }) {
     final Logger logger = providerContainer.read(loggerProvider);
     if (activityId.isEmpty) {
       logger.e('canActOnSecurityMode() - activityId is empty');
       return false;
     }
 
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    if (currentProfileId.isEmpty) {
+      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+      currentProfileId = profileController.currentProfileId ?? '';
+    }
+
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final Activity? activity = cacheController.getFromCache<Activity>(activityId);
-
-    final String currentProfileId = profileController.currentProfileId ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
     if (activity == null || publisherProfileId.isEmpty) {

@@ -12,7 +12,7 @@ import 'package:logger/logger.dart';
 /// This mixin is used to handle profile switching.
 /// e.g. sending a comment as a different profile such as an organization.
 // ignore: invalid_use_of_internal_member
-abstract class ProfileSwitchMixin {
+mixin ProfileSwitchMixin {
   StreamSubscription<ProfileSwitchedEvent>? _profileSwitchedEventSubscription;
 
   /// This method is used to prepare the profile switcher.
@@ -43,6 +43,11 @@ abstract class ProfileSwitchMixin {
     }
   }
 
+  bool get canSwitchProfile {
+    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+    return profileControllerState.availableProfileIds.length > 1;
+  }
+
   void switchProfile(String profileId) {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
@@ -68,6 +73,12 @@ abstract class ProfileSwitchMixin {
     }
 
     onProfileSwitched(profileId, profile);
+  }
+
+  Profile? getCurrentProfile() {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final String currentProfileId = getCurrentProfileId();
+    return cacheController.getFromCache(currentProfileId);
   }
 
   String getCurrentProfileId();

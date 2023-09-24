@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,12 +53,12 @@ class PostPage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     final Activity updatedActivity = state.activity ?? activity;
+    final Profile? currentProfile = viewModel.getCurrentProfile();
 
-    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final List<Widget> actions = [];
 
-    if (profileControllerState.currentProfile != null) {
-      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
+    if (currentProfile != null) {
+      actions.addAll(currentProfile.buildCommonProfilePageActions());
     }
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -75,6 +76,8 @@ class PostPage extends HookConsumerWidget {
       alignment: Alignment.bottomCenter,
       child: PostCommentBox(
         mediaQuery: mediaQuery,
+        currentProfile: currentProfile,
+        canSwitchProfile: viewModel.canSwitchProfile,
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,
         onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),

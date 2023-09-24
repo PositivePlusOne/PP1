@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,6 +36,7 @@ class PostViewModelState with _$PostViewModelState {
   const factory PostViewModelState({
     required String activityId,
     Activity? activity,
+    @Default('') String currentProfileId,
     required TargetFeed targetFeed,
     @Default('') currentCommentText,
     @Default(false) bool isBusy,
@@ -46,12 +49,13 @@ class PostViewModelState with _$PostViewModelState {
   }) =>
       PostViewModelState(
         activityId: activityId,
+        currentProfileId: '',
         targetFeed: targetFeed,
       );
 }
 
 @riverpod
-class PostViewModel extends _$PostViewModel with LifecycleMixin {
+class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMixin {
   final TextEditingController commentTextController = TextEditingController();
 
   StreamSubscription<ActivityCreatedEvent>? _activityCreatedEventSubscription;
@@ -66,6 +70,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
   @override
   void onFirstRender() {
     super.onFirstRender();
+    prepareProfileSwitcher();
     setupListeners();
   }
 
@@ -118,15 +123,18 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
   }
 
   bool checkCanComment() {
+    if (state.currentProfileId.isEmpty) {
+      return false;
+    }
+
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
     final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
-    return checkCanView() && commentMode.canActOnActivity(state.activityId);
+    return checkCanView() && commentMode.canActOnActivity(state.activityId, currentProfileId: state.currentProfileId);
   }
 
   Future<void> onPostCommentRequested() async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final EventBus eventBus = ref.read(eventBusProvider);
@@ -137,7 +145,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
       return;
     }
 
-    if (profileController.currentProfileId == null) {
+    if (state.currentProfileId.isEmpty) {
       logger.e('Profile is not loaded');
       return;
     }
@@ -148,6 +156,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
       logger.i('Posting comment');
       final Reaction reaction = await reactionApiService.postReaction(
         activityId: state.activityId,
+        targetUid: state.currentProfileId,
         origin: TargetFeed.toOrigin(state.targetFeed),
         kind: 'comment',
         text: trimmedString,
@@ -155,7 +164,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
 
       reactionsController.offsetReactionCountForActivity(
         activityId: activityId,
-        userId: profileController.currentProfileId!,
+        userId: state.currentProfileId,
         origin: TargetFeed.toOrigin(state.targetFeed),
         reactionType: 'comment',
         offset: 1,
@@ -192,5 +201,18 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin {
     } finally {
       state = state.copyWith(isRefreshing: false);
     }
+  }
+
+  @override
+  String getCurrentProfileId() {
+    return state.currentProfileId;
+  }
+
+  @override
+  void onProfileSwitched(String? id, Profile? profile) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[PostViewModel] onProfileSwitched($id, $profile)');
+
+    state = state.copyWith(currentProfileId: id ?? '');
   }
 }

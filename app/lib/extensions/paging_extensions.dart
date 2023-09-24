@@ -25,12 +25,12 @@ extension PagingExtensions on PagingController {
   }
 
   void appendSafeLastPage<T>(List<T> newItems) {
-    if (itemList == null) {
+    if (newItems.isEmpty) {
       appendLastPage(newItems);
       return;
     }
 
-    final List<T> actualNewItems = newItems.where((T item) => !(itemList?.contains(item) ?? false)).toList();
+    final List<T> actualNewItems = newItems.whereType<T>().where((T item) => !(itemList?.contains(item) ?? false)).toList();
     final bool hasNewItems = actualNewItems.isNotEmpty;
 
     if (hasNewItems) {

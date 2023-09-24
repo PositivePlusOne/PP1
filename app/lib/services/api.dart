@@ -44,6 +44,7 @@ Map<String, dynamic> buildRequestPayload({
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
+  String targetUid = '',
   Map<String, bool> cacheOverwriteSchemaKeys = const {"users": true, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
@@ -52,11 +53,9 @@ FutureOr<T> getHttpsCallableResult<T>({
   final Logger logger = providerContainer.read(loggerProvider);
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
   final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
-  final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
   final FirebasePerformance firebasePerformance = providerContainer.read(firebasePerformanceProvider);
 
   final String currentUid = firebaseAuth.currentUser?.uid ?? '';
-  final String targetUid = profileControllerState.currentProfile?.flMeta?.id ?? '';
   final String selectedUid = targetUid.isNotEmpty ? targetUid : currentUid;
   final Trace trace = firebasePerformance.newTrace(name);
   final Stopwatch stopwatch = Stopwatch();
