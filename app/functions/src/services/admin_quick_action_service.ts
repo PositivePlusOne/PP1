@@ -4,6 +4,9 @@ import { AdminQuickActionJSON } from "../dto/admin";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { DataService } from "./data_service";
 
+import { AssignOrganisationMemberAction } from "./actions/assign_organisation_member_action";
+import { RemoveOrganisationMemberAction } from "./actions/remove_organisation_member_action";
+
 export namespace AdminQuickActionService {
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
         try {
@@ -19,6 +22,12 @@ export namespace AdminQuickActionService {
             await saveQuickAction(action);
 
             switch (action.action) {
+                case 'removeOrganisationMember':
+                    await RemoveOrganisationMemberAction.removeOrganisationMember(action);
+                    break;
+                case 'assignOrganisationMember':
+                    await AssignOrganisationMemberAction.assignOrganisationMember(action);
+                    break;
                 default:
                     appendOutput(action, `No action handler defined for action ${action.action}`);
                     updateStatus(action, 'error');

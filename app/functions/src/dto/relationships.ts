@@ -41,6 +41,7 @@ export interface RelationshipJSON {
     following?: boolean;
     hidden?: boolean;
     muted?: boolean;
+    managed?: boolean;
 }
 
 export class Relationship {
@@ -52,6 +53,7 @@ export class Relationship {
     following: boolean;
     hidden: boolean;
     muted: boolean;
+    managed: boolean;
 
     constructor(json: RelationshipJSON) {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
@@ -62,5 +64,6 @@ export class Relationship {
         this.following = json.following || false;
         this.hidden = json.hidden || false;
         this.muted = json.muted || false;
+        this.managed = json.managed || false;
     }
 }

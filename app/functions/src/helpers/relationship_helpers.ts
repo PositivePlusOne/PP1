@@ -71,7 +71,7 @@ export namespace RelationshipHelpers {
     relationship.searchIndexRelationshipFollows = followingSearchIndex;
     relationship.searchIndexRelationshipFollowers = followersSearchIndex;
     relationship.searchIndexRelationshipHides = hiddenSearchIndex;
-    relationship.searchIndexRelationshipManagers = managersSearchIndex;
+    relationship.searchIndexRelationshipManages = managersSearchIndex;
 
     return relationship;
   }
