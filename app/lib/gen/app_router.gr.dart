@@ -367,7 +367,9 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ProfileEditThanksPage(
           key: args.key,
+          title: args.title,
           body: args.body,
+          continueText: args.continueText,
           returnStyle: args.returnStyle,
         ),
       );
@@ -1522,7 +1524,9 @@ class ProfileDisplayNameEntryRoute extends PageRouteInfo<void> {
 class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
   ProfileEditThanksRoute({
     Key? key,
+    required String title,
     required String body,
+    required String continueText,
     ProfileEditThanksReturnStyle returnStyle =
         ProfileEditThanksReturnStyle.popToEditSettings,
     List<PageRouteInfo>? children,
@@ -1530,7 +1534,9 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
           ProfileEditThanksRoute.name,
           args: ProfileEditThanksRouteArgs(
             key: key,
+            title: title,
             body: body,
+            continueText: continueText,
             returnStyle: returnStyle,
           ),
           initialChildren: children,
@@ -1545,19 +1551,25 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
 class ProfileEditThanksRouteArgs {
   const ProfileEditThanksRouteArgs({
     this.key,
+    required this.title,
     required this.body,
+    required this.continueText,
     this.returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
   });
 
   final Key? key;
 
+  final String title;
+
   final String body;
+
+  final String continueText;
 
   final ProfileEditThanksReturnStyle returnStyle;
 
   @override
   String toString() {
-    return 'ProfileEditThanksRouteArgs{key: $key, body: $body, returnStyle: $returnStyle}';
+    return 'ProfileEditThanksRouteArgs{key: $key, title: $title, body: $body, continueText: $continueText, returnStyle: $returnStyle}';
   }
 }
 

@@ -51,6 +51,8 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
     final Locale locale = Localizations.localeOf(context);
     final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
     final AccountFormController controller = ref.read(provider.notifier);
@@ -92,17 +94,17 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
             PositiveBackButton(isDisabled: state.isBusy),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Change Email Address',
+              localisations.page_account_actions_change_email_address_title,
               style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'What is your new email address?',
+              localisations.page_account_actions_change_email_address_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTextField(
-              labelText: 'Email Address',
+              labelText: localisations.shared_email_address,
               initialText: state.emailAddress,
               onTextChanged: controller.onEmailAddressChanged,
               tintColor: tintColor,

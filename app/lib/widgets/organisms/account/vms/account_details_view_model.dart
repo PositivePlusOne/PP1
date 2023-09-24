@@ -11,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -198,11 +199,13 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     await appRouter.push(const AccountConnectSocialRoute());
   }
 
-  Future<void> onConnectAppleUserRequested() async {
+  Future<void> onConnectAppleUserRequested(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     logger.d('onConnectAppleUserRequested');
     state = state.copyWith(isBusy: true);
@@ -216,7 +219,9 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       }
 
       await appRouter.replace(ProfileEditThanksRoute(
-        body: 'You can now use your Apple account to access Positive+1',
+        title: localisations.page_account_actions_change_social_connect_updated_title,
+        continueText: localisations.page_account_actions_change_return_profile,
+        body: localisations.page_account_actions_change_social_connect_updated_body_apple,
         returnStyle: ProfileEditThanksReturnStyle.popToAccountDetails,
       ));
     } catch (e) {
@@ -235,9 +240,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     }
   }
 
-  Future<void> onConnectFacebookUserRequested() async {
+  Future<void> onConnectFacebookUserRequested(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     logger.d('onConnectFacebookUserRequested');
     state = state.copyWith(isBusy: true);
@@ -247,7 +253,9 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       // TODO(ryan): Implement Facebook provider
       // await userController.registerFacebookProvider();
       await appRouter.replace(ProfileEditThanksRoute(
-        body: 'You can now use your Facebook account to access Positive+1',
+        title: localisations.page_account_actions_change_social_connect_updated_title,
+        continueText: localisations.page_account_actions_change_return_profile,
+        body: localisations.page_account_actions_change_social_connect_updated_body_facebook,
         returnStyle: ProfileEditThanksReturnStyle.popToAccountDetails,
       ));
     } catch (e) {
@@ -257,10 +265,11 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     }
   }
 
-  Future<void> onConnectGoogleUserRequested() async {
+  Future<void> onConnectGoogleUserRequested(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     logger.d('onConnectGoogleUserRequested');
     state = state.copyWith(isBusy: true);
@@ -275,7 +284,9 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
 
       await appRouter.replace(
         ProfileEditThanksRoute(
-          body: 'You can now use your Google account to access Positive+1',
+          title: localisations.page_account_actions_change_social_connect_updated_title,
+          continueText: localisations.page_account_actions_change_return_account,
+          body: localisations.page_account_actions_change_social_connect_updated_body_google,
           returnStyle: ProfileEditThanksReturnStyle.popToAccountDetails,
         ),
       );

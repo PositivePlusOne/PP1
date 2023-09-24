@@ -131,7 +131,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
           colors: colors,
           isDisabled: formControllerState.genders.isEmpty || formControllerState.isBusy || isUpdateDisabled,
           onTapped: () {
-            formController.onGenderConfirmed(localizations.page_profile_thanks_gender);
+            formController.onGenderConfirmed(context);
           },
           label: formControllerState.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,

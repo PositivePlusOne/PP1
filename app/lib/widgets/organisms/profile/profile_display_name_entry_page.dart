@@ -41,7 +41,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     return controller.displayNameValidationResults.isNotEmpty ? colors.red : colors.green;
   }
 
-  PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors, String thanksString) {
+  PositiveTextFieldIcon? getTextFieldSuffixIcon(ProfileFormController controller, DesignColorsModel colors) {
     if (controller.state.displayName.isEmpty) {
       return null;
     }
@@ -52,7 +52,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
           )
         : PositiveTextFieldIcon.success(
             backgroundColor: colors.green,
-            onTap: (context) => controller.onDisplayNameConfirmed(context, thanksString),
+            onTap: (context) => controller.onDisplayNameConfirmed(context),
           );
   }
 
@@ -80,7 +80,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final Color tintColor = getTextFieldTintColor(controller, colors);
-    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors, localizations.page_profile_thanks_display_name);
+    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),
@@ -96,7 +96,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
             return PositiveButton(
               colors: colors,
               primaryColor: colors.black,
-              onTapped: () => controller.onDisplayNameConfirmed(context, localizations.page_profile_thanks_display_name),
+              onTapped: () => controller.onDisplayNameConfirmed(context),
               isDisabled: !controller.isDisplayNameValid || (isSameDisplayName && state.formMode == FormMode.edit),
               label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
             );

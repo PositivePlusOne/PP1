@@ -150,6 +150,9 @@
     
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your full name",
+    "page_profile_name_entry_description_update": "Going for a new moniker? Cool! What's your new name?",
+    "page_profile_name_entry_description_updated_title": "All Set",
+    "page_profile_name_entry_description_updated_body": "We love your new name. It's now been changed.",
     "page_profile_name_entry_input_label": "Your Name",
 
     "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
@@ -243,12 +246,81 @@
     "page_account_actions_preferences": "App Preferences",
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
+    
+    "page_account_actions_change_return_account": "Back to Account",
+    "page_account_actions_change_return_profile": "Back to Profile",
+
     "page_account_actions_change_password": "Change Password",
     "page_account_actions_change_disable_google_sign_in": "Disable Google Sign In",
     "page_account_actions_change_disable_apple_sign_in": "Disable Apple Sign In",
     "page_account_actions_change_disable_facebook_sign_in": "Disable Facebook Sign In",
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
+
+    "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
+    "page_account_actions_change_delete_account_splash_body": "but we understand why. We ask you to verify some of your details just to be sure it’s you trying to delete your account.",
+    "page_account_actions_change_delete_account_continue": "Verify",
+    "page_account_actions_change_delete_account_confirm_title": "Enter your Password",
+    "page_account_actions_change_delete_account_confirm_body": "Please confirm your password, then your account deletion will be started on our side",
+    "page_account_actions_change_delete_account_finished_title": "Thanks!",
+    "page_account_actions_change_delete_account_finished_body": "Your account deletion has been started and you will no longer be able to access your account. You will receive an email once your account has been deleted.",
+    "page_account_actions_change_delete_account_finished_button": "Close App",
+
+
+    "page_account_actions_change_email_address_title": "Change Email Address",
+    "page_account_actions_change_email_address_body": "Switching emails? Great! What's your shiny new email address?",
+    "page_account_actions_change_email_address_updated_title": "All Set",
+    "page_account_actions_change_email_address_updated_body": "Your email is switched up and good to go.",
+
+    "page_account_actions_change_social_disable_title": "Disable Social Sign in",
+    "page_account_actions_change_social_disable_body": "To disable social sign in you must provide a new email address for your account.",
+    "page_account_actions_change_social_disable_updated_title": "Thanks!",
+    "page_account_actions_change_social_disable_updated_body": "You can now access your account using your email and password",
+
+    "page_account_actions_change_phone_title": "New Phone Number",
+    "page_account_actions_change_phone_body": "Switching digits? Perfect! What's your new number?\n\nIn the future, we may use your number for account security purposes.",
+    "page_account_actions_change_phone_updated_title": "All Done!",
+    "page_account_actions_change_phone_updated_body": "We've got your new number. You're all set.",
+
+    "page_account_actions_change_password_title": "Change Password",
+    "page_account_actions_change_password_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
+    "page_account_actions_change_password_updated_title": "Great",
+    "page_account_actions_change_password_updated_body": "We've got your new password. You're ready to go.",
+
+    "page_account_actions_change_password_title": "Change Password",
+    "page_account_actions_change_password_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
+    "page_account_actions_change_password_updated_title": "Great",
+    "page_account_actions_change_password_updated_body": "We've got your new password. You're ready to go.",
+
+    "page_account_actions_change_hiv_updated_title": "Thanks!",
+    "page_account_actions_change_hiv_updated_body": "Your profile has been updated",
+
+    "page_account_actions_change_gender_updated_title": "High Five!",
+    "page_account_actions_change_gender_updated_body": "Your identity has been updated. Go you!",
+
+    "page_account_actions_change_location_updated_title": "Saved!",
+    "page_account_actions_change_location_updated_body": "You're all set. Thanks for the update!",
+
+    "page_account_actions_change_bio_updated_title": "Saved!",
+    "page_account_actions_change_bio_updated_body": "You've done it! Your about info is refreshed and ready for the spotlight.",
+
+    "page_account_actions_change_colour_updated_title": "All Set!",
+    "page_account_actions_change_colour_updated_body": "Look at you go! Your profile has been updated.",
+
+    "page_account_actions_change_interests_title": "Your Interests",
+    "page_account_actions_change_interests_body": "What are your interests?",
+    "page_account_actions_change_interests_updated_title": "Thanks!",
+    "page_account_actions_change_interests_updated_body": "Your interests have been changed",
+
+    "page_account_actions_change_social_connect_title": "connect a social account",
+    "page_account_actions_change_social_connect_continue_google": "Continue With Google",
+    "page_account_actions_change_social_connect_continue_apple": "Continue With Apple",
+    "page_account_actions_change_social_connect_continue_facebook": "Continue With Facebook",
+    "page_account_actions_change_social_connect_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
+    "page_account_actions_change_social_connect_updated_title": "Awesome!",
+    "page_account_actions_change_social_connect_updated_body_google": "You can now log in to your Positive+1 account using your Google account. Let's roll!",
+    "page_account_actions_change_social_connect_updated_body_apple": "You can now log in to your Positive+1 account using your Apple account. Let's roll!",
+    "page_account_actions_change_social_connect_updated_body_facebook": "You can now log in to your Positive+1 account using your Facebook account. Let's roll!",
 
     "page_notifications_empty_title":"You’re all caught up",
     "page_notifications_empty_body":"Nothing to do here, go and enjoy your day!",
@@ -275,8 +347,17 @@
     "page_chat_empty_conversations_body": "No chats yet? That's okay. Let's get one started!",
     "page_chat_empty_conversations_start": "Start chatting",
     
-    "page_chat_empty_connections_title": "You have no connections",
-    "page_chat_empty_connections_body": "To start a conversation you must have a connection within Positive+1",
+    "page_chat_empty_connections_title": "No connections",
+    "page_chat_empty_connections_body": "Ready, set, connect! Go mingle with the incredible folks here at Positive+1!",
+    
+    "page_chat_empty_followers_title": "No Followers",
+    "page_chat_empty_followers_body": "Start sharing content and engaging with others to build your following on Positive+1!",
+    
+    "page_chat_empty_following_title": "You aren’t following anyone",
+    "page_chat_empty_following_body": "You haven't followed anyone yet. Start exploring to discover great content!",
+    
+    "page_chat_empty_blocked_title": "You haven’t blocked anyone",
+    "page_chat_empty_blocked_body": "Keep Positive+1 a safe and welcoming space by blocking accounts that don’t meet your standards.",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
     "page_search_posts_not_found_title": "No Posts\nFound",

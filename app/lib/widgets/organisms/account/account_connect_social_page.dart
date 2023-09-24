@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -29,6 +30,7 @@ class AccountConnectSocialPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final AccountDetailsViewModel controller = ref.read(accountDetailsViewModelProvider.notifier);
     final AccountDetailsViewModelState state = ref.watch(accountDetailsViewModelProvider);
@@ -42,7 +44,7 @@ class AccountConnectSocialPage extends ConsumerWidget {
             PositiveBackButton(isDisabled: state.isBusy),
             const SizedBox(height: kPaddingMedium),
             Text(
-              'Connect a social account',
+              localisations.page_account_actions_change_social_connect_title,
               style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
           ],
@@ -52,10 +54,10 @@ class AccountConnectSocialPage extends ConsumerWidget {
         if (!userController.isGoogleProviderLinked) ...<Widget>[
           PositiveButton(
             colors: colors,
-            onTapped: controller.onConnectGoogleUserRequested,
+            onTapped: () => controller.onConnectGoogleUserRequested(context),
             isDisabled: state.isBusy,
             primaryColor: colors.white,
-            label: 'Continue With Google',
+            label: localisations.page_account_actions_change_social_connect_continue_google,
             icon: UniconsLine.google,
             style: PositiveButtonStyle.primary,
           ),
@@ -63,10 +65,10 @@ class AccountConnectSocialPage extends ConsumerWidget {
         if (!userController.isAppleProviderLinked) ...<Widget>[
           PositiveButton(
             colors: colors,
-            onTapped: controller.onConnectAppleUserRequested,
+            onTapped: () => controller.onConnectAppleUserRequested(context),
             isDisabled: state.isBusy,
             primaryColor: colors.white,
-            label: 'Continue With Apple',
+            label: localisations.page_account_actions_change_social_connect_continue_apple,
             icon: UniconsLine.apple,
             style: PositiveButtonStyle.primary,
           ),
@@ -75,10 +77,10 @@ class AccountConnectSocialPage extends ConsumerWidget {
         // if (!userController.isFacebookProviderLinked) ...<Widget>[
         //   PositiveButton(
         //     colors: colors,
-        //     onTapped: controller.onConnectFacebookUserRequested,
+        //     onTapped: ()=>controller.onConnectFacebookUserRequested( context),
         //     isDisabled: state.isBusy,
         //     primaryColor: colors.white,
-        //     label: 'Continue With Facebook',
+        //     label: localisations.page_account_actions_change_social_connect_continue_facebook,
         //     icon: UniconsLine.facebook_f,
         //     style: PositiveButtonStyle.primary,
         //   ),

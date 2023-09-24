@@ -332,10 +332,11 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  Future<void> onDisplayNameConfirmed(BuildContext context, String thanksDescription) async {
+  Future<void> onDisplayNameConfirmed(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     if (!isDisplayNameValid) {
       return;
@@ -355,7 +356,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_profile_name_entry_description_updated_title,
+            continueText: localisations.page_account_actions_change_return_account,
+            body: localisations.page_profile_name_entry_description_updated_body,
+          ));
           break;
       }
     } finally {
@@ -504,10 +509,11 @@ class ProfileFormController extends _$ProfileFormController {
     await appRouter.push(hint);
   }
 
-  Future<void> onInterestsConfirmed({required String thanksDescription}) async {
+  Future<void> onInterestsConfirmed(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     state = state.copyWith(isBusy: true);
     logger.i('Saving interests');
@@ -524,7 +530,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_interests_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_interests_updated_body,
+          ));
           break;
       }
     } finally {
@@ -564,9 +574,10 @@ class ProfileFormController extends _$ProfileFormController {
     }
   }
 
-  void onHivStatusConfirm({required String thanksDescription}) async {
+  void onHivStatusConfirm(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
@@ -585,7 +596,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_hiv_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_hiv_updated_body,
+          ));
           break;
       }
     } finally {
@@ -626,10 +641,11 @@ class ProfileFormController extends _$ProfileFormController {
     );
   }
 
-  Future<void> onGenderConfirmed(String thanksDescription) async {
+  Future<void> onGenderConfirmed(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     state = state.copyWith(isBusy: true);
     logger.i('Saving genders');
@@ -646,7 +662,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: thanksDescription));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_gender_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_gender_updated_body,
+          ));
           break;
       }
     } finally {
@@ -840,7 +860,7 @@ class ProfileFormController extends _$ProfileFormController {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     logger.i('Saving location');
@@ -859,7 +879,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_location_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_location_updated_body,
+          ));
           break;
       }
     } finally {
@@ -881,7 +905,7 @@ class ProfileFormController extends _$ProfileFormController {
     final BuildContext context = appRouter.navigatorKey.currentContext!;
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     state = state.copyWith(isBusy: true);
     logger.i('Saving biography');
@@ -898,7 +922,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_bio_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_bio_updated_body,
+          ));
           break;
       }
     } finally {
@@ -911,7 +939,7 @@ class ProfileFormController extends _$ProfileFormController {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final BuildContext context = appRouter.navigatorKey.currentState!.context;
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     state = state.copyWith(isBusy: true);
     logger.i('Saving accent color');
@@ -941,7 +969,11 @@ class ProfileFormController extends _$ProfileFormController {
           await appRouter.push(const HomeRoute());
           break;
         case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(body: localizations.shared_profile_edit_confirmation_body));
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_colour_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_colour_updated_body,
+          ));
           break;
       }
     } finally {

@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_error.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -260,6 +261,7 @@ class AccountFormController extends _$AccountFormController {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
+    final AppLocalizations localisations = AppLocalizations.of(appRouter.navigatorKey.currentContext!)!;
 
     logger.d('Updating email address to: ${state.emailAddress}');
     if (!isEmailValid) {
@@ -275,7 +277,8 @@ class AccountFormController extends _$AccountFormController {
       await profileController.updateEmailAddress(emailAddress: state.emailAddress);
 
       final AccountUpdatedRoute route = AccountUpdatedRoute(
-        body: 'Your email address has been changed',
+        title: localisations.page_account_actions_change_email_address_updated_title,
+        body: localisations.page_account_actions_change_email_address_updated_body,
       );
 
       state = state.copyWith(isBusy: false);

@@ -138,7 +138,7 @@ class ChatMembersPage extends HookConsumerWidget {
       footerWidgets: <Widget>[
         if (oneOnOneDisplayName.isNotEmpty) ...<Widget>[
           Text(
-            locale.page_chat_view_members_oto_placeholder(oneOnOneDisplayName.asHandle),
+            locale.page_chat_view_members_oto_placeholder,
             textAlign: TextAlign.left,
             style: typography.styleSubtitle.copyWith(color: colors.black),
           ),
