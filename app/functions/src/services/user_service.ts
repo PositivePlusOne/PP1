@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
-import { ProfileService } from "./profile_service";
 import { RelationshipService } from "./relationship_service";
+import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
 
 export namespace UserService {
   /**
@@ -21,24 +21,23 @@ export namespace UserService {
       return uid;
     }
 
-    const [relationship, targetProfile] = await Promise.all([
-      RelationshipService.getRelationship([uid, requestId]),
-      ProfileService.getProfile(requestId),
-    ]);
-
-    if (!relationship || !targetProfile) {
+    const relationship = await RelationshipService.getRelationship([uid, requestId]) as RelationshipJSON | null;
+    if (!relationship) {
       functions.logger.info(`Authenticated as: ${uid}`);
       return uid;
     }
 
-    const isManageRelationshipFlag = relationship?.flags?.includes("managedRelationship") || false;
-    const hasManagedOrganisationTargetFlag = targetProfile?.featureFlags?.includes("manageTargetOrganisation") || false;
-
-    if (isManageRelationshipFlag && hasManagedOrganisationTargetFlag) {
+    const relationshipMember = relationship?.members?.find((m: RelationshipMemberJSON) => m.memberId === uid);
+    if (!relationshipMember) {
       functions.logger.info(`Authenticated as: ${uid}`);
       return uid;
     }
 
-    throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
+    if (!relationshipMember?.canManage) {
+      throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
+    }
+
+    functions.logger.info(`Authenticated as: ${requestId} (via ${uid})`);
+    return requestId;
   }
 }
