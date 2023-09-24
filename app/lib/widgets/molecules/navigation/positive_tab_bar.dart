@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,7 +27,7 @@ class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
 
   final List<String> tabs;
   final int index;
-  final Future<void> Function(int index) onTapped;
+  final FutureOr<void> Function(int index) onTapped;
 
   final List<Color> tabColours;
 
@@ -79,7 +81,7 @@ class PositiveTabItem extends ConsumerWidget {
   });
 
   final String label;
-  final Future<void> Function() onTapped;
+  final FutureOr<void> Function() onTapped;
   final bool isSelected;
   final Color primaryColour;
 

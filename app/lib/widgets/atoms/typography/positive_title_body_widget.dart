@@ -22,7 +22,8 @@ class PositiaveTitleBodyWidget extends ConsumerWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
         Align(
           alignment: Alignment.centerLeft,
           child: FittedBox(
@@ -38,6 +39,7 @@ class PositiaveTitleBodyWidget extends ConsumerWidget {
         const SizedBox(height: kPaddingMedium),
         Text(
           body,
+          textAlign: TextAlign.left,
           style: typography.styleBody.copyWith(
             color: colors.black,
           ),

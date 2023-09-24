@@ -73,6 +73,12 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     if (oldWidget.uid != widget.uid) {
       disposeNotificationsState();
       setupNotificationsState();
+
+      // If state has not been loaded yet, load it.
+      // This is due to a bug in the PagedSliverList where it will not load the first page if the list is empty.
+      if (notificationsState.pagingController.itemList?.isEmpty ?? true) {
+        requestNextPage('');
+      }
     }
   }
 
@@ -126,6 +132,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     try {
       final EndpointResponse endpointResponse = await notificationApiService.listNotifications(
         cursor: notificationsState.currentPaginationKey,
+        targetUid: widget.uid,
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);

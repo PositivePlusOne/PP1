@@ -7,12 +7,12 @@ part of 'notifications_view_model.dart';
 // **************************************************************************
 
 String _$notificationsViewModelHash() =>
-    r'1e516f444d89aa8346df84c1baeff31eacaeae4a';
+    r'dfa2cf608f5c9799133dd71414c5885832f0b2f1';
 
 /// See also [NotificationsViewModel].
 @ProviderFor(NotificationsViewModel)
-final notificationsViewModelProvider = AutoDisposeNotifierProvider<
-    NotificationsViewModel, NotificationsViewModelState>.internal(
+final notificationsViewModelProvider = NotifierProvider<NotificationsViewModel,
+    NotificationsViewModelState>.internal(
   NotificationsViewModel.new,
   name: r'notificationsViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,7 +22,6 @@ final notificationsViewModelProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$NotificationsViewModel
-    = AutoDisposeNotifier<NotificationsViewModelState>;
+typedef _$NotificationsViewModel = Notifier<NotificationsViewModelState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

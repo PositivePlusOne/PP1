@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,6 +53,27 @@ mixin ProfileSwitchMixin {
       onProfileSwitched(null, null);
       return;
     }
+  }
+
+  List<String> getSupportedProfileIds() {
+    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    final String currentUserId = userController.currentUser?.uid ?? '';
+
+    Set<String> supportedProfileIds = profileControllerState.availableProfileIds;
+
+    // Add the currentUser to the top of the list.
+    if (currentUserId.isNotEmpty) {
+      supportedProfileIds = {currentUserId, ...supportedProfileIds};
+    }
+
+    return supportedProfileIds.toList();
+  }
+
+  List<Profile> getSupportedProfiles() {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final List<String> supportedProfileIds = getSupportedProfileIds();
+    return cacheController.getManyFromCache(supportedProfileIds);
   }
 
   bool get canSwitchProfile {
@@ -117,6 +139,11 @@ mixin ProfileSwitchMixin {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
     final String currentProfileId = getCurrentProfileId();
     return cacheController.getFromCache(currentProfileId);
+  }
+
+  String getCurrentUserId() {
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    return userController.currentUser?.uid ?? '';
   }
 
   String getCurrentProfileId();
