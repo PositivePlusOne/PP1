@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
@@ -7,8 +9,14 @@ import 'package:app/services/third_party.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:logger/logger.dart';
 
+/// This mixin is used to handle profile switching.
+/// e.g. sending a comment as a different profile such as an organization.
 // ignore: invalid_use_of_internal_member
 abstract class ProfileSwitchMixin {
+  StreamSubscription<ProfileSwitchedEvent>? _profileSwitchedEventSubscription;
+
+  /// This method is used to prepare the profile switcher.
+  /// Call this from within the build method of the view model that uses this mixin.
   void prepareProfileSwitcher() {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
@@ -17,7 +25,8 @@ abstract class ProfileSwitchMixin {
     logger.d('ProfileSwitchMixin.prepareProfileSwitcher()');
     switchProfile(profileController.currentProfileId ?? '');
 
-    eventBus.on<ProfileSwitchedEvent>().listen(onInternalProfileSwitched);
+    _profileSwitchedEventSubscription?.cancel();
+    _profileSwitchedEventSubscription = eventBus.on<ProfileSwitchedEvent>().listen(onInternalProfileSwitched);
   }
 
   void onInternalProfileSwitched(ProfileSwitchedEvent event) {
