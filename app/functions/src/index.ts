@@ -16,6 +16,7 @@ import { config } from "firebase-functions/v1";
 import { StorageEndpoints } from "./endpoints/storage_endpoints";
 import { PostEndpoints } from "./endpoints/post_endpoints";
 import { ReactionEndpoints } from "./endpoints/reaction_endpoints";
+import { QuickActionHandler } from "./handlers/quick_action_handler";
 
 export const adminApp = admin.initializeApp();
 export const applicationConfig = config().config;
@@ -25,6 +26,7 @@ functions.logger.info("Application config", { applicationConfig });
 //* Register handlers for data changes
 SearchIndexHandler.register();
 CacheHandler.register();
+QuickActionHandler.register();
 
 //* System endpoints
 exports.health = HealthEndpoints;

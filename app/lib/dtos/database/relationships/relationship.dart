@@ -60,7 +60,7 @@ class RelationshipFlag with _$RelationshipFlag {
     return strategies.map((e) => toJson(e)).toList();
   }
 
-  factory RelationshipFlag.fromJson(String value) {
+  factory RelationshipFlag.fromJson(dynamic value) {
     switch (value) {
       case 'organisation_manager':
         return const _RelationshipFlagOrganisationManager();
@@ -69,7 +69,7 @@ class RelationshipFlag with _$RelationshipFlag {
     }
   }
 
-  static List<RelationshipFlag> fromJsonList(List<String> json) {
+  static List<RelationshipFlag> fromJsonList(List<dynamic> json) {
     return json.map((e) => RelationshipFlag.fromJson(e)).toList();
   }
 }

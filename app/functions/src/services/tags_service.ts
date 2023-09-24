@@ -92,7 +92,6 @@ export namespace TagsService {
     functions.logger.info("Getting multiple tags", { formattedKeys });
 
     if (!formattedKeys || formattedKeys.length === 0) {
-      functions.logger.error("Invalid tag keys", { keys });
       return [];
     }
 

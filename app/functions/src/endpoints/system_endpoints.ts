@@ -16,9 +16,6 @@ import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
 import { TagsService } from "../services/tags_service";
 import { ProfileJSON } from "../dto/profile";
-import { NotificationsService } from "../services/notifications_service";
-import { DEFAULT_PAGINATION_WINDOW_SIZE } from "../helpers/pagination";
-import { NotificationPayloadResponse } from "../services/types/notification_payload";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -57,9 +54,8 @@ export namespace SystemEndpoints {
   export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
-    const streamClient = FeedService.getFeedsClient();
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, notificationFeed] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -68,7 +64,7 @@ export namespace SystemEndpoints {
       TagsService.getRecentUserTags(locale),
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("user", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
-      uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
+      // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
     ]);
 
 
@@ -79,30 +75,14 @@ export namespace SystemEndpoints {
       interestResponse[key] = value;
     });
 
-    let profile = {};
+    let profile = {} as ProfileJSON;
     const supportedProfiles = [];
 
     if (typeof uid === "string" && uid.length > 0) {
       supportedProfiles.push(uid);
 
-      let managedProfiles = [];
+      // let managedProfiles = [];
       let userProfile = await ProfileService.getProfile(uid);
-
-      functions.logger.info("Checking if managed profiles should be loaded", { uid, userProfile });
-      const docId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile || {});
-
-      if (docId) {
-        functions.logger.info("Getting managed profiles", { docId });
-        managedProfiles = await ProfileService.getManagedProfiles(docId);
-      }
-
-      for (const managedProfile of managedProfiles) {
-        const managedProfileUid = FlamelinkHelpers.getFlamelinkIdFromObject(managedProfile);
-        if (managedProfileUid) {
-          supportedProfiles.push(managedProfileUid);
-        }
-      }
-
       if (!userProfile) {
         functions.logger.info("Profile not found, creating...", { uid });
 
@@ -113,51 +93,10 @@ export namespace SystemEndpoints {
       }
 
       functions.logger.info("Getting profile", { uid, userProfile });
-
       profile = userProfile as ProfileJSON;
     }
 
-    const notificationFeedRecords = [];
-    // const userFeedRecords = [];
-    // const timelineFeedRecords = [];
-
-    let unreadCount = 0;
-    let unseenCount = 0;
-
-    if (uid) {
-      // If we are logged in, we add enough data to the endpoint for the client to be able to pre-populate the app rather than waiting for the first API call to complete.
-      // This makes the experience on the app slightly smoother, but we should measure the impact on this endpoint's performance.
-      const notificationResult = notificationFeed as NotificationPayloadResponse;
-      unreadCount = notificationResult.unread_count;
-      unseenCount = notificationResult.unseen_count;
-      notificationFeedRecords.push(...notificationResult.payloads);
-
-      const profileIds = notificationResult.payloads.map((notification) => notification.sender).filter((sender) => sender.length > 0);
-      if (profileIds.length > 0) {
-        joinRecords.push(...profileIds);
-      }
-
-      // const userFeedResult = userFeed as GetFeedWindowResult;
-      // const timelineFeedResult = timelineFeed as GetFeedWindowResult;
-
-      // joinRecords.push(...userFeedActivities);
-      // joinRecords.push(...timelineFeedActivities);
-
-      // // Add the FL IDs of each activity to the feed records so we can identify them later.
-      // for (const activity of userFeedActivities) {
-      //   const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
-      //   if (flamelinkId) {
-      //     userFeedRecords.push(flamelinkId);
-      //   }
-      // }
-
-      // for (const activity of timelineFeedActivities) {
-      //   const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
-      //   if (flamelinkId) {
-      //     timelineFeedRecords.push(flamelinkId);
-      //   }
-      // }
-    }
+    functions.logger.info(`Profile found, getting joins ${profile?._fl_meta_?.fl_id}`, { uid });
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -171,9 +110,6 @@ export namespace SystemEndpoints {
         topicTags,
         recentTags,
         supportedProfiles,
-        unreadNotificationCount: unreadCount,
-        unseenNotificationCount: unseenCount,
-        notifications: notificationFeedRecords,
         // userFeedRecords: userFeedRecords,
         // timelineFeeduserFeedRecords: timelineFeedRecords,
       },

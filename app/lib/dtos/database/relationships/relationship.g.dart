@@ -18,7 +18,7 @@ _$_Relationship _$$_RelationshipFromJson(Map<String, dynamic> json) =>
           const [],
       flags: json['flags'] == null
           ? const []
-          : RelationshipFlag.fromJsonList(json['flags'] as List<String>),
+          : RelationshipFlag.fromJsonList(json['flags'] as List),
       blocked: json['blocked'] as bool? ?? false,
       channelId: json['channelId'] as String? ?? '',
       connected: json['connected'] as bool? ?? false,

@@ -316,6 +316,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     profile.removeFlaggedData(isConnected);
                     profile.removePrivateData();
                 }
+
+                
+                responseData.data[profileSchemaKey].push(profile);
                 break;
             case relationshipSchemaKey:
                 responseData.data[schema].push(new Relationship(obj));

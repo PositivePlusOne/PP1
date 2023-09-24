@@ -8,7 +8,6 @@ import { SystemService } from "./system_service";
 import { Keys } from "../constants/keys";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
-import { CacheService } from "./cache_service";
 import { MediaJSON } from "../dto/media";
 import { StorageService } from "./storage_service";
 
@@ -42,48 +41,6 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
     }, skipCacheLookup) as ProfileJSON;
-  }
-
-  /**
-   * Gets all managed profiles for a user.
-   * @param {string} uid The FL ID of the user.
-   * @return {Promise<any>} The managed profiles.
-   */
-  export async function getManagedProfiles(uid: string): Promise<any> {
-    functions.logger.info(`Getting managed profiles for user: ${uid}`);
-
-    // Create a cache key for these for an hour, this is more forgiving than the default 24 hours
-    const cacheKey = `managed_profiles_${uid}`;
-    const cacheDuration = 60 * 60;
-    const cacheResults = await CacheService.getFromCache(cacheKey);
-
-    if (cacheResults) {
-      functions.logger.debug(`Returning cached managed profiles for user: ${uid}`);
-      return cacheResults;
-    }
-
-    const userProfile = await getProfile(uid);
-    const userProfileDocId = FlamelinkHelpers.getFlamelinkDocIdFromObject(userProfile);
-    if (!userProfile || !userProfileDocId) {
-      return [];
-    }
-
-    const firestore = adminApp.firestore();
-    const ref = firestore.collection("fl_content").doc(userProfileDocId);
-    const managedProfiles = await firestore
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "users")
-      .where("organisationConfiguration.members", "array-contains", ref)
-      .get();
-
-    const result = [] as any[];
-    managedProfiles.forEach((profile) => {
-      result.push(profile.data());
-    });
-
-    await CacheService.setInCache(cacheKey, result, cacheDuration);
-
-    return result;
   }
 
   // /**
