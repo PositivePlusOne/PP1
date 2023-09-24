@@ -379,19 +379,23 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final ListDevicesResponse devicesResponse = await streamChatClient.getDevices();
-    for (final Device device in devicesResponse.devices) {
-      if (device.id != fcmToken) {
-        log.i('[GetStreamController] onUserChanged() removing device: ${device.id}');
-        await streamChatClient.removeDevice(device.id);
+    try {
+      final ListDevicesResponse devicesResponse = await streamChatClient.getDevices();
+      for (final Device device in devicesResponse.devices) {
+        if (device.id != fcmToken) {
+          log.i('[GetStreamController] onUserChanged() removing device: ${device.id}');
+          await streamChatClient.removeDevice(device.id);
+        }
       }
-    }
 
-    if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
-      log.i('[GetStreamController] onUserChanged() adding device: $fcmToken');
-      await streamChatClient.addDevice(fcmToken, PushProvider.firebase, pushProviderName: pushProviderName);
-    } else {
-      log.i('[GetStreamController] onUserChanged() device already exists: $fcmToken');
+      if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
+        log.i('[GetStreamController] onUserChanged() adding device: $fcmToken');
+        await streamChatClient.addDevice(fcmToken, PushProvider.firebase, pushProviderName: pushProviderName);
+      } else {
+        log.i('[GetStreamController] onUserChanged() device already exists: $fcmToken');
+      }
+    } catch (e) {
+      log.e('[GetStreamController] onUserChanged() error: $e');
     }
   }
 

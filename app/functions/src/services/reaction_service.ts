@@ -4,7 +4,6 @@ import { ReactionJSON, reactionSchemaKey } from "../dto/reactions";
 import { DataService } from "./data_service";
 import { StreamClient, DefaultGenerics, ReactionFilterConditions } from "getstream";
 import { ReactionEntryJSON } from "../dto/stream";
-import { ReactionStatisticsService } from "./reaction_statistics_service";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { RelationshipJSON } from "../dto/relationships";
@@ -15,6 +14,8 @@ import { ReactionCommentNotification } from "./builders/notifications/activities
 import { ProfileService } from "./profile_service";
 import { ProfileJSON } from "../dto/profile";
 import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
+import { ProfileStatisticsService } from "./profile_statistics_service";
+import { ActivityStatisticsService } from "./activity_statistics_service";
 
 export namespace ReactionService {
 
@@ -198,8 +199,10 @@ export namespace ReactionService {
             },
         }) as ReactionJSON;
 
-        functions.logger.info("Added reaction", { response, reaction });
-        await ReactionStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1);
+        await Promise.all([
+            ActivityStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1),
+            ProfileStatisticsService.updateReactionCountForProfile(expectedUserId, expectedKind, 1),
+        ]);
 
         return reaction;
     }
@@ -223,15 +226,18 @@ export namespace ReactionService {
 
     export async function deleteReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<void> {
         const id = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
-        if (!id || !reaction.activity_id || !reaction.origin || !reaction.kind) {
+        if (!id || !reaction.activity_id || !reaction.origin || !reaction.kind || !reaction.user_id) {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
 
         if (reaction.entry_id) {
             await client.reactions.delete(reaction.entry_id);
         }
-        
-        await ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1);
+
+        await Promise.all([
+            ActivityStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1),
+            ProfileStatisticsService.updateReactionCountForProfile(reaction.user_id, reaction.kind, -1),
+        ]);
 
         await DataService.deleteDocument({
             schemaKey: reactionSchemaKey,
@@ -251,7 +257,7 @@ export namespace ReactionService {
         const results = response.results;
         functions.logger.info("Reactions for activity", { activity_id, kind, limit, cursor, response, results });
         
-        const reactionIds = results.map((reaction: any) => reaction?.source_reaction_id ?? "").filter((id: string) => id !== "");
+        const reactionIds = results.map((reaction: any) => reaction?.data?.source_reaction_id ?? "").filter((id: string) => id !== "");
 
         const reactions = await DataService.getBatchDocuments({
             schemaKey: reactionSchemaKey,

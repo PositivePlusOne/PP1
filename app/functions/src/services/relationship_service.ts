@@ -459,6 +459,28 @@ export namespace RelationshipService {
     return relationships;
   }
 
+  export async function getManagedRelationships(uid: string): Promise<RelationshipJSON[]> {
+    functions.logger.info("Getting managed relationships", {
+      uid,
+    });
+
+    const managedRelationships = await DataService.getDocumentWindowRaw({
+      schemaKey: "relationships",
+      where: [
+        { fieldPath: "_fl_meta_.schema", op: "==", value: "relationships" },
+        { fieldPath: "searchIndexRelationshipManages", op: ">=", value: uid },
+        { fieldPath: "searchIndexRelationshipManages", op: "<=", value: uid + "\uf8ff" },
+        { fieldPath: "managed", op: "==", value: true },
+      ],
+    }) as RelationshipJSON[];
+
+    functions.logger.info("Managed relationships", {
+      managedRelationships,
+    });
+
+    return managedRelationships ?? [];
+  }
+
   /**
    * Unblocks a relationship from the given sender.
    * @param {string} sender the sender of the message.
@@ -534,6 +556,42 @@ export namespace RelationshipService {
 
     relationship.blocked = true;
     relationship.connected = isRelationshipConnectedAfterBlock;
+    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    resetRelationshipPaginationCache(relationship);
+
+    return await DataService.updateDocument({
+      schemaKey: "relationships",
+      entryId: flamelinkId,
+      data: relationship,
+    });
+  }
+
+  export async function manageRelationship(sender: string, relationship: RelationshipJSON, canManage: boolean): Promise<any> {
+    functions.logger.info("Managing relationship", {
+      sender,
+      relationship,
+      canManage,
+    });
+
+    const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(relationship);
+    if (!flamelinkId) {
+      throw new Error("Relationship does not have a flamelink id");
+    }
+
+    let relationshipManagedFlag = false;
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === sender) {
+          member.canManage = canManage;
+        }
+
+        if (member.canManage) {
+          relationshipManagedFlag = true;
+        }
+      }
+    }
+
+    relationship.managed = relationshipManagedFlag;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
 

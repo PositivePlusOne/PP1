@@ -18,6 +18,7 @@ export namespace RelationshipHelpers {
     let followingSearchIndex = "";
     let followersSearchIndex = "";
     let hiddenSearchIndex = "";
+    let managersSearchIndex = "";
 
     const allMemberIds = relationship.members.map((member: any) => member.memberId);
 
@@ -57,6 +58,10 @@ export namespace RelationshipHelpers {
       if (member.isHidden) {
         hiddenSearchIndex += member.memberId;
       }
+
+      if (member.canManage) {
+        managersSearchIndex += member.memberId;
+      }
     }
 
     relationship.searchIndexRelationship = searchIndex;
@@ -66,6 +71,7 @@ export namespace RelationshipHelpers {
     relationship.searchIndexRelationshipFollows = followingSearchIndex;
     relationship.searchIndexRelationshipFollowers = followersSearchIndex;
     relationship.searchIndexRelationshipHides = hiddenSearchIndex;
+    relationship.searchIndexRelationshipManages = managersSearchIndex;
 
     return relationship;
   }

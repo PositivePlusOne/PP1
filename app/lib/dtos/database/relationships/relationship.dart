@@ -13,13 +13,14 @@ part 'relationship.g.dart';
 class Relationship with _$Relationship {
   const factory Relationship({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+    @Default([]) List<RelationshipMember> members,
+    @Default([]) @JsonKey(fromJson: RelationshipFlag.fromJsonList, toJson: RelationshipFlag.toJsonList) List<RelationshipFlag> flags,
     @Default(false) bool blocked,
     @Default('') String channelId,
     @Default(false) bool connected,
     @Default(false) bool following,
     @Default(false) bool hidden,
     @Default(false) bool muted,
-    @Default([]) List<RelationshipMember> members,
   }) = _Relationship;
 
   factory Relationship.empty(List<String> members) {
@@ -43,4 +44,32 @@ class Relationship with _$Relationship {
   }
 
   factory Relationship.fromJson(Map<String, dynamic> json) => _$RelationshipFromJson(json);
+}
+
+@freezed
+class RelationshipFlag with _$RelationshipFlag {
+  const factory RelationshipFlag.organisationManager() = _RelationshipFlagOrganisationManager;
+
+  static String toJson(RelationshipFlag strategy) {
+    return strategy.when(
+      organisationManager: () => 'organisation_manager',
+    );
+  }
+
+  static List<String> toJsonList(List<RelationshipFlag> strategies) {
+    return strategies.map((e) => toJson(e)).toList();
+  }
+
+  factory RelationshipFlag.fromJson(dynamic value) {
+    switch (value) {
+      case 'organisation_manager':
+        return const _RelationshipFlagOrganisationManager();
+      default:
+        throw ArgumentError('Invalid value for ActivityPricingExternalStoreInformationPricingStrategy: $value');
+    }
+  }
+
+  static List<RelationshipFlag> fromJsonList(List<dynamic> json) {
+    return json.map((e) => RelationshipFlag.fromJson(e)).toList();
+  }
 }
