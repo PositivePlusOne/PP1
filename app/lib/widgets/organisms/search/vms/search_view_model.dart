@@ -1,12 +1,18 @@
 // Dart imports:
 
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
@@ -36,6 +42,9 @@ class SearchViewModelState with _$SearchViewModelState {
     @Default('') String searchUsersCursor,
     @Default('') String searchPostsCursor,
     @Default('') String searchTagsCursor,
+    @Default(false) bool hasSearchedTags,
+    @Default(false) bool hasSearchedPosts,
+    @Default(false) bool hasSearchedUsers,
   }) = _SearchViewModelState;
 
   factory SearchViewModelState.initialState(SearchTab tab) => SearchViewModelState(
@@ -56,10 +65,43 @@ enum SearchTab {
 
 @Riverpod(keepAlive: true)
 class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
+  StreamSubscription<ProfileSwitchedEvent>? onProfileChanged;
+
   @override
   SearchViewModelState build(SearchTab tab) {
+    setupListeners();
     return SearchViewModelState.initialState(tab);
   }
+
+  Future<void> setupListeners() async {
+    final EventBus eventBus = ref.read(eventBusProvider);
+    await onProfileChanged?.cancel();
+    onProfileChanged = eventBus.on<ProfileSwitchedEvent>().listen((event) {
+      onProfileSwitched(event);
+    });
+  }
+
+  void onProfileSwitched(ProfileSwitchedEvent event) {
+    state = SearchViewModelState.initialState(tab);
+  }
+
+  bool get hasSearched => switch (state.currentTab) {
+        SearchTab.users => state.hasSearchedUsers,
+        SearchTab.posts => state.hasSearchedPosts,
+        SearchTab.tags => state.hasSearchedTags,
+      };
+
+  String searchNotFoundTitle(AppLocalizations localisations) => switch (state.currentTab) {
+        SearchTab.users => localisations.page_search_people_not_found_title,
+        SearchTab.posts => localisations.page_search_posts_not_found_title,
+        SearchTab.tags => localisations.page_search_tags_not_found_title,
+      };
+
+  String searchNotFoundBody(AppLocalizations localisations) => switch (state.currentTab) {
+        SearchTab.users => localisations.page_search_people_not_found_body,
+        SearchTab.posts => localisations.page_search_posts_not_found_body,
+        SearchTab.tags => localisations.page_search_tags_not_found_body,
+      };
 
   Future<bool> onWillPopScope() async {
     final AppRouter router = ref.read(appRouterProvider);
@@ -88,6 +130,29 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     state = state.copyWith(searchQuery: searchTerm);
   }
 
+  void updateHasSearched(bool newValue) {
+    switch (state.currentTab) {
+      case SearchTab.users:
+        state = state.copyWith(
+          hasSearchedUsers: newValue,
+        );
+        break;
+
+      case SearchTab.posts:
+        state = state.copyWith(
+          hasSearchedPosts: newValue,
+        );
+        break;
+
+      case SearchTab.tags:
+        state = state.copyWith(
+          hasSearchedTags: newValue,
+        );
+        break;
+      default:
+    }
+  }
+
   Future<void> onSearchSubmitted(String rawSearchTerm) async {
     final Logger logger = ref.read(loggerProvider);
     final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
@@ -95,6 +160,8 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     if (searchTerm.isEmpty) {
       return;
     }
+
+    updateHasSearched(true);
 
     logger.i('Searching for $searchTerm');
     state = state.copyWith(
@@ -126,6 +193,8 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           SearchTab.tags => (json) => Tag.fromJson(json),
         },
       );
+
+      updateHasSearched(true);
 
       if (response.results.isEmpty) {
         logger.w('Search response data is null');

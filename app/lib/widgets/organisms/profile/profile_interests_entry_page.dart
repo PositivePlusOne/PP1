@@ -135,7 +135,7 @@ class ProfileInterestsEntryPage extends ConsumerWidget {
             return PositiveButton(
               colors: colors,
               isDisabled: state.isBusy || !controller.isInterestsValid || (isSameInterests && state.formMode == FormMode.edit),
-              onTapped: () => controller.onInterestsConfirmed(thanksDescription: localizations.page_profile_thanks_interests),
+              onTapped: () => controller.onInterestsConfirmed(context),
               label: controller.state.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,
               style: PositiveButtonStyle.primary,

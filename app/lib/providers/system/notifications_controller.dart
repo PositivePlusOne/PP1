@@ -327,6 +327,7 @@ class NotificationsController extends _$NotificationsController {
       currentPaginationKey: '',
       unreadCount: 0,
       unseenCount: 0,
+      hasFirstLoad: false,
     );
 
     cacheController.addToCache(key: expectedCacheKey, value: notificationsState);

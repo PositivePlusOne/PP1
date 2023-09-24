@@ -44,7 +44,7 @@ class CreateConversationPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final String currentUserProfileId = profileControllerState.currentProfile?.flMeta?.id ?? '';
@@ -98,7 +98,7 @@ class CreateConversationPage extends HookConsumerWidget {
                 const SizedBox(width: kPaddingMedium),
                 Expanded(
                   child: PositiveSearchField(
-                    hintText: locale.shared_search_people_hint,
+                    hintText: localisations.shared_search_people_hint,
                     onCancel: () => chatViewModel.setSearchQuery(''),
                     onChange: chatViewModel.setSearchQuery,
                     isEnabled: hasConnectedProfiles,
@@ -116,13 +116,13 @@ class CreateConversationPage extends HookConsumerWidget {
                 children: [
                   const SizedBox(height: kPaddingMedium),
                   AutoSizeText(
-                    'You have no connections',
+                    localisations.page_chat_empty_connections_title,
                     maxLines: 2,
                     style: typography.styleHero.copyWith(color: colors.black),
                   ),
                   const SizedBox(height: kPaddingMedium),
                   Text(
-                    'To start a conversation you must have a connection within Positive+1',
+                    localisations.page_chat_empty_connections_body,
                     style: typography.styleSubtitle.copyWith(color: colors.black),
                   ),
                   const SizedBox(height: kPaddingMedium),
@@ -160,7 +160,7 @@ class CreateConversationPage extends HookConsumerWidget {
               isDisabled: !hasConnectedProfiles || chatViewModelState.selectedMembers.isEmpty,
               colors: colors,
               style: !hasConnectedProfiles ? PositiveButtonStyle.ghost : PositiveButtonStyle.primary,
-              label: chatViewModelState.currentChannel != null ? "Add to Conversation" : locale.page_chat_action_start_conversation,
+              label: chatViewModelState.currentChannel != null ? localisations.page_connections_list_add_dialog_title : localisations.page_chat_action_start_conversation,
               onTapped: () => chatViewModel.onCurrentChannelMembersConfirmed(context),
               size: PositiveButtonSize.large,
               primaryColor: colors.black,

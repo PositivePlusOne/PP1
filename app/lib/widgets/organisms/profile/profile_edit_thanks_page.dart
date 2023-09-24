@@ -19,20 +19,23 @@ enum ProfileEditThanksReturnStyle {
 class ProfileEditThanksPage extends ConsumerWidget {
   const ProfileEditThanksPage({
     Key? key,
+    required this.title,
     required this.body,
+    required this.continueText,
     this.returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
   }) : super(key: key);
 
+  final String title;
   final String body;
+  final String continueText;
   final ProfileEditThanksReturnStyle returnStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final locale = AppLocalizations.of(context)!;
     return PositiveGenericPage(
-      title: locale.page_profile_thanks_title,
+      title: title,
       body: body,
-      buttonText: locale.shared_actions_continue,
+      buttonText: continueText,
       onContinueSelected: () async {
         switch (returnStyle) {
           case ProfileEditThanksReturnStyle.popToEditSettings:

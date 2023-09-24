@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/providers/system/design_controller.dart';
@@ -27,6 +28,7 @@ class ActivateAccountBanner extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final HomeViewModel viewModel = ref.read(homeViewModelProvider.notifier);
 
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
@@ -82,13 +84,13 @@ class ActivateAccountBanner extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Activate your account',
+                        localisations.page_home_banner_sign_in_title,
                         style: typography.styleTitle.copyWith(
                           color: colors.black,
                         ),
                       ),
                       Text(
-                        'Engage and connect with the community',
+                        localisations.page_home_banner_sign_in_body,
                         style: typography.styleSubtitle.copyWith(
                           color: colors.black,
                         ),
@@ -103,7 +105,7 @@ class ActivateAccountBanner extends ConsumerWidget {
                     primaryColor: colors.black,
                     onTapped: viewModel.onSignInSelected,
                     size: PositiveButtonSize.medium,
-                    label: 'Sign In',
+                    label: localisations.shared_actions_sign_in,
                   ),
                 ),
                 const SizedBox(width: kPaddingMedium),

@@ -121,7 +121,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
               colors: colors,
               isDisabled: (state.hivStatus?.isEmpty ?? true) || state.isBusy || (isSameHivStatus && isSameVisibility),
               onTapped: () async {
-                controller.onHivStatusConfirm(thanksDescription: localizations.page_profile_hiv_status_thanks_desc);
+                controller.onHivStatusConfirm(context);
               },
               label: formState.formMode == FormMode.edit ? localizations.shared_actions_update : localizations.shared_actions_continue,
               layout: PositiveButtonLayout.textOnly,

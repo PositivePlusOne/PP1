@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -24,6 +25,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
@@ -32,12 +34,12 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
         children: <Widget>[
           const SizedBox(height: kPaddingLarge),
           Text(
-            'Get the convo started',
+            localisations.page_chat_empty_conversations_title,
             style: typography.styleHero.copyWith(color: colors.black),
           ),
           const SizedBox(height: kPaddingMedium),
           Text(
-            'You do not have any conversations. Let’s get one started!',
+            localisations.page_chat_empty_conversations_body,
             style: typography.styleBody.copyWith(color: colors.black),
           ),
           const SizedBox(height: kPaddingSmall),
@@ -45,7 +47,7 @@ class EmptyChatListPlaceholder extends ConsumerWidget {
             child: PositiveButton(
               colors: colors,
               primaryColor: colors.teal,
-              label: 'Start a conversation',
+              label: localisations.page_chat_empty_conversations_start,
               icon: UniconsLine.comment_edit,
               size: PositiveButtonSize.large,
               style: PositiveButtonStyle.primary,

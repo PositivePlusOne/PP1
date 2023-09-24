@@ -25,6 +25,11 @@
     "page_splash_section_tomorrow_starts_now_second_line": "Starts",
     "page_splash_section_tomorrow_starts_now_third_line": "Now",
 
+    "page_welcome_back_title":"Welcome Back",
+    "page_welcome_back_message_one":"Where've you been? We missed you.",
+    "page_welcome_back_message_two":"Glad you're back. Ready to dive back in?",
+    "page_welcome_back_message_three":"Your community has been waiting for you!",
+
     "page_onboarding_welcome_heading_first_line": "Think.",
     "page_onboarding_welcome_heading_second_line": "Feel.",
     "page_onboarding_welcome_heading_third_line": "Live.",
@@ -41,67 +46,116 @@
     "page_onboarding_guidance_body": "Guidance/directory section - Find support local to you etc",
 
     "page_onboarding_our_pledge_title": "Our Pledge",
-    "page_onboarding_our_pledge_body": "We Will:",
-    "page_onboarding_our_pledge_bullet_one": "Provide a safe, secure and authentic environment for people to find friendship, support and even love.",
-    "page_onboarding_our_pledge_bullet_two": "Verify and moderate every profile. (scammers etc that’s your cue to leave)",
-    "page_onboarding_our_pledge_bullet_three": "Donate 10% of all proceeds to organisations that truly support the needs of our HIV community around the world.",
+    "page_onboarding_our_pledge_bullet_one": "We've got your back. Count on us for a safe, secure and authentic environment to find friends, support and even love.",
+    "page_onboarding_our_pledge_bullet_two": "We verify and moderate every profile. Scammers? No chance.",
+    "page_onboarding_our_pledge_bullet_three": "Good vibes only? Good deeds too! 10% of our proceeds straight to HIV support organizations worldwide.",
     "page_onboarding_our_pledge_action_accept": "I've read and agree to the pledge",
 
     "page_onboarding_your_pledge_title": "Your Pledge",
-    "page_onboarding_your_pledge_body": "You Will:",
-    "page_onboarding_your_pledge_bullet_one": "Treat people, their views and experiences with respect.",
-    "page_onboarding_your_pledge_bullet_two": "Be open, honest and authentic.",
-    "page_onboarding_your_pledge_bullet_three": "Not post spam, harass or solicit people.",
-    "page_onboarding_your_pledge_bullet_four": "Invite your friends.",
+    "page_onboarding_your_pledge_bullet_one": "Play nice! Respect for peeps, their views, and experiences is non-negotiable here.",
+    "page_onboarding_your_pledge_bullet_two": "Be open, honest, and authentically 'you' - we're all about the real deal!",
+    "page_onboarding_your_pledge_bullet_three": "Nope to spam, nay to harassment, and never to solicitation - let's keep things clean and serene.",
+    "page_onboarding_your_pledge_bullet_four": "We're all ears for your feedback - shoot it our way, anytime.",
+    "page_onboarding_your_pledge_bullet_five": "Found your happy place? Well, the more the merrier! Invite your friends and spread the positivity.",
     "page_onboarding_your_pledge_action_accept": "I've read and agree to the pledge",
     "page_onboarding_your_pledge_action_terms": "Read more of our [App Terms and Conditions](https://www.positiveplusone.com)",
 
+    "page_onboarding_terms_and_conditions": "TERMS & CONDITIONS",
+    "page_onboarding_terms_trust": "Trust us, your privacy is our biggest priority!",
+    "page_onboarding_terms_number_how_we_use": "HOW WE USE YOUR NUMBER",
+    "page_onboarding_terms_number_one": "Your number stays incognito - other users won't be able to see it. Ever.",
+    "page_onboarding_terms_number_two": "We promise, no annoying marketing blabber will be sent your way.",
+    "page_onboarding_terms_number_three": "That magic number you'll get? It's just your account verification code, nothing more.",
+    "page_onboarding_terms_number_four": "This snazzy code links your mobile number to your account, making sure it's really you.",
+    
+    "page_onboarding_terms_birthday_how_we_use": "WHY WE NEED YOUR BIRTHDAY",
+    "page_onboarding_terms_birthday_one": "Your age helps us identify and celebrate the unique individual that you are.",
+    "page_onboarding_terms_birthday_two": "Age is more than just a number! It lets us curate content that perfectly matches your interests and preferences, making your Positive+1 experience tailor-made for you.",
+    "page_onboarding_terms_birthday_three": "Some things are age-sensitive, and we've got your back on that. We'll ensure age-appropriate access to certain content, keeping things fun, safe, and suitable for you.",
+    "page_onboarding_terms_birthday_four": "It's your choice to reveal your age to other users. Share the joy of getting older (and wiser) with your Positive+1 pals!",
+    "page_onboarding_terms_birthday_five": "⌛Remember, if you accidentally put in the wrong age, no worries! Just give us a shout, and we'll help you correct it.",
+    
+    "page_onboarding_terms_identity_how_we_use": "WHY YOUR IDENTITY IS IMPORTANT",
+    "page_onboarding_terms_identity_one": "We want to celebrate who you are! Letting us know how you identify helps us create an inclusive and accepting community.",
+    "page_onboarding_terms_identity_two": "Finding like-minded folks is easier when we understand your identity. It helps us match you with awesome people who get you.",
+    "page_onboarding_terms_identity_three": "Your identity shapes your Positive+1 journey. We'll personalize the app just for you, making it a perfect fit for your unique self.",
+
+    "page_onboarding_terms_hiv_how_we_use": "WHY YOUR IDENTITY IS IMPORTANT",
+    "page_onboarding_terms_hiv_one": "This community is for individuals living with, working in, and affected by HIV. To foster a safe and open environment, we encourage users to share their HIV status with one another.",
+    "page_onboarding_terms_hiv_two": "Not comfortable doing that? Totally okay. You can choose not display your HIV status if you prefer. Whatever makes you feel most comfortable.",
+    "page_onboarding_terms_hiv_three": "Rest assured that Positive Plus One respects your privacy. Your HIV status will never be shared outside of the platform.",
+    "page_onboarding_terms_hiv_four": "Should you need to change your HIV status in the future, you can easily do so by accessing your Profile settings. Your control over your information is important to us",
+
+    "page_onboarding_terms_interests_how_we_use": "YOUR INTERESTS",
+    "page_onboarding_terms_interests_one": "Your interests help us customise the Positive+1 experience just for you.",
+    "page_onboarding_terms_interests_two": "We're better at matchmaking when we understand your interests. It lets us connect you with like-minded individuals.",
+    
+    "page_onboarding_terms_location_how_we_use": "YOUR LOCATION",
+    "page_onboarding_terms_location_one": "Let us know where you are, and we'll find some fab folks nearby who just might be your kind of crowd.",
+    "page_onboarding_terms_location_two": "Curious about the local buzz? We'll let you know what's happening in your area.",
+    
+    "page_onboarding_terms_reference_how_we_use": "YOUR VISUAL IDENTITY",
+    "page_onboarding_terms_reference_one": "Taking a selfie helps us ensure authenticity and prevent false identities within our community.",
+    "page_onboarding_terms_reference_two": "By confirming your real self through a selfie, we create a safer environment for all Positive+1 members.",
+
     "page_registration_create_account_title": "Create an Account",
-    "page_registration_create_account_body": "Let's create a Positive+1 Account.",
+    "page_registration_create_account_body": "Ready to join the club?",
     "page_registration_create_account_action_continue_google": "Continue with Google",
     "page_registration_create_account_action_continue_apple": "Continue with Apple",
     "page_registration_create_account_action_continue_facebook": "Continue with Facebook",
     "page_registration_create_account_action_continue_email": "Continue with Email",
+    "page_registration_create_account_action_need_account": "Need to Make an Account?",
     "page_registration_create_account_action_continue_login": "Already on Positive+1?",
     "page_registration_account_setup": "Account Created!",
-    "page_registration_account_setup_body": "Let’s take a breather, from here we will ask for you to complete your profile before you can access Positive+1",
+    "page_registration_account_setup_body": "Almost there! We just need a little more info to personalize your Positive+1 experience. Complete your profile to get access to Positive+1.",
     "page_registration_account_setup_continue": "Let's Continue",
 
     "page_registration_email_entry_title": "Your Email",
-    "page_registration_email_entry_body": "Let's get started!",
+    "page_registration_email_entry_body": "Enter your email to get started",
+
+    "page_registration_email_forgotten": "Forgotten Email",
+    "page_registration_email_forgotten_body": "Continue with Email",
 
     "page_registration_password_label": "Password",
     "page_registration_create_password": "Create Password",
-    "page_registration_create_password_tooltip": "Create a secure, non-repetitive password.",
+    "page_registration_create_password_tooltip": "Whip up a strong password to keep your account safe and secure",
 
     "page_registration_your_number": "Your Number",
     "page_registration_verification_code": "We’ll send you a verification code via text.",
     "page_registration_new_number": "What is your new phone number?",
     "page_registration_change_number": "Change Phone Number",
 
-    "page_login_password_enter": "Please enter your password to sign in",
+    "page_account_recovery_title": "Account Recovery",
+    "page_account_recovery_body": "Don't worry. It happens. We'll send a recovery link to the email address linked to your account. No biggie.",
+    "page_account_recovery_started_title": "Recovery Started",
+    "page_account_recovery_started_body": "Okay! We've sent the link. Check your email account to see if you've received it.",
+
+    "page_account_recovery_new_password_title": "Create A New Password",
+    "page_account_recovery_new_password_body": "New password, new you",
+
+    "page_login_password_enter": "Enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",
     "page_login_password_forgotten_body": "We have sent reset instructions to your email address!",
+    "page_login_password_error": "Hi there! We don't recognise the sign in details you're using. Please double-check your email address and password, or use the Forgotten Password link above.",
     
     "page_home_post_post": "Post",
     "page_home_post_clip": "Clip",
     "page_home_post_event": "Event",
+    
+    "page_home_banner_sign_in_title": "Activate your account",
+    "page_home_banner_sign_in_body": "Engage and connect with the community",
 
+    "page_home_blocker_title": "Thanks for showing an interest in Positive+1",
+    "page_home_blocker_body": "To be able to create content, view profiles and connect with people you'll need to sign in or register for an account.",
+    
     "page_profile_name_entry_title": "Your Name",
-    "page_profile_name_entry_description": "Let us know your name",
+    "page_profile_name_entry_description": "Let us know your full name",
+    "page_profile_name_entry_description_update": "Going for a new moniker? Cool! What's your new name?",
+    "page_profile_name_entry_description_updated_title": "All Set",
+    "page_profile_name_entry_description_updated_body": "We love your new name. It's now been changed.",
     "page_profile_name_entry_input_label": "Your Name",
 
-    "page_profile_name_hint_title": "What your name is used for",
-    "page_profile_name_hint_bullet_one": "Your name is stored against your account for security purposes",
-    "page_profile_name_hint_bullet_two": "You can choose to display your name within the app to other people",
-    "page_profile_name_hint_bullet_three": "You can change this setting at any time based on your personal preferences",
-
-    "page_profile_display_name_entry_description": "How would you like to be known?",
-
-    "page_profile_display_name_hint_title": "What is your display name used for?",
-    "page_profile_display_name_hint_bullet_one": "Your display name is how you are identified to us and other people across Positive+1",
-    "page_profile_display_name_hint_bullet_two": "It keeps you unique and can be anything you like (within reason)",
-    "page_profile_display_name_hint_bullet_three": "We have some small rules: No profanity or at risk terms",
+    "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
 
     "page_profile_birthday_title": "Your Birthday",
     "page_profile_birthday_description": "Let us know how old you are",
@@ -111,27 +165,12 @@
     "page_profile_delete_account_title": "Hope to see you again",
     "page_profile_delete_account_body": "Thank you for your interest in Positive+1. While we cannot get you on our full experience for now, you can use our app as an unregistered user to view content that has been marked as suitable for your age.\n\nWe understand that this may be disappointing, but we take the safety and privacy of our users very seriously. We hope you'll consider signing up when you're eligible.",
 
-    "page_profile_birthday_hint_title": "Why we need your birthday",
-    "page_profile_birthday_hint_bullet_one": "We use this to identify you",
-    "page_profile_birthday_hint_bullet_two": "We can tailor content to your age",
-    "page_profile_birthday_hint_bullet_three": "The app can restrict access to content due to your age",
-    "page_profile_birthday_hint_bullet_four": "You can choose to present your age and birthday to other users",
-    "page_profile_birthday_hint_bullet_five": "You will have to request to change this at a later date if you input this incorrectly",
-
     "page_profile_interests_title": "Your Interests",
     "page_profile_interests_description": "Why do you want to join Positive+1?",
-
-    "page_profile_interests_hint_title": "Your interests",
-    "page_profile_interests_hint_bullet_one": "",
 
     "page_registration_hiv_status_title": "HIV and you",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",
     "page_registration_hiv_status_option_title": "How would you describe your HIV status?",
-
-    "page_profile_hiv_status_hint_title": "Your HIV Status",
-    "page_profile_hiv_status_hint_bullet_one": "This is a community for people living with, working in, and affected by HIV. To create a safe and open environment it is important that each of us shares our HIV status",
-    "page_profile_hiv_status_hint_bullet_two": "Positive+1 will not share your HIV status outside of the platform",
-    "page_profile_hiv_status_hint_bullet_three": "If you need to change your HIV status at a later date you can do this via your Profile",
 
     "page_profile_hiv_status_thanks_desc": "Your HIV Status has been changed",
 
@@ -140,14 +179,7 @@
     "page_registration_gender_no_results": "No Matching gender",
 
     "page_registration_welcome_back": "Welcome Back",
-    "page_registration_welcome_back_body": "To continue with your registration, please press continue below",
-
-    "page_profile_gender_hint_title": "Why your identity is important",
-    "page_profile_gender_hint_bullet_one": "",
-
-    "page_profile_location_hint_title": "Your location",
-    "page_profile_location_hint_bullet_one": "Your",
-    "page_profile_location_hint_bullet_two": "Location",
+    "page_registration_welcome_back_body": "Ready to keep going? Tap 'Continue' below and let's complete your profile!",
 
     "page_profile_interest_title": "Your interests",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
@@ -156,9 +188,9 @@
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
 
     "page_profile_location_title": "Where are you?",
-    "page_profile_location_subtitle": "Search for your location, or press the find me button",
+    "page_profile_location_subtitle": "Where in the world are you? Search your location or kick back and let us find you.",
     "page_profile_location_action_find": "Find Me",
-    "page_profile_location_instruction": "Search for your location, or press the find me button",
+    "page_profile_location_instruction": "Where in the world are you? Search your location or kick back and let us find you.",
     "page_profile_location_not_set": "Location not provided",
     "page_profile_location_dialog_title": "Results",
     "page_profile_location_errors_search_failed": "We couldn’t find that location. Please try again or use the Find Me button above.",
@@ -172,15 +204,15 @@
     "page_profile_image_selfie_pending": "Position your face inside the oval",
     "page_profile_image_selfie_ready": "Selfie Ready!",
 
-    "page_profile_photo_title": "Now your profile photo",
-    "page_profile_photo_body": "Let's get a photo of you!",
+    "page_profile_photo_title": "Selfie Time!",
+    "page_profile_photo_body": "Time to get a photo of that pretty face.",
     "page_profile_photo_continue": "Select a Photo",
     
     "page_profile_photo_dialogue_take": "Take a Fresh Photo",
     "page_profile_photo_dialogue_camera_roll": "Select from Camera Roll",
 
-    "page_profile_image_completion_title": "Thanks for that!",
-    "page_profile_image_completion_body": "Your selfie has been stored and will be used for future verification. You can now continue.",
+    "page_profile_image_completion_title": "Done!",
+    "page_profile_image_completion_body": "We're good to go. Let's keep going.",
 
     "page_profile_edit_about_you": "About you",
     "page_profile_edit_about_you_desc": "Say something about yourself",
@@ -214,6 +246,10 @@
     "page_account_actions_preferences": "App Preferences",
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
+    
+    "page_account_actions_change_return_account": "Back to Account",
+    "page_account_actions_change_return_profile": "Back to Profile",
+
     "page_account_actions_change_password": "Change Password",
     "page_account_actions_change_disable_google_sign_in": "Disable Google Sign In",
     "page_account_actions_change_disable_apple_sign_in": "Disable Apple Sign In",
@@ -221,11 +257,79 @@
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
 
+    "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
+    "page_account_actions_change_delete_account_splash_body": "but we understand why. We ask you to verify some of your details just to be sure it’s you trying to delete your account.",
+    "page_account_actions_change_delete_account_continue": "Verify",
+    "page_account_actions_change_delete_account_confirm_title": "Enter your Password",
+    "page_account_actions_change_delete_account_confirm_body": "Please confirm your password, then your account deletion will be started on our side",
+    "page_account_actions_change_delete_account_finished_title": "Thanks!",
+    "page_account_actions_change_delete_account_finished_body": "Your account deletion has been started and you will no longer be able to access your account. You will receive an email once your account has been deleted.",
+    "page_account_actions_change_delete_account_finished_button": "Close App",
+
+
+    "page_account_actions_change_email_address_title": "Change Email Address",
+    "page_account_actions_change_email_address_body": "Switching emails? Great! What's your shiny new email address?",
+    "page_account_actions_change_email_address_updated_title": "All Set",
+    "page_account_actions_change_email_address_updated_body": "Your email is switched up and good to go.",
+
+    "page_account_actions_change_social_disable_title": "Disable Social Sign in",
+    "page_account_actions_change_social_disable_body": "To disable social sign in you must provide a new email address for your account.",
+    "page_account_actions_change_social_disable_updated_title": "Thanks!",
+    "page_account_actions_change_social_disable_updated_body": "You can now access your account using your email and password",
+
+    "page_account_actions_change_phone_title": "New Phone Number",
+    "page_account_actions_change_phone_body": "Switching digits? Perfect! What's your new number?\n\nIn the future, we may use your number for account security purposes.",
+    "page_account_actions_change_phone_updated_title": "All Done!",
+    "page_account_actions_change_phone_updated_body": "We've got your new number. You're all set.",
+
+    "page_account_actions_change_password_title": "Change Password",
+    "page_account_actions_change_password_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
+    "page_account_actions_change_password_updated_title": "Great",
+    "page_account_actions_change_password_updated_body": "We've got your new password. You're ready to go.",
+
+    "page_account_actions_change_password_title": "Change Password",
+    "page_account_actions_change_password_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
+    "page_account_actions_change_password_updated_title": "Great",
+    "page_account_actions_change_password_updated_body": "We've got your new password. You're ready to go.",
+
+    "page_account_actions_change_hiv_updated_title": "Thanks!",
+    "page_account_actions_change_hiv_updated_body": "Your profile has been updated",
+
+    "page_account_actions_change_gender_updated_title": "High Five!",
+    "page_account_actions_change_gender_updated_body": "Your identity has been updated. Go you!",
+
+    "page_account_actions_change_location_updated_title": "Saved!",
+    "page_account_actions_change_location_updated_body": "You're all set. Thanks for the update!",
+
+    "page_account_actions_change_bio_updated_title": "Saved!",
+    "page_account_actions_change_bio_updated_body": "You've done it! Your about info is refreshed and ready for the spotlight.",
+
+    "page_account_actions_change_colour_updated_title": "All Set!",
+    "page_account_actions_change_colour_updated_body": "Look at you go! Your profile has been updated.",
+
+    "page_account_actions_change_interests_title": "Your Interests",
+    "page_account_actions_change_interests_body": "What are your interests?",
+    "page_account_actions_change_interests_updated_title": "Thanks!",
+    "page_account_actions_change_interests_updated_body": "Your interests have been changed",
+
+    "page_account_actions_change_social_connect_title": "connect a social account",
+    "page_account_actions_change_social_connect_continue_google": "Continue With Google",
+    "page_account_actions_change_social_connect_continue_apple": "Continue With Apple",
+    "page_account_actions_change_social_connect_continue_facebook": "Continue With Facebook",
+    "page_account_actions_change_social_connect_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
+    "page_account_actions_change_social_connect_updated_title": "Awesome!",
+    "page_account_actions_change_social_connect_updated_body_google": "You can now log in to your Positive+1 account using your Google account. Let's roll!",
+    "page_account_actions_change_social_connect_updated_body_apple": "You can now log in to your Positive+1 account using your Apple account. Let's roll!",
+    "page_account_actions_change_social_connect_updated_body_facebook": "You can now log in to your Positive+1 account using your Facebook account. Let's roll!",
+
+    "page_notifications_empty_title":"You’re all caught up",
+    "page_notifications_empty_body":"Nothing to do here, go and enjoy your day!",
+
     "page_account_verify_account_title": "Verify Account",
     "page_account_verify_account_body": "You have not logged on recently. Can we confirm your password so we know that it is you!",
     "page_account_verify_account_password_forgotten": "Forgotten Password",
 
-    "page_chat_action_start_conversation": "Start Conversation",
+    "page_chat_action_start_conversation": "Start Chat",
 
     "page_chat_empty": "Get the conversation started! Write your first message to @{displayName}",
     "@page_chat_empty" : {
@@ -238,8 +342,33 @@
 
     "page_chat_empty_person": "Get the conversation started! Write your first message to {displayName}",
     "page_chat_empty_group": "Get the conversation started! Write your first message to the group",
+    
+    "page_chat_empty_conversations_title": "Time to break the ice",
+    "page_chat_empty_conversations_body": "No chats yet? That's okay. Let's get one started!",
+    "page_chat_empty_conversations_start": "Start chatting",
+    
+    "page_chat_empty_connections_title": "No connections",
+    "page_chat_empty_connections_body": "Ready, set, connect! Go mingle with the incredible folks here at Positive+1!",
+    
+    "page_chat_empty_followers_title": "No Followers",
+    "page_chat_empty_followers_body": "Start sharing content and engaging with others to build your following on Positive+1!",
+    
+    "page_chat_empty_following_title": "You aren’t following anyone",
+    "page_chat_empty_following_body": "You haven't followed anyone yet. Start exploring to discover great content!",
+    
+    "page_chat_empty_blocked_title": "You haven’t blocked anyone",
+    "page_chat_empty_blocked_body": "Keep Positive+1 a safe and welcoming space by blocking accounts that don’t meet your standards.",
 
     "page_search_subtitle_pending": "Search for people, events, groups and more...",
+    "page_search_posts_not_found_title": "No Posts\nFound",
+    "page_search_posts_not_found_body": "We couldn’t find any Posts matching your search term",
+    "page_search_people_not_found_title": "No People\nFound",
+    "page_search_people_not_found_body": "We couldn’t find anybody matching your search term",
+    "page_search_events_not_found_title": "No Events\nFound",
+    "page_search_events_not_found_body": "We couldn’t find any Events matching your search term",
+    "page_search_tags_not_found_title": "No Tags\nFound",
+    "page_search_tags_not_found_body": "We couldn’t find any Tags matching your search term",
+
     "page_chat_lock_dialog_title": "Leave and Lock Conversation",
     "page_chat_lock_dialog_desc": "Locked conversations still appear in the chat lists of all participants, but further messages cannot be added.",
 
@@ -250,8 +379,8 @@
     "page_chat_message_members_search_hint": "Search People in Conversation",
     "page_chat_message_members_add_users": "Add Users",
     "page_chat_message_members_remove_users": "Remove Users",
-    "page_chat_message_members_continue": "Continue Conversation",
-    "page_chat_view_members_oto_placeholder": "If you wish to start a chat with more than just {displayName} please start a new chat",
+    "page_chat_message_members_continue": "Continue Chatting",
+    "page_chat_view_members_oto_placeholder": "Want a group conversation? You'll need to start a separate chat.",
     "page_chat_leave_group_system_message_own": "You are no longer in this conversation",
     "page_chat_leave_group_system_message": "@{id} left the conversation",
     "@page_chat_leave_group_system_message": {
@@ -352,6 +481,7 @@
     "shared_phone_number": "Phone Number",
 
     "shared_actions_sign_up": "Sign In / Register",
+    "shared_actions_sign_in": "Sign In",
     "shared_characters_remaining": "remaining",
     "shared_actions_continue": "Continue",
     "shared_actions_continue_with_location": "Continue With Location",
@@ -426,6 +556,12 @@
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
     "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
 
+    
+    "shared_get_notified_title": "Get Notified",
+    "shared_get_notified_refuse": "I do not want to be notified",
+    "shared_get_notified_turn_on": "Turn On Notifications",
+    "shared_get_notified_body": "Stay in the loop! From sizzling conversations to the freshest events, we'll bring all the good stuff straight to your phone. Never miss a beat with Positive+1!",
+
     "shared_promotions_premium_account": "Premium Account",
     "shared_promotions_premium_account_description": "Sign up to Positive+1 Premium",
 
@@ -444,8 +580,8 @@
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search Connections",
 
-    "shared_no_connections": "You have no\nconnections",
-    "shared_no_connections_subtitle": "To start a conversation you must have a connection within Positive+1",
+    "shared_no_connections": "No friends\nyet?",
+    "shared_no_connections_subtitle": "Remember, to start a conversation, first make a connection.",
 
     "shared_navigation_tooltips_notifications": "Notifications",
     "shared_navigation_tooltips_account": "Account Settings",
@@ -463,7 +599,7 @@
     "shared_errors_defaults_body": "A mistake was made (error)",
     "shared_errors_defaults_action": "Try Again",
     "shared_errors_not_max_length": "The value supplied is too long",
-    "shared_errors_invalid_email": "The email you have entered is invalid",
+    "shared_errors_invalid_email": "Please enter a valid email address",
     "shared_errors_invalid_phone": "The phone number you have entered is incorrect",
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",
     "shared_errors_user_not_found": "The user account was not found",
