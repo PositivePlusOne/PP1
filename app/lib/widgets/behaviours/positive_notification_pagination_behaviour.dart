@@ -3,11 +3,10 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/atoms/typography/positive_title_body_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -26,6 +25,7 @@ import 'package:app/providers/system/handlers/notifications/notification_handler
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/notification_api_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/atoms/typography/positive_title_body_widget.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../../services/third_party.dart';
