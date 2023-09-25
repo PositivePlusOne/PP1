@@ -32,7 +32,7 @@ class PositiveSwitchProfileDialog extends HookConsumerWidget {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
-    final String currentUserId = profileController.currentProfileId ?? '';
+    final String currentUserId = profileController.currentUserId ?? '';
     final String currentProfileId = controller.getCurrentProfileId();
     final Set<String> availableProfileIds = profileController.state.availableProfileIds;
 

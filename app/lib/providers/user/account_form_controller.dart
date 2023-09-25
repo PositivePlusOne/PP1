@@ -218,7 +218,7 @@ class AccountFormController extends _$AccountFormController {
 
       await profileController.deleteProfile();
       if (profileController.isCurrentlyOrganisation) {
-        await profileController.switchProfile(uid: firebaseAuth.currentUser!.uid);
+        profileController.switchProfile(firebaseAuth.currentUser!.uid);
         return;
       }
 

@@ -519,13 +519,13 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final String repostOriginalActivityId = widget.activity.generalConfiguration?.repostActivityId ?? '';
     final Activity? repostOriginalActivity = repostOriginalActivityId.isEmpty ? null : cacheController.getFromCache(repostOriginalActivityId);
 
-    final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
+    final String currentProfileId = ref.watch(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
     final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';
     final String activityID = widget.activity.flMeta?.id ?? '';
 
     final ActivitySecurityConfigurationMode shareMode = widget.activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
 
-    final bool canActShare = shareMode.canActOnActivity(activityID);
+    final bool canActShare = shareMode.canActOnActivity(activityID, currentProfileId: currentProfileId);
     final bool isPublisher = currentProfileId == publisherId;
     final bool isRepost = repostOriginalPublisher != null && repostOriginalActivity != null;
 

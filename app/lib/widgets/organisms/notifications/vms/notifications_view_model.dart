@@ -4,7 +4,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -17,7 +16,6 @@ part 'notifications_view_model.g.dart';
 class NotificationsViewModelState with _$NotificationsViewModelState {
   const factory NotificationsViewModelState({
     @Default(false) bool isBusy,
-    @Default('') currentProfileId,
   }) = _NotificationsViewModelState;
 
   factory NotificationsViewModelState.initialState() => const NotificationsViewModelState(
@@ -44,18 +42,5 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
     logger.d('onAccountSelected()');
 
     await appRouter.push(const AccountRoute());
-  }
-
-  @override
-  String getCurrentProfileId() {
-    return state.currentProfileId;
-  }
-
-  @override
-  void onProfileSwitched(String? id, Profile? profile) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[NotificationsViewModel.onProfileSwitched] - id: $id, profile: $profile');
-
-    state = state.copyWith(currentProfileId: id ?? '');
   }
 }

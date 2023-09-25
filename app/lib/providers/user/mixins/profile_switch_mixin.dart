@@ -146,7 +146,20 @@ mixin ProfileSwitchMixin {
     return userController.currentUser?.uid ?? '';
   }
 
-  String getCurrentProfileId();
+  String getCurrentProfileId() {
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    return profileController.currentProfileId ?? '';
+  }
 
-  void onProfileSwitched(String? id, Profile? profile);
+  void onProfileSwitched(String? id, Profile? profile) {
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    if (id == null || profile == null) {
+      logger.e('ProfileSwitchMixin.onProfileSwitched($id, $profile) - id == null || profile == null');
+      return;
+    }
+
+    profileController.switchProfile(id);
+  }
 }

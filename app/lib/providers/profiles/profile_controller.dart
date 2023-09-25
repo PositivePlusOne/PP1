@@ -55,8 +55,20 @@ class ProfileController extends _$ProfileController {
   StreamSubscription<CacheKeyUpdatedEvent>? cacheKeyUpdatedEventSubscription;
 
   String? get currentProfileId => state.currentProfile?.flMeta?.id;
+  String? get currentUserId => ref.read(firebaseAuthProvider).currentUser?.uid;
+  Profile? get currentProfile => state.currentProfile;
 
-  bool get isCurrentlyAuthenticatedUser {
+  Profile? get currentUserProfile {
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    if (firebaseAuth.currentUser == null) {
+      return null;
+    }
+
+    return cacheController.getFromCache(firebaseAuth.currentUser!.uid);
+  }
+
+  bool get isCurrentlyUserProfile {
     if (currentProfileId?.isEmpty ?? true) {
       return false;
     }
@@ -73,7 +85,7 @@ class ProfileController extends _$ProfileController {
       return false;
     }
 
-    if (!isCurrentlyAuthenticatedUser) {
+    if (!isCurrentlyUserProfile) {
       return true;
     }
 
@@ -143,9 +155,10 @@ class ProfileController extends _$ProfileController {
     providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(currentUserUid));
   }
 
-  Future<void> switchProfile({String uid = ''}) async {
+  void switchProfile(String uid) {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
 
     if (uid == state.currentProfile?.flMeta?.id) {
       logger.i('[Profile Service] - Already on profile: $uid');
@@ -157,7 +170,13 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot switch to user that is not available - $uid');
     }
 
-    final Profile profile = await getProfile(uid);
+    final Profile? profile = cacheController.getFromCache(uid);
+    final bool isSupported = profile != null && state.availableProfileIds.contains(uid);
+
+    if (!isSupported) {
+      logger.e('[Profile Service] - Cannot switch to user that is not supported - $uid');
+      return;
+    }
 
     state = state.copyWith(currentProfile: profile);
     eventBus.fire(ProfileSwitchedEvent(uid));
@@ -221,10 +240,10 @@ class ProfileController extends _$ProfileController {
   Future<void> updateFirebaseMessagingToken() async {
     final NotificationsControllerState notificationControllerState = ref.read(notificationsControllerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final Logger logger = ref.read(loggerProvider);
 
-    if (state.currentProfile == null) {
+    if (currentUserProfile == null) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without profile');
       return;
     }
@@ -240,7 +259,7 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot update firebase messaging token without token');
     }
 
-    if (state.currentProfile?.fcmToken == firebaseMessagingToken) {
+    if (currentUserProfile?.fcmToken == firebaseMessagingToken) {
       logger.i('[Profile Service] - Firebase messaging token up to date');
       return;
     }
