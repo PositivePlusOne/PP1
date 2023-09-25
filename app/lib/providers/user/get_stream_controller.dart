@@ -25,7 +25,6 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
-import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
@@ -57,7 +56,7 @@ class GetStreamControllerState with _$GetStreamControllerState {
 
 @Riverpod(keepAlive: true)
 class GetStreamController extends _$GetStreamController {
-  StreamSubscription<ProfileSwitchedEvent>? profileSubscription;
+  StreamSubscription<fba.User?>? userSubscription;
   StreamSubscription<CacheKeyUpdatedEvent>? cacheKeySubscription;
 
   StreamSubscription<String>? firebaseTokenSubscription;
@@ -105,11 +104,12 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> setupListeners() async {
+    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
 
-    await profileSubscription?.cancel();
-    profileSubscription = eventBus.on<ProfileSwitchedEvent>().listen(onProfileChanged);
+    await userSubscription?.cancel();
+    userSubscription = firebaseAuth.userChanges().listen(onUserChanged);
 
     await cacheKeySubscription?.cancel();
     cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
@@ -120,15 +120,15 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
-  Future<void> onProfileChanged(ProfileSwitchedEvent event) async {
+  Future<void> onUserChanged(fba.User? event) async {
     final log = ref.read(loggerProvider);
-    log.d('[GetStreamController] onProfileChanged()');
+    log.d('[GetStreamController] onUserChanged()');
 
     await disconnectStreamUser();
     await resetUserListeners();
 
-    if (event.profileId.isEmpty) {
-      log.i('[GetStreamController] onProfileChanged() profileId is empty');
+    if (event == null) {
+      log.i('[GetStreamController] onUserChanged() profileId is empty');
       return;
     }
 
