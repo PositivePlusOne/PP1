@@ -232,8 +232,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       await PositiveDialog.show(
         title: '',
         context: context,
-        backgroundOpacity: kOpacityQuarter,
-        barrierOpacity: kOpacityBarrier,
         barrierDismissible: true,
         child: PostOptionsDialog(
           onEditPostSelected: () => onPostEdited(context),
@@ -292,8 +290,6 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     await PositiveDialog.show(
       title: localisations.post_dialogue_delete_post,
       context: context,
-      backgroundOpacity: kOpacityQuarter,
-      barrierOpacity: kOpacityBarrier,
       barrierDismissible: true,
       child: PostDeleteConfirmDialog(
         onDeletePostConfirmed: () => onPostDeleteConfirmed(context),

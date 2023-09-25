@@ -17,9 +17,11 @@ FutureOr<NotificationApiService> notificationApiService(NotificationApiServiceRe
 class NotificationApiService {
   FutureOr<EndpointResponse> listNotifications({
     String cursor = '',
+    String targetUid = '',
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'notifications-listNotifications',
+      targetUid: targetUid,
       pagination: Pagination(cursor: cursor, limit: kStandardFeedWindowSize),
     );
   }

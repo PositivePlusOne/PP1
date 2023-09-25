@@ -12,7 +12,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -39,6 +38,7 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/atoms/pills/security_mode_pill.dart';
 import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';
@@ -362,18 +362,6 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     return commentHeaderText;
   }
 
-  String buildCommentVisibilityPillText(AppLocalizations localizations) {
-    final ActivitySecurityConfigurationMode reactionMode = widget.reactionMode ?? const ActivitySecurityConfigurationMode.disabled();
-    return reactionMode.when(
-      public: () => localizations.shared_reaction_type_generic_everyone,
-      followersAndConnections: () => localizations.shared_reaction_type_generic_followers,
-      connections: () => localizations.shared_reaction_type_generic_connections,
-      signedIn: () => localizations.shared_reaction_type_generic_signed_in,
-      private: () => localizations.shared_reaction_type_generic_me,
-      disabled: () => localizations.shared_reaction_type_generic_disabled,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
@@ -387,12 +375,31 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     );
 
     final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: buildCommentHeaderText(localizations));
-    final String commentPillText = buildCommentVisibilityPillText(localizations);
     final bool commentsDisabled = widget.reactionMode == const ActivitySecurityConfigurationMode.disabled();
 
     return MultiSliver(
       children: <Widget>[
-        SliverToBoxAdapter(child: ReactionHeader(reactionMode: widget.reactionMode, commentPillText: commentPillText)),
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: BoxDecoration(
+              color: colours.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
+            ),
+            padding: const EdgeInsets.all(kPaddingMedium),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  localizations.shared_comments_heading,
+                  style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
+                ),
+                if (widget.reactionMode != null) ...<Widget>[
+                  SecurityModePill(reactionMode: widget.reactionMode!),
+                ],
+              ],
+            ),
+          ),
+        ),
         if (commentsDisabled) ...<Widget>[
           SliverToBoxAdapter(child: commentPlaceholder),
         ],
@@ -415,67 +422,6 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
           ),
         ],
       ],
-    );
-  }
-}
-
-class ReactionHeader extends ConsumerWidget {
-  const ReactionHeader({
-    super.key,
-    required this.reactionMode,
-    required this.commentPillText,
-  });
-
-  final ActivitySecurityConfigurationMode? reactionMode;
-  final String commentPillText;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colours.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
-      ),
-      padding: const EdgeInsets.all(kPaddingMedium),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            localizations.shared_comments_heading, //! This will need to be dynamic if we support listing more reaction types.
-            style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
-          ),
-          if (reactionMode != null) ...<Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: colours.colorGray1,
-                borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: kPaddingSmall,
-                vertical: kPaddingExtraSmall,
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    UniconsLine.comment_alt_notes,
-                    size: kIconExtraSmall,
-                    color: colours.colorGray6,
-                  ),
-                  const SizedBox(width: kPaddingExtraSmall),
-                  Text(
-                    commentPillText,
-                    style: typography.styleButtonBold.copyWith(color: colours.colorGray6),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 }

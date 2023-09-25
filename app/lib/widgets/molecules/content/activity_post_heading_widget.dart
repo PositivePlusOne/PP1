@@ -48,7 +48,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    final Color accentColor = publisher?.accentColor.toColorFromHex() ?? colours.teal;
+    final Color accentColor = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
     final Color complementaryColor = accentColor.complimentTextColor;
 
     String displayName = localisations.shared_placeholders_empty_display_name;

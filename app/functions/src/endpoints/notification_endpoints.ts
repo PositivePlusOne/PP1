@@ -11,7 +11,6 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 export namespace NotificationEndpoints {
   export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
-
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 
     if (uid.length === 0) {

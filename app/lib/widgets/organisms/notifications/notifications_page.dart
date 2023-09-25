@@ -1,10 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/helpers/brand_helpers.dart';
-import 'package:app/hooks/cache_hook.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/state/positive_notifications_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,12 +8,20 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/switchers/positive_profile_segmented_switcher.dart';
+import 'package:app/widgets/organisms/notifications/vms/notifications_view_model.dart';
+import 'package:app/widgets/state/positive_notifications_state.dart';
 
 @RoutePage()
 class NotificationsPage extends HookConsumerWidget {
@@ -27,23 +29,30 @@ class NotificationsPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
-    final String profileId = currentProfile?.flMeta?.id ?? '';
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+
+    final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
+    final NotificationsViewModelState state = ref.watch(notificationsViewModelProvider);
+
+    final Profile? currentProfile = viewModel.getCurrentProfile();
 
     final List<Widget> actions = [];
-    if (currentProfile != null) {
-      actions.addAll(currentProfile.buildCommonProfilePageActions(disableNotifications: true));
+    final List<String> cacheKeys = [];
+    bool hasNotifications = false;
+
+    if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) {
+      actions.addAll(currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
+      final String notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
+      final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(notificationCacheKey);
+      hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
+      cacheKeys.add(notificationCacheKey);
     }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final String notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(profileId);
-    final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(notificationCacheKey);
-    final bool hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
-
-    useCacheHook(keys: [notificationCacheKey]);
+    useCacheHook(keys: cacheKeys);
+    useLifecycleHook(viewModel);
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
@@ -55,11 +64,16 @@ class NotificationsPage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarTrailing: actions,
-          appBarSpacing: kPaddingSmall,
-          children: const <Widget>[],
+          appBarSpacing: kPaddingNone,
+          children: <Widget>[
+            if (viewModel.canSwitchProfile) ...<Widget>[
+              PositiveProfileSegmentedSwitcher(mixin: viewModel),
+              const SizedBox(height: kPaddingMedium),
+            ],
+          ],
         ),
-        if (profileId.isNotEmpty) ...<Widget>[
-          PositiveNotificationsPaginationBehaviour(uid: profileId),
+        if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) ...<Widget>[
+          PositiveNotificationsPaginationBehaviour(uid: currentProfile!.flMeta!.id!),
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(child: SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData))),
         ],

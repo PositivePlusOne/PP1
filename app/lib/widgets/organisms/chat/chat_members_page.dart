@@ -14,7 +14,6 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';

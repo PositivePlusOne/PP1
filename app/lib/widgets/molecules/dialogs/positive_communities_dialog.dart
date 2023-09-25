@@ -153,16 +153,16 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       logger.d('No more pages to load: $communityType');
       switch (communityType) {
         case CommunityType.following:
-          _followingPagingController.appendSafeLastPage([]);
+          _followingPagingController.appendSafeLastPage<String>([]);
           break;
         case CommunityType.followers:
-          _followersPagingController.appendSafeLastPage([]);
+          _followersPagingController.appendSafeLastPage<String>([]);
           break;
         case CommunityType.connected:
-          _connectionsPagingController.appendSafeLastPage([]);
+          _connectionsPagingController.appendSafeLastPage<String>([]);
           break;
         case CommunityType.blocked:
-          _blockedPagingController.appendSafeLastPage([]);
+          _blockedPagingController.appendSafeLastPage<String>([]);
           break;
       }
 

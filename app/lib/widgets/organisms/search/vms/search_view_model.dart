@@ -1,22 +1,22 @@
 // Dart imports:
 
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/providers/profiles/events/profile_switched_event.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:event_bus/event_bus.dart';
+// Flutter imports:
 import 'package:flutter/widgets.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/services/search_api_service.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/profile/profile.dart';
