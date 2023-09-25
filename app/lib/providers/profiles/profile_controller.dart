@@ -55,6 +55,7 @@ class ProfileController extends _$ProfileController {
   StreamSubscription<CacheKeyUpdatedEvent>? cacheKeyUpdatedEventSubscription;
 
   String? get currentProfileId => state.currentProfile?.flMeta?.id;
+  String? get currentUserId => ref.read(firebaseAuthProvider).currentUser?.uid;
   Profile? get currentProfile => state.currentProfile;
 
   Profile? get currentUserProfile {

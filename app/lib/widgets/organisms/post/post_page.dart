@@ -19,6 +19,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/events/content/activity_events.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
@@ -49,10 +50,12 @@ class PostPage extends HookConsumerWidget {
 
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
+    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
     useLifecycleHook(viewModel);
 
     final Activity updatedActivity = state.activity ?? activity;
-    final Profile? currentProfile = viewModel.getCurrentProfile();
+    final Profile? currentProfile = profileState.currentProfile;
 
     final List<Widget> actions = [];
 

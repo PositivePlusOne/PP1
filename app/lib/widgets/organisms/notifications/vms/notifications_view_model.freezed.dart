@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$NotificationsViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
-  dynamic get currentProfileId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NotificationsViewModelStateCopyWith<NotificationsViewModelState>
@@ -32,7 +31,7 @@ abstract class $NotificationsViewModelStateCopyWith<$Res> {
       _$NotificationsViewModelStateCopyWithImpl<$Res,
           NotificationsViewModelState>;
   @useResult
-  $Res call({bool isBusy, dynamic currentProfileId});
+  $Res call({bool isBusy});
 }
 
 /// @nodoc
@@ -50,17 +49,12 @@ class _$NotificationsViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
-    Object? currentProfileId = freezed,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentProfileId: freezed == currentProfileId
-          ? _value.currentProfileId
-          : currentProfileId // ignore: cast_nullable_to_non_nullable
-              as dynamic,
     ) as $Val);
   }
 }
@@ -74,7 +68,7 @@ abstract class _$$_NotificationsViewModelStateCopyWith<$Res>
       __$$_NotificationsViewModelStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isBusy, dynamic currentProfileId});
+  $Res call({bool isBusy});
 }
 
 /// @nodoc
@@ -91,16 +85,12 @@ class __$$_NotificationsViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
-    Object? currentProfileId = freezed,
   }) {
     return _then(_$_NotificationsViewModelState(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentProfileId: freezed == currentProfileId
-          ? _value.currentProfileId!
-          : currentProfileId,
     ));
   }
 }
@@ -108,19 +98,15 @@ class __$$_NotificationsViewModelStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_NotificationsViewModelState implements _NotificationsViewModelState {
-  const _$_NotificationsViewModelState(
-      {this.isBusy = false, this.currentProfileId = ''});
+  const _$_NotificationsViewModelState({this.isBusy = false});
 
   @override
   @JsonKey()
   final bool isBusy;
-  @override
-  @JsonKey()
-  final dynamic currentProfileId;
 
   @override
   String toString() {
-    return 'NotificationsViewModelState(isBusy: $isBusy, currentProfileId: $currentProfileId)';
+    return 'NotificationsViewModelState(isBusy: $isBusy)';
   }
 
   @override
@@ -128,14 +114,11 @@ class _$_NotificationsViewModelState implements _NotificationsViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_NotificationsViewModelState &&
-            (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            const DeepCollectionEquality()
-                .equals(other.currentProfileId, currentProfileId));
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isBusy,
-      const DeepCollectionEquality().hash(currentProfileId));
+  int get hashCode => Object.hash(runtimeType, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -147,14 +130,11 @@ class _$_NotificationsViewModelState implements _NotificationsViewModelState {
 
 abstract class _NotificationsViewModelState
     implements NotificationsViewModelState {
-  const factory _NotificationsViewModelState(
-      {final bool isBusy,
-      final dynamic currentProfileId}) = _$_NotificationsViewModelState;
+  const factory _NotificationsViewModelState({final bool isBusy}) =
+      _$_NotificationsViewModelState;
 
   @override
   bool get isBusy;
-  @override
-  dynamic get currentProfileId;
   @override
   @JsonKey(ignore: true)
   _$$_NotificationsViewModelStateCopyWith<_$_NotificationsViewModelState>
