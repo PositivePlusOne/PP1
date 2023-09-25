@@ -156,7 +156,6 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
       logger.i('Posting comment');
       final Reaction reaction = await reactionApiService.postReaction(
         activityId: state.activityId,
-        targetUid: state.currentProfileId,
         origin: TargetFeed.toOrigin(state.targetFeed),
         kind: 'comment',
         text: trimmedString,

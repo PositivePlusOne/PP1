@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,9 +21,9 @@ import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
 @RoutePage()
 class PostSharePage extends StatefulHookConsumerWidget {
   const PostSharePage({
-    super.key,
     required this.activity,
     required this.origin,
+    super.key,
   });
 
   final Activity activity;
@@ -39,6 +40,7 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
   Future<void> onShareSelected(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final SharingController sharingController = ref.read(sharingControllerProvider.notifier);
+
     final AppRouter appRouter = ref.read(appRouterProvider);
     if (selectedCommunityIds.isEmpty) {
       logger.w('No communities selected');

@@ -319,9 +319,9 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PostSharePage(
-          key: args.key,
           activity: args.activity,
           origin: args.origin,
+          key: args.key,
         ),
       );
     },
@@ -1396,16 +1396,16 @@ class PostRouteArgs {
 /// [PostSharePage]
 class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
   PostShareRoute({
-    Key? key,
     required Activity activity,
     required String origin,
+    Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           PostShareRoute.name,
           args: PostShareRouteArgs(
-            key: key,
             activity: activity,
             origin: origin,
+            key: key,
           ),
           initialChildren: children,
         );
@@ -1418,20 +1418,20 @@ class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
 
 class PostShareRouteArgs {
   const PostShareRouteArgs({
-    this.key,
     required this.activity,
     required this.origin,
+    this.key,
   });
-
-  final Key? key;
 
   final Activity activity;
 
   final String origin;
 
+  final Key? key;
+
   @override
   String toString() {
-    return 'PostShareRouteArgs{key: $key, activity: $activity, origin: $origin}';
+    return 'PostShareRouteArgs{activity: $activity, origin: $origin, key: $key}';
   }
 }
 

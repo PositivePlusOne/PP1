@@ -42,9 +42,16 @@ Map<String, dynamic> buildRequestPayload({
   return requestPayload;
 }
 
+bool canChangeTargetId(String name) {
+  return switch (name) {
+    'system-getSystemConfiguration' => false,
+    'profile-updateFcmToken' => false,
+    (_) => true,
+  };
+}
+
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
-  String targetUid = '',
   Map<String, bool> cacheOverwriteSchemaKeys = const {"users": true, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
@@ -54,9 +61,12 @@ FutureOr<T> getHttpsCallableResult<T>({
   final FirebaseFunctions firebaseFunctions = providerContainer.read(firebaseFunctionsProvider);
   final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
   final FirebasePerformance firebasePerformance = providerContainer.read(firebasePerformanceProvider);
+  final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
   final String currentUid = firebaseAuth.currentUser?.uid ?? '';
-  final String selectedUid = targetUid.isNotEmpty ? targetUid : currentUid;
+  final String targetUid = profileController.currentProfileId ?? '';
+  final bool canChangeTarget = canChangeTargetId(name) && targetUid.isNotEmpty;
+  final String selectedUid = canChangeTarget ? targetUid : currentUid;
   final Trace trace = firebasePerformance.newTrace(name);
   final Stopwatch stopwatch = Stopwatch();
 

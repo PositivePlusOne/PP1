@@ -130,11 +130,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     final NotificationApiService notificationApiService = await providerContainer.read(notificationApiServiceProvider.future);
 
     try {
-      final EndpointResponse endpointResponse = await notificationApiService.listNotifications(
-        cursor: notificationsState.currentPaginationKey,
-        targetUid: widget.uid,
-      );
-
+      final EndpointResponse endpointResponse = await notificationApiService.listNotifications(cursor: notificationsState.currentPaginationKey);
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       String next = data.containsKey('cursor') ? data['cursor'].toString() : '';
 

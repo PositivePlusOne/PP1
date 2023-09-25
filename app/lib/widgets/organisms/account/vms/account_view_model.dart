@@ -111,7 +111,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     }
 
     logger.d('onSwitchProfileRequested: requestedProfileId: $requestedProfileId');
-    await profileController.switchProfile(uid: requestedProfileId);
+    profileController.switchProfile(requestedProfileId);
   }
 
   Future<void> onEditAccountButtonPressed() async {
