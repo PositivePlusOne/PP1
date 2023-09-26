@@ -96,8 +96,13 @@ export namespace PostEndpoints {
 
     const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
     const activityOriginFeed = activity.publisherInformation?.originFeed || "";
-    if (!activity || !activityOriginFeed) {
+    const activityOriginPosterId = activity.publisherInformation?.publisherId || "";
+    if (!activity || !activityOriginFeed || !activityOriginPosterId) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
+    }
+
+    if (activityOriginPosterId === uid) {
+      throw new functions.https.HttpsError("invalid-argument", "Cannot share own activity");
     }
 
     const isRepost = activity.generalConfiguration?.type === "repost";
@@ -105,11 +110,10 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Cannot share a repost");
     }
 
-    const publisherId = activity.publisherInformation?.publisherId || "";
-    const relationship = await RelationshipService.getRelationship([uid, publisherId], true) as RelationshipJSON;
+    const relationship = await RelationshipService.getRelationship([uid, activityOriginPosterId], true) as RelationshipJSON;
     const shareMode = activity.securityConfiguration?.shareMode || "disabled";
-
     const canAct = SecurityHelpers.canActOnActivity(activity, relationship, uid, shareMode);
+
     if (!canAct) {
       throw new functions.https.HttpsError("permission-denied", "User cannot share activity");
     }
@@ -120,15 +124,13 @@ export namespace PostEndpoints {
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
-        originFeed: `user:${uid}`,
+        originFeed: `${FeedName.User}:${uid}`,
       },
       generalConfiguration: {
         type: "repost",
-      },
-      repostConfiguration: {
-        targetActivityId: activityId,
-        targetActivityPublisherId: publisherId,
-        targetActivityOriginFeed: activityOriginFeed,
+        repostActivityId: activityId,
+        repostActivityPublisherId: activityOriginPosterId,
+        repostActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,
@@ -140,7 +142,7 @@ export namespace PostEndpoints {
       },
     } as ActivityJSON;
 
-    const userActivity = await ActivitiesService.postActivity(uid, origin, activityRequest);
+    const userActivity = await ActivitiesService.postActivity(uid, FeedName.User, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
     
     functions.logger.info("Posted user activity", { feedActivity: userActivity });

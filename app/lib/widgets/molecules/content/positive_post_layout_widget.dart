@@ -256,62 +256,62 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     );
   }
 
-  //TODO(S): Partial scaffold for repost, repost functionality not enabled yet
-  Future<Widget> _repostBuilder(
-    BuildContext context,
-    WidgetRef ref,
-    Profile? currentProfile,
-    Relationship? publisherRelationship,
-  ) async {
-    final Logger logger = ref.read(loggerProvider);
+  //TODO(S): Partial scaffold for repost, repost functionality moved to another file
+  // Future<Widget> _repostBuilder(
+  //   BuildContext context,
+  //   WidgetRef ref,
+  //   Profile? currentProfile,
+  //   Relationship? publisherRelationship,
+  // ) async {
+  //   final Logger logger = ref.read(loggerProvider);
 
-    if (postContent != null && postContent!.generalConfiguration != null && postContent!.enrichmentConfiguration != null) {
-      logger.d('widget.postContent does not have generalConfiguration and enrichmentConfiguration');
-      return const SizedBox();
-    }
+  //   if (postContent != null && postContent!.generalConfiguration != null && postContent!.enrichmentConfiguration != null) {
+  //     logger.d('widget.postContent does not have generalConfiguration and enrichmentConfiguration');
+  //     return const SizedBox();
+  //   }
 
-    // if (postContent?.generalConfiguration!.repostActivityId.isNotEmpty) {
-    //   logger.d('widget.postContent is missing repost data');
-    //   return const SizedBox();
-    // }
+  //   // if (postContent?.generalConfiguration!.repostActivityId.isNotEmpty) {
+  //   //   logger.d('widget.postContent is missing repost data');
+  //   //   return const SizedBox();
+  //   // }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          //* -=-=-=- attached video -=-=-=- *\\
-          if (postContent!.media.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return _postCarouselAttachedImages(context, constraints);
-              },
-            ),
-          ],
-          _postAttachedVideo(),
-          //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-          //* -=-=-=- Post Title -=-=-=- *\\
-          _postTitle(),
-          //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
-            _tags(),
-          ],
-          //* -=-=-=- Location -=-=-=- *\\
-          if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
-            const SizedBox(height: kPaddingSmall),
-            _location(),
-          ],
-          //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-          _markdownBody(context: context, ref: ref),
-        ],
-      ),
-    );
-  }
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
+  //     child: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       children: [
+  //         //* -=-=-=- attached video -=-=-=- *\\
+  //         if (postContent!.media.isNotEmpty) ...[
+  //           const SizedBox(height: kPaddingSmall),
+  //           LayoutBuilder(
+  //             builder: (context, constraints) {
+  //               return _postCarouselAttachedImages(context, constraints);
+  //             },
+  //           ),
+  //         ],
+  //         _postAttachedVideo(),
+  //         //* -=-=-=- Post Actions -=-=-=- *\\
+  //         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+  //         //* -=-=-=- Post Title -=-=-=- *\\
+  //         _postTitle(),
+  //         //* -=-=-=- Tags -=-=-=- *\\
+  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //           const SizedBox(height: kPaddingSmall),
+  //           _tags(),
+  //         ],
+  //         //* -=-=-=- Location -=-=-=- *\\
+  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //           const SizedBox(height: kPaddingSmall),
+  //           _location(),
+  //         ],
+  //         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
+  //         _markdownBody(context: context, ref: ref),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-            List of attached images           -=-=-=-=-=- *\\
