@@ -18,9 +18,11 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/chat/archived_member.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
@@ -37,6 +39,7 @@ import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
@@ -136,14 +139,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                       child: StreamMessageText(
                         onLinkTap: onLinkTap,
                         message: message.copyWith(text: messageText),
-                        messageTheme: StreamMessageThemeData(
-                          avatarTheme: const StreamAvatarThemeData(
-                            constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
-                          ),
-                          messageTextStyle: typography.styleNotification.copyWith(color: colors.colorGray7),
-                          messageBackgroundColor: colors.black.withOpacity(0.05),
-                          messageLinksStyle: typography.styleNotification.copyWith(color: colors.black, fontWeight: FontWeight.bold),
-                        ),
+                        messageTheme: buildStreamMessageThemeData(typography, colors),
                       ),
                     ),
                   ),
@@ -197,6 +193,10 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
     final ArchivedMember? archivedCurrentMember = extraData.archivedMembers?.firstWhereOrNull((element) => element.memberId == currentStreamUser.id);
     final bool isArchived = archivedCurrentMember != null;
 
+    // Get blocked members
+    final List<Relationship> relationships = viewModel.getCachedMemberRelationships();
+    final List<Relationship> blockedRelationships = viewModel.getCachedSourceBlockedMemberRelationships(relationships);
+
     final AppLocalizations locale = AppLocalizations.of(context)!;
 
     usePageRefreshHook();
@@ -221,7 +221,14 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
           visibleComponents: PositiveScaffoldComponent.onlyHeadingWidgets,
           headingWidgets: <Widget>[
             SliverPinnedHeader(
-              child: _AppBar(colors: colors, router: router, memberProfiles: memberProfiles, viewModel: viewModel, channel: channel),
+              child: _AppBar(
+                colors: colors,
+                router: router,
+                memberProfiles: memberProfiles,
+                viewModel: viewModel,
+                channel: channel,
+                blockedMemberCount: blockedRelationships.length,
+              ),
             ),
             SliverStack(
               children: <Widget>[
@@ -232,15 +239,18 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                     child: StreamMessageListView(
                       showFloatingDateDivider: false,
                       showScrollToBottom: false,
-                      // messageListBuilder: (context, messages) => ListView.builder(
-                      //   padding: const EdgeInsets.only(bottom: kPaddingSmall),
-                      //   itemCount: messages.length,
-                      //   itemBuilder: (context, index) => messages[index],
-                      // ),
                       messageFilter: !isArchived ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                       emptyBuilder: (context) => buildEmptyChatList(context, members, memberProfiles, locale),
                       systemMessageBuilder: (context, message) => buildSystemMessage(context, message, colors, typography, locale, currentStreamUser),
-                      // messageBuilder: (context, details, messages, defaultMessageWidget) => buildMessage(context, details, messages, defaultMessageWidget, colors),
+                      messageBuilder: (context, details, messages, defaultMessageWidget) => buildMessage(
+                        context,
+                        viewModel,
+                        details,
+                        messages,
+                        defaultMessageWidget,
+                        colors,
+                        currentStreamUser.id,
+                      ),
                     ),
                   ),
                 ),
@@ -266,12 +276,159 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
       ),
     );
   }
+}
 
-  PositiveProfileCircularIndicator buildUserAvatar(User user, DesignColorsModel colors) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Profile? profile = cacheController.getFromCache<Profile>(user.id);
-    return PositiveProfileCircularIndicator(profile: profile);
+StreamMessageThemeData buildStreamMessageThemeData(DesignTypographyModel typography, DesignColorsModel colors, {bool isMyMessage = false}) {
+  final TextStyle chatTextStyle = TextStyle(
+    fontFamily: 'AlbertSans',
+    fontSize: 14.0,
+    fontWeight: FontWeight.w400,
+    color: colors.colorGray7,
+  );
+
+  return StreamMessageThemeData(
+    avatarTheme: const StreamAvatarThemeData(
+      constraints: BoxConstraints(maxHeight: kIconLarge, maxWidth: kIconLarge),
+    ),
+    messageBackgroundColor: isMyMessage ? colors.teal : colors.black.withOpacity(0.05),
+    messageTextStyle: isMyMessage ? chatTextStyle.copyWith(color: colors.black) : chatTextStyle,
+    messageLinksStyle: isMyMessage ? chatTextStyle.copyWith(color: colors.black) : chatTextStyle,
+  );
+}
+
+StreamMessageThemeData buildStreamBottomRowThemeData(DesignTypographyModel typography, DesignColorsModel colors) {
+  return StreamMessageThemeData(
+    messageTextStyle: typography.styleButtonBold,
+  );
+}
+
+Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetails details, List<Message> messages, StreamMessageWidget defaultMessageWidget, DesignColorsModel colors, String currentProfileId) {
+  final bool isMyMessage = details.isMyMessage;
+  final bool isOnlyEmoji = details.message.text?.isOnlyEmoji ?? false;
+  final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+  final StreamMessageThemeData themeData = buildStreamMessageThemeData(typography, colors, isMyMessage: isMyMessage);
+  final StreamMessageThemeData bottomRowThemeData = buildStreamBottomRowThemeData(typography, colors);
+
+  return StreamMessageWidget(
+    messageTheme: themeData,
+    bottomRowBuilderWithDefaultWidget: (context, message, widget) => widget.copyWith(
+      messageTheme: bottomRowThemeData,
+      showTimeStamp: false,
+      usernameBuilder: (context, message) => isMyMessage
+          ? ChatSelfUsernameRow(typography: typography, colors: colors, message: message)
+          : ChatMemberUsernameRow(
+              typography: typography,
+              colors: colors,
+              message: message,
+              relationship: viewModel.getRelationshipForMessage(message),
+              currentProfileId: currentProfileId,
+            ),
+    ),
+    message: details.message,
+    reverse: isMyMessage,
+    padding: const EdgeInsets.all(8),
+    showSendingIndicator: false,
+    borderRadiusGeometry: BorderRadius.only(
+      topLeft: const Radius.circular(16),
+      bottomLeft: isMyMessage ? const Radius.circular(16) : const Radius.circular(2),
+      topRight: const Radius.circular(16),
+      bottomRight: isMyMessage ? const Radius.circular(2) : const Radius.circular(16),
+    ),
+    textPadding: EdgeInsets.symmetric(
+      vertical: 8,
+      horizontal: isOnlyEmoji ? 0 : 16.0,
+    ),
+    showUserAvatar: isMyMessage ? DisplayWidget.gone : DisplayWidget.show,
+    userAvatarBuilder: isMyMessage ? null : (context, user) => _buildUserAvatar(user, colors),
+  );
+}
+
+class ChatSelfUsernameRow extends StatelessWidget {
+  const ChatSelfUsernameRow({
+    required this.typography,
+    required this.colors,
+    required this.message,
+    super.key,
+  });
+
+  final DesignColorsModel colors;
+  final DesignTypographyModel typography;
+  final Message message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
+          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+        ),
+        const SizedBox(width: kPaddingExtraSmall),
+      ],
+    );
   }
+}
+
+class ChatMemberUsernameRow extends StatelessWidget {
+  const ChatMemberUsernameRow({
+    required this.typography,
+    required this.colors,
+    required this.message,
+    required this.relationship,
+    required this.currentProfileId,
+    super.key,
+  });
+
+  final DesignColorsModel colors;
+  final DesignTypographyModel typography;
+  final Message message;
+
+  final Relationship? relationship;
+  final String currentProfileId;
+
+  @override
+  Widget build(BuildContext context) {
+    bool hasSourceBlocked = false;
+    if (relationship != null && currentProfileId.isNotEmpty) {
+      final Set<RelationshipState> states = relationship!.relationshipStatesForEntity(currentProfileId);
+      hasSourceBlocked = states.contains(RelationshipState.sourceBlocked);
+    }
+
+    return Row(
+      children: <Widget>[
+        if (hasSourceBlocked)
+          Padding(
+            padding: const EdgeInsets.only(right: kPaddingExtraSmall),
+            child: Icon(
+              UniconsLine.ban,
+              size: kIconExtraSmall,
+              color: colors.colorGray3,
+            ),
+          ),
+        Expanded(
+          child: Text(
+            message.user?.name ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+          ),
+        ),
+        const SizedBox(width: kPaddingExtraSmall),
+        Text(
+          Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
+          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+        ),
+        const SizedBox(width: kPaddingExtraSmall),
+      ],
+    );
+  }
+}
+
+PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors) {
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+  final Profile? profile = cacheController.getFromCache<Profile>(user.id);
+  return PositiveProfileCircularIndicator(profile: profile);
 }
 
 class MessageInputContainer extends StatelessWidget {
@@ -391,6 +548,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.memberProfiles,
     required this.viewModel,
     required this.channel,
+    this.blockedMemberCount = 0,
   });
 
   final DesignColorsModel colors;
@@ -398,6 +556,8 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Profile> memberProfiles;
   final ChatViewModel viewModel;
   final Channel channel;
+
+  final int blockedMemberCount;
 
   @override
   Widget build(BuildContext context) {
@@ -408,7 +568,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: kPaddingMedium),
             child: PositiveButton(
@@ -421,8 +581,20 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const SizedBox(width: kPaddingSmall),
-          Expanded(child: _AvatarList(members: memberProfiles)),
-          const Spacer(),
+          Expanded(flex: 3, child: _AvatarList(members: memberProfiles)),
+          const SizedBox(width: kPaddingSmall),
+          if (blockedMemberCount > 0) ...<Widget>[
+            Expanded(
+              flex: 3,
+              child: PositiveHint(
+                label: '$blockedMemberCount blocked',
+                icon: UniconsLine.ban,
+                iconColor: colors.black,
+              ),
+            ),
+            const SizedBox(width: kPaddingSmall),
+          ],
+          const Expanded(child: SizedBox.shrink()),
           PositiveButton(
             colors: colors,
             primaryColor: colors.teal,
@@ -478,34 +650,39 @@ class _AvatarList extends ConsumerWidget {
     }
 
     final numAvatars = min(filteredMembers.length, 3);
-    return Stack(
-      children: [
-        for (var i = 0; i < numAvatars; i++)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: kPaddingMedium * i),
-              child: SizedBox(
-                height: 40,
-                width: 40,
-                child: i == 2 && filteredMembers.length > 3
-                    ? PositiveCircularIndicator(
-                        gapColor: colors.white,
-                        child: Center(
-                          child: Text(
-                            "+${filteredMembers.length - 2}",
-                            style: typography.styleSubtextBold,
+    const double targetWidth = 40 * 3 - (avatarOffset * 2);
+
+    return SizedBox(
+      width: targetWidth,
+      child: Stack(
+        children: <Widget>[
+          for (var i = 0; i < numAvatars; i++)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: EdgeInsets.only(left: kPaddingMedium * i),
+                child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: i == 2 && filteredMembers.length > 3
+                      ? PositiveCircularIndicator(
+                          gapColor: colors.white,
+                          child: Center(
+                            child: Text(
+                              "+${filteredMembers.length - 2}",
+                              style: typography.styleSubtextBold,
+                            ),
                           ),
+                        )
+                      : PositiveProfileCircularIndicator(
+                          profile: filteredMembers[i],
+                          size: avatarOffset,
                         ),
-                      )
-                    : PositiveProfileCircularIndicator(
-                        profile: filteredMembers[i],
-                        size: avatarOffset,
-                      ),
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

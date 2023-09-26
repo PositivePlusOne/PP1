@@ -9,11 +9,13 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_verified_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -23,6 +25,8 @@ class PositiveChatMemberTile extends ConsumerWidget {
   const PositiveChatMemberTile({
     required this.onTap,
     required this.profile,
+    this.currentProfileId = '',
+    this.relationship,
     this.isSelected = false,
     this.isEnabled = true,
     this.displaySelectToggle = true,
@@ -30,6 +34,8 @@ class PositiveChatMemberTile extends ConsumerWidget {
   }) : super(key: key);
 
   final Profile profile;
+  final String currentProfileId;
+  final Relationship? relationship;
 
   final bool isSelected;
   final bool isEnabled;
@@ -38,6 +44,7 @@ class PositiveChatMemberTile extends ConsumerWidget {
   final void Function(BuildContext context) onTap;
 
   static const double kSelectSize = 24;
+  static const double kBanIconSize = 18;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,6 +55,12 @@ class PositiveChatMemberTile extends ConsumerWidget {
 
     final Color accentColor = profile.accentColor.toColorFromHex();
     final Color complementaryColor = accentColor.complimentTextColor;
+
+    bool isSourceBlocked = false;
+    if (relationship != null && currentProfileId.isNotEmpty) {
+      final Set<RelationshipState> relationshipStates = relationship!.relationshipStatesForEntity(currentProfileId);
+      isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
+    }
 
     return PositiveTapBehaviour(
       onTap: onTap,
@@ -83,6 +96,17 @@ class PositiveChatMemberTile extends ConsumerWidget {
                 ],
               ),
             ),
+            if (isSourceBlocked) ...<Widget>[
+              Container(
+                margin: const EdgeInsets.only(right: kPaddingSmall),
+                padding: const EdgeInsets.all(kPaddingExtraSmall),
+                decoration: BoxDecoration(
+                  color: colors.black,
+                  borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+                ),
+                child: Icon(UniconsLine.ban, size: kBanIconSize, color: colors.white),
+              ),
+            ],
             if (displaySelectToggle) ...<Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: kPaddingSmall),
