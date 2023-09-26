@@ -90,7 +90,7 @@ export namespace PostEndpoints {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
 
-    if (!activityId || !origin) {
+    if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
     }
 
