@@ -367,7 +367,11 @@
     "page_search_events_not_found_title": "No Events\nFound",
     "page_search_events_not_found_body": "We couldn’t find any Events matching your search term",
     "page_search_tags_not_found_title": "No Tags\nFound",
-    "page_search_tags_not_found_body": "We couldn’t find any Tags matching your search term",
+
+    "page_search_tab_posts": "Posts",
+    "page_search_tab_people": "Profiles",
+    "page_search_tab_events": "Events",
+    "page_search_tab_tags": "Tags",
 
     "page_chat_lock_dialog_title": "Leave and Lock Conversation",
     "page_chat_lock_dialog_desc": "Locked conversations still appear in the chat lists of all participants, but further messages cannot be added.",
