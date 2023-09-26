@@ -194,7 +194,7 @@ class SearchPage extends ConsumerWidget {
                   ],
                   tabs: <String>[
                     localisations.page_search_tab_posts,
-                    localisations.page_search_tab_people,
+                    localisations.page_search_tab_profiles,
                     // localisations.page_search_tab_events,
                     localisations.page_search_tab_tags,
                   ],
