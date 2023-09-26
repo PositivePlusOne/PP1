@@ -63,6 +63,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
             includeLogoWherePossible: appBarLeading == null,
             safeAreaQueryData: mediaQueryData,
             applyLeadingandTrailingPadding: true,
+            decorationColor: backgroundColor ?? colors.colorGray1,
             leading: appBarLeading,
             trailing: appBarTrailing,
             trailType: appBarTrailType,
