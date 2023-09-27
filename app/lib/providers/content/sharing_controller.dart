@@ -225,12 +225,12 @@ class SharingController extends _$SharingController implements ISharingControlle
     final Activity? sharedActivity = activities.firstOrNull;
 
     // Add the data to the user feed
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final String expectedUserFeedCacheKey = 'feeds:user-${profileController.currentProfileId}';
     final String expectedTimelineFeedCacheKey = 'feeds:timeline-${profileController.currentProfileId}';
 
-    final PositiveFeedState? userFeedState = cacheController.getFromCache(expectedUserFeedCacheKey);
-    final PositiveFeedState? timelineFeedState = cacheController.getFromCache(expectedTimelineFeedCacheKey);
+    final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedCacheKey);
+    final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedCacheKey);
 
     if (userFeedState != null && sharedActivity != null) {
       logger.i('Adding shared activity to user feed');

@@ -27,13 +27,13 @@ class PositiveComment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     // Load the publisher.
     final String publisherKey = comment.userId;
-    final Profile? publisherProfile = cacheController.getFromCache(publisherKey);
+    final Profile? publisherProfile = cacheController.get(publisherKey);
 
     return IgnorePointer(
       // ignoring: !widget.isEnabled,

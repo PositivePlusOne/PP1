@@ -139,7 +139,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
   List<Relationship> getCachedMemberRelationships() {
     final logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
@@ -154,7 +154,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
         }
 
         final String relationshipId = [currentProfileId, member.user!.id].asGUID;
-        final Relationship? relationship = cacheController.getFromCache(relationshipId);
+        final Relationship? relationship = cacheController.get(relationshipId);
         if (relationship != null) {
           relationships.add(relationship);
         }
@@ -239,8 +239,8 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
 
     String serverMessageHeading = '';
     if (memberIds.length == 1) {
-      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-      final Profile? profile = cacheController.getFromCache(memberIds.first);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      final Profile? profile = cacheController.get(memberIds.first);
       serverMessageHeading = profile == null ? localizations.page_connections_list_add_dialog_member_unknown : profile.displayName.asHandle;
     } else {
       serverMessageHeading = localizations.page_connections_list_add_dialog_members_multi(memberIds.length);

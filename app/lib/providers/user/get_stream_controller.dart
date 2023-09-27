@@ -243,7 +243,7 @@ class GetStreamController extends _$GetStreamController {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final ProfileFetchProcessor profileFetchProcessor = await ref.read(profileFetchProcessorProvider.future);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     log.d('[GetStreamController] updateChannelMembership()');
 
     if (streamChatClient.state.currentUser == null) {
@@ -265,7 +265,7 @@ class GetStreamController extends _$GetStreamController {
         return false;
       }
 
-      final Object? cachedMember = cacheController.getFromCache(memberId!);
+      final Object? cachedMember = cacheController.get(memberId!);
       return cachedMember == null;
     });
 

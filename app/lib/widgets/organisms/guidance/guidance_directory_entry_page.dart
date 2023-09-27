@@ -58,10 +58,10 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final GuidanceControllerState state = ref.watch(guidanceControllerProvider);
     final GuidanceController controller = ref.read(guidanceControllerProvider.notifier);
-    final CacheController cacheController = ref.watch(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.watch(cacheControllerProvider);
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final GuidanceDirectoryEntry guidanceEntry = cacheController.getFromCache(guidanceEntryId) ?? GuidanceDirectoryEntry.empty();
+    final GuidanceDirectoryEntry guidanceEntry = cacheController.get(guidanceEntryId) ?? GuidanceDirectoryEntry.empty();
     final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
     final List<Widget> actions = [];
 

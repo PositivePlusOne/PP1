@@ -81,14 +81,14 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.state.currentProfile?.flMeta?.id ?? '';
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     if (currentProfileId.isEmpty) {
       logger.e('onSwitchProfileRequested: currentProfileId is empty');
       return;
     }
 
     final Iterable<String> profileIds = profileController.state.availableProfileIds.where((element) => element != currentProfileId);
-    final List<Profile> profiles = profileIds.map((e) => cacheController.getFromCache(e)).whereNotNull().cast<Profile>().toList();
+    final List<Profile> profiles = profileIds.map((e) => cacheController.get(e)).whereNotNull().cast<Profile>().toList();
 
     logger.d('onSwitchProfileRequested: currentProfileId: $currentProfileId, profileIds: $profileIds, profiles: $profiles');
     if (profiles.isEmpty) {

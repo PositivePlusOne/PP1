@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -47,14 +49,27 @@ class PostPage extends HookConsumerWidget {
     final AppRouter router = ref.read(appRouterProvider);
 
     final PostViewModelProvider provider = postViewModelProvider(activity.flMeta!.id!, feed);
-
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
+
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    Activity updatedActivity = activity;
+    final List<String> cacheKeys = [];
+
+    if (profileState.currentProfile?.flMeta?.id != null) {
+      cacheKeys.add(profileState.currentProfile!.flMeta!.id!);
+    }
+
+    if (activity.flMeta?.id != null) {
+      updatedActivity = cacheController.get<Activity>(activity.flMeta!.id!) ?? activity;
+      cacheKeys.add(activity.flMeta!.id!);
+    }
 
     useLifecycleHook(viewModel);
+    useCacheHook(keys: cacheKeys);
 
-    final Activity updatedActivity = state.activity ?? activity;
     final Profile? currentProfile = profileState.currentProfile;
 
     final List<Widget> actions = [];

@@ -1,22 +1,19 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
+import 'dart:collection';
 import 'dart:io';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/content/activity_events.dart';
+import 'package:app/providers/system/constants/cache_constants.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import '../../constants/cache_constants.dart';
 import '../../services/third_party.dart';
 
 part 'cache_controller.freezed.dart';
@@ -37,112 +34,19 @@ class CacheRecord with _$CacheRecord {
   factory CacheRecord.fromJson(Map<String, Object?> json) => _$CacheRecordFromJson(json);
 }
 
-@freezed
-class CacheControllerState with _$CacheControllerState {
-  const factory CacheControllerState({
-    required Map<String, CacheRecord> cacheData,
-  }) = _CacheControllerState;
-  factory CacheControllerState.initialState() => const CacheControllerState(cacheData: {});
+@Riverpod(keepAlive: true)
+CacheController cacheController(CacheControllerRef ref) {
+  return CacheController();
 }
 
-@Riverpod(keepAlive: true)
-class CacheController extends _$CacheController {
-  // Not giving up the chance to use this key lol
-  static const String kCacheSharedPrefsKeyPrefix = 'pp_cache_';
+class CacheController {
+  final HashMap<String, CacheRecord> cacheData = HashMap<String, CacheRecord>();
 
-  Timer? scheduledJobCacheClear;
-  Timer? scheduledJobCachePersist;
-
-  @override
-  CacheControllerState build() {
-    return CacheControllerState.initialState();
-  }
-
-  Future<void> setupListeners() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('Setting up cache timers');
-
-    scheduledJobCacheClear?.cancel();
-    scheduledJobCachePersist?.cancel();
-
-    // * This will delete profile eventually
-    scheduledJobCacheClear = Timer.periodic(
-      kCacheCleanupFrequency,
-      (Timer t) => clearOutdatedCacheEntries(),
-    );
-
-    // scheduledJobCachePersist = Timer.periodic(
-    //   kCacheCleanupPersist,
-    //   (Timer t) => persistCache(),
-    // );
-  }
-
-  void clearCache() {
-    state = state.copyWith(cacheData: {});
-  }
-
-  Future<void> persistCache() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('Persisting cache data');
-
-    final File? prefsFile = await getSharedPrefsFile();
-    if (prefsFile == null) {
-      logger.d('Cannot persist cache data, no cache file found');
-      return;
-    }
-
-    try {
-      final String data = json.encode(state.cacheData.values);
-      await prefsFile.writeAsString(data);
-      logger.i('Cache data persisted');
-    } catch (e) {
-      logger.e('Error persisting cache data: $e');
-    }
-  }
-
-  Future<bool> restoreCache() async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('Restoring cache data');
-
-    final File? prefsFile = await getSharedPrefsFile();
-    if (prefsFile?.existsSync() != true) {
-      logger.d('No cache file found');
-      return false;
-    }
-
-    try {
-      final String jsonData = prefsFile!.readAsStringSync();
-      if (jsonData.isEmpty) {
-        logger.d('Cache file is empty');
-        return false;
-      }
-
-      final List<CacheRecord> cacheDataList = json.decode(jsonData);
-      final Map<String, CacheRecord> cacheData = cacheDataList.fold(
-        {},
-        (Map<String, CacheRecord> map, CacheRecord record) => {...map}..[record.key] = record,
-      );
-
-      state = state.copyWith(cacheData: cacheData);
-      return true;
-    } catch (e) {
-      logger.e('Error restoring cache data: $e');
-      return false;
-    }
-  }
-
-  Future<File?> getSharedPrefsFile() async {
-    final Logger logger = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final String? userId = firebaseAuth.currentUser?.uid;
-    if (userId == null) {
-      logger.d('No user ID found, not creating cache file');
-      return null;
-    }
-
+  Future<File?> getSharedPrefsFile(String uid) async {
+    final Logger logger = providerContainer.read(loggerProvider);
     final Directory directory = await getApplicationDocumentsDirectory();
     final String path = directory.path;
-    final String fileName = '$kCacheSharedPrefsKeyPrefix$userId';
+    final String fileName = '$kSharedPreferenceKeyPrefix$uid';
     final File prefsFile = File('$path/$fileName');
 
     if (!(await prefsFile.exists())) {
@@ -153,30 +57,7 @@ class CacheController extends _$CacheController {
     return prefsFile;
   }
 
-  void clearOutdatedCacheEntries() {
-    final Logger logger = ref.read(loggerProvider);
-    final DateTime now = DateTime.now();
-    final Map<String, CacheRecord> cacheData = state.cacheData;
-    final List<String> keysToRemove = [];
-
-    logger.d('Clearing outdated cache entries');
-    cacheData.forEach((String key, CacheRecord record) {
-      final DateTime? ttl = record.expiresAt;
-      if (ttl?.isBefore(now) ?? false) {
-        keysToRemove.add(key);
-      }
-    });
-
-    logger.d('Removing ${keysToRemove.length} outdated cache entries');
-    final newCacheData = {...cacheData};
-    for (final String key in keysToRemove) {
-      newCacheData.remove(key);
-    }
-
-    state = state.copyWith(cacheData: newCacheData);
-  }
-
-  void addToCache({
+  void add({
     required String key,
     required dynamic value,
     bool overwrite = true,
@@ -184,35 +65,37 @@ class CacheController extends _$CacheController {
   }) {
     final StackTrace trace = StackTrace.current;
     final String caller = trace.toString().split('#')[1].split(' ')[0];
-    final Logger logger = ref.read(loggerProvider);
+    final Logger logger = providerContainer.read(loggerProvider);
 
-    CacheRecord? record = state.cacheData[key];
-    if (overwrite || record == null) {
-      record = record?.copyWith(
-            lastUpdatedAt: DateTime.now(),
-            lastAccessedBy: caller,
-            value: value,
-          ) ??
-          CacheRecord(
-            key: key,
-            value: value,
-            createdBy: caller,
-            createdAt: DateTime.now(),
-            lastUpdatedAt: DateTime.now(),
-            lastAccessedBy: caller,
-            expiresAt: ttl != null ? DateTime.now().add(ttl) : null,
-          );
-
-      state = state.copyWith(cacheData: {...state.cacheData}..[key] = record);
-      processEvents(record);
-    } else {
+    CacheRecord? record = cacheData[key];
+    if (!overwrite && record != null) {
       logger.d('Not overwriting cache entry for $key from $caller');
+      return;
     }
+
+    final bool exists = record != null;
+    record = record?.copyWith(
+          lastUpdatedAt: DateTime.now(),
+          lastAccessedBy: caller,
+          value: value,
+        ) ??
+        CacheRecord(
+          key: key,
+          value: value,
+          createdBy: caller,
+          createdAt: DateTime.now(),
+          lastUpdatedAt: DateTime.now(),
+          lastAccessedBy: caller,
+          expiresAt: ttl != null ? DateTime.now().add(ttl) : null,
+        );
+
+    cacheData[key] = record;
+    processEvents(record, exists ? CacheKeyUpdatedEventType.updated : CacheKeyUpdatedEventType.created);
   }
 
-  Iterable<T> getAllFromCache<T>() {
+  Iterable<T> listAll<T>() {
     final List<T> results = [];
-    for (final CacheRecord record in state.cacheData.values) {
+    for (final CacheRecord record in cacheData.values) {
       if (record.value is T) {
         results.add(record.value as T);
       }
@@ -221,62 +104,61 @@ class CacheController extends _$CacheController {
     return results;
   }
 
-  void processEvents(CacheRecord record) {
-    final Logger logger = ref.read(loggerProvider);
-    final EventBus eventBus = ref.read(eventBusProvider);
-    logger.i('Processing add events for cache record ${record.key}');
+  bool contains(String key) {
+    return cacheData.containsKey(key);
+  }
 
-    final List<dynamic> events = [];
-    switch (record.value.runtimeType) {
-      case ReactionStatistics:
-        events.add(ActivityReactionsUpdatedEvent(reactionStatistics: record.value as ReactionStatistics));
-        break;
+  void remove(String key) {
+    final CacheRecord? record = cacheData.remove(key);
+    if (record == null) {
+      return;
     }
 
-    events.add(CacheKeyUpdatedEvent(record.key, record.value));
-
-    for (final dynamic event in events) {
-      logger.d('Firing processed cache event: $event');
-      eventBus.fire(event);
-    }
+    final EventBus eventBus = providerContainer.read(eventBusProvider);
+    eventBus.fire(CacheKeyUpdatedEvent(key, CacheKeyUpdatedEventType.deleted, record));
   }
 
-  bool containsInCache(String key) {
-    return state.cacheData.containsKey(key);
-  }
-
-  void removeFromCache(String key) {
-    state = state.copyWith(cacheData: {...state.cacheData}..remove(key));
-    providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
-  }
-
-  void removeMultipleFromCache(List<String> keys) {
-    state = state.copyWith(cacheData: {...state.cacheData}..removeWhere((key, value) => keys.contains(key)));
+  void removeSet(Iterable<String> keys) {
     for (final String key in keys) {
-      providerContainer.read(eventBusProvider).fire(CacheKeyUpdatedEvent(key, null));
+      remove(key);
     }
   }
 
-  T? getFromCache<T>(String key) {
-    final CacheRecord? record = state.cacheData[key];
+  T? get<T>(String key) {
+    final CacheRecord? record = cacheData[key];
     final dynamic data = record?.value;
     return data != null && data is T ? data : null;
   }
 
-  bool isCached(String key) {
-    return state.cacheData.containsKey(key);
+  bool exists(String key) {
+    return cacheData.containsKey(key);
   }
 
-  List<T> getManyFromCache<T>(List<String> ids) {
+  List<T> list<T>(Iterable<String> ids) {
     final List<T> results = [];
 
     for (final String id in ids) {
-      final T? result = getFromCache<T>(id);
+      final T? result = get<T>(id);
       if (result != null) {
         results.add(result);
       }
     }
 
     return results;
+  }
+
+  void processEvents(CacheRecord record, CacheKeyUpdatedEventType eventType) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final EventBus eventBus = providerContainer.read(eventBusProvider);
+    logger.i('Processing add events for cache record ${record.key}');
+
+    final List<dynamic> events = [];
+
+    events.add(CacheKeyUpdatedEvent(record.key, eventType, record.value));
+
+    for (final dynamic event in events) {
+      logger.d('Firing processed cache event: $event');
+      eventBus.fire(event);
+    }
   }
 }

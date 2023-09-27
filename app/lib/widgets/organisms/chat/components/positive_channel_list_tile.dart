@@ -47,12 +47,12 @@ class PositiveChannelListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final String? currentUserId = ref.read(firebaseAuthProvider).currentUser?.uid;
     final List<Member> members = channel?.state?.members.toList() ?? [];
-    final List<Profile> profiles = members.map((e) => cacheController.getFromCache<Profile>(e.userId!)).nonNulls.toList();
+    final List<Profile> profiles = members.map((e) => cacheController.get<Profile>(e.userId!)).nonNulls.toList();
     final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
 
     final Message? latestMessage = channel?.state?.messages.reversed.firstOrNull;

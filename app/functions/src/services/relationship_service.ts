@@ -201,7 +201,7 @@ export namespace RelationshipService {
   export async function getBlockedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
     const cacheKey = BLOCKED_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
-    let data = await CacheService.getFromCache(cacheKey);
+    let data = await CacheService.get(cacheKey);
 
     if (!data) {
       const relationshipsSnapshot = await adminFirestore
@@ -249,7 +249,7 @@ export namespace RelationshipService {
   export async function getConnectedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
     const cacheKey = CONNECTED_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
-    let data = await CacheService.getFromCache(cacheKey);
+    let data = await CacheService.get(cacheKey);
 
     if (!data) {
       const relationshipsSnapshot = await adminFirestore
@@ -296,7 +296,7 @@ export namespace RelationshipService {
   export async function getFollowRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
     const cacheKey = FOLLOWING_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
-    let data = await CacheService.getFromCache(cacheKey);
+    let data = await CacheService.get(cacheKey);
 
     if (!data) {
       const relationshipsSnapshot = await adminFirestore
@@ -337,7 +337,7 @@ export namespace RelationshipService {
   export async function getFollowedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
     const cacheKey = FOLLOWERS_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
-    let data = await CacheService.getFromCache(cacheKey);
+    let data = await CacheService.get(cacheKey);
 
     if (!data) {
       const relationshipsSnapshot = await adminFirestore

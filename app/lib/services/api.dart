@@ -10,7 +10,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
@@ -90,9 +89,6 @@ FutureOr<T> getHttpsCallableResult<T>({
     final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
     Map<String, dynamic> responseData = json.decodeSafe(response.data);
 
-    // Middleware to manipulate response data
-    responseData = enrichResponseActivityReactionData(responseData);
-
     final EndpointResponse responsePayload = EndpointResponse.fromJson(responseData);
     if (responsePayload.data.isNotEmpty) {
       providerContainer.cacheResponseData(responsePayload.data, cacheOverwriteSchemaKeys);
@@ -111,51 +107,6 @@ FutureOr<T> getHttpsCallableResult<T>({
     stopwatch.stop();
     logger.d('getHttpsCallableResult: $name took ${stopwatch.elapsedMilliseconds}ms');
   }
-}
-
-Map<String, dynamic> enrichResponseActivityReactionData(Map<String, dynamic> responseData) {
-  final Logger logger = providerContainer.read(loggerProvider);
-  final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-
-  if (!responseData.containsKey('data')) {
-    logger.d('enrichResponseActivityReactionData: no data, skipping');
-    return responseData;
-  }
-
-  final List<dynamic> reactionRaw = (responseData['data'].containsKey('reactions') ? responseData['data']['reactions'] : []);
-  final List<dynamic> reactionStatisticsRaw = (responseData['data'].containsKey('reactionStatistics') ? responseData['data']['reactionStatistics'] : []);
-  final List<Reaction> reactions = reactionRaw.map((dynamic reaction) => Reaction.fromJson(json.decodeSafe(reaction))).toList();
-  final List<ReactionStatistics> reactionStatistics = reactionStatisticsRaw.map((dynamic stat) => ReactionStatistics.fromJson(json.decodeSafe(stat))).toList();
-
-  final String currentProfileId = profileController.currentProfileId ?? '';
-  if (currentProfileId.isEmpty) {
-    logger.d('enrichResponseActivityReactionData: no current profile id, skipping');
-    return responseData;
-  }
-
-  if (reactions.isNotEmpty && reactionStatistics.isNotEmpty) {
-    logger.d('enrichResponseActivityReactionData: enriching response data with reaction statistics');
-    final List<ReactionStatistics> newReactionStatistics = reactionStatistics.map((ReactionStatistics reactionStatistic) {
-      final List<Reaction> relatedActivityReactions = reactions.where((Reaction reaction) => reaction.activityId == reactionStatistic.activityId && reaction.userId == currentProfileId).toList();
-      final Set<String> relatedActivityKinds = relatedActivityReactions.map((Reaction reaction) => ReactionType.toJson(reaction.kind)).toSet();
-
-      if (relatedActivityReactions.isNotEmpty) {
-        final Map<String, bool> newUniqueUserReactions = {};
-        for (final String kind in relatedActivityKinds) {
-          newUniqueUserReactions[kind] = true;
-        }
-
-        return reactionStatistic.copyWith(uniqueUserReactions: newUniqueUserReactions);
-      }
-
-      return reactionStatistic;
-    }).toList();
-
-    logger.d('enrichResponseActivityReactionData: newReactionStatistics: $newReactionStatistics');
-    responseData['data']['reactionStatistics'] = newReactionStatistics.map((ReactionStatistics reactionStatistic) => reactionStatistic.toJson()).toList();
-  }
-
-  return responseData;
 }
 
 @Riverpod(keepAlive: true)

@@ -1,6 +1,4 @@
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 
 class TargetFeed {
@@ -29,42 +27,4 @@ class TargetFeed {
 
   final String feed;
   final String slug;
-}
-
-class ActivityCreatedEvent {
-  const ActivityCreatedEvent({
-    required this.targets,
-    required this.activity,
-  });
-
-  final List<TargetFeed> targets;
-  final Activity activity;
-}
-
-class ActivityUpdatedEvent {
-  const ActivityUpdatedEvent({
-    required this.targets,
-    required this.activity,
-  });
-
-  final List<TargetFeed> targets;
-  final Activity activity;
-}
-
-class ActivityDeletedEvent {
-  const ActivityDeletedEvent({
-    required this.targets,
-    required this.activity,
-  });
-
-  final List<TargetFeed> targets;
-  final Activity activity;
-}
-
-class ActivityReactionsUpdatedEvent {
-  const ActivityReactionsUpdatedEvent({
-    required this.reactionStatistics,
-  });
-
-  final ReactionStatistics reactionStatistics;
 }

@@ -117,7 +117,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
     final List<Tag> returnTags = [];
     final List<Tag> enrichedTags = [
-      ...tagState.recentTags,
+      ...tagState.recentTags.values,
     ];
 
     // Remove any tags that have already been selected

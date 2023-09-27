@@ -27,11 +27,11 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
@@ -134,7 +134,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   void loadActivityData() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     publisherRelationship = null;
@@ -151,7 +151,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       return;
     }
 
-    final Profile? publisherProfile = cacheController.getFromCache(publisherKey);
+    final Profile? publisherProfile = cacheController.get(publisherKey);
     if (publisherProfile == null) {
       logger.e('Publisher profile not found in cache for $publisherKey');
       return;
@@ -178,7 +178,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       return;
     }
 
-    final Relationship? relationship = cacheController.getFromCache(members.asGUID);
+    final Relationship? relationship = cacheController.get(members.asGUID);
     if (relationship == null) {
       logger.d('Relationship not found in cache for $relationship');
       return;
@@ -193,14 +193,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   void fetchReactionStatistics() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ReactionStatistics requestStatistics = ReactionStatistics.fromActivity(
       widget.activity,
       widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
     );
 
     final String cacheKey = ReactionStatistics.buildCacheKey(requestStatistics);
-    final ReactionStatistics? cachedStatistics = cacheController.getFromCache(cacheKey);
+    final ReactionStatistics? cachedStatistics = cacheController.get(cacheKey);
     if (cachedStatistics != null) {
       logger.i('Loaded reaction statistics from cache for ${widget.activity.flMeta?.id}');
       reactionStatistics = cachedStatistics;
@@ -240,7 +240,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       );
     } else {
       final logger = providerContainer.read(loggerProvider);
-      final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+      final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
       if (publisher == null) {
         return;
@@ -259,7 +259,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         publisher!.flMeta?.id ?? '',
       ];
 
-      final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
+      final Relationship relationship = cacheController.get(members.asGUID) ?? Relationship.empty(members);
       await PositiveDialog.show(
         context: context,
         useSafeArea: false,
@@ -303,22 +303,17 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final Logger logger = ref.read(loggerProvider);
+    final String activityId = widget.activity.flMeta?.id ?? '';
 
-    if (profileController.currentProfileId == null || widget.activity.flMeta == null || widget.activity.flMeta!.id == null) {
+    if (profileController.currentProfileId == null || activityId.isEmpty) {
       return;
     }
 
     try {
-      await activityController.deleteActivity(widget.activity.flMeta!.id!);
-      final List<TargetFeed> targetFeeds = [
-        TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
-        TargetFeed('timeline', profileController.currentProfileId ?? ''),
-        ...widget.activity.tagTargetFeeds,
-      ];
-
-      eventBus.fire(ActivityDeletedEvent(targets: targetFeeds, activity: widget.activity));
+      await activityController.deleteActivity(activityId);
+      cacheController.remove(activityId);
     } catch (e) {
       logger.e("Error deleting activity: $e");
 
@@ -351,7 +346,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   Future<void> onPostBookmarked(BuildContext context, Activity activity) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-    final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     final String currentProfileId = profileController.currentProfileId ?? '';
@@ -366,16 +361,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       _isBookmarking = true;
       setStateIfMounted();
 
-      final bool isBookmarked = communitiesController.isActivityBookmarked(activityId, origin);
+      final bool isBookmarked = reactionsController.isActivityBookmarked(activityId, origin);
       if (isBookmarked) {
-        await communitiesController.removeBookmarkActivity(origin: origin, activityId: activityId);
+        await reactionsController.removeBookmarkActivity(origin: origin, activityId: activityId, uid: currentProfileId);
         ScaffoldMessenger.of(context).showSnackBar(
           PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
         );
         return;
       }
 
-      await communitiesController.bookmarkActivity(origin: origin, activityId: activityId);
+      await reactionsController.bookmarkActivity(origin: origin, activityId: activityId);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
@@ -387,7 +382,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
 
   Future<void> onPostLiked(BuildContext context, Activity activity) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-    final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     final String profileId = profileController.currentProfileId ?? '';
@@ -402,16 +397,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
       _isLiking = true;
       setStateIfMounted();
 
-      final bool isLiked = communitiesController.isActivityLiked(activityId, origin);
+      final bool isLiked = reactionsController.hasLikedActivity(activityId: activityId, uid: profileId, origin: origin);
       if (isLiked) {
-        await communitiesController.unlikeActivity(origin: origin, activityId: activityId);
+        await reactionsController.unlikeActivity(origin: origin, activityId: activityId, uid: profileId);
         ScaffoldMessenger.of(context).showSnackBar(
           PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
         );
         return;
       }
 
-      await communitiesController.likeActivity(origin: origin, activityId: activityId);
+      await reactionsController.likeActivity(origin: origin, activityId: activityId, uid: profileId);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
@@ -497,11 +492,11 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     Promotion? promotion;
     if (widget.activity.enrichmentConfiguration?.promotionKey != null) {
-      promotion = cacheController.getFromCache(widget.activity.enrichmentConfiguration!.promotionKey);
+      promotion = cacheController.get(widget.activity.enrichmentConfiguration!.promotionKey);
     }
 
     final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
@@ -515,9 +510,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final bool canView = viewMode.canActOnActivity(widget.activity.flMeta?.id ?? '');
 
     final String repostOriginalPublisherId = widget.activity.generalConfiguration?.repostActivityPublisherId ?? '';
-    final Profile? repostOriginalPublisher = repostOriginalPublisherId.isEmpty ? null : cacheController.getFromCache(repostOriginalPublisherId);
+    final Profile? repostOriginalPublisher = repostOriginalPublisherId.isEmpty ? null : cacheController.get(repostOriginalPublisherId);
     final String repostOriginalActivityId = widget.activity.generalConfiguration?.repostActivityId ?? '';
-    final Activity? repostOriginalActivity = repostOriginalActivityId.isEmpty ? null : cacheController.getFromCache(repostOriginalActivityId);
+    final Activity? repostOriginalActivity = repostOriginalActivityId.isEmpty ? null : cacheController.get(repostOriginalActivityId);
 
     final String currentProfileId = ref.watch(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
     final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';

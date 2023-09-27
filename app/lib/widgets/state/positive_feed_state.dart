@@ -5,17 +5,20 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/providers/events/content/activity_events.dart';
 
 class PositiveFeedState {
   PositiveFeedState({
     required this.feed,
-    required this.slug,
+    required this.profileId,
     required this.pagingController,
-    required this.currentPaginationKey,
+    this.currentPaginationKey = '',
+    this.hasPerformedInitialLoad = false,
   });
 
-  final String feed;
-  final String slug;
+  final TargetFeed feed;
+  final String profileId;
   final PagingController<String, Activity> pagingController;
+  bool hasPerformedInitialLoad;
   String currentPaginationKey;
 }

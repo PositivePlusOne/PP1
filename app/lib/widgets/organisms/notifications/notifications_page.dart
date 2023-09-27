@@ -30,7 +30,7 @@ class NotificationsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
     final NotificationsViewModelState state = ref.watch(notificationsViewModelProvider);
@@ -44,7 +44,7 @@ class NotificationsPage extends HookConsumerWidget {
     if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) {
       actions.addAll(currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
       final String notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
-      final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(notificationCacheKey);
+      final PositiveNotificationsState? cachedFeedState = cacheController.get(notificationCacheKey);
       hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
       cacheKeys.add(notificationCacheKey);
     }

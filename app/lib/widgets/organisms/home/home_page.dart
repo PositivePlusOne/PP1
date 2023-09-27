@@ -77,7 +77,7 @@ class HomePage extends HookConsumerWidget {
             PositiveHubFloatingBar(
               index: state.currentTabIndex,
               onTapped: viewModel.onTabSelected,
-              topics: tagsControllerState.topicTags,
+              topics: tagsControllerState.topicTags.values.toList(),
               onTopicSelected: viewModel.onTopicSelected,
               onSeeMoreTopicsSelected: viewModel.onSeeMoreTopicsSelected,
               tabColours: <Color>[
@@ -98,7 +98,6 @@ class HomePage extends HookConsumerWidget {
         if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
             feed: TargetFeed('timeline', userController.currentUser!.uid),
-            onPageLoaded: (_) {},
           ),
         ],
       ],

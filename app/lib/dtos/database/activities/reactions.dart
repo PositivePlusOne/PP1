@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:collection';
+
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -69,10 +72,11 @@ class ReactionStatistics with _$ReactionStatistics {
   const factory ReactionStatistics({
     @Default('') @JsonKey(name: 'feed') String feed,
     @Default({}) @JsonKey(name: 'counts') Map<String, int> counts,
-    @Default({}) @JsonKey(name: 'unique_user_reactions') Map<String, bool> uniqueUserReactions,
+    @Default({}) @JsonKey(name: 'unique_user_reactions') Map<String, Map<String, bool>> uniqueUserReactions,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
     @Default('') @JsonKey(name: 'user_id') String userId,
+    @Default({}) @JsonKey(name: 'all_reactions') Map<String, Reaction> allReactions,
   }) = _ReactionStatistics;
 
   factory ReactionStatistics.fromJson(Map<String, dynamic> json) => _$ReactionStatisticsFromJson(json);
@@ -81,7 +85,7 @@ class ReactionStatistics with _$ReactionStatistics {
     return ReactionStatistics(
       feed: TargetFeed.toOrigin(feed),
       counts: {},
-      uniqueUserReactions: {},
+      uniqueUserReactions: HashMap<String, HashMap<String, bool>>(),
       activityId: activity.flMeta?.id ?? '',
       reactionId: '',
       userId: '',

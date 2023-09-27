@@ -164,7 +164,7 @@ export class Profile {
     //     }
 
     //     const cacheKey = `profile-stats-${this._fl_meta_.fl_id}`;
-    //     const cachedStats = await CacheService.getFromCache(cacheKey) as ProfileStatisicsJSON | undefined;
+    //     const cachedStats = await CacheService.get(cacheKey) as ProfileStatisicsJSON | undefined;
     //     if (cachedStats) {
     //         this.statistics = new ProfileStatisics(cachedStats);
     //         return;

@@ -299,8 +299,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   }
 
   Widget buildProfileTile(BuildContext context, DesignColorsModel colors, String profileId, int index) {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final Profile? profile = cacheController.getFromCache(profileId);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Profile? profile = cacheController.get(profileId);
     final bool isSelected = widget.selectedProfiles.contains(profileId);
 
     return profile == null

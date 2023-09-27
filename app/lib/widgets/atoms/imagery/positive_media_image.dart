@@ -320,7 +320,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   }
 
   static void clearCacheProvidersForMedia(Media media) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
     final List<String> cacheKeys = [
@@ -329,14 +329,14 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     ];
 
     logger.d('Clearing media cache for ${media.name} with keys: $cacheKeys');
-    cacheController.removeMultipleFromCache(cacheKeys);
+    cacheController.removeSet(cacheKeys);
   }
 
   Future<void> onForceMediaFetchCalled(ForceMediaFetchEvent event) async {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
 
-    _imageProvider = cacheController.getFromCache(expectedCacheKey);
+    _imageProvider = cacheController.get(expectedCacheKey);
     _imageProvider ??= PositiveMediaImageProvider(
       media: widget.media,
       useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
@@ -347,7 +347,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     await _forceMediaFetchSubscription?.cancel();
     _forceMediaFetchSubscription = providerContainer.read(eventBusProvider).on<ForceMediaFetchEvent>().listen(onForceMediaFetchCalled);
 
-    final Uint8List? cachedBytes = cacheController.getFromCache(expectedCacheKey);
+    final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
     final String mimeType = lookupMimeType(widget.media.name, headerBytes: bytes) ?? '';
 
     if (cachedBytes != null && cachedBytes.isNotEmpty) {
@@ -366,7 +366,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
       return;
     }
 
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
 
     this.bytes = bytes;
@@ -374,7 +374,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     widget.onBytesLoaded?.call(mimeType, bytes);
 
     setStateIfMounted();
-    cacheController.addToCache(key: expectedCacheKey, value: bytes, ttl: kCacheTTLShort);
+    cacheController.add(key: expectedCacheKey, value: bytes, ttl: kCacheTTLShort);
   }
 
   @override
