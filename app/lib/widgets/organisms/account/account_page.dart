@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/switchers/positive_profile_segmented_switcher.dart';
+import 'package:app/widgets/organisms/account/vms/account_page_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,6 +34,8 @@ class AccountPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
+    final AccountPageViewModel viewModel = ref.watch(accountPageViewModelProvider.notifier);
+
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final List<Widget> actions = [
@@ -56,7 +60,18 @@ class AccountPage extends ConsumerWidget {
           backgroundColor: colors.teal,
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
-          appBarBottom: const AccountProfileBanner(),
+          appBarBottom: PreferredSize(
+            preferredSize: const Size(double.infinity, AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
+                  child: PositiveProfileSegmentedSwitcher(mixin: viewModel),
+                ),
+                const AccountProfileBanner(),
+              ],
+            ),
+          ),
           appBarSpacing: kPaddingMedium,
           horizontalPadding: kPaddingSmall,
           children: <Widget>[
