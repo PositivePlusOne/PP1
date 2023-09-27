@@ -19,58 +19,58 @@ import '../dtos/database/activities/tags.dart';
 import '../dtos/database/relationships/relationship.dart';
 
 extension ProviderContainerExt on ProviderContainer {
-  void cacheResponseData(Map<String, dynamic> data, Map<String, bool> overwriteCache) {
-    cacheProfileData(data, overwriteCache["users"] ?? true);
-    cacheReactionData(data, overwriteCache["reactions"] ?? true);
-    cacheReactionStatisticsData(data, overwriteCache["reactionStatistics"] ?? true);
-    cacheActivityData(data, overwriteCache["activities"] ?? true);
-    cacheRelationshipData(data, overwriteCache["relationships"] ?? true);
-    cacheTagData(data, overwriteCache["tags"] ?? true);
-    cacheGuidanceDirectoryEntries(data, overwriteCache["guidanceDirectoryEntries"] ?? true);
-    cachePromotionData(data, overwriteCache["promotions"] ?? true);
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheReactionData(data);
+    cacheReactionStatisticsData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
+    cachePromotionData(data);
   }
 }
 
 extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
-  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
-    cacheProfileData(data, overwriteCache);
-    cacheReactionData(data, overwriteCache);
-    cacheReactionStatisticsData(data, overwriteCache);
-    cacheActivityData(data, overwriteCache);
-    cacheRelationshipData(data, overwriteCache);
-    cacheTagData(data, overwriteCache);
-    cacheGuidanceDirectoryEntries(data, overwriteCache);
-    cachePromotionData(data, overwriteCache);
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheReactionData(data);
+    cacheReactionStatisticsData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
+    cachePromotionData(data);
   }
 }
 
 extension NotifierProviderRefExt on NotifierProviderRef {
-  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
-    cacheProfileData(data, overwriteCache);
-    cacheReactionData(data, overwriteCache);
-    cacheReactionStatisticsData(data, overwriteCache);
-    cacheActivityData(data, overwriteCache);
-    cacheRelationshipData(data, overwriteCache);
-    cacheTagData(data, overwriteCache);
-    cacheGuidanceDirectoryEntries(data, overwriteCache);
-    cachePromotionData(data, overwriteCache);
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheReactionData(data);
+    cacheReactionStatisticsData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
+    cachePromotionData(data);
   }
 }
 
 extension WidgetRefExt on WidgetRef {
-  void cacheResponseData(Map<String, dynamic> data, bool overwriteCache) {
-    cacheProfileData(data, overwriteCache);
-    cacheReactionData(data, overwriteCache);
-    cacheReactionStatisticsData(data, overwriteCache);
-    cacheActivityData(data, overwriteCache);
-    cacheRelationshipData(data, overwriteCache);
-    cacheTagData(data, overwriteCache);
-    cacheGuidanceDirectoryEntries(data, overwriteCache);
-    cachePromotionData(data, overwriteCache);
+  void cacheResponseData(Map<String, dynamic> data) {
+    cacheProfileData(data);
+    cacheReactionData(data);
+    cacheReactionStatisticsData(data);
+    cacheActivityData(data);
+    cacheRelationshipData(data);
+    cacheTagData(data);
+    cacheGuidanceDirectoryEntries(data);
+    cachePromotionData(data);
   }
 }
 
-void cacheProfileData(Map<String, dynamic> data, bool overwriteCache) {
+void cacheProfileData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -86,14 +86,14 @@ void cacheProfileData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      cacheController.add(key: profileId, value: newProfile, overwrite: overwriteCache);
+      cacheController.add(key: profileId, value: newProfile);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
     }
   }
 }
 
-void cacheActivityData(Map<String, dynamic> data, bool overwriteCache) {
+void cacheActivityData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -109,14 +109,14 @@ void cacheActivityData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      cacheController.add(key: activityId, value: newActivity, overwrite: overwriteCache);
+      cacheController.add(key: activityId, value: newActivity);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
     }
   }
 }
 
-void cacheReactionData(Map<String, dynamic> data, bool overwriteCache) {
+void cacheReactionData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -132,14 +132,14 @@ void cacheReactionData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      cacheController.add(key: reactionId, value: newReaction, overwrite: overwriteCache);
+      cacheController.add(key: reactionId, value: newReaction);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache reaction: $reaction - ex: $ex');
     }
   }
 }
 
-void cacheReactionStatisticsData(Map<String, dynamic> data, bool overwriteCache) {
+void cacheReactionStatisticsData(Map<String, dynamic> data) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
   final List<dynamic> reactionStatisticsRaw = (data.containsKey('reactionStatistics') ? data['reactionStatistics'] : []).map((dynamic reactionStatistic) => json.decodeSafe(reactionStatistic)).toList();
@@ -147,11 +147,11 @@ void cacheReactionStatisticsData(Map<String, dynamic> data, bool overwriteCache)
 
   for (ReactionStatistics reactionStatistic in reactionStatistics) {
     final String cacheKey = ReactionStatistics.buildCacheKey(reactionStatistic);
-    cacheController.add(key: cacheKey, value: reactionStatistic, overwrite: overwriteCache);
+    cacheController.add(key: cacheKey, value: reactionStatistic);
   }
 }
 
-void cacheRelationshipData(Map<String, dynamic> data, bool overwriteCache) {
+void cacheRelationshipData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -167,14 +167,14 @@ void cacheRelationshipData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      cacheController.add(key: relationshipId, value: newRelationship, overwrite: overwriteCache);
+      cacheController.add(key: relationshipId, value: newRelationship);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
     }
   }
 }
 
-void cacheTagData(Map<String, dynamic> data, bool overwriteCache) {
+void cacheTagData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -190,14 +190,14 @@ void cacheTagData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      cacheController.add(key: newTag.key, value: newTag, overwrite: overwriteCache);
+      cacheController.add(key: newTag.key, value: newTag);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
     }
   }
 }
 
-void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCache) {
+void cacheGuidanceDirectoryEntries(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -213,14 +213,14 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data, bool overwriteCach
         continue;
       }
 
-      cacheController.add(key: entryId, value: newEntry, overwrite: overwriteCache);
+      cacheController.add(key: entryId, value: newEntry);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');
     }
   }
 }
 
-void cachePromotionData(Map<String, dynamic> data, bool overwriteCache) {
+void cachePromotionData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
@@ -236,7 +236,7 @@ void cachePromotionData(Map<String, dynamic> data, bool overwriteCache) {
         continue;
       }
 
-      cacheController.add(key: promotionId, value: newPromotion, overwrite: overwriteCache);
+      cacheController.add(key: promotionId, value: newPromotion);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache promotion: $promotion - ex: $ex');
     }

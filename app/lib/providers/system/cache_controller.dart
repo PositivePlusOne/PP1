@@ -60,7 +60,6 @@ class CacheController {
   void add({
     required String key,
     required dynamic value,
-    bool overwrite = true,
     Duration? ttl,
   }) {
     final StackTrace trace = StackTrace.current;
@@ -68,7 +67,7 @@ class CacheController {
     final Logger logger = providerContainer.read(loggerProvider);
 
     CacheRecord? record = cacheData[key];
-    if (!overwrite && record != null) {
+    if (record != null) {
       logger.d('Not overwriting cache entry for $key from $caller');
       return;
     }

@@ -19,6 +19,7 @@ class PositiveFeedState {
   final TargetFeed feed;
   final String profileId;
   final PagingController<String, Activity> pagingController;
+
   bool hasPerformedInitialLoad;
   String currentPaginationKey;
 }
