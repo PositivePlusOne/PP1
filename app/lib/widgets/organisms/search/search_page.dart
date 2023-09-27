@@ -44,7 +44,7 @@ class SearchPage extends ConsumerWidget {
     final SearchViewModelProvider provider = searchViewModelProvider(defaultTab);
     final SearchViewModel viewModel = ref.read(provider.notifier);
 
-    final List<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags));
+    final Iterable<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags.values));
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -70,7 +70,7 @@ class SearchPage extends ConsumerWidget {
     if (!canDisplaySearchResults) {
       if (isSearching) {
         searchResultWidgets.addAll(
-          [
+          <Widget>[
             const PositiveLoadingIndicator(),
             const SizedBox(height: kPaddingSmall),
           ],
@@ -78,7 +78,7 @@ class SearchPage extends ConsumerWidget {
       } else {
         if (viewModel.hasSearched) {
           searchResultWidgets.addAll(
-            [
+            <Widget>[
               const SizedBox(height: kPaddingExtraLarge),
               PositiaveTitleBodyWidget(
                 title: viewModel.searchNotFoundTitle(localisations),
@@ -88,7 +88,7 @@ class SearchPage extends ConsumerWidget {
           );
         } else {
           searchResultWidgets.addAll(
-            [
+            <Widget>[
               Text(
                 localisations.page_search_subtitle_pending,
                 style: typography.styleSubtext.copyWith(color: colours.colorGray7),
@@ -102,7 +102,7 @@ class SearchPage extends ConsumerWidget {
     if (canDisplaySearchResults) {
       switch (currentTab) {
         case SearchTab.users:
-          searchResultWidgets.addAll([
+          searchResultWidgets.addAll(<Widget>[
             for (final Profile profile in searchUserResults) ...<Widget>[
               PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
             ],
@@ -110,7 +110,7 @@ class SearchPage extends ConsumerWidget {
           break;
 
         case SearchTab.posts:
-          searchResultWidgets.addAll([
+          searchResultWidgets.addAll(<Widget>[
             for (final Activity activity in searchPostsResults) ...<Widget>[
               PositiveActivityWidget(activity: activity),
             ],
@@ -119,7 +119,7 @@ class SearchPage extends ConsumerWidget {
 
         case SearchTab.tags:
           searchResultWidgets.addAll(
-            [
+            <Widget>[
               StaggeredGrid.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: kPaddingSmall,

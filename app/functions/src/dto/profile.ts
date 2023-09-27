@@ -151,6 +151,14 @@ export class Profile {
         this.media = this.media.filter((media) => !media.isPrivate);
     }
 
+    notifyPartial(): void {
+        if (!this._fl_meta_) {
+            return;
+        }
+
+        this._fl_meta_.isPartial = true;
+    }
+
     computeSearchTags(): void {
         this._tags = [
             this.displayName.length > 0 ? 'hasDisplayName' : '',
