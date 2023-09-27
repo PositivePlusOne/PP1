@@ -283,6 +283,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             continue;
         }
 
+        if (obj._fl_meta_) {
+            obj._fl_meta_.lastFetchDate = new Date().toISOString();
+        }
+
         if (responseData.data[schema] === undefined) {
             responseData.data[schema] = [];
         }
@@ -315,9 +319,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                     profile.removeFlaggedData(isConnected);
                     profile.removePrivateData();
+                    profile.notifyPartial();
                 }
 
-                
                 responseData.data[profileSchemaKey].push(profile);
                 break;
             case relationshipSchemaKey:

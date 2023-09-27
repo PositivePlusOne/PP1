@@ -13,13 +13,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/events/content/activity_events.dart';
-import 'package:app/providers/events/content/reaction_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
@@ -105,62 +102,34 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
 
   Future<void> onPostCommentRequested() async {
     final Logger logger = ref.read(loggerProvider);
-    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
-    final String trimmedString = state.currentCommentText.trim();
-
-    if (trimmedString.isEmpty) {
-      logger.e('Reaction text is empty');
-      return;
-    }
-
     if (profileController.currentProfileId == null) {
       logger.e('Profile is not loaded');
       return;
     }
 
-    state = state.copyWith(isBusy: true);
+    final String trimmedString = state.currentCommentText.trim();
+    if (trimmedString.isEmpty) {
+      logger.e('Reaction text is empty');
+      return;
+    }
 
     try {
       logger.i('Posting comment');
-      final Reaction reaction = await reactionApiService.postReaction(
+      state = state.copyWith(isBusy: true);
+      final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+      await reactionApiService.postReaction(
         activityId: state.activityId,
         origin: TargetFeed.toOrigin(state.targetFeed),
         kind: 'comment',
         text: trimmedString,
       );
 
-      eventBus.fire(ReactionCreatedEvent(activityId: activityId, reaction: reaction));
       commentTextController.clear();
+      state = state.copyWith(currentCommentText: '');
+      logger.d('Comment posted successfully');
     } finally {
       state = state.copyWith(isBusy: false);
-    }
-  }
-
-  Future<void> onRefresh() async {
-    final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    if (profileController.currentProfileId == null) {
-      logger.d('onRefresh() - profileController.currentProfileId is null');
-      return;
-    }
-
-    logger.d('onRefresh()');
-    state = state.copyWith(isRefreshing: true);
-
-    try {
-      final String cacheId = PositiveReactionPaginationBehaviourState.buildCacheKey("comment", state.activityId);
-      final PositiveReactionsState? commentsState = cacheController.get<PositiveReactionsState>(cacheId);
-
-      // Check if the feed is already loaded
-      if (commentsState != null) {
-        commentsState.pagingController.refresh();
-      }
-    } finally {
-      state = state.copyWith(isRefreshing: false);
     }
   }
 }
