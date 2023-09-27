@@ -35,12 +35,5 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     super.onFirstRender();
     prepareProfileSwitcher();
   }
-
-  Future<void> onAccountSelected() async {
-    final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    logger.d('onAccountSelected()');
-
-    await appRouter.push(const AccountRoute());
-  }
 }
