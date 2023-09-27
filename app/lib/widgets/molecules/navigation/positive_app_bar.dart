@@ -95,8 +95,9 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
             left: kPaddingNone,
             top: kPaddingNone,
             bottom: getDecorationHeight,
-            child: Container(
+            child: AnimatedContainer(
               color: backgroundColor,
+              duration: kAnimationDurationExtended,
             ),
           ),
           if (backgroundImage != null) ...<Widget>[
@@ -259,7 +260,8 @@ class _PositiveAppBarTrailConvex extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: kAnimationDurationExtended,
       height: PositiveAppBar.kPositiveAppBarRadius,
       width: double.infinity,
       decoration: BoxDecoration(
@@ -297,7 +299,8 @@ class _PositiveAppBarTrailConcave extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Container(
+          AnimatedContainer(
+            duration: kAnimationDurationRegular,
             height: kPositiveConcavePillHeight,
             width: kPositiveConcavePillWidth,
             decoration: BoxDecoration(
@@ -306,7 +309,8 @@ class _PositiveAppBarTrailConcave extends StatelessWidget {
             ),
           ),
           const SizedBox(height: kPaddingExtraSmall),
-          Container(
+          AnimatedContainer(
+            duration: kAnimationDurationRegular,
             height: PositiveAppBar.kPositiveAppBarRadius,
             width: double.infinity,
             decoration: BoxDecoration(

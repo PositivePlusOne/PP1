@@ -35,5 +35,4 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     super.onFirstRender();
     prepareProfileSwitcher();
   }
-    final AppRouter appRouter = ref.read(appRouterProvider);
 }

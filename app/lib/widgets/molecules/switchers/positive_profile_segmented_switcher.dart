@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -15,10 +16,12 @@ import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
   const PositiveProfileSegmentedSwitcher({
     required this.mixin,
+    this.isSlim = false,
     super.key,
   });
 
   final ProfileSwitchMixin mixin;
+  final bool isSlim;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,12 +38,23 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
       children[profileId] = Text(profile.displayName);
     }
 
-    return PositiveTabBar(
-      margin: EdgeInsets.zero,
-      index: supportedProfileIds.indexOf(currentProfileId),
-      onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
-      tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
-      tabs: profiles.map((Profile profile) => profile.displayName).toList(),
-    );
+    switch (isSlim) {
+      case true:
+        return PositiveSlimTabBar(
+          margin: EdgeInsets.zero,
+          index: supportedProfileIds.indexOf(currentProfileId),
+          onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
+          tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
+          tabs: profiles.map((Profile profile) => profile.displayName).toList(),
+        );
+      default:
+        return PositiveTabBar(
+          margin: EdgeInsets.zero,
+          index: supportedProfileIds.indexOf(currentProfileId),
+          onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
+          tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
+          tabs: profiles.map((Profile profile) => profile.displayName).toList(),
+        );
+    }
   }
 }

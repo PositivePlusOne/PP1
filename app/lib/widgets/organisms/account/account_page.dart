@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/molecules/switchers/positive_profile_segmented_switcher.dart';
 import 'package:app/widgets/organisms/account/vms/account_page_view_model.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class AccountPage extends ConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final AccountPageViewModel viewModel = ref.watch(accountPageViewModelProvider.notifier);
+    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -57,7 +59,7 @@ class AccountPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           foregroundColor: colors.black,
-          backgroundColor: colors.teal,
+          backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.white,
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: PreferredSize(
@@ -66,7 +68,10 @@ class AccountPage extends ConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
-                  child: PositiveProfileSegmentedSwitcher(mixin: viewModel),
+                  child: PositiveProfileSegmentedSwitcher(
+                    mixin: viewModel,
+                    isSlim: true,
+                  ),
                 ),
                 const AccountProfileBanner(),
               ],
