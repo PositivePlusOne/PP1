@@ -110,7 +110,7 @@ export namespace TagsService {
   export async function getPopularTags(locale: string): Promise<TagJSON[]> {
     functions.logger.info("Getting popular tags for locale", { locale });
     const latestCacheKey = `tags-${locale}-popularity`;
-    const latestCachedData = await CacheService.getFromCache(latestCacheKey) as Tag[];
+    const latestCachedData = await CacheService.get(latestCacheKey) as Tag[];
     if (latestCachedData) {
       return latestCachedData;
     }
@@ -147,7 +147,7 @@ export namespace TagsService {
   export async function getTopicTags(locale: string): Promise<TagJSON[]> {
     functions.logger.info("Getting topics tags for locale", { locale });
     const latestCacheKey = `tags-${locale}-topics`;
-    const latestCachedData = await CacheService.getFromCache(latestCacheKey) as Tag[];
+    const latestCachedData = await CacheService.get(latestCacheKey) as Tag[];
     if (latestCachedData) {
       return latestCachedData;
     }

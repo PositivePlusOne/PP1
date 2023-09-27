@@ -79,7 +79,7 @@ extension ActivityExt on Activity {
   }
 
   Relationship getRelationship() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     final String publisherId = publisherInformation?.publisherId ?? '';
@@ -94,7 +94,7 @@ extension ActivityExt on Activity {
     }
 
     final String expectedGUID = <String>[publisherId, currentUserId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache(expectedGUID);
+    final Relationship? relationship = cacheController.get(expectedGUID);
 
     if (relationship != null) {
       return relationship;
@@ -127,8 +127,8 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
       currentProfileId = profileController.currentProfileId ?? '';
     }
 
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Activity? activity = cacheController.getFromCache<Activity>(activityId);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final Activity? activity = cacheController.get<Activity>(activityId);
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
     if (activity == null || publisherProfileId.isEmpty) {
@@ -157,7 +157,7 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     }
 
     final String relationshipId = [currentProfileId, publisherProfileId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache<Relationship>(relationshipId);
+    final Relationship? relationship = cacheController.get<Relationship>(relationshipId);
 
     if (relationship == null) {
       logger.e('canActOnSecurityMode() - relationship is null');

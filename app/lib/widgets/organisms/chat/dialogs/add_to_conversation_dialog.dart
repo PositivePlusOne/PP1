@@ -27,7 +27,7 @@ class AddToConversationDialog extends HookConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
@@ -36,7 +36,7 @@ class AddToConversationDialog extends HookConsumerWidget {
     final List<Profile> selectedProfiles = [];
 
     for (final user in selectedUsers) {
-      final profile = cacheController.getFromCache(user);
+      final profile = cacheController.get(user);
       if (profile != null) {
         selectedProfiles.add(profile);
       } else {

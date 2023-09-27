@@ -24,17 +24,18 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/common/events/force_feed_rebuild_event.dart';
+import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -44,7 +45,6 @@ import '../atoms/indicators/positive_post_loading_indicator.dart';
 class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   const PositiveFeedPaginationBehaviour({
     required this.feed,
-    this.onPageLoaded,
     this.windowSize = 20,
     this.onHeaderTap,
     this.onMediaTap,
@@ -58,28 +58,19 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
   final void Function(Activity activity)? onHeaderTap;
   final void Function(Activity activity, Media media)? onMediaTap;
 
-  final Function(Map<String, dynamic>)? onPageLoaded;
-
   final bool isSliver;
 
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
 
   @override
-  ConsumerState<PositiveFeedPaginationBehaviour> createState() => _PositiveFeedPaginationBehaviourState();
+  ConsumerState<PositiveFeedPaginationBehaviour> createState() => PositiveFeedPaginationBehaviourState();
 }
 
-class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
+class PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
   late PositiveFeedState feedState;
 
-  StreamSubscription<ActivityCreatedEvent>? _onActivityCreatedSubscription;
-  StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
-  StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
-
+  StreamSubscription<CacheKeyUpdatedEvent>? _onCacheKeyUpdatedSubscription;
   StreamSubscription<ForceFeedRebuildEvent>? _onForceFeedRebuildSubscription;
-
-  String get expectedCacheKey => 'feeds:${widget.feed.feed}-${widget.feed.slug}';
-
-  bool requestedFirstWindow = false;
 
   @override
   void initState() {
@@ -98,30 +89,43 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   @override
   void didUpdateWidget(PositiveFeedPaginationBehaviour oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (oldWidget.feed.feed != widget.feed.feed || oldWidget.feed.slug != widget.feed.slug) {
       disposeFeedState();
       setupFeedState();
     }
   }
 
+  static String getExpectedCacheKey({
+    required String profileId,
+    required TargetFeed feed,
+  }) =>
+      'feeds:$profileId:${feed.feed}-${feed.slug}';
+
   Future<void> setupListeners() async {
     final EventBus eventBus = providerContainer.read(eventBusProvider);
 
-    await _onActivityCreatedSubscription?.cancel();
-    await _onActivityUpdatedSubscription?.cancel();
-    await _onActivityDeletedSubscription?.cancel();
+    await _onCacheKeyUpdatedSubscription?.cancel();
     await _onForceFeedRebuildSubscription?.cancel();
 
-    _onActivityCreatedSubscription = eventBus.on<ActivityCreatedEvent>().listen(onActivityCreated);
-    _onActivityUpdatedSubscription = eventBus.on<ActivityUpdatedEvent>().listen(onActivityUpdated);
-    _onActivityDeletedSubscription = eventBus.on<ActivityDeletedEvent>().listen(onActivityDeleted);
+    _onCacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
     _onForceFeedRebuildSubscription = eventBus.on<ForceFeedRebuildEvent>().listen((_) => setStateIfMounted());
   }
 
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    if (event.value is! PositiveFeedState) {
+      return;
+    }
+
+    final PositiveFeedState feedState = event.value as PositiveFeedState;
+    if (feedState.feed.feed != widget.feed.feed || feedState.feed.slug != widget.feed.slug) {
+      setStateIfMounted();
+    }
+  }
+
   Future<void> disposeListeners() async {
-    await _onActivityCreatedSubscription?.cancel();
-    await _onActivityUpdatedSubscription?.cancel();
-    await _onActivityDeletedSubscription?.cancel();
+    await _onCacheKeyUpdatedSubscription?.cancel();
+    await _onForceFeedRebuildSubscription?.cancel();
   }
 
   void disposeFeedState() {
@@ -130,41 +134,26 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
   void setupFeedState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final ActivitiesController activitiesController = providerContainer.read(activitiesControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String profileId = profileController.currentProfile?.flMeta?.id ?? '';
 
     logger.d('setupFeedState() - Loading state for ${widget.feed}');
-    final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
-    if (cachedFeedState != null) {
-      logger.d('setupFeedState() - Found cached state for ${widget.feed}');
-      feedState = cachedFeedState;
-      requestedFirstWindow = true;
-      feedState.pagingController.addPageRequestListener(requestNextPage);
-      return;
-    }
+    feedState = activitiesController.getOrCreateFeedStateForOrigin(
+      feed: widget.feed,
+      profileId: profileId,
+    );
 
-    logger.d('setupFeedState() - No cached state for ${widget.feed}. Creating new state.');
     final PagingController<String, Activity> pagingController = PagingController<String, Activity>(firstPageKey: '');
     pagingController.addPageRequestListener(requestNextPage);
-
-    feedState = PositiveFeedState(
-      feed: widget.feed.feed,
-      slug: widget.feed.slug,
-      pagingController: pagingController,
-      currentPaginationKey: '',
-    );
-  }
-
-  void saveFeedState() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-
-    logger.d('saveState() - Saving state for ${widget.feed}');
-    cacheController.addToCache(key: expectedCacheKey, value: feedState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
+    final ActivitiesController activitiesController = providerContainer.read(activitiesControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String profileId = profileController.currentProfile?.flMeta?.id ?? '';
 
     try {
       final EndpointResponse endpointResponse = await postApiService.listActivities(
@@ -183,103 +172,19 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         next = '';
       }
 
-      requestedFirstWindow = true;
-      widget.onPageLoaded?.call(data);
-      appendActivityPage(data, next);
+      activitiesController.notifyPageKeyUpdated(
+        feed: widget.feed,
+        pageKey: next,
+        profileId: profileId,
+      );
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
-      feedState.pagingController.error = ex;
-    }
-  }
-
-  void appendActivityPage(Map<String, dynamic> data, String nextPageKey) {
-    final Logger logger = providerContainer.read(loggerProvider);
-
-    feedState.currentPaginationKey = nextPageKey;
-    logger.i('requestNextTimelinePage() - nextPageKey: $nextPageKey - currentPaginationKey: ${feedState.currentPaginationKey}');
-
-    final List<String> windowIds = ((data.containsKey('windowIds') && data['windowIds'] is Iterable ? data['windowIds'] : []) as List).map((dynamic windowId) {
-      return windowId is String ? windowId : windowId.toString();
-    }).toList();
-
-    final List<dynamic> activitiesRaw = data.containsKey('activities') && data['activities'] is Iterable ? data['activities'] : [];
-    final List<Activity> activities = activitiesRaw
-        .map((dynamic activity) {
-          try {
-            final Map<String, dynamic> activityData = json.decodeSafe(activity);
-            return Activity.fromJson(activityData);
-          } catch (ex) {
-            logger.e('requestNextTimelinePage() - ex: $ex');
-            return null;
-          }
-        })
-        .whereType<Activity>()
-        .where((activity) => activity.flMeta?.id != null && windowIds.contains(activity.flMeta?.id))
-        .toList();
-
-    // Remove all activities that are not included in the windowIds
-    // This is to prevent showing reposts that are not in the windowIds
-    final List<Activity> newActivities = activities.where((element) => windowIds.contains(element.flMeta?.id)).toList();
-    final bool hasNext = nextPageKey.isNotEmpty && newActivities.isNotEmpty;
-
-    logger.d('requestNextTimelinePage() - newActivities: $newActivities');
-
-    if (!hasNext) {
-      feedState.pagingController.appendSafeLastPage(newActivities);
-    } else {
-      feedState.pagingController.appendSafePage(newActivities, nextPageKey);
-    }
-
-    saveFeedState();
-  }
-
-  void onActivityCreated(ActivityCreatedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final Activity activity = event.activity;
-    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      feedState.pagingController.itemList?.insert(0, activity);
-      feedState.pagingController.itemList = feedState.pagingController.itemList;
-
-      logger.d('onActivityCreated() - Added activity to feed: ${widget.feed} - activity: $activity');
-      setStateIfMounted();
-    }
-  }
-
-  void onActivityUpdated(ActivityUpdatedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final Activity activity = event.activity;
-    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == activity.flMeta?.id) ?? -1;
-      if (index >= 0) {
-        feedState.pagingController.itemList?[index] = activity;
-        feedState.pagingController.itemList = feedState.pagingController.itemList;
-
-        logger.d('onActivityUpdated() - Updated activity in feed: ${widget.feed} - activity: $activity');
-        setStateIfMounted();
-      }
-    }
-  }
-
-  void onActivityDeleted(ActivityDeletedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final String id = event.activity.flMeta?.id ?? '';
-    if (id.isEmpty) {
-      return;
-    }
-
-    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == id) ?? -1;
-      if (index >= 0) {
-        feedState.pagingController.itemList?.removeAt(index);
-        feedState.pagingController.itemList = feedState.pagingController.itemList;
-
-        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - activityId: ${event.activity}');
-        setStateIfMounted();
-      }
+      activitiesController.notifyPageError(profileId: profileId, feed: widget.feed, error: ex);
     }
   }
 
   bool checkShouldDisplayNoPosts() {
+    final bool requestedFirstWindow = feedState.hasPerformedInitialLoad;
     if (!requestedFirstWindow) {
       return false;
     }
@@ -392,7 +297,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     }
 
     final String guid = [userId, currentUserId].asGUID;
-    final Relationship? relationship = providerContainer.read(cacheControllerProvider.notifier).getFromCache(guid);
+    final Relationship? relationship = providerContainer.read(cacheControllerProvider).get(guid);
     if (relationship == null) {
       return true;
     }

@@ -16,9 +16,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$TagsControllerState {
-  List<Tag> get popularTags => throw _privateConstructorUsedError;
-  List<Tag> get recentTags => throw _privateConstructorUsedError;
-  List<Tag> get topicTags => throw _privateConstructorUsedError;
+  HashMap<String, Tag> get allTags => throw _privateConstructorUsedError;
+  HashMap<String, Tag> get popularTags => throw _privateConstructorUsedError;
+  HashMap<String, Tag> get recentTags => throw _privateConstructorUsedError;
+  HashMap<String, Tag> get topicTags => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TagsControllerStateCopyWith<TagsControllerState> get copyWith =>
@@ -31,7 +32,11 @@ abstract class $TagsControllerStateCopyWith<$Res> {
           TagsControllerState value, $Res Function(TagsControllerState) then) =
       _$TagsControllerStateCopyWithImpl<$Res, TagsControllerState>;
   @useResult
-  $Res call({List<Tag> popularTags, List<Tag> recentTags, List<Tag> topicTags});
+  $Res call(
+      {HashMap<String, Tag> allTags,
+      HashMap<String, Tag> popularTags,
+      HashMap<String, Tag> recentTags,
+      HashMap<String, Tag> topicTags});
 }
 
 /// @nodoc
@@ -47,23 +52,28 @@ class _$TagsControllerStateCopyWithImpl<$Res, $Val extends TagsControllerState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? allTags = null,
     Object? popularTags = null,
     Object? recentTags = null,
     Object? topicTags = null,
   }) {
     return _then(_value.copyWith(
+      allTags: null == allTags
+          ? _value.allTags
+          : allTags // ignore: cast_nullable_to_non_nullable
+              as HashMap<String, Tag>,
       popularTags: null == popularTags
           ? _value.popularTags
           : popularTags // ignore: cast_nullable_to_non_nullable
-              as List<Tag>,
+              as HashMap<String, Tag>,
       recentTags: null == recentTags
           ? _value.recentTags
           : recentTags // ignore: cast_nullable_to_non_nullable
-              as List<Tag>,
+              as HashMap<String, Tag>,
       topicTags: null == topicTags
           ? _value.topicTags
           : topicTags // ignore: cast_nullable_to_non_nullable
-              as List<Tag>,
+              as HashMap<String, Tag>,
     ) as $Val);
   }
 }
@@ -76,7 +86,11 @@ abstract class _$$_TagsControllerStateCopyWith<$Res>
       __$$_TagsControllerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Tag> popularTags, List<Tag> recentTags, List<Tag> topicTags});
+  $Res call(
+      {HashMap<String, Tag> allTags,
+      HashMap<String, Tag> popularTags,
+      HashMap<String, Tag> recentTags,
+      HashMap<String, Tag> topicTags});
 }
 
 /// @nodoc
@@ -90,23 +104,28 @@ class __$$_TagsControllerStateCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? allTags = null,
     Object? popularTags = null,
     Object? recentTags = null,
     Object? topicTags = null,
   }) {
     return _then(_$_TagsControllerState(
+      allTags: null == allTags
+          ? _value.allTags
+          : allTags // ignore: cast_nullable_to_non_nullable
+              as HashMap<String, Tag>,
       popularTags: null == popularTags
-          ? _value._popularTags
+          ? _value.popularTags
           : popularTags // ignore: cast_nullable_to_non_nullable
-              as List<Tag>,
+              as HashMap<String, Tag>,
       recentTags: null == recentTags
-          ? _value._recentTags
+          ? _value.recentTags
           : recentTags // ignore: cast_nullable_to_non_nullable
-              as List<Tag>,
+              as HashMap<String, Tag>,
       topicTags: null == topicTags
-          ? _value._topicTags
+          ? _value.topicTags
           : topicTags // ignore: cast_nullable_to_non_nullable
-              as List<Tag>,
+              as HashMap<String, Tag>,
     ));
   }
 }
@@ -115,43 +134,23 @@ class __$$_TagsControllerStateCopyWithImpl<$Res>
 
 class _$_TagsControllerState implements _TagsControllerState {
   const _$_TagsControllerState(
-      {final List<Tag> popularTags = const <Tag>[],
-      final List<Tag> recentTags = const <Tag>[],
-      final List<Tag> topicTags = const <Tag>[]})
-      : _popularTags = popularTags,
-        _recentTags = recentTags,
-        _topicTags = topicTags;
+      {required this.allTags,
+      required this.popularTags,
+      required this.recentTags,
+      required this.topicTags});
 
-  final List<Tag> _popularTags;
   @override
-  @JsonKey()
-  List<Tag> get popularTags {
-    if (_popularTags is EqualUnmodifiableListView) return _popularTags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_popularTags);
-  }
-
-  final List<Tag> _recentTags;
+  final HashMap<String, Tag> allTags;
   @override
-  @JsonKey()
-  List<Tag> get recentTags {
-    if (_recentTags is EqualUnmodifiableListView) return _recentTags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_recentTags);
-  }
-
-  final List<Tag> _topicTags;
+  final HashMap<String, Tag> popularTags;
   @override
-  @JsonKey()
-  List<Tag> get topicTags {
-    if (_topicTags is EqualUnmodifiableListView) return _topicTags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_topicTags);
-  }
+  final HashMap<String, Tag> recentTags;
+  @override
+  final HashMap<String, Tag> topicTags;
 
   @override
   String toString() {
-    return 'TagsControllerState(popularTags: $popularTags, recentTags: $recentTags, topicTags: $topicTags)';
+    return 'TagsControllerState(allTags: $allTags, popularTags: $popularTags, recentTags: $recentTags, topicTags: $topicTags)';
   }
 
   @override
@@ -159,20 +158,21 @@ class _$_TagsControllerState implements _TagsControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_TagsControllerState &&
+            const DeepCollectionEquality().equals(other.allTags, allTags) &&
             const DeepCollectionEquality()
-                .equals(other._popularTags, _popularTags) &&
+                .equals(other.popularTags, popularTags) &&
             const DeepCollectionEquality()
-                .equals(other._recentTags, _recentTags) &&
-            const DeepCollectionEquality()
-                .equals(other._topicTags, _topicTags));
+                .equals(other.recentTags, recentTags) &&
+            const DeepCollectionEquality().equals(other.topicTags, topicTags));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(_popularTags),
-      const DeepCollectionEquality().hash(_recentTags),
-      const DeepCollectionEquality().hash(_topicTags));
+      const DeepCollectionEquality().hash(allTags),
+      const DeepCollectionEquality().hash(popularTags),
+      const DeepCollectionEquality().hash(recentTags),
+      const DeepCollectionEquality().hash(topicTags));
 
   @JsonKey(ignore: true)
   @override
@@ -184,16 +184,19 @@ class _$_TagsControllerState implements _TagsControllerState {
 
 abstract class _TagsControllerState implements TagsControllerState {
   const factory _TagsControllerState(
-      {final List<Tag> popularTags,
-      final List<Tag> recentTags,
-      final List<Tag> topicTags}) = _$_TagsControllerState;
+      {required final HashMap<String, Tag> allTags,
+      required final HashMap<String, Tag> popularTags,
+      required final HashMap<String, Tag> recentTags,
+      required final HashMap<String, Tag> topicTags}) = _$_TagsControllerState;
 
   @override
-  List<Tag> get popularTags;
+  HashMap<String, Tag> get allTags;
   @override
-  List<Tag> get recentTags;
+  HashMap<String, Tag> get popularTags;
   @override
-  List<Tag> get topicTags;
+  HashMap<String, Tag> get recentTags;
+  @override
+  HashMap<String, Tag> get topicTags;
   @override
   @JsonKey(ignore: true)
   _$$_TagsControllerStateCopyWith<_$_TagsControllerState> get copyWith =>

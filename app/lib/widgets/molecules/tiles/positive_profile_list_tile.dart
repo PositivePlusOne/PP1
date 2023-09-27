@@ -61,7 +61,7 @@ class PositiveProfileListTile extends ConsumerWidget {
 
   Future<void> onOptionsTapped(BuildContext context) async {
     final logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
     final String uid = profile?.flMeta?.id ?? '';
 
@@ -76,7 +76,7 @@ class PositiveProfileListTile extends ConsumerWidget {
       profile?.flMeta?.id ?? '',
     ];
 
-    final Relationship relationship = cacheController.getFromCache(members.asGUID) ?? Relationship.empty(members);
+    final Relationship relationship = cacheController.get(members.asGUID) ?? Relationship.empty(members);
     await PositiveDialog.show(
       context: context,
       useSafeArea: false,

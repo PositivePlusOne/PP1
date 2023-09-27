@@ -26,9 +26,9 @@ class PositivePostHorizontalTags extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final CacheController cacheController = ref.watch(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.watch(cacheControllerProvider);
     final Locale locale = Localizations.localeOf(context);
-    final Iterable<Tag> tagInstances = tags.map((element) => cacheController.getFromCache(element)).whereType<Tag>().where((element) => element.fallback.isNotEmpty);
+    final Iterable<Tag> tagInstances = tags.map((element) => cacheController.get(element)).whereType<Tag>().where((element) => element.fallback.isNotEmpty);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,

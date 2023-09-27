@@ -34,13 +34,12 @@ Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cacheControllerHash() => r'f533ce84ba7155acfbc6f090444b727cde52996e';
+String _$cacheControllerHash() => r'be125cb6f5017f7b95aa0919ee1cd6b9c55803b1';
 
-/// See also [CacheController].
-@ProviderFor(CacheController)
-final cacheControllerProvider =
-    NotifierProvider<CacheController, CacheControllerState>.internal(
-  CacheController.new,
+/// See also [cacheController].
+@ProviderFor(cacheController)
+final cacheControllerProvider = Provider<CacheController>.internal(
+  cacheController,
   name: r'cacheControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
@@ -49,6 +48,6 @@ final cacheControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CacheController = Notifier<CacheControllerState>;
+typedef CacheControllerRef = ProviderRef<CacheController>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

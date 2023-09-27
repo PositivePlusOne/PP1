@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -73,9 +74,7 @@ class PositiveReactionPaginationBehaviour extends StatefulHookConsumerWidget {
 class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveReactionPaginationBehaviour> {
   PositiveReactionsState? reactionState;
 
-  StreamSubscription<ReactionCreatedEvent>? _onReactionCreatedSubscription;
-  StreamSubscription<ReactionUpdatedEvent>? _onReactionUpdatedSubscription;
-  StreamSubscription<ReactionDeletedEvent>? _onReactionDeletedSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? _onCacheKeyUpdatedSubscription;
 
   String get expectedCacheKey => buildCacheKey(widget.kind, widget.activityId);
 
@@ -83,7 +82,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     return 'reactions:$kind:$activityId';
   }
 
-  Activity? get activity => ref.read(cacheControllerProvider.notifier).getFromCache(widget.activityId);
+  Activity? get activity => ref.read(cacheControllerProvider).get(widget.activityId);
 
   @override
   void initState() {
@@ -136,10 +135,10 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
 
   void setupReactionsState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
     logger.d('setupReactionsState() - Loading state for ${widget.activityId}');
-    final PositiveReactionsState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
+    final PositiveReactionsState? cachedFeedState = cacheController.get(expectedCacheKey);
     if (cachedFeedState != null) {
       logger.d('setupReactionsState() - Found cached state for ${widget.activityId}');
       reactionState = cachedFeedState;
@@ -165,7 +164,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
 
   void saveReactionsState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
     if (reactionState?.pagingController.itemList?.isEmpty ?? true) {
       logger.d('saveState() - No reactions to save for ${widget.activityId}');
@@ -173,7 +172,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     }
 
     logger.d('saveState() - Saving reactions state for ${widget.activityId}');
-    cacheController.addToCache(key: expectedCacheKey, value: reactionState);
+    cacheController.add(key: expectedCacheKey, value: reactionState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
@@ -290,7 +289,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
   }
 
   bool checkCanComment() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
@@ -306,7 +305,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     }
 
     final String relationshipGuid = [publisherId, currentUserId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache(relationshipGuid);
+    final Relationship? relationship = cacheController.get(relationshipGuid);
     final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentUserId) ?? {};
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);

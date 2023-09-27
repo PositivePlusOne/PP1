@@ -13,7 +13,7 @@ export namespace DataService {
 
   export const getDocumentReference = async function (options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
     const cacheKey = CacheService.generateCacheKey(options);
-    const cachedDocument = await CacheService.getFromCache(cacheKey);
+    const cachedDocument = await CacheService.get(cacheKey);
     let documentId = cachedDocument?._fl_meta_?.docId || "";
     let documentRef: DocumentReference<DocumentData>;
 
@@ -46,7 +46,7 @@ export namespace DataService {
     }
 
     if (!skipCacheLookup) {
-      data = await CacheService.getFromCache(cacheKey);
+      data = await CacheService.get(cacheKey);
       if (data) {
         functions.logger.debug(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
         return data;
@@ -87,7 +87,7 @@ export namespace DataService {
     }
 
     if (!skipCacheLookup) {
-      data = await CacheService.getFromCache(cacheKey);
+      data = await CacheService.get(cacheKey);
       if (data) {
         functions.logger.debug(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
         return data;
@@ -164,7 +164,7 @@ export namespace DataService {
     let data = {};
 
     await adminApp.firestore().runTransaction(async (transaction) => {
-      let document = await CacheService.getFromCache(cacheKey);
+      let document = await CacheService.get(cacheKey);
       if (!document) {
         functions.logger.info(`Document not found, fetching from flamelink`);
         document = await flamelinkApp.content.get(options);
@@ -240,7 +240,7 @@ export namespace DataService {
     const futures = options.entryIds.map(async (entryId) => {
       let data;
       const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId });
-      data = await CacheService.getFromCache(cacheKey);
+      data = await CacheService.get(cacheKey);
 
       if (data) {
         functions.logger.info(`Found document in cache for ${options.schemaKey}: ${entryId}`);
@@ -275,7 +275,7 @@ export namespace DataService {
   export const exists = async function (options: { schemaKey: string; entryId: string }): Promise<boolean> {
     const flamelinkApp = SystemService.getFlamelinkApp();
     const cacheKey = CacheService.generateCacheKey(options);
-    const cachedDocument = await CacheService.getFromCache(cacheKey);
+    const cachedDocument = await CacheService.get(cacheKey);
 
     if (cachedDocument) {
       functions.logger.info(`Document exists in cache for ${options.schemaKey}: ${options.entryId}`);
@@ -298,7 +298,7 @@ export namespace DataService {
    */
   export const deleteDocument = async function (options: { schemaKey: string; entryId: string }): Promise<void> {
     const cacheKey = CacheService.generateCacheKey(options);
-    let currentDocument = await CacheService.getFromCache(cacheKey);
+    let currentDocument = await CacheService.get(cacheKey);
 
     await CacheService.deleteFromCache(cacheKey);
 

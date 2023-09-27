@@ -22,7 +22,7 @@ export namespace GuidanceEndpoints {
 
     const cacheKey = `guidance_categories_${locale}_${guidanceType}_${parent}`;
 
-    const cachedValue = await CacheService.getFromCache(cacheKey);
+    const cachedValue = await CacheService.get(cacheKey);
     if (cachedValue) {
       return safeJsonStringify(cachedValue);
     }
@@ -70,7 +70,7 @@ export namespace GuidanceEndpoints {
       }
 
       const cacheKey = `guidanceArticles_${locale}_${guidanceType}_${parent || ""}`;
-      const cachedValue = await CacheService.getFromCache(cacheKey);
+      const cachedValue = await CacheService.get(cacheKey);
       if (cachedValue) {
         return safeJsonStringify(cachedValue);
       }
@@ -94,7 +94,7 @@ export namespace GuidanceEndpoints {
     const cursor = data.cursor || "";
     const limit = data.limit || 10;
     const cacheKey = `guidanceDirectoryEntries_${cursor}_${limit}`;
-    const cachedValue = await CacheService.getFromCache(cacheKey);
+    const cachedValue = await CacheService.get(cacheKey);
 
     let returnCursor = "";
 

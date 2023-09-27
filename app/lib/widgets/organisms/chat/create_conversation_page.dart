@@ -59,8 +59,8 @@ class CreateConversationPage extends HookConsumerWidget {
     final Set<String> connectedProfileIds = communitiesControllerState.connectedProfileIds;
     final bool hasConnectedProfiles = connectedProfileIds.isNotEmpty;
 
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final List<Profile> connectedProfiles = cacheController.getManyFromCache<Profile>(connectedProfileIds.toList());
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final List<Profile> connectedProfiles = cacheController.list<Profile>(connectedProfileIds.toList());
 
     if (chatViewModelState.searchQuery.isNotEmpty) {
       connectedProfiles.removeWhere((Profile profile) => !profile.matchesStringSearch(chatViewModelState.searchQuery));

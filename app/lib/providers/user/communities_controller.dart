@@ -10,17 +10,13 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/providers/content/reactions_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/relationship_search_api_service.dart';
 import '../../services/third_party.dart';
 
@@ -330,167 +326,5 @@ class CommunitiesController extends _$CommunitiesController {
     };
 
     logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data');
-  }
-
-  bool isActivityBookmarked(String activityId, String feed) {
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-    return reactionsController.getStatisticsForActivity(activityId, feed).uniqueUserReactions['bookmark'] ?? false;
-  }
-
-  Future<void> bookmarkActivity({
-    required String activityId,
-    required String origin,
-  }) async {
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    logger.i('CommunitiesController - bookmarkActivity - Bookmarking activity: $activityId');
-
-    if (userController.currentUser == null) {
-      throw Exception('User is null');
-    }
-
-    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-
-    await reactionApiService.postReaction(
-      activityId: activityId,
-      origin: origin,
-      kind: 'bookmark',
-    );
-
-    reactionsController.offsetReactionCountForActivity(
-      activityId: activityId,
-      userId: userController.currentUser!.uid,
-      origin: origin,
-      reactionType: 'bookmark',
-      offset: 1,
-    );
-
-    logger.i('CommunitiesController - bookmarkActivity - Bookmarked activity: $activityId');
-  }
-
-  Future<void> removeBookmarkActivity({
-    required String activityId,
-    required String origin,
-  }) async {
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    logger.i('CommunitiesController - removeBookmarkActivity - Removing bookmark from activity: $activityId');
-
-    if (userController.currentUser == null) {
-      throw Exception('User is null');
-    }
-
-    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final List<Reaction> reactions = reactionsController.getOwnReactionsForFeedActivity(
-      activityId: activityId,
-      origin: origin,
-      kind: 'bookmark',
-    );
-
-    if (reactions.isEmpty) {
-      throw Exception('No bookmark found for activity: $activityId');
-    }
-
-    final Reaction reaction = reactions.first;
-    final String reactionId = reaction.flMeta?.id ?? '';
-    if (reactionId.isEmpty) {
-      throw Exception('No reaction id found for activity: $activityId');
-    }
-
-    await reactionApiService.deleteReaction(reactionId: reactionId);
-    reactionsController.offsetReactionCountForActivity(
-      activityId: activityId,
-      userId: userController.currentUser!.uid,
-      origin: origin,
-      reactionType: 'bookmark',
-      offset: -1,
-    );
-
-    cacheController.removeFromCache(reactionId);
-    logger.i('CommunitiesController - removeBookmarkActivity - Removed bookmark from activity: $activityId');
-  }
-
-  bool isActivityLiked(String activityId, String feed) {
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-    return reactionsController.getStatisticsForActivity(activityId, feed).uniqueUserReactions['like'] ?? false;
-  }
-
-  Future<void> likeActivity({
-    required String activityId,
-    required String origin,
-  }) async {
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    logger.i('CommunitiesController - likeActivity - Liking activity: $activityId');
-
-    if (userController.currentUser == null) {
-      throw Exception('User is null');
-    }
-
-    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-
-    await reactionApiService.postReaction(
-      activityId: activityId,
-      origin: origin,
-      kind: 'like',
-    );
-
-    reactionsController.offsetReactionCountForActivity(
-      activityId: activityId,
-      userId: userController.currentUser!.uid,
-      origin: origin,
-      reactionType: 'like',
-      offset: 1,
-    );
-
-    logger.i('CommunitiesController - likeActivity - Liked activity: $activityId');
-  }
-
-  Future<void> unlikeActivity({
-    required String activityId,
-    required String origin,
-  }) async {
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    logger.i('CommunitiesController - unlikeActivity - Removing like from activity: $activityId');
-
-    if (userController.currentUser == null) {
-      throw Exception('User is null');
-    }
-
-    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final List<Reaction> reactions = reactionsController.getOwnReactionsForFeedActivity(
-      activityId: activityId,
-      origin: origin,
-      kind: 'like',
-    );
-
-    if (reactions.isEmpty) {
-      throw Exception('No like found for activity: $activityId');
-    }
-
-    final Reaction reaction = reactions.first;
-    final String reactionId = reaction.flMeta?.id ?? '';
-    if (reactionId.isEmpty) {
-      throw Exception('No reaction id found for activity: $activityId');
-    }
-
-    await reactionApiService.deleteReaction(reactionId: reactionId);
-    reactionsController.offsetReactionCountForActivity(
-      activityId: activityId,
-      userId: userController.currentUser!.uid,
-      origin: origin,
-      reactionType: 'like',
-      offset: -1,
-    );
-
-    cacheController.removeFromCache(reactionId);
-    logger.i('CommunitiesController - unlikeActivity - Removed like from activity: $activityId');
   }
 }

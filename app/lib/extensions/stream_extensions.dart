@@ -79,7 +79,7 @@ extension ChannelListExtensions on Iterable<Channel> {
   }
 
   Iterable<Channel> withProfileTextSearch(String str) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
@@ -100,7 +100,7 @@ extension ChannelListExtensions on Iterable<Channel> {
           continue;
         }
 
-        final Profile? otherProfile = cacheController.getFromCache<Profile>(memberId);
+        final Profile? otherProfile = cacheController.get<Profile>(memberId);
         if (otherProfile == null) {
           continue;
         }
@@ -119,7 +119,7 @@ extension ChannelListExtensions on Iterable<Channel> {
       return this;
     }
 
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
@@ -139,8 +139,8 @@ extension ChannelListExtensions on Iterable<Channel> {
         }
 
         final String relationshipIdentifier = [currentProfileId, member].asGUID;
-        final Relationship? relationship = cacheController.getFromCache(relationshipIdentifier);
-        final Profile? otherProfile = cacheController.getFromCache<Profile>(member);
+        final Relationship? relationship = cacheController.get(relationshipIdentifier);
+        final Profile? otherProfile = cacheController.get<Profile>(member);
         final bool isValidRelationship = relationship?.isValidConnectedRelationship ?? false;
         if (isValidRelationship && otherProfile != null) {
           return true;
@@ -179,8 +179,8 @@ extension MemberListExt on Iterable<Member> {
 
 extension MessageExt on Message {
   String getFormattedDescription(AppLocalizations localizations) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Profile? profile = cacheController.getFromCache<Profile>(user!.id);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final Profile? profile = cacheController.get<Profile>(user!.id);
     final String handle = profile?.displayName.asHandle ?? localizations.shared_placeholders_empty_display_name;
     final String formattedText = text?.trim() ?? '';
     final String displayName = profile?.displayName.asHandle ?? ''.asHandle;

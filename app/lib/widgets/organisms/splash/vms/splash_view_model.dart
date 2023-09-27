@@ -19,7 +19,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -66,7 +65,6 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final UserController userController = ref.read(userControllerProvider.notifier);
     final BuildContext context = router.navigatorKey.currentState!.context;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
     final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
@@ -92,28 +90,20 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await userController.signOut(shouldNavigate: false);
     }
 
-    bool hasRestoredCache = false;
-    if (firebaseAuth.currentUser != null) {
-      hasRestoredCache = await cacheController.restoreCache();
-    }
+    try {
+      final SystemController systemController = ref.read(systemControllerProvider.notifier);
+      await systemController.updateSystemConfiguration();
+    } catch (ex) {
+      log.e('Failed to preload build information. Error: $ex');
+      final bool isLoggedOut = firebaseAuth.currentUser == null;
 
-    if (!hasRestoredCache) {
-      try {
-        final SystemController systemController = ref.read(systemControllerProvider.notifier);
-        await systemController.updateSystemConfiguration();
-      } catch (ex) {
-        log.e('Failed to preload build information. Error: $ex');
-        final bool isLoggedOut = firebaseAuth.currentUser == null;
-        router.removeWhere((route) => true);
-
-        if (isLoggedOut) {
-          await router.push(const HomeRoute());
-          return;
-        }
-
-        await router.push(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
+      if (isLoggedOut) {
+        await router.replace(const HomeRoute());
         return;
       }
+
+      await router.replace(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
+      return;
     }
 
     //* Wait until the required splash length has been reached

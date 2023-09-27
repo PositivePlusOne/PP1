@@ -47,12 +47,16 @@ _$_ReactionStatistics _$$_ReactionStatisticsFromJson(
           const {},
       uniqueUserReactions:
           (json['unique_user_reactions'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry(k, e as bool),
+                (k, e) => MapEntry(k, Map<String, bool>.from(e as Map)),
               ) ??
               const {},
       activityId: json['activity_id'] as String? ?? '',
       reactionId: json['reaction_id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
+      allReactions: (json['all_reactions'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, Reaction.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
     );
 
 Map<String, dynamic> _$$_ReactionStatisticsToJson(
@@ -64,4 +68,6 @@ Map<String, dynamic> _$$_ReactionStatisticsToJson(
       'activity_id': instance.activityId,
       'reaction_id': instance.reactionId,
       'user_id': instance.userId,
+      'all_reactions':
+          instance.allReactions.map((k, e) => MapEntry(k, e.toJson())),
     };

@@ -44,7 +44,7 @@ class ChatMembersPage extends HookConsumerWidget {
 
     final Channel channel = chatViewModelState.currentChannel!;
     final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
-    final CacheController cacheController = ref.watch(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.watch(cacheControllerProvider);
 
     final String? currentProfileId = profileController.currentProfileId;
     final List<String> otherUserMemberIds = channel.state!.members.map((e) => e.userId).where((element) => element != currentProfileId).nonNulls.toList();
@@ -53,7 +53,7 @@ class ChatMembersPage extends HookConsumerWidget {
     useLifecycleHook(chatViewModel);
 
     for (final String userId in otherUserMemberIds) {
-      final Profile? profile = cacheController.getFromCache(userId);
+      final Profile? profile = cacheController.get(userId);
       if (profile != null) {
         otherUserProfiles[userId] = profile;
       }

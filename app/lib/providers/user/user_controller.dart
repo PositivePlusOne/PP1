@@ -421,7 +421,7 @@ class UserController extends _$UserController {
     final GoogleSignIn googleSignIn = ref.read(googleSignInProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     log.d('[UserController] signOut()');
     if (!isUserLoggedIn) {
@@ -437,7 +437,7 @@ class UserController extends _$UserController {
     await firebaseAuth.signOut();
     log.i('[UserController] signOut() Signed out of Firebase');
 
-    cacheController.clearCache();
+    cacheController.cacheData.clear();
     log.i('[UserController] signOut() Cleared cache');
 
     await analyticsController.trackEvent(AnalyticEvents.accountSignOut);

@@ -86,15 +86,15 @@ class RelationshipController extends _$RelationshipController {
     final Logger logger = ref.read(loggerProvider);
     final List<String> sortedMembers = [...relationship.members.map((e) => e.memberId)]..sort();
     final String relationshipId = sortedMembers.join('-');
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     logger.d('[Profile Service] - Adding relationship to cache: $relationship');
-    cacheController.addToCache(key: relationshipId, value: relationship);
+    cacheController.add(key: relationshipId, value: relationship);
   }
 
   bool hasPendingConnectionRequestToCurrentUser(String uid) {
     final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     logger.d('[Profile Service] - Checking if user has pending relationship to current user: $uid');
 
@@ -102,7 +102,7 @@ class RelationshipController extends _$RelationshipController {
     final List<String> sortedMembers = [currentUserId, uid]..sort();
     final String relationshipId = sortedMembers.join('-');
 
-    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    final Relationship? relationship = cacheController.get(relationshipId);
     if (relationship == null) {
       logger.d('[Profile Service] - User has no relationship to current user: $uid');
       return false;
@@ -124,9 +124,9 @@ class RelationshipController extends _$RelationshipController {
       return;
     }
 
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final String relationshipId = [profileController.currentProfileId!, uid].asGUID;
-    final Relationship? relationship = cacheController.getFromCache(relationshipId);
+    final Relationship? relationship = cacheController.get(relationshipId);
     final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(profileController.currentProfileId!) ?? {};
     if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
       logger.d('[Profile Service] - User is already blocked: $uid');

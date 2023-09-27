@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,7 +35,6 @@ part 'post_view_model.g.dart';
 class PostViewModelState with _$PostViewModelState {
   const factory PostViewModelState({
     required String activityId,
-    Activity? activity,
     required TargetFeed targetFeed,
     @Default('') currentCommentText,
     @Default(false) bool isBusy,
@@ -55,10 +55,6 @@ class PostViewModelState with _$PostViewModelState {
 class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMixin {
   final TextEditingController commentTextController = TextEditingController();
 
-  StreamSubscription<ActivityCreatedEvent>? _activityCreatedEventSubscription;
-  StreamSubscription<ActivityUpdatedEvent>? _activityUpdatedEventSubscription;
-  StreamSubscription<ActivityDeletedEvent>? _activityDeletedEventSubscription;
-
   @override
   PostViewModelState build(String activityId, TargetFeed feed) {
     return PostViewModelState.fromActivity(activityId: activityId, targetFeed: feed);
@@ -68,30 +64,6 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
   void onFirstRender() {
     super.onFirstRender();
     prepareProfileSwitcher();
-    setupListeners();
-  }
-
-  Future<void> setupListeners() async {
-    final Logger logger = ref.read(loggerProvider);
-    final EventBus eventBus = ref.read(eventBusProvider);
-
-    await _activityCreatedEventSubscription?.cancel();
-    await _activityUpdatedEventSubscription?.cancel();
-    await _activityDeletedEventSubscription?.cancel();
-
-    logger.i('[PostViewModel] setupListeners() - Setting up listeners');
-    _activityCreatedEventSubscription = eventBus.on<ActivityCreatedEvent>().listen((_) => updateActivity());
-    _activityUpdatedEventSubscription = eventBus.on<ActivityUpdatedEvent>().listen((_) => updateActivity());
-    _activityDeletedEventSubscription = eventBus.on<ActivityDeletedEvent>().listen((_) => updateActivity());
-  }
-
-  void updateActivity() {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
-
-    state = state.copyWith(activity: activity);
-    logger.i('[PostViewModel] updateActivity() - activity: $activity');
   }
 
   Future<bool> onWillPopScope() async {
@@ -113,8 +85,8 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
   }
 
   bool checkCanView() {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Activity? activity = cacheController.get<Activity>(state.activityId);
     final ActivitySecurityConfigurationMode viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
     return viewMode.canActOnActivity(state.activityId);
   }
@@ -125,15 +97,14 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
       return false;
     }
 
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    final Activity? activity = cacheController.getFromCache<Activity>(state.activityId);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Activity? activity = cacheController.get<Activity>(state.activityId);
     final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
     return checkCanView() && commentMode.canActOnActivity(state.activityId, currentProfileId: profileController.currentProfileId!);
   }
 
   Future<void> onPostCommentRequested() async {
     final Logger logger = ref.read(loggerProvider);
-    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
@@ -160,14 +131,6 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
         text: trimmedString,
       );
 
-      reactionsController.offsetReactionCountForActivity(
-        activityId: activityId,
-        userId: profileController.currentProfileId!,
-        origin: TargetFeed.toOrigin(state.targetFeed),
-        reactionType: 'comment',
-        offset: 1,
-      );
-
       eventBus.fire(ReactionCreatedEvent(activityId: activityId, reaction: reaction));
       commentTextController.clear();
     } finally {
@@ -178,7 +141,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
   Future<void> onRefresh() async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     if (profileController.currentProfileId == null) {
       logger.d('onRefresh() - profileController.currentProfileId is null');
@@ -190,7 +153,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
 
     try {
       final String cacheId = PositiveReactionPaginationBehaviourState.buildCacheKey("comment", state.activityId);
-      final PositiveReactionsState? commentsState = cacheController.getFromCache<PositiveReactionsState>(cacheId);
+      final PositiveReactionsState? commentsState = cacheController.get<PositiveReactionsState>(cacheId);
 
       // Check if the feed is already loaded
       if (commentsState != null) {

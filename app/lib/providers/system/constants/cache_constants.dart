@@ -1,0 +1,1 @@
+const String kSharedPreferenceKeyPrefix = 'shared_preferences:';

@@ -30,7 +30,7 @@ class PositiveSwitchProfileDialog extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final String currentUserId = profileController.currentUserId ?? '';
     final String currentProfileId = controller.getCurrentProfileId();
@@ -38,7 +38,7 @@ class PositiveSwitchProfileDialog extends HookConsumerWidget {
 
     // Get a new set with the current profile id first
     final List<String> profileIds = <String>{currentUserId, ...availableProfileIds}.toList();
-    final List<Profile> profiles = cacheController.getManyFromCache(profileIds);
+    final List<Profile> profiles = cacheController.list(profileIds);
 
     return Column(
       children: <Widget>[

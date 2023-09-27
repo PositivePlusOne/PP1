@@ -71,9 +71,9 @@ mixin ProfileSwitchMixin {
   }
 
   List<Profile> getSupportedProfiles() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final List<String> supportedProfileIds = getSupportedProfileIds();
-    return cacheController.getManyFromCache(supportedProfileIds);
+    return cacheController.list(supportedProfileIds);
   }
 
   bool get canSwitchProfile {
@@ -111,7 +111,7 @@ mixin ProfileSwitchMixin {
   void switchProfile(String profileId) {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String currentProfileId = getCurrentProfileId();
 
     logger.d('ProfileSwitchMixin.switchProfile($profileId)');
@@ -126,7 +126,7 @@ mixin ProfileSwitchMixin {
     }
 
     final bool canSupport = profileControllerState.availableProfileIds.contains(profileId);
-    final Profile? profile = cacheController.getFromCache(profileId);
+    final Profile? profile = cacheController.get(profileId);
     if (!canSupport || profile == null) {
       logger.e('ProfileSwitchMixin.switchProfile($profileId) - !canSupport || profile == null');
       return;
@@ -136,9 +136,9 @@ mixin ProfileSwitchMixin {
   }
 
   Profile? getCurrentProfile() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String currentProfileId = getCurrentProfileId();
-    return cacheController.getFromCache(currentProfileId);
+    return cacheController.get(currentProfileId);
   }
 
   String getCurrentUserId() {

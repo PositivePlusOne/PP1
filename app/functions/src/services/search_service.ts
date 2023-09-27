@@ -149,7 +149,7 @@ export namespace SearchService {
     });
 
     const cacheKey = `search:${index.indexName}:${query}:${page}:${limit}:${actualFilters}`;
-    const cachedResults = await CacheService.getFromCache(cacheKey);
+    const cachedResults = await CacheService.get(cacheKey);
     if (cachedResults) {
       functions.logger.info("Got cached search results", {
         structuredData: true,

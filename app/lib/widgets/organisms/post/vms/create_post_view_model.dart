@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -18,13 +17,11 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/content/gallery_controller.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -154,14 +151,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    final EventBus eventBus = ref.read(eventBusProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    late final Activity activity;
 
     if (profileController.currentProfileId == null) {
       logger.e("Profile ID is null, cannot post");
@@ -185,7 +180,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       ));
 
       if (!state.isEditing) {
-        activity = await activityController.postActivity(
+        await activityController.postActivity(
           activityData: ActivityData(
             content: captionController.text.trim(),
             altText: altTextController.text.trim(),
@@ -198,7 +193,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           ),
         );
       } else {
-        activity = await activityController.updateActivity(
+        await activityController.updateActivity(
           activityData: ActivityData(
             activityID: state.currentActivityID,
             content: captionController.text.trim(),
@@ -245,18 +240,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       icon: UniconsLine.plus_circle,
       backgroundColour: colours.black,
     );
-
-    final List<TargetFeed> targets = <TargetFeed>[
-      TargetFeed('user', profileController.currentProfileId!),
-      TargetFeed('timeline', profileController.currentProfileId!),
-      ...activity.tagTargetFeeds,
-    ];
-
-    if (state.isEditing) {
-      eventBus.fire(ActivityUpdatedEvent(targets: targets, activity: activity));
-    } else {
-      eventBus.fire(ActivityCreatedEvent(targets: targets, activity: activity));
-    }
 
     state = state.copyWith(isBusy: false);
     router.removeLast();

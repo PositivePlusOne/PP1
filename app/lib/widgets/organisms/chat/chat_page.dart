@@ -177,7 +177,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final ChatViewModel viewModel = ref.watch(chatViewModelProvider.notifier);
@@ -187,7 +187,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
     final Channel channel = StreamChannel.of(context).channel;
 
     final List<Member> members = channel.state?.members.where((element) => element.user?.id != null).toList() ?? [];
-    final List<Profile> memberProfiles = members.map((e) => cacheController.getFromCache<Profile>(e.userId!)).nonNulls.toList();
+    final List<Profile> memberProfiles = members.map((e) => cacheController.get<Profile>(e.userId!)).nonNulls.toList();
 
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
     final ArchivedMember? archivedCurrentMember = extraData.archivedMembers?.firstWhereOrNull((element) => element.memberId == currentStreamUser.id);
@@ -426,8 +426,8 @@ class ChatMemberUsernameRow extends StatelessWidget {
 }
 
 PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors) {
-  final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-  final Profile? profile = cacheController.getFromCache<Profile>(user.id);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+  final Profile? profile = cacheController.get<Profile>(user.id);
   return PositiveProfileCircularIndicator(profile: profile);
 }
 

@@ -50,7 +50,7 @@ export namespace CacheService {
      * @param {string} key the key to get.
      * @return {Promise<Record<string, any> | null>} the value from the cache, or null if it doesn't exist.
      */
-    export async function getFromCache(key: string): Promise<any | null> {
+    export async function get(key: string): Promise<any | null> {
         const redisClient = await getRedisClient();
         const value = await redisClient.get(key);
         if (!value) {

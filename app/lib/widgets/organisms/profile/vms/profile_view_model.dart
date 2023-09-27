@@ -53,7 +53,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     relationshipsUpdatedSubscription ??= eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdatedEvent);
 
@@ -67,7 +67,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     Relationship relationship = Relationship.empty(members);
 
     if (profileController.currentProfileId != null && profileController.currentProfileId != uid) {
-      final Relationship? cachedRelationship = cacheController.getFromCache(members.asGUID);
+      final Relationship? cachedRelationship = cacheController.get(members.asGUID);
       if (cachedRelationship != null) {
         logger.d('[Profile View Model] - Preloading relationship for user: $uid');
         relationship = cachedRelationship;
