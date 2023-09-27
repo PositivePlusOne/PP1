@@ -51,7 +51,6 @@ bool canChangeTargetId(String name) {
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
-  Map<String, bool> cacheOverwriteSchemaKeys = const {"users": true, "activities": true, "relationships": true, "tags": true, "guidanceDirectoryEntries": true},
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
   T Function(EndpointResponse response)? selector,
@@ -91,7 +90,7 @@ FutureOr<T> getHttpsCallableResult<T>({
 
     final EndpointResponse responsePayload = EndpointResponse.fromJson(responseData);
     if (responsePayload.data.isNotEmpty) {
-      providerContainer.cacheResponseData(responsePayload.data, cacheOverwriteSchemaKeys);
+      providerContainer.cacheResponseData(responsePayload.data);
     }
 
     if (selector == null) {
