@@ -14,7 +14,7 @@ class FlMeta with _$FlMeta {
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdDate,
     String? lastModifiedBy,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? lastModifiedDate,
-    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? lastFetchDate,
+    @Default(-1) int lastFetchMillis,
     @Default(true) bool isPartial,
     String? docId,
     @JsonKey(name: 'fl_id') String? id,
