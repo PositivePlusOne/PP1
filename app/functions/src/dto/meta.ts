@@ -9,7 +9,7 @@ export interface FlMetaJSON {
     schemaRefId?: string;
     lastModifiedBy?: string;
     lastModifiedDate?: string;
-    lastFetchDate?: string;
+    lastFetchMillis?: number;
     isPartial?: boolean;
 }
 
@@ -24,7 +24,7 @@ export class FlMeta {
     schemaRefId?: string;
     lastModifiedBy?: string;
     lastModifiedDate?: string;
-    lastFetchDate?: string;
+    lastFetchMillis?: number;
     isPartial?: boolean;
 
     constructor(json: FlMetaJSON) {
@@ -38,7 +38,7 @@ export class FlMeta {
         this.schemaRefId = json.schemaRefId;
         this.lastModifiedBy = json.lastModifiedBy || '';
         this.lastModifiedDate = json.lastModifiedDate || '';
-        this.lastFetchDate = json.lastFetchDate || '';
+        this.lastFetchMillis = json.lastFetchMillis || -1;
         this.isPartial = json.isPartial || false;
     }
 

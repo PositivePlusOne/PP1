@@ -273,6 +273,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
     // Stage 7: Build response
     const populatePromises = [] as Promise<any>[];
+    let currentEpochMillis = Date.now();
+
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
         const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
@@ -283,8 +285,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             continue;
         }
 
+        // We append one millisecond to ensure that the order of the data is preserved.
         if (obj._fl_meta_) {
-            obj._fl_meta_.lastFetchDate = new Date().toISOString();
+            obj._fl_meta_.lastFetchMillis = currentEpochMillis;
         }
 
         if (responseData.data[schema] === undefined) {
@@ -348,6 +351,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             default:
                 break;
         }
+
+        currentEpochMillis++;
     }
 
     // Stage 8: Wait for all population to complete
