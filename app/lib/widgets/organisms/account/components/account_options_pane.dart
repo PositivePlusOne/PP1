@@ -56,6 +56,15 @@ class AccountOptionsPane extends ConsumerWidget {
         label: localizations.page_account_actions_details,
         onTapped: viewModel.onAccountDetailsButtonSelected,
       ),
+      const SizedBox(height: kPaddingMedium),
+      PositiveButton(
+        colors: colors,
+        icon: UniconsLine.sliders_v_alt,
+        style: PositiveButtonStyle.ghost,
+        primaryColor: colors.colorGray1,
+        label: localizations.page_account_actions_preferences,
+        onTapped: () => viewModel.onAccountPreferencesRequested(context),
+      ),
       //! PP1-984
       // const SizedBox(height: kPaddingMedium),
       // PositiveButton(
@@ -75,15 +84,6 @@ class AccountOptionsPane extends ConsumerWidget {
         primaryColor: colors.colorGray1,
         label: localizations.page_account_actions_following,
         onTapped: viewModel.onMyCommunitiesButtonPressed,
-      ),
-      const SizedBox(height: kPaddingMedium),
-      PositiveButton(
-        colors: colors,
-        icon: UniconsLine.sliders_v_alt,
-        style: PositiveButtonStyle.ghost,
-        primaryColor: colors.colorGray1,
-        label: localizations.page_account_actions_preferences,
-        onTapped: () => viewModel.onAccountPreferencesRequested(context),
       ),
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
@@ -144,7 +144,7 @@ class AccountOptionsPane extends ConsumerWidget {
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
         colors: colors,
-        icon: UniconsLine.accessible_icon_alt,
+        icon: UniconsLine.user_square,
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_team,
@@ -153,7 +153,7 @@ class AccountOptionsPane extends ConsumerWidget {
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
         colors: colors,
-        icon: UniconsLine.user_square,
+        icon: UniconsLine.users_alt,
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_followers,
@@ -162,7 +162,7 @@ class AccountOptionsPane extends ConsumerWidget {
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
         colors: colors,
-        icon: UniconsLine.chat_bubble_user,
+        icon: UniconsLine.comment_message,
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_chat,
@@ -171,7 +171,7 @@ class AccountOptionsPane extends ConsumerWidget {
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
         colors: colors,
-        icon: UniconsLine.layer_group,
+        icon: UniconsLine.sign_out_alt,
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_leave("Company Name"),
