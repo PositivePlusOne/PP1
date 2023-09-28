@@ -17,11 +17,13 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
   const PositiveProfileSegmentedSwitcher({
     required this.mixin,
     this.isSlim = false,
+    this.onTapped,
     super.key,
   });
 
   final ProfileSwitchMixin mixin;
   final bool isSlim;
+  final Function(int)? onTapped;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +45,13 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
         return PositiveSlimTabBar(
           margin: EdgeInsets.zero,
           index: supportedProfileIds.indexOf(currentProfileId),
-          onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
+          onTapped: (int index) {
+            mixin.switchProfile(supportedProfileIds[index]);
+
+            if (onTapped != null) {
+              onTapped!(index);
+            }
+          },
           tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
           tabs: profiles.map((Profile profile) => profile.displayName).toList(),
         );

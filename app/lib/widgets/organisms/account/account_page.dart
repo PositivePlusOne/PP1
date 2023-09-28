@@ -2,6 +2,7 @@
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/molecules/switchers/positive_profile_segmented_switcher.dart';
 import 'package:app/widgets/organisms/account/vms/account_page_view_model.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,8 +34,6 @@ class AccountPage extends ConsumerWidget {
     ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-
     final AccountPageViewModel viewModel = ref.watch(accountPageViewModelProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
@@ -59,7 +58,7 @@ class AccountPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           foregroundColor: colors.black,
-          backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.white,
+          backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.teal,
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: PreferredSize(
@@ -71,6 +70,7 @@ class AccountPage extends ConsumerWidget {
                   child: PositiveProfileSegmentedSwitcher(
                     mixin: viewModel,
                     isSlim: true,
+                    onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, profileState, viewModel),
                   ),
                 ),
                 const AccountProfileBanner(),
@@ -78,9 +78,34 @@ class AccountPage extends ConsumerWidget {
             ),
           ),
           appBarSpacing: kPaddingMedium,
-          horizontalPadding: kPaddingSmall,
+          horizontalPadding: kPaddingNone,
           children: <Widget>[
-            AccountOptionsPane(colors: colors),
+            SizedBox(
+              //? 7 buttons of 54 height + 6 kPaddingMedium between each button + 2 kPaddingSmallMedium for the padding inside glass pane
+              height: 54 * 7 + kPaddingMedium * 6 + kPaddingSmallMedium * 2,
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: viewModel.pageController,
+                children: [
+                  Column(
+                    children: [
+                      AccountOptionsPane(
+                        colors: colors,
+                        edgePadding: kPaddingSmall,
+                        accentColour: viewModel.state.profileAccentColour,
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                  AccountOptionsPane(
+                    colors: colors,
+                    isOrganisation: true,
+                    edgePadding: kPaddingSmall,
+                    accentColour: viewModel.state.organisationAccentColour,
+                  ),
+                ],
+              ),
+            ),
             //! PP1-984
             // const SizedBox(height: kPaddingMedium),
             // PremiumMembershipBanner(colors: colors, typography: typography),
