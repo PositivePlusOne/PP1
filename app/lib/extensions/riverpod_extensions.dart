@@ -140,14 +140,20 @@ void cacheReactionData(Map<String, dynamic> data) {
 }
 
 void cacheReactionStatisticsData(Map<String, dynamic> data) {
+  final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
   final List<dynamic> reactionStatisticsRaw = (data.containsKey('reactionStatistics') ? data['reactionStatistics'] : []).map((dynamic reactionStatistic) => json.decodeSafe(reactionStatistic)).toList();
   final List<ReactionStatistics> reactionStatistics = reactionStatisticsRaw.map((dynamic stat) => ReactionStatistics.fromJson(stat)).toList();
 
   for (ReactionStatistics reactionStatistic in reactionStatistics) {
-    final String cacheKey = ReactionStatistics.buildCacheKey(reactionStatistic);
-    cacheController.add(key: cacheKey, value: reactionStatistic);
+    final String reactionStatisticsId = reactionStatistic.flMeta?.id ?? '';
+    if (reactionStatisticsId.isEmpty) {
+      logger.e('requestNextTimelinePage() - Failed to cache reaction statistics: $reactionStatistic');
+      continue;
+    }
+
+    cacheController.add(key: reactionStatisticsId, value: reactionStatistic);
   }
 }
 

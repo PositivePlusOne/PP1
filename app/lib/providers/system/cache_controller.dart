@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'dart:io';
 
 // Package imports:
+import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -24,11 +25,7 @@ class CacheRecord with _$CacheRecord {
   const factory CacheRecord({
     required String key,
     required Object value,
-    required String createdBy,
-    required String lastAccessedBy,
-    required DateTime createdAt,
-    required DateTime lastUpdatedAt,
-    required DateTime? expiresAt,
+    required FlMeta metadata,
   }) = _CacheRecord;
 
   factory CacheRecord.fromJson(Map<String, Object?> json) => _$CacheRecordFromJson(json);
@@ -61,6 +58,7 @@ class CacheController {
     required String key,
     required dynamic value,
     Duration? ttl,
+    FlMeta? metadata,
   }) {
     final StackTrace trace = StackTrace.current;
     final String caller = trace.toString().split('#')[1].split(' ')[0];
@@ -72,24 +70,33 @@ class CacheController {
       return;
     }
 
-    final bool exists = record != null;
-    record = record?.copyWith(
-          lastUpdatedAt: DateTime.now(),
-          lastAccessedBy: caller,
-          value: value,
-        ) ??
-        CacheRecord(
-          key: key,
-          value: value,
-          createdBy: caller,
-          createdAt: DateTime.now(),
-          lastUpdatedAt: DateTime.now(),
-          lastAccessedBy: caller,
-          expiresAt: ttl != null ? DateTime.now().add(ttl) : null,
-        );
+    final bool hasRecord = record != null;
+    final FlMeta newMetadata = metadata ?? FlMeta.empty(key, '');
+    final bool isDataComplete = newMetadata.isPartial;
+    final int newFetchMillis = newMetadata.lastFetchMillis;
 
-    cacheData[key] = record;
-    processEvents(record, exists ? CacheKeyUpdatedEventType.updated : CacheKeyUpdatedEventType.created);
+    final bool isOldDataComplete = record?.metadata.isPartial ?? false;
+    final int oldFetchMillis = record?.metadata.lastFetchMillis ?? -1;
+
+    final bool shouldSkipOnDataIntegrity = !isDataComplete && isOldDataComplete;
+    if (hasRecord && shouldSkipOnDataIntegrity) {
+      logger.w('Skipping cache update on $key due to new data being incomplete');
+      return;
+    }
+
+    if (hasRecord && newFetchMillis < oldFetchMillis) {
+      logger.w('Skipping cache update on $key due to new data being older');
+      return;
+    }
+
+    final CacheRecord newCacheRecord = CacheRecord(
+      key: key,
+      value: value,
+      metadata: newMetadata,
+    );
+
+    cacheData[key] = newCacheRecord;
+    processEvents(newCacheRecord, hasRecord ? CacheKeyUpdatedEventType.updated : CacheKeyUpdatedEventType.created);
   }
 
   Iterable<T> listAll<T>() {

@@ -10,24 +10,14 @@ _$_CacheRecord _$$_CacheRecordFromJson(Map<String, dynamic> json) =>
     _$_CacheRecord(
       key: json['key'] as String,
       value: json['value'] as Object,
-      createdBy: json['createdBy'] as String,
-      lastAccessedBy: json['lastAccessedBy'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      lastUpdatedAt: DateTime.parse(json['lastUpdatedAt'] as String),
-      expiresAt: json['expiresAt'] == null
-          ? null
-          : DateTime.parse(json['expiresAt'] as String),
+      metadata: FlMeta.fromJson(json['metadata'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
     <String, dynamic>{
       'key': instance.key,
       'value': instance.value,
-      'createdBy': instance.createdBy,
-      'lastAccessedBy': instance.lastAccessedBy,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'lastUpdatedAt': instance.lastUpdatedAt.toIso8601String(),
-      'expiresAt': instance.expiresAt?.toIso8601String(),
+      'metadata': instance.metadata.toJson(),
     };
 
 // **************************************************************************

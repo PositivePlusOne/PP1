@@ -12,7 +12,7 @@ _$_FlMeta _$$_FlMetaFromJson(Map<String, dynamic> json) => _$_FlMeta(
       lastModifiedBy: json['lastModifiedBy'] as String?,
       lastModifiedDate: dateFromUnknown(json['lastModifiedDate']),
       lastFetchMillis: json['lastFetchMillis'] as int? ?? -1,
-      isPartial: json['isPartial'] as bool? ?? true,
+      isPartial: json['isPartial'] as bool? ?? false,
       docId: json['docId'] as String?,
       id: json['fl_id'] as String?,
       env: json['env'] as String? ?? '',

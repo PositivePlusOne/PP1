@@ -52,7 +52,6 @@ class SearchApiService {
     final EndpointResponse response = await getHttpsCallableResult(
       name: 'search-search',
       pagination: pagination,
-      cacheOverwriteSchemaKeys: const {"users": false},
       parameters: {
         'query': query,
         'index': index,

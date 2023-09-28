@@ -1355,7 +1355,7 @@ class OnboardingYourPledgeRouteArgs {
 class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
     required Activity activity,
-    required TargetFeed feed,
+    required InvalidType feed,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -1382,7 +1382,7 @@ class PostRouteArgs {
 
   final Activity activity;
 
-  final TargetFeed feed;
+  final InvalidType feed;
 
   final Key? key;
 

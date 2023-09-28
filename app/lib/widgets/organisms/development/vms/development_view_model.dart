@@ -125,7 +125,7 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
 
     try {
       final CacheController cacheController = ref.read(cacheControllerProvider);
-      cacheController.clearCache();
+      cacheController.cacheData.clear();
 
       state = state.copyWith(status: 'Local cache reset successfully');
     } catch (ex) {

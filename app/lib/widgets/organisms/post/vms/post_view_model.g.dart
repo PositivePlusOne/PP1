@@ -32,11 +32,11 @@ class _SystemHash {
 abstract class _$PostViewModel
     extends BuildlessAutoDisposeNotifier<PostViewModelState> {
   late final String activityId;
-  late final TargetFeed feed;
+  late final InvalidType feed;
 
   PostViewModelState build(
     String activityId,
-    TargetFeed feed,
+    InvalidType feed,
   );
 }
 
@@ -52,7 +52,7 @@ class PostViewModelFamily extends Family<PostViewModelState> {
   /// See also [PostViewModel].
   PostViewModelProvider call(
     String activityId,
-    TargetFeed feed,
+    InvalidType feed,
   ) {
     return PostViewModelProvider(
       activityId,
@@ -108,7 +108,7 @@ class PostViewModelProvider
         );
 
   final String activityId;
-  final TargetFeed feed;
+  final InvalidType feed;
 
   @override
   bool operator ==(Object other) {
