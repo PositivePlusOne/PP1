@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { DefaultGenerics, NewActivity, StreamClient, StreamFeed, connect } from "getstream";
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
-import { FeedRequest } from "../dto/feed_dtos";
+import { FeedRequest, FeedRequestJSON } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { StreamHelpers } from "../helpers/stream_helpers";
@@ -69,14 +69,14 @@ export namespace FeedService {
     try {
       // Assumption check: The users flat feed should include predefined feeds including their own user feed.
       functions.logger.info("Verifying default timeline feed subscriptions for user", { userId });
-      const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { feed: "user", id: userId }];
+      const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { targetSlug: "user", targetUserId: userId }] as FeedRequestJSON[];
       for (const expectedFeed of expectedFeeds) {
         const userTimelineFeedFollowing = await userTimelineFeed.following();
-        const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id === expectedFeed.feed && feed.target_id === expectedFeed.id);
+        const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id === expectedFeed.targetSlug && feed.target_id === expectedFeed.targetUserId);
 
         if (!isFollowing) {
           functions.logger.info("Following feed", { feed: expectedFeed });
-          await userTimelineFeed.follow(expectedFeed.feed, expectedFeed.id);
+          await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetSlug);
         }
       }
     } catch (error) {
@@ -137,12 +137,16 @@ export namespace FeedService {
    * @param {FeedRequest} target the target feed.
    * @return {Promise<void>} a promise that resolves when the feed is followed.
    */
-  export async function followFeed(client: StreamClient<DefaultGenerics>, source: FeedRequest, target: FeedRequest): Promise<void> {
+  export async function followFeed(client: StreamClient<DefaultGenerics>, source: FeedRequestJSON, target: FeedRequestJSON): Promise<void> {
     functions.logger.info("Following feed", { source, target });
 
+    if (!source.targetSlug || !target.targetSlug || !source.targetUserId || !target.targetUserId) {
+      throw new Error("Missing feed or slug for follow request");
+    }
+
     // Get the source and targets user feeds
-    const sourceFeed = client.feed(source.feed, source.id);
-    const targetFeed = client.feed(target.feed, target.id);
+    const sourceFeed = client.feed(source.targetSlug, source.targetUserId);
+    const targetFeed = client.feed(target.targetSlug, target.targetUserId);
 
     // Follow the target feed
     await sourceFeed.follow(targetFeed.slug, targetFeed.userId);
@@ -156,16 +160,16 @@ export namespace FeedService {
    * @param {FeedRequest} target the target feed.
    * @return {Promise<void>} a promise that resolves when the feed is unfollowed.
    */
-  export async function unfollowFeed(client: StreamClient<DefaultGenerics>, source: FeedRequest, target: FeedRequest): Promise<void> {
+  export async function unfollowFeed(client: StreamClient<DefaultGenerics>, source: FeedRequestJSON, target: FeedRequestJSON): Promise<void> {
     functions.logger.info("Unfollowing feed", { source, target });
 
-    if (!source || !target) {
+    if (!source.targetSlug || !target.targetSlug || !source.targetUserId || !target.targetUserId) {
       throw new Error("Missing source or target");
     }
 
     // Get the source and targets user feeds
-    const sourceFeed = client.feed(source.feed, source.id);
-    const targetFeed = client.feed(target.feed, target.id);
+    const sourceFeed = client.feed(source.targetSlug, source.targetUserId);
+    const targetFeed = client.feed(target.targetSlug, target.targetUserId);
 
     // Follow the target feed
     await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);

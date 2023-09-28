@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,11 +53,8 @@ extension ActivityExt on Activity {
     await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
-  bool get canDisplayOnFeed {
-    final Relationship relationship = getRelationship();
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-
-    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(profileController.currentProfileId ?? '');
+  bool canDisplayOnFeed(Relationship relationship, String currentProfileId) {
+    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentProfileId);
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
@@ -72,10 +70,32 @@ extension ActivityExt on Activity {
       public: () => true,
       followersAndConnections: () => isFollowing || hasFullyConnected,
       connections: () => hasFullyConnected,
-      signedIn: () => profileController.currentProfileId != null,
+      signedIn: () => currentProfileId.isNotEmpty,
       private: () => false,
       disabled: () => false,
     );
+  }
+
+  ReactionStatistics getStatisticsForActivity(TargetFeed feed) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    ReactionStatistics statistics = ReactionStatistics(
+      activityId: activityId,
+      counts: {},
+      feed: feed,
+    );
+
+    logger.i('getStatisticsForActivity: $activityId, $origin');
+    final String expectedCacheKey = ReactionStatistics.buildCacheKey(statistics);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final ReactionStatistics? cachedStatistics = cacheController.get(expectedCacheKey);
+    if (cachedStatistics != null) {
+      logger.i('getStatisticsForActivity: $activityId, $origin, found in cache');
+      return cachedStatistics;
+    }
+
+    logger.i('getStatisticsForActivity: $activityId, $origin, not found in cache');
+    cacheController.add(key: expectedCacheKey, value: statistics);
+    return statistics;
   }
 
   Relationship getRelationship() {

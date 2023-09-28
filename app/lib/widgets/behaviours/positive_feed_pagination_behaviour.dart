@@ -273,11 +273,10 @@ class PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPag
     }
 
     return PositiveActivityWidget(
-      key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
-      onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
-      onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
       activity: item,
       targetFeed: widget.feed,
+      onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
+      onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
       index: index,
     );
   }

@@ -37,7 +37,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
-import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
+import 'package:app/widgets/molecules/content/positive_post_layout_dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
@@ -45,12 +45,13 @@ import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../dialogs/positive_dialog.dart';
-import 'activity_post_heading_widget.dart';
+import 'activity_post_heading_dart';
 
-class PositiveActivityWidget extends StatefulHookConsumerWidget {
-  const PositiveActivityWidget({
-    required this.activity,
-    this.targetFeed,
+class PositiveActivityWidget extends HookConsumerWidget {
+  PositiveActivityWidget({
+    required this.activityId,
+    required this.currentProfileId,
+    required this.targetFeed,
     this.index = -1,
     this.isEnabled = true,
     this.onHeaderTapped,
@@ -60,7 +61,9 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
     super.key,
   });
 
-  final Activity activity;
+  final String activityId;
+  final String currentProfileId;
+
   final TargetFeed? targetFeed;
   final int index;
 
@@ -71,11 +74,6 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
   final bool isFullscreen;
   final bool isShared;
 
-  @override
-  ConsumerState<PositiveActivityWidget> createState() => _PositiveActivityWidgetState();
-}
-
-class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> {
   StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
   final Set<RelationshipState> relationshipStates = <RelationshipState>{};
@@ -98,7 +96,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   void didUpdateWidget(PositiveActivityWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.activity.flMeta?.id != widget.activity.flMeta?.id) {
+    if (oldactivity.flMeta?.id != activity.flMeta?.id) {
       disposeListeners();
       setupListeners();
       loadActivityData();
@@ -123,8 +121,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
-    final String activityId = widget.activity.flMeta?.id ?? '';
-    final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';
+    final String activityId = activity.flMeta?.id ?? '';
+    final String publisherId = activity.publisherInformation?.publisherId ?? '';
 
     if (event.key.contains(activityId) || event.key.contains(publisherId)) {
       loadActivityData();
@@ -141,13 +139,13 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     publisher = null;
     relationshipStates.clear();
 
-    logger.i('Loading activity information for ${widget.activity.flMeta?.id}');
+    logger.i('Loading activity information for ${activity.flMeta?.id}');
     setStateIfMounted();
 
     // Load the publisher.
-    final String publisherKey = widget.activity.publisherInformation?.publisherId ?? '';
+    final String publisherKey = activity.publisherInformation?.publisherId ?? '';
     if (publisherKey.isEmpty) {
-      logger.w('Publisher key is empty for ${widget.activity.flMeta?.id}');
+      logger.w('Publisher key is empty for ${activity.flMeta?.id}');
       return;
     }
 
@@ -195,14 +193,14 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ReactionStatistics requestStatistics = ReactionStatistics.fromActivity(
-      widget.activity,
-      widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
+      activity,
+      targetFeed ?? TargetFeed('user', activity.publisherInformation?.publisherId ?? ''),
     );
 
     final String cacheKey = ReactionStatistics.buildCacheKey(requestStatistics);
     final ReactionStatistics? cachedStatistics = cacheController.get(cacheKey);
     if (cachedStatistics != null) {
-      logger.i('Loaded reaction statistics from cache for ${widget.activity.flMeta?.id}');
+      logger.i('Loaded reaction statistics from cache for ${activity.flMeta?.id}');
       reactionStatistics = cachedStatistics;
       setStateIfMounted();
       return;
@@ -266,7 +264,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
         child: ProfileModalDialog(
           profile: publisher!,
           relationship: relationship,
-          postID: widget.activity.flMeta?.id ?? "",
+          postID: activity.flMeta?.id ?? "",
           types: const {
             ProfileModalDialogOptionType.viewProfile,
             ProfileModalDialogOptionType.follow,
@@ -305,7 +303,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final Logger logger = ref.read(loggerProvider);
-    final String activityId = widget.activity.flMeta?.id ?? '';
+    final String activityId = activity.flMeta?.id ?? '';
 
     if (profileController.currentProfileId == null || activityId.isEmpty) {
       return;
@@ -419,7 +417,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   Future<void> onPostEdited(BuildContext context) async {
     final AppRouter router = ref.read(appRouterProvider);
 
-    if (widget.activity.generalConfiguration == null) {
+    if (activity.generalConfiguration == null) {
       return;
     }
 
@@ -427,16 +425,16 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     await router.push(
       CreatePostRoute(
         activityData: ActivityData(
-          activityID: widget.activity.flMeta!.id,
-          content: widget.activity.generalConfiguration?.content ?? "",
-          tags: widget.activity.enrichmentConfiguration?.tags ?? const [],
-          postType: PostType.getPostTypeFromActivity(widget.activity),
-          media: widget.activity.media,
-          commentPermissionMode: widget.activity.securityConfiguration?.commentMode,
-          visibilityMode: widget.activity.securityConfiguration?.viewMode,
-          allowSharing: widget.activity.securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),
+          activityID: activity.flMeta!.id,
+          content: activity.generalConfiguration?.content ?? "",
+          tags: activity.enrichmentConfiguration?.tags ?? const [],
+          postType: PostType.getPostTypeFromActivity(activity),
+          media: activity.media,
+          commentPermissionMode: activity.securityConfiguration?.commentMode,
+          visibilityMode: activity.securityConfiguration?.viewMode,
+          allowSharing: activity.securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),
           //! This is currently shared between ALL media!
-          altText: widget.activity.media.any((element) => element.altText.isNotEmpty) ? widget.activity.media.firstWhere((element) => element.altText.isNotEmpty).altText : '',
+          altText: activity.media.any((element) => element.altText.isNotEmpty) ? activity.media.firstWhere((element) => element.altText.isNotEmpty).altText : '',
         ),
         isEditPage: true,
       ),
@@ -444,8 +442,8 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
   }
 
   Future<void> onInternalHeaderTap(BuildContext context) async {
-    if (widget.onHeaderTapped != null) {
-      widget.onHeaderTapped!();
+    if (onHeaderTapped != null) {
+      onHeaderTapped!();
       return;
     }
 
@@ -456,34 +454,34 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final Logger logger = ref.read(loggerProvider);
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
-      activity: widget.activity,
-      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
+      activity: activity,
+      feed: targetFeed ?? TargetFeed('user', activity.publisherInformation?.publisherId ?? ''),
     );
 
     // Check if we are already on the post page.
     if (router.current.name == PostRoute.name) {
-      logger.i('Already on post ${widget.activity.flMeta?.id}');
+      logger.i('Already on post ${activity.flMeta?.id}');
       return;
     }
 
-    logger.i('Navigating to post ${widget.activity.flMeta?.id}');
+    logger.i('Navigating to post ${activity.flMeta?.id}');
     await router.push(postRoute);
   }
 
   Future<void> onInternalMediaTap(Media media) async {
-    if (widget.onImageTapped != null) {
-      widget.onImageTapped!(media);
+    if (onImageTapped != null) {
+      onImageTapped!(media);
       return;
     }
 
     final Logger logger = ref.read(loggerProvider);
     final AppRouter router = ref.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
-      activity: widget.activity,
-      feed: widget.targetFeed ?? TargetFeed('user', widget.activity.publisherInformation?.publisherId ?? ''),
+      activity: activity,
+      feed: targetFeed ?? TargetFeed('user', activity.publisherInformation?.publisherId ?? ''),
     );
 
-    logger.i('Navigating to post ${widget.activity.flMeta?.id}');
+    logger.i('Navigating to post ${activity.flMeta?.id}');
     await router.push(postRoute);
   }
 
@@ -495,30 +493,30 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     Promotion? promotion;
-    if (widget.activity.enrichmentConfiguration?.promotionKey != null) {
-      promotion = cacheController.get(widget.activity.enrichmentConfiguration!.promotionKey);
+    if (activity.enrichmentConfiguration?.promotionKey != null) {
+      promotion = cacheController.get(activity.enrichmentConfiguration!.promotionKey);
     }
 
     final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
     final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;
-    final bool isBusy = _isBookmarking || _isLiking || !widget.isEnabled;
+    final bool isBusy = _isBookmarking || _isLiking || !isEnabled;
 
     final int totalLikes = reactionStatistics?.counts["like"] ?? 0;
     final int totalComments = reactionStatistics?.counts["comment"] ?? 0;
 
-    final ActivitySecurityConfigurationMode viewMode = widget.activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
-    final bool canView = viewMode.canActOnActivity(widget.activity.flMeta?.id ?? '');
+    final ActivitySecurityConfigurationMode viewMode = activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool canView = viewMode.canActOnActivity(activity.flMeta?.id ?? '');
 
-    final String repostOriginalPublisherId = widget.activity.generalConfiguration?.repostActivityPublisherId ?? '';
+    final String repostOriginalPublisherId = activity.generalConfiguration?.repostActivityPublisherId ?? '';
     final Profile? repostOriginalPublisher = repostOriginalPublisherId.isEmpty ? null : cacheController.get(repostOriginalPublisherId);
-    final String repostOriginalActivityId = widget.activity.generalConfiguration?.repostActivityId ?? '';
+    final String repostOriginalActivityId = activity.generalConfiguration?.repostActivityId ?? '';
     final Activity? repostOriginalActivity = repostOriginalActivityId.isEmpty ? null : cacheController.get(repostOriginalActivityId);
 
     final String currentProfileId = ref.watch(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
-    final String publisherId = widget.activity.publisherInformation?.publisherId ?? '';
-    final String activityID = widget.activity.flMeta?.id ?? '';
+    final String publisherId = activity.publisherInformation?.publisherId ?? '';
+    final String activityID = activity.flMeta?.id ?? '';
 
-    final ActivitySecurityConfigurationMode shareMode = widget.activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final ActivitySecurityConfigurationMode shareMode = activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
 
     final bool canActShare = shareMode.canActOnActivity(activityID, currentProfileId: currentProfileId);
     final bool isPublisher = currentProfileId == publisherId;
@@ -530,7 +528,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           PositiveTapBehaviour(
             onTap: onInternalHeaderTap,
             child: ActivityPostHeadingWidget(
-              flMetaData: widget.activity.flMeta,
+              flMetaData: activity.flMeta,
               publisher: publisher,
               onOptions: onPostOptionsSelected,
             ),
@@ -544,9 +542,9 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             ),
             child: PositiveActivityWidget(
               activity: repostOriginalActivity,
-              index: widget.index,
-              isEnabled: widget.isEnabled,
-              isFullscreen: widget.isFullscreen,
+              index: index,
+              isEnabled: isEnabled,
+              isFullscreen: isFullscreen,
               targetFeed: TargetFeed.fromOrigin(repostOriginalActivity.publisherInformation?.originFeed ?? ''),
               isShared: true,
             ),
@@ -555,7 +553,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             isLiked: isLiked,
             likes: totalLikes,
             likesEnabled: !isBusy && !isPublisher,
-            onLike: (context) => onPostLiked(context, widget.activity),
+            onLike: (context) => onPostLiked(context, activity),
             shareEnabled: !isBusy && canActShare,
             onShare: (_) {},
             comments: totalComments,
@@ -563,7 +561,7 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
             onComment: (_) {},
             bookmarkEnabled: !isBusy,
             bookmarked: isBookmarked,
-            onBookmark: (context) => onPostBookmarked(context, widget.activity),
+            onBookmark: (context) => onPostBookmarked(context, activity),
           ),
         ],
       );
@@ -576,31 +574,31 @@ class _PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget>
           PositiveTapBehaviour(
             onTap: onInternalHeaderTap,
             child: ActivityPostHeadingWidget(
-              flMetaData: widget.activity.flMeta,
+              flMetaData: activity.flMeta,
               publisher: publisher,
               promotion: promotion,
               onOptions: onPostOptionsSelected,
-              isShared: widget.isShared,
+              isShared: isShared,
             ),
           ),
           if (canView) ...<Widget>[
             PositivePostLayoutWidget(
-              postContent: widget.activity,
+              postContent: activity,
               publisher: publisher,
               promotion: promotion,
-              isShortformPost: !widget.isFullscreen,
-              sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
+              isShortformPost: !isFullscreen,
+              sidePadding: isShared ? kPaddingExtraSmall : kPaddingSmall,
               onImageTap: onInternalMediaTap,
-              onLike: (context) => onPostLiked(context, widget.activity),
+              onLike: (context) => onPostLiked(context, activity),
               isLiked: isLiked,
               totalLikes: totalLikes,
               totalComments: totalComments,
               isBookmarked: isBookmarked,
-              onBookmark: (context) => onPostBookmarked(context, widget.activity),
+              onBookmark: (context) => onPostBookmarked(context, activity),
               isBusy: isBusy,
-              origin: widget.targetFeed != null ? TargetFeed.toOrigin(widget.targetFeed!) : null,
+              origin: targetFeed != null ? TargetFeed.toOrigin(targetFeed!) : null,
               onPostPageRequested: requestPostRoute,
-              isShared: widget.isShared,
+              isShared: isShared,
             ),
           ] else ...<Widget>[
             Padding(

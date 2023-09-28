@@ -2,12 +2,12 @@
 import 'dart:collection';
 
 // Package imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 
 part 'reactions.freezed.dart';
 part 'reactions.g.dart';
@@ -70,7 +70,8 @@ class ReactionType with _$ReactionType {
 @freezed
 class ReactionStatistics with _$ReactionStatistics {
   const factory ReactionStatistics({
-    @Default('') @JsonKey(name: 'feed') String feed,
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+    @Default('') @JsonKey(name: 'feed') TargetFeed feed,
     @Default({}) @JsonKey(name: 'counts') Map<String, int> counts,
     @Default({}) @JsonKey(name: 'unique_user_reactions') Map<String, Map<String, bool>> uniqueUserReactions,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
@@ -91,8 +92,35 @@ class ReactionStatistics with _$ReactionStatistics {
       userId: '',
     );
   }
+}
 
-  static String buildCacheKey(ReactionStatistics reactionStatistics) {
-    return 'statistics:${reactionStatistics.feed}:${reactionStatistics.activityId}:${reactionStatistics.reactionId}:${reactionStatistics.userId}';
+@freezed
+class TargetFeed with _$TargetFeed {
+  const factory TargetFeed({
+    @Default('') String targetSlug,
+    @Default('') String targetUserId,
+  }) = _TargetFeed;
+
+  factory TargetFeed.fromJson(Map<String, dynamic> json) => _$TargetFeedFromJson(json);
+
+  static TargetFeed fromTag(Tag tag) => TargetFeed(targetSlug: 'tags', targetUserId: tag.key);
+
+  static TargetFeed fromOrigin(String origin) {
+    final List<String> parts = origin.split(':');
+    final String feed = parts[0];
+    final String slug = parts[1];
+
+    return TargetFeed(targetSlug: feed, targetUserId: slug);
+  }
+
+  static String toOrigin(TargetFeed targetFeed) {
+    String feed = targetFeed.feed;
+
+    //! If we have more aggregated feeds, we need to add them here
+    if (feed == 'timeline') {
+      feed = 'user';
+    }
+
+    return '$feed:${targetFeed.slug}';
   }
 }

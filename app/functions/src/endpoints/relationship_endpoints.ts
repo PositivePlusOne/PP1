@@ -13,7 +13,7 @@ import { ChatConnectionSentNotification } from "../services/builders/notificatio
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { RelationshipUpdatedNotification } from "../services/builders/notifications/relationships/relationship_updated_notification";
 import { FeedService } from "../services/feed_service";
-import { FeedRequest } from "../dto/feed_dtos";
+import { FeedRequest, FeedRequestJSON } from "../dto/feed_dtos";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { RelationshipJSON } from "../dto/relationships";
 
@@ -296,8 +296,8 @@ export namespace RelationshipEndpoints {
     }
 
     // Create two feed requests and follow the target user
-    const sourceFeed = { feed: "timeline", id: uid } as FeedRequest;
-    const targetFeed = { feed: "user", id: targetUid } as FeedRequest;
+    const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
+    const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
     const feedClient = FeedService.getFeedsClient();
 
     await FeedService.followFeed(feedClient, sourceFeed, targetFeed);
@@ -329,8 +329,8 @@ export namespace RelationshipEndpoints {
 
     const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
 
-    const sourceFeed = { feed: "timeline", id: uid } as FeedRequest;
-    const targetFeed = { feed: "user", id: targetUid } as FeedRequest;
+    const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
+    const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
     const feedClient = FeedService.getFeedsClient();
 
     await FeedService.unfollowFeed(feedClient, sourceFeed, targetFeed);

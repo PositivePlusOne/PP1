@@ -55,7 +55,7 @@ class _$PostViewModelStateCopyWithImpl<$Res, $Val extends PostViewModelState>
   @override
   $Res call({
     Object? activityId = null,
-    Object? targetFeed = null,
+    Object? targetFeed = freezed,
     Object? currentCommentText = freezed,
     Object? isBusy = null,
     Object? isRefreshing = null,
@@ -65,7 +65,7 @@ class _$PostViewModelStateCopyWithImpl<$Res, $Val extends PostViewModelState>
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
               as String,
-      targetFeed: null == targetFeed
+      targetFeed: freezed == targetFeed
           ? _value.targetFeed
           : targetFeed // ignore: cast_nullable_to_non_nullable
               as TargetFeed,
@@ -113,7 +113,7 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? activityId = null,
-    Object? targetFeed = null,
+    Object? targetFeed = freezed,
     Object? currentCommentText = freezed,
     Object? isBusy = null,
     Object? isRefreshing = null,
@@ -123,7 +123,7 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
               as String,
-      targetFeed: null == targetFeed
+      targetFeed: freezed == targetFeed
           ? _value.targetFeed
           : targetFeed // ignore: cast_nullable_to_non_nullable
               as TargetFeed,
@@ -178,8 +178,8 @@ class _$_PostViewModelState implements _PostViewModelState {
             other is _$_PostViewModelState &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId) &&
-            (identical(other.targetFeed, targetFeed) ||
-                other.targetFeed == targetFeed) &&
+            const DeepCollectionEquality()
+                .equals(other.targetFeed, targetFeed) &&
             const DeepCollectionEquality()
                 .equals(other.currentCommentText, currentCommentText) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
@@ -191,7 +191,7 @@ class _$_PostViewModelState implements _PostViewModelState {
   int get hashCode => Object.hash(
       runtimeType,
       activityId,
-      targetFeed,
+      const DeepCollectionEquality().hash(targetFeed),
       const DeepCollectionEquality().hash(currentCommentText),
       isBusy,
       isRefreshing);

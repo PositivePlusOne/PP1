@@ -2,6 +2,14 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 extension PagingExtensions on PagingController {
+  void update() {
+    value = PagingState(
+      itemList: itemList,
+      error: null,
+      nextPageKey: nextPageKey,
+    );
+  }
+
   // Append a page to the current list of items and advance the pageKey.
   // This is useful is used in something like an animated switched list
   void notifyPage(String nextPageKey) {

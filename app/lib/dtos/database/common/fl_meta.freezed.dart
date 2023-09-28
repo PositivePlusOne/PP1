@@ -252,7 +252,7 @@ class _$_FlMeta implements _FlMeta {
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       this.lastModifiedDate,
       this.lastFetchMillis = -1,
-      this.isPartial = true,
+      this.isPartial = false,
       this.docId,
       @JsonKey(name: 'fl_id') this.id,
       this.env = '',
