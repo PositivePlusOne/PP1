@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,6 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -35,42 +35,39 @@ import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
 @RoutePage()
 class PostPage extends HookConsumerWidget {
   const PostPage({
-    required this.activity,
     required this.feed,
+    this.activityId = '',
     super.key,
   });
 
-  final Activity activity;
   final TargetFeed feed;
+  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppRouter router = ref.read(appRouterProvider);
 
-    final PostViewModelProvider provider = postViewModelProvider(activity.flMeta!.id!, feed);
+    final PostViewModelProvider provider = postViewModelProvider(activityId, feed);
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
 
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
-    Activity updatedActivity = activity;
     final List<String> cacheKeys = [];
+    final String currentProfileId = profileState.currentProfile?.flMeta?.id ?? '';
 
-    if (profileState.currentProfile?.flMeta?.id != null) {
-      cacheKeys.add(profileState.currentProfile!.flMeta!.id!);
-    }
-
-    if (activity.flMeta?.id != null) {
-      updatedActivity = cacheController.get<Activity>(activity.flMeta!.id!) ?? activity;
-      cacheKeys.add(activity.flMeta!.id!);
+    if (currentProfileId.isNotEmpty) {
+      cacheKeys.add(currentProfileId);
     }
 
     useLifecycleHook(viewModel);
     useCacheHook(keys: cacheKeys);
 
     final Profile? currentProfile = profileState.currentProfile;
+    final Activity? currentActivity = cacheController.get(activityId);
 
     final List<Widget> actions = [];
 
@@ -81,8 +78,7 @@ class PostPage extends HookConsumerWidget {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
 
-    final bool commentsDisabled = updatedActivity.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
-    final String activityId = updatedActivity.flMeta?.id ?? '';
+    final bool commentsDisabled = currentActivity?.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
 
     final bool canView = viewModel.checkCanView();
     final bool canComment = viewModel.checkCanComment();
@@ -97,7 +93,7 @@ class PostPage extends HookConsumerWidget {
         canSwitchProfile: viewModel.canSwitchProfile,
         onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
           context,
-          updatedActivity.securityConfiguration?.commentMode,
+          currentActivity?.securityConfiguration?.commentMode,
         ),
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,
@@ -127,7 +123,7 @@ class PostPage extends HookConsumerWidget {
             icon: UniconsLine.angle_left_b,
             onTapped: () => viewModel.onWillPopScope(),
           ),
-          appBarTrailing: [
+          appBarTrailing: <Widget>[
             for (final Widget actionWidget in actions) ...<Widget>[
               Align(
                 alignment: Alignment.center,
@@ -137,11 +133,11 @@ class PostPage extends HookConsumerWidget {
           ],
           children: <Widget>[
             PositiveActivityWidget(
-              activity: updatedActivity,
+              currentProfile: currentProfile,
+              activity: currentActivity,
               targetFeed: feed,
               isFullscreen: true,
               isEnabled: !state.isBusy,
-              onHeaderTapped: () {},
               onImageTapped: (media) => router.push(MediaRoute(media: media)),
             ),
           ],
@@ -179,7 +175,7 @@ class PostPage extends HookConsumerWidget {
                   const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
                   PositiveReactionPaginationBehaviour(
                     kind: 'comment',
-                    reactionMode: updatedActivity.securityConfiguration?.commentMode,
+                    reactionMode: currentActivity?.securityConfiguration?.commentMode,
                     activityId: activityId,
                     feed: feed,
                   ),

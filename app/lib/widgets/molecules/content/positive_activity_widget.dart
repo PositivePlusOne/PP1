@@ -28,7 +28,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
@@ -37,7 +36,6 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
-import 'package:app/widgets/molecules/content/positive_post_layout_dart';
 import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
@@ -45,184 +43,47 @@ import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 import '../dialogs/positive_dialog.dart';
-import 'activity_post_heading_dart';
 
 class PositiveActivityWidget extends HookConsumerWidget {
   PositiveActivityWidget({
-    required this.activityId,
-    required this.currentProfileId,
     required this.targetFeed,
+    this.activity,
+    this.targetProfile,
+    this.targetRelationship,
+    this.targetReactionStatistics,
+    this.currentProfile,
+    this.resenderProfile,
+    this.resenderRelationship,
+    this.resenderReactionStatistics,
     this.index = -1,
     this.isEnabled = true,
-    this.onHeaderTapped,
     this.onImageTapped,
     this.isFullscreen = false,
     this.isShared = false,
     super.key,
   });
 
-  final String activityId;
-  final String currentProfileId;
+  final TargetFeed targetFeed;
 
-  final TargetFeed? targetFeed;
+  final Activity? activity;
+  final Profile? targetProfile;
+
+  final Relationship? targetRelationship;
+  final ReactionStatistics? targetReactionStatistics;
+
+  final Profile? currentProfile;
+
+  final Profile? resenderProfile;
+  final Relationship? resenderRelationship;
+  final ReactionStatistics? resenderReactionStatistics;
+
   final int index;
 
   final bool isEnabled;
-  final void Function()? onHeaderTapped;
   final void Function(Media media)? onImageTapped;
 
   final bool isFullscreen;
   final bool isShared;
-
-  StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
-
-  final Set<RelationshipState> relationshipStates = <RelationshipState>{};
-  Relationship? publisherRelationship;
-  ReactionStatistics? reactionStatistics;
-  Profile? publisher;
-
-  bool _isBookmarking = false;
-  bool _isLiking = false;
-
-  @override
-  void initState() {
-    super.initState();
-    setupListeners();
-    loadActivityData();
-    fetchReactionStatistics();
-  }
-
-  @override
-  void didUpdateWidget(PositiveActivityWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldactivity.flMeta?.id != activity.flMeta?.id) {
-      disposeListeners();
-      setupListeners();
-      loadActivityData();
-      fetchReactionStatistics();
-    }
-  }
-
-  @override
-  void dispose() {
-    disposeListeners();
-    super.dispose();
-  }
-
-  Future<void> setupListeners() async {
-    final EventBus eventBus = ref.read(eventBusProvider);
-    await _cacheKeyUpdatedSubscription?.cancel();
-    _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
-  }
-
-  Future<void> disposeListeners() async {
-    await _cacheKeyUpdatedSubscription?.cancel();
-  }
-
-  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
-    final String activityId = activity.flMeta?.id ?? '';
-    final String publisherId = activity.publisherInformation?.publisherId ?? '';
-
-    if (event.key.contains(activityId) || event.key.contains(publisherId)) {
-      loadActivityData();
-      fetchReactionStatistics();
-    }
-  }
-
-  void loadActivityData() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-
-    publisherRelationship = null;
-    publisher = null;
-    relationshipStates.clear();
-
-    logger.i('Loading activity information for ${activity.flMeta?.id}');
-    setStateIfMounted();
-
-    // Load the publisher.
-    final String publisherKey = activity.publisherInformation?.publisherId ?? '';
-    if (publisherKey.isEmpty) {
-      logger.w('Publisher key is empty for ${activity.flMeta?.id}');
-      return;
-    }
-
-    final Profile? publisherProfile = cacheController.get(publisherKey);
-    if (publisherProfile == null) {
-      logger.e('Publisher profile not found in cache for $publisherKey');
-      return;
-    }
-
-    publisher = publisherProfile;
-    logger.i('Loaded publisher profile for $publisherKey');
-
-    final String currentProfileId = profileController.currentProfileId ?? '';
-    if (currentProfileId.isEmpty) {
-      logger.w('[loadActivityData] Current profile id is empty');
-      return;
-    }
-
-    if (currentProfileId == publisherKey) {
-      logger.i('Publisher is current user, skipping relationship load');
-      return;
-    }
-
-    // Load the relationship.
-    final Set<String> members = {currentProfileId, publisherKey};
-    if (members.length != 2) {
-      logger.w('Invalid members for $publisherKey');
-      return;
-    }
-
-    final Relationship? relationship = cacheController.get(members.asGUID);
-    if (relationship == null) {
-      logger.d('Relationship not found in cache for $relationship');
-      return;
-    }
-
-    publisherRelationship = relationship;
-    relationshipStates.addAll(relationship.relationshipStatesForEntity(currentProfileId));
-
-    logger.i('Loaded relationship for $relationship');
-    setStateIfMounted();
-  }
-
-  void fetchReactionStatistics() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final ReactionStatistics requestStatistics = ReactionStatistics.fromActivity(
-      activity,
-      targetFeed ?? TargetFeed('user', activity.publisherInformation?.publisherId ?? ''),
-    );
-
-    final String cacheKey = ReactionStatistics.buildCacheKey(requestStatistics);
-    final ReactionStatistics? cachedStatistics = cacheController.get(cacheKey);
-    if (cachedStatistics != null) {
-      logger.i('Loaded reaction statistics from cache for ${activity.flMeta?.id}');
-      reactionStatistics = cachedStatistics;
-      setStateIfMounted();
-      return;
-    }
-  }
-
-  bool get canDisplayActivity {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    if (publisher == null || publisherRelationship == null) {
-      return false;
-    }
-
-    // If the publisher is the current user, we can always display the activity.
-    if (userController.currentUser!.uid == publisher!.flMeta!.id) {
-      return true;
-    }
-
-    final bool isBlocked = relationshipStates.contains(RelationshipState.sourceBlocked) || relationshipStates.contains(RelationshipState.targetBlocked);
-    final bool isSourceHidden = relationshipStates.contains(RelationshipState.sourceHidden);
-
-    return !isBlocked && !isSourceHidden;
-  }
 
   Future<void> onPostOptionsSelected(BuildContext context) async {
     final UserController userController = ref.read(userControllerProvider.notifier);
@@ -236,48 +97,50 @@ class PositiveActivityWidget extends HookConsumerWidget {
           onDeletePostSelected: () => onPostDeleted(context),
         ),
       );
-    } else {
-      final logger = providerContainer.read(loggerProvider);
-      final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-      if (publisher == null) {
-        return;
-      }
-      final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
-      final String uid = publisher!.flMeta?.id ?? '';
-
-      logger.d('User profile modal requested: $uid');
-      if (uid.isEmpty || auth.currentUser == null) {
-        logger.w('User profile modal requested with empty uid');
-        return;
-      }
-
-      final List<String> members = <String>[
-        auth.currentUser?.uid ?? '',
-        publisher!.flMeta?.id ?? '',
-      ];
-
-      final Relationship relationship = cacheController.get(members.asGUID) ?? Relationship.empty(members);
-      await PositiveDialog.show(
-        context: context,
-        useSafeArea: false,
-        child: ProfileModalDialog(
-          profile: publisher!,
-          relationship: relationship,
-          postID: activity.flMeta?.id ?? "",
-          types: const {
-            ProfileModalDialogOptionType.viewProfile,
-            ProfileModalDialogOptionType.follow,
-            ProfileModalDialogOptionType.connect,
-            ProfileModalDialogOptionType.message,
-            ProfileModalDialogOptionType.block,
-            ProfileModalDialogOptionType.report,
-            ProfileModalDialogOptionType.hidePosts,
-            ProfileModalDialogOptionType.reportPost,
-          },
-        ),
-      );
+      return;
     }
+
+    final logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+
+    if (publisher == null) {
+      return;
+    }
+    final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
+    final String uid = publisher!.flMeta?.id ?? '';
+
+    logger.d('User profile modal requested: $uid');
+    if (uid.isEmpty || auth.currentUser == null) {
+      logger.w('User profile modal requested with empty uid');
+      return;
+    }
+
+    final List<String> members = <String>[
+      auth.currentUser?.uid ?? '',
+      publisher!.flMeta?.id ?? '',
+    ];
+
+    final Relationship relationship = cacheController.get(members.asGUID) ?? Relationship.empty(members);
+    await PositiveDialog.show(
+      context: context,
+      useSafeArea: false,
+      child: ProfileModalDialog(
+        profile: publisher!,
+        relationship: relationship,
+        postID: activity.flMeta?.id ?? "",
+        types: const {
+          ProfileModalDialogOptionType.viewProfile,
+          ProfileModalDialogOptionType.follow,
+          ProfileModalDialogOptionType.connect,
+          ProfileModalDialogOptionType.message,
+          ProfileModalDialogOptionType.block,
+          ProfileModalDialogOptionType.report,
+          ProfileModalDialogOptionType.hidePosts,
+          ProfileModalDialogOptionType.reportPost,
+        },
+      ),
+    );
   }
 
   Future<void> onPostDeleted(BuildContext context) async {
