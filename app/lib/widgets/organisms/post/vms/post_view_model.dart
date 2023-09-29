@@ -21,8 +21,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
-import 'package:app/widgets/state/positive_reactions_state.dart';
 
 part 'post_view_model.freezed.dart';
 part 'post_view_model.g.dart';

@@ -35,11 +35,13 @@ import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
 @RoutePage()
 class PostPage extends HookConsumerWidget {
   const PostPage({
+    required this.activityId,
     required this.feed,
     this.activityId = '',
     super.key,
   });
 
+  final String activityId;
   final TargetFeed feed;
   final String activityId;
 
@@ -56,8 +58,8 @@ class PostPage extends HookConsumerWidget {
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
-    final List<String> cacheKeys = [];
-    final String currentProfileId = profileState.currentProfile?.flMeta?.id ?? '';
+    final Activity? activity = cacheController.get(activityId);
+    final List<String> cacheKeys = <String>[activityId];
 
     if (currentProfileId.isNotEmpty) {
       cacheKeys.add(currentProfileId);
@@ -78,7 +80,7 @@ class PostPage extends HookConsumerWidget {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
 
-    final bool commentsDisabled = currentActivity?.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
+    final bool commentsDisabled = activity?.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
 
     final bool canView = viewModel.checkCanView();
     final bool canComment = viewModel.checkCanComment();
@@ -93,7 +95,7 @@ class PostPage extends HookConsumerWidget {
         canSwitchProfile: viewModel.canSwitchProfile,
         onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
           context,
-          currentActivity?.securityConfiguration?.commentMode,
+          activity?.securityConfiguration?.commentMode,
         ),
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,

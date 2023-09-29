@@ -1,12 +1,12 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 
 class PositiveFeedState with PositivePaginationControllerState {
   PositiveFeedState({
@@ -32,6 +32,6 @@ class PositiveFeedState with PositivePaginationControllerState {
   }
 
   static String buildFeedCacheKey(TargetFeed feed) {
-    return 'feed:paging:${feed.feed}:${feed.slug}';
+    return 'feed:paging:${feed.targetSlug}:${feed.targetUserId}';
   }
 }

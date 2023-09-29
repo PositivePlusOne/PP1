@@ -84,12 +84,12 @@ class ReactionStatistics with _$ReactionStatistics {
 
   static ReactionStatistics fromActivity(Activity activity, TargetFeed feed) {
     return ReactionStatistics(
-      feed: TargetFeed.toOrigin(feed),
-      counts: {},
+      feed: feed,
       uniqueUserReactions: HashMap<String, HashMap<String, bool>>(),
       activityId: activity.flMeta?.id ?? '',
       reactionId: '',
       userId: '',
+      counts: {},
     );
   }
 }
@@ -114,13 +114,13 @@ class TargetFeed with _$TargetFeed {
   }
 
   static String toOrigin(TargetFeed targetFeed) {
-    String feed = targetFeed.feed;
+    String slug = targetFeed.targetSlug;
 
     //! If we have more aggregated feeds, we need to add them here
-    if (feed == 'timeline') {
-      feed = 'user';
+    if (slug == 'timeline') {
+      slug = 'user';
     }
 
-    return '$feed:${targetFeed.slug}';
+    return '$slug:${targetFeed.targetUserId}';
   }
 }

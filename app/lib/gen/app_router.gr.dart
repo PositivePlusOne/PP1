@@ -308,7 +308,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PostPage(
-          activity: args.activity,
+          activityId: args.activityId,
           feed: args.feed,
           key: args.key,
         ),
@@ -1354,14 +1354,14 @@ class OnboardingYourPledgeRouteArgs {
 /// [PostPage]
 class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
-    required Activity activity,
-    required InvalidType feed,
+    required String activityId,
+    required TargetFeed feed,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           PostRoute.name,
           args: PostRouteArgs(
-            activity: activity,
+            activityId: activityId,
             feed: feed,
             key: key,
           ),
@@ -1375,20 +1375,20 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
 
 class PostRouteArgs {
   const PostRouteArgs({
-    required this.activity,
+    required this.activityId,
     required this.feed,
     this.key,
   });
 
-  final Activity activity;
+  final String activityId;
 
-  final InvalidType feed;
+  final TargetFeed feed;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'PostRouteArgs{activity: $activity, feed: $feed, key: $key}';
+    return 'PostRouteArgs{activityId: $activityId, feed: $feed, key: $key}';
   }
 }
 

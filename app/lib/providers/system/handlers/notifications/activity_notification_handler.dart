@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,7 +15,6 @@ import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/services/third_party.dart';

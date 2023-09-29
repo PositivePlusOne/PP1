@@ -53,7 +53,9 @@ extension ActivityExt on Activity {
     await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
-  bool canDisplayOnFeed(Relationship relationship, String currentProfileId) {
+  //* Verifies whether the activity can be included in the paged data.
+  //* Not the same as whether the post should be hidden due to blocked state
+  bool canDisplayOnFeed(String currentProfileId, Relationship relationship) {
     final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentProfileId);
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
@@ -79,9 +81,9 @@ extension ActivityExt on Activity {
   ReactionStatistics getStatisticsForActivity(TargetFeed feed) {
     final Logger logger = providerContainer.read(loggerProvider);
     ReactionStatistics statistics = ReactionStatistics(
-      activityId: activityId,
-      counts: {},
+      activityId: flMeta?.id ?? '',
       feed: feed,
+      counts: {},
     );
 
     logger.i('getStatisticsForActivity: $activityId, $origin');
