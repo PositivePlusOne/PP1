@@ -294,6 +294,27 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     return currentModel;
   }
 
+  Future<void> onVideoButtonPressed(VideoCameraState cameraState) async {
+    if (cameraState.captureState is VideoRecordingCameraState) {
+      print("object");
+    }
+    // if (cameraState.captureState?.isRecordingVideo ?? false) {
+    //   // cameraState.captureState as VideoRecordingCameraState;
+    //   final CaptureRequest captureRequest = await cameraState.startRecording();
+    //   final XFile? file = captureRequest.when(
+    //     single: (p0) => p0.file,
+    //   );
+    // } else {
+    //   final CaptureRequest captureRequest = await cameraState.startRecording();
+    // }
+
+    // if (file == null) {
+    //   return;
+    // }
+
+    // await widget.onCameraImageTaken?.call(file);
+  }
+
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
     final CaptureRequest captureRequest = await cameraState.takePhoto();
     final XFile? file = captureRequest.when(
@@ -575,7 +596,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
                 active: canTakePictureOrVideo,
                 onTap: (_) => state.when(
                   onPhotoMode: onImageTaken,
-                  onVideoMode: (videoState) {},
+                  onVideoMode: onVideoButtonPressed,
                   onVideoRecordingMode: (videoState) {},
                 ),
               ),
