@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -22,23 +23,28 @@ class AccountPageViewModelState with _$AccountPageViewModelState {
     @Default(Colors.white) Color organisationAccentColour,
   }) = _AccountPageViewModelState;
 
-  factory AccountPageViewModelState.initialState() => const AccountPageViewModelState(
+  factory AccountPageViewModelState.initialState() => AccountPageViewModelState(
         isBusy: false,
       );
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, ProfileSwitchMixin {
-  final PageController pageController = PageController();
+  late final PageController pageController;
 
   @override
   AccountPageViewModelState build() {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Profile? profile = profileController.currentProfile;
+    pageController = PageController(
+      initialPage: (profile?.featureFlags.contains(kFeatureFlagOrganisation) ?? true) ? 1 : 0,
+    );
     return AccountPageViewModelState.initialState();
   }
 
   void onProfileChange(int profileIndex, ProfileControllerState profileState, ProfileSwitchMixin mixin) {
     final Profile targetProfile = mixin.getSupportedProfiles()[profileIndex];
-    final bool isOrganisation = targetProfile.featureFlags.contains("organisation");
+    final bool isOrganisation = targetProfile.featureFlags.contains(kFeatureFlagOrganisation);
     final Color accentColour = targetProfile.accentColor.toSafeColorFromHex();
 
     final int targetPage = (isOrganisation ? 1 : 0);
@@ -66,5 +72,18 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
   void onFirstRender() {
     super.onFirstRender();
     prepareProfileSwitcher();
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Profile? profile = profileController.currentProfile;
+
+    state = state.copyWith(
+      organisationAccentColour: profile?.accentColor.toColorFromHex() ?? Colors.white,
+      profileAccentColour: profile?.accentColor.toColorFromHex() ?? Colors.white,
+    );
+  }
+
+  @override
+  void onProfileSwitched(String? id, Profile? profile) {
+    super.onProfileSwitched(id, profile);
   }
 }

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +20,7 @@ class AccountOptionsPane extends ConsumerWidget {
   const AccountOptionsPane({
     super.key,
     required this.colors,
+    required this.mixin,
     this.edgePadding = kPaddingNone,
     this.isOrganisation = false,
     this.accentColour = Colors.white,
@@ -28,6 +30,7 @@ class AccountOptionsPane extends ConsumerWidget {
   final bool isOrganisation;
   final double edgePadding;
   final Color accentColour;
+  final ProfileSwitchMixin mixin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -113,6 +116,7 @@ class AccountOptionsPane extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.genericFeedback());
     final AccountViewModel viewModel = ref.watch(viewModelProvider.notifier);
+    final String profileName = mixin.getCurrentProfile()?.displayName ?? "";
 
     return [
       PositiveButton(
@@ -174,7 +178,7 @@ class AccountOptionsPane extends ConsumerWidget {
         icon: UniconsLine.sign_out_alt,
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
-        label: localizations.page_account_organisation_actions_leave("Company Name"),
+        label: localizations.page_account_organisation_actions_leave(profileName),
         onTapped: viewModel.onAccountDetailsButtonSelected,
       ),
     ];

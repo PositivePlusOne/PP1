@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/widgets/molecules/switchers/positive_profile_segmented_switcher.dart';
 import 'package:app/widgets/organisms/account/vms/account_page_view_model.dart';
 import 'package:flutter/gestures.dart';
@@ -26,16 +27,16 @@ import 'components/account_options_pane.dart';
 import 'components/account_profile_banner.dart';
 
 @RoutePage()
-class AccountPage extends ConsumerWidget {
+class AccountPage extends HookConsumerWidget {
   const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(profileControllerProvider);
-
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final AccountPageViewModel viewModel = ref.watch(accountPageViewModelProvider.notifier);
+    final AccountPageViewModel viewModel = ref.read(accountPageViewModelProvider.notifier);
+    final AccountPageViewModelState state = ref.watch(accountPageViewModelProvider);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+    useLifecycleHook(viewModel);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -92,7 +93,8 @@ class AccountPage extends ConsumerWidget {
                       AccountOptionsPane(
                         colors: colors,
                         edgePadding: kPaddingSmall,
-                        accentColour: viewModel.state.profileAccentColour,
+                        accentColour: state.profileAccentColour,
+                        mixin: viewModel,
                       ),
                       const Spacer(),
                     ],
@@ -101,7 +103,8 @@ class AccountPage extends ConsumerWidget {
                     colors: colors,
                     isOrganisation: true,
                     edgePadding: kPaddingSmall,
-                    accentColour: viewModel.state.organisationAccentColour,
+                    accentColour: state.organisationAccentColour,
+                    mixin: viewModel,
                   ),
                 ],
               ),

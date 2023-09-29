@@ -77,7 +77,7 @@ class ProfileController extends _$ProfileController {
   }
 
   bool get isCurrentlyOrganisation {
-    return state.currentProfile?.featureFlags.contains(kFeatureFlagOrganisationControls) ?? false;
+    return state.currentProfile?.featureFlags.contains(kFeatureFlagOrganisation) ?? false;
   }
 
   bool get hasSetupProfile {
