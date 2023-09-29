@@ -56,6 +56,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     required AwesomeFilter currentFilter,
     required ActivityData previousActivity,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
+    @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
   }) = _CreatePostViewModelState;
 
   factory CreatePostViewModelState.initialState() => CreatePostViewModelState(
@@ -81,7 +82,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       state = state.copyWith(
         currentCreatePostPage: CreatePostCurrentPage.camera,
         currentPostType: PostType.text,
-        activeButton: PositivePostNavigationActiveButton.post,
+        activeButton: state.lastActiveButton,
       );
     }
 
@@ -91,6 +92,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> initCamera(BuildContext context) async {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
+      currentPostType: PostType.image,
+      activeButton: PositivePostNavigationActiveButton.post,
     );
   }
 
@@ -464,7 +467,31 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(currentFilter: filter);
   }
 
-  Future<void> onFlexButtonPressed(BuildContext context, Profile? currentProfile) async {
+  Future<void> onPostPressed(BuildContext context) async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.post,
+      lastActiveButton: PositivePostNavigationActiveButton.post,
+      currentPostType: PostType.image,
+    );
+  }
+
+  Future<void> onClipPressed(BuildContext context) async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.clip,
+      lastActiveButton: PositivePostNavigationActiveButton.clip,
+      currentPostType: PostType.clip,
+    );
+  }
+
+  Future<void> onEventPressed(BuildContext context) async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.event,
+      lastActiveButton: PositivePostNavigationActiveButton.event,
+      currentPostType: PostType.event,
+    );
+  }
+
+  Future<void> onFlexButtonPressed(BuildContext context) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     switch (state.currentCreatePostPage) {
