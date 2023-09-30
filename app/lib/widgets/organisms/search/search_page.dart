@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -112,7 +113,10 @@ class SearchPage extends ConsumerWidget {
         case SearchTab.posts:
           searchResultWidgets.addAll(<Widget>[
             for (final Activity activity in searchPostsResults) ...<Widget>[
-              PositiveActivityWidget(activity: activity),
+              PositiveActivityWidget(
+                activity: activity,
+                targetFeed: TargetFeed.search(),
+              ),
             ],
           ].spaceWithVertical(kPaddingMedium));
           break;

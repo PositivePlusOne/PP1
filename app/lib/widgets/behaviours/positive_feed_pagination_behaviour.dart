@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,6 +16,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
@@ -197,7 +197,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return PositiveActivityWidget(
       activity: item,
       targetFeed: feed,
-      onImageTapped: onMediaTap != null ? (media) => onMediaTap?.call(item, media) : null,
       onHeaderTapped: onHeaderTap != null ? () => onHeaderTap?.call(item) : null,
       index: index,
     );

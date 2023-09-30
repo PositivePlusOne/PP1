@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:collection';
 
 // Package imports:
-import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/helpers/cache_helpers.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -12,13 +12,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/extensions/paging_extensions.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/api.dart';
@@ -121,12 +120,38 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> deleteActivity(String activityId) async {
+  Future<void> deleteActivity(Activity activity) async {
     final Logger logger = ref.read(loggerProvider);
-    logger.i('[Activities Service] - Deleting activity');
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final String activityId = activity.flMeta?.id ?? '';
 
+    logger.i('[Activities Service] - Deleting activity: $activityId');
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     await postApiService.deleteActivity(activityId: activityId);
+
+    //* We can keep the activity in the cache for now, as this will prevent the UI from breaking
+    //* cacheController.remove(activityId);
+    //* But, lets remove it from the feed state
+    final List<TargetFeed> feeds = buildTargetFeedsForActivity(activity);
+    final List<String> cacheKeys = feeds.map((e) => PositiveFeedState.buildFeedCacheKey(e)).toList();
+
+    for (final String cacheKey in cacheKeys) {
+      final PositiveFeedState? feedState = cacheController.get(cacheKey);
+      if (feedState == null) {
+        continue;
+      }
+
+      final PagingController<String, Activity> pagingController = feedState.pagingController;
+      final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+      final int index = currentItems.indexWhere((element) => element.flMeta?.id == activityId);
+      if (index >= 0) {
+        currentItems.removeAt(index);
+        pagingController.itemList = currentItems;
+      }
+
+      cacheController.add(key: cacheKey, value: feedState);
+    }
   }
 
   Future<Activity> updateActivity({
@@ -151,7 +176,7 @@ class ActivitiesController extends _$ActivitiesController {
     required TargetFeed feed,
   }) {
     final Logger logger = ref.read(loggerProvider);
-    final String cacheKey = PositiveFeedPaginationBehaviourState.getExpectedCacheKey(profileId: profileId, feed: feed);
+    final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     logger.i('[Activities Service] - Loading feed state for profile: $profileId - feed: $feed');
@@ -184,7 +209,7 @@ class ActivitiesController extends _$ActivitiesController {
     required String pageKey,
   }) {
     final Logger logger = ref.read(loggerProvider);
-    final String cacheKey = PositiveFeedPaginationBehaviourState.getExpectedCacheKey(profileId: profileId, feed: feed);
+    final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     logger.i('[Activities Service] - Updating feed state for profile: $profileId - feed: $feed');
@@ -204,7 +229,7 @@ class ActivitiesController extends _$ActivitiesController {
     required Object error,
   }) {
     final Logger logger = ref.read(loggerProvider);
-    final String cacheKey = PositiveFeedPaginationBehaviourState.getExpectedCacheKey(profileId: profileId, feed: feed);
+    final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     logger.i('[Activities Service] - Updating feed state for profile: $profileId - feed: $feed');
@@ -228,10 +253,9 @@ class ActivitiesController extends _$ActivitiesController {
 
     logger.i('[Activities Service] - Updating feed state for profile: $currentProfileId - activity: $activity');
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String cacheKey = PositiveFeedPaginationBehaviourState.getExpectedCacheKey(
-      profileId: currentProfileId,
-      feed: TargetFeed.fromOrigin(originFeed),
-    );
+
+    final TargetFeed feed = TargetFeed.fromOrigin(originFeed);
+    final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
 
     final PositiveFeedState feedState = getOrCreateFeedStateForOrigin(
       profileId: currentProfileId,
@@ -261,10 +285,8 @@ class ActivitiesController extends _$ActivitiesController {
 
     logger.i('[Activities Service] - Updating feed state for profile: $currentProfileId - activity: $activity');
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String cacheKey = PositiveFeedPaginationBehaviourState.getExpectedCacheKey(
-      profileId: currentProfileId,
-      feed: TargetFeed.fromOrigin(originFeed),
-    );
+    final TargetFeed feed = TargetFeed.fromOrigin(originFeed);
+    final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
 
     final PositiveFeedState feedState = getOrCreateFeedStateForOrigin(
       profileId: currentProfileId,
@@ -297,10 +319,8 @@ class ActivitiesController extends _$ActivitiesController {
 
     logger.i('[Activities Service] - Updating feed state for profile: $currentProfileId - activity: $activity');
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String cacheKey = PositiveFeedPaginationBehaviourState.getExpectedCacheKey(
-      profileId: currentProfileId,
-      feed: TargetFeed.fromOrigin(originFeed),
-    );
+    final TargetFeed feed = TargetFeed.fromOrigin(originFeed);
+    final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
 
     final PositiveFeedState feedState = getOrCreateFeedStateForOrigin(
       profileId: currentProfileId,

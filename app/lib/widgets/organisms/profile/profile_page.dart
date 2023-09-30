@@ -8,6 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -140,7 +141,10 @@ class ProfilePage extends HookConsumerWidget {
           ),
         ),
         PositiveFeedPaginationBehaviour(
-          feed: TargetFeed('user', targetProfile.flMeta?.id ?? ''),
+          feed: TargetFeed(
+            targetSlug: 'user',
+            targetUserId: targetProfile.flMeta?.id ?? '',
+          ),
         ),
       ],
     );

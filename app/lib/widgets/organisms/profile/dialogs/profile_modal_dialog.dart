@@ -3,6 +3,7 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/diagnostics.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
@@ -65,10 +66,10 @@ class ProfileModalDialogOption {
 
 class ProfileModalDialog extends ConsumerStatefulWidget {
   const ProfileModalDialog({
-    required this.profile,
-    required this.relationship,
+    required this.targetProfileId,
     this.styleOverrides = const {},
-    this.postID = "",
+    this.currentProfileId = '',
+    this.activityId = '',
     this.types = const {
       ProfileModalDialogOptionType.viewProfile,
       ProfileModalDialogOptionType.follow,
@@ -81,13 +82,12 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final Profile profile;
-  final Relationship relationship;
+  final String currentProfileId;
+  final String targetProfileId;
+  final String activityId;
+
   final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
-  final String postID;
-
   final Set<ProfileModalDialogOptionType> types;
-
   static const String kProfileDialogHeroTag = 'profile_modal_dialog';
 
   @override
@@ -96,43 +96,10 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
-  late Relationship _currentRelationship;
-  late final StreamSubscription<CacheKeyUpdatedEvent> _cacheUpdatedSubscription;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _currentRelationship = widget.relationship;
-    setupListeners();
-  }
-
-  void setupListeners() {
-    final EventBus eventBus = ref.read(eventBusProvider);
-    _cacheUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyChanged);
-  }
-
-  @override
-  void dispose() {
-    _cacheUpdatedSubscription.cancel();
-    super.dispose();
-  }
-
-  void onCacheKeyChanged(CacheKeyUpdatedEvent event) {
-    final String key = widget.profile.flMeta?.id ?? '';
-    if (!mounted || key.isEmpty) {
-      return;
-    }
-
-    if (event.key.contains(key) && event.value is Relationship) {
-      _currentRelationship = event.value;
-      setState(() {});
-    }
-  }
-
-  Future<void> onOptionSelected(ProfileModalDialogOptionType type) async {
+  Future<void> onOptionSelected(ProfileModalDialogOptionType type, Profile sourceProfile, Profile targetProfile, Relationship targetRelationship) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final String flamelinkId = widget.profile.flMeta?.id ?? '';
+    final String flamelinkId = targetProfile.flMeta?.id ?? '';
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
@@ -145,22 +112,23 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     });
 
     final UserController userController = ref.read(userControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
-    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userController.currentUser?.uid ?? '');
+    final Set<RelationshipState> relationshipStates = targetRelationship.relationshipStatesForEntity(userController.currentUser?.uid ?? '');
+
+    final String targetDisplayName = targetProfile.displayName;
 
     try {
       switch (type) {
         case ProfileModalDialogOptionType.viewProfile:
           await appRouter.pop();
-          await ref.read(profileControllerProvider.notifier).viewProfile(widget.profile);
+          await ref.read(profileControllerProvider.notifier).viewProfile(targetProfile);
           break;
         case ProfileModalDialogOptionType.follow:
           var following = relationshipStates.contains(RelationshipState.sourceFollowed);
           following ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following ${widget.profile.displayName.asHandle}'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following ${targetDisplayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.connect:
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
@@ -172,25 +140,25 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptionType.block:
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} ${widget.profile.displayName.asHandle}'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} ${targetDisplayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.mute:
           relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(flamelinkId) : await relationshipController.muteRelationship(flamelinkId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} ${widget.profile.displayName.asHandle}'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} ${targetDisplayName.asHandle}'));
           break;
         case ProfileModalDialogOptionType.hidePosts:
           relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(flamelinkId) : await relationshipController.hideRelationship(flamelinkId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} ${widget.profile.displayName.asHandle}\'s posts'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} ${targetDisplayName.asHandle}\'s posts'));
           break;
         case ProfileModalDialogOptionType.report:
           await appRouter.pop();
           await PositiveDialog.show(
             context: context,
             useSafeArea: false,
-            title: localizations.shared_profile_report_modal_title(widget.profile.displayName.asHandle),
-            child: ProfileReportDialog(currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
+            title: localizations.shared_profile_report_modal_title(targetDisplayName.asHandle),
+            child: ProfileReportDialog(currentUserProfile: sourceProfile, targetProfile: widget.profile),
           );
           break;
         case ProfileModalDialogOptionType.reportPost:

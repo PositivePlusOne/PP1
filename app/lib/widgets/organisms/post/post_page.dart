@@ -1,9 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/reactions.dart';
-import 'package:app/hooks/cache_hook.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,13 +12,16 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
@@ -37,13 +37,11 @@ class PostPage extends HookConsumerWidget {
   const PostPage({
     required this.activityId,
     required this.feed,
-    this.activityId = '',
     super.key,
   });
 
   final String activityId;
   final TargetFeed feed;
-  final String activityId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +56,9 @@ class PostPage extends HookConsumerWidget {
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
+    final Profile? currentProfile = profileState.currentProfile;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
     final Activity? activity = cacheController.get(activityId);
     final List<String> cacheKeys = <String>[activityId];
 
@@ -67,9 +68,6 @@ class PostPage extends HookConsumerWidget {
 
     useLifecycleHook(viewModel);
     useCacheHook(keys: cacheKeys);
-
-    final Profile? currentProfile = profileState.currentProfile;
-    final Activity? currentActivity = cacheController.get(activityId);
 
     final List<Widget> actions = [];
 
@@ -136,11 +134,10 @@ class PostPage extends HookConsumerWidget {
           children: <Widget>[
             PositiveActivityWidget(
               currentProfile: currentProfile,
-              activity: currentActivity,
+              activity: activity,
               targetFeed: feed,
               isFullscreen: true,
               isEnabled: !state.isBusy,
-              onImageTapped: (media) => router.push(MediaRoute(media: media)),
             ),
           ],
         ),
@@ -177,8 +174,8 @@ class PostPage extends HookConsumerWidget {
                   const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
                   PositiveReactionPaginationBehaviour(
                     kind: 'comment',
-                    reactionMode: currentActivity?.securityConfiguration?.commentMode,
-                    activityId: activityId,
+                    reactionMode: activity?.securityConfiguration?.commentMode,
+                    activity: activity,
                     feed: feed,
                   ),
                   SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),

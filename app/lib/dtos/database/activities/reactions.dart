@@ -2,11 +2,11 @@
 import 'dart:collection';
 
 // Package imports:
-import 'package:app/dtos/database/activities/tags.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'reactions.freezed.dart';
@@ -71,20 +71,19 @@ class ReactionType with _$ReactionType {
 class ReactionStatistics with _$ReactionStatistics {
   const factory ReactionStatistics({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') @JsonKey(name: 'feed') TargetFeed feed,
+    @Default('') @JsonKey(name: 'feed') String feed,
     @Default({}) @JsonKey(name: 'counts') Map<String, int> counts,
     @Default({}) @JsonKey(name: 'unique_user_reactions') Map<String, Map<String, bool>> uniqueUserReactions,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
     @Default('') @JsonKey(name: 'user_id') String userId,
-    @Default({}) @JsonKey(name: 'all_reactions') Map<String, Reaction> allReactions,
   }) = _ReactionStatistics;
 
   factory ReactionStatistics.fromJson(Map<String, dynamic> json) => _$ReactionStatisticsFromJson(json);
 
   static ReactionStatistics fromActivity(Activity activity, TargetFeed feed) {
     return ReactionStatistics(
-      feed: feed,
+      feed: TargetFeed.toOrigin(feed),
       uniqueUserReactions: HashMap<String, HashMap<String, bool>>(),
       activityId: activity.flMeta?.id ?? '',
       reactionId: '',
@@ -111,6 +110,14 @@ class TargetFeed with _$TargetFeed {
     final String slug = parts[1];
 
     return TargetFeed(targetSlug: feed, targetUserId: slug);
+  }
+
+  static TargetFeed search() {
+    return const TargetFeed(targetSlug: 'search', targetUserId: '');
+  }
+
+  static TargetFeed tag(String tag) {
+    return TargetFeed(targetSlug: 'tags', targetUserId: tag);
   }
 
   static String toOrigin(TargetFeed targetFeed) {

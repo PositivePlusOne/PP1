@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/gen/app_router.dart';
@@ -52,10 +52,12 @@ class ActivityNotificationHandler extends NotificationHandler {
       return;
     }
 
-    final Activity activity = await activitiesController.getActivity(activityId);
+    // Preload the activity
+    await activitiesController.getActivity(activityId);
+
     final AppRouter router = providerContainer.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
-      activity: activity,
+      activityId: activityId,
       feed: TargetFeed.fromOrigin(origin),
     );
 

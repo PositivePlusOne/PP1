@@ -1247,7 +1247,7 @@ mixin _$ReactionStatistics {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   @JsonKey(name: 'feed')
-  TargetFeed get feed => throw _privateConstructorUsedError;
+  String get feed => throw _privateConstructorUsedError;
   @JsonKey(name: 'counts')
   Map<String, int> get counts => throw _privateConstructorUsedError;
   @JsonKey(name: 'unique_user_reactions')
@@ -1259,8 +1259,6 @@ mixin _$ReactionStatistics {
   String get reactionId => throw _privateConstructorUsedError;
   @JsonKey(name: 'user_id')
   String get userId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'all_reactions')
-  Map<String, Reaction> get allReactions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1276,17 +1274,15 @@ abstract class $ReactionStatisticsCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      @JsonKey(name: 'feed') TargetFeed feed,
+      @JsonKey(name: 'feed') String feed,
       @JsonKey(name: 'counts') Map<String, int> counts,
       @JsonKey(name: 'unique_user_reactions')
       Map<String, Map<String, bool>> uniqueUserReactions,
       @JsonKey(name: 'activity_id') String activityId,
       @JsonKey(name: 'reaction_id') String reactionId,
-      @JsonKey(name: 'user_id') String userId,
-      @JsonKey(name: 'all_reactions') Map<String, Reaction> allReactions});
+      @JsonKey(name: 'user_id') String userId});
 
   $FlMetaCopyWith<$Res>? get flMeta;
-  $TargetFeedCopyWith<$Res> get feed;
 }
 
 /// @nodoc
@@ -1309,7 +1305,6 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
     Object? activityId = null,
     Object? reactionId = null,
     Object? userId = null,
-    Object? allReactions = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -1319,7 +1314,7 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
       feed: null == feed
           ? _value.feed
           : feed // ignore: cast_nullable_to_non_nullable
-              as TargetFeed,
+              as String,
       counts: null == counts
           ? _value.counts
           : counts // ignore: cast_nullable_to_non_nullable
@@ -1340,10 +1335,6 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      allReactions: null == allReactions
-          ? _value.allReactions
-          : allReactions // ignore: cast_nullable_to_non_nullable
-              as Map<String, Reaction>,
     ) as $Val);
   }
 
@@ -1358,14 +1349,6 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
       return _then(_value.copyWith(flMeta: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $TargetFeedCopyWith<$Res> get feed {
-    return $TargetFeedCopyWith<$Res>(_value.feed, (value) {
-      return _then(_value.copyWith(feed: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -1378,19 +1361,16 @@ abstract class _$$_ReactionStatisticsCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-      @JsonKey(name: 'feed') TargetFeed feed,
+      @JsonKey(name: 'feed') String feed,
       @JsonKey(name: 'counts') Map<String, int> counts,
       @JsonKey(name: 'unique_user_reactions')
       Map<String, Map<String, bool>> uniqueUserReactions,
       @JsonKey(name: 'activity_id') String activityId,
       @JsonKey(name: 'reaction_id') String reactionId,
-      @JsonKey(name: 'user_id') String userId,
-      @JsonKey(name: 'all_reactions') Map<String, Reaction> allReactions});
+      @JsonKey(name: 'user_id') String userId});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
-  @override
-  $TargetFeedCopyWith<$Res> get feed;
 }
 
 /// @nodoc
@@ -1411,7 +1391,6 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
     Object? activityId = null,
     Object? reactionId = null,
     Object? userId = null,
-    Object? allReactions = null,
   }) {
     return _then(_$_ReactionStatistics(
       flMeta: freezed == flMeta
@@ -1421,7 +1400,7 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
       feed: null == feed
           ? _value.feed
           : feed // ignore: cast_nullable_to_non_nullable
-              as TargetFeed,
+              as String,
       counts: null == counts
           ? _value._counts
           : counts // ignore: cast_nullable_to_non_nullable
@@ -1442,10 +1421,6 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
               as String,
-      allReactions: null == allReactions
-          ? _value._allReactions
-          : allReactions // ignore: cast_nullable_to_non_nullable
-              as Map<String, Reaction>,
     ));
   }
 }
@@ -1461,12 +1436,9 @@ class _$_ReactionStatistics implements _ReactionStatistics {
       final Map<String, Map<String, bool>> uniqueUserReactions = const {},
       @JsonKey(name: 'activity_id') this.activityId = '',
       @JsonKey(name: 'reaction_id') this.reactionId = '',
-      @JsonKey(name: 'user_id') this.userId = '',
-      @JsonKey(name: 'all_reactions')
-      final Map<String, Reaction> allReactions = const {}})
+      @JsonKey(name: 'user_id') this.userId = ''})
       : _counts = counts,
-        _uniqueUserReactions = uniqueUserReactions,
-        _allReactions = allReactions;
+        _uniqueUserReactions = uniqueUserReactions;
 
   factory _$_ReactionStatistics.fromJson(Map<String, dynamic> json) =>
       _$$_ReactionStatisticsFromJson(json);
@@ -1476,7 +1448,7 @@ class _$_ReactionStatistics implements _ReactionStatistics {
   final FlMeta? flMeta;
   @override
   @JsonKey(name: 'feed')
-  final TargetFeed feed;
+  final String feed;
   final Map<String, int> _counts;
   @override
   @JsonKey(name: 'counts')
@@ -1505,18 +1477,10 @@ class _$_ReactionStatistics implements _ReactionStatistics {
   @override
   @JsonKey(name: 'user_id')
   final String userId;
-  final Map<String, Reaction> _allReactions;
-  @override
-  @JsonKey(name: 'all_reactions')
-  Map<String, Reaction> get allReactions {
-    if (_allReactions is EqualUnmodifiableMapView) return _allReactions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_allReactions);
-  }
 
   @override
   String toString() {
-    return 'ReactionStatistics(flMeta: $flMeta, feed: $feed, counts: $counts, uniqueUserReactions: $uniqueUserReactions, activityId: $activityId, reactionId: $reactionId, userId: $userId, allReactions: $allReactions)';
+    return 'ReactionStatistics(flMeta: $flMeta, feed: $feed, counts: $counts, uniqueUserReactions: $uniqueUserReactions, activityId: $activityId, reactionId: $reactionId, userId: $userId)';
   }
 
   @override
@@ -1533,9 +1497,7 @@ class _$_ReactionStatistics implements _ReactionStatistics {
                 other.activityId == activityId) &&
             (identical(other.reactionId, reactionId) ||
                 other.reactionId == reactionId) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            const DeepCollectionEquality()
-                .equals(other._allReactions, _allReactions));
+            (identical(other.userId, userId) || other.userId == userId));
   }
 
   @JsonKey(ignore: true)
@@ -1548,8 +1510,7 @@ class _$_ReactionStatistics implements _ReactionStatistics {
       const DeepCollectionEquality().hash(_uniqueUserReactions),
       activityId,
       reactionId,
-      userId,
-      const DeepCollectionEquality().hash(_allReactions));
+      userId);
 
   @JsonKey(ignore: true)
   @override
@@ -1569,15 +1530,13 @@ class _$_ReactionStatistics implements _ReactionStatistics {
 abstract class _ReactionStatistics implements ReactionStatistics {
   const factory _ReactionStatistics(
       {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      @JsonKey(name: 'feed') final TargetFeed feed,
+      @JsonKey(name: 'feed') final String feed,
       @JsonKey(name: 'counts') final Map<String, int> counts,
       @JsonKey(name: 'unique_user_reactions')
       final Map<String, Map<String, bool>> uniqueUserReactions,
       @JsonKey(name: 'activity_id') final String activityId,
       @JsonKey(name: 'reaction_id') final String reactionId,
-      @JsonKey(name: 'user_id') final String userId,
-      @JsonKey(name: 'all_reactions')
-      final Map<String, Reaction> allReactions}) = _$_ReactionStatistics;
+      @JsonKey(name: 'user_id') final String userId}) = _$_ReactionStatistics;
 
   factory _ReactionStatistics.fromJson(Map<String, dynamic> json) =
       _$_ReactionStatistics.fromJson;
@@ -1587,7 +1546,7 @@ abstract class _ReactionStatistics implements ReactionStatistics {
   FlMeta? get flMeta;
   @override
   @JsonKey(name: 'feed')
-  TargetFeed get feed;
+  String get feed;
   @override
   @JsonKey(name: 'counts')
   Map<String, int> get counts;
@@ -1603,9 +1562,6 @@ abstract class _ReactionStatistics implements ReactionStatistics {
   @override
   @JsonKey(name: 'user_id')
   String get userId;
-  @override
-  @JsonKey(name: 'all_reactions')
-  Map<String, Reaction> get allReactions;
   @override
   @JsonKey(ignore: true)
   _$$_ReactionStatisticsCopyWith<_$_ReactionStatistics> get copyWith =>

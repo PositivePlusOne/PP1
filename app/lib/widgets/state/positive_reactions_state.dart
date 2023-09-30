@@ -1,11 +1,11 @@
 // Dart imports:
 
 // Package imports:
-import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 
 class PositiveReactionsState with PositivePaginationControllerState {
   PositiveReactionsState({

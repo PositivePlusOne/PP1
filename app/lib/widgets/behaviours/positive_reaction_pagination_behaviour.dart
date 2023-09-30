@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -35,6 +34,7 @@ import 'package:app/providers/events/content/reaction_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
@@ -47,9 +47,9 @@ import '../../services/third_party.dart';
 class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
   const PositiveReactionPaginationBehaviour({
     required this.reactionsState,
-    required this.activity,
     required this.kind,
     required this.feed,
+    this.activity,
     this.relationship,
     this.reactionMode,
     this.onPageLoaded,
@@ -58,7 +58,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
   });
 
   final PositiveReactionsState reactionsState;
-  final Activity activity;
+  final Activity? activity;
   final TargetFeed feed;
   final Relationship? relationship;
   final String kind;

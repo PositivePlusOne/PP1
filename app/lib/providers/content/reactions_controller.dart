@@ -67,12 +67,7 @@ class ReactionsController extends _$ReactionsController {
     required String origin,
   }) async {
     final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
     logger.i('CommunitiesController - bookmarkActivity - Bookmarking activity: $activityId');
-
-    if (userController.currentUser == null) {
-      throw Exception('User is null');
-    }
 
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     await reactionApiService.postReaction(

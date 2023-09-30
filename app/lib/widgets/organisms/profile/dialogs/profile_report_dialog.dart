@@ -16,6 +16,8 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -24,15 +26,15 @@ import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.da
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
 import '../../../../providers/system/design_controller.dart';
 
-class ProfileReportDialog extends ConsumerWidget {
+class ProfileReportDialog extends HookConsumerWidget {
   const ProfileReportDialog({
-    required this.currentUserProfile,
-    required this.targetProfile,
+    required this.targetProfileId,
+    this.currentProfileId = '',
     super.key,
   });
 
-  final Profile currentUserProfile;
-  final Profile targetProfile;
+  final String targetProfileId;
+  final String currentProfileId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,8 +50,16 @@ class ProfileReportDialog extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final List<String> cacheKeys = [];
+
+    final Profile? currentProfile = cacheController.get(currentProfileId);
+    final Profile? targetProfile = cacheController.get(targetProfileId);
+
+    useCacheHook(keys: []);
+
     return Column(
-      children: [
+      children: <Widget>[
         Text(
           localizations.shared_profile_report_modal_subtitle,
           style: typography.styleSubtitle.copyWith(color: colors.white),
@@ -88,7 +98,7 @@ class ProfileReportDialog extends ConsumerWidget {
           colors: colors,
           onTapped: () => viewModel.onFeedbackSubmitted(
             reportee: targetProfile,
-            reporter: currentUserProfile,
+            reporter: currentProfile,
           ),
           icon: UniconsLine.exclamation_octagon,
           label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
