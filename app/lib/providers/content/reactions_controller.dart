@@ -1,26 +1,21 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:collection';
 
 // Package imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/helpers/cache_helpers.dart';
-import 'package:app/widgets/state/positive_reactions_state.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
-import 'package:app/main.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 
 part 'reactions_controller.freezed.dart';
 part 'reactions_controller.g.dart';
@@ -107,55 +102,68 @@ class ReactionsController extends _$ReactionsController {
       return statistics;
     }
 
-    final ReactionStatistics newStatistics = ReactionStatistics.newEntry(activity, reaction);
-    cacheController.put(cacheKey, newStatistics);
+    final ReactionStatistics newStatistics = ReactionStatistics.newEntry(activity);
+    cacheController.add(key: cacheKey, value: newStatistics, metadata: newStatistics.flMeta);
+
     return newStatistics;
   }
 
-  PositiveReactionsState getReactionStateForActivityAndProfile({
+  PositiveReactionsState getPositiveReactionsStateForActivityAndKind({
     required Activity activity,
-    required TargetFeed feed,
     required Profile? currentProfile,
+    required ReactionType kind,
   }) {
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final List<String> cacheKeys = buildExpectedUniqueReactionKeysForActivityAndProfile(
-      activity: activity,
-      currentProfile: currentProfile,
-    );
-
-    final List<Reaction> reactions = cacheController.list<Reaction>().toList();
-    final Iterable<Reaction> targetReactions = reactions.where((element) {
-      return cacheKeys.contains(buildExpectedReactionKey(element));
-    });
-
-    final PositiveReactionsState reactionState = PositiveReactionsState(
-      profileId: currentProfile?.flMeta?.id ?? '',
-      activityId: activity.flMeta?.id ?? '',
-      kind: '',
-      pagingController: PagingController<String, Reaction>(firstPageKey: ''),
-    );
-
-    for (final Reaction reaction in targetReactions) {
-      reactionState.updateReactionStatistics(ReactionStatistics.fromActivity(activity, feed));
+    final String activityId = activity.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final Logger logger = ref.read(loggerProvider);
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      logger.w('Cannot build positive reactions state for activity: $activityId and profile: $currentProfileId');
+      return PositiveReactionsState.empty();
     }
 
-    return reactionState;
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final PositiveReactionsState state = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfileId,
+      kind: ReactionType.toJson(kind),
+    );
+
+    // Check if we have the state in the cache, if not, add it
+    final String cacheKey = state.buildCacheKey();
+    final PositiveReactionsState? cachedState = cacheController.get(cacheKey);
+    if (cachedState != null) {
+      return cachedState;
+    }
+
+    logger.i('Adding positive reactions state to cache: $cacheKey');
+    cacheController.add(key: cacheKey, value: state);
+    return state;
   }
 
-  List<Reaction> getOwnReactionsForFeedActivity({
-    required String activityId,
-    required String origin,
-    required String uid,
-    String? kind,
+  List<Reaction> getOwnReactionsForActivityAndProfile({
+    required Activity activity,
+    required Profile? currentProfile,
   }) {
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final List<Reaction> cachedReactions = cacheController.list<Reaction>().toList();
-    final Iterable<Reaction> targetReactions = cachedReactions.where((element) {
-      final String expectedKind = ReactionType.toJson(element.kind);
-      return element.activityId == activityId && element.origin == origin && element.userId == uid && (kind == null || expectedKind == kind);
-    });
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final List<Reaction> reactions = <Reaction>[];
 
-    return targetReactions.toList();
+    for (final String kind in kAllReactionTypes) {
+      final ReactionType reactionType = ReactionType.fromJson(kind);
+      final PositiveReactionsState state = getPositiveReactionsStateForActivityAndKind(
+        activity: activity,
+        currentProfile: currentProfile,
+        kind: reactionType,
+      );
+
+      final List<Reaction> ownReactions = state.pagingController.itemList?.where((reaction) {
+            return reaction.userId == currentProfileId;
+          }).toList() ??
+          [];
+
+      reactions.addAll(ownReactions);
+    }
+
+    return reactions;
   }
 
   bool isActivityBookmarked(String activityId, String feed) {

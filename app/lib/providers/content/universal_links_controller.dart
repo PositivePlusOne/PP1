@@ -150,8 +150,9 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       appRouter.removeWhere((route) => true);
     }
 
-    final TargetFeed feed = TargetFeed(routeDetails.$2, routeDetails.$1);
-    appRouter.push(PostRoute(activity: activity, feed: feed));
+    final TargetFeed feed = TargetFeed.fromOrigin(routeDetails.$3);
+    final PostRoute postRoute = PostRoute(feed: feed, activityId: routeDetails.$1);
+    appRouter.push(postRoute);
 
     logger.i('Handling route link: $routeDetails');
     state = state.copyWith(isUniversalLinkHandled: true);

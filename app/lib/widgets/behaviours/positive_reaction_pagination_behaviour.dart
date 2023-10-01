@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -21,20 +20,14 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/events/content/reaction_events.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
@@ -106,10 +99,10 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    logger.d('setupReactionsState() - Loading state for ${activityId}');
+    logger.d('setupReactionsState() - Loading state for $activityId');
     final PositiveReactionsState? cachedFeedState = cacheController.get(expectedCacheKey);
     if (cachedFeedState != null) {
-      logger.d('setupReactionsState() - Found cached state for ${activityId}');
+      logger.d('setupReactionsState() - Found cached state for $activityId');
       reactionState = cachedFeedState;
       reactionState?.pagingController.addPageRequestListener(requestNextPage);
       setStateIfMounted();
@@ -117,7 +110,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
       return;
     }
 
-    logger.d('setupReactionsState() - No cached state for ${activityId}. Creating new state.');
+    logger.d('setupReactionsState() - No cached state for $activityId. Creating new state.');
     final PagingController<String, Reaction> pagingController = PagingController<String, Reaction>(firstPageKey: '');
     pagingController.addPageRequestListener(requestNextPage);
 
@@ -136,11 +129,11 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
     if (reactionState?.pagingController.itemList?.isEmpty ?? true) {
-      logger.d('saveState() - No reactions to save for ${activityId}');
+      logger.d('saveState() - No reactions to save for $activityId');
       return;
     }
 
-    logger.d('saveState() - Saving reactions state for ${activityId}');
+    logger.d('saveState() - Saving reactions state for $activityId');
     cacheController.add(key: expectedCacheKey, value: reactionState);
   }
 

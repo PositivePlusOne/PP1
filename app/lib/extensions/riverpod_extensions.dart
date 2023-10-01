@@ -86,7 +86,7 @@ void cacheProfileData(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: profileId, value: newProfile);
+      cacheController.add(key: profileId, value: newProfile, metadata: newProfile.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache profile: $profile - ex: $ex');
     }
@@ -109,7 +109,7 @@ void cacheActivityData(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: activityId, value: newActivity);
+      cacheController.add(key: activityId, value: newActivity, metadata: newActivity.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache activity: $activity - ex: $ex');
     }
@@ -132,7 +132,7 @@ void cacheReactionData(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: reactionId, value: newReaction);
+      cacheController.add(key: reactionId, value: newReaction, metadata: newReaction.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache reaction: $reaction - ex: $ex');
     }
@@ -153,7 +153,7 @@ void cacheReactionStatisticsData(Map<String, dynamic> data) {
       continue;
     }
 
-    cacheController.add(key: reactionStatisticsId, value: reactionStatistic);
+    cacheController.add(key: reactionStatisticsId, value: reactionStatistic, metadata: reactionStatistic.flMeta);
   }
 }
 
@@ -173,7 +173,7 @@ void cacheRelationshipData(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: relationshipId, value: newRelationship);
+      cacheController.add(key: relationshipId, value: newRelationship, metadata: newRelationship.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
     }
@@ -196,7 +196,7 @@ void cacheTagData(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: newTag.key, value: newTag);
+      cacheController.add(key: newTag.key, value: newTag, metadata: newTag.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache tag: $tag - ex: $ex');
     }
@@ -219,7 +219,7 @@ void cacheGuidanceDirectoryEntries(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: entryId, value: newEntry);
+      cacheController.add(key: entryId, value: newEntry, metadata: newEntry.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache entry: $entry - ex: $ex');
     }
@@ -242,7 +242,7 @@ void cachePromotionData(Map<String, dynamic> data) {
         continue;
       }
 
-      cacheController.add(key: promotionId, value: newPromotion);
+      cacheController.add(key: promotionId, value: newPromotion, metadata: newPromotion.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache promotion: $promotion - ex: $ex');
     }

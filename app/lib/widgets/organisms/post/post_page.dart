@@ -16,7 +16,6 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -46,7 +45,6 @@ class PostPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final AppRouter router = ref.read(appRouterProvider);
 
     final PostViewModelProvider provider = postViewModelProvider(activityId, feed);
     final PostViewModel viewModel = ref.read(provider.notifier);

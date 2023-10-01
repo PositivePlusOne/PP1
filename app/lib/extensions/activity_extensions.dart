@@ -1,9 +1,8 @@
 // Flutter imports:
-import 'package:app/providers/content/activities_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
@@ -16,9 +15,9 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -48,7 +47,7 @@ extension ActivityExt on Activity {
   }
 
   TargetFeed get repostTargetFeed {
-    return TargetFeed.fromOrigin(generalConfiguration?.repostActivityOriginFeed ?? '');
+    return TargetFeed.fromOrigin(repostConfiguration?.targetActivityOriginFeed ?? '');
   }
 
   List<TargetFeed> get tagTargetFeeds {
@@ -99,16 +98,18 @@ extension ActivityExt on Activity {
     );
   }
 
-  ReactionStatistics getStatistics() {
+  ReactionStatistics getStatistics({
+    required Profile? currentProfile,
+  }) {
     final Logger logger = providerContainer.read(loggerProvider);
     ReactionStatistics statistics = ReactionStatistics(
       activityId: flMeta?.id ?? '',
-      feed: TargetFeed.toOrigin(targetFeed),
       counts: {},
     );
 
     final String activityId = flMeta?.id ?? '';
-    final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(activityId);
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(activityId, currentProfileId);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ReactionStatistics? cachedStatistics = cacheController.get(expectedCacheKey);
     if (cachedStatistics != null) {
@@ -117,7 +118,7 @@ extension ActivityExt on Activity {
     }
 
     logger.i('getStatisticsForActivity: $activityId, not found in cache');
-    cacheController.add(key: expectedCacheKey, value: statistics);
+    cacheController.add(key: expectedCacheKey, value: statistics, metadata: statistics.flMeta);
 
     return statistics;
   }
@@ -140,7 +141,7 @@ extension ActivityExt on Activity {
   }
 
   Relationship getReposterRelationship(Profile currentProfile) {
-    final String reposterId = generalConfiguration?.repostActivityPublisherId ?? '';
+    final String reposterId = repostConfiguration?.targetActivityPublisherId ?? '';
     final String currentProfileId = currentProfile.flMeta?.id ?? '';
 
     if (reposterId.isEmpty || currentProfileId.isEmpty) {
@@ -292,11 +293,15 @@ extension ActivityExt on Activity {
     );
   }
 
-  Future<void> onPostLiked(BuildContext context, Profile? profile) async {
+  Future<void> onPostLiked({
+    required BuildContext context,
+    required Profile? currentProfile,
+    required PositiveReactionsState positiveReactionsState,
+  }) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
 
-    final String profileId = profile?.flMeta?.id ?? '';
+    final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
     final String origin = publisherInformation?.originFeed ?? '';
 
@@ -304,7 +309,7 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isLiked = reactionsController.hasLikedActivity(activityId: activityId, uid: profileId, origin: origin);
+    final bool isLiked = reactionsController.hasLikedActivity(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
     if (isLiked) {
       await reactionsController.unlikeActivity(origin: origin, activityId: activityId, uid: profileId);
       ScaffoldMessenger.of(context).showSnackBar(

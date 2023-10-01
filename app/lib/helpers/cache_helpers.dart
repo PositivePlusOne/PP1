@@ -148,8 +148,8 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
   final String currentProfileId = currentProfile?.flMeta?.id ?? '';
   final String activityPublisherId = activity.publisherInformation?.publisherId ?? '';
 
-  final String repostedActivityId = activity.generalConfiguration?.repostActivityId ?? '';
-  final String repostedPublisherId = activity.generalConfiguration?.repostActivityPublisherId ?? '';
+  final String repostedActivityId = activity.repostConfiguration?.targetActivityId ?? '';
+  final String repostedPublisherId = activity.repostConfiguration?.targetActivityPublisherId ?? '';
 
   final List<TargetFeed> targetFeeds = buildTargetFeedsForActivity(activity);
 
@@ -191,7 +191,7 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
   }
 
   // Generate a reactions feed key
-  final String reactionsFeedKey = PositiveReactionsState.buildReactionsCacheKey(activityId);
+  final String reactionsFeedKey = PositiveReactionsState.buildReactionsCacheKey(activityId, currentProfileId);
   if (reactionsFeedKey.isNotEmpty) {
     cacheKeys.add(reactionsFeedKey);
   }

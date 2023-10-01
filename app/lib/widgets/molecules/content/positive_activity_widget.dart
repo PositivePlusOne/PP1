@@ -167,7 +167,7 @@ class PositiveActivityWidget extends HookConsumerWidget {
               isBookmarked: isBookmarked,
               onBookmark: (context) => onPostBookmarked(context, activity),
               isBusy: isBusy,
-              origin: targetFeed != null ? TargetFeed.toOrigin(targetFeed!) : null,
+              origin: targetFeed != null ? TargetFeed.toOrigin(targetFeed) : null,
               onPostPageRequested: requestPostRoute,
               isShared: isShared,
             ),

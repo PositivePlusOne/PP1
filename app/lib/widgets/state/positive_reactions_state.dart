@@ -30,11 +30,28 @@ class PositiveReactionsState with PositivePaginationControllerState {
 
   @override
   String buildCacheKey() {
-    return buildReactionsCacheKey(activityId, profileId);
+    return buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: profileId,
+      kind: kind,
+    );
   }
 
-  static buildReactionsCacheKey(String activityId, String profileId) {
-    return 'feed:paging:reactions:$activityId:$profileId';
+  static PositiveReactionsState empty() {
+    return PositiveReactionsState(
+      profileId: '',
+      activityId: '',
+      kind: '',
+      pagingController: PagingController<String, Reaction>(firstPageKey: ''),
+    );
+  }
+
+  static buildReactionsCacheKey({
+    required String activityId,
+    required String profileId,
+    required String kind,
+  }) {
+    return 'feed:paging:reactions:$activityId:$kind:$profileId';
   }
 
   void updateReactionStatistics(ReactionStatistics statistics) {

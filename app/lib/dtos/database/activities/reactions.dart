@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:collection';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
