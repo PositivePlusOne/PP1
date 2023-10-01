@@ -6,8 +6,10 @@ import 'dart:collection';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -79,6 +81,65 @@ class ReactionsController extends _$ReactionsController {
     }
 
     return 'reaction:${reaction.kind}:${reaction.origin}:${reaction.activityId}:${reaction.reactionId}:${reaction.userId}';
+  }
+
+  String buildExpectedStatisticsCacheKey({
+    required String activityId,
+    required String reactionId,
+  }) {
+    return 'statistics:activity:$activityId:$reactionId';
+  }
+
+  ReactionStatistics getStatisticsForActivity({
+    required Activity activity,
+    required Reaction? reaction,
+  }) {
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final String activityId = activity.flMeta?.id ?? '';
+    final String reactionId = reaction?.flMeta?.id ?? '';
+    final String cacheKey = buildExpectedStatisticsCacheKey(
+      activityId: activityId,
+      reactionId: reactionId,
+    );
+
+    final ReactionStatistics? statistics = cacheController.get(cacheKey);
+    if (statistics != null) {
+      return statistics;
+    }
+
+    final ReactionStatistics newStatistics = ReactionStatistics.newEntry(activity, reaction);
+    cacheController.put(cacheKey, newStatistics);
+    return newStatistics;
+  }
+
+  PositiveReactionsState getReactionStateForActivityAndProfile({
+    required Activity activity,
+    required TargetFeed feed,
+    required Profile? currentProfile,
+  }) {
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final List<String> cacheKeys = buildExpectedUniqueReactionKeysForActivityAndProfile(
+      activity: activity,
+      currentProfile: currentProfile,
+    );
+
+    final List<Reaction> reactions = cacheController.list<Reaction>().toList();
+    final Iterable<Reaction> targetReactions = reactions.where((element) {
+      return cacheKeys.contains(buildExpectedReactionKey(element));
+    });
+
+    final PositiveReactionsState reactionState = PositiveReactionsState(
+      profileId: currentProfile?.flMeta?.id ?? '',
+      activityId: activity.flMeta?.id ?? '',
+      kind: '',
+      pagingController: PagingController<String, Reaction>(firstPageKey: ''),
+    );
+
+    for (final Reaction reaction in targetReactions) {
+      reactionState.updateReactionStatistics(ReactionStatistics.fromActivity(activity, feed));
+    }
+
+    return reactionState;
   }
 
   List<Reaction> getOwnReactionsForFeedActivity({
@@ -153,9 +214,8 @@ class ReactionsController extends _$ReactionsController {
   }
 
   bool hasLikedActivity({
-    required String uid,
-    required String activityId,
-    required String origin,
+    required Profile? currentProfile,
+    required PositiveReactionsState positiveReactionsState,
   }) {
     final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
     return reactionsController.getStatisticsForActivity(activityId, feed).uniqueUserReactions['like'] ?? false;

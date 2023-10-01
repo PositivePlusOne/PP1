@@ -71,7 +71,6 @@ class ReactionType with _$ReactionType {
 class ReactionStatistics with _$ReactionStatistics {
   const factory ReactionStatistics({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
-    @Default('') @JsonKey(name: 'feed') String feed,
     @Default({}) @JsonKey(name: 'counts') Map<String, int> counts,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
@@ -80,9 +79,8 @@ class ReactionStatistics with _$ReactionStatistics {
 
   factory ReactionStatistics.fromJson(Map<String, dynamic> json) => _$ReactionStatisticsFromJson(json);
 
-  static ReactionStatistics fromActivity(Activity activity, TargetFeed feed) {
+  static ReactionStatistics newEntry(Activity activity) {
     return ReactionStatistics(
-      feed: TargetFeed.toOrigin(feed),
       activityId: activity.flMeta?.id ?? '',
       reactionId: '',
       userId: '',

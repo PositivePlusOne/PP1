@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { DefaultGenerics, NewActivity, StreamClient, StreamFeed, connect } from "getstream";
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
-import { FeedRequest, FeedRequestJSON } from "../dto/feed_dtos";
+import { FeedRequestJSON } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { StreamHelpers } from "../helpers/stream_helpers";

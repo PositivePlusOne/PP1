@@ -20,7 +20,6 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
-import { PromotionsService } from "../services/promotions_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {

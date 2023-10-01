@@ -13,7 +13,7 @@ import { ChatConnectionSentNotification } from "../services/builders/notificatio
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { RelationshipUpdatedNotification } from "../services/builders/notifications/relationships/relationship_updated_notification";
 import { FeedService } from "../services/feed_service";
-import { FeedRequest, FeedRequestJSON } from "../dto/feed_dtos";
+import { FeedRequestJSON } from "../dto/feed_dtos";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { RelationshipJSON } from "../dto/relationships";
 

@@ -43,16 +43,10 @@ _$_ReactionStatistics _$$_ReactionStatisticsFromJson(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
-      feed: json['feed'] as String? ?? '',
       counts: (json['counts'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as int),
           ) ??
           const {},
-      uniqueUserReactions:
-          (json['unique_user_reactions'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry(k, Map<String, bool>.from(e as Map)),
-              ) ??
-              const {},
       activityId: json['activity_id'] as String? ?? '',
       reactionId: json['reaction_id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
@@ -62,9 +56,7 @@ Map<String, dynamic> _$$_ReactionStatisticsToJson(
         _$_ReactionStatistics instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
-      'feed': instance.feed,
       'counts': instance.counts,
-      'unique_user_reactions': instance.uniqueUserReactions,
       'activity_id': instance.activityId,
       'reaction_id': instance.reactionId,
       'user_id': instance.userId,

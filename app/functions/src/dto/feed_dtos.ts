@@ -11,4 +11,4 @@ export class FeedRequest {
     this.targetSlug = json.targetSlug || '';
     this.targetUserId = json.targetUserId || '';
   }
-};
+}

@@ -66,10 +66,7 @@ class PositiveActivityWidget extends HookConsumerWidget {
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
-    Promotion? promotion;
-    if (activity.enrichmentConfiguration?.promotionKey != null) {
-      promotion = cacheController.get(activity.enrichmentConfiguration!.promotionKey);
-    }
+    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey);
 
     final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
     final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;

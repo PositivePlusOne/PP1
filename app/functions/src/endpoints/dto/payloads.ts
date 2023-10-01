@@ -358,25 +358,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     // Stage 8: Wait for all population to complete
     await Promise.all(populatePromises);
 
-    // For now, the client will handle this.
-    // Stage 9: Enrich response
-    // const reactions = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionSchemaKey) as ReactionJSON[];
-    // const reactionStatistics = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionStatisticsSchemaKey) as ReactionStatisticsJSON[];
-
-    // if (reactions && reactions.length > 0 && reactionStatistics && reactionStatistics.length > 0) {
-    //     const newStatistics = ReactionStatisticsService.enrichStatisticsWithUniqueUserReactions(reactionStatistics, reactions);
-    //     if (newStatistics) {
-    //         responseData.data[reactionStatisticsSchemaKey] = [];
-    //         for (const stat of newStatistics) {
-    //             if (!stat) {
-    //                 continue;
-    //             }
-
-    //             responseData.data[reactionStatisticsSchemaKey].push(new ReactionStatistics(stat));
-    //         }
-    //     }
-    // }
-
-    // Stage 10: Return response
+    // Stage 9: Return response
     return safeJsonStringify(responseData);
 }
