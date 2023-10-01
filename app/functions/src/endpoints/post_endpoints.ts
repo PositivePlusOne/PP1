@@ -50,13 +50,13 @@ export namespace PostEndpoints {
 
         // Get promotions from activities where the promotion key is set
         const promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
-        const promotions = await PromotionsService.getPromotions(promotionIds);
 
-        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds, promotions });
+        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
     
         return buildEndpointResponse(context, {
           sender: uid,
-          data: [...activities, ...promotions],
+          joins: [...promotionIds],
+          data: [...activities],
           limit: limit,
           cursor: paginationToken,
           seedData: {
@@ -125,9 +125,11 @@ export namespace PostEndpoints {
       },
       generalConfiguration: {
         type: "repost",
-        repostActivityId: activityId,
-        repostActivityPublisherId: publisherId,
-        repostActivityOriginFeed: activityOriginFeed,
+      },
+      repostConfiguration: {
+        targetActivityId: activityId,
+        targetActivityPublisherId: publisherId,
+        targetActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,
@@ -154,13 +156,12 @@ export namespace PostEndpoints {
     
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
-    const feed = request.data.feed || FeedName.User;
     const targets = request.data.targets || [] as string[];
 
     const title = request.data.title || "";
     const description = request.data.description || "";
 
-    if (!activityId || !feed) {
+    if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
     }
 
@@ -330,7 +331,7 @@ export namespace PostEndpoints {
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
-    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || (activity?.generalConfiguration?.repostActivityId && activity?.generalConfiguration?.repostActivityPublisherId);
+    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || activity?.repostConfiguration?.targetActivityId;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }

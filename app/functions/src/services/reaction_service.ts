@@ -27,7 +27,6 @@ export namespace ReactionService {
         return UNIQUE_REACTIONS.includes(kind);
     }
 
-
     export function getExpectedKeyFromOptions(reaction: ReactionJSON): string {
         if (!reaction.origin || !reaction.activity_id || !reaction.user_id || !reaction.kind) {
             functions.logger.error("Invalid reaction key", { reaction });

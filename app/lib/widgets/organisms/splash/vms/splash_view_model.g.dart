@@ -85,8 +85,8 @@ class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<
     SplashViewModel, SplashViewModelState> {
   /// See also [SplashViewModel].
   SplashViewModelProvider(
-    this.style,
-  ) : super.internal(
+    SplashStyle style,
+  ) : this._internal(
           () => SplashViewModel()..style = style,
           from: splashViewModelProvider,
           name: r'splashViewModelProvider',
@@ -97,9 +97,51 @@ class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<
           dependencies: SplashViewModelFamily._dependencies,
           allTransitiveDependencies:
               SplashViewModelFamily._allTransitiveDependencies,
+          style: style,
         );
 
+  SplashViewModelProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.style,
+  }) : super.internal();
+
   final SplashStyle style;
+
+  @override
+  SplashViewModelState runNotifierBuild(
+    covariant SplashViewModel notifier,
+  ) {
+    return notifier.build(
+      style,
+    );
+  }
+
+  @override
+  Override overrideWith(SplashViewModel Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: SplashViewModelProvider._internal(
+        () => create()..style = style,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        style: style,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<SplashViewModel, SplashViewModelState>
+      createElement() {
+    return _SplashViewModelProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -113,15 +155,21 @@ class SplashViewModelProvider extends AutoDisposeNotifierProviderImpl<
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin SplashViewModelRef
+    on AutoDisposeNotifierProviderRef<SplashViewModelState> {
+  /// The parameter `style` of this provider.
+  SplashStyle get style;
+}
+
+class _SplashViewModelProviderElement
+    extends AutoDisposeNotifierProviderElement<SplashViewModel,
+        SplashViewModelState> with SplashViewModelRef {
+  _SplashViewModelProviderElement(super.provider);
 
   @override
-  SplashViewModelState runNotifierBuild(
-    covariant SplashViewModel notifier,
-  ) {
-    return notifier.build(
-      style,
-    );
-  }
+  SplashStyle get style => (origin as SplashViewModelProvider).style;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

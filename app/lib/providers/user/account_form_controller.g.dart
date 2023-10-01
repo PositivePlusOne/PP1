@@ -86,8 +86,8 @@ class AccountFormControllerProvider
     extends NotifierProviderImpl<AccountFormController, AccountFormState> {
   /// See also [AccountFormController].
   AccountFormControllerProvider(
-    this.locale,
-  ) : super.internal(
+    Locale locale,
+  ) : this._internal(
           () => AccountFormController()..locale = locale,
           from: accountFormControllerProvider,
           name: r'accountFormControllerProvider',
@@ -98,9 +98,51 @@ class AccountFormControllerProvider
           dependencies: AccountFormControllerFamily._dependencies,
           allTransitiveDependencies:
               AccountFormControllerFamily._allTransitiveDependencies,
+          locale: locale,
         );
 
+  AccountFormControllerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.locale,
+  }) : super.internal();
+
   final Locale locale;
+
+  @override
+  AccountFormState runNotifierBuild(
+    covariant AccountFormController notifier,
+  ) {
+    return notifier.build(
+      locale,
+    );
+  }
+
+  @override
+  Override overrideWith(AccountFormController Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: AccountFormControllerProvider._internal(
+        () => create()..locale = locale,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        locale: locale,
+      ),
+    );
+  }
+
+  @override
+  NotifierProviderElement<AccountFormController, AccountFormState>
+      createElement() {
+    return _AccountFormControllerProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -114,15 +156,20 @@ class AccountFormControllerProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin AccountFormControllerRef on NotifierProviderRef<AccountFormState> {
+  /// The parameter `locale` of this provider.
+  Locale get locale;
+}
+
+class _AccountFormControllerProviderElement
+    extends NotifierProviderElement<AccountFormController, AccountFormState>
+    with AccountFormControllerRef {
+  _AccountFormControllerProviderElement(super.provider);
 
   @override
-  AccountFormState runNotifierBuild(
-    covariant AccountFormController notifier,
-  ) {
-    return notifier.build(
-      locale,
-    );
-  }
+  Locale get locale => (origin as AccountFormControllerProvider).locale;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

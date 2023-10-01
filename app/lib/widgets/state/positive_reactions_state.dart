@@ -9,6 +9,7 @@ import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 
 class PositiveReactionsState with PositivePaginationControllerState {
   PositiveReactionsState({
+    required this.profileId,
     required this.pagingController,
     required this.activityId,
     required this.kind,
@@ -18,6 +19,7 @@ class PositiveReactionsState with PositivePaginationControllerState {
   @override
   final PagingController<String, Reaction> pagingController;
 
+  final String profileId;
   final String activityId;
   final String kind;
 
@@ -28,11 +30,11 @@ class PositiveReactionsState with PositivePaginationControllerState {
 
   @override
   String buildCacheKey() {
-    return buildReactionsCacheKey(activityId);
+    return buildReactionsCacheKey(activityId, profileId);
   }
 
-  static buildReactionsCacheKey(String activityId) {
-    return 'feed:paging:reactions:$activityId';
+  static buildReactionsCacheKey(String activityId, String profileId) {
+    return 'feed:paging:reactions:$activityId:$profileId';
   }
 
   void updateReactionStatistics(ReactionStatistics statistics) {

@@ -3,6 +3,9 @@ import 'dart:async';
 import 'dart:collection';
 
 // Package imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/helpers/cache_helpers.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -39,6 +42,43 @@ class ReactionsController extends _$ReactionsController {
   @override
   ReactionsControllerState build() {
     return ReactionsControllerState.initialState();
+  }
+
+  bool isUniqueReactionKind(String kind) {
+    return kUniqueReactionTypes.contains(kind);
+  }
+
+  List<String> buildExpectedUniqueReactionKeysForActivityAndProfile({
+    required Activity activity,
+    required Profile? currentProfile,
+  }) {
+    final List<String> cacheKeys = [];
+    if (currentProfile?.flMeta?.id?.isEmpty ?? true) {
+      return cacheKeys;
+    }
+
+    for (final String uniqueKind in kUniqueReactionTypes) {
+      final ReactionType reactionType = ReactionType.fromJson(uniqueKind);
+      final Reaction stubReaction = Reaction(
+        kind: reactionType,
+        userId: currentProfile?.flMeta?.id ?? '',
+        activityId: activity.flMeta?.id ?? '',
+        origin: activity.publisherInformation?.originFeed ?? '',
+      );
+
+      final List<String> keys = buildExpectedCacheKeysForReaction(currentProfile, stubReaction);
+      cacheKeys.addAll(keys);
+    }
+
+    return cacheKeys;
+  }
+
+  String buildExpectedReactionKey(Reaction reaction) {
+    if (reaction.flMeta?.id?.isNotEmpty ?? false) {
+      return reaction.flMeta!.id!;
+    }
+
+    return 'reaction:${reaction.kind}:${reaction.origin}:${reaction.activityId}:${reaction.reactionId}:${reaction.userId}';
   }
 
   List<Reaction> getOwnReactionsForFeedActivity({

@@ -7,7 +7,7 @@ part of 'reactions_controller.dart';
 // **************************************************************************
 
 String _$reactionsControllerHash() =>
-    r'51bcca515b825b6e03544abf52334eae8c62b0c7';
+    r'b1577da83fe38c846a9cd4db7c786bbcb9828c34';
 
 /// See also [ReactionsController].
 @ProviderFor(ReactionsController)
@@ -24,4 +24,4 @@ final reactionsControllerProvider =
 
 typedef _$ReactionsController = Notifier<ReactionsControllerState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

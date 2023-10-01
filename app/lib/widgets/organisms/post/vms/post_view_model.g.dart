@@ -90,9 +90,9 @@ class PostViewModelProvider
     extends AutoDisposeNotifierProviderImpl<PostViewModel, PostViewModelState> {
   /// See also [PostViewModel].
   PostViewModelProvider(
-    this.activityId,
-    this.feed,
-  ) : super.internal(
+    String activityId,
+    TargetFeed feed,
+  ) : this._internal(
           () => PostViewModel()
             ..activityId = activityId
             ..feed = feed,
@@ -105,10 +105,58 @@ class PostViewModelProvider
           dependencies: PostViewModelFamily._dependencies,
           allTransitiveDependencies:
               PostViewModelFamily._allTransitiveDependencies,
+          activityId: activityId,
+          feed: feed,
         );
+
+  PostViewModelProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.activityId,
+    required this.feed,
+  }) : super.internal();
 
   final String activityId;
   final TargetFeed feed;
+
+  @override
+  PostViewModelState runNotifierBuild(
+    covariant PostViewModel notifier,
+  ) {
+    return notifier.build(
+      activityId,
+      feed,
+    );
+  }
+
+  @override
+  Override overrideWith(PostViewModel Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: PostViewModelProvider._internal(
+        () => create()
+          ..activityId = activityId
+          ..feed = feed,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        activityId: activityId,
+        feed: feed,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<PostViewModel, PostViewModelState>
+      createElement() {
+    return _PostViewModelProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -125,16 +173,24 @@ class PostViewModelProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin PostViewModelRef on AutoDisposeNotifierProviderRef<PostViewModelState> {
+  /// The parameter `activityId` of this provider.
+  String get activityId;
+
+  /// The parameter `feed` of this provider.
+  TargetFeed get feed;
+}
+
+class _PostViewModelProviderElement extends AutoDisposeNotifierProviderElement<
+    PostViewModel, PostViewModelState> with PostViewModelRef {
+  _PostViewModelProviderElement(super.provider);
 
   @override
-  PostViewModelState runNotifierBuild(
-    covariant PostViewModel notifier,
-  ) {
-    return notifier.build(
-      activityId,
-      feed,
-    );
-  }
+  String get activityId => (origin as PostViewModelProvider).activityId;
+  @override
+  TargetFeed get feed => (origin as PostViewModelProvider).feed;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

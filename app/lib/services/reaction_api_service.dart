@@ -33,14 +33,12 @@ class ReactionApiService {
     required List<String> targets,
     required String title,
     required String description,
-    String? feed,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-shareActivityToConversations',
       parameters: {
         'activityId': activityId,
         'targets': targets,
-        'feed': feed,
         'title': title,
         'description': description,
       },

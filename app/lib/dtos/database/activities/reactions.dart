@@ -73,7 +73,6 @@ class ReactionStatistics with _$ReactionStatistics {
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') @JsonKey(name: 'feed') String feed,
     @Default({}) @JsonKey(name: 'counts') Map<String, int> counts,
-    @Default({}) @JsonKey(name: 'unique_user_reactions') Map<String, Map<String, bool>> uniqueUserReactions,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
     @Default('') @JsonKey(name: 'user_id') String userId,
@@ -84,7 +83,6 @@ class ReactionStatistics with _$ReactionStatistics {
   static ReactionStatistics fromActivity(Activity activity, TargetFeed feed) {
     return ReactionStatistics(
       feed: TargetFeed.toOrigin(feed),
-      uniqueUserReactions: HashMap<String, HashMap<String, bool>>(),
       activityId: activity.flMeta?.id ?? '',
       reactionId: '',
       userId: '',

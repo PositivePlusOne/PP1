@@ -196,6 +196,12 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
     cacheKeys.add(reactionsFeedKey);
   }
 
+  // Add promotion keys
+  final String promotionKey = activity.enrichmentConfiguration?.promotionKey ?? '';
+  if (promotionKey.isNotEmpty) {
+    cacheKeys.add(promotionKey);
+  }
+
   return cacheKeys;
 }
 

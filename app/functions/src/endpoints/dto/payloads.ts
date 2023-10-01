@@ -117,27 +117,27 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     }
                 }
 
-                const repostActivityId = activity.generalConfiguration?.repostActivityId || "";
-                const repostActivityPublisherId = activity.generalConfiguration?.repostActivityPublisherId || "";
-                const repostActivityOriginFeed = activity.generalConfiguration?.repostActivityOriginFeed || "";
-                const isRepost = repostActivityId && repostActivityPublisherId && repostActivityOriginFeed;
-                const isReposter = sender && sender === repostActivityPublisherId;
+                const repostTargetActivityId = activity.repostConfiguration?.targetActivityId || "";
+                const repostTargetActivityPublisherId = activity.repostConfiguration?.targetActivityPublisherId || "";
+                const repostTargetActivityOriginFeed = activity.repostConfiguration?.targetActivityOriginFeed || "";
+                const isRepost = repostTargetActivityId && repostTargetActivityPublisherId && repostTargetActivityOriginFeed;
+                const isReposter = sender && sender === repostTargetActivityPublisherId;
 
                 if (isRepost && !isReposter) {
-                    joinedDataRecords.get(activitySchemaKey)?.add(repostActivityId);
-                    joinedDataRecords.get(profileSchemaKey)?.add(repostActivityPublisherId);
+                    joinedDataRecords.get(activitySchemaKey)?.add(repostTargetActivityId);
+                    joinedDataRecords.get(profileSchemaKey)?.add(repostTargetActivityPublisherId);
 
-                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostActivityPublisherId]);
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostTargetActivityPublisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
                 if (isRepost) {
-                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostActivityOriginFeed, repostActivityId);
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostTargetActivityOriginFeed, repostTargetActivityId);
                     joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 
                     // Unique reactions
                     if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostActivityOriginFeed, repostActivityId, sender);
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostTargetActivityOriginFeed, repostTargetActivityId, sender);
                         functions.logger.info("Unique nested reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {

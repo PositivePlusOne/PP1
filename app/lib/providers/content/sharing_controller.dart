@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -84,7 +85,13 @@ class SharingController extends _$SharingController implements ISharingControlle
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String displayName = getSafeDisplayNameFromProfile(profileController.state.currentProfile);
     final String externalLink = switch (target) {
-      ShareTarget.post => universalLinksController.buildPostRouteLink(postOptions!.$1.flMeta!.id!, postOptions.$2).toString(),
+      ShareTarget.post => universalLinksController
+          .buildPostRouteLink(
+            postOptions!.$1.flMeta!.id!,
+            postOptions.$2,
+            po,
+          )
+          .toString(),
     };
 
     //* Mock message, this is to be replaced with a proper message
@@ -186,8 +193,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
 
     logger.d('Sharing via connection chat');
-    final String feed = TargetFeed.fromOrigin(origin).feed;
-    final SharePostOptions postOptions = (activity, feed);
+    final SharePostOptions postOptions = (activity, origin);
     final ShareMessage message = getShareMessage(context, ShareTarget.post, postOptions: postOptions);
 
     final String title = message.$1;
@@ -195,7 +201,6 @@ class SharingController extends _$SharingController implements ISharingControlle
 
     await reactionApiService.sharePostToConversations(
       activityId: activity.flMeta!.id!,
-      feed: feed,
       targets: profileIds,
       title: title,
       description: text,

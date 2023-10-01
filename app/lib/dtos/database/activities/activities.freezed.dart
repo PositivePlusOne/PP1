@@ -24,6 +24,8 @@ mixin _$Activity {
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   ActivityGeneralConfiguration? get generalConfiguration =>
       throw _privateConstructorUsedError;
+  ActivityRepostConfiguration? get repostConfiguration =>
+      throw _privateConstructorUsedError;
   ActivitySecurityConfiguration? get securityConfiguration =>
       throw _privateConstructorUsedError;
   ActivityEventConfiguration? get eventConfiguration =>
@@ -51,6 +53,7 @@ abstract class $ActivityCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       ActivityGeneralConfiguration? generalConfiguration,
+      ActivityRepostConfiguration? repostConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
       ActivityEventConfiguration? eventConfiguration,
       ActivityPricingInformation? pricingInformation,
@@ -60,6 +63,7 @@ abstract class $ActivityCopyWith<$Res> {
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
+  $ActivityRepostConfigurationCopyWith<$Res>? get repostConfiguration;
   $ActivitySecurityConfigurationCopyWith<$Res>? get securityConfiguration;
   $ActivityEventConfigurationCopyWith<$Res>? get eventConfiguration;
   $ActivityPricingInformationCopyWith<$Res>? get pricingInformation;
@@ -82,6 +86,7 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
   $Res call({
     Object? flMeta = freezed,
     Object? generalConfiguration = freezed,
+    Object? repostConfiguration = freezed,
     Object? securityConfiguration = freezed,
     Object? eventConfiguration = freezed,
     Object? pricingInformation = freezed,
@@ -98,6 +103,10 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
           ? _value.generalConfiguration
           : generalConfiguration // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfiguration?,
+      repostConfiguration: freezed == repostConfiguration
+          ? _value.repostConfiguration
+          : repostConfiguration // ignore: cast_nullable_to_non_nullable
+              as ActivityRepostConfiguration?,
       securityConfiguration: freezed == securityConfiguration
           ? _value.securityConfiguration
           : securityConfiguration // ignore: cast_nullable_to_non_nullable
@@ -147,6 +156,19 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
     return $ActivityGeneralConfigurationCopyWith<$Res>(
         _value.generalConfiguration!, (value) {
       return _then(_value.copyWith(generalConfiguration: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ActivityRepostConfigurationCopyWith<$Res>? get repostConfiguration {
+    if (_value.repostConfiguration == null) {
+      return null;
+    }
+
+    return $ActivityRepostConfigurationCopyWith<$Res>(
+        _value.repostConfiguration!, (value) {
+      return _then(_value.copyWith(repostConfiguration: value) as $Val);
     });
   }
 
@@ -226,6 +248,7 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       ActivityGeneralConfiguration? generalConfiguration,
+      ActivityRepostConfiguration? repostConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
       ActivityEventConfiguration? eventConfiguration,
       ActivityPricingInformation? pricingInformation,
@@ -237,6 +260,8 @@ abstract class _$$_ActivityCopyWith<$Res> implements $ActivityCopyWith<$Res> {
   $FlMetaCopyWith<$Res>? get flMeta;
   @override
   $ActivityGeneralConfigurationCopyWith<$Res>? get generalConfiguration;
+  @override
+  $ActivityRepostConfigurationCopyWith<$Res>? get repostConfiguration;
   @override
   $ActivitySecurityConfigurationCopyWith<$Res>? get securityConfiguration;
   @override
@@ -262,6 +287,7 @@ class __$$_ActivityCopyWithImpl<$Res>
   $Res call({
     Object? flMeta = freezed,
     Object? generalConfiguration = freezed,
+    Object? repostConfiguration = freezed,
     Object? securityConfiguration = freezed,
     Object? eventConfiguration = freezed,
     Object? pricingInformation = freezed,
@@ -278,6 +304,10 @@ class __$$_ActivityCopyWithImpl<$Res>
           ? _value.generalConfiguration
           : generalConfiguration // ignore: cast_nullable_to_non_nullable
               as ActivityGeneralConfiguration?,
+      repostConfiguration: freezed == repostConfiguration
+          ? _value.repostConfiguration
+          : repostConfiguration // ignore: cast_nullable_to_non_nullable
+              as ActivityRepostConfiguration?,
       securityConfiguration: freezed == securityConfiguration
           ? _value.securityConfiguration
           : securityConfiguration // ignore: cast_nullable_to_non_nullable
@@ -312,6 +342,7 @@ class _$_Activity implements _Activity {
   const _$_Activity(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.generalConfiguration,
+      this.repostConfiguration,
       this.securityConfiguration,
       this.eventConfiguration,
       this.pricingInformation,
@@ -329,6 +360,8 @@ class _$_Activity implements _Activity {
   final FlMeta? flMeta;
   @override
   final ActivityGeneralConfiguration? generalConfiguration;
+  @override
+  final ActivityRepostConfiguration? repostConfiguration;
   @override
   final ActivitySecurityConfiguration? securityConfiguration;
   @override
@@ -350,7 +383,7 @@ class _$_Activity implements _Activity {
 
   @override
   String toString() {
-    return 'Activity(flMeta: $flMeta, generalConfiguration: $generalConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
+    return 'Activity(flMeta: $flMeta, generalConfiguration: $generalConfiguration, repostConfiguration: $repostConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
   }
 
   @override
@@ -361,6 +394,8 @@ class _$_Activity implements _Activity {
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.generalConfiguration, generalConfiguration) ||
                 other.generalConfiguration == generalConfiguration) &&
+            (identical(other.repostConfiguration, repostConfiguration) ||
+                other.repostConfiguration == repostConfiguration) &&
             (identical(other.securityConfiguration, securityConfiguration) ||
                 other.securityConfiguration == securityConfiguration) &&
             (identical(other.eventConfiguration, eventConfiguration) ||
@@ -381,6 +416,7 @@ class _$_Activity implements _Activity {
       runtimeType,
       flMeta,
       generalConfiguration,
+      repostConfiguration,
       securityConfiguration,
       eventConfiguration,
       pricingInformation,
@@ -406,6 +442,7 @@ abstract class _Activity implements Activity {
   const factory _Activity(
           {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
           final ActivityGeneralConfiguration? generalConfiguration,
+          final ActivityRepostConfiguration? repostConfiguration,
           final ActivitySecurityConfiguration? securityConfiguration,
           final ActivityEventConfiguration? eventConfiguration,
           final ActivityPricingInformation? pricingInformation,
@@ -421,6 +458,8 @@ abstract class _Activity implements Activity {
   FlMeta? get flMeta;
   @override
   ActivityGeneralConfiguration? get generalConfiguration;
+  @override
+  ActivityRepostConfiguration? get repostConfiguration;
   @override
   ActivitySecurityConfiguration? get securityConfiguration;
   @override
@@ -438,6 +477,204 @@ abstract class _Activity implements Activity {
   @JsonKey(ignore: true)
   _$$_ActivityCopyWith<_$_Activity> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+ActivityRepostConfiguration _$ActivityRepostConfigurationFromJson(
+    Map<String, dynamic> json) {
+  return _ActivityRepostConfiguration.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ActivityRepostConfiguration {
+  String get targetActivityId => throw _privateConstructorUsedError;
+  String get targetActivityPublisherId => throw _privateConstructorUsedError;
+  String get targetActivityOriginFeed => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ActivityRepostConfigurationCopyWith<ActivityRepostConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ActivityRepostConfigurationCopyWith<$Res> {
+  factory $ActivityRepostConfigurationCopyWith(
+          ActivityRepostConfiguration value,
+          $Res Function(ActivityRepostConfiguration) then) =
+      _$ActivityRepostConfigurationCopyWithImpl<$Res,
+          ActivityRepostConfiguration>;
+  @useResult
+  $Res call(
+      {String targetActivityId,
+      String targetActivityPublisherId,
+      String targetActivityOriginFeed});
+}
+
+/// @nodoc
+class _$ActivityRepostConfigurationCopyWithImpl<$Res,
+        $Val extends ActivityRepostConfiguration>
+    implements $ActivityRepostConfigurationCopyWith<$Res> {
+  _$ActivityRepostConfigurationCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? targetActivityId = null,
+    Object? targetActivityPublisherId = null,
+    Object? targetActivityOriginFeed = null,
+  }) {
+    return _then(_value.copyWith(
+      targetActivityId: null == targetActivityId
+          ? _value.targetActivityId
+          : targetActivityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetActivityPublisherId: null == targetActivityPublisherId
+          ? _value.targetActivityPublisherId
+          : targetActivityPublisherId // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetActivityOriginFeed: null == targetActivityOriginFeed
+          ? _value.targetActivityOriginFeed
+          : targetActivityOriginFeed // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_ActivityRepostConfigurationCopyWith<$Res>
+    implements $ActivityRepostConfigurationCopyWith<$Res> {
+  factory _$$_ActivityRepostConfigurationCopyWith(
+          _$_ActivityRepostConfiguration value,
+          $Res Function(_$_ActivityRepostConfiguration) then) =
+      __$$_ActivityRepostConfigurationCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String targetActivityId,
+      String targetActivityPublisherId,
+      String targetActivityOriginFeed});
+}
+
+/// @nodoc
+class __$$_ActivityRepostConfigurationCopyWithImpl<$Res>
+    extends _$ActivityRepostConfigurationCopyWithImpl<$Res,
+        _$_ActivityRepostConfiguration>
+    implements _$$_ActivityRepostConfigurationCopyWith<$Res> {
+  __$$_ActivityRepostConfigurationCopyWithImpl(
+      _$_ActivityRepostConfiguration _value,
+      $Res Function(_$_ActivityRepostConfiguration) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? targetActivityId = null,
+    Object? targetActivityPublisherId = null,
+    Object? targetActivityOriginFeed = null,
+  }) {
+    return _then(_$_ActivityRepostConfiguration(
+      targetActivityId: null == targetActivityId
+          ? _value.targetActivityId
+          : targetActivityId // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetActivityPublisherId: null == targetActivityPublisherId
+          ? _value.targetActivityPublisherId
+          : targetActivityPublisherId // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetActivityOriginFeed: null == targetActivityOriginFeed
+          ? _value.targetActivityOriginFeed
+          : targetActivityOriginFeed // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_ActivityRepostConfiguration implements _ActivityRepostConfiguration {
+  const _$_ActivityRepostConfiguration(
+      {this.targetActivityId = '',
+      this.targetActivityPublisherId = '',
+      this.targetActivityOriginFeed = ''});
+
+  factory _$_ActivityRepostConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$$_ActivityRepostConfigurationFromJson(json);
+
+  @override
+  @JsonKey()
+  final String targetActivityId;
+  @override
+  @JsonKey()
+  final String targetActivityPublisherId;
+  @override
+  @JsonKey()
+  final String targetActivityOriginFeed;
+
+  @override
+  String toString() {
+    return 'ActivityRepostConfiguration(targetActivityId: $targetActivityId, targetActivityPublisherId: $targetActivityPublisherId, targetActivityOriginFeed: $targetActivityOriginFeed)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ActivityRepostConfiguration &&
+            (identical(other.targetActivityId, targetActivityId) ||
+                other.targetActivityId == targetActivityId) &&
+            (identical(other.targetActivityPublisherId,
+                    targetActivityPublisherId) ||
+                other.targetActivityPublisherId == targetActivityPublisherId) &&
+            (identical(
+                    other.targetActivityOriginFeed, targetActivityOriginFeed) ||
+                other.targetActivityOriginFeed == targetActivityOriginFeed));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, targetActivityId,
+      targetActivityPublisherId, targetActivityOriginFeed);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_ActivityRepostConfigurationCopyWith<_$_ActivityRepostConfiguration>
+      get copyWith => __$$_ActivityRepostConfigurationCopyWithImpl<
+          _$_ActivityRepostConfiguration>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_ActivityRepostConfigurationToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ActivityRepostConfiguration
+    implements ActivityRepostConfiguration {
+  const factory _ActivityRepostConfiguration(
+      {final String targetActivityId,
+      final String targetActivityPublisherId,
+      final String targetActivityOriginFeed}) = _$_ActivityRepostConfiguration;
+
+  factory _ActivityRepostConfiguration.fromJson(Map<String, dynamic> json) =
+      _$_ActivityRepostConfiguration.fromJson;
+
+  @override
+  String get targetActivityId;
+  @override
+  String get targetActivityPublisherId;
+  @override
+  String get targetActivityOriginFeed;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ActivityRepostConfigurationCopyWith<_$_ActivityRepostConfiguration>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 ActivityGeneralConfiguration _$ActivityGeneralConfigurationFromJson(
@@ -459,9 +696,6 @@ mixin _$ActivityGeneralConfiguration {
       throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   bool get isSensitive => throw _privateConstructorUsedError;
-  String get repostActivityId => throw _privateConstructorUsedError;
-  String get repostActivityPublisherId => throw _privateConstructorUsedError;
-  String get repostActivityOriginFeed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -487,10 +721,7 @@ abstract class $ActivityGeneralConfigurationCopyWith<$Res> {
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
       String content,
-      bool isSensitive,
-      String repostActivityId,
-      String repostActivityPublisherId,
-      String repostActivityOriginFeed});
+      bool isSensitive});
 
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
   $ActivityGeneralConfigurationStyleCopyWith<$Res> get style;
@@ -514,9 +745,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
     Object? style = null,
     Object? content = null,
     Object? isSensitive = null,
-    Object? repostActivityId = null,
-    Object? repostActivityPublisherId = null,
-    Object? repostActivityOriginFeed = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -535,18 +763,6 @@ class _$ActivityGeneralConfigurationCopyWithImpl<$Res,
           ? _value.isSensitive
           : isSensitive // ignore: cast_nullable_to_non_nullable
               as bool,
-      repostActivityId: null == repostActivityId
-          ? _value.repostActivityId
-          : repostActivityId // ignore: cast_nullable_to_non_nullable
-              as String,
-      repostActivityPublisherId: null == repostActivityPublisherId
-          ? _value.repostActivityPublisherId
-          : repostActivityPublisherId // ignore: cast_nullable_to_non_nullable
-              as String,
-      repostActivityOriginFeed: null == repostActivityOriginFeed
-          ? _value.repostActivityOriginFeed
-          : repostActivityOriginFeed // ignore: cast_nullable_to_non_nullable
-              as String,
     ) as $Val);
   }
 
@@ -588,10 +804,7 @@ abstract class _$$_ActivityGeneralConfigurationCopyWith<$Res>
           toJson: ActivityGeneralConfigurationStyle.toJson)
       ActivityGeneralConfigurationStyle style,
       String content,
-      bool isSensitive,
-      String repostActivityId,
-      String repostActivityPublisherId,
-      String repostActivityOriginFeed});
+      bool isSensitive});
 
   @override
   $ActivityGeneralConfigurationTypeCopyWith<$Res> get type;
@@ -616,9 +829,6 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
     Object? style = null,
     Object? content = null,
     Object? isSensitive = null,
-    Object? repostActivityId = null,
-    Object? repostActivityPublisherId = null,
-    Object? repostActivityOriginFeed = null,
   }) {
     return _then(_$_ActivityGeneralConfiguration(
       type: null == type
@@ -637,18 +847,6 @@ class __$$_ActivityGeneralConfigurationCopyWithImpl<$Res>
           ? _value.isSensitive
           : isSensitive // ignore: cast_nullable_to_non_nullable
               as bool,
-      repostActivityId: null == repostActivityId
-          ? _value.repostActivityId
-          : repostActivityId // ignore: cast_nullable_to_non_nullable
-              as String,
-      repostActivityPublisherId: null == repostActivityPublisherId
-          ? _value.repostActivityPublisherId
-          : repostActivityPublisherId // ignore: cast_nullable_to_non_nullable
-              as String,
-      repostActivityOriginFeed: null == repostActivityOriginFeed
-          ? _value.repostActivityOriginFeed
-          : repostActivityOriginFeed // ignore: cast_nullable_to_non_nullable
-              as String,
     ));
   }
 }
@@ -666,10 +864,7 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
           toJson: ActivityGeneralConfigurationStyle.toJson)
       this.style = const ActivityGeneralConfigurationStyle.text(),
       this.content = '',
-      this.isSensitive = false,
-      this.repostActivityId = '',
-      this.repostActivityPublisherId = '',
-      this.repostActivityOriginFeed = ''});
+      this.isSensitive = false});
 
   factory _$_ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =>
       _$$_ActivityGeneralConfigurationFromJson(json);
@@ -690,19 +885,10 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
   @override
   @JsonKey()
   final bool isSensitive;
-  @override
-  @JsonKey()
-  final String repostActivityId;
-  @override
-  @JsonKey()
-  final String repostActivityPublisherId;
-  @override
-  @JsonKey()
-  final String repostActivityOriginFeed;
 
   @override
   String toString() {
-    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, isSensitive: $isSensitive, repostActivityId: $repostActivityId, repostActivityPublisherId: $repostActivityPublisherId, repostActivityOriginFeed: $repostActivityOriginFeed)';
+    return 'ActivityGeneralConfiguration(type: $type, style: $style, content: $content, isSensitive: $isSensitive)';
   }
 
   @override
@@ -714,28 +900,13 @@ class _$_ActivityGeneralConfiguration implements _ActivityGeneralConfiguration {
             (identical(other.style, style) || other.style == style) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.isSensitive, isSensitive) ||
-                other.isSensitive == isSensitive) &&
-            (identical(other.repostActivityId, repostActivityId) ||
-                other.repostActivityId == repostActivityId) &&
-            (identical(other.repostActivityPublisherId,
-                    repostActivityPublisherId) ||
-                other.repostActivityPublisherId == repostActivityPublisherId) &&
-            (identical(
-                    other.repostActivityOriginFeed, repostActivityOriginFeed) ||
-                other.repostActivityOriginFeed == repostActivityOriginFeed));
+                other.isSensitive == isSensitive));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      type,
-      style,
-      content,
-      isSensitive,
-      repostActivityId,
-      repostActivityPublisherId,
-      repostActivityOriginFeed);
+  int get hashCode =>
+      Object.hash(runtimeType, type, style, content, isSensitive);
 
   @JsonKey(ignore: true)
   @override
@@ -764,10 +935,7 @@ abstract class _ActivityGeneralConfiguration
           toJson: ActivityGeneralConfigurationStyle.toJson)
       final ActivityGeneralConfigurationStyle style,
       final String content,
-      final bool isSensitive,
-      final String repostActivityId,
-      final String repostActivityPublisherId,
-      final String repostActivityOriginFeed}) = _$_ActivityGeneralConfiguration;
+      final bool isSensitive}) = _$_ActivityGeneralConfiguration;
 
   factory _ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) =
       _$_ActivityGeneralConfiguration.fromJson;
@@ -786,12 +954,6 @@ abstract class _ActivityGeneralConfiguration
   String get content;
   @override
   bool get isSensitive;
-  @override
-  String get repostActivityId;
-  @override
-  String get repostActivityPublisherId;
-  @override
-  String get repostActivityOriginFeed;
   @override
   @JsonKey(ignore: true)
   _$$_ActivityGeneralConfigurationCopyWith<_$_ActivityGeneralConfiguration>

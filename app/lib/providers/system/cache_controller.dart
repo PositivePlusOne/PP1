@@ -130,7 +130,11 @@ class CacheController {
     }
   }
 
-  T? get<T>(String key) {
+  T? get<T>(String? key) {
+    if (key == null || key.isEmpty) {
+      return null;
+    }
+
     final CacheRecord? record = cacheData[key];
     final dynamic data = record?.value;
     return data != null && data is T ? data : null;

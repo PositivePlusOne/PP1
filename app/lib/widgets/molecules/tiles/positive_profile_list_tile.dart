@@ -40,7 +40,9 @@ enum PositiveProfileListTileType {
 
 class PositiveProfileListTile extends ConsumerWidget {
   const PositiveProfileListTile({
-    this.profile,
+    required this.senderProfile,
+    required this.targetProfile,
+    required this.relationship,
     this.isEnabled = true,
     this.isSelected = false,
     this.type = PositiveProfileListTileType.view,
@@ -48,7 +50,10 @@ class PositiveProfileListTile extends ConsumerWidget {
     super.key,
   });
 
-  final Profile? profile;
+  final Profile? senderProfile;
+  final Profile? targetProfile;
+  final Relationship? relationship;
+
   final bool isEnabled;
 
   final PositiveProfileListTileType type;
@@ -61,37 +66,33 @@ class PositiveProfileListTile extends ConsumerWidget {
 
   Future<void> onOptionsTapped(BuildContext context) async {
     final logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
-    final String uid = profile?.flMeta?.id ?? '';
+    final String currentProfileUid = senderProfile?.flMeta?.id ?? '';
+    final String targetProfileUid = targetProfile?.flMeta?.id ?? '';
 
-    logger.d('User profile modal requested: $uid');
-    if (uid.isEmpty || auth.currentUser == null) {
+    logger.d('User profile modal requested: $currentProfileUid');
+    if (currentProfileUid.isEmpty) {
       logger.w('User profile modal requested with empty uid');
       return;
     }
 
-    final List<String> members = <String>[
-      auth.currentUser?.uid ?? '',
-      profile?.flMeta?.id ?? '',
-    ];
-
-    final Relationship relationship = cacheController.get(members.asGUID) ?? Relationship.empty(members);
     await PositiveDialog.show(
       context: context,
       useSafeArea: false,
-      child: ProfileModalDialog(profile: profile!, relationship: relationship),
+      child: ProfileModalDialog(
+        targetProfileId: targetProfileUid,
+        currentProfileId: currentProfileUid,
+      ),
     );
   }
 
   Future<void> onListTileSelected(BuildContext context) async {
-    if (profile == null) {
+    if (targetProfile == null) {
       return;
     }
 
     if (type == PositiveProfileListTileType.view) {
       final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-      await profileController.viewProfile(profile!);
+      await profileController.viewProfile(targetProfile!);
       return;
     }
 
@@ -106,7 +107,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final String tagline = profile?.getTagline(localizations) ?? '';
+    final String tagline = targetProfile?.getTagline(localizations) ?? '';
 
     return PositiveTapBehaviour(
       onTap: onListTileSelected,
@@ -123,7 +124,7 @@ class PositiveProfileListTile extends ConsumerWidget {
         padding: const EdgeInsets.all(kPaddingSmall),
         child: Row(
           children: <Widget>[
-            PositiveProfileCircularIndicator(profile: profile, size: kIconHuge),
+            PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
             const SizedBox(width: kPaddingSmall),
             Expanded(
               child: Column(
@@ -131,7 +132,7 @@ class PositiveProfileListTile extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    getSafeDisplayNameFromProfile(profile),
+                    getSafeDisplayNameFromProfile(targetProfile),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.styleTitle.copyWith(color: colors.colorGray7),

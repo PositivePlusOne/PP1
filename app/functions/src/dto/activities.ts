@@ -33,6 +33,7 @@ export enum ActivityActionVerb {
  * @property {ActivityPricingInformationJSON} [pricingInformation]
  * @property {ActivityPublisherInformationJSON} [publisherInformation]
  * @property {ActivityEnrichmentConfigurationJSON} [enrichmentConfiguration]
+ * @property {ActivityRepostConfigurationJSON} [repostConfiguration]
  * @property {MediaJSON[]} [media]
  */
 export interface ActivityJSON {
@@ -43,6 +44,7 @@ export interface ActivityJSON {
   pricingInformation?: ActivityPricingInformationJSON;
   publisherInformation?: ActivityPublisherInformationJSON;
   enrichmentConfiguration?: ActivityEnrichmentConfigurationJSON;
+  repostConfiguration?: ActivityRepostConfigurationJSON;
   media?: MediaJSON[];
 }
 
@@ -57,6 +59,7 @@ export interface ActivityJSON {
  * @property {ActivityPricingInformation} [pricingInformation]
  * @property {ActivityPublisherInformation} [publisherInformation]
  * @property {ActivityEnrichmentConfiguration} [enrichmentConfiguration]
+ * @property {ActivityRepostConfiguration} [repostConfiguration]
  * @property {Media[]} media
  */
 export class Activity {
@@ -67,6 +70,7 @@ export class Activity {
   pricingInformation?: ActivityPricingInformation;
   publisherInformation?: ActivityPublisherInformation;
   enrichmentConfiguration?: ActivityEnrichmentConfiguration;
+  repostConfiguration?: ActivityRepostConfiguration;
   media: Media[];
 
   constructor(json: ActivityJSON) {
@@ -77,6 +81,7 @@ export class Activity {
     this.pricingInformation = json.pricingInformation && new ActivityPricingInformation(json.pricingInformation);
     this.publisherInformation = json.publisherInformation && new ActivityPublisherInformation(json.publisherInformation);
     this.enrichmentConfiguration = json.enrichmentConfiguration && new ActivityEnrichmentConfiguration(json.enrichmentConfiguration);
+    this.repostConfiguration = json.repostConfiguration && new ActivityRepostConfiguration(json.repostConfiguration);
     this.media = json.media ? json.media.map((item) => new Media(item)) : [];
   }
 }
@@ -114,9 +119,6 @@ export interface ActivityGeneralConfigurationJSON {
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
   isSensitive?: boolean;
-  repostActivityId?: string;
-  repostActivityPublisherId?: string;
-  repostActivityOriginFeed?: string;
 }
 
 /**
@@ -132,18 +134,30 @@ export class ActivityGeneralConfiguration {
   style: ActivityGeneralConfigurationStyle;
   content: string;
   isSensitive: boolean;
-  repostActivityId: string;
-  repostActivityPublisherId: string;
-  repostActivityOriginFeed: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
     this.isSensitive = json.isSensitive || false;
-    this.repostActivityId = json.repostActivityId || '';
-    this.repostActivityPublisherId = json.repostActivityPublisherId || '';
-    this.repostActivityOriginFeed = json.repostActivityOriginFeed || '';
+  }
+}
+
+export interface ActivityRepostConfigurationJSON {
+  targetActivityId: string;
+  targetActivityPublisherId: string;
+  targetActivityOriginFeed: string;
+}
+
+export class ActivityRepostConfiguration {
+  targetActivityId: string;
+  targetActivityPublisherId: string;
+  targetActivityOriginFeed: string;
+
+  constructor(json: ActivityRepostConfigurationJSON) {
+    this.targetActivityId = json.targetActivityId;
+    this.targetActivityPublisherId = json.targetActivityPublisherId;
+    this.targetActivityOriginFeed = json.targetActivityOriginFeed;
   }
 }
 
