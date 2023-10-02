@@ -54,6 +54,16 @@ class ReactionType with _$ReactionType {
     }
   }
 
+  static List<ReactionType> values() {
+    return const <ReactionType>[
+      ReactionType.like(),
+      ReactionType.dislike(),
+      ReactionType.comment(),
+      ReactionType.bookmark(),
+      ReactionType.share(),
+    ];
+  }
+
   static String toJson(ReactionType reactionType) {
     return reactionType.when(
       unknownReaction: () => 'unknownReaction',

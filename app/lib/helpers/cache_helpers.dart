@@ -190,10 +190,17 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
     cacheKeys.add(relationshipKey);
   }
 
-  // Generate a reactions feed key
-  final String reactionsFeedKey = PositiveReactionsState.buildReactionsCacheKey(activityId, currentProfileId);
-  if (reactionsFeedKey.isNotEmpty) {
-    cacheKeys.add(reactionsFeedKey);
+  // Generate reaction feed keys
+  for (final ReactionType kind in ReactionType.values()) {
+    final String reactionFeedKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfileId,
+      kind: ReactionType.toJson(kind),
+    );
+
+    if (reactionFeedKey.isNotEmpty) {
+      cacheKeys.add(reactionFeedKey);
+    }
   }
 
   // Add promotion keys

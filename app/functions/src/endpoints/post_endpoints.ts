@@ -25,19 +25,19 @@ export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-        const feedId = request.data.feed || "";
-        const slugId = request.data.options?.slug || "";
+        const targetUserId = request.data.targetUserId || "";
+        const targetSlug = request.data.targetSlug || "";
         const limit = request.limit || 25;
         const cursor = request.cursor || "";
 
-        functions.logger.info(`Listing activities`, { uid, feedId, slugId, limit, cursor });
+        functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
 
-        if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
+        if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
           throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
         }
     
         const feedsClient = FeedService.getFeedsClient();
-        const feed = feedsClient.feed(feedId, slugId);
+        const feed = feedsClient.feed(targetSlug, targetUserId);
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
     
         // Convert window results to a list of IDs

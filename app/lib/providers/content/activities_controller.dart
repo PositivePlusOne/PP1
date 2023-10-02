@@ -203,14 +203,18 @@ class ActivitiesController extends _$ActivitiesController {
     return feedState;
   }
 
-  void notifyPageKeyUpdated({
+  Future<void> notifyPageKeyUpdated({
     required String profileId,
     required TargetFeed feed,
     required String pageKey,
-  }) {
+    Duration delay = const Duration(seconds: 1), // Delay to allow the activities to be added to the cache
+  }) async {
     final Logger logger = ref.read(loggerProvider);
     final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
     final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    logger.d('[Activities Service] - Delaying feed state update for profile: $profileId - feed: $feed');
+    await Future<void>.delayed(delay);
 
     logger.i('[Activities Service] - Updating feed state for profile: $profileId - feed: $feed');
     final PositiveFeedState feedState = getOrCreateFeedStateForOrigin(profileId: profileId, feed: feed);

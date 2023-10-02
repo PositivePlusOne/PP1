@@ -12,10 +12,13 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/paging_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
@@ -223,8 +226,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     }
   }
 
-  Future<void> onInternalActionSelected() async {}
-
   @override
   void dispose() {
     _followingPagingController.dispose();
@@ -237,6 +238,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final ProfileControllerState profileController = ref.watch(profileControllerProvider);
+    final Profile? currentProfile = profileController.currentProfile;
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
@@ -259,10 +265,30 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             AnimatedSwitcher(
               duration: kAnimationDurationRegular,
               child: switch (ref.watch(communitiesControllerProvider).selectedCommunityType) {
-                CommunityType.following => buildRelationshipList(context, colors, _followingPagingController),
-                CommunityType.followers => buildRelationshipList(context, colors, _followersPagingController),
-                CommunityType.connected => buildRelationshipList(context, colors, _connectionsPagingController),
-                CommunityType.blocked => buildRelationshipList(context, colors, _blockedPagingController),
+                CommunityType.following => buildRelationshipList(
+                    context: context,
+                    controller: _followingPagingController,
+                    cacheController: cacheController,
+                    senderProfile: currentProfile,
+                  ),
+                CommunityType.followers => buildRelationshipList(
+                    context: context,
+                    controller: _followersPagingController,
+                    cacheController: cacheController,
+                    senderProfile: currentProfile,
+                  ),
+                CommunityType.connected => buildRelationshipList(
+                    context: context,
+                    controller: _connectionsPagingController,
+                    cacheController: cacheController,
+                    senderProfile: currentProfile,
+                  ),
+                CommunityType.blocked => buildRelationshipList(
+                    context: context,
+                    controller: _blockedPagingController,
+                    cacheController: cacheController,
+                    senderProfile: currentProfile,
+                  ),
               },
             ),
           ],
@@ -281,7 +307,12 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     );
   }
 
-  Widget buildRelationshipList(BuildContext context, DesignColorsModel colors, PagingController<String, String> controller) {
+  Widget buildRelationshipList({
+    required BuildContext context,
+    required Profile? senderProfile,
+    required CacheController cacheController,
+    required PagingController<String, String> controller,
+  }) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedListView.separated(
       shrinkWrap: true,
@@ -293,25 +324,45 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (context, item, index) => buildProfileTile(context, colors, item, index),
+        itemBuilder: (context, item, index) {
+          final Profile? targetProfile = cacheController.get(item);
+          final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+          final String relationshipId = [senderProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
+          final Relationship? relationship = cacheController.get(relationshipId);
+
+          return buildProfileTile(
+            context: context,
+            senderProfile: senderProfile,
+            targetProfile: targetProfile,
+            relationship: relationship,
+          );
+        },
       ),
     );
   }
 
-  Widget buildProfileTile(BuildContext context, DesignColorsModel colors, String profileId, int index) {
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Profile? profile = cacheController.get(profileId);
-    final bool isSelected = widget.selectedProfiles.contains(profileId);
+  Widget buildProfileTile({
+    required BuildContext context,
+    required Profile? senderProfile,
+    required Profile? targetProfile,
+    required Relationship? relationship,
+  }) {
+    if (targetProfile == null) {
+      return const SizedBox();
+    }
 
-    return profile == null
-        ? const SizedBox()
-        : PositiveProfileListTile(
-            profile: profile,
-            type: widget.mode.toProfileListTileType,
-            isSelected: isSelected,
-            onSelected: () => widget.onProfileSelected?.call(profileId),
-            isEnabled: widget.isEnabled,
-          );
+    final String targetProfileId = targetProfile.flMeta?.id ?? '';
+    final bool isSelected = widget.selectedProfiles.contains(targetProfileId);
+
+    return PositiveProfileListTile(
+      targetProfile: targetProfile,
+      senderProfile: senderProfile,
+      relationship: relationship,
+      type: widget.mode.toProfileListTileType,
+      isSelected: isSelected,
+      onSelected: () => widget.onProfileSelected?.call(targetProfileId),
+      isEnabled: widget.isEnabled,
+    );
   }
 
   Widget buildAppBar(BuildContext context, DesignColorsModel colors) {

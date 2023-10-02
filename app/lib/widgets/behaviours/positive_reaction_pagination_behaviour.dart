@@ -24,8 +24,6 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/content/activity_events.dart';
-import 'package:app/providers/events/content/reaction_events.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -39,130 +37,62 @@ import '../../services/third_party.dart';
 
 class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
   const PositiveReactionPaginationBehaviour({
+    required this.activity,
+    required this.publisherRelationship,
     required this.reactionsState,
-    required this.kind,
     required this.feed,
-    this.activity,
-    this.relationship,
+    required this.kind,
     this.reactionMode,
-    this.onPageLoaded,
     this.windowSize = 10,
     super.key,
   });
 
+  final Activity activity;
+  final Relationship publisherRelationship;
   final PositiveReactionsState reactionsState;
-  final Activity? activity;
   final TargetFeed feed;
-  final Relationship? relationship;
   final String kind;
 
   final ActivitySecurityConfigurationMode? reactionMode;
 
   final int windowSize;
 
-  final Function(Map<String, dynamic>)? onPageLoaded;
-
   static const String kWidgetKey = 'PositiveReactionPaginationBehaviour';
-
-  @override
-  void initState() {
-    super.initState();
-    setupListeners();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setupReactionsState());
-  }
-
-  @override
-  void dispose() {
-    disposeListeners();
-    disposeReactionsState();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(PositiveReactionPaginationBehaviour oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldactivityId != activityId) {
-      disposeReactionsState();
-
-      if (mounted) {
-        setupReactionsState();
-      }
-    }
-  }
-
-  void disposeReactionsState() {
-    reactionState?.pagingController.removePageRequestListener(requestNextPage);
-  }
-
-  void setupReactionsState() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-
-    logger.d('setupReactionsState() - Loading state for $activityId');
-    final PositiveReactionsState? cachedFeedState = cacheController.get(expectedCacheKey);
-    if (cachedFeedState != null) {
-      logger.d('setupReactionsState() - Found cached state for $activityId');
-      reactionState = cachedFeedState;
-      reactionState?.pagingController.addPageRequestListener(requestNextPage);
-      setStateIfMounted();
-
-      return;
-    }
-
-    logger.d('setupReactionsState() - No cached state for $activityId. Creating new state.');
-    final PagingController<String, Reaction> pagingController = PagingController<String, Reaction>(firstPageKey: '');
-    pagingController.addPageRequestListener(requestNextPage);
-
-    reactionState = PositiveReactionsState(
-      activityId: activityId,
-      kind: kind,
-      pagingController: pagingController,
-      currentPaginationKey: '',
-    );
-
-    setStateIfMounted();
-  }
 
   void saveReactionsState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    if (reactionState?.pagingController.itemList?.isEmpty ?? true) {
-      logger.d('saveState() - No reactions to save for $activityId');
+    if (reactionsState.pagingController.itemList?.isEmpty ?? true) {
+      logger.d('saveState() - No reactions to save for $reactionsState');
       return;
     }
 
-    logger.d('saveState() - Saving reactions state for $activityId');
-    cacheController.add(key: expectedCacheKey, value: reactionState);
+    logger.d('saveState() - Saving reactions state for $reactionsState');
+    final String newCacheKey = reactionsState.buildCacheKey();
+    cacheController.add(key: newCacheKey, value: reactionsState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
 
-    if (!mounted) {
-      logger.d('requestNextTimelinePage() - Not mounted');
-      return;
-    }
-
     try {
       final EndpointResponse endpointResponse = await reactionApiService.listReactionsForActivity(
-        activityId: activityId,
+        activityId: activity.flMeta?.id ?? '',
         kind: kind,
-        cursor: reactionState?.currentPaginationKey ?? '',
+        cursor: reactionsState.currentPaginationKey,
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       String next = data.containsKey('cursor') ? data['cursor'].toString() : '';
 
       // Check for weird backend loops (extra safety)
-      if (next == reactionState?.currentPaginationKey) {
+      if (next == reactionsState.currentPaginationKey) {
         next = '';
       }
 
-      appendReactionPage(data, next);
-      onPageLoaded?.call(data);
+      appendReactionPageToState(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       reactionsState.pagingController.error = ex;
@@ -171,15 +101,26 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     }
   }
 
+  void appendReactionPageToState(Map<String, dynamic> data, String next) {
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    final List<dynamic> reactions = data['reactions'] as List<dynamic>;
+    final List<Reaction> reactionList = reactions.map((dynamic reaction) => Reaction.fromJson(reaction as Map<String, dynamic>)).toList();
+
+    logger.d('appendReactionPageToState() - reactionList: $reactionList');
+
+    reactionsState.pagingController.appendPage(reactionList, next);
+  }
+
   // Currently comments are the only reaction type supported.
   String buildCommentHeaderText(AppLocalizations localizations) {
     final ActivitySecurityConfigurationMode commentMode = activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final bool loggedIn = userController.isUserLoggedIn;
-    final bool isFollowing = relationship?.following ?? false;
-    final bool isConnected = relationship?.isValidConnectedRelationship ?? false;
-    final bool isBlocked = relationship?.blocked ?? false;
+    final bool isFollowing = publisherRelationship.following;
+    final bool isConnected = publisherRelationship.isValidConnectedRelationship;
+    final bool isBlocked = publisherRelationship.blocked;
 
     if (isBlocked) {
       return localizations.post_comments_disabled_header;

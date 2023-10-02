@@ -221,15 +221,17 @@ class PostApiService {
     );
   }
 
-  FutureOr<EndpointResponse> listActivities(String feedID, String slugID, {Pagination? pagination}) async {
+  FutureOr<EndpointResponse> listActivities({
+    required String targetSlug,
+    required String targetUserId,
+    Pagination? pagination,
+  }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-listActivities',
       pagination: pagination,
       parameters: {
-        'feed': feedID,
-        'options': {
-          'slug': slugID,
-        },
+        'targetSlug': targetSlug,
+        'targetUserId': targetUserId,
       },
     );
   }

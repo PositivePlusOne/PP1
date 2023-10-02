@@ -75,8 +75,9 @@ extension ActivityExt on Activity {
 
   //* Verifies whether the activity can be included in the paged data.
   //* Not the same as whether the post should be hidden due to blocked state
-  bool canDisplayOnFeed(String currentProfileId, Relationship relationship) {
-    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentProfileId);
+  bool canDisplayOnFeed(Profile? currentProfile, Relationship? relationshipWithActivityPublisher) {
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final Set<RelationshipState> states = relationshipWithActivityPublisher?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
@@ -100,6 +101,7 @@ extension ActivityExt on Activity {
 
   ReactionStatistics getStatistics({
     required Profile? currentProfile,
+    required ReactionType kind,
   }) {
     final Logger logger = providerContainer.read(loggerProvider);
     ReactionStatistics statistics = ReactionStatistics(
@@ -109,7 +111,12 @@ extension ActivityExt on Activity {
 
     final String activityId = flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(activityId, currentProfileId);
+    final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfileId,
+      kind: ReactionType.toJson(kind),
+    );
+
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final ReactionStatistics? cachedStatistics = cacheController.get(expectedCacheKey);
     if (cachedStatistics != null) {
@@ -263,9 +270,50 @@ extension ActivityExt on Activity {
     await router.pop();
   }
 
+  Reaction? getUniqueReaction({
+    required Profile? currentProfile,
+    required PositiveReactionsState positiveReactionsState,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      return null;
+    }
+
+    final List<Reaction> reactions = positiveReactionsState.pagingController.itemList?.where((reaction) {
+          return reaction.userId == currentProfileId;
+        }).toList() ??
+        [];
+
+    if (reactions.length != 1) {
+      return null;
+    }
+
+    return reactions.first;
+  }
+
+  bool isActivityBookmarked({
+    required Profile? currentProfile,
+    required PositiveReactionsState positiveReactionsState,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      return false;
+    }
+
+    return positiveReactionsState.pagingController.itemList?.any((reaction) {
+          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.bookmark();
+        }) ==
+        true;
+  }
+
   Future<void> onPostBookmarked({
     required BuildContext context,
     required Profile? currentProfile,
+    required PositiveReactionsState positiveReactionsState,
   }) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
@@ -278,9 +326,9 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isBookmarked = reactionsController.isActivityBookmarked(activityId, origin);
+    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
     if (isBookmarked) {
-      await reactionsController.removeBookmarkActivity(origin: origin, activityId: activityId, uid: profileId);
+      await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
@@ -291,6 +339,23 @@ extension ActivityExt on Activity {
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
     );
+  }
+
+  bool isActivityLiked({
+    required Profile? currentProfile,
+    required PositiveReactionsState positiveReactionsState,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      return false;
+    }
+
+    return positiveReactionsState.pagingController.itemList?.any((reaction) {
+          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.like();
+        }) ==
+        true;
   }
 
   Future<void> onPostLiked({
@@ -309,9 +374,9 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isLiked = reactionsController.hasLikedActivity(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+    final bool isLiked = isActivityLiked(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
     if (isLiked) {
-      await reactionsController.unlikeActivity(origin: origin, activityId: activityId, uid: profileId);
+      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
@@ -400,13 +465,13 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
   bool get isDisabled => this == const ActivitySecurityConfigurationMode.disabled();
 
   bool canActOnActivity({
-    required Activity activity,
+    required Activity? activity,
     required Profile? currentProfile,
-    required Relationship? relationship,
+    required Relationship? publisherRelationship,
   }) {
     final Logger logger = providerContainer.read(loggerProvider);
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    final String publisherProfileId = activity.publisherInformation?.publisherId ?? '';
+    final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
     if (publisherProfileId.isEmpty) {
       logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');
@@ -433,12 +498,12 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
       return true;
     }
 
-    if (relationship == null) {
+    if (publisherRelationship == null) {
       logger.e('canActOnSecurityMode() - relationship is null');
       return false;
     }
 
-    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+    final Set<RelationshipState> relationshipStates = publisherRelationship.relationshipStatesForEntity(currentProfileId);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
 

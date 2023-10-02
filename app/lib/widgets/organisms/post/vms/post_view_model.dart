@@ -12,6 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -77,14 +79,24 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
     state = state.copyWith(currentCommentText: str.trim());
   }
 
-  bool checkCanView() {
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Activity? activity = cacheController.get<Activity>(state.activityId);
+  bool checkCanView({
+    required Activity? activity,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
+  }) {
     final ActivitySecurityConfigurationMode viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
-    return viewMode.canActOnActivity(state.activityId);
+    return viewMode.canActOnActivity(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: publisherRelationship,
+    );
   }
 
-  bool checkCanComment() {
+  bool checkCanComment({
+    required Activity activity,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
+  }) {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     if (profileController.currentProfileId == null) {
       return false;
@@ -93,7 +105,16 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final Activity? activity = cacheController.get<Activity>(state.activityId);
     final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
-    return checkCanView() && commentMode.canActOnActivity(state.activityId, currentProfileId: profileController.currentProfileId!);
+    return checkCanView(
+          activity: activity,
+          currentProfile: currentProfile,
+          publisherRelationship: publisherRelationship,
+        ) &&
+        commentMode.canActOnActivity(
+          activity: activity,
+          currentProfile: currentProfile,
+          publisherRelationship: publisherRelationship,
+        );
   }
 
   Future<void> onPostCommentRequested() async {
