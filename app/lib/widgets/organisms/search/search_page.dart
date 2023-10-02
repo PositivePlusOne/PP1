@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/behaviours/positive_cache_widget.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -60,6 +63,8 @@ class SearchPage extends ConsumerWidget {
     final List<Activity> searchPostsResults = ref.watch(provider.select((value) => value.searchPostsResults));
     final List<Tag> searchTagResults = ref.watch(provider.select((value) => value.searchTagResults));
 
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+
     final bool canDisplaySearchResults = switch (currentTab) {
       SearchTab.users => searchUserResults.isNotEmpty,
       SearchTab.posts => searchPostsResults.isNotEmpty,
@@ -113,9 +118,21 @@ class SearchPage extends ConsumerWidget {
         case SearchTab.posts:
           searchResultWidgets.addAll(<Widget>[
             for (final Activity activity in searchPostsResults) ...<Widget>[
-              PositiveActivityWidget(
-                activity: activity,
-                targetFeed: TargetFeed.search(),
+              final String publisherId = activity.publisherInformation?.publisherId ?? '';
+              final String relationshipId = currentProfile?.relationships[publisherId]?.flMeta?.id ?? '';
+              
+              PositiveCacheWidget(
+                currentProfile: currentProfile,
+                cacheObjects: [activity],
+                onBuild: (context) => PositiveFeedPaginationBehaviour.buildWidgetForFeed(
+                  activityId: activity.flMeta?.id ?? '',
+                  currentProfileId: currentProfile?.flMeta?.id ?? '',
+                  feed: TargetFeed.fromOrigin(activity.publisherInformation?.originFeed ?? ''),
+                  item: activity,
+                  index: searchPostsResults.indexOf(activity),
+                  relationshipId: relationshipId,
+                  reposterRelationshipId: reposterRelationshipId,
+                ),
               ),
             ],
           ].spaceWithVertical(kPaddingMedium));

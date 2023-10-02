@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +19,7 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -28,12 +30,15 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';
@@ -53,7 +58,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   final Profile? currentProfile;
   final TargetFeed feed;
-  final PositiveFeedState feedState;
+  final PositiveFeedState? feedState;
   final int windowSize;
 
   final void Function(Activity activity)? onHeaderTap;
@@ -75,7 +80,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
         pagination: Pagination(
-          cursor: feedState.currentPaginationKey,
+          cursor: feedState?.currentPaginationKey,
         ),
       );
 
@@ -83,7 +88,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       String next = data.containsKey('next') ? data['next'].toString() : '';
 
       // Check for weird backend loops (extra safety)
-      if (next == feedState.currentPaginationKey) {
+      if (next == feedState?.currentPaginationKey) {
         next = '';
       }
 
@@ -106,20 +111,20 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }).toList();
 
     logger.d('appendActivityPageToState() - activityList.length: ${activityList.length}');
-    feedState.pagingController.appendPage(activityList, next);
+    feedState?.pagingController.appendPage(activityList, next);
   }
 
   void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    if (feedState.pagingController.itemList?.isEmpty ?? true) {
+    if (feedState?.pagingController.itemList?.isEmpty ?? true) {
       logger.d('saveActivitiesState() - No activities to save');
       return;
     }
 
     logger.d('saveActivitiesState() - Saving activities');
-    final String newCacheKey = feedState.buildCacheKey();
+    final String newCacheKey = feedState!.buildCacheKey();
     cacheController.add(key: newCacheKey, value: feedState);
   }
 
@@ -127,13 +132,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     Profile? currentProfile,
     Relationship? relationship,
   }) {
-    final bool requestedFirstWindow = feedState.hasPerformedInitialLoad;
+    final bool requestedFirstWindow = feedState?.hasPerformedInitialLoad ?? false;
     if (!requestedFirstWindow) {
       return false;
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final Iterable<Activity>? activities = feedState.pagingController.itemList;
+    final Iterable<Activity>? activities = feedState?.pagingController.itemList;
     final bool canDisplayAny = activities?.any((element) {
           final String publisherId = element.publisherInformation?.publisherId ?? '';
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
@@ -200,7 +205,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   Widget buildSeparator(BuildContext context, int index) {
-    final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
+    final Activity? activity = feedState?.pagingController.itemList?.elementAtOrNull(index);
     final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     if (activityId.isEmpty || currentProfileId.isEmpty) {
@@ -221,24 +226,83 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   Widget buildItem(BuildContext context, Activity item, int index) {
-    final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
-    final String activityId = activity?.flMeta?.id ?? '';
+    final Activity? tempActivity = feedState?.pagingController.itemList?.elementAtOrNull(index);
+    final String activityId = tempActivity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     if (activityId.isEmpty || currentProfileId.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String relationshipId = [activityId, currentProfileId].asGUID;
+    final String reposterRelationshipId = [tempActivity?.repostConfiguration?.targetActivityPublisherId ?? '', currentProfile?.flMeta?.id ?? ''].asGUID;
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [tempActivity]).toList();
+
+    return PositiveCacheWidget(
+      currentProfile: currentProfile,
+      cacheObjects: expectedCacheKeys,
+      onBuild: (context) => buildWidgetForFeed(
+        activityId: activityId,
+        currentProfileId: currentProfileId,
+        feed: feed,
+        item: item,
+        index: index,
+        relationshipId: relationshipId,
+        reposterRelationshipId: reposterRelationshipId,
+      ),
+    );
+  }
+
+  static Widget buildWidgetForFeed({
+    required String activityId,
+    required String currentProfileId,
+    required TargetFeed feed,
+    required Activity item,
+    required int index,
+    required String relationshipId,
+    required String reposterRelationshipId,
+  }) {
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final Relationship? relationship = cacheController.get(relationshipId);
+
+    final Activity? activity = cacheController.get(activityId);
+    final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId ?? '');
+    final Profile? currentProfile = cacheController.get(currentProfileId);
+    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey ?? '');
+
+    final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
+    final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
 
     final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
 
+    final String activityReactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+    final ReactionStatistics? activityReactionStatistics = cacheController.get(activityReactionStatisticsCacheKey);
+
+    final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile).toList();
+    final List<Reaction> currentProfileReactions = cacheController.list(expectedUniqueReactionKeys);
+
+    final String reactionsFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfileId,
+    );
+
+    final PositiveReactionsState? activityReactionFeedState = cacheController.get(reactionsFeedStateCacheKey);
+
     return PositiveActivityWidget(
       activity: item,
+      activityReactionStatistics: activityReactionStatistics,
+      activityPromotion: promotion,
+      currentProfile: currentProfile,
+      currentProfileReactions: currentProfileReactions,
+      activityReactionFeedState: activityReactionFeedState,
+      targetProfile: targetProfile,
+      targetRelationship: relationship,
+      reposterProfile: reposterProfile,
+      reposterRelationship: reposterRelationship,
       targetFeed: feed,
       index: index,
     );
@@ -271,12 +335,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
     final bool canDisplay = canDisplaySliverFeed;
-    if (!canDisplay) {
+    if (!canDisplay || feedState == null) {
       return const SizedBox.shrink();
     }
 
     return PagedSliverList.separated(
-      pagingController: feedState.pagingController,
+      pagingController: feedState!.pagingController,
       separatorBuilder: buildSeparator,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
@@ -290,12 +354,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildFeed(BuildContext context, Widget loadingIndicator) {
     final bool canDisplay = canDisplaySliverFeed;
-    if (!canDisplay) {
+    if (!canDisplay || feedState == null) {
       return const SizedBox.shrink();
     }
 
     return PagedListView.separated(
-      pagingController: feedState.pagingController,
+      pagingController: feedState!.pagingController,
       separatorBuilder: buildSeparator,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,

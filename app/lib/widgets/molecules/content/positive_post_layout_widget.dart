@@ -63,7 +63,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     super.key,
   });
 
-  final Activity postContent;
+  final Activity? postContent;
   final Profile? publisherProfile;
   final Relationship? publisherRelationship;
   final Promotion? promotion;
@@ -80,10 +80,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   final bool isLiked;
   final int totalLikes;
-  final Future<void> Function(BuildContext context)? onLike;
+  final FutureOr<void> Function(BuildContext context)? onLike;
 
   final bool isBookmarked;
-  final Future<void> Function(BuildContext context)? onBookmark;
+  final FutureOr<void> Function(BuildContext context)? onBookmark;
 
   final int totalComments;
 
@@ -92,7 +92,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ActivityGeneralConfigurationType? postType = postContent.generalConfiguration?.type;
+    final ActivityGeneralConfigurationType? postType = postContent?.generalConfiguration?.type;
     if (postType == null) {
       return const SizedBox.shrink();
     }
@@ -116,7 +116,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   }) {
     final Logger logger = ref.read(loggerProvider);
 
-    if (postContent.eventConfiguration == null || postContent.enrichmentConfiguration == null) {
+    if (postContent?.eventConfiguration == null || postContent?.enrichmentConfiguration == null) {
       logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
@@ -127,34 +127,35 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (postContent.media.length == 1) ...[
+        if (postContent?.media.length == 1) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (postContent.media.length == 1) ..._postListAttachedImages(),
+        if (postContent?.media.length == 1) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (postContent.media.isNotEmpty)
+        if (postContent?.media.isNotEmpty ?? false) ...[
           LayoutBuilder(
             builder: (context, constraints) {
               return _postCarouselAttachedImages(context, constraints);
             },
           ),
 
-        //* -=-=-=- Post Actions -=-=-=- *\\
-        _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+          //* -=-=-=- Post Actions -=-=-=- *\\
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
 
-        //* -=-=-=- Post Title -=-=-=- *\\
-        _postTitle(),
+          //* -=-=-=- Post Title -=-=-=- *\\
+          _postTitle(),
 
-        //* -=-=-=- Tags -=-=-=- *\\
-        if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
-          const SizedBox(height: kPaddingSmall),
-          _tags(),
-        ],
+          //* -=-=-=- Tags -=-=-=- *\\
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
+            const SizedBox(height: kPaddingSmall),
+            _tags(),
+          ],
 
-        //* -=-=-=- Location -=-=-=- *\\
-        if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
-          const SizedBox(height: kPaddingSmall),
-          _location(),
+          //* -=-=-=- Location -=-=-=- *\\
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
+            const SizedBox(height: kPaddingSmall),
+            _location(),
+          ],
         ],
       ],
     );
@@ -172,14 +173,14 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (postContent.media.isNotEmpty) ...[
+        if (postContent?.media.isNotEmpty ?? false) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (postContent.media.length == 1 || !isShortformPost) ...<Widget>[
+        if (postContent?.media.length == 1 || !isShortformPost) ...<Widget>[
           ..._postListAttachedImages(),
         ],
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (postContent.media.length > 1 && isShortformPost) ...[
+        if ((postContent?.media.length ?? 0) > 1 && isShortformPost) ...[
           LayoutBuilder(
             builder: (context, constraints) {
               return _postCarouselAttachedImages(context, constraints);
@@ -207,7 +208,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   }) {
     final Logger logger = ref.read(loggerProvider);
 
-    if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
+    if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
       logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
@@ -220,12 +221,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //* -=-=-=- Single attached image -=-=-=- *\\
-          if (postContent.media.length == 1) ...[
+          if (postContent?.media.length == 1) ...[
             const SizedBox(height: kPaddingSmall),
           ],
-          if (postContent.media.length == 1) ..._postListAttachedImages(),
+          if (postContent?.media.length == 1) ..._postListAttachedImages(),
           //* -=-=-=- attached video -=-=-=- *\\
-          if (postContent.media.isNotEmpty) ...[
+          if (postContent?.media.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
             LayoutBuilder(
               builder: (context, constraints) {
@@ -239,12 +240,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
           //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
             _tags(),
           ],
           //* -=-=-=- Location -=-=-=- *\\
-          if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
             _location(),
           ],
@@ -259,12 +260,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   // Future<Widget> _repostBuilder(BuildContext context, WidgetRef ref) async {
   //   final Logger logger = ref.read(loggerProvider);
 
-  //   if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
+  //   if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
   //     logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
   //     return const SizedBox();
   //   }
   //   final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-  //   Activity activity = await activityController.getActivity(postContent.foreignKey);
+  //   Activity activity = await activityController.getActivity(postContent?.foreignKey);
 
   //   return Padding(
   //     padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
@@ -274,7 +275,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //       mainAxisAlignment: MainAxisAlignment.start,
   //       children: [
   //         //* -=-=-=- attached video -=-=-=- *\\
-  //         if (postContent.media.isNotEmpty) ...[
+  //         if (postContent?.media.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           LayoutBuilder(
   //             builder: (context, constraints) {
@@ -288,12 +289,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //         //* -=-=-=- Post Title -=-=-=- *\\
   //         _postTitle(),
   //         //* -=-=-=- Tags -=-=-=- *\\
-  //         if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //         if (postContent?.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           _tags(),
   //         ],
   //         //* -=-=-=- Location -=-=-=- *\\
-  //         if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //         if (postContent?.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           _location(),
   //         ],
@@ -312,7 +313,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final List<Widget> imageWidgetList = [];
     final Color publisherColour = publisherProfile?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
 
-    for (Media media in postContent.media) {
+    for (Media media in postContent?.media ?? []) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         imageWidgetList.add(
           Container(
@@ -363,7 +364,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     //? Calculations for image size are provided in the async function commented out below
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
-    for (Media media in postContent.media) {
+    for (Media media in postContent?.media ?? []) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         listBanners.add(
           Padding(
@@ -432,7 +433,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
-    if (postContent.media.first.type == MediaType.video_link) {
+    if (postContent?.media.first.type == MediaType.video_link) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: const SizedBox(),
@@ -497,13 +498,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final Activity activity = postContent;
     final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
-    final String publisherId = activity.publisherInformation?.publisherId ?? '';
+    final String publisherId = postContent?.publisherInformation?.publisherId ?? '';
 
-    final ActivitySecurityConfigurationMode shareMode = activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final ActivitySecurityConfigurationMode shareMode = postContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
 
-    final bool canActShare = shareMode.canActOnActivity(activity: activity, currentProfile: currentProfile, publisherRelationship: publisherRelationship);
+    final bool canActShare = shareMode.canActOnActivity(activity: postContent, currentProfile: currentProfile, publisherRelationship: publisherRelationship);
     final bool isPublisher = currentProfileId == publisherId;
 
     return Padding(
@@ -517,7 +517,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
         //TODO(S): share enabled and on share functionality here
         shareEnabled: !isBusy && canActShare,
-        onShare: (context) => postContent.share(context),
+        onShare: (context) => postContent?.share(context),
 
         //TODO(S): comment enabled and on comment functionality here
         comments: totalComments,
@@ -539,7 +539,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: Text(
-        postContent.eventConfiguration!.name,
+        postContent?.eventConfiguration?.name ?? '',
         //TODO(S): this needs to be updated for non-left-to-right languages
         textAlign: TextAlign.left,
         style: typeography.styleTitle,
@@ -556,7 +556,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: PositivePostHorizontalTags(
-        tags: postContent.enrichmentConfiguration!.tags,
+        tags: postContent?.enrichmentConfiguration?.tags ?? [],
         typeography: typeography,
         colours: colours,
       ),
@@ -569,7 +569,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       child: Row(
         children: [
           PositivePostIconTag(
-            text: postContent.eventConfiguration!.location,
+            text: postContent?.eventConfiguration?.location ?? '',
             forwardIcon: UniconsLine.map_marker,
             typeography: typeography,
             colours: colours,
@@ -589,7 +589,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     String parsedMarkdown = html2md.convert(
       //TODO(S): either fork the package, find a new one, or replace the whole markdown idea to get around some hard coded issues
       //? This is purest Jank, replace \n with an unusual string until after the markdown conversion as the converter is hardcoded to remove all whitespace
-      postContent.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
+      postContent?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
     );
     if (isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
       parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
@@ -597,7 +597,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     }
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    final List<Tag> tags = tagsController.resolveTags(postContent.enrichmentConfiguration?.tags ?? []);
+    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? []);
 
     return PositiveTapBehaviour(
       onTap: onPostPageRequested,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
@@ -12,10 +13,14 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/content/activity_post_heading_widget.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
+import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -23,14 +28,16 @@ import '../../../providers/system/design_controller.dart';
 class PositiveActivityWidget extends HookConsumerWidget {
   const PositiveActivityWidget({
     required this.targetFeed,
-    this.activity,
-    this.targetProfile,
-    this.targetRelationship,
-    this.targetReactionStatistics,
-    this.currentProfile,
-    this.resenderProfile,
-    this.resenderRelationship,
-    this.resenderReactionStatistics,
+    required this.activity,
+    required this.activityReactionStatistics,
+    required this.activityPromotion,
+    required this.activityReactionFeedState,
+    required this.targetProfile,
+    required this.targetRelationship,
+    required this.currentProfile,
+    required this.currentProfileReactions,
+    required this.reposterProfile,
+    required this.reposterRelationship,
     this.index = -1,
     this.isEnabled = true,
     this.isFullscreen = false,
@@ -41,16 +48,18 @@ class PositiveActivityWidget extends HookConsumerWidget {
   final TargetFeed targetFeed;
 
   final Activity? activity;
-  final Profile? targetProfile;
+  final ReactionStatistics? activityReactionStatistics;
+  final Promotion? activityPromotion;
+  final PositiveReactionsState? activityReactionFeedState;
 
+  final Profile? targetProfile;
   final Relationship? targetRelationship;
-  final ReactionStatistics? targetReactionStatistics;
 
   final Profile? currentProfile;
+  final List<Reaction> currentProfileReactions;
 
-  final Profile? resenderProfile;
-  final Relationship? resenderRelationship;
-  final ReactionStatistics? resenderReactionStatistics;
+  final Profile? reposterProfile;
+  final Relationship? reposterRelationship;
 
   final int index;
 
@@ -59,49 +68,71 @@ class PositiveActivityWidget extends HookConsumerWidget {
   final bool isFullscreen;
   final bool isShared;
 
+  Future<void> requestPostRoute(BuildContext context) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final String activityId = activity?.flMeta?.id ?? '';
+
+    final PostRoute postRoute = PostRoute(
+      activityId: activityId,
+      feed: targetFeed,
+    );
+
+    // Check if we are already on the post page.
+    if (router.current.name == PostRoute.name) {
+      logger.i('Already on post $activityId');
+      return;
+    }
+
+    logger.i('Navigating to post $activityId');
+    await router.push(postRoute);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final bool isLiked = currentProfileReactions.any((reaction) => reaction.kind == const ReactionType.like());
+    final bool isBookmarked = currentProfileReactions.any((reaction) => reaction.kind == const ReactionType.bookmark());
 
-    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey);
+    final int totalLikes = activityReactionStatistics?.counts["like"] ?? 0;
+    final int totalComments = activityReactionStatistics?.counts["comment"] ?? 0;
 
-    final bool isLiked = reactionStatistics?.uniqueUserReactions["like"] == true;
-    final bool isBookmarked = reactionStatistics?.uniqueUserReactions["bookmark"] == true;
-    final bool isBusy = _isBookmarking || _isLiking || !isEnabled;
+    final bool isRepost = activity?.repostConfiguration?.targetActivityPublisherId.isNotEmpty ?? false;
+    final Relationship? actualRelationship = isRepost ? reposterRelationship : targetRelationship;
 
-    final int totalLikes = reactionStatistics?.counts["like"] ?? 0;
-    final int totalComments = reactionStatistics?.counts["comment"] ?? 0;
+    final ActivitySecurityConfigurationMode viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool canView = viewMode.canActOnActivity(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: actualRelationship,
+    );
 
-    final ActivitySecurityConfigurationMode viewMode = activity.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
-    final bool canView = viewMode.canActOnActivity(activity.flMeta?.id ?? '');
-
-    final String repostOriginalPublisherId = activity.generalConfiguration?.repostActivityPublisherId ?? '';
-    final Profile? repostOriginalPublisher = repostOriginalPublisherId.isEmpty ? null : cacheController.get(repostOriginalPublisherId);
-    final String repostOriginalActivityId = activity.generalConfiguration?.repostActivityId ?? '';
-    final Activity? repostOriginalActivity = repostOriginalActivityId.isEmpty ? null : cacheController.get(repostOriginalActivityId);
-
-    final String currentProfileId = ref.watch(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
-    final String publisherId = activity.publisherInformation?.publisherId ?? '';
-    final String activityID = activity.flMeta?.id ?? '';
-
-    final ActivitySecurityConfigurationMode shareMode = activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
-
-    final bool canActShare = shareMode.canActOnActivity(activityID, currentProfileId: currentProfileId);
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final String publisherId = activity?.publisherInformation?.publisherId ?? '';
     final bool isPublisher = currentProfileId == publisherId;
-    final bool isRepost = repostOriginalPublisher != null && repostOriginalActivity != null;
+
+    final ActivitySecurityConfigurationMode shareMode = activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+
+    final bool canActShare = shareMode.canActOnActivity(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: actualRelationship,
+    );
 
     if (isRepost) {
       return Column(
         children: <Widget>[
-          PositiveTapBehaviour(
-            onTap: onInternalHeaderTap,
-            child: ActivityPostHeadingWidget(
-              flMetaData: activity.flMeta,
-              publisher: publisher,
-              onOptions: onPostOptionsSelected,
+          ActivityPostHeadingWidget(
+            flMetaData: activity?.flMeta,
+            isShared: isShared,
+            publisher: reposterProfile,
+            promotion: activityPromotion,
+            onOptions: () => activity?.onPostOptionsSelected(
+              context: context,
+              targetProfile: targetProfile,
+              currentProfile: currentProfile,
             ),
           ),
           Container(
@@ -112,62 +143,87 @@ class PositiveActivityWidget extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(kBorderRadiusSmall),
             ),
             child: PositiveActivityWidget(
-              activity: repostOriginalActivity,
+              activity: activity,
+              activityReactionStatistics: activityReactionStatistics,
+              activityPromotion: activityPromotion,
+              activityReactionFeedState: activityReactionFeedState,
+              targetProfile: targetProfile,
+              targetRelationship: targetRelationship,
+              currentProfile: currentProfile,
+              currentProfileReactions: currentProfileReactions,
+              reposterProfile: null,
+              reposterRelationship: null,
               index: index,
               isEnabled: isEnabled,
               isFullscreen: isFullscreen,
-              targetFeed: TargetFeed.fromOrigin(repostOriginalActivity.publisherInformation?.originFeed ?? ''),
+              targetFeed: targetFeed,
               isShared: true,
             ),
           ),
           PositivePostActions(
             isLiked: isLiked,
             likes: totalLikes,
-            likesEnabled: !isBusy && !isPublisher,
-            onLike: (context) => onPostLiked(context, activity),
-            shareEnabled: !isBusy && canActShare,
+            likesEnabled: !isPublisher,
+            onLike: (context) => activity?.onPostLiked(
+              context: context,
+              currentProfile: currentProfile,
+              reactionsFeedState: activityReactionFeedState,
+            ),
+            shareEnabled: canActShare,
             onShare: (_) {},
             comments: totalComments,
-            commentsEnabled: !isBusy,
             onComment: (_) {},
-            bookmarkEnabled: !isBusy,
             bookmarked: isBookmarked,
-            onBookmark: (context) => onPostBookmarked(context, activity),
+            onBookmark: (context) => activity?.onPostBookmarked(
+              context: context,
+              currentProfile: currentProfile,
+              reactionsFeedState: activityReactionFeedState,
+            ),
           ),
         ],
       );
     }
 
     return IgnorePointer(
-      ignoring: isBusy,
+      ignoring: !isEnabled,
       child: Column(
         children: <Widget>[
           PositiveTapBehaviour(
-            onTap: onInternalHeaderTap,
             child: ActivityPostHeadingWidget(
-              flMetaData: activity.flMeta,
-              publisher: publisher,
-              promotion: promotion,
-              onOptions: onPostOptionsSelected,
+              flMetaData: activity?.flMeta,
+              publisher: targetProfile,
+              promotion: activityPromotion,
+              onOptions: () => activity?.onPostOptionsSelected(
+                context: context,
+                targetProfile: targetProfile,
+                currentProfile: currentProfile,
+              ),
               isShared: isShared,
             ),
           ),
           if (canView) ...<Widget>[
             PositivePostLayoutWidget(
               postContent: activity,
-              publisher: publisher,
-              promotion: promotion,
+              publisherProfile: targetProfile,
+              publisherRelationship: targetRelationship,
+              promotion: activityPromotion,
               isShortformPost: !isFullscreen,
               sidePadding: isShared ? kPaddingExtraSmall : kPaddingSmall,
-              onImageTap: onInternalMediaTap,
-              onLike: (context) => onPostLiked(context, activity),
+              onLike: (context) => activity?.onPostLiked(
+                context: context,
+                currentProfile: currentProfile,
+                reactionsFeedState: activityReactionFeedState,
+              ),
               isLiked: isLiked,
               totalLikes: totalLikes,
               totalComments: totalComments,
               isBookmarked: isBookmarked,
-              onBookmark: (context) => onPostBookmarked(context, activity),
-              isBusy: isBusy,
-              origin: targetFeed != null ? TargetFeed.toOrigin(targetFeed) : null,
+              onBookmark: (context) => activity?.onPostBookmarked(
+                context: context,
+                currentProfile: currentProfile,
+                reactionsFeedState: activityReactionFeedState,
+              ),
+              isBusy: !isEnabled,
               onPostPageRequested: requestPostRoute,
               isShared: isShared,
             ),

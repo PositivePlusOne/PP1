@@ -12,7 +12,6 @@ class PositiveReactionsState with PositivePaginationControllerState {
     required this.profileId,
     required this.pagingController,
     required this.activityId,
-    required this.kind,
     this.currentPaginationKey = '',
   });
 
@@ -21,7 +20,6 @@ class PositiveReactionsState with PositivePaginationControllerState {
 
   final String profileId;
   final String activityId;
-  final String kind;
 
   String currentPaginationKey;
 
@@ -33,7 +31,6 @@ class PositiveReactionsState with PositivePaginationControllerState {
     return buildReactionsCacheKey(
       activityId: activityId,
       profileId: profileId,
-      kind: kind,
     );
   }
 
@@ -41,7 +38,6 @@ class PositiveReactionsState with PositivePaginationControllerState {
     return PositiveReactionsState(
       profileId: '',
       activityId: '',
-      kind: '',
       pagingController: PagingController<String, Reaction>(firstPageKey: ''),
     );
   }
@@ -49,9 +45,8 @@ class PositiveReactionsState with PositivePaginationControllerState {
   static buildReactionsCacheKey({
     required String activityId,
     required String profileId,
-    required String kind,
   }) {
-    return 'feed:paging:reactions:$activityId:$kind:$profileId';
+    return 'feed:paging:reactions:$activityId:$profileId';
   }
 
   void updateReactionStatistics(ReactionStatistics statistics) {

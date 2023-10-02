@@ -20,6 +20,7 @@ Iterable<String> buildExpectedCacheKeysFromObjects(Profile? currentProfile, Iter
           Reaction => cacheKeys.addAll(buildExpectedCacheKeysForReaction(currentProfile, obj)),
           ReactionStatistics => cacheKeys.addAll(buildExpectedCacheKeysForReactionStatistics(currentProfile, obj)),
           Relationship => cacheKeys.addAll(buildExpectedCacheKeysForRelationship(currentProfile, obj)),
+          String => cacheKeys.add(obj),
           (_) => {},
         };
   }
@@ -190,18 +191,8 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
     cacheKeys.add(relationshipKey);
   }
 
-  // Generate reaction feed keys
-  for (final ReactionType kind in ReactionType.values()) {
-    final String reactionFeedKey = PositiveReactionsState.buildReactionsCacheKey(
-      activityId: activityId,
-      profileId: currentProfileId,
-      kind: ReactionType.toJson(kind),
-    );
-
-    if (reactionFeedKey.isNotEmpty) {
-      cacheKeys.add(reactionFeedKey);
-    }
-  }
+  // Generate reaction feed key
+  cacheKeys.add(PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId));
 
   // Add promotion keys
   final String promotionKey = activity.enrichmentConfiguration?.promotionKey ?? '';

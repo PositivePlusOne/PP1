@@ -114,7 +114,6 @@ extension ActivityExt on Activity {
     final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfileId,
-      kind: ReactionType.toJson(kind),
     );
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -166,11 +165,11 @@ extension ActivityExt on Activity {
 
   Future<void> onPostOptionsSelected({
     required BuildContext context,
-    required Profile targetProfile,
-    required Profile currentProfile,
+    required Profile? targetProfile,
+    required Profile? currentProfile,
   }) async {
-    final String targetProfileId = targetProfile.flMeta?.id ?? '';
-    final String currentProfileId = currentProfile.flMeta?.id ?? '';
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
     if (currentProfileId.isNotEmpty && currentProfileId == targetProfileId) {
       await PositiveDialog.show(
@@ -178,8 +177,8 @@ extension ActivityExt on Activity {
         context: context,
         barrierDismissible: true,
         child: PostOptionsDialog(
-          onEditPostSelected: () => onPostEdited(context: context, currentProfile: currentProfile),
-          onDeletePostSelected: () => onPostDeleted(context: context, currentProfile: currentProfile),
+          onEditPostSelected: () => onPostEdited(),
+          onDeletePostSelected: () => onPostDeleted(context: context),
         ),
       );
 
@@ -209,7 +208,6 @@ extension ActivityExt on Activity {
 
   Future<void> onPostDeleted({
     required BuildContext context,
-    required Profile currentProfile,
   }) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = providerContainer.read(appRouterProvider);
@@ -222,7 +220,6 @@ extension ActivityExt on Activity {
       child: PostDeleteConfirmDialog(
         onDeletePostConfirmed: () => onPostDeleteConfirmed(
           context: context,
-          currentProfile: currentProfile,
         ),
       ),
     );
@@ -230,7 +227,6 @@ extension ActivityExt on Activity {
 
   Future<void> onPostDeleteConfirmed({
     required BuildContext context,
-    required Profile currentProfile,
   }) async {
     final ActivitiesController activityController = providerContainer.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
@@ -272,7 +268,7 @@ extension ActivityExt on Activity {
 
   Reaction? getUniqueReaction({
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState? reactionsFeedState,
   }) {
     final String activityId = flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
@@ -281,7 +277,7 @@ extension ActivityExt on Activity {
       return null;
     }
 
-    final List<Reaction> reactions = positiveReactionsState.pagingController.itemList?.where((reaction) {
+    final List<Reaction> reactions = reactionsFeedState?.pagingController.itemList?.where((reaction) {
           return reaction.userId == currentProfileId;
         }).toList() ??
         [];
@@ -295,7 +291,7 @@ extension ActivityExt on Activity {
 
   bool isActivityBookmarked({
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState? reactionsFeedState,
   }) {
     final String activityId = flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
@@ -304,7 +300,7 @@ extension ActivityExt on Activity {
       return false;
     }
 
-    return positiveReactionsState.pagingController.itemList?.any((reaction) {
+    return reactionsFeedState?.pagingController.itemList?.any((reaction) {
           return reaction.userId == currentProfileId && reaction.kind == const ReactionType.bookmark();
         }) ==
         true;
@@ -313,7 +309,7 @@ extension ActivityExt on Activity {
   Future<void> onPostBookmarked({
     required BuildContext context,
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState? reactionsFeedState,
   }) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
@@ -326,9 +322,9 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
     if (isBookmarked) {
-      await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+      await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
@@ -343,7 +339,7 @@ extension ActivityExt on Activity {
 
   bool isActivityLiked({
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState reactionsFeedState,
   }) {
     final String activityId = flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
@@ -352,7 +348,7 @@ extension ActivityExt on Activity {
       return false;
     }
 
-    return positiveReactionsState.pagingController.itemList?.any((reaction) {
+    return reactionsFeedState.pagingController.itemList?.any((reaction) {
           return reaction.userId == currentProfileId && reaction.kind == const ReactionType.like();
         }) ==
         true;
@@ -361,8 +357,12 @@ extension ActivityExt on Activity {
   Future<void> onPostLiked({
     required BuildContext context,
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState? reactionsFeedState,
   }) async {
+    if (reactionsFeedState == null) {
+      throw Exception('reactionsFeedState is null');
+    }
+
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
 
@@ -374,9 +374,9 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isLiked = isActivityLiked(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+    final bool isLiked = isActivityLiked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
     if (isLiked) {
-      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
@@ -389,12 +389,8 @@ extension ActivityExt on Activity {
     );
   }
 
-  Future<void> onPostEdited({
-    required BuildContext context,
-    required Profile? currentProfile,
-  }) async {
+  Future<void> onPostEdited() async {
     final AppRouter router = providerContainer.read(appRouterProvider);
-
     if (generalConfiguration == null) {
       return;
     }
@@ -417,26 +413,6 @@ extension ActivityExt on Activity {
         isEditPage: true,
       ),
     );
-  }
-
-  Future<void> requestPostRoute(BuildContext context) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final AppRouter router = providerContainer.read(appRouterProvider);
-    final String activityId = flMeta?.id ?? '';
-
-    final PostRoute postRoute = PostRoute(
-      activityId: activityId,
-      feed: targetFeed,
-    );
-
-    // Check if we are already on the post page.
-    if (router.current.name == PostRoute.name) {
-      logger.i('Already on post ${flMeta?.id}');
-      return;
-    }
-
-    logger.i('Navigating to post ${flMeta?.id}');
-    await router.push(postRoute);
   }
 
   Future<void> requestFullscreenMedia(Media media, TargetFeed? feed) async {

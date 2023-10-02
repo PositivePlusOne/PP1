@@ -46,7 +46,7 @@ class ReactionsController extends _$ReactionsController {
   }
 
   List<String> buildExpectedUniqueReactionKeysForActivityAndProfile({
-    required Activity activity,
+    required Activity? activity,
     required Profile? currentProfile,
   }) {
     final List<String> cacheKeys = [];
@@ -59,8 +59,8 @@ class ReactionsController extends _$ReactionsController {
       final Reaction stubReaction = Reaction(
         kind: reactionType,
         userId: currentProfile?.flMeta?.id ?? '',
-        activityId: activity.flMeta?.id ?? '',
-        origin: activity.publisherInformation?.originFeed ?? '',
+        activityId: activity?.flMeta?.id ?? '',
+        origin: activity?.publisherInformation?.originFeed ?? '',
       );
 
       final List<String> keys = buildExpectedCacheKeysForReaction(currentProfile, stubReaction);
@@ -80,9 +80,8 @@ class ReactionsController extends _$ReactionsController {
 
   String buildExpectedStatisticsCacheKey({
     required String activityId,
-    required String reactionId,
   }) {
-    return 'statistics:activity:$activityId:$reactionId';
+    return 'statistics:activity:$activityId';
   }
 
   ReactionStatistics getStatisticsForActivity({
@@ -91,10 +90,8 @@ class ReactionsController extends _$ReactionsController {
   }) {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final String activityId = activity.flMeta?.id ?? '';
-    final String reactionId = reaction?.flMeta?.id ?? '';
     final String cacheKey = buildExpectedStatisticsCacheKey(
       activityId: activityId,
-      reactionId: reactionId,
     );
 
     final ReactionStatistics? statistics = cacheController.get(cacheKey);
@@ -125,7 +122,6 @@ class ReactionsController extends _$ReactionsController {
     final PositiveReactionsState state = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfileId,
-      kind: ReactionType.toJson(kind),
     );
 
     // Check if we have the state in the cache, if not, add it
@@ -186,14 +182,14 @@ class ReactionsController extends _$ReactionsController {
   Future<void> removeBookmarkActivity({
     required Activity activity,
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState? reactionsFeedState,
   }) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('CommunitiesController - removeBookmarkActivity - Removing bookmark from activity: $activity');
 
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Reaction? bookmarkReaction = activity.getUniqueReaction(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+    final Reaction? bookmarkReaction = activity.getUniqueReaction(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
 
     if (bookmarkReaction == null) {
       throw Exception('No bookmark found for activity: $activity');
@@ -231,14 +227,14 @@ class ReactionsController extends _$ReactionsController {
   Future<void> unlikeActivity({
     required Activity activity,
     required Profile? currentProfile,
-    required PositiveReactionsState positiveReactionsState,
+    required PositiveReactionsState reactionsFeedState,
   }) async {
     final Logger logger = ref.read(loggerProvider);
 
     logger.i('CommunitiesController - unlikeActivity - Removing like from activity: $activity');
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Reaction? likeReaction = activity.getUniqueReaction(currentProfile: currentProfile, positiveReactionsState: positiveReactionsState);
+    final Reaction? likeReaction = activity.getUniqueReaction(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
     if (likeReaction == null) {
       throw Exception('No like found for activity: $activity');
     }

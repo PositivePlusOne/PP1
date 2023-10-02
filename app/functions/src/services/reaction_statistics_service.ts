@@ -10,8 +10,8 @@ import { ReactionStatistics, ReactionStatisticsJSON, reactionStatisticsSchemaKey
 export namespace ReactionStatisticsService {
     export const REACTION_COUNT_TARGETS = ["like", "bookmark", "comment"];
 
-    export function getExpectedKeyFromOptions(activity_id?: string, reaction_id?: string): string {
-        return `statistics:activity:${activity_id ?? ""}:${reaction_id ?? ""}`;
+    export function getExpectedKeyFromOptions(activity_id?: string): string {
+        return `statistics:activity:${activity_id ?? ""}`;
     }
 
     export async function getReactionStatisticsForActivityArray(activities: ActivityJSON[]): Promise<ReactionStatisticsJSON[]> {

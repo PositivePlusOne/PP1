@@ -1,4 +1,9 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,7 +26,7 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class TagFeedPage extends ConsumerWidget {
+class TagFeedPage extends HookConsumerWidget {
   const TagFeedPage({
     super.key,
     required this.tag,
@@ -35,9 +40,17 @@ class TagFeedPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final TargetFeed feed = TargetFeed.fromTag(tag);
+
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+
+    final String feedStateKey = PositiveFeedState.buildFeedCacheKey(feed);
+    final PositiveFeedState? feedState = cacheController.get(feedStateKey);
+
+    useCacheHook(keys: [feedStateKey]);
 
     return PositiveScaffold(
       visibleComponents: const {
@@ -57,7 +70,11 @@ class TagFeedPage extends ConsumerWidget {
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
-        PositiveFeedPaginationBehaviour(feed: feed),
+        PositiveFeedPaginationBehaviour(
+          feed: feed,
+          currentProfile: currentProfile,
+          feedState: feedState,
+        ),
       ],
     );
   }
