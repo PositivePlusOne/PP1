@@ -25,13 +25,13 @@ import '../../../../providers/system/design_controller.dart';
 
 class PostReportDialog extends ConsumerWidget {
   const PostReportDialog({
-    required this.currentUserProfile,
+    required this.currentProfile,
     required this.targetPost,
     required this.targetProfile,
     super.key,
   });
 
-  final Profile currentUserProfile;
+  final Profile? currentProfile;
   final Profile targetProfile;
   final String targetPost;
 
@@ -50,7 +50,7 @@ class PostReportDialog extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return Column(
-      children: [
+      children: <Widget>[
         Text(
           localizations.post_report_dialog_body,
           style: typography.styleSubtitle.copyWith(color: colors.white),
@@ -90,7 +90,7 @@ class PostReportDialog extends ConsumerWidget {
           onTapped: () => viewModel.onPostFeedbackSubmitted(
             reportee: targetProfile,
             reportedPost: targetPost,
-            reporter: currentUserProfile,
+            reporter: currentProfile,
           ),
           icon: UniconsLine.exclamation_octagon,
           label: localizations.post_report_dialog_title,

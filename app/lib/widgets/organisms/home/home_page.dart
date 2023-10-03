@@ -1,4 +1,10 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,7 +17,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -37,8 +42,9 @@ class HomePage extends HookConsumerWidget {
 
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
-
     final TagsControllerState tagsControllerState = ref.watch(tagsControllerProvider);
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -48,9 +54,22 @@ class HomePage extends HookConsumerWidget {
     final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [];
 
-    if (profileControllerState.currentProfile != null) {
+    final Profile? currentProfile = profileControllerState.currentProfile;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (currentProfile != null) {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
+
+    final TargetFeed targetFeed = TargetFeed(
+      targetSlug: 'timeline',
+      targetUserId: currentProfileId,
+    );
+
+    final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
+    final PositiveFeedState? feedState = cacheController.get(expectedFeedStateKey);
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetFeed]).toList();
+    useCacheHook(keys: expectedCacheKeys);
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
@@ -97,7 +116,9 @@ class HomePage extends HookConsumerWidget {
         ),
         if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
-            feed: TargetFeed('timeline', userController.currentUser!.uid),
+            currentProfile: currentProfile,
+            feedState: feedState,
+            feed: targetFeed,
           ),
         ],
       ],

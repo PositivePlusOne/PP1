@@ -1,5 +1,8 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +50,7 @@ class SearchPage extends ConsumerWidget {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final SearchViewModelProvider provider = searchViewModelProvider(defaultTab);
     final SearchViewModel viewModel = ref.read(provider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final Iterable<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags.values));
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -109,8 +113,21 @@ class SearchPage extends ConsumerWidget {
       switch (currentTab) {
         case SearchTab.users:
           searchResultWidgets.addAll(<Widget>[
-            for (final Profile profile in searchUserResults) ...<Widget>[
-              PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
+            for (final Profile targetProfile in searchUserResults) ...<Widget>[
+              PositiveCacheWidget(
+                currentProfile: currentProfile,
+                cacheObjects: [targetProfile],
+                onBuild: (context) {
+                  final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfile.flMeta?.id ?? ''].asGUID;
+                  final Relationship? relationship = cacheController.get(relationshipId);
+                  return PositiveProfileListTile(
+                    isEnabled: !isBusy,
+                    targetProfile: targetProfile,
+                    senderProfile: currentProfile,
+                    relationship: relationship,
+                  );
+                },
+              ),
             ],
           ].spaceWithVertical(kPaddingSmall));
           break;
@@ -118,21 +135,25 @@ class SearchPage extends ConsumerWidget {
         case SearchTab.posts:
           searchResultWidgets.addAll(<Widget>[
             for (final Activity activity in searchPostsResults) ...<Widget>[
-              final String publisherId = activity.publisherInformation?.publisherId ?? '';
-              final String relationshipId = currentProfile?.relationships[publisherId]?.flMeta?.id ?? '';
-              
               PositiveCacheWidget(
                 currentProfile: currentProfile,
                 cacheObjects: [activity],
-                onBuild: (context) => PositiveFeedPaginationBehaviour.buildWidgetForFeed(
-                  activityId: activity.flMeta?.id ?? '',
-                  currentProfileId: currentProfile?.flMeta?.id ?? '',
-                  feed: TargetFeed.fromOrigin(activity.publisherInformation?.originFeed ?? ''),
-                  item: activity,
-                  index: searchPostsResults.indexOf(activity),
-                  relationshipId: relationshipId,
-                  reposterRelationshipId: reposterRelationshipId,
-                ),
+                onBuild: (context) {
+                  final String publisherId = activity.publisherInformation?.publisherId ?? '';
+                  final String reposterId = activity.repostConfiguration?.targetActivityPublisherId ?? '';
+                  final String relationshipId = [currentProfile?.flMeta?.id ?? '', publisherId].asGUID;
+                  final String reposterRelationshipId = [currentProfile?.flMeta?.id ?? '', reposterId].asGUID;
+
+                  return PositiveFeedPaginationBehaviour.buildWidgetForFeed(
+                    activityId: activity.flMeta?.id ?? '',
+                    currentProfileId: currentProfile?.flMeta?.id ?? '',
+                    feed: TargetFeed.fromOrigin(activity.publisherInformation?.originFeed ?? ''),
+                    item: activity,
+                    index: searchPostsResults.indexOf(activity),
+                    relationshipId: relationshipId,
+                    reposterRelationshipId: reposterRelationshipId,
+                  );
+                },
               ),
             ],
           ].spaceWithVertical(kPaddingMedium));

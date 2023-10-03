@@ -53,7 +53,7 @@ class ProfilePage extends HookConsumerWidget {
       state.profile?.flMeta?.id ?? '',
     ];
 
-    //* This is protected by the ProfileDisplayGuard
+    final Profile? currentProfile = controllerState.currentProfile;
     final Profile targetProfile = state.profile ?? Profile.empty();
     final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
@@ -78,6 +78,7 @@ class ProfilePage extends HookConsumerWidget {
             },
           ),
           PositiveProfileActionsList(
+            currentProfile: currentProfile,
             targetProfile: targetProfile,
             relationship: relationship,
           ),
@@ -141,6 +142,7 @@ class ProfilePage extends HookConsumerWidget {
           ),
         ),
         PositiveFeedPaginationBehaviour(
+          currentProfile: currentProfile,
           feed: TargetFeed(
             targetSlug: 'user',
             targetUserId: targetProfile.flMeta?.id ?? '',

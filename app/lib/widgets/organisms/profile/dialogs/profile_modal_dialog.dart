@@ -2,6 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,7 +24,6 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/post_report_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
@@ -60,12 +63,12 @@ class ProfileModalDialogOption {
   final bool isDisabled;
 }
 
-class ProfileModalDialog extends ConsumerStatefulWidget {
+class ProfileModalDialog extends StatefulHookConsumerWidget {
   const ProfileModalDialog({
     required this.targetProfileId,
-    this.styleOverrides = const {},
-    this.currentProfileId = '',
+    required this.currentProfileId,
     this.activityId = '',
+    this.styleOverrides = const {},
     this.types = const {
       ProfileModalDialogOptionType.viewProfile,
       ProfileModalDialogOptionType.follow,
@@ -93,13 +96,20 @@ class ProfileModalDialog extends ConsumerStatefulWidget {
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
 
-  Future<void> onOptionSelected(ProfileModalDialogOptionType type, Profile sourceProfile, Profile targetProfile, Relationship targetRelationship) async {
+  Future<void> onOptionSelected({
+    required ProfileModalDialogOptionType type,
+    required Profile? currentProfile,
+    required Profile targetProfile,
+    required Relationship? targetRelationship,
+  }) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final String flamelinkId = targetProfile.flMeta?.id ?? '';
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    if (!mounted || flamelinkId.isEmpty) {
+    final String targetProfileId = targetProfile.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (!mounted || targetProfileId.isEmpty) {
       return;
     }
 
@@ -107,12 +117,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       isBusy = true;
     });
 
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
-    final Set<RelationshipState> relationshipStates = targetRelationship.relationshipStatesForEntity(userController.currentUser?.uid ?? '');
+    final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfileId) ?? {};
 
-    final String targetDisplayName = targetProfile.displayName;
+    final String targetDisplayNameHandle = targetProfile.displayName.asHandle;
 
     try {
       switch (type) {
@@ -122,43 +131,46 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           break;
         case ProfileModalDialogOptionType.follow:
           var following = relationshipStates.contains(RelationshipState.sourceFollowed);
-          following ? await relationshipController.unfollowRelationship(flamelinkId) : await relationshipController.followRelationship(flamelinkId);
+          following ? await relationshipController.unfollowRelationship(targetProfileId) : await relationshipController.followRelationship(targetProfileId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following ${targetDisplayName.asHandle}'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following $targetDisplayNameHandle'));
           break;
         case ProfileModalDialogOptionType.connect:
-          relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(flamelinkId) : await relationshipController.connectRelationship(flamelinkId);
+          relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(targetProfileId) : await relationshipController.connectRelationship(targetProfileId);
           await appRouter.pop();
           break;
         case ProfileModalDialogOptionType.message:
-          await getStreamController.createConversation([flamelinkId], shouldPopDialog: true);
+          await getStreamController.createConversation([targetProfileId], shouldPopDialog: true);
           break;
         case ProfileModalDialogOptionType.block:
-          relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(flamelinkId) : await relationshipController.blockRelationship(flamelinkId);
+          relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(targetProfileId) : await relationshipController.blockRelationship(targetProfileId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} ${targetDisplayName.asHandle}'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} $targetDisplayNameHandle'));
           break;
         case ProfileModalDialogOptionType.mute:
-          relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(flamelinkId) : await relationshipController.muteRelationship(flamelinkId);
+          relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(targetProfileId) : await relationshipController.muteRelationship(targetProfileId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} ${targetDisplayName.asHandle}'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} $targetDisplayNameHandle'));
           break;
         case ProfileModalDialogOptionType.hidePosts:
-          relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(flamelinkId) : await relationshipController.hideRelationship(flamelinkId);
+          relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(targetProfileId) : await relationshipController.hideRelationship(targetProfileId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} ${targetDisplayName.asHandle}\'s posts'));
+          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} $targetDisplayNameHandle\'s posts'));
           break;
         case ProfileModalDialogOptionType.report:
           await appRouter.pop();
           await PositiveDialog.show(
             context: context,
             useSafeArea: false,
-            title: localizations.shared_profile_report_modal_title(targetDisplayName.asHandle),
-            child: ProfileReportDialog(currentUserProfile: sourceProfile, targetProfile: widget.profile),
+            title: localizations.shared_profile_report_modal_title(targetDisplayNameHandle),
+            child: ProfileReportDialog(
+              currentProfileId: currentProfileId,
+              targetProfileId: targetProfileId,
+            ),
           );
           break;
         case ProfileModalDialogOptionType.reportPost:
-          if (widget.postID.isEmpty) {
+          if (widget.activityId.isEmpty) {
             await appRouter.pop();
             break;
           }
@@ -168,7 +180,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
             context: context,
             useSafeArea: false,
             title: localizations.post_report_dialog_title,
-            child: PostReportDialog(targetPost: widget.postID, currentUserProfile: profileController.state.currentProfile!, targetProfile: widget.profile),
+            child: PostReportDialog(
+              targetPost: widget.activityId,
+              currentProfile: currentProfile,
+              targetProfile: targetProfile,
+            ),
           );
           break;
       }
@@ -179,18 +195,21 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     }
   }
 
-  bool canDisplayOptionType(RelationshipControllerState relationshipState, UserControllerState userControllerState, ProfileModalDialogOptionType option) {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final String flamelinkId = widget.profile.flMeta?.id ?? '';
-    final String currentUserId = userController.currentUser?.uid ?? '';
-    final bool isSelf = flamelinkId == currentUserId;
+  bool canDisplayOptionType({
+    required Profile? currentProfile,
+    required Profile targetProfile,
+    required Relationship? targetRelationship,
+    required ProfileModalDialogOptionType option,
+  }) {
+    final String targetProfileId = targetProfile.flMeta?.id ?? '';
+    final String currentProfileID = currentProfile?.flMeta?.id ?? '';
+    final bool isSelf = targetProfileId == currentProfileID;
 
-    if (flamelinkId.isEmpty || isSelf) {
+    if (targetProfileId.isEmpty || isSelf) {
       return false;
     }
 
-    final String userId = userController.currentUser?.uid ?? '';
-    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
+    final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfileID) ?? {};
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
     final bool isBlocked = isSourceBlocked || isTargetBlocked;
@@ -211,16 +230,21 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     return true;
   }
 
-  Widget buildOption(AppLocalizations localizations, RelationshipControllerState relationshipState, DesignColorsModel colors, ProfileModalDialogOptionType type) {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final String flamelinkId = widget.profile.flMeta?.id ?? '';
-    final String displayName = widget.profile.displayName;
-    if (flamelinkId.isEmpty) {
+  Widget buildOption({
+    required Profile? currentProfile,
+    required Profile targetProfile,
+    required Relationship? targetRelationship,
+    required AppLocalizations localizations,
+    required DesignColorsModel colors,
+    required ProfileModalDialogOptionType type,
+  }) {
+    final String targetProfileId = targetProfile.flMeta?.id ?? '';
+    final String targetProfileDisplayNameHandle = targetProfile.displayName.asHandle;
+    if (targetProfileId.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final String userId = userController.currentUser?.uid ?? '';
-    final Set<RelationshipState> relationshipStates = _currentRelationship.relationshipStatesForEntity(userId);
+    final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfile?.flMeta?.id ?? '') ?? {};
     final bool isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isPendingConnection = relationshipStates.contains(RelationshipState.sourceConnected) && !relationshipStates.contains(RelationshipState.targetConnected);
@@ -238,7 +262,12 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
             label: styleOverride.title,
             icon: styleOverride.icon,
             forceIconPadding: true,
-            onTapped: () => onOptionSelected(type),
+            onTapped: () => onOptionSelected(
+              type: type,
+              currentProfile: currentProfile,
+              targetProfile: targetProfile,
+              targetRelationship: targetRelationship,
+            ),
             isDisabled: isBusy || styleOverride.isDisabled,
           );
         }
@@ -250,7 +279,12 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         label: label,
         icon: icon,
         forceIconPadding: true,
-        onTapped: () => onOptionSelected(type),
+        onTapped: () => onOptionSelected(
+          type: type,
+          currentProfile: currentProfile,
+          targetProfile: targetProfile,
+          targetRelationship: targetRelationship,
+        ),
         isDisabled: isBusy || isDisabled,
       );
     }
@@ -259,7 +293,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.viewProfile:
         return buttonFromOptionType(type, UniconsLine.user_circle, localizations.shared_profile_modal_action_view_profile);
       case ProfileModalDialogOptionType.follow:
-        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(displayName.asHandle) : localizations.shared_profile_modal_action_follow(displayName.asHandle), highlightOption: isFollowing);
+        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_follow(targetProfileDisplayNameHandle), highlightOption: isFollowing);
       case ProfileModalDialogOptionType.connect:
         String label = isConnected ? localizations.shared_profile_modal_action_disconnect : localizations.shared_profile_modal_action_connect;
         if (isPendingConnection) {
@@ -268,17 +302,17 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
         return buttonFromOptionType(type, UniconsLine.link, label, highlightOption: isConnected, isDisabled: isPendingConnection);
       case ProfileModalDialogOptionType.message:
-        return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(displayName.asHandle));
+        return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(targetProfileDisplayNameHandle));
       case ProfileModalDialogOptionType.block:
-        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(displayName.asHandle) : localizations.shared_profile_modal_action_block(displayName.asHandle), highlightOption: isSourceBlocked);
+        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_block(targetProfileDisplayNameHandle), highlightOption: isSourceBlocked);
       case ProfileModalDialogOptionType.report:
-        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(displayName.asHandle));
+        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(targetProfileDisplayNameHandle));
       case ProfileModalDialogOptionType.reportPost:
         return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report_post);
       case ProfileModalDialogOptionType.hidePosts:
-        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(displayName.asHandle) : localizations.shared_profile_modal_action_hide_posts(displayName.asHandle), highlightOption: isHidden);
+        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_hide_posts(targetProfileDisplayNameHandle), highlightOption: isHidden);
       case ProfileModalDialogOptionType.mute:
-        return buttonFromOptionType(type, isMuted ? UniconsLine.volume : UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_unmute(displayName.asHandle) : localizations.shared_profile_modal_action_mute(displayName.asHandle), highlightOption: isMuted);
+        return buttonFromOptionType(type, isMuted ? UniconsLine.volume : UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_unmute(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_mute(targetProfileDisplayNameHandle), highlightOption: isMuted);
     }
   }
 
@@ -287,18 +321,48 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    final RelationshipControllerState relationshipState = ref.read(relationshipControllerProvider);
-    final UserControllerState userControllerState = ref.read(userControllerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final Profile? currentProfile = profileControllerState.currentProfile;
+    final Profile? targetProfile = cacheController.get(widget.targetProfileId);
+
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    final String relationshipId = [currentProfileId, targetProfileId].asGUID;
+    final Relationship? targetRelationship = cacheController.get(relationshipId);
 
     final List<Widget> children = [];
     final List<ProfileModalDialogOptionType> optionTypes = widget.types.toList();
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysForProfile(currentProfile, targetProfile ?? Profile.empty());
+    useCacheHook(keys: expectedCacheKeys);
 
     // Order the options based on the order of the types
     optionTypes.sort((a, b) => a.order.compareTo(b.order));
 
     for (final ProfileModalDialogOptionType optionType in optionTypes) {
-      if (canDisplayOptionType(relationshipState, userControllerState, optionType)) {
-        children.add(buildOption(localizations, relationshipState, colors, optionType));
+      if (targetProfile == null) {
+        continue;
+      }
+
+      final bool canDisplay = canDisplayOptionType(
+        option: optionType,
+        currentProfile: currentProfile,
+        targetProfile: targetProfile,
+        targetRelationship: targetRelationship,
+      );
+
+      if (canDisplay) {
+        final option = buildOption(
+          colors: colors,
+          currentProfile: currentProfile,
+          localizations: localizations,
+          targetProfile: targetProfile,
+          targetRelationship: targetRelationship,
+          type: optionType,
+        );
+
+        children.add(option);
       }
     }
 

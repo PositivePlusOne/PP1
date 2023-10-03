@@ -42,7 +42,7 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
     super.key,
   });
 
-  final Profile currentProfile;
+  final Profile? currentProfile;
   final Profile targetProfile;
   final Relationship relationship;
 
@@ -177,7 +177,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     final Logger logger = ref.read(loggerProvider);
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
-    final String currentUserId = widget.currentProfile.flMeta?.id ?? '';
+    final String currentUserId = widget.currentProfile?.flMeta?.id ?? '';
 
     logger.d('User profile modal requested: $targetUserId');
 

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/cache_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,7 +30,7 @@ import '../../../../providers/system/design_controller.dart';
 class ProfileReportDialog extends HookConsumerWidget {
   const ProfileReportDialog({
     required this.targetProfileId,
-    this.currentProfileId = '',
+    required this.currentProfileId,
     super.key,
   });
 
@@ -51,12 +52,12 @@ class ProfileReportDialog extends HookConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final List<String> cacheKeys = [];
 
     final Profile? currentProfile = cacheController.get(currentProfileId);
     final Profile? targetProfile = cacheController.get(targetProfileId);
 
-    useCacheHook(keys: []);
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysForProfile(currentProfile, targetProfile ?? Profile.empty());
+    useCacheHook(keys: expectedCacheKeys);
 
     return Column(
       children: <Widget>[
@@ -101,7 +102,7 @@ class ProfileReportDialog extends HookConsumerWidget {
             reporter: currentProfile,
           ),
           icon: UniconsLine.exclamation_octagon,
-          label: localizations.shared_profile_report_modal_title(targetProfile.displayName.asHandle),
+          label: localizations.shared_profile_report_modal_title(targetProfile?.displayName.asHandle ?? ''),
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
           isDisabled: !isValid || state.isBusy,

@@ -20,6 +20,7 @@ Iterable<String> buildExpectedCacheKeysFromObjects(Profile? currentProfile, Iter
           Reaction => cacheKeys.addAll(buildExpectedCacheKeysForReaction(currentProfile, obj)),
           ReactionStatistics => cacheKeys.addAll(buildExpectedCacheKeysForReactionStatistics(currentProfile, obj)),
           Relationship => cacheKeys.addAll(buildExpectedCacheKeysForRelationship(currentProfile, obj)),
+          TargetFeed => cacheKeys.addAll(buildExpectedCacheKeysForTargetFeed(currentProfile, obj)),
           String => cacheKeys.add(obj),
           (_) => {},
         };

@@ -239,7 +239,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   }
 
   Future<void> onPostFeedbackSubmitted({
-    required Profile reporter,
+    required Profile? reporter,
     required Profile reportee,
     required String reportedPost,
   }) async {
@@ -265,7 +265,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final String template = postReportTemplate(
       reportedPost,
       reportee,
-      reporter,
+      reporter ?? Profile.empty(),
       content,
     );
 
