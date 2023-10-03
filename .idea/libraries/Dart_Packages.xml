@@ -826,7 +826,7 @@
         <entry key="flutter">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/3.13.1/packages/flutter/lib" />
+              <option value="$USER_HOME$/fvm/versions/3.13.6/packages/flutter/lib" />
             </list>
           </value>
         </entry>
@@ -917,7 +917,7 @@
         <entry key="flutter_localizations">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/3.13.1/packages/flutter_localizations/lib" />
+              <option value="$USER_HOME$/fvm/versions/3.13.6/packages/flutter_localizations/lib" />
             </list>
           </value>
         </entry>
@@ -1022,14 +1022,14 @@
         <entry key="flutter_test">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/3.13.1/packages/flutter_test/lib" />
+              <option value="$USER_HOME$/fvm/versions/3.13.6/packages/flutter_test/lib" />
             </list>
           </value>
         </entry>
         <entry key="flutter_web_plugins">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/3.13.1/packages/flutter_web_plugins/lib" />
+              <option value="$USER_HOME$/fvm/versions/3.13.6/packages/flutter_web_plugins/lib" />
             </list>
           </value>
         </entry>
@@ -2017,7 +2017,7 @@
         <entry key="sky_engine">
           <value>
             <list>
-              <option value="$USER_HOME$/fvm/versions/3.13.1/bin/cache/pkg/sky_engine/lib" />
+              <option value="$USER_HOME$/fvm/versions/3.13.6/bin/cache/pkg/sky_engine/lib" />
             </list>
           </value>
         </entry>
@@ -2480,7 +2480,7 @@
         <entry key="vm_snapshot_analysis">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vm_snapshot_analysis-0.7.2/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vm_snapshot_analysis-0.7.6/lib" />
             </list>
           </value>
         </entry>
@@ -2931,7 +2931,7 @@
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/visibility_detector-0.4.0+2/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-11.10.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vm_service-11.7.1/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vm_snapshot_analysis-0.7.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vm_snapshot_analysis-0.7.6/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/wakelock_plus-1.1.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/wakelock_plus_platform_interface-1.1.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/watcher-1.1.0/lib" />
@@ -2946,11 +2946,11 @@
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.3/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.3.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/yaml-3.1.2/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/3.13.1/bin/cache/pkg/sky_engine/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/3.13.1/packages/flutter/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/3.13.1/packages/flutter_localizations/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/3.13.1/packages/flutter_test/lib" />
-      <root url="file://$USER_HOME$/fvm/versions/3.13.1/packages/flutter_web_plugins/lib" />
+      <root url="file://$USER_HOME$/fvm/versions/3.13.6/bin/cache/pkg/sky_engine/lib" />
+      <root url="file://$USER_HOME$/fvm/versions/3.13.6/packages/flutter/lib" />
+      <root url="file://$USER_HOME$/fvm/versions/3.13.6/packages/flutter_localizations/lib" />
+      <root url="file://$USER_HOME$/fvm/versions/3.13.6/packages/flutter_test/lib" />
+      <root url="file://$USER_HOME$/fvm/versions/3.13.6/packages/flutter_web_plugins/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

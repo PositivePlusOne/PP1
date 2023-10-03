@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/widgets/state/positive_reactions_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -41,6 +40,7 @@ import 'package:app/services/api.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
 

@@ -13,12 +13,17 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -30,6 +35,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/post/post_comment_box.dart';
 import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 
 @RoutePage()
 class PostPage extends HookConsumerWidget {
@@ -58,14 +64,32 @@ class PostPage extends HookConsumerWidget {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
     final Activity? activity = cacheController.get(activityId);
-    final List<String> cacheKeys = <String>[activityId];
 
-    if (currentProfileId.isNotEmpty) {
-      cacheKeys.add(currentProfileId);
-    }
+    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
+    final PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
+
+    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey);
+
+    final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId);
+    final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId);
+
+    final String expectedTargetRelationshipKey = [currentProfileId, targetProfile?.flMeta?.id ?? ''].asGUID;
+    final Relationship? targetRelationship = cacheController.get(expectedTargetRelationshipKey);
+
+    final String expectedReposterRelationshipKey = [currentProfileId, reposterProfile?.flMeta?.id ?? ''].asGUID;
+    final Relationship? reposterRelationship = cacheController.get(expectedReposterRelationshipKey);
+
+    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
+    final String expectedReactionStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+    final ReactionStatistics? reactionStatistics = cacheController.get(expectedReactionStatisticsKey);
+
+    final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile);
+    final List<Reaction> uniqueReactions = cacheController.list(expectedUniqueReactionKeys);
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity, feed, reactionStatistics, ...uniqueReactions]).toList();
 
     useLifecycleHook(viewModel);
-    useCacheHook(keys: cacheKeys);
+    useCacheHook(keys: expectedCacheKeys);
 
     final List<Widget> actions = [];
 
@@ -78,8 +102,17 @@ class PostPage extends HookConsumerWidget {
 
     final bool commentsDisabled = activity?.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
 
-    final bool canView = viewModel.checkCanView();
-    final bool canComment = viewModel.checkCanComment();
+    final bool canView = viewModel.checkCanView(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: targetRelationship,
+    );
+
+    final bool canComment = viewModel.checkCanComment(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: targetRelationship,
+    );
 
     final List<PositiveScaffoldDecoration> decorations = canView ? [] : buildType3ScaffoldDecorations(colors);
 
@@ -132,6 +165,14 @@ class PostPage extends HookConsumerWidget {
           children: <Widget>[
             PositiveActivityWidget(
               currentProfile: currentProfile,
+              activityPromotion: promotion,
+              activityReactionFeedState: reactionsState,
+              targetProfile: targetProfile,
+              targetRelationship: targetRelationship,
+              reposterProfile: reposterProfile,
+              reposterRelationship: reposterRelationship,
+              activityReactionStatistics: reactionStatistics,
+              currentProfileReactions: uniqueReactions,
               activity: activity,
               targetFeed: feed,
               isFullscreen: true,
@@ -172,9 +213,11 @@ class PostPage extends HookConsumerWidget {
                   const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
                   PositiveReactionPaginationBehaviour(
                     kind: 'comment',
-                    reactionMode: activity?.securityConfiguration?.commentMode,
                     activity: activity,
+                    publisherRelationship: targetRelationship,
+                    reactionsState: reactionsState,
                     feed: feed,
+                    reactionMode: activity?.securityConfiguration?.commentMode,
                   ),
                   SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),
                 ],

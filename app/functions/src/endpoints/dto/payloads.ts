@@ -102,7 +102,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                 // Overall statistics
                 if (originFeed && activityId) {
-                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(originFeed, activityId);
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(activityId);
                     joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 
                     // Unique reactions
@@ -132,7 +132,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
 
                 if (isRepost) {
-                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostTargetActivityOriginFeed, repostTargetActivityId);
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostTargetActivityId);
                     joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 
                     // Unique reactions

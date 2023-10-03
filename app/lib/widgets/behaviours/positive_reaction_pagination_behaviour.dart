@@ -47,9 +47,9 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     super.key,
   });
 
-  final Activity activity;
-  final Relationship publisherRelationship;
-  final PositiveReactionsState reactionsState;
+  final Activity? activity;
+  final Relationship? publisherRelationship;
+  final PositiveReactionsState? reactionsState;
   final TargetFeed feed;
   final String kind;
 
@@ -63,13 +63,13 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    if (reactionsState.pagingController.itemList?.isEmpty ?? true) {
+    if (reactionsState?.pagingController.itemList?.isEmpty ?? true) {
       logger.d('saveState() - No reactions to save for $reactionsState');
       return;
     }
 
     logger.d('saveState() - Saving reactions state for $reactionsState');
-    final String newCacheKey = reactionsState.buildCacheKey();
+    final String newCacheKey = reactionsState!.buildCacheKey();
     cacheController.add(key: newCacheKey, value: reactionsState);
   }
 
@@ -79,23 +79,23 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
     try {
       final EndpointResponse endpointResponse = await reactionApiService.listReactionsForActivity(
-        activityId: activity.flMeta?.id ?? '',
+        activityId: activity?.flMeta?.id ?? '',
         kind: kind,
-        cursor: reactionsState.currentPaginationKey,
+        cursor: reactionsState?.currentPaginationKey ?? '',
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       String next = data.containsKey('cursor') ? data['cursor'].toString() : '';
 
       // Check for weird backend loops (extra safety)
-      if (next == reactionsState.currentPaginationKey) {
+      if (next == reactionsState?.currentPaginationKey) {
         next = '';
       }
 
       appendReactionPageToState(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
-      reactionsState.pagingController.error = ex;
+      reactionsState?.pagingController.error = ex;
     } finally {
       saveReactionsState();
     }
@@ -109,18 +109,18 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
     logger.d('appendReactionPageToState() - reactionList: $reactionList');
 
-    reactionsState.pagingController.appendPage(reactionList, next);
+    reactionsState?.pagingController.appendPage(reactionList, next);
   }
 
   // Currently comments are the only reaction type supported.
   String buildCommentHeaderText(AppLocalizations localizations) {
-    final ActivitySecurityConfigurationMode commentMode = activity.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final bool loggedIn = userController.isUserLoggedIn;
-    final bool isFollowing = publisherRelationship.following;
-    final bool isConnected = publisherRelationship.isValidConnectedRelationship;
-    final bool isBlocked = publisherRelationship.blocked;
+    final bool isFollowing = publisherRelationship?.following ?? false;
+    final bool isConnected = publisherRelationship?.isValidConnectedRelationship ?? false;
+    final bool isBlocked = publisherRelationship?.blocked ?? false;
 
     if (isBlocked) {
       return localizations.post_comments_disabled_header;
@@ -193,10 +193,10 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
         if (commentsDisabled) ...<Widget>[
           SliverToBoxAdapter(child: commentPlaceholder),
         ],
-        if (!commentsDisabled) ...<Widget>[
+        if (reactionsState != null && !commentsDisabled) ...<Widget>[
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
-            pagingController: reactionsState.pagingController,
+            pagingController: reactionsState!.pagingController,
             separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,

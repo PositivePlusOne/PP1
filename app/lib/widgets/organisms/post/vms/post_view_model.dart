@@ -93,7 +93,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
   }
 
   bool checkCanComment({
-    required Activity activity,
+    required Activity? activity,
     required Profile? currentProfile,
     required Relationship? publisherRelationship,
   }) {
