@@ -63,7 +63,7 @@ class AccountPage extends HookConsumerWidget {
           appBarBottom: PreferredSize(
             preferredSize: const Size(double.infinity, AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2),
             child: Column(
-              children: [
+              children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
                   child: PositiveProfileSegmentedSwitcher(

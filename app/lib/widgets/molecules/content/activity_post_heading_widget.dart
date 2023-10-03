@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,10 +29,10 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
+    required this.onOptions,
     this.flMetaData,
     this.publisher,
     this.promotion,
-    required this.onOptions,
     this.isShared = false,
     super.key,
   });
@@ -39,7 +41,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   final Profile? publisher;
   final Promotion? promotion;
 
-  final Function onOptions;
+  final FutureOr<void> Function() onOptions;
   final bool isShared;
 
   @override
@@ -120,7 +122,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                 icon: UniconsLine.ellipsis_h,
                 style: PositiveButtonStyle.text,
                 size: PositiveButtonSize.medium,
-                onTapped: () => onOptions(context),
+                onTapped: onOptions,
               ),
             ],
           ],

@@ -1,8 +1,10 @@
 // Flutter imports:
+import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
@@ -59,6 +61,84 @@ extension ActivityExt on Activity {
     }
 
     return targetFeeds;
+  }
+
+  void appendActivityToProfileFeeds(String currentProfileId) {
+    final TargetFeed userFeed = TargetFeed(targetSlug: 'user', targetUserId: currentProfileId);
+    final TargetFeed timelineFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
+
+    final String expectedUserFeedCacheKey = PositiveFeedState.buildFeedCacheKey(userFeed);
+    final String expectedTimelineFeedCacheKey = PositiveFeedState.buildFeedCacheKey(timelineFeed);
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedCacheKey);
+    final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedCacheKey);
+
+    if (userFeedState != null) {
+      final PagingController<String, Activity> pagingController = userFeedState.pagingController;
+      final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+      final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+      if (exists) {
+        final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        currentItems[index] = this;
+      } else {
+        currentItems.insert(0, this);
+      }
+
+      pagingController.itemList = currentItems;
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      pagingController.notifyListeners();
+
+      cacheController.add(key: expectedUserFeedCacheKey, value: userFeedState);
+    }
+
+    if (timelineFeedState != null) {
+      final PagingController<String, Activity> pagingController = timelineFeedState.pagingController;
+      final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+      final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+      if (exists) {
+        final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        currentItems[index] = this;
+      } else {
+        currentItems.insert(0, this);
+      }
+
+      pagingController.itemList = currentItems;
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      pagingController.notifyListeners();
+
+      cacheController.add(key: expectedTimelineFeedCacheKey, value: timelineFeedState);
+    }
+
+    for (final String tag in enrichmentConfiguration?.tags ?? <String>[]) {
+      final TargetFeed tagFeed = TargetFeed.fromTag(tag);
+      final String expectedTagFeedCacheKey = PositiveFeedState.buildFeedCacheKey(tagFeed);
+
+      final PositiveFeedState? tagFeedState = cacheController.get(expectedTagFeedCacheKey);
+      if (tagFeedState != null) {
+        final PagingController<String, Activity> pagingController = tagFeedState.pagingController;
+        final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+        final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        if (exists) {
+          final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
+          currentItems[index] = this;
+        } else {
+          currentItems.insert(0, this);
+        }
+
+        pagingController.itemList = currentItems;
+
+        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+        pagingController.notifyListeners();
+
+        cacheController.add(key: expectedTagFeedCacheKey, value: tagFeedState);
+      }
+    }
   }
 
   Future<void> share(BuildContext context, Profile? currentProfile) async {

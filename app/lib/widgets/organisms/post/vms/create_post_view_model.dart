@@ -194,6 +194,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         );
       } else {
         await activityController.updateActivity(
+          currentProfile: currentProfile,
           activityData: ActivityData(
             activityID: state.currentActivityID,
             content: captionController.text.trim(),

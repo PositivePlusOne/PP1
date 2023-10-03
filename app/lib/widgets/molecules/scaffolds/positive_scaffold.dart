@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -214,10 +215,13 @@ class PositiveScaffoldContent extends StatelessWidget {
                   hasScrollBody: false,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: decorationBoxSize,
-                      width: decorationBoxSize,
-                      child: Stack(children: decorations),
+                    child: PositiveTileEntryAnimation(
+                      direction: AxisDirection.down,
+                      child: SizedBox(
+                        height: decorationBoxSize,
+                        width: decorationBoxSize,
+                        child: Stack(children: decorations),
+                      ),
                     ),
                   ),
                 ),
@@ -228,10 +232,13 @@ class PositiveScaffoldContent extends StatelessWidget {
                   hasScrollBody: false,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: decorationBoxSize,
-                      width: decorationBoxSize,
-                      child: decorationWidget!,
+                    child: PositiveTileEntryAnimation(
+                      direction: AxisDirection.down,
+                      child: SizedBox(
+                        height: decorationBoxSize,
+                        width: decorationBoxSize,
+                        child: decorationWidget!,
+                      ),
                     ),
                   ),
                 ),

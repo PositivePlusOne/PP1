@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:collection';
 
 // Package imports:
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -122,63 +123,7 @@ class ActivitiesController extends _$ActivitiesController {
 
     // Add the activity to the feed state
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    if (currentProfileId.isNotEmpty) {
-      logger.d('[Activities Service] - Delaying feed state update for profile: $currentProfileId');
-      final TargetFeed userFeed = TargetFeed(targetSlug: 'user', targetUserId: currentProfileId);
-      final TargetFeed timelineFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
-
-      final String expectedUserFeedCacheKey = PositiveFeedState.buildFeedCacheKey(userFeed);
-      final String expectedTimelineFeedCacheKey = PositiveFeedState.buildFeedCacheKey(timelineFeed);
-
-      final CacheController cacheController = ref.read(cacheControllerProvider);
-      final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedCacheKey);
-      final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedCacheKey);
-
-      if (userFeedState != null) {
-        final PagingController<String, Activity> pagingController = userFeedState.pagingController;
-        final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
-
-        currentItems.insert(0, activity);
-        pagingController.itemList = currentItems;
-
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        pagingController.notifyListeners();
-
-        cacheController.add(key: expectedUserFeedCacheKey, value: userFeedState);
-      }
-
-      if (timelineFeedState != null) {
-        final PagingController<String, Activity> pagingController = timelineFeedState.pagingController;
-        final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
-
-        currentItems.insert(0, activity);
-        pagingController.itemList = currentItems;
-
-        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-        pagingController.notifyListeners();
-
-        cacheController.add(key: expectedTimelineFeedCacheKey, value: timelineFeedState);
-      }
-
-      for (final String tag in tags) {
-        final TargetFeed tagFeed = TargetFeed.fromTag(tag);
-        final String expectedTagFeedCacheKey = PositiveFeedState.buildFeedCacheKey(tagFeed);
-
-        final PositiveFeedState? tagFeedState = cacheController.get(expectedTagFeedCacheKey);
-        if (tagFeedState != null) {
-          final PagingController<String, Activity> pagingController = tagFeedState.pagingController;
-          final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
-
-          currentItems.insert(0, activity);
-          pagingController.itemList = currentItems;
-
-          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-          pagingController.notifyListeners();
-
-          cacheController.add(key: expectedTagFeedCacheKey, value: tagFeedState);
-        }
-      }
-    }
+    activity.appendActivityToProfileFeeds(currentProfileId);
 
     logger.i('[Activities Service] - Feed state updated for profile: $currentProfileId - activity: $activity');
     return activity;
@@ -223,17 +168,22 @@ class ActivitiesController extends _$ActivitiesController {
 
   Future<Activity> updateActivity({
     required ActivityData activityData,
+    required Profile? currentProfile,
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('[Activities Service] - Updating activity');
 
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     final Activity activity = await postApiService.updateActivity(activityData: activityData);
 
     // Add the tags to the users recent tags
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     tagsController.addTagsToRecentTags(tags: activityData.tags ?? <String>[]);
+
+    // Add the activity to the feed state
+    activity.appendActivityToProfileFeeds(currentProfileId);
 
     return activity;
   }

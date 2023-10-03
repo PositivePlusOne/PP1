@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -235,33 +236,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
     final Activity? sharedActivity = activities.firstOrNull;
 
-    // Add the data to the user feed
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final TargetFeed expectedUserFeedCacheKey = TargetFeed(
-      targetSlug: 'user',
-      targetUserId: postOptions.$3,
-    );
-
-    final TargetFeed expectedTimelineFeedCacheKey = TargetFeed(
-      targetSlug: 'timeline',
-      targetUserId: postOptions.$3,
-    );
-
-    final String expectedUserFeedKey = PositiveFeedState.buildFeedCacheKey(expectedUserFeedCacheKey);
-    final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedKey);
-
-    final String expectedTimelineFeedKey = PositiveFeedState.buildFeedCacheKey(expectedTimelineFeedCacheKey);
-    final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedKey);
-
-    if (userFeedState != null && sharedActivity != null) {
-      logger.i('Adding shared activity to user feed');
-      userFeedState.pagingController.itemList?.insert(0, sharedActivity);
-    }
-
-    if (timelineFeedState != null && sharedActivity != null) {
-      logger.i('Adding shared activity to timeline feed');
-      timelineFeedState.pagingController.itemList?.insert(0, sharedActivity);
-    }
+    sharedActivity?.appendActivityToProfileFeeds(postOptions.$3);
 
     await appRouter.pop();
 

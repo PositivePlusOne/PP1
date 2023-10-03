@@ -59,7 +59,7 @@ class PositiveSlimTabBar extends ConsumerWidget implements PreferredSizeWidget {
             Expanded(
               child: PositiveSlimTabItem(
                 label: tab,
-                primaryColour: tabColours[tabs.indexOf(tab)],
+                primaryColour: colors.white,
                 isSelected: tabs.indexOf(tab) == index,
                 onTapped: () => onTapped(tabs.indexOf(tab)),
               ),

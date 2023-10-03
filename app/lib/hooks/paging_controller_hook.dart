@@ -40,10 +40,42 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     setupListeners();
   }
 
+  @override
+  void dispose() {
+    disposeListeners();
+    super.dispose();
+  }
+
   void setupListeners() {
-    hook.controller.addPageRequestListener((dynamic pageKey) {
-      hook.listener(pageKey.toString());
-    });
+    hook.controller.addPageRequestListener(onPageRequest);
+  }
+
+  void disposeListeners() {
+    hook.controller.removePageRequestListener(onPageRequest);
+  }
+
+  void requestPage() {
+    final bool isLastPage = hook.controller.nextPageKey == null;
+    if (isLastPage) {
+      return;
+    }
+
+    hook.controller.notifyPageRequestListeners(hook.controller.nextPageKey);
+  }
+
+  void onPageRequest(dynamic pageKey) {
+    hook.listener(pageKey);
+  }
+
+  @override
+  void didUpdateHook(PagingControllerHook oldHook) {
+    super.didUpdateHook(oldHook);
+
+    if (hook.controller != oldHook.controller) {
+      disposeListeners();
+      setupListeners();
+      requestPage();
+    }
   }
 
   @override

@@ -129,11 +129,13 @@ class PositiveActivityWidget extends HookConsumerWidget {
             isShared: isShared,
             publisher: reposterProfile,
             promotion: activityPromotion,
-            onOptions: () => activity?.onPostOptionsSelected(
-              context: context,
-              targetProfile: targetProfile,
-              currentProfile: currentProfile,
-            ),
+            onOptions: () {
+              activity?.onPostOptionsSelected(
+                context: context,
+                targetProfile: targetProfile,
+                currentProfile: currentProfile,
+              );
+            },
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
