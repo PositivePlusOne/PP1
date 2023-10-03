@@ -180,7 +180,6 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       if (request) {
         cameraPermissionStatus = await Permission.camera.request();
         microphonePermissionStatus = await Permission.microphone.request();
-        microphonePermissionStatus = await Permission.audio.request();
       } else {
         cameraPermissionStatus = await Permission.camera.status;
         microphonePermissionStatus = await Permission.microphone.status;
