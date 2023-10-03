@@ -81,6 +81,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 Positioned.fill(
                   child: PositiveCamera(
                     onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
+                    onCameraVideoTaken: (video) => viewModel.onVideoTaken(context, video),
                     cameraNavigation: (_) {
                       return const SizedBox(
                         height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
@@ -92,6 +93,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     ),
                     onTapClose: (_) => appRouter.pop(),
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
+                    isVideoMode: state.currentPostType == PostType.clip,
                     //! Flash controlls in FlutterAwesome do not seem to be working
                     // enableFlashControlls: true,
                   ),

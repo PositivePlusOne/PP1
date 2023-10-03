@@ -49,6 +49,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
     this.topChildren,
     this.onCameraImageTaken,
+    this.onCameraVideoTaken,
     this.onFaceDetected,
     this.previewFile,
     this.cameraNavigation,
@@ -61,10 +62,12 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.onTapAddImage,
     this.enableFlashControls = true,
     this.displayCameraShade = true,
+    this.isVideoMode = false,
     super.key,
   });
 
   final Future<void> Function(XFile imagePath)? onCameraImageTaken;
+  final Future<void> Function(XFile videoPath)? onCameraVideoTaken;
   final void Function(FaceDetectionModel? model)? onFaceDetected;
 
   // This is useful for when you want to "pause" the camera and show a preview of the image
@@ -84,6 +87,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final bool isBusy;
   final bool displayCameraShade;
+  final bool isVideoMode;
 
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
@@ -101,11 +105,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   PositiveCameraViewMode viewMode = PositiveCameraViewMode.none;
 
   PermissionStatus? cameraPermissionStatus;
+  PermissionStatus? microphonePermissionStatus;
   PermissionStatus? libraryPermissionStatus;
 
   bool isPhysicalDevice = true;
 
-  bool get hasCameraPermission => cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
+  bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
   bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
@@ -174,8 +179,11 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     try {
       if (request) {
         cameraPermissionStatus = await Permission.camera.request();
+        microphonePermissionStatus = await Permission.microphone.request();
+        microphonePermissionStatus = await Permission.audio.request();
       } else {
         cameraPermissionStatus = await Permission.camera.status;
+        microphonePermissionStatus = await Permission.microphone.status;
       }
     } catch (e) {
       cameraPermissionStatus = PermissionStatus.denied;
@@ -294,25 +302,28 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     return currentModel;
   }
 
-  Future<void> onVideoButtonPressed(VideoCameraState cameraState) async {
-    if (cameraState.captureState is VideoRecordingCameraState) {
-      print("object");
+  Future<void> onVideoRecordingStart(VideoCameraState cameraState) async {
+    // cameraState.captureState as VideoRecordingCameraState;
+    final CaptureRequest captureRequest = await cameraState.startRecording();
+  }
+
+  Future<void> onVideoRecordingEnd(VideoRecordingCameraState cameraState) async {
+    await cameraState.when(
+      onVideoRecordingMode: (mode) => mode.stopRecording(),
+    );
+
+    var currentCapture = cameraState.cameraContext.mediaCaptureController.value;
+    if (currentCapture != null) {
+      final XFile? file = await currentCapture.captureRequest.when(
+        single: (single) => single.file,
+      );
+
+      if (file == null) {
+        return;
+      }
+
+      await widget.onCameraVideoTaken?.call(file);
     }
-    // if (cameraState.captureState?.isRecordingVideo ?? false) {
-    //   // cameraState.captureState as VideoRecordingCameraState;
-    //   final CaptureRequest captureRequest = await cameraState.startRecording();
-    //   final XFile? file = captureRequest.when(
-    //     single: (p0) => p0.file,
-    //   );
-    // } else {
-    //   final CaptureRequest captureRequest = await cameraState.startRecording();
-    // }
-
-    // if (file == null) {
-    //   return;
-    // }
-
-    // await widget.onCameraImageTaken?.call(file);
   }
 
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
@@ -337,9 +348,11 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     useLifecycleHook(this);
 
     final Widget camera = CameraAwesomeBuilder.awesome(
-      saveConfig: SaveConfig.photo(
+      saveConfig: SaveConfig.photoAndVideo(
         mirrorFrontCamera: true,
-        pathBuilder: buildCaptureRequest,
+        photoPathBuilder: (sens) => buildCaptureRequest(sens, false),
+        videoOptions: VideoOptions(enableAudio: true),
+        videoPathBuilder: (sens) => buildCaptureRequest(sens, true),
       ),
       sensorConfig: config,
       enablePhysicalButton: true,
@@ -388,7 +401,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               child: CameraFloatingButton.showCamera(
                 active: true,
                 onTap: (context) => setState(() {
-                  viewMode = cameraPermissionStatus == PermissionStatus.granted ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+                  viewMode = hasCameraPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
                 }),
               ),
             ),
@@ -422,14 +435,15 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             ref: ref,
             onTapClose: () async {
               cameraPermissionStatus = await Permission.camera.status;
-              final bool isGranted = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
-              if (!isGranted) {
+              microphonePermissionStatus = await Permission.microphone.status;
+              if (!hasCameraPermission) {
                 final SystemController systemController = ref.read(systemControllerProvider.notifier);
                 await systemController.openPermissionSettings();
                 cameraPermissionStatus == await Permission.camera.status;
+                microphonePermissionStatus = await Permission.microphone.status;
               }
 
-              viewMode = cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+              viewMode = hasCameraPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
               setStateIfMounted();
             }));
         break;
@@ -478,6 +492,16 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   }
 
   Widget topOverlay(CameraState state) {
+    if (widget.isVideoMode) {
+      if (state.captureMode != CaptureMode.video) {
+        state.setState(CaptureMode.video);
+      }
+    } else {
+      if (state.captureMode != CaptureMode.photo) {
+        state.setState(CaptureMode.photo);
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmall),
       child: Row(
@@ -593,13 +617,14 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               CameraButton(
-                active: canTakePictureOrVideo,
-                onTap: (_) => state.when(
-                  onPhotoMode: onImageTaken,
-                  onVideoMode: onVideoButtonPressed,
-                  onVideoRecordingMode: (videoState) {},
-                ),
-              ),
+                  active: canTakePictureOrVideo,
+                  onTap: (_) {
+                    state.when(
+                      onPhotoMode: onImageTaken,
+                      onVideoMode: onVideoRecordingStart,
+                      onVideoRecordingMode: onVideoRecordingEnd,
+                    );
+                  }),
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -636,10 +661,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     setStateIfMounted();
   }
 
-  Future<CaptureRequest> buildCaptureRequest(List<Sensor> sensors) async {
+  Future<CaptureRequest> buildCaptureRequest(List<Sensor> sensors, bool isVideo) async {
     final Directory dir = await getTemporaryDirectory();
     final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
-    final String filePath = '${dir.path}/$currentTime.jpg';
+    final String filePath = '${dir.path}/$currentTime.${isVideo ? 'mp4' : 'jpg'}';
 
     return SingleCaptureRequest(filePath, sensors.first);
   }
