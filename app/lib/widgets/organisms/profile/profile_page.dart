@@ -59,7 +59,6 @@ class ProfilePage extends HookConsumerWidget {
     ];
 
     final Profile? currentProfile = controllerState.currentProfile;
-
     final Profile targetProfile = state.profile ?? Profile.empty();
     final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
@@ -78,6 +77,7 @@ class ProfilePage extends HookConsumerWidget {
 
     useLifecycleHook(viewModel);
     usePageRefreshHook();
+
     useCacheHook(keys: expectedCacheKeys);
 
     PreferredSizeWidget? appBarBottomWidget;

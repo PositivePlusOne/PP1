@@ -124,7 +124,7 @@ class ActivitiesController extends _$ActivitiesController {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     if (currentProfileId.isNotEmpty) {
       logger.d('[Activities Service] - Delaying feed state update for profile: $currentProfileId');
-      final TargetFeed userFeed = TargetFeed(targetSlug: 'users', targetUserId: currentProfileId);
+      final TargetFeed userFeed = TargetFeed(targetSlug: 'user', targetUserId: currentProfileId);
       final TargetFeed timelineFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
 
       final String expectedUserFeedCacheKey = PositiveFeedState.buildFeedCacheKey(userFeed);
@@ -141,6 +141,9 @@ class ActivitiesController extends _$ActivitiesController {
         currentItems.insert(0, activity);
         pagingController.itemList = currentItems;
 
+        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+        pagingController.notifyListeners();
+
         cacheController.add(key: expectedUserFeedCacheKey, value: userFeedState);
       }
 
@@ -150,6 +153,9 @@ class ActivitiesController extends _$ActivitiesController {
 
         currentItems.insert(0, activity);
         pagingController.itemList = currentItems;
+
+        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+        pagingController.notifyListeners();
 
         cacheController.add(key: expectedTimelineFeedCacheKey, value: timelineFeedState);
       }
@@ -165,6 +171,9 @@ class ActivitiesController extends _$ActivitiesController {
 
           currentItems.insert(0, activity);
           pagingController.itemList = currentItems;
+
+          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+          pagingController.notifyListeners();
 
           cacheController.add(key: expectedTagFeedCacheKey, value: tagFeedState);
         }
@@ -204,6 +213,9 @@ class ActivitiesController extends _$ActivitiesController {
         currentItems.removeAt(index);
         pagingController.itemList = currentItems;
       }
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      pagingController.notifyListeners();
 
       cacheController.add(key: cacheKey, value: feedState);
     }
@@ -327,6 +339,9 @@ class ActivitiesController extends _$ActivitiesController {
     currentItems.insert(0, activity);
     pagingController.itemList = currentItems;
 
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    pagingController.notifyListeners();
+
     logger.i('[Activities Service] - Feed state updated for profile: $currentProfileId - activity: $activity');
     cacheController.add(key: cacheKey, value: feedState);
   }
@@ -361,6 +376,9 @@ class ActivitiesController extends _$ActivitiesController {
       pagingController.itemList = currentItems;
     }
 
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    pagingController.notifyListeners();
+
     logger.i('[Activities Service] - Feed state updated for profile: $currentProfileId - activity: $activity');
     cacheController.add(key: cacheKey, value: feedState);
   }
@@ -394,6 +412,9 @@ class ActivitiesController extends _$ActivitiesController {
       currentItems.removeAt(index);
       pagingController.itemList = currentItems;
     }
+
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    pagingController.notifyListeners();
 
     logger.i('[Activities Service] - Feed state updated for profile: $currentProfileId - activity: $activity');
     cacheController.add(key: cacheKey, value: feedState);

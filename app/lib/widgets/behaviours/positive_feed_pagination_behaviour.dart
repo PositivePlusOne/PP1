@@ -38,6 +38,7 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -447,10 +448,13 @@ class NoPostsPlaceholder extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            height: decorationBoxSize,
-            width: decorationBoxSize,
-            child: Stack(children: buildType2ScaffoldDecorations(colors)),
+          child: PositiveTileEntryAnimation(
+            direction: AxisDirection.down,
+            child: SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType2ScaffoldDecorations(colors)),
+            ),
           ),
         ),
       ],

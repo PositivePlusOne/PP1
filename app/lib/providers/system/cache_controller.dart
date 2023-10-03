@@ -60,15 +60,9 @@ class CacheController {
     Duration? ttl,
     FlMeta? metadata,
   }) {
-    final StackTrace trace = StackTrace.current;
-    final String caller = trace.toString().split('#')[1].split(' ')[0];
     final Logger logger = providerContainer.read(loggerProvider);
 
     CacheRecord? record = cacheData[key];
-    if (record != null) {
-      logger.d('Not overwriting cache entry for $key from $caller');
-      return;
-    }
 
     final bool hasRecord = record != null;
     final FlMeta newMetadata = metadata ?? FlMeta.empty(key, '');

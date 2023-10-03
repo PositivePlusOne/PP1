@@ -13,6 +13,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
@@ -33,9 +34,9 @@ class NotificationsPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
-    final NotificationsViewModelState state = ref.watch(notificationsViewModelProvider);
+    ref.watch(notificationsViewModelProvider);
 
-    final Profile? currentProfile = viewModel.getCurrentProfile();
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
     final List<Widget> actions = [];
     final List<String> cacheKeys = [];

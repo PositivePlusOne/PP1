@@ -242,6 +242,34 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final Profile? currentProfile = profileController.currentProfile;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
+    final CommunityType communityType = ref.watch(communitiesControllerProvider).selectedCommunityType;
+
+    final Widget child = switch (communityType) {
+      CommunityType.following => buildRelationshipList(
+          context: context,
+          controller: _followingPagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
+      CommunityType.followers => buildRelationshipList(
+          context: context,
+          controller: _followersPagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
+      CommunityType.connected => buildRelationshipList(
+          context: context,
+          controller: _connectionsPagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
+      CommunityType.blocked => buildRelationshipList(
+          context: context,
+          controller: _blockedPagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
+    };
 
     return PositiveScaffold(
       headingWidgets: <Widget>[
@@ -262,35 +290,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
               ),
               const SizedBox(height: kPaddingSmall),
             ],
-            AnimatedSwitcher(
-              duration: kAnimationDurationRegular,
-              child: switch (ref.watch(communitiesControllerProvider).selectedCommunityType) {
-                CommunityType.following => buildRelationshipList(
-                    context: context,
-                    controller: _followingPagingController,
-                    cacheController: cacheController,
-                    senderProfile: currentProfile,
-                  ),
-                CommunityType.followers => buildRelationshipList(
-                    context: context,
-                    controller: _followersPagingController,
-                    cacheController: cacheController,
-                    senderProfile: currentProfile,
-                  ),
-                CommunityType.connected => buildRelationshipList(
-                    context: context,
-                    controller: _connectionsPagingController,
-                    cacheController: cacheController,
-                    senderProfile: currentProfile,
-                  ),
-                CommunityType.blocked => buildRelationshipList(
-                    context: context,
-                    controller: _blockedPagingController,
-                    cacheController: cacheController,
-                    senderProfile: currentProfile,
-                  ),
-              },
-            ),
+            child,
           ],
         ),
       ],
@@ -316,6 +316,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedListView.separated(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       pagingController: controller,
       separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
       padding: EdgeInsets.zero,

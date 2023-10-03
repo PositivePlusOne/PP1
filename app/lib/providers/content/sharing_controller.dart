@@ -238,7 +238,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     // Add the data to the user feed
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final TargetFeed expectedUserFeedCacheKey = TargetFeed(
-      targetSlug: 'users',
+      targetSlug: 'user',
       targetUserId: postOptions.$3,
     );
 
