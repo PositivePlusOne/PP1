@@ -134,7 +134,7 @@ class CameraFloatingButton extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(kIconSmall),
                 border: Border.all(
                   color: colors.white,
-                  width: 1.0,
+                  width: kBorderThicknessSmall,
                 ),
               )
             : null,
