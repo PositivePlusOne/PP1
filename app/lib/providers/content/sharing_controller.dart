@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/reactions.dart';
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,7 +15,9 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';

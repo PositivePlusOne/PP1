@@ -39,15 +39,16 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
     final AccountViewModel viewModel = ref.watch(viewModelProvider.notifier);
 
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+    final Profile? currentProfile = profileState.currentProfile;
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    String displayName = profileState.currentProfile?.displayName ?? '';
+    String displayName = currentProfile?.displayName ?? '';
     if (displayName.isEmpty) {
       displayName = localizations.shared_placeholders_empty_display_name;
     }
 
-    String name = profileState.currentProfile?.name ?? '';
+    String name = currentProfile?.name ?? '';
     if (name.isEmpty) {
       name = localizations.shared_placeholders_empty_name;
     }
@@ -65,7 +66,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           PositiveProfileCircularIndicator(
-            profile: profileState.currentProfile ?? Profile.empty(),
+            profile: currentProfile ?? Profile.empty(),
             onTap: viewModel.onSwitchProfileRequested,
           ),
           const SizedBox(width: kPaddingSmall),
@@ -94,7 +95,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.eye,
-            onTapped: viewModel.onViewProfileButtonSelected,
+            onTapped: () => viewModel.onViewProfileButtonSelected(currentProfile),
             tooltip: localizations.page_account_actions_view_profile,
           ),
           const SizedBox(width: kPaddingSmall),

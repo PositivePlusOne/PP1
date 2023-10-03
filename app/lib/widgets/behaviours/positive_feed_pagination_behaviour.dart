@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,6 +30,7 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';

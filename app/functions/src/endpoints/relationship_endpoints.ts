@@ -19,7 +19,7 @@ import { RelationshipJSON } from "../dto/relationships";
 
 export namespace RelationshipEndpoints {
   export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const members = request.data.members || [];
 
     // Push UID into members array if it's not already there.
@@ -44,7 +44,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const blockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Blocking user", { uid, targetUid });
 
@@ -85,7 +85,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unblockRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unblocking user", { uid, targetUid });
 
@@ -126,7 +126,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const muteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Muting user", { uid, targetUid });
 
@@ -158,7 +158,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unmuteRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unmuting user", { uid, targetUid });
 
@@ -184,7 +184,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const connectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Connecting user", { uid, targetUid });
 
@@ -235,7 +235,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const disconnectRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Disconnecting user", { uid, targetUid });
 
@@ -274,7 +274,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const followRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Following relationship", { uid, targetUid });
 
@@ -313,7 +313,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unfollowRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unfollowing relationship", { uid, targetUid });
 
@@ -346,7 +346,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const hideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Hiding relationship", { uid, targetUid });
 
@@ -372,7 +372,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unhideRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unhiding relationship", { uid, targetUid });
 
@@ -398,7 +398,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listConnectedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
     const limit = request.limit || 10;
@@ -427,7 +427,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listFollowRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
     const limit = request.limit || 10;
@@ -456,7 +456,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listFollowingRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
     const limit = request.limit || 10;
@@ -485,7 +485,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listBlockedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
     const limit = request.limit || 10;

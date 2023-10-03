@@ -12,6 +12,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/feedback/feedback_type.dart';
+import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
@@ -124,6 +126,21 @@ class SystemApiService {
     return await getHttpsCallableResult<String>(
       name: 'system-getStreamToken',
       selector: (response) => response.data['token'].toString(),
+    );
+  }
+
+  FutureOr<EndpointResponse> submitFeedback({
+    required String content,
+    required FeedbackType feedbackType,
+    required ReportType reportType,
+  }) async {
+    return await getHttpsCallableResult(
+      name: 'system-submitFeedback',
+      parameters: {
+        'content': content,
+        'feedbackType': FeedbackType.toJson(feedbackType),
+        'reportType': ReportType.toJson(reportType),
+      },
     );
   }
 }

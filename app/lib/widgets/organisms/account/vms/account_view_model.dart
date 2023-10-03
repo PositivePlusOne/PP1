@@ -23,6 +23,7 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
@@ -123,17 +124,27 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     appRouter.push(const AccountProfileEditSettingsRoute());
   }
 
-  Future<void> onViewProfileButtonSelected() async {
-    final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+  Future<void> onViewProfileButtonSelected(Profile? currentProfile) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+
+    if (currentProfile == null) {
+      logger.e('onViewProfileButtonSelected: currentProfile is null');
+      return;
+    }
 
     logger.d('onViewProfileButtonSelected');
     state = state.copyWith(isBusy: true);
 
     try {
-      await profileViewModel.preloadUserProfile(auth.currentUser!.uid);
+      final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
+      final String currentProfileId = currentProfile.flMeta?.id ?? '';
+      if (currentProfileId.isEmpty) {
+        logger.e('onViewProfileButtonSelected: currentProfileId is empty');
+        return;
+      }
+
+      await profileViewModel.preloadUserProfile(currentProfileId);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -190,7 +201,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFeedbackSubmitted');
 
@@ -211,18 +221,12 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     }
 
     try {
-      final User? user = auth.currentUser;
-      if (user == null) {
-        logger.e('Cannot send feedback without a user');
-        return;
-      }
-
-      final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
-      await callable.call(<String, dynamic>{
-        'content': content,
-        'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
-        'reportType': ReportType.toJson(state.feedback.reportType),
-      });
+      final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
+      await systemApiService.submitFeedback(
+        content: content,
+        feedbackType: state.feedback.feedbackType,
+        reportType: state.feedback.reportType,
+      );
 
       await appRouter.pop();
       feedbackType.when(
