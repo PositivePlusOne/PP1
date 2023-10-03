@@ -107,7 +107,7 @@ class TargetFeed with _$TargetFeed {
 
   factory TargetFeed.fromJson(Map<String, dynamic> json) => _$TargetFeedFromJson(json);
 
-  static TargetFeed fromTag(Tag tag) => TargetFeed(targetSlug: 'tags', targetUserId: tag.key);
+  static TargetFeed fromTag(String tag) => TargetFeed(targetSlug: 'tags', targetUserId: tag);
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');

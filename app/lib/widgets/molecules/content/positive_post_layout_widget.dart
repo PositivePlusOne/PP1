@@ -517,7 +517,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
         //TODO(S): share enabled and on share functionality here
         shareEnabled: !isBusy && canActShare,
-        onShare: (context) => postContent?.share(context),
+        onShare: (context) => postContent?.share(context, currentProfile),
 
         //TODO(S): comment enabled and on comment functionality here
         comments: totalComments,

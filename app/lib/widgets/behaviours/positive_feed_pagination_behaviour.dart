@@ -86,11 +86,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
-      String next = data.containsKey('next') ? data['next'].toString() : '';
+      String? next = data.containsKey('next') ? data['next'].toString() : null;
 
       // Check for weird backend loops (extra safety)
       if (next == feedState.currentPaginationKey) {
-        next = '';
+        next = null;
       }
 
       appendActivityPageToState(data, next);
@@ -102,7 +102,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
   }
 
-  void appendActivityPageToState(Map<String, dynamic> data, String next) {
+  void appendActivityPageToState(Map<String, dynamic> data, String? next) {
     final Logger logger = providerContainer.read(loggerProvider);
 
     final List<dynamic> activities = data['activities'] as List<dynamic>;

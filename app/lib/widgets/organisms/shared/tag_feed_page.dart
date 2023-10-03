@@ -43,7 +43,7 @@ class TagFeedPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    final TargetFeed feed = TargetFeed.fromTag(tag);
+    final TargetFeed feed = TargetFeed.fromTag(tag.key);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 

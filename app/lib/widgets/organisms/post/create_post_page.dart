@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -21,7 +23,7 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/camera/camera_floating_button.dart';
 
 @RoutePage()
-class CreatePostPage extends ConsumerStatefulWidget {
+class CreatePostPage extends StatefulHookConsumerWidget {
   const CreatePostPage({
     this.isEditPage = false,
     this.activityData,
@@ -59,6 +61,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
     final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
     return WillPopScope(
       onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
@@ -154,7 +158,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTapPost: (_) {},
                     onTapClip: (_) {},
                     onTapEvent: (_) {},
-                    onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
+                    onTapFlex: (context) => viewModel.onFlexButtonPressed(context, currentProfile),
                     activeButton: PositivePostNavigationActiveButton.flex,
                     flexCaption: state.activeButtonFlexText,
                     isEnabled: viewModel.isNavigationEnabled && !state.isBusy,

@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -53,14 +55,14 @@ abstract class ISharingController {
   Future<void> shareExternally(BuildContext context, ShareTarget target, Rect origin, {SharePostOptions? postOptions});
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions});
   Future<void> shareViaConnections(BuildContext context, {SharePostOptions? postOptions});
-  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String origin, List<String> profileIds);
+  Future<void> shareViaConnectionChat(BuildContext context, Profile? currentProfile, Activity activity, String origin, List<String> profileIds);
 }
 
 enum ShareTarget {
   post,
 }
 
-typedef SharePostOptions = (Activity activity, String origin);
+typedef SharePostOptions = (Activity activity, String origin, String currentProfileId);
 typedef ShareMessage = (String title, String message);
 
 @Riverpod(keepAlive: true)
@@ -102,12 +104,12 @@ class SharingController extends _$SharingController implements ISharingControlle
   @override
   List<Widget> buildShareActions(BuildContext context, Rect origin, ShareTarget target, {SharePostOptions? postOptions}) {
     return switch (target) {
-      ShareTarget.post => buildSharePostActions(context, origin, postOptions!),
+      ShareTarget.post => buildSharePostActions(context, origin, postOptions),
     };
   }
 
   @override
-  List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions postOptions) {
+  List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions? postOptions) {
     final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
@@ -179,19 +181,26 @@ class SharingController extends _$SharingController implements ISharingControlle
     final Logger logger = ref.read(loggerProvider);
     logger.d('Sharing via connections');
 
+    final String activityID = postOptions?.$1.flMeta?.id ?? '';
+    final String origin = postOptions?.$2 ?? '';
+    if (activityID.isEmpty || origin.isEmpty) {
+      throw Exception('Activity is missing an ID');
+    }
+
     await appRouter.pop();
     Future<void>.delayed(kAnimationDurationDebounce, () {
-      appRouter.push(PostShareRoute(activity: postOptions!.$1, origin: postOptions.$2));
+      appRouter.push(PostShareRoute(activityId: activityID, origin: origin));
     });
   }
 
   @override
-  Future<void> shareViaConnectionChat(BuildContext context, Activity activity, String origin, List<String> profileIds) async {
+  Future<void> shareViaConnectionChat(BuildContext context, Profile? currentProfile, Activity activity, String origin, List<String> profileIds) async {
     final Logger logger = ref.read(loggerProvider);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
 
     logger.d('Sharing via connection chat');
-    final SharePostOptions postOptions = (activity, origin);
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final SharePostOptions postOptions = (activity, origin, currentProfileId);
     final ShareMessage message = getShareMessage(context, ShareTarget.post, postOptions: postOptions);
 
     final String title = message.$1;
@@ -209,7 +218,6 @@ class SharingController extends _$SharingController implements ISharingControlle
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {
     final Logger logger = ref.read(loggerProvider);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     if (postOptions == null) {
@@ -229,11 +237,21 @@ class SharingController extends _$SharingController implements ISharingControlle
 
     // Add the data to the user feed
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String expectedUserFeedCacheKey = 'feeds:user-${profileController.currentProfileId}';
-    final String expectedTimelineFeedCacheKey = 'feeds:timeline-${profileController.currentProfileId}';
+    final TargetFeed expectedUserFeedCacheKey = TargetFeed(
+      targetSlug: 'users',
+      targetUserId: postOptions.$3,
+    );
 
-    final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedCacheKey);
-    final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedCacheKey);
+    final TargetFeed expectedTimelineFeedCacheKey = TargetFeed(
+      targetSlug: 'timeline',
+      targetUserId: postOptions.$3,
+    );
+
+    final String expectedUserFeedKey = PositiveFeedState.buildFeedCacheKey(expectedUserFeedCacheKey);
+    final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedKey);
+
+    final String expectedTimelineFeedKey = PositiveFeedState.buildFeedCacheKey(expectedTimelineFeedCacheKey);
+    final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedKey);
 
     if (userFeedState != null && sharedActivity != null) {
       logger.i('Adding shared activity to user feed');

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -326,33 +328,24 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> connectStreamUser() async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
     final log = ref.read(loggerProvider);
 
-    if (profileController.state.currentProfile?.flMeta?.id?.isEmpty ?? true) {
+    final String currentUserId = userController.currentUser?.uid ?? '';
+    if (currentUserId.isEmpty) {
       log.e('[GetStreamController] connectStreamUser() profileId is empty');
       return;
     }
 
     // Check if user is already connected
-    if (streamChatClient.wsConnectionStatus == ConnectionStatus.connected) {
-      log.i('[GetStreamController] connectStreamUser() user is already connected');
+    if (streamChatClient.wsConnectionStatus != ConnectionStatus.disconnected) {
+      log.i('[GetStreamController] connectStreamUser() user is already connected or connecting');
       return;
     }
 
     log.i('[GetStreamController] onUserChanged() user is not null');
     final String token = await systemApiService.getStreamToken();
-    final String uid = profileController.state.currentProfile?.flMeta?.id ?? '';
-    final String imageUrl = profileController.state.currentProfile?.profileImage?.bucketPath ?? '';
-    final String displayName = profileController.state.currentProfile?.displayName ?? '';
-    final String accentColor = profileController.state.currentProfile?.accentColor ?? '#2BEDE1';
-
-    final Map<String, dynamic> userData = buildUserExtraData(
-      imageUrl: imageUrl,
-      displayName: displayName,
-      accentColor: accentColor,
-    );
 
     // Check if user is disconnected, so we don't call connectUser() twice
     if (streamChatClient.wsConnectionStatus != ConnectionStatus.disconnected) {
@@ -360,7 +353,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final User chatUser = buildStreamChatUser(id: uid, extraData: userData);
+    final User chatUser = buildStreamChatUser(id: currentUserId);
     await streamChatClient.connectUser(chatUser, token);
   }
 
@@ -568,9 +561,48 @@ class GetStreamController extends _$GetStreamController {
       case Relationship:
         onRelationshipUpdated(event.value as Relationship);
         break;
+      case Profile:
+        onProfileUpdated(event.value as Profile);
+        break;
       default:
         break;
     }
+  }
+
+  void onProfileUpdated(Profile profile) {
+    final log = ref.read(loggerProvider);
+    final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    log.d('[GetStreamController] onProfileUpdated()');
+
+    final String currentUserId = userController.currentUser?.uid ?? '';
+    final String profileId = profile.flMeta?.id ?? '';
+
+    if (currentUserId.isEmpty || currentUserId != profileId) {
+      log.i('[GetStreamController] onProfileUpdated() currentUserId is empty or does not match profileId');
+      return;
+    }
+
+    if (streamChatClient.state.currentUser == null) {
+      log.i('[GetStreamController] onProfileUpdated() user is null');
+      return;
+    }
+
+    final String uid = profileController.state.currentProfile?.flMeta?.id ?? '';
+    final String imageUrl = profileController.state.currentProfile?.profileImage?.bucketPath ?? '';
+    final String displayName = profileController.state.currentProfile?.displayName ?? '';
+    final String accentColor = profileController.state.currentProfile?.accentColor ?? '#2BEDE1';
+
+    final Map<String, dynamic> userData = buildUserExtraData(
+      imageUrl: imageUrl,
+      displayName: displayName,
+      accentColor: accentColor,
+    );
+
+    log.i('[GetStreamController] onProfileUpdated() updating user');
+    final User chatUser = buildStreamChatUser(id: uid, extraData: userData);
+    streamChatClient.state.updateUser(chatUser);
   }
 
   // Some relationships will have a channel ID, some won't

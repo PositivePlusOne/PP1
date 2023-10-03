@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -146,19 +147,18 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
   }
 
-  Future<void> onPostFinished(BuildContext context) async {
+  Future<void> onPostFinished(BuildContext context, Profile? currentProfile) async {
     if (state.isBusy) {
       return;
     }
 
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    if (profileController.currentProfileId == null) {
+    if (currentProfile == null) {
       logger.e("Profile ID is null, cannot post");
       return;
     }
@@ -181,6 +181,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       if (!state.isEditing) {
         await activityController.postActivity(
+          currentProfile: currentProfile,
           activityData: ActivityData(
             content: captionController.text.trim(),
             altText: altTextController.text.trim(),
@@ -436,7 +437,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(currentFilter: filter);
   }
 
-  Future<void> onFlexButtonPressed(BuildContext context) async {
+  Future<void> onFlexButtonPressed(BuildContext context, Profile? currentProfile) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     switch (state.currentCreatePostPage) {
@@ -453,7 +454,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        await onPostFinished(context);
+        await onPostFinished(context, currentProfile);
         break;
     }
   }

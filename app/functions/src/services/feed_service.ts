@@ -76,7 +76,7 @@ export namespace FeedService {
 
         if (!isFollowing) {
           functions.logger.info("Following feed", { feed: expectedFeed });
-          await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetSlug);
+          await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetUserId);
         }
       }
     } catch (error) {
@@ -103,6 +103,8 @@ export namespace FeedService {
       user_id: uid,
       enrich: true,
     });
+
+    functions.logger.info("Got feed window", { feed, windowSize, next, response });
 
     const entries = [] as FeedEntry[];
     response.results.forEach((activity: any) => {

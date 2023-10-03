@@ -61,7 +61,7 @@ extension ActivityExt on Activity {
     return targetFeeds;
   }
 
-  Future<void> share(BuildContext context) async {
+  Future<void> share(BuildContext context, Profile? currentProfile) async {
     final SharingController sharingController = providerContainer.read(sharingControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
     if (publisherInformation?.originFeed.isEmpty ?? true == true) {
@@ -69,7 +69,9 @@ extension ActivityExt on Activity {
       throw Exception('publisherInformation.originFeed is empty');
     }
 
-    final (Activity activity, String feed) postOptions = (this, publisherInformation!.originFeed);
+    // typedef SharePostOptions = (Activity activity, String origin, String currentProfileId);
+    final String originFeed = publisherInformation?.originFeed ?? '';
+    final SharePostOptions postOptions = (this, originFeed, currentProfile?.flMeta?.id ?? '');
     await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 

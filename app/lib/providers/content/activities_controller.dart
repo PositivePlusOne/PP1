@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:collection';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -105,6 +106,7 @@ class ActivitiesController extends _$ActivitiesController {
 
   Future<Activity> postActivity({
     required ActivityData activityData,
+    required Profile? currentProfile,
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
@@ -115,8 +117,61 @@ class ActivitiesController extends _$ActivitiesController {
 
     // Add the tags to the users recent tags
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    tagsController.addTagsToRecentTags(tags: activityData.tags ?? <String>[]);
+    final List<String> tags = activityData.tags ?? <String>[];
+    tagsController.addTagsToRecentTags(tags: tags);
 
+    // Add the activity to the feed state
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (currentProfileId.isNotEmpty) {
+      logger.d('[Activities Service] - Delaying feed state update for profile: $currentProfileId');
+      final TargetFeed userFeed = TargetFeed(targetSlug: 'users', targetUserId: currentProfileId);
+      final TargetFeed timelineFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
+
+      final String expectedUserFeedCacheKey = PositiveFeedState.buildFeedCacheKey(userFeed);
+      final String expectedTimelineFeedCacheKey = PositiveFeedState.buildFeedCacheKey(timelineFeed);
+
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedCacheKey);
+      final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedCacheKey);
+
+      if (userFeedState != null) {
+        final PagingController<String, Activity> pagingController = userFeedState.pagingController;
+        final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+        currentItems.insert(0, activity);
+        pagingController.itemList = currentItems;
+
+        cacheController.add(key: expectedUserFeedCacheKey, value: userFeedState);
+      }
+
+      if (timelineFeedState != null) {
+        final PagingController<String, Activity> pagingController = timelineFeedState.pagingController;
+        final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+        currentItems.insert(0, activity);
+        pagingController.itemList = currentItems;
+
+        cacheController.add(key: expectedTimelineFeedCacheKey, value: timelineFeedState);
+      }
+
+      for (final String tag in tags) {
+        final TargetFeed tagFeed = TargetFeed.fromTag(tag);
+        final String expectedTagFeedCacheKey = PositiveFeedState.buildFeedCacheKey(tagFeed);
+
+        final PositiveFeedState? tagFeedState = cacheController.get(expectedTagFeedCacheKey);
+        if (tagFeedState != null) {
+          final PagingController<String, Activity> pagingController = tagFeedState.pagingController;
+          final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+          currentItems.insert(0, activity);
+          pagingController.itemList = currentItems;
+
+          cacheController.add(key: expectedTagFeedCacheKey, value: tagFeedState);
+        }
+      }
+    }
+
+    logger.i('[Activities Service] - Feed state updated for profile: $currentProfileId - activity: $activity');
     return activity;
   }
 
