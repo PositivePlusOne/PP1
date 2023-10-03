@@ -50,6 +50,9 @@ class NotificationsPage extends HookConsumerWidget {
       cacheKeys.add(notificationCacheKey);
     }
 
+    cacheKeys.addAll(viewModel.getSupportedProfileIds());
+    ref.watch(profileControllerProvider);
+
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useCacheHook(keys: cacheKeys);
@@ -74,6 +77,7 @@ class NotificationsPage extends HookConsumerWidget {
           ],
         ),
         if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) ...<Widget>[
+          //TODO: load additional profile notification data after loading first profile
           PositiveNotificationsPaginationBehaviour(uid: currentProfile!.flMeta!.id!),
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(child: SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData))),

@@ -246,6 +246,14 @@
     "page_account_actions_preferences": "App Preferences",
     "page_account_actions_logout": "Sign Out",
     "page_account_actions_feedback": "Provide Feedback",
+
+    "page_account_organisation_actions_company_details": "Company Details",
+    "page_account_organisation_actions_directory_details": "Directory Details",
+    "page_account_organisation_actions_promoted": "Promoted Posts",
+    "page_account_organisation_actions_team": "Team Members",
+    "page_account_organisation_actions_followers": "Followers",
+    "page_account_organisation_actions_chat": "Company Chat",
+    "page_account_organisation_actions_leave": "Leave {company}",
     
     "page_account_actions_change_return_account": "Back to Account",
     "page_account_actions_change_return_profile": "Back to Profile",

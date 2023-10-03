@@ -151,6 +151,7 @@ mixin ProfileSwitchMixin {
     return profileController.currentProfileId ?? '';
   }
 
+  @mustCallSuper
   void onProfileSwitched(String? id, Profile? profile) {
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);

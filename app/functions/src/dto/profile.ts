@@ -16,7 +16,7 @@ export const visibilityFlagHivStatus = 'hiv_status';
 
 export const featureFlagMarketing = 'marketing';
 export const featureFlagIncognito = 'incognito';
-export const featureFlagOrganisationControls = 'organisationControls';
+export const featureFlagOrganisationControls = 'organisation';
 
 export interface ProfileStatisicsJSON {
     counts?: Record<string, number>;

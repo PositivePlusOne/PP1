@@ -19,6 +19,7 @@ import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -127,6 +128,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   Future<void> onViewProfileButtonSelected(Profile? currentProfile) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     if (currentProfile == null) {
       logger.e('onViewProfileButtonSelected: currentProfile is null');

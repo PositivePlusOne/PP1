@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sharing_controller.dart';
+part of 'account_page_view_model.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sharingControllerHash() => r'cb9a19459fa252267355480ceb819e7de72c59d1';
+String _$accountPageViewModelHash() =>
+    r'ee263ed5813704be5e3f2e819699756d6fb6c7d8';
 
-/// See also [SharingController].
-@ProviderFor(SharingController)
-final sharingControllerProvider =
-    NotifierProvider<SharingController, SharingControllerState>.internal(
-  SharingController.new,
-  name: r'sharingControllerProvider',
+/// See also [AccountPageViewModel].
+@ProviderFor(AccountPageViewModel)
+final accountPageViewModelProvider = AutoDisposeNotifierProvider<
+    AccountPageViewModel, AccountPageViewModelState>.internal(
+  AccountPageViewModel.new,
+  name: r'accountPageViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$sharingControllerHash,
+      : _$accountPageViewModelHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$SharingController = Notifier<SharingControllerState>;
+typedef _$AccountPageViewModel = AutoDisposeNotifier<AccountPageViewModelState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
