@@ -252,6 +252,11 @@ FutureOr<PermissionStatus> cameraPermissions(CameraPermissionsRef ref) async {
 }
 
 @Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> microphonePermissions(MicrophonePermissionsRef ref) async {
+  return Permission.microphone.request();
+}
+
+@Riverpod(keepAlive: true)
 LocalAuthentication localAuthentication(LocalAuthenticationRef ref) {
   return LocalAuthentication();
 }

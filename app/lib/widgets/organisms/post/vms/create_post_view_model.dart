@@ -378,6 +378,33 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   //? Create image Post here!
+  Future<void> onVideoTaken(BuildContext context, XFile file) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
+
+    final List<GalleryEntry> entries = [];
+    if (file.path.isNotEmpty) {
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(file, uploadImmediately: true);
+      entries.add(entry);
+    }
+
+    if (entries.isEmpty) {
+      return;
+    }
+
+    // state = state.copyWith(
+    //   galleryEntries: entries,
+    //   currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+    //   editingGalleryEntry: entries.firstOrNull,
+    //   currentPostType: PostType.image,
+    //   activeButton: PositivePostNavigationActiveButton.flex,
+    //   activeButtonFlexText: localisations.shared_actions_next,
+    // );
+    print("e");
+    return;
+  }
+
+  //? Create image Post here!
   Future<void> onImageTaken(BuildContext context, XFile file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
