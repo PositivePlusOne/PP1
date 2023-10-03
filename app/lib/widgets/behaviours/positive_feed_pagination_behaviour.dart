@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -117,14 +118,19 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    feedState.hasPerformedInitialLoad = true;
 
     if (feedState.pagingController.itemList?.isEmpty ?? true) {
       logger.d('saveActivitiesState() - No activities to save');
-      return;
+      feedState.pagingController.value = PagingState<String, Activity>(
+        itemList: feedState.pagingController.itemList,
+        error: null,
+        nextPageKey: null,
+      );
     }
 
     logger.d('saveActivitiesState() - Saving activities');
-    final String newCacheKey = feedState!.buildCacheKey();
+    final String newCacheKey = feedState.buildCacheKey();
     cacheController.add(key: newCacheKey, value: feedState);
   }
 
@@ -132,7 +138,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     Profile? currentProfile,
     Relationship? relationship,
   }) {
-    final bool requestedFirstWindow = feedState.hasPerformedInitialLoad ?? false;
+    final bool requestedFirstWindow = feedState.hasPerformedInitialLoad;
     if (!requestedFirstWindow) {
       return false;
     }
@@ -155,50 +161,29 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
+    usePagingController(
+      controller: feedState.pagingController,
+      listener: requestNextPage,
+    );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts();
+    final Widget noPostsSliverWidget = SliverNoPostsPlaceholder(
+      typography: typography,
+      colors: colors,
+    );
+
+    final Widget noPostsWidget = NoPostsPlaceholder(
+      typography: typography,
+      colors: colors,
+    );
+
     if (shouldDisplayNoPosts) {
-      return SliverStack(
-        positionedAlignment: Alignment.bottomCenter,
-        children: <Widget>[
-          SliverPositioned(
-            left: 0.0,
-            right: 0.0,
-            top: kPaddingSmall,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 120.0),
-                child: Text(
-                  'No Posts to Display',
-                  textAlign: TextAlign.center,
-                  style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-                ),
-              ),
-            ),
-          ),
-          SliverFillRemaining(
-            fillOverscroll: false,
-            hasScrollBody: false,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: decorationBoxSize,
-                width: decorationBoxSize,
-                child: Stack(children: buildType2ScaffoldDecorations(colors)),
-              ),
-            ),
-          ),
-        ],
-      );
+      return noPostsSliverWidget;
     }
 
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     if (isSliver) {
-      return buildSliverFeed(context, loadingIndicator);
+      return buildSliverFeed(context, loadingIndicator, noPostsWidget);
     } else {
       return buildFeed(context, loadingIndicator);
     }
@@ -333,14 +318,34 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return !states.contains(RelationshipState.targetBlocked) && !states.contains(RelationshipState.sourceHidden);
   }
 
-  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
+  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator, Widget noPostsWidget) {
     final bool canDisplay = canDisplaySliverFeed;
-    if (!canDisplay || feedState == null) {
+    if (!canDisplay) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     return PagedSliverList.separated(
-      pagingController: feedState!.pagingController,
+      pagingController: feedState.pagingController,
+      separatorBuilder: buildSeparator,
+      builderDelegate: PagedChildBuilderDelegate<Activity>(
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
+        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        noItemsFoundIndicatorBuilder: (context) => noPostsWidget,
+        itemBuilder: (_, item, index) => buildItem(context, item, index),
+      ),
+    );
+  }
+
+  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
+    final bool canDisplay = canDisplaySliverFeed;
+    if (!canDisplay) {
+      return const SizedBox.shrink();
+    }
+
+    return PagedListView.separated(
+      pagingController: feedState.pagingController,
       separatorBuilder: buildSeparator,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
@@ -351,23 +356,104 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       ),
     );
   }
+}
 
-  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
-    final bool canDisplay = canDisplaySliverFeed;
-    if (!canDisplay || feedState == null) {
-      return const SizedBox.shrink();
-    }
+class SliverNoPostsPlaceholder extends StatelessWidget {
+  const SliverNoPostsPlaceholder({
+    super.key,
+    required this.typography,
+    required this.colors,
+  });
 
-    return PagedListView.separated(
-      pagingController: feedState!.pagingController,
-      separatorBuilder: buildSeparator,
-      builderDelegate: PagedChildBuilderDelegate<Activity>(
-        animateTransitions: true,
-        transitionDuration: kAnimationDurationRegular,
-        firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
-      ),
+  final DesignTypographyModel typography;
+  final DesignColorsModel colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+    final double decorationBoxSize = min(screenSize.height / 2, 400);
+
+    return SliverStack(
+      positionedAlignment: Alignment.bottomCenter,
+      children: <Widget>[
+        SliverPositioned(
+          left: 0.0,
+          right: 0.0,
+          top: kPaddingSmall,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 120.0),
+              child: Text(
+                'No Posts to Display',
+                textAlign: TextAlign.center,
+                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ),
+        SliverFillRemaining(
+          fillOverscroll: false,
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType2ScaffoldDecorations(colors)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class NoPostsPlaceholder extends StatelessWidget {
+  const NoPostsPlaceholder({
+    super.key,
+    required this.typography,
+    required this.colors,
+  });
+
+  final DesignTypographyModel typography;
+  final DesignColorsModel colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+    final double decorationBoxSize = min(screenSize.height / 2, 400);
+
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: <Widget>[
+        Positioned(
+          left: 0.0,
+          right: 0.0,
+          top: kPaddingSmall,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 120.0),
+              child: Text(
+                'No Posts to Display',
+                textAlign: TextAlign.center,
+                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: SizedBox(
+            height: decorationBoxSize,
+            width: decorationBoxSize,
+            child: Stack(children: buildType2ScaffoldDecorations(colors)),
+          ),
+        ),
+      ],
     );
   }
 }
