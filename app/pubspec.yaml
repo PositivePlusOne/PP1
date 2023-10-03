@@ -99,6 +99,9 @@ dependencies:
   mime: ^1.0.4
   flutter_image_compress: ^2.0.4
 
+  # Dunno why this is needed
+  video_player_avfoundation: ^2.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

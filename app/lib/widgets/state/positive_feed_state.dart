@@ -31,6 +31,19 @@ class PositiveFeedState with PositivePaginationControllerState {
     return buildFeedCacheKey(feed);
   }
 
+  static PositiveFeedState buildNewState({
+    required TargetFeed feed,
+    required String currentProfileId,
+  }) {
+    return PositiveFeedState(
+      feed: feed,
+      profileId: currentProfileId,
+      pagingController: PagingController<String, Activity>(
+        firstPageKey: '',
+      ),
+    );
+  }
+
   static String buildFeedCacheKey(TargetFeed feed) {
     return 'feed:paging:${feed.targetSlug}:${feed.targetUserId}';
   }

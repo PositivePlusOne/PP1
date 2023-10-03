@@ -58,7 +58,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   final Profile? currentProfile;
   final TargetFeed feed;
-  final PositiveFeedState? feedState;
+  final PositiveFeedState feedState;
   final int windowSize;
 
   final void Function(Activity activity)? onHeaderTap;
@@ -80,7 +80,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
         pagination: Pagination(
-          cursor: feedState?.currentPaginationKey,
+          cursor: feedState.currentPaginationKey,
         ),
       );
 
@@ -88,7 +88,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       String next = data.containsKey('next') ? data['next'].toString() : '';
 
       // Check for weird backend loops (extra safety)
-      if (next == feedState?.currentPaginationKey) {
+      if (next == feedState.currentPaginationKey) {
         next = '';
       }
 
@@ -111,14 +111,14 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }).toList();
 
     logger.d('appendActivityPageToState() - activityList.length: ${activityList.length}');
-    feedState?.pagingController.appendPage(activityList, next);
+    feedState.pagingController.appendPage(activityList, next);
   }
 
   void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    if (feedState?.pagingController.itemList?.isEmpty ?? true) {
+    if (feedState.pagingController.itemList?.isEmpty ?? true) {
       logger.d('saveActivitiesState() - No activities to save');
       return;
     }
@@ -132,13 +132,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     Profile? currentProfile,
     Relationship? relationship,
   }) {
-    final bool requestedFirstWindow = feedState?.hasPerformedInitialLoad ?? false;
+    final bool requestedFirstWindow = feedState.hasPerformedInitialLoad ?? false;
     if (!requestedFirstWindow) {
       return false;
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final Iterable<Activity>? activities = feedState?.pagingController.itemList;
+    final Iterable<Activity>? activities = feedState.pagingController.itemList;
     final bool canDisplayAny = activities?.any((element) {
           final String publisherId = element.publisherInformation?.publisherId ?? '';
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
@@ -205,7 +205,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   Widget buildSeparator(BuildContext context, int index) {
-    final Activity? activity = feedState?.pagingController.itemList?.elementAtOrNull(index);
+    final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
     final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     if (activityId.isEmpty || currentProfileId.isEmpty) {
@@ -226,7 +226,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   Widget buildItem(BuildContext context, Activity item, int index) {
-    final Activity? tempActivity = feedState?.pagingController.itemList?.elementAtOrNull(index);
+    final Activity? tempActivity = feedState.pagingController.itemList?.elementAtOrNull(index);
     final String activityId = tempActivity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     if (activityId.isEmpty || currentProfileId.isEmpty) {
@@ -336,7 +336,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
     final bool canDisplay = canDisplaySliverFeed;
     if (!canDisplay || feedState == null) {
-      return const SizedBox.shrink();
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     return PagedSliverList.separated(

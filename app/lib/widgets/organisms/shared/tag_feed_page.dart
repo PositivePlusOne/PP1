@@ -48,7 +48,7 @@ class TagFeedPage extends HookConsumerWidget {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
     final String feedStateKey = PositiveFeedState.buildFeedCacheKey(feed);
-    final PositiveFeedState? feedState = cacheController.get(feedStateKey);
+    final PositiveFeedState feedState = cacheController.get(feedStateKey) ?? PositiveFeedState.buildNewState(feed: feed, currentProfileId: currentProfile?.flMeta?.id ?? '');
 
     useCacheHook(keys: [feedStateKey]);
 

@@ -72,7 +72,7 @@ class ProfilePage extends HookConsumerWidget {
     );
 
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
-    final PositiveFeedState? feedState = cacheController.get(expectedFeedStateKey);
+    final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: targetFeed, currentProfileId: currentProfile?.flMeta?.id ?? '');
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetProfile, targetFeed]).toList();
 

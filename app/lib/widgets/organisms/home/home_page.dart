@@ -66,7 +66,7 @@ class HomePage extends HookConsumerWidget {
     );
 
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
-    final PositiveFeedState? feedState = cacheController.get(expectedFeedStateKey);
+    final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: targetFeed, currentProfileId: currentProfileId);
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetFeed]).toList();
     useCacheHook(keys: expectedCacheKeys);
@@ -119,6 +119,7 @@ class HomePage extends HookConsumerWidget {
             currentProfile: currentProfile,
             feedState: feedState,
             feed: targetFeed,
+            isSliver: true,
           ),
         ],
       ],
