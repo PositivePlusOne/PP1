@@ -87,10 +87,15 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
                       );
                     },
-                    leftActionWidget: CameraFloatingButton.postWithoutImage(
-                      active: true,
-                      onTap: (context) => viewModel.showCreateTextPost(context),
-                    ),
+                    leftActionWidget: state.currentPostType == PostType.image
+                        ? CameraFloatingButton.postWithoutImage(
+                            active: true,
+                            onTap: (context) => viewModel.showCreateTextPost(context),
+                          )
+                        : const SizedBox(
+                            width: kIconLarge,
+                            height: kIconLarge,
+                          ),
                     onTapClose: (_) => appRouter.pop(),
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
                     isVideoMode: state.currentPostType == PostType.clip,
