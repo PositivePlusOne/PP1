@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -338,10 +339,22 @@ class GalleryController extends _$GalleryController {
       final currentMedia = profile.media.firstWhere((element) => element.name.startsWith(mediaTypePrefix(type)));
       // for which we need the actual path for this type
       final String path = _mediaTypePath(type, currentMedia.name);
-      // which can be made into a file reference
-      final Reference reference = storage.ref().child(path);
-      // to delete
-      await reference.delete();
+      final String bucketPathWithoutFilename = path.substring(0, path.lastIndexOf('/'));
+      final String filenameWithoutExtension = currentMedia.name.substring(0, currentMedia.name.lastIndexOf('.'));
+      final String fileExtension = currentMedia.name.split('.').last;
+      // for which we lso have thumbnails
+      final Reference thumbnailPath = FirebaseStorage.instance.ref('$bucketPathWithoutFilename/thumbnails');
+      for (final thumbnailSize in PositiveThumbnailTargetSize.values) {
+        // File will with be filename + extension + suffix or filename + suffix + extension
+        final String filenameTypeOne = '$filenameWithoutExtension.${fileExtension}_${thumbnailSize!.fileSuffix}';
+        final String filenameTypeTwo = '${filenameWithoutExtension}_${thumbnailSize!.fileSuffix}.$fileExtension';
+        // which we would like to try to delete
+        thumbnailPath.child(filenameTypeOne).delete().onError((error, stackTrace) => logger.i('[Gallery Controller] -Deleting thumbnail at $filenameTypeOne did not do anything ${error.toString()}'));
+        thumbnailPath.child(filenameTypeTwo).delete().onError((error, stackTrace) => logger.i('[Gallery Controller] -Deleting thumbnail at $filenameTypeOne did not do anything ${error.toString()}'));
+      }
+
+      // and deleting the actually profile image is important enough to wait for
+      await storage.ref().child(path).delete();
     } catch (e) {
       logger.i('[Gallery Controller] - No existing image found');
     }
