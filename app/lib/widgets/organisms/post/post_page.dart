@@ -66,7 +66,8 @@ class PostPage extends HookConsumerWidget {
     final Activity? activity = cacheController.get(activityId);
 
     final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
-    final PositiveReactionsState reactionsState = cacheController.get(expectedReactionsKey) ?? PositiveReactionsState.empty();
+    PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
+    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId, currentProfileId);
 
     final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey);
 

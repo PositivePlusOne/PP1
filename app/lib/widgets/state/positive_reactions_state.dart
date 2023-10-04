@@ -15,7 +15,7 @@ class PositiveReactionsState with PositivePaginationControllerState {
     this.currentPaginationKey = '',
   });
 
-  static final PositiveReactionsState emptyState = PositiveReactionsState.empty();
+  static final PositiveReactionsState emptyState = PositiveReactionsState.createNewFeedState('', '');
 
   @override
   final PagingController<String, Reaction> pagingController;
@@ -36,18 +36,13 @@ class PositiveReactionsState with PositivePaginationControllerState {
     );
   }
 
-  static PagingController<String, Reaction> get emptyPagingController => PagingController<String, Reaction>(
-        firstPageKey: '',
-      )..value = const PagingState<String, Reaction>(
-          nextPageKey: null,
-          itemList: <Reaction>[],
-        );
-
-  static PositiveReactionsState empty() {
+  static PositiveReactionsState createNewFeedState(String activityId, String profileId) {
     return PositiveReactionsState(
-      profileId: '',
-      activityId: '',
-      pagingController: emptyPagingController,
+      profileId: profileId,
+      activityId: activityId,
+      pagingController: PagingController<String, Reaction>(
+        firstPageKey: '',
+      ),
     );
   }
 

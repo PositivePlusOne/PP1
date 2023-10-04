@@ -115,7 +115,7 @@ class ReactionsController extends _$ReactionsController {
     final Logger logger = ref.read(loggerProvider);
     if (activityId.isEmpty || currentProfileId.isEmpty) {
       logger.w('Cannot build positive reactions state for activity: $activityId and profile: $currentProfileId');
-      return PositiveReactionsState.empty();
+      return PositiveReactionsState.createNewFeedState('', '');
     }
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
