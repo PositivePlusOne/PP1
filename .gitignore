@@ -7,6 +7,7 @@
 **/coverage/lcov.info
 **/coverage/html/**
 **/.flutter-plugins
+**/.DS_Store
 
 clients/ppoa/test/rules/node_modules/**
 clients/ppoa/pubspec.lock
