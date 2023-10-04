@@ -345,12 +345,19 @@ class GalleryController extends _$GalleryController {
       // for which we lso have thumbnails
       final Reference thumbnailPath = FirebaseStorage.instance.ref('$bucketPathWithoutFilename/thumbnails');
       for (final thumbnailSize in PositiveThumbnailTargetSize.values) {
-        // File will with be filename + extension + suffix or filename + suffix + extension
-        final String filenameTypeOne = '$filenameWithoutExtension.${fileExtension}_${thumbnailSize!.fileSuffix}';
-        final String filenameTypeTwo = '${filenameWithoutExtension}_${thumbnailSize!.fileSuffix}.$fileExtension';
-        // which we would like to try to delete
-        thumbnailPath.child(filenameTypeOne).delete().onError((error, stackTrace) => logger.i('[Gallery Controller] -Deleting thumbnail at $filenameTypeOne did not do anything ${error.toString()}'));
-        thumbnailPath.child(filenameTypeTwo).delete().onError((error, stackTrace) => logger.i('[Gallery Controller] -Deleting thumbnail at $filenameTypeOne did not do anything ${error.toString()}'));
+        // File will with be filename + extension + suffix or filename + suffix + extension so ty to delete both / either
+        final String filenameTypeOne = '$filenameWithoutExtension.${fileExtension}_${thumbnailSize.fileSuffix}';
+        try {
+          thumbnailPath.child(filenameTypeOne).delete();
+        } catch (e) {
+          logger.i('[Gallery Controller] - Deleting thumbnail at $filenameTypeOne did not do anything');
+        }
+        final String filenameTypeTwo = '${filenameWithoutExtension}_${thumbnailSize.fileSuffix}.$fileExtension';
+        try {
+          thumbnailPath.child(filenameTypeTwo).delete();
+        } catch (e) {
+          logger.i('[Gallery Controller] - Deleting thumbnail at $filenameTypeTwo did not do anything');
+        }
       }
 
       // and deleting the actually profile image is important enough to wait for
