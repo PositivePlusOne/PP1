@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -68,12 +69,12 @@ class GalleryController extends _$GalleryController {
     return '$userFolderPath/gallery';
   }
 
-  String get referenceImagePath {
-    return '$userFolderPath/private/reference.jpeg';
+  String referenceImagePath(String referenceImageName) {
+    return '$userFolderPath/private/$referenceImageName';
   }
 
-  String get profileImagePath {
-    return '$rootGalleryPath/profile.jpeg';
+  String profileImagePath(String profileImageName) {
+    return '$rootGalleryPath/$profileImageName';
   }
 
   Reference get rootProfileGalleryReference {
@@ -307,6 +308,13 @@ class GalleryController extends _$GalleryController {
     state = state.copyWith(galleryEntries: state.galleryEntries.where((GalleryEntry e) => e != entry).toList());
   }
 
+  /// helper to consistently return the filename prefix (to ID the image) from the type
+  /// will be 'profile' or 'reference'
+  String mediaTypePrefix(ProfileImageUpdateRequestType type) => type == ProfileImageUpdateRequestType.profile ? 'profile' : 'reference';
+
+  /// helper to return the proper path to the file based on the type and the full filename (profile_id.jpeg for example)
+  String _mediaTypePath(ProfileImageUpdateRequestType type, String filename) => type == ProfileImageUpdateRequestType.profile ? profileImagePath(filename) : referenceImagePath(filename);
+
   Future<Media> updateProfileOrReferenceImage(Uint8List data, ProfileImageUpdateRequestType type) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
@@ -316,25 +324,61 @@ class GalleryController extends _$GalleryController {
     if (profileController.currentProfileId == null) {
       throw Exception('No profile selected');
     }
+    final profile = profileController.currentProfile;
+    if (profile == null) {
+      throw Exception('No profile resolved');
+    }
 
     if (data.isEmpty) {
       throw Exception('No data provided');
     }
-
-    final String path = type == ProfileImageUpdateRequestType.profile ? profileImagePath : referenceImagePath;
-    final Reference reference = storage.ref().child(path);
-
+    // so we need to find the image path for the type of image requested - these images are 'named' with profile_ or reference_
+    // so are pretty easy to find actually
     try {
-      await reference.delete();
+      // find the current profile / reference image in order to delete it
+      final currentMedia = profile.media.firstWhere((element) => element.name.startsWith(mediaTypePrefix(type)));
+      // for which we need the actual path for this type
+      final String path = _mediaTypePath(type, currentMedia.name);
+      final String bucketPathWithoutFilename = path.substring(0, path.lastIndexOf('/'));
+      final String filenameWithoutExtension = currentMedia.name.substring(0, currentMedia.name.lastIndexOf('.'));
+      final String fileExtension = currentMedia.name.split('.').last;
+      // for which we lso have thumbnails
+      final Reference thumbnailPath = FirebaseStorage.instance.ref('$bucketPathWithoutFilename/thumbnails');
+      for (final thumbnailSize in PositiveThumbnailTargetSize.values) {
+        // File will with be filename + extension + suffix or filename + suffix + extension so ty to delete both / either
+        final String filenameTypeOne = '$filenameWithoutExtension.${fileExtension}_${thumbnailSize.fileSuffix}';
+        try {
+          thumbnailPath.child(filenameTypeOne).delete();
+        } catch (e) {
+          logger.i('[Gallery Controller] - Deleting thumbnail at $filenameTypeOne did not do anything');
+        }
+        final String filenameTypeTwo = '${filenameWithoutExtension}_${thumbnailSize.fileSuffix}.$fileExtension';
+        try {
+          thumbnailPath.child(filenameTypeTwo).delete();
+        } catch (e) {
+          logger.i('[Gallery Controller] - Deleting thumbnail at $filenameTypeTwo did not do anything');
+        }
+      }
+
+      // and deleting the actually profile image is important enough to wait for
+      await storage.ref().child(path).delete();
     } catch (e) {
       logger.i('[Gallery Controller] - No existing image found');
     }
 
+    // now, to place the new image into the store, we need to create new data, with a new filename so there are new thumbnails etc
+    // as this file is under the users folder, and they can't fire off loads of these images in quick succession, we can just
+    // use the current dateTime to ensure each uploaded image is unique
+    final newFilename = '${mediaTypePrefix(type)}_${DateTime.now().toIso8601String()}.jpeg';
+    final newFilepath = _mediaTypePath(type, newFilename);
+    // which can be made into a file reference
+    final Reference reference = storage.ref().child(newFilepath);
+    // which we can put data in place for (uploading the image basically)
     await reference.putData(data, SettableMetadata(contentType: 'image/jpeg'));
-
+    // now we have uploaded this media - let's return the object that represents it
     final Media media = Media(
-      name: type == ProfileImageUpdateRequestType.profile ? 'profile.jpeg' : 'reference.jpeg',
-      bucketPath: path,
+      name: newFilename,
+      bucketPath: newFilepath,
       priority: kMediaPriorityDefault,
       type: MediaType.bucket_path,
       isPrivate: type == ProfileImageUpdateRequestType.reference,

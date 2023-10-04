@@ -474,7 +474,24 @@ class ProfileController extends _$ProfileController {
     final Media media = await galleryController.updateProfileOrReferenceImage(imageData, ProfileImageUpdateRequestType.reference);
     final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
     final Profile profile = Profile.fromJson(profileJson);
-    state = state.copyWith(currentProfile: profile);
+
+    // this profile will now contain 2 reference images, one deleted, one new which is contained in the [media] object
+    final profileMedia = [...profile.media];
+    final referencePrefix = galleryController.mediaTypePrefix(ProfileImageUpdateRequestType.reference);
+    //! Remove the cache records for the bytes data
+    //! This is important as the bytes data is not stored in the cache manager, but the media is so remove all 'reference' media
+    for (final mediaElement in profile.media) {
+      if (mediaElement.name.startsWith(referencePrefix)) {
+        // we need to remove this cached data
+        PositiveMediaImageState.clearCacheProvidersForMedia(mediaElement);
+      }
+    }
+    // also, we need a new list of media that doesn't contain the old reference images
+    profileMedia.removeWhere((element) => element.name.startsWith(referencePrefix) && element.name != media.name);
+    // which needs to go back into the profile
+    final newProfile = profile.copyWith(media: profileMedia);
+    // and changing the state
+    state = state.copyWith(currentProfile: newProfile);
   }
 
   Future<void> updateProfileImage(XFile image) async {
@@ -514,12 +531,25 @@ class ProfileController extends _$ProfileController {
     final Map<String, Object?> profileJson = await profileApiService.addMedia(media: [media]);
     final Profile profile = Profile.fromJson(profileJson);
 
+    // this profile will now contain 2 profile images, one deleted, one new which is contained in the [media] object
+    final profileMedia = [...profile.media];
+    final profilePrefix = galleryController.mediaTypePrefix(ProfileImageUpdateRequestType.profile);
     //! Remove the cache records for the bytes data
-    //! This is important as the bytes data is not stored in the cache manager, but the media is
-    PositiveMediaImageState.clearCacheProvidersForMedia(media);
-
+    //! This is important as the bytes data is not stored in the cache manager, but the media is so remove all 'profile' media
+    for (final mediaElement in profile.media) {
+      if (mediaElement.name.startsWith(profilePrefix)) {
+        // we need to remove this cached data
+        PositiveMediaImageState.clearCacheProvidersForMedia(mediaElement);
+      }
+    }
+    // also, we need a new list of media that doesn't contain the old profile images
+    profileMedia.removeWhere((element) => element.name.startsWith(profilePrefix) && element.name != media.name);
+    // which needs to go back into the profile
+    final newProfile = profile.copyWith(media: profileMedia);
+    // fetching the new data for this new profile
     eventBus.fire(ForceMediaFetchEvent(media: media));
-    state = state.copyWith(currentProfile: profile);
+    // and changing the state
+    state = state.copyWith(currentProfile: newProfile);
   }
 
   Future<void> updateBiography(String biography) async {
