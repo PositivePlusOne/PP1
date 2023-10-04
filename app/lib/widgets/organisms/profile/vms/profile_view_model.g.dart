@@ -6,7 +6,7 @@ part of 'profile_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$profileViewModelHash() => r'3b5f6b87db534e5be294f2ae06ae7e7c260c3e14';
+String _$profileViewModelHash() => r'de6695c6c6010a23fdb3ab0b7062d1d10a20b2cd';
 
 /// See also [ProfileViewModel].
 @ProviderFor(ProfileViewModel)
@@ -23,4 +23,4 @@ final profileViewModelProvider =
 
 typedef _$ProfileViewModel = Notifier<ProfileViewModelState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

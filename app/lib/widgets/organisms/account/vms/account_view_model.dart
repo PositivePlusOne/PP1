@@ -19,10 +19,12 @@ import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/organisms/account/dialogs/account_feedback_dialog.dart';
@@ -81,14 +83,14 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.state.currentProfile?.flMeta?.id ?? '';
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     if (currentProfileId.isEmpty) {
       logger.e('onSwitchProfileRequested: currentProfileId is empty');
       return;
     }
 
     final Iterable<String> profileIds = profileController.state.availableProfileIds.where((element) => element != currentProfileId);
-    final List<Profile> profiles = profileIds.map((e) => cacheController.getFromCache(e)).whereNotNull().cast<Profile>().toList();
+    final List<Profile> profiles = profileIds.map((e) => cacheController.get(e)).whereNotNull().cast<Profile>().toList();
 
     logger.d('onSwitchProfileRequested: currentProfileId: $currentProfileId, profileIds: $profileIds, profiles: $profiles');
     if (profiles.isEmpty) {
@@ -123,17 +125,28 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     appRouter.push(const AccountProfileEditSettingsRoute());
   }
 
-  Future<void> onViewProfileButtonSelected() async {
-    final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+  Future<void> onViewProfileButtonSelected(Profile? currentProfile) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
+    if (currentProfile == null) {
+      logger.e('onViewProfileButtonSelected: currentProfile is null');
+      return;
+    }
 
     logger.d('onViewProfileButtonSelected');
     state = state.copyWith(isBusy: true);
 
     try {
-      await profileViewModel.preloadUserProfile(auth.currentUser!.uid);
+      final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
+      final String currentProfileId = currentProfile.flMeta?.id ?? '';
+      if (currentProfileId.isEmpty) {
+        logger.e('onViewProfileButtonSelected: currentProfileId is empty');
+        return;
+      }
+
+      await profileViewModel.preloadUserProfile(currentProfileId);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -190,7 +203,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
-    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFeedbackSubmitted');
 
@@ -211,18 +223,12 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     }
 
     try {
-      final User? user = auth.currentUser;
-      if (user == null) {
-        logger.e('Cannot send feedback without a user');
-        return;
-      }
-
-      final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
-      await callable.call(<String, dynamic>{
-        'content': content,
-        'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
-        'reportType': ReportType.toJson(state.feedback.reportType),
-      });
+      final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
+      await systemApiService.submitFeedback(
+        content: content,
+        feedbackType: state.feedback.feedbackType,
+        reportType: state.feedback.reportType,
+      );
 
       await appRouter.pop();
       feedbackType.when(
@@ -239,7 +245,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   }
 
   Future<void> onPostFeedbackSubmitted({
-    required Profile reporter,
+    required Profile? reporter,
     required Profile reportee,
     required String reportedPost,
   }) async {
@@ -265,7 +271,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final String template = postReportTemplate(
       reportedPost,
       reportee,
-      reporter,
+      reporter ?? Profile.empty(),
       content,
     );
 

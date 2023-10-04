@@ -5,17 +5,46 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 
-class PositiveFeedState {
+class PositiveFeedState with PositivePaginationControllerState {
   PositiveFeedState({
-    required this.feed,
-    required this.slug,
     required this.pagingController,
-    required this.currentPaginationKey,
+    required this.feed,
+    required this.profileId,
+    this.currentPaginationKey = '',
+    this.hasPerformedInitialLoad = false,
   });
 
-  final String feed;
-  final String slug;
+  @override
   final PagingController<String, Activity> pagingController;
+
+  final TargetFeed feed;
+  final String profileId;
+
+  bool hasPerformedInitialLoad;
   String currentPaginationKey;
+
+  @override
+  String buildCacheKey() {
+    return buildFeedCacheKey(feed);
+  }
+
+  static PositiveFeedState buildNewState({
+    required TargetFeed feed,
+    required String currentProfileId,
+  }) {
+    return PositiveFeedState(
+      feed: feed,
+      profileId: currentProfileId,
+      pagingController: PagingController<String, Activity>(
+        firstPageKey: '',
+      ),
+    );
+  }
+
+  static String buildFeedCacheKey(TargetFeed feed) {
+    return 'feed:paging:${feed.targetSlug}:${feed.targetUserId}';
+  }
 }

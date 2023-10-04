@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -21,17 +20,11 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/content/activity_events.dart';
-import 'package:app/providers/events/content/reaction_events.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -43,282 +36,81 @@ import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';
 
-class PositiveReactionPaginationBehaviour extends StatefulHookConsumerWidget {
+class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
   const PositiveReactionPaginationBehaviour({
-    required this.activityId,
-    required this.kind,
+    required this.activity,
+    required this.publisherRelationship,
+    required this.reactionsState,
     required this.feed,
+    required this.kind,
     this.reactionMode,
-    this.onPageLoaded,
     this.windowSize = 10,
     super.key,
   });
 
-  final String activityId;
-  final String kind;
+  final Activity? activity;
+  final Relationship? publisherRelationship;
+  final PositiveReactionsState reactionsState;
   final TargetFeed feed;
+  final String kind;
 
   final ActivitySecurityConfigurationMode? reactionMode;
 
   final int windowSize;
 
-  final Function(Map<String, dynamic>)? onPageLoaded;
-
   static const String kWidgetKey = 'PositiveReactionPaginationBehaviour';
-
-  @override
-  ConsumerState<PositiveReactionPaginationBehaviour> createState() => PositiveReactionPaginationBehaviourState();
-}
-
-class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveReactionPaginationBehaviour> {
-  PositiveReactionsState? reactionState;
-
-  StreamSubscription<ReactionCreatedEvent>? _onReactionCreatedSubscription;
-  StreamSubscription<ReactionUpdatedEvent>? _onReactionUpdatedSubscription;
-  StreamSubscription<ReactionDeletedEvent>? _onReactionDeletedSubscription;
-
-  String get expectedCacheKey => buildCacheKey(widget.kind, widget.activityId);
-
-  static String buildCacheKey(String kind, String activityId) {
-    return 'reactions:$kind:$activityId';
-  }
-
-  Activity? get activity => ref.read(cacheControllerProvider.notifier).getFromCache(widget.activityId);
-
-  @override
-  void initState() {
-    super.initState();
-    setupListeners();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setupReactionsState());
-  }
-
-  @override
-  void dispose() {
-    disposeListeners();
-    disposeReactionsState();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(PositiveReactionPaginationBehaviour oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.activityId != widget.activityId) {
-      disposeReactionsState();
-
-      if (mounted) {
-        setupReactionsState();
-      }
-    }
-  }
-
-  Future<void> setupListeners() async {
-    final EventBus eventBus = providerContainer.read(eventBusProvider);
-
-    await _onReactionCreatedSubscription?.cancel();
-    await _onReactionUpdatedSubscription?.cancel();
-    await _onReactionDeletedSubscription?.cancel();
-
-    _onReactionCreatedSubscription = eventBus.on<ReactionCreatedEvent>().listen(onReactionCreated);
-    _onReactionUpdatedSubscription = eventBus.on<ReactionUpdatedEvent>().listen(onReactionUpdated);
-    _onReactionDeletedSubscription = eventBus.on<ReactionDeletedEvent>().listen(onReactionDeleted);
-  }
-
-  Future<void> disposeListeners() async {
-    await _onReactionCreatedSubscription?.cancel();
-    await _onReactionUpdatedSubscription?.cancel();
-    await _onReactionDeletedSubscription?.cancel();
-  }
-
-  void disposeReactionsState() {
-    reactionState?.pagingController.removePageRequestListener(requestNextPage);
-  }
-
-  void setupReactionsState() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-
-    logger.d('setupReactionsState() - Loading state for ${widget.activityId}');
-    final PositiveReactionsState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
-    if (cachedFeedState != null) {
-      logger.d('setupReactionsState() - Found cached state for ${widget.activityId}');
-      reactionState = cachedFeedState;
-      reactionState?.pagingController.addPageRequestListener(requestNextPage);
-      setStateIfMounted();
-
-      return;
-    }
-
-    logger.d('setupReactionsState() - No cached state for ${widget.activityId}. Creating new state.');
-    final PagingController<String, Reaction> pagingController = PagingController<String, Reaction>(firstPageKey: '');
-    pagingController.addPageRequestListener(requestNextPage);
-
-    reactionState = PositiveReactionsState(
-      activityId: widget.activityId,
-      kind: widget.kind,
-      pagingController: pagingController,
-      currentPaginationKey: '',
-    );
-
-    setStateIfMounted();
-  }
 
   void saveReactionsState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    if (reactionState?.pagingController.itemList?.isEmpty ?? true) {
-      logger.d('saveState() - No reactions to save for ${widget.activityId}');
+    if (reactionsState.pagingController.itemList?.isEmpty ?? true) {
+      logger.d('saveState() - No reactions to save for $reactionsState');
       return;
     }
 
-    logger.d('saveState() - Saving reactions state for ${widget.activityId}');
-    cacheController.addToCache(key: expectedCacheKey, value: reactionState);
+    logger.d('saveState() - Saving reactions state for $reactionsState');
+    final String newCacheKey = reactionsState.buildCacheKey();
+    cacheController.add(key: newCacheKey, value: reactionsState);
   }
 
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
 
-    if (!mounted) {
-      logger.d('requestNextTimelinePage() - Not mounted');
-      return;
-    }
-
     try {
       final EndpointResponse endpointResponse = await reactionApiService.listReactionsForActivity(
-        activityId: widget.activityId,
-        kind: widget.kind,
-        cursor: reactionState?.currentPaginationKey ?? '',
+        activityId: activity?.flMeta?.id ?? '',
+        kind: kind,
+        cursor: reactionsState.currentPaginationKey,
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
-      String next = data.containsKey('cursor') ? data['cursor'].toString() : '';
+      String? next = data.containsKey('cursor') ? data['cursor'].toString() : '';
 
       // Check for weird backend loops (extra safety)
-      if (next == reactionState?.currentPaginationKey) {
-        next = '';
+      if (next == reactionsState.currentPaginationKey) {
+        next = null;
       }
 
-      appendReactionPage(data, next);
-      widget.onPageLoaded?.call(data);
+      appendReactionPageToState(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
-      reactionState?.pagingController.error = ex;
+      reactionsState.pagingController.error = ex;
     } finally {
       saveReactionsState();
     }
   }
 
-  void appendReactionPage(Map<String, dynamic> data, String nextPageKey) {
+  void appendReactionPageToState(Map<String, dynamic> data, String? next) {
     final Logger logger = providerContainer.read(loggerProvider);
-    final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != reactionState?.currentPaginationKey;
 
-    reactionState?.currentPaginationKey = nextPageKey;
-    logger.i('requestNextTimelinePage() - hasNext: $hasNext - nextPageKey: $nextPageKey - currentPaginationKey: ${reactionState?.currentPaginationKey}');
+    final List<dynamic> reactions = data['reactions'] as List<dynamic>;
+    final List<Reaction> reactionList = reactions.map((dynamic reaction) => Reaction.fromJson(reaction as Map<String, dynamic>)).toList();
 
-    final List<Reaction> newReactions = [];
-    final List<dynamic> reactions = (data.containsKey('reactions') ? data['reactions'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
+    logger.d('appendReactionPageToState() - reactionList: $reactionList');
 
-    for (final dynamic reaction in reactions) {
-      try {
-        logger.d('requestNextTimelinePage() - parsing reaction: $reaction');
-        final Reaction newReaction = Reaction.fromJson(reaction);
-        final String reactionId = newReaction.flMeta?.id ?? '';
-
-        if (reactionId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to parse reaction: $reaction');
-          continue;
-        }
-
-        newReactions.add(newReaction);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to parse reaction: $reaction - ex: $ex');
-      }
-    }
-
-    logger.d('requestNextTimelinePage() - newReactions: $newReactions');
-
-    if (!hasNext && mounted) {
-      reactionState?.pagingController.appendSafeLastPage(newReactions);
-    } else if (mounted) {
-      reactionState?.pagingController.appendSafePage(newReactions, nextPageKey);
-    }
-
-    saveReactionsState();
-  }
-
-  void onReactionCreated(ReactionCreatedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final Reaction reaction = event.reaction;
-    if (event.activityId == widget.activityId) {
-      reactionState?.pagingController.itemList?.insert(0, reaction);
-      reactionState?.pagingController.itemList = reactionState?.pagingController.itemList;
-
-      logger.d('onReactionCreated() - Added reaction to state: ${widget.activityId} - reaction: $reaction');
-      setStateIfMounted();
-    }
-  }
-
-  void onReactionUpdated(ReactionUpdatedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final Reaction reaction = event.reaction;
-    if (event.activityId == widget.activityId) {
-      final int index = reactionState?.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == reaction.flMeta?.id) ?? -1;
-      if (index >= 0) {
-        reactionState?.pagingController.itemList?[index] = reaction;
-        reactionState?.pagingController.itemList = reactionState?.pagingController.itemList;
-
-        logger.d('onReactionUpdated() - Updated reaction in state: ${widget.activityId} - reaction: $reaction');
-        setStateIfMounted();
-      }
-    }
-  }
-
-  void onReactionDeleted(ReactionDeletedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    if (event.activityId == widget.activityId) {
-      final int index = reactionState?.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == event.activityId) ?? -1;
-      if (index >= 0) {
-        reactionState?.pagingController.itemList?.removeAt(index);
-        reactionState?.pagingController.itemList = reactionState?.pagingController.itemList;
-
-        logger.d('onReactionDeleted() - Deleted reaction in state');
-        setStateIfMounted();
-      }
-    }
-  }
-
-  bool checkCanComment() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-
-    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
-    final String publisherId = activity?.publisherInformation?.publisherId ?? '';
-    final String currentUserId = profileController.currentProfileId ?? '';
-    if (publisherId.isEmpty) {
-      return false;
-    }
-
-    final bool isPublisher = publisherId == currentUserId;
-    if (isPublisher) {
-      return true;
-    }
-
-    final String relationshipGuid = [publisherId, currentUserId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache(relationshipGuid);
-    final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentUserId) ?? {};
-    final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
-    final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
-
-    return commentMode.when(
-      public: () => true,
-      signedIn: () => currentUserId.isNotEmpty,
-      followersAndConnections: () => isConnected || isFollowing,
-      connections: () => isConnected,
-      private: () => isPublisher,
-      disabled: () => false,
-    );
+    reactionsState.pagingController.appendPage(reactionList, next);
   }
 
   // Currently comments are the only reaction type supported.
@@ -327,10 +119,9 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final bool loggedIn = userController.isUserLoggedIn;
-    final Relationship? relationship = activity?.getRelationship();
-    final bool isFollowing = relationship?.following ?? false;
-    final bool isConnected = relationship?.isValidConnectedRelationship ?? false;
-    final bool isBlocked = relationship?.blocked ?? false;
+    final bool isFollowing = publisherRelationship?.following ?? false;
+    final bool isConnected = publisherRelationship?.isValidConnectedRelationship ?? false;
+    final bool isBlocked = publisherRelationship?.blocked ?? false;
 
     if (isBlocked) {
       return localizations.post_comments_disabled_header;
@@ -363,7 +154,7 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
@@ -375,7 +166,12 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
     );
 
     final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: buildCommentHeaderText(localizations));
-    final bool commentsDisabled = widget.reactionMode == const ActivitySecurityConfigurationMode.disabled();
+    final bool commentsDisabled = reactionMode == const ActivitySecurityConfigurationMode.disabled();
+
+    usePagingController(
+      controller: reactionsState.pagingController,
+      listener: requestNextPage,
+    );
 
     return MultiSliver(
       children: <Widget>[
@@ -393,8 +189,8 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
                   localizations.shared_comments_heading,
                   style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
                 ),
-                if (widget.reactionMode != null) ...<Widget>[
-                  SecurityModePill(reactionMode: widget.reactionMode!),
+                if (reactionMode != null) ...<Widget>[
+                  SecurityModePill(reactionMode: reactionMode!),
                 ],
               ],
             ),
@@ -403,10 +199,10 @@ class PositiveReactionPaginationBehaviourState extends ConsumerState<PositiveRea
         if (commentsDisabled) ...<Widget>[
           SliverToBoxAdapter(child: commentPlaceholder),
         ],
-        if (reactionState != null && !commentsDisabled) ...<Widget>[
+        if (!commentsDisabled) ...<Widget>[
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
-            pagingController: reactionState!.pagingController,
+            pagingController: reactionsState.pagingController,
             separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,

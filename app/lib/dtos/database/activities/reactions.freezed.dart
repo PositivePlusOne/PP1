@@ -1244,13 +1244,10 @@ ReactionStatistics _$ReactionStatisticsFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ReactionStatistics {
-  @JsonKey(name: 'feed')
-  String get feed => throw _privateConstructorUsedError;
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta => throw _privateConstructorUsedError;
   @JsonKey(name: 'counts')
   Map<String, int> get counts => throw _privateConstructorUsedError;
-  @JsonKey(name: 'unique_user_reactions')
-  Map<String, bool> get uniqueUserReactions =>
-      throw _privateConstructorUsedError;
   @JsonKey(name: 'activity_id')
   String get activityId => throw _privateConstructorUsedError;
   @JsonKey(name: 'reaction_id')
@@ -1271,13 +1268,13 @@ abstract class $ReactionStatisticsCopyWith<$Res> {
       _$ReactionStatisticsCopyWithImpl<$Res, ReactionStatistics>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'feed') String feed,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'counts') Map<String, int> counts,
-      @JsonKey(name: 'unique_user_reactions')
-      Map<String, bool> uniqueUserReactions,
       @JsonKey(name: 'activity_id') String activityId,
       @JsonKey(name: 'reaction_id') String reactionId,
       @JsonKey(name: 'user_id') String userId});
+
+  $FlMetaCopyWith<$Res>? get flMeta;
 }
 
 /// @nodoc
@@ -1293,26 +1290,21 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? feed = null,
+    Object? flMeta = freezed,
     Object? counts = null,
-    Object? uniqueUserReactions = null,
     Object? activityId = null,
     Object? reactionId = null,
     Object? userId = null,
   }) {
     return _then(_value.copyWith(
-      feed: null == feed
-          ? _value.feed
-          : feed // ignore: cast_nullable_to_non_nullable
-              as String,
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       counts: null == counts
           ? _value.counts
           : counts // ignore: cast_nullable_to_non_nullable
               as Map<String, int>,
-      uniqueUserReactions: null == uniqueUserReactions
-          ? _value.uniqueUserReactions
-          : uniqueUserReactions // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       activityId: null == activityId
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
@@ -1327,6 +1319,18 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
               as String,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $FlMetaCopyWith<$Res>? get flMeta {
+    if (_value.flMeta == null) {
+      return null;
+    }
+
+    return $FlMetaCopyWith<$Res>(_value.flMeta!, (value) {
+      return _then(_value.copyWith(flMeta: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -1338,13 +1342,14 @@ abstract class _$$_ReactionStatisticsCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'feed') String feed,
+      {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       @JsonKey(name: 'counts') Map<String, int> counts,
-      @JsonKey(name: 'unique_user_reactions')
-      Map<String, bool> uniqueUserReactions,
       @JsonKey(name: 'activity_id') String activityId,
       @JsonKey(name: 'reaction_id') String reactionId,
       @JsonKey(name: 'user_id') String userId});
+
+  @override
+  $FlMetaCopyWith<$Res>? get flMeta;
 }
 
 /// @nodoc
@@ -1358,26 +1363,21 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? feed = null,
+    Object? flMeta = freezed,
     Object? counts = null,
-    Object? uniqueUserReactions = null,
     Object? activityId = null,
     Object? reactionId = null,
     Object? userId = null,
   }) {
     return _then(_$_ReactionStatistics(
-      feed: null == feed
-          ? _value.feed
-          : feed // ignore: cast_nullable_to_non_nullable
-              as String,
+      flMeta: freezed == flMeta
+          ? _value.flMeta
+          : flMeta // ignore: cast_nullable_to_non_nullable
+              as FlMeta?,
       counts: null == counts
           ? _value._counts
           : counts // ignore: cast_nullable_to_non_nullable
               as Map<String, int>,
-      uniqueUserReactions: null == uniqueUserReactions
-          ? _value._uniqueUserReactions
-          : uniqueUserReactions // ignore: cast_nullable_to_non_nullable
-              as Map<String, bool>,
       activityId: null == activityId
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
@@ -1398,22 +1398,19 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_ReactionStatistics implements _ReactionStatistics {
   const _$_ReactionStatistics(
-      {@JsonKey(name: 'feed') this.feed = '',
+      {@JsonKey(name: '_fl_meta_') this.flMeta,
       @JsonKey(name: 'counts') final Map<String, int> counts = const {},
-      @JsonKey(name: 'unique_user_reactions')
-      final Map<String, bool> uniqueUserReactions = const {},
       @JsonKey(name: 'activity_id') this.activityId = '',
       @JsonKey(name: 'reaction_id') this.reactionId = '',
       @JsonKey(name: 'user_id') this.userId = ''})
-      : _counts = counts,
-        _uniqueUserReactions = uniqueUserReactions;
+      : _counts = counts;
 
   factory _$_ReactionStatistics.fromJson(Map<String, dynamic> json) =>
       _$$_ReactionStatisticsFromJson(json);
 
   @override
-  @JsonKey(name: 'feed')
-  final String feed;
+  @JsonKey(name: '_fl_meta_')
+  final FlMeta? flMeta;
   final Map<String, int> _counts;
   @override
   @JsonKey(name: 'counts')
@@ -1421,16 +1418,6 @@ class _$_ReactionStatistics implements _ReactionStatistics {
     if (_counts is EqualUnmodifiableMapView) return _counts;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_counts);
-  }
-
-  final Map<String, bool> _uniqueUserReactions;
-  @override
-  @JsonKey(name: 'unique_user_reactions')
-  Map<String, bool> get uniqueUserReactions {
-    if (_uniqueUserReactions is EqualUnmodifiableMapView)
-      return _uniqueUserReactions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_uniqueUserReactions);
   }
 
   @override
@@ -1445,7 +1432,7 @@ class _$_ReactionStatistics implements _ReactionStatistics {
 
   @override
   String toString() {
-    return 'ReactionStatistics(feed: $feed, counts: $counts, uniqueUserReactions: $uniqueUserReactions, activityId: $activityId, reactionId: $reactionId, userId: $userId)';
+    return 'ReactionStatistics(flMeta: $flMeta, counts: $counts, activityId: $activityId, reactionId: $reactionId, userId: $userId)';
   }
 
   @override
@@ -1453,10 +1440,8 @@ class _$_ReactionStatistics implements _ReactionStatistics {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ReactionStatistics &&
-            (identical(other.feed, feed) || other.feed == feed) &&
+            (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             const DeepCollectionEquality().equals(other._counts, _counts) &&
-            const DeepCollectionEquality()
-                .equals(other._uniqueUserReactions, _uniqueUserReactions) &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId) &&
             (identical(other.reactionId, reactionId) ||
@@ -1468,9 +1453,8 @@ class _$_ReactionStatistics implements _ReactionStatistics {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      feed,
+      flMeta,
       const DeepCollectionEquality().hash(_counts),
-      const DeepCollectionEquality().hash(_uniqueUserReactions),
       activityId,
       reactionId,
       userId);
@@ -1492,10 +1476,8 @@ class _$_ReactionStatistics implements _ReactionStatistics {
 
 abstract class _ReactionStatistics implements ReactionStatistics {
   const factory _ReactionStatistics(
-      {@JsonKey(name: 'feed') final String feed,
+      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       @JsonKey(name: 'counts') final Map<String, int> counts,
-      @JsonKey(name: 'unique_user_reactions')
-      final Map<String, bool> uniqueUserReactions,
       @JsonKey(name: 'activity_id') final String activityId,
       @JsonKey(name: 'reaction_id') final String reactionId,
       @JsonKey(name: 'user_id') final String userId}) = _$_ReactionStatistics;
@@ -1504,14 +1486,11 @@ abstract class _ReactionStatistics implements ReactionStatistics {
       _$_ReactionStatistics.fromJson;
 
   @override
-  @JsonKey(name: 'feed')
-  String get feed;
+  @JsonKey(name: '_fl_meta_')
+  FlMeta? get flMeta;
   @override
   @JsonKey(name: 'counts')
   Map<String, int> get counts;
-  @override
-  @JsonKey(name: 'unique_user_reactions')
-  Map<String, bool> get uniqueUserReactions;
   @override
   @JsonKey(name: 'activity_id')
   String get activityId;
@@ -1524,5 +1503,162 @@ abstract class _ReactionStatistics implements ReactionStatistics {
   @override
   @JsonKey(ignore: true)
   _$$_ReactionStatisticsCopyWith<_$_ReactionStatistics> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+TargetFeed _$TargetFeedFromJson(Map<String, dynamic> json) {
+  return _TargetFeed.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TargetFeed {
+  String get targetSlug => throw _privateConstructorUsedError;
+  String get targetUserId => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $TargetFeedCopyWith<TargetFeed> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TargetFeedCopyWith<$Res> {
+  factory $TargetFeedCopyWith(
+          TargetFeed value, $Res Function(TargetFeed) then) =
+      _$TargetFeedCopyWithImpl<$Res, TargetFeed>;
+  @useResult
+  $Res call({String targetSlug, String targetUserId});
+}
+
+/// @nodoc
+class _$TargetFeedCopyWithImpl<$Res, $Val extends TargetFeed>
+    implements $TargetFeedCopyWith<$Res> {
+  _$TargetFeedCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? targetSlug = null,
+    Object? targetUserId = null,
+  }) {
+    return _then(_value.copyWith(
+      targetSlug: null == targetSlug
+          ? _value.targetSlug
+          : targetSlug // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetUserId: null == targetUserId
+          ? _value.targetUserId
+          : targetUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$_TargetFeedCopyWith<$Res>
+    implements $TargetFeedCopyWith<$Res> {
+  factory _$$_TargetFeedCopyWith(
+          _$_TargetFeed value, $Res Function(_$_TargetFeed) then) =
+      __$$_TargetFeedCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String targetSlug, String targetUserId});
+}
+
+/// @nodoc
+class __$$_TargetFeedCopyWithImpl<$Res>
+    extends _$TargetFeedCopyWithImpl<$Res, _$_TargetFeed>
+    implements _$$_TargetFeedCopyWith<$Res> {
+  __$$_TargetFeedCopyWithImpl(
+      _$_TargetFeed _value, $Res Function(_$_TargetFeed) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? targetSlug = null,
+    Object? targetUserId = null,
+  }) {
+    return _then(_$_TargetFeed(
+      targetSlug: null == targetSlug
+          ? _value.targetSlug
+          : targetSlug // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetUserId: null == targetUserId
+          ? _value.targetUserId
+          : targetUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$_TargetFeed implements _TargetFeed {
+  const _$_TargetFeed({this.targetSlug = '', this.targetUserId = ''});
+
+  factory _$_TargetFeed.fromJson(Map<String, dynamic> json) =>
+      _$$_TargetFeedFromJson(json);
+
+  @override
+  @JsonKey()
+  final String targetSlug;
+  @override
+  @JsonKey()
+  final String targetUserId;
+
+  @override
+  String toString() {
+    return 'TargetFeed(targetSlug: $targetSlug, targetUserId: $targetUserId)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_TargetFeed &&
+            (identical(other.targetSlug, targetSlug) ||
+                other.targetSlug == targetSlug) &&
+            (identical(other.targetUserId, targetUserId) ||
+                other.targetUserId == targetUserId));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, targetSlug, targetUserId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_TargetFeedCopyWith<_$_TargetFeed> get copyWith =>
+      __$$_TargetFeedCopyWithImpl<_$_TargetFeed>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_TargetFeedToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TargetFeed implements TargetFeed {
+  const factory _TargetFeed(
+      {final String targetSlug, final String targetUserId}) = _$_TargetFeed;
+
+  factory _TargetFeed.fromJson(Map<String, dynamic> json) =
+      _$_TargetFeed.fromJson;
+
+  @override
+  String get targetSlug;
+  @override
+  String get targetUserId;
+  @override
+  @JsonKey(ignore: true)
+  _$$_TargetFeedCopyWith<_$_TargetFeed> get copyWith =>
       throw _privateConstructorUsedError;
 }

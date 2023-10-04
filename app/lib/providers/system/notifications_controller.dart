@@ -310,12 +310,12 @@ class NotificationsController extends _$NotificationsController {
 
   PositiveNotificationsState getOrCreateNotificationCacheState(String uid) {
     final logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final String expectedCacheKey = 'notifications:$uid';
 
     logger.d('createInitialNotificationCacheState: $uid');
 
-    PositiveNotificationsState? notificationsState = cacheController.getFromCache(expectedCacheKey);
+    PositiveNotificationsState? notificationsState = cacheController.get(expectedCacheKey);
     if (notificationsState != null) {
       logger.d('createInitialNotificationCacheState: Already has cache state, skipping');
       return notificationsState;
@@ -330,7 +330,7 @@ class NotificationsController extends _$NotificationsController {
       hasFirstLoad: false,
     );
 
-    cacheController.addToCache(key: expectedCacheKey, value: notificationsState);
+    cacheController.add(key: expectedCacheKey, value: notificationsState);
     return notificationsState;
   }
 

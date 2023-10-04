@@ -16,7 +16,7 @@ export const visibilityFlagHivStatus = 'hiv_status';
 
 export const featureFlagMarketing = 'marketing';
 export const featureFlagIncognito = 'incognito';
-export const featureFlagOrganisationControls = 'organisationControls';
+export const featureFlagOrganisationControls = 'organisation';
 
 export interface ProfileStatisicsJSON {
     counts?: Record<string, number>;
@@ -151,6 +151,14 @@ export class Profile {
         this.media = this.media.filter((media) => !media.isPrivate);
     }
 
+    notifyPartial(): void {
+        if (!this._fl_meta_) {
+            return;
+        }
+
+        this._fl_meta_.isPartial = true;
+    }
+
     computeSearchTags(): void {
         this._tags = [
             this.displayName.length > 0 ? 'hasDisplayName' : '',
@@ -164,7 +172,7 @@ export class Profile {
     //     }
 
     //     const cacheKey = `profile-stats-${this._fl_meta_.fl_id}`;
-    //     const cachedStats = await CacheService.getFromCache(cacheKey) as ProfileStatisicsJSON | undefined;
+    //     const cachedStats = await CacheService.get(cacheKey) as ProfileStatisicsJSON | undefined;
     //     if (cachedStats) {
     //         this.statistics = new ProfileStatisics(cachedStats);
     //         return;

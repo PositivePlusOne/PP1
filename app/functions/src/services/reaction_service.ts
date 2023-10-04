@@ -15,7 +15,7 @@ import { ProfileService } from "./profile_service";
 import { ProfileJSON } from "../dto/profile";
 import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
 import { ProfileStatisticsService } from "./profile_statistics_service";
-import { ActivityStatisticsService } from "./activity_statistics_service";
+import { ReactionStatisticsService } from "./reaction_statistics_service";
 
 export namespace ReactionService {
 
@@ -26,7 +26,6 @@ export namespace ReactionService {
     export function isUniqueReactionKind(kind: string) {
         return UNIQUE_REACTIONS.includes(kind);
     }
-
 
     export function getExpectedKeyFromOptions(reaction: ReactionJSON): string {
         if (!reaction.origin || !reaction.activity_id || !reaction.user_id || !reaction.kind) {
@@ -200,7 +199,7 @@ export namespace ReactionService {
         }) as ReactionJSON;
 
         await Promise.all([
-            ActivityStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1),
+            ReactionStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1),
             ProfileStatisticsService.updateReactionCountForProfile(expectedUserId, expectedKind, 1),
         ]);
 
@@ -235,7 +234,7 @@ export namespace ReactionService {
         }
 
         await Promise.all([
-            ActivityStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1),
+            ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1),
             ProfileStatisticsService.updateReactionCountForProfile(reaction.user_id, reaction.kind, -1),
         ]);
 

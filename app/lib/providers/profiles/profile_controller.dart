@@ -60,12 +60,12 @@ class ProfileController extends _$ProfileController {
 
   Profile? get currentUserProfile {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     if (firebaseAuth.currentUser == null) {
       return null;
     }
 
-    return cacheController.getFromCache(firebaseAuth.currentUser!.uid);
+    return cacheController.get(firebaseAuth.currentUser!.uid);
   }
 
   bool get isCurrentlyUserProfile {
@@ -77,7 +77,7 @@ class ProfileController extends _$ProfileController {
   }
 
   bool get isCurrentlyOrganisation {
-    return state.currentProfile?.featureFlags.contains(kFeatureFlagOrganisationControls) ?? false;
+    return state.currentProfile?.featureFlags.contains(kFeatureFlagOrganisation) ?? false;
   }
 
   bool get hasSetupProfile {
@@ -138,10 +138,10 @@ class ProfileController extends _$ProfileController {
   void onSupportedProfilesUpdated(Set<String> availableProfileIds) {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final String currentUserUid = firebaseAuth.currentUser?.uid ?? '';
-    final Profile? currentUserProfile = cacheController.getFromCache(currentUserUid);
+    final Profile? currentUserProfile = cacheController.get(currentUserUid);
 
     if (currentUserUid.isEmpty || currentUserProfile == null) {
       logger.e('[Profile Service] - Current profile is not available, setting available profiles to current user only');
@@ -158,7 +158,7 @@ class ProfileController extends _$ProfileController {
   void switchProfile(String uid) {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     if (uid == state.currentProfile?.flMeta?.id) {
       logger.i('[Profile Service] - Already on profile: $uid');
@@ -170,7 +170,7 @@ class ProfileController extends _$ProfileController {
       throw Exception('Cannot switch to user that is not available - $uid');
     }
 
-    final Profile? profile = cacheController.getFromCache(uid);
+    final Profile? profile = cacheController.get(uid);
     final bool isSupported = profile != null && state.availableProfileIds.contains(uid);
 
     if (!isSupported) {
@@ -189,7 +189,7 @@ class ProfileController extends _$ProfileController {
     }
 
     logger.i('[Profile Service] - Cache key updated, reloading current profile');
-    final Profile? currentProfile = ref.read(cacheControllerProvider.notifier).getFromCache(event.key);
+    final Profile? currentProfile = ref.read(cacheControllerProvider).get(event.key);
     if (currentProfile == null) {
       logger.e('[Profile Service] - Current profile is null, cannot reload');
       return;
@@ -217,12 +217,12 @@ class ProfileController extends _$ProfileController {
 
   Future<Profile> getProfile(String uid, {bool skipCacheLookup = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
     logger.i('[Profile Service] - Loading profile: $uid');
     if (!skipCacheLookup) {
-      final Profile? cachedProfile = cacheController.getFromCache(uid);
+      final Profile? cachedProfile = cacheController.get(uid);
       if (cachedProfile != null) {
         logger.i('[Profile Service] - Profile loaded from cache: $uid');
         return cachedProfile;

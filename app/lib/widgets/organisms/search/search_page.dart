@@ -10,17 +10,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/atoms/typography/positive_title_body_widget.dart';
-import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
+import 'package:app/widgets/behaviours/positive_cache_widget.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
@@ -43,8 +49,9 @@ class SearchPage extends ConsumerWidget {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final SearchViewModelProvider provider = searchViewModelProvider(defaultTab);
     final SearchViewModel viewModel = ref.read(provider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
-    final List<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags));
+    final Iterable<Tag> tags = ref.watch(tagsControllerProvider.select((value) => value.topicTags.values));
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
@@ -59,6 +66,8 @@ class SearchPage extends ConsumerWidget {
     final List<Activity> searchPostsResults = ref.watch(provider.select((value) => value.searchPostsResults));
     final List<Tag> searchTagResults = ref.watch(provider.select((value) => value.searchTagResults));
 
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+
     final bool canDisplaySearchResults = switch (currentTab) {
       SearchTab.users => searchUserResults.isNotEmpty,
       SearchTab.posts => searchPostsResults.isNotEmpty,
@@ -70,7 +79,7 @@ class SearchPage extends ConsumerWidget {
     if (!canDisplaySearchResults) {
       if (isSearching) {
         searchResultWidgets.addAll(
-          [
+          <Widget>[
             const PositiveLoadingIndicator(),
             const SizedBox(height: kPaddingSmall),
           ],
@@ -78,7 +87,7 @@ class SearchPage extends ConsumerWidget {
       } else {
         if (viewModel.hasSearched) {
           searchResultWidgets.addAll(
-            [
+            <Widget>[
               const SizedBox(height: kPaddingExtraLarge),
               PositiaveTitleBodyWidget(
                 title: viewModel.searchNotFoundTitle(localisations),
@@ -88,7 +97,7 @@ class SearchPage extends ConsumerWidget {
           );
         } else {
           searchResultWidgets.addAll(
-            [
+            <Widget>[
               Text(
                 localisations.page_search_subtitle_pending,
                 style: typography.styleSubtext.copyWith(color: colours.colorGray7),
@@ -102,24 +111,56 @@ class SearchPage extends ConsumerWidget {
     if (canDisplaySearchResults) {
       switch (currentTab) {
         case SearchTab.users:
-          searchResultWidgets.addAll([
-            for (final Profile profile in searchUserResults) ...<Widget>[
-              PositiveProfileListTile(profile: profile, isEnabled: !isBusy),
+          searchResultWidgets.addAll(<Widget>[
+            for (final Profile targetProfile in searchUserResults) ...<Widget>[
+              PositiveCacheWidget(
+                currentProfile: currentProfile,
+                cacheObjects: [targetProfile],
+                onBuild: (context) {
+                  final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfile.flMeta?.id ?? ''].asGUID;
+                  final Relationship? relationship = cacheController.get(relationshipId);
+                  return PositiveProfileListTile(
+                    isEnabled: !isBusy,
+                    targetProfile: targetProfile,
+                    senderProfile: currentProfile,
+                    relationship: relationship,
+                  );
+                },
+              ),
             ],
           ].spaceWithVertical(kPaddingSmall));
           break;
 
         case SearchTab.posts:
-          searchResultWidgets.addAll([
+          searchResultWidgets.addAll(<Widget>[
             for (final Activity activity in searchPostsResults) ...<Widget>[
-              PositiveActivityWidget(activity: activity),
+              PositiveCacheWidget(
+                currentProfile: currentProfile,
+                cacheObjects: [activity],
+                onBuild: (context) {
+                  final String publisherId = activity.publisherInformation?.publisherId ?? '';
+                  final String reposterId = activity.repostConfiguration?.targetActivityPublisherId ?? '';
+                  final String relationshipId = [currentProfile?.flMeta?.id ?? '', publisherId].asGUID;
+                  final String reposterRelationshipId = [currentProfile?.flMeta?.id ?? '', reposterId].asGUID;
+
+                  return PositiveFeedPaginationBehaviour.buildWidgetForFeed(
+                    activityId: activity.flMeta?.id ?? '',
+                    currentProfileId: currentProfile?.flMeta?.id ?? '',
+                    feed: TargetFeed.fromOrigin(activity.publisherInformation?.originFeed ?? ''),
+                    item: activity,
+                    index: searchPostsResults.indexOf(activity),
+                    relationshipId: relationshipId,
+                    reposterRelationshipId: reposterRelationshipId,
+                  );
+                },
+              ),
             ],
           ].spaceWithVertical(kPaddingMedium));
           break;
 
         case SearchTab.tags:
           searchResultWidgets.addAll(
-            [
+            <Widget>[
               StaggeredGrid.count(
                 crossAxisCount: 2,
                 crossAxisSpacing: kPaddingSmall,

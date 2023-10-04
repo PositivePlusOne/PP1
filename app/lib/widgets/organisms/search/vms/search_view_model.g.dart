@@ -85,8 +85,8 @@ class SearchViewModelProvider
     extends NotifierProviderImpl<SearchViewModel, SearchViewModelState> {
   /// See also [SearchViewModel].
   SearchViewModelProvider(
-    this.tab,
-  ) : super.internal(
+    SearchTab tab,
+  ) : this._internal(
           () => SearchViewModel()..tab = tab,
           from: searchViewModelProvider,
           name: r'searchViewModelProvider',
@@ -97,9 +97,51 @@ class SearchViewModelProvider
           dependencies: SearchViewModelFamily._dependencies,
           allTransitiveDependencies:
               SearchViewModelFamily._allTransitiveDependencies,
+          tab: tab,
         );
 
+  SearchViewModelProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tab,
+  }) : super.internal();
+
   final SearchTab tab;
+
+  @override
+  SearchViewModelState runNotifierBuild(
+    covariant SearchViewModel notifier,
+  ) {
+    return notifier.build(
+      tab,
+    );
+  }
+
+  @override
+  Override overrideWith(SearchViewModel Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: SearchViewModelProvider._internal(
+        () => create()..tab = tab,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tab: tab,
+      ),
+    );
+  }
+
+  @override
+  NotifierProviderElement<SearchViewModel, SearchViewModelState>
+      createElement() {
+    return _SearchViewModelProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -113,15 +155,20 @@ class SearchViewModelProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin SearchViewModelRef on NotifierProviderRef<SearchViewModelState> {
+  /// The parameter `tab` of this provider.
+  SearchTab get tab;
+}
+
+class _SearchViewModelProviderElement
+    extends NotifierProviderElement<SearchViewModel, SearchViewModelState>
+    with SearchViewModelRef {
+  _SearchViewModelProviderElement(super.provider);
 
   @override
-  SearchViewModelState runNotifierBuild(
-    covariant SearchViewModel notifier,
-  ) {
-    return notifier.build(
-      tab,
-    );
-  }
+  SearchTab get tab => (origin as SearchViewModelProvider).tab;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

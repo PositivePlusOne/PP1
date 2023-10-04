@@ -8,13 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/services/third_party.dart';
@@ -52,10 +51,12 @@ class ActivityNotificationHandler extends NotificationHandler {
       return;
     }
 
-    final Activity activity = await activitiesController.getActivity(activityId);
+    // Preload the activity
+    await activitiesController.getActivity(activityId);
+
     final AppRouter router = providerContainer.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
-      activity: activity,
+      activityId: activityId,
       feed: TargetFeed.fromOrigin(origin),
     );
 

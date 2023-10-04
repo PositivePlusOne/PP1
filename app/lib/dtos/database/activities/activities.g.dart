@@ -14,6 +14,10 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
           ? null
           : ActivityGeneralConfiguration.fromJson(
               json['generalConfiguration'] as Map<String, dynamic>),
+      repostConfiguration: json['repostConfiguration'] == null
+          ? null
+          : ActivityRepostConfiguration.fromJson(
+              json['repostConfiguration'] as Map<String, dynamic>),
       securityConfiguration: json['securityConfiguration'] == null
           ? null
           : ActivitySecurityConfiguration.fromJson(
@@ -43,12 +47,31 @@ Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'generalConfiguration': instance.generalConfiguration?.toJson(),
+      'repostConfiguration': instance.repostConfiguration?.toJson(),
       'securityConfiguration': instance.securityConfiguration?.toJson(),
       'eventConfiguration': instance.eventConfiguration?.toJson(),
       'pricingInformation': instance.pricingInformation?.toJson(),
       'publisherInformation': instance.publisherInformation?.toJson(),
       'enrichmentConfiguration': instance.enrichmentConfiguration?.toJson(),
       'media': instance.media.map((e) => e.toJson()).toList(),
+    };
+
+_$_ActivityRepostConfiguration _$$_ActivityRepostConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    _$_ActivityRepostConfiguration(
+      targetActivityId: json['targetActivityId'] as String? ?? '',
+      targetActivityPublisherId:
+          json['targetActivityPublisherId'] as String? ?? '',
+      targetActivityOriginFeed:
+          json['targetActivityOriginFeed'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$$_ActivityRepostConfigurationToJson(
+        _$_ActivityRepostConfiguration instance) =>
+    <String, dynamic>{
+      'targetActivityId': instance.targetActivityId,
+      'targetActivityPublisherId': instance.targetActivityPublisherId,
+      'targetActivityOriginFeed': instance.targetActivityOriginFeed,
     };
 
 _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
@@ -62,11 +85,6 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
           : ActivityGeneralConfigurationStyle.fromJson(json['style'] as String),
       content: json['content'] as String? ?? '',
       isSensitive: json['isSensitive'] as bool? ?? false,
-      repostActivityId: json['repostActivityId'] as String? ?? '',
-      repostActivityPublisherId:
-          json['repostActivityPublisherId'] as String? ?? '',
-      repostActivityOriginFeed:
-          json['repostActivityOriginFeed'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
@@ -76,9 +94,6 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
       'content': instance.content,
       'isSensitive': instance.isSensitive,
-      'repostActivityId': instance.repostActivityId,
-      'repostActivityPublisherId': instance.repostActivityPublisherId,
-      'repostActivityOriginFeed': instance.repostActivityOriginFeed,
     };
 
 _$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(

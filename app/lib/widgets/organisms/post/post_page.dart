@@ -12,14 +12,20 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/gen/app_router.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/events/content/activity_events.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
@@ -29,33 +35,61 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import 'package:app/widgets/organisms/post/post_comment_box.dart';
 import 'package:app/widgets/organisms/post/vms/post_view_model.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 
 @RoutePage()
 class PostPage extends HookConsumerWidget {
   const PostPage({
-    required this.activity,
+    required this.activityId,
     required this.feed,
     super.key,
   });
 
-  final Activity activity;
+  final String activityId;
   final TargetFeed feed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final AppRouter router = ref.read(appRouterProvider);
 
-    final PostViewModelProvider provider = postViewModelProvider(activity.flMeta!.id!, feed);
-
+    final PostViewModelProvider provider = postViewModelProvider(activityId, feed);
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
+
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
-    useLifecycleHook(viewModel);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
-    final Activity updatedActivity = state.activity ?? activity;
     final Profile? currentProfile = profileState.currentProfile;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    final Activity? activity = cacheController.get(activityId);
+
+    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
+    final PositiveReactionsState reactionsState = cacheController.get(expectedReactionsKey) ?? PositiveReactionsState.empty();
+
+    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey);
+
+    final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId);
+    final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId);
+
+    final String expectedTargetRelationshipKey = [currentProfileId, targetProfile?.flMeta?.id ?? ''].asGUID;
+    final Relationship? targetRelationship = cacheController.get(expectedTargetRelationshipKey);
+
+    final String expectedReposterRelationshipKey = [currentProfileId, reposterProfile?.flMeta?.id ?? ''].asGUID;
+    final Relationship? reposterRelationship = cacheController.get(expectedReposterRelationshipKey);
+
+    final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
+    final String expectedReactionStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+    final ReactionStatistics? reactionStatistics = cacheController.get(expectedReactionStatisticsKey);
+
+    final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile);
+    final List<Reaction> uniqueReactions = cacheController.list(expectedUniqueReactionKeys);
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity, feed, reactionStatistics, ...uniqueReactions]).toList();
+
+    useLifecycleHook(viewModel);
+    useCacheHook(keys: expectedCacheKeys);
 
     final List<Widget> actions = [];
 
@@ -66,11 +100,19 @@ class PostPage extends HookConsumerWidget {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
 
-    final bool commentsDisabled = updatedActivity.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
-    final String activityId = updatedActivity.flMeta?.id ?? '';
+    final bool commentsDisabled = activity?.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
 
-    final bool canView = viewModel.checkCanView();
-    final bool canComment = viewModel.checkCanComment();
+    final bool canView = viewModel.checkCanView(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: targetRelationship,
+    );
+
+    final bool canComment = viewModel.checkCanComment(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: targetRelationship,
+    );
 
     final List<PositiveScaffoldDecoration> decorations = canView ? [] : buildType3ScaffoldDecorations(colors);
 
@@ -82,7 +124,7 @@ class PostPage extends HookConsumerWidget {
         canSwitchProfile: viewModel.canSwitchProfile,
         onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
           context,
-          updatedActivity.securityConfiguration?.commentMode,
+          activity?.securityConfiguration?.commentMode,
         ),
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,
@@ -112,7 +154,7 @@ class PostPage extends HookConsumerWidget {
             icon: UniconsLine.angle_left_b,
             onTapped: () => viewModel.onWillPopScope(),
           ),
-          appBarTrailing: [
+          appBarTrailing: <Widget>[
             for (final Widget actionWidget in actions) ...<Widget>[
               Align(
                 alignment: Alignment.center,
@@ -122,12 +164,19 @@ class PostPage extends HookConsumerWidget {
           ],
           children: <Widget>[
             PositiveActivityWidget(
-              activity: updatedActivity,
+              currentProfile: currentProfile,
+              activityPromotion: promotion,
+              activityReactionFeedState: reactionsState,
+              targetProfile: targetProfile,
+              targetRelationship: targetRelationship,
+              reposterProfile: reposterProfile,
+              reposterRelationship: reposterRelationship,
+              activityReactionStatistics: reactionStatistics,
+              currentProfileReactions: uniqueReactions,
+              activity: activity,
               targetFeed: feed,
               isFullscreen: true,
               isEnabled: !state.isBusy,
-              onHeaderTapped: () {},
-              onImageTapped: (media) => router.push(MediaRoute(media: media)),
             ),
           ],
         ),
@@ -164,9 +213,11 @@ class PostPage extends HookConsumerWidget {
                   const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
                   PositiveReactionPaginationBehaviour(
                     kind: 'comment',
-                    reactionMode: updatedActivity.securityConfiguration?.commentMode,
-                    activityId: activityId,
+                    activity: activity,
+                    publisherRelationship: targetRelationship,
+                    reactionsState: reactionsState,
                     feed: feed,
+                    reactionMode: activity?.securityConfiguration?.commentMode,
                   ),
                   SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),
                 ],

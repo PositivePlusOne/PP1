@@ -7,7 +7,7 @@ part of 'create_post_view_model.dart';
 // **************************************************************************
 
 String _$createPostViewModelHash() =>
-    r'e67c79eb81867ac05d8e85ee0ae24de140817e4f';
+    r'799f7595a5291fef8617a4333e42143d518f55e7';
 
 /// See also [CreatePostViewModel].
 @ProviderFor(CreatePostViewModel)
@@ -24,4 +24,4 @@ final createPostViewModelProvider = AutoDisposeNotifierProvider<
 
 typedef _$CreatePostViewModel = AutoDisposeNotifier<CreatePostViewModelState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

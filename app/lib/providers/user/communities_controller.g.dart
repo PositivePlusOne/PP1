@@ -7,7 +7,7 @@ part of 'communities_controller.dart';
 // **************************************************************************
 
 String _$communitiesControllerHash() =>
-    r'd2d4624bcba407da6c20da6e23e280609d99d65f';
+    r'3711a603279ecd48f35f6e49a1d664a0504a703a';
 
 /// See also [CommunitiesController].
 @ProviderFor(CommunitiesController)
@@ -24,4 +24,4 @@ final communitiesControllerProvider = NotifierProvider<CommunitiesController,
 
 typedef _$CommunitiesController = Notifier<CommunitiesControllerState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

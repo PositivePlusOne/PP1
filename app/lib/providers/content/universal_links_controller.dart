@@ -9,9 +9,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 
@@ -36,7 +36,7 @@ abstract class IUniversalLinksController {
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
   Future<UniversalPostRouteDetails?> getRouteLinkDetails(Uri? uri);
-  Uri buildPostRouteLink(String activity, String feed);
+  Uri buildPostRouteLink(String activityId, String reactionId, String origin);
 }
 
 enum HandleLinkResult {
@@ -45,7 +45,7 @@ enum HandleLinkResult {
   notHandled,
 }
 
-typedef UniversalPostRouteDetails = (String activity, String feed, Uri source);
+typedef UniversalPostRouteDetails = (String activityId, String reactionId, String origin, Uri source);
 
 @Riverpod(keepAlive: true)
 class UniversalLinksController extends _$UniversalLinksController implements IUniversalLinksController {
@@ -87,12 +87,13 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
 
   @override
   Future<UniversalPostRouteDetails?> getRouteLinkDetails(Uri? uri) async {
-    final String activity = uri?.queryParameters['activity'] ?? '';
-    final String feed = uri?.queryParameters['feed'] ?? '';
+    final String activityId = uri?.queryParameters['activityId'] ?? '';
+    final String reactionId = uri?.queryParameters['reactionId'] ?? '';
+    final String origin = uri?.queryParameters['origin'] ?? '';
     final String scheme = uri?.scheme ?? '';
-    final bool canBuildRouteLink = scheme == state.expectedUniversalLinkScheme && activity.isNotEmpty;
+    final bool canBuildRouteLink = scheme == state.expectedUniversalLinkScheme && activityId.isNotEmpty;
 
-    return canBuildRouteLink ? (activity, feed, uri!) : null;
+    return canBuildRouteLink ? (activityId, reactionId, origin, uri!) : null;
   }
 
   @override
@@ -149,8 +150,9 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       appRouter.removeWhere((route) => true);
     }
 
-    final TargetFeed feed = TargetFeed(routeDetails.$2, routeDetails.$1);
-    appRouter.push(PostRoute(activity: activity, feed: feed));
+    final TargetFeed feed = TargetFeed.fromOrigin(routeDetails.$3);
+    final PostRoute postRoute = PostRoute(feed: feed, activityId: routeDetails.$1);
+    appRouter.push(postRoute);
 
     logger.i('Handling route link: $routeDetails');
     state = state.copyWith(isUniversalLinkHandled: true);
@@ -158,14 +160,15 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   }
 
   @override
-  Uri buildPostRouteLink(String activity, String feed) {
+  Uri buildPostRouteLink(String activityId, String reactionId, String origin) {
     final String scheme = state.expectedUniversalLinkScheme;
     const String host = 'positiveplusone.com';
     const String path = '/post';
 
     final Map<String, String> query = <String, String>{
-      'activity': activity,
-      'feed': feed,
+      'activityId': activityId,
+      'reactionId': reactionId,
+      'origin': origin,
     };
 
     final String encodedQuery = query.entries.map((e) => '${e.key}=${Uri.encodeQueryComponent(e.value)}').join('&');

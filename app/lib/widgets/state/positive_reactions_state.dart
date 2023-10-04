@@ -5,18 +5,72 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 
-class PositiveReactionsState {
+class PositiveReactionsState with PositivePaginationControllerState {
   PositiveReactionsState({
-    required this.activityId,
-    required this.kind,
+    required this.profileId,
     required this.pagingController,
-    required this.currentPaginationKey,
+    required this.activityId,
+    this.currentPaginationKey = '',
   });
 
-  final String activityId;
-  final String kind;
+  static final PositiveReactionsState emptyState = PositiveReactionsState.empty();
+
+  @override
   final PagingController<String, Reaction> pagingController;
 
+  final String profileId;
+  final String activityId;
+
   String currentPaginationKey;
+
+  ReactionStatistics? _currentStatistics;
+  ReactionStatistics? get currentStatistics => _currentStatistics;
+
+  @override
+  String buildCacheKey() {
+    return buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: profileId,
+    );
+  }
+
+  static PagingController<String, Reaction> get emptyPagingController => PagingController<String, Reaction>(
+        firstPageKey: '',
+      )..value = const PagingState<String, Reaction>(
+          nextPageKey: null,
+          itemList: <Reaction>[],
+        );
+
+  static PositiveReactionsState empty() {
+    return PositiveReactionsState(
+      profileId: '',
+      activityId: '',
+      pagingController: emptyPagingController,
+    );
+  }
+
+  static buildReactionsCacheKey({
+    required String activityId,
+    required String profileId,
+  }) {
+    return 'feed:paging:reactions:$activityId:$profileId';
+  }
+
+  void updateReactionStatistics(ReactionStatistics statistics) {
+    if (!doStatisticsApply(statistics)) {
+      return;
+    }
+
+    _currentStatistics = statistics;
+
+    // Ryan: We call into this as the activities do not update, but we may want the UI to update.
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    pagingController.notifyListeners();
+  }
+
+  bool doStatisticsApply(ReactionStatistics statistics) {
+    return statistics.activityId == activityId;
+  }
 }

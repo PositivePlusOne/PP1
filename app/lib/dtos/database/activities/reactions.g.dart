@@ -40,16 +40,13 @@ Map<String, dynamic> _$$_ReactionToJson(_$_Reaction instance) =>
 _$_ReactionStatistics _$$_ReactionStatisticsFromJson(
         Map<String, dynamic> json) =>
     _$_ReactionStatistics(
-      feed: json['feed'] as String? ?? '',
+      flMeta: json['_fl_meta_'] == null
+          ? null
+          : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       counts: (json['counts'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as int),
           ) ??
           const {},
-      uniqueUserReactions:
-          (json['unique_user_reactions'] as Map<String, dynamic>?)?.map(
-                (k, e) => MapEntry(k, e as bool),
-              ) ??
-              const {},
       activityId: json['activity_id'] as String? ?? '',
       reactionId: json['reaction_id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
@@ -58,10 +55,21 @@ _$_ReactionStatistics _$$_ReactionStatisticsFromJson(
 Map<String, dynamic> _$$_ReactionStatisticsToJson(
         _$_ReactionStatistics instance) =>
     <String, dynamic>{
-      'feed': instance.feed,
+      '_fl_meta_': instance.flMeta?.toJson(),
       'counts': instance.counts,
-      'unique_user_reactions': instance.uniqueUserReactions,
       'activity_id': instance.activityId,
       'reaction_id': instance.reactionId,
       'user_id': instance.userId,
+    };
+
+_$_TargetFeed _$$_TargetFeedFromJson(Map<String, dynamic> json) =>
+    _$_TargetFeed(
+      targetSlug: json['targetSlug'] as String? ?? '',
+      targetUserId: json['targetUserId'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$$_TargetFeedToJson(_$_TargetFeed instance) =>
+    <String, dynamic>{
+      'targetSlug': instance.targetSlug,
+      'targetUserId': instance.targetUserId,
     };

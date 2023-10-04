@@ -6,7 +6,7 @@ part of 'tags_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$tagsControllerHash() => r'703ea0a4efaa0f28d2e785f258fe094feb2e3e64';
+String _$tagsControllerHash() => r'94497655d549ed52bcaecf194e4346de662a92aa';
 
 /// See also [TagsController].
 @ProviderFor(TagsController)
@@ -23,4 +23,4 @@ final tagsControllerProvider =
 
 typedef _$TagsController = Notifier<TagsControllerState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

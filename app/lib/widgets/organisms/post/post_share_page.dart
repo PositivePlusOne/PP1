@@ -9,9 +9,14 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/providers/content/sharing_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
@@ -20,12 +25,12 @@ import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
 @RoutePage()
 class PostSharePage extends StatefulHookConsumerWidget {
   const PostSharePage({
-    required this.activity,
+    required this.activityId,
     required this.origin,
     super.key,
   });
 
-  final Activity activity;
+  final String activityId;
   final String origin;
 
   @override
@@ -36,10 +41,14 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
   final List<String> selectedCommunityIds = <String>[];
   bool isBusy = false;
 
-  Future<void> onShareSelected(BuildContext context) async {
+  Future<void> onShareSelected(BuildContext context, Activity? activity, Profile? currentProfile) async {
     final Logger logger = ref.read(loggerProvider);
-    final SharingController sharingController = ref.read(sharingControllerProvider.notifier);
+    if (activity == null || currentProfile == null) {
+      logger.w('Activity or current profile is null');
+      return;
+    }
 
+    final SharingController sharingController = ref.read(sharingControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     if (selectedCommunityIds.isEmpty) {
       logger.w('No communities selected');
@@ -49,7 +58,7 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
     setStateIfMounted(callback: () => isBusy = true);
 
     try {
-      await sharingController.shareViaConnectionChat(context, widget.activity, widget.origin, selectedCommunityIds);
+      await sharingController.shareViaConnectionChat(context, currentProfile, activity, widget.origin, selectedCommunityIds);
       appRouter.removeLast();
 
       Future<void>.delayed(kAnimationDurationDebounce, () {
@@ -80,11 +89,20 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
 
   @override
   Widget build(BuildContext context) {
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final Profile? currentProfile = profileControllerState.currentProfile;
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Activity? activity = cacheController.get(widget.activityId);
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity]).toList();
+    useCacheHook(keys: expectedCacheKeys);
+
     return PositiveCommunitiesDialog(
       supportedCommunityTypes: const [CommunityType.connected],
       selectedCommunityType: CommunityType.connected,
       actionLabel: 'Share',
-      onActionPressed: () => onShareSelected(context),
+      onActionPressed: () => onShareSelected(context, activity, currentProfile),
       isEnabled: !isBusy,
       canCallToAction: selectedCommunityIds.isNotEmpty,
       mode: CommunitiesDialogMode.select,

@@ -12,7 +12,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'activity_post_heading_widget.dart';
 
 class PositiveComment extends ConsumerWidget {
@@ -27,13 +26,13 @@ class PositiveComment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     // Load the publisher.
     final String publisherKey = comment.userId;
-    final Profile? publisherProfile = cacheController.getFromCache(publisherKey);
+    final Profile? publisherProfile = cacheController.get(publisherKey);
 
     return IgnorePointer(
       // ignoring: !widget.isEnabled,
@@ -43,28 +42,25 @@ class PositiveComment extends ConsumerWidget {
           bottom: kPaddingMedium,
         ),
         decoration: BoxDecoration(color: colours.white),
-        child: PositiveTapBehaviour(
-          // onTap: onInternalHeaderTap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ActivityPostHeadingWidget(
-                flMetaData: comment.flMeta,
-                publisher: publisherProfile,
-                //TODO(S) this should be the generic profile options
-                onOptions: () {},
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ActivityPostHeadingWidget(
+              flMetaData: comment.flMeta,
+              publisher: publisherProfile,
+              //TODO(S) this should be the generic profile options
+              onOptions: () {},
+            ),
+            const SizedBox(height: kPaddingSmall),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              child: Text(
+                comment.text,
+                textAlign: TextAlign.left,
+                style: typography.styleBody,
               ),
-              const SizedBox(height: kPaddingSmall),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-                child: Text(
-                  comment.text,
-                  textAlign: TextAlign.left,
-                  style: typography.styleBody,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

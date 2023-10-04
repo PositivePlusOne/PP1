@@ -90,8 +90,8 @@ class GuidanceController extends _$GuidanceController {
 
   Future<void> loadCategories(GuidanceCategory? parent, String categoryType) async {
     final String cacheKey = buildCacheKey(currentCategory: parent);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
-    if (cacheController.containsInCache(cacheKey)) {
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    if (cacheController.exists(cacheKey)) {
       await router.push(GuidanceEntryRoute(entryId: cacheKey));
       return;
     }
@@ -114,7 +114,7 @@ class GuidanceController extends _$GuidanceController {
 
       final catContent = GuidanceCategoryListBuilder(articles: arts, categories: cats, title: parent?.title, controller: this);
 
-      cacheController.addToCache(key: cacheKey, value: catContent);
+      cacheController.add(key: cacheKey, value: catContent);
       state = state.copyWith(isBusy: false);
       await router.push(GuidanceEntryRoute(entryId: cacheKey));
     } finally {
@@ -148,9 +148,9 @@ class GuidanceController extends _$GuidanceController {
 
     try {
       state = state.copyWith(isBusy: true);
-      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
       final String cacheKey = buildCacheKey(searchQuery: term);
-      final GuidanceSearchResultsBuilder? cachedResponse = cacheController.getFromCache(cacheKey);
+      final GuidanceSearchResultsBuilder? cachedResponse = cacheController.get(cacheKey);
       if (cachedResponse != null) {
         state = state.copyWith(isBusy: false);
         await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
@@ -170,7 +170,7 @@ class GuidanceController extends _$GuidanceController {
         directoryEntries: response.results,
       );
 
-      cacheController.addToCache(key: cacheKey, value: resBuilder);
+      cacheController.add(key: cacheKey, value: resBuilder);
       state = state.copyWith(isBusy: false);
       controller.clear();
 
@@ -188,9 +188,9 @@ class GuidanceController extends _$GuidanceController {
 
     try {
       state = state.copyWith(isBusy: true);
-      final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
       final String cacheKey = buildCacheKey(searchQuery: term);
-      if (cacheController.containsInCache(cacheKey)) {
+      if (cacheController.exists(cacheKey)) {
         state = state.copyWith(isBusy: false);
         await router.push(GuidanceEntryRoute(entryId: cacheKey, searchTerm: term));
         return;
@@ -215,7 +215,7 @@ class GuidanceController extends _$GuidanceController {
         state: state,
       );
 
-      cacheController.addToCache(key: cacheKey, value: resBuilder);
+      cacheController.add(key: cacheKey, value: resBuilder);
       state = state.copyWith(isBusy: false);
       controller.clear();
 
@@ -227,9 +227,9 @@ class GuidanceController extends _$GuidanceController {
 
   Future<void> pushGuidanceArticle(GuidanceArticle article) async {
     final String cacheKey = buildCacheKey(currentArticle: article);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final GuidanceArticleBuilder articleBuilder = GuidanceArticleBuilder(article: article, controller: this);
-    cacheController.addToCache(key: cacheKey, value: articleBuilder);
+    cacheController.add(key: cacheKey, value: articleBuilder);
 
     await router.push(GuidanceEntryRoute(entryId: cacheKey));
   }

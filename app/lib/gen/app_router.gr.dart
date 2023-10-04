@@ -308,7 +308,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PostPage(
-          activity: args.activity,
+          activityId: args.activityId,
           feed: args.feed,
           key: args.key,
         ),
@@ -319,7 +319,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: PostSharePage(
-          activity: args.activity,
+          activityId: args.activityId,
           origin: args.origin,
           key: args.key,
         ),
@@ -1354,14 +1354,14 @@ class OnboardingYourPledgeRouteArgs {
 /// [PostPage]
 class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
-    required Activity activity,
+    required String activityId,
     required TargetFeed feed,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           PostRoute.name,
           args: PostRouteArgs(
-            activity: activity,
+            activityId: activityId,
             feed: feed,
             key: key,
           ),
@@ -1375,12 +1375,12 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
 
 class PostRouteArgs {
   const PostRouteArgs({
-    required this.activity,
+    required this.activityId,
     required this.feed,
     this.key,
   });
 
-  final Activity activity;
+  final String activityId;
 
   final TargetFeed feed;
 
@@ -1388,7 +1388,7 @@ class PostRouteArgs {
 
   @override
   String toString() {
-    return 'PostRouteArgs{activity: $activity, feed: $feed, key: $key}';
+    return 'PostRouteArgs{activityId: $activityId, feed: $feed, key: $key}';
   }
 }
 
@@ -1396,14 +1396,14 @@ class PostRouteArgs {
 /// [PostSharePage]
 class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
   PostShareRoute({
-    required Activity activity,
+    required String activityId,
     required String origin,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           PostShareRoute.name,
           args: PostShareRouteArgs(
-            activity: activity,
+            activityId: activityId,
             origin: origin,
             key: key,
           ),
@@ -1418,12 +1418,12 @@ class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
 
 class PostShareRouteArgs {
   const PostShareRouteArgs({
-    required this.activity,
+    required this.activityId,
     required this.origin,
     this.key,
   });
 
-  final Activity activity;
+  final String activityId;
 
   final String origin;
 
@@ -1431,7 +1431,7 @@ class PostShareRouteArgs {
 
   @override
   String toString() {
-    return 'PostShareRouteArgs{activity: $activity, origin: $origin, key: $key}';
+    return 'PostShareRouteArgs{activityId: $activityId, origin: $origin, key: $key}';
   }
 }
 

@@ -26,6 +26,8 @@ mixin _$FlMeta {
   String? get lastModifiedBy => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get lastModifiedDate => throw _privateConstructorUsedError;
+  int get lastFetchMillis => throw _privateConstructorUsedError;
+  bool get isPartial => throw _privateConstructorUsedError;
   String? get docId => throw _privateConstructorUsedError;
   @JsonKey(name: 'fl_id')
   String? get id => throw _privateConstructorUsedError;
@@ -51,6 +53,8 @@ abstract class $FlMetaCopyWith<$Res> {
       String? lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? lastModifiedDate,
+      int lastFetchMillis,
+      bool isPartial,
       String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
@@ -76,6 +80,8 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
     Object? createdDate = freezed,
     Object? lastModifiedBy = freezed,
     Object? lastModifiedDate = freezed,
+    Object? lastFetchMillis = null,
+    Object? isPartial = null,
     Object? docId = freezed,
     Object? id = freezed,
     Object? env = freezed,
@@ -100,6 +106,14 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
           ? _value.lastModifiedDate
           : lastModifiedDate // ignore: cast_nullable_to_non_nullable
               as String?,
+      lastFetchMillis: null == lastFetchMillis
+          ? _value.lastFetchMillis
+          : lastFetchMillis // ignore: cast_nullable_to_non_nullable
+              as int,
+      isPartial: null == isPartial
+          ? _value.isPartial
+          : isPartial // ignore: cast_nullable_to_non_nullable
+              as bool,
       docId: freezed == docId
           ? _value.docId
           : docId // ignore: cast_nullable_to_non_nullable
@@ -141,6 +155,8 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
       String? lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? lastModifiedDate,
+      int lastFetchMillis,
+      bool isPartial,
       String? docId,
       @JsonKey(name: 'fl_id') String? id,
       String? env,
@@ -163,6 +179,8 @@ class __$$_FlMetaCopyWithImpl<$Res>
     Object? createdDate = freezed,
     Object? lastModifiedBy = freezed,
     Object? lastModifiedDate = freezed,
+    Object? lastFetchMillis = null,
+    Object? isPartial = null,
     Object? docId = freezed,
     Object? id = freezed,
     Object? env = freezed,
@@ -187,6 +205,14 @@ class __$$_FlMetaCopyWithImpl<$Res>
           ? _value.lastModifiedDate
           : lastModifiedDate // ignore: cast_nullable_to_non_nullable
               as String?,
+      lastFetchMillis: null == lastFetchMillis
+          ? _value.lastFetchMillis
+          : lastFetchMillis // ignore: cast_nullable_to_non_nullable
+              as int,
+      isPartial: null == isPartial
+          ? _value.isPartial
+          : isPartial // ignore: cast_nullable_to_non_nullable
+              as bool,
       docId: freezed == docId
           ? _value.docId
           : docId // ignore: cast_nullable_to_non_nullable
@@ -225,6 +251,8 @@ class _$_FlMeta implements _FlMeta {
       this.lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       this.lastModifiedDate,
+      this.lastFetchMillis = -1,
+      this.isPartial = false,
       this.docId,
       @JsonKey(name: 'fl_id') this.id,
       this.env = '',
@@ -246,6 +274,12 @@ class _$_FlMeta implements _FlMeta {
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   final String? lastModifiedDate;
   @override
+  @JsonKey()
+  final int lastFetchMillis;
+  @override
+  @JsonKey()
+  final bool isPartial;
+  @override
   final String? docId;
   @override
   @JsonKey(name: 'fl_id')
@@ -264,7 +298,7 @@ class _$_FlMeta implements _FlMeta {
 
   @override
   String toString() {
-    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, lastModifiedDate: $lastModifiedDate, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId)';
+    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, lastModifiedBy: $lastModifiedBy, lastModifiedDate: $lastModifiedDate, lastFetchMillis: $lastFetchMillis, isPartial: $isPartial, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId)';
   }
 
   @override
@@ -280,6 +314,10 @@ class _$_FlMeta implements _FlMeta {
                 other.lastModifiedBy == lastModifiedBy) &&
             (identical(other.lastModifiedDate, lastModifiedDate) ||
                 other.lastModifiedDate == lastModifiedDate) &&
+            (identical(other.lastFetchMillis, lastFetchMillis) ||
+                other.lastFetchMillis == lastFetchMillis) &&
+            (identical(other.isPartial, isPartial) ||
+                other.isPartial == isPartial) &&
             (identical(other.docId, docId) || other.docId == docId) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.env, env) || other.env == env) &&
@@ -297,6 +335,8 @@ class _$_FlMeta implements _FlMeta {
       createdDate,
       lastModifiedBy,
       lastModifiedDate,
+      lastFetchMillis,
+      isPartial,
       docId,
       id,
       env,
@@ -326,6 +366,8 @@ abstract class _FlMeta implements FlMeta {
       final String? lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       final String? lastModifiedDate,
+      final int lastFetchMillis,
+      final bool isPartial,
       final String? docId,
       @JsonKey(name: 'fl_id') final String? id,
       final String? env,
@@ -345,6 +387,10 @@ abstract class _FlMeta implements FlMeta {
   @override
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get lastModifiedDate;
+  @override
+  int get lastFetchMillis;
+  @override
+  bool get isPartial;
   @override
   String? get docId;
   @override

@@ -36,11 +36,13 @@ import '../../organisms/profile/dialogs/profile_modal_dialog.dart';
 
 class PositiveProfileActionsList extends ConsumerStatefulWidget implements PreferredSizeWidget {
   const PositiveProfileActionsList({
+    required this.currentProfile,
     required this.targetProfile,
     required this.relationship,
     super.key,
   });
 
+  final Profile? currentProfile;
   final Profile targetProfile;
   final Relationship relationship;
 
@@ -174,13 +176,16 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
 
     final Logger logger = ref.read(loggerProvider);
-    logger.d('User profile modal requested: ${widget.targetProfile}');
+    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
+    final String currentUserId = widget.currentProfile?.flMeta?.id ?? '';
+
+    logger.d('User profile modal requested: $targetUserId');
 
     await PositiveDialog.show(
       context: context,
       child: ProfileModalDialog(
-        profile: widget.targetProfile,
-        relationship: widget.relationship,
+        targetProfileId: targetUserId,
+        currentProfileId: currentUserId,
         types: const {
           ProfileModalDialogOptionType.hidePosts,
           ProfileModalDialogOptionType.block,

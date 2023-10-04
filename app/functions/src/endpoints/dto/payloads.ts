@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import safeJsonStringify from 'safe-json-stringify';
-import { Activity, ActivityJSON, ActivityStatistics, activitySchemaKey, activityStatisticsSchemaKey } from '../../dto/activities';
+import { Activity, ActivityJSON, activitySchemaKey } from '../../dto/activities';
 import { Profile, ProfileStatistics, profileSchemaKey, profileStatisticsSchemaKey } from '../../dto/profile';
 import { Relationship, RelationshipJSON, relationshipSchemaKey } from '../../dto/relationships';
 import { Tag, tagSchemaKey } from '../../dto/tags';
@@ -10,11 +10,11 @@ import { DataService } from '../../services/data_service';
 import { CacheService } from '../../services/cache_service';
 import { StringHelpers } from '../../helpers/string_helpers';
 import { Reaction, reactionSchemaKey } from '../../dto/reactions';
-import { ActivityStatisticsService } from '../../services/activity_statistics_service';
+import { ReactionStatisticsService } from '../../services/reaction_statistics_service';
 import { ReactionService } from '../../services/reaction_service';
 import { Promotion, promotionsSchemaKey } from '../../dto/promotions';
 import { ProfileStatisticsService } from '../../services/profile_statistics_service';
-// import { FeedService } from '../../services/feed_service';
+import { ReactionStatistics, reactionStatisticsSchemaKey } from '../../dto/reaction_statistics';
 
 export type EndpointRequest = {
     sender: string;
@@ -73,7 +73,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     joinedDataRecords.set(profileSchemaKey, new Set<string>());
     joinedDataRecords.set(activitySchemaKey, new Set<string>());
     joinedDataRecords.set(reactionSchemaKey, new Set<string>());
-    joinedDataRecords.set(activityStatisticsSchemaKey, new Set<string>());
+    joinedDataRecords.set(reactionStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(profileStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(relationshipSchemaKey, new Set<string>());
     joinedDataRecords.set(tagSchemaKey, new Set<string>());
@@ -102,8 +102,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                 // Overall statistics
                 if (originFeed && activityId) {
-                    const expectedStatisticsKey = ActivityStatisticsService.getExpectedKeyFromOptions(originFeed, activityId);
-                    joinedDataRecords.get(activityStatisticsSchemaKey)?.add(expectedStatisticsKey);
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(activityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 
                     // Unique reactions
                     if (sender) {
@@ -117,27 +117,27 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     }
                 }
 
-                const repostActivityId = activity.generalConfiguration?.repostActivityId || "";
-                const repostActivityPublisherId = activity.generalConfiguration?.repostActivityPublisherId || "";
-                const repostActivityOriginFeed = activity.generalConfiguration?.repostActivityOriginFeed || "";
-                const isRepost = repostActivityId && repostActivityPublisherId && repostActivityOriginFeed;
-                const isReposter = sender && sender === repostActivityPublisherId;
+                const repostTargetActivityId = activity.repostConfiguration?.targetActivityId || "";
+                const repostTargetActivityPublisherId = activity.repostConfiguration?.targetActivityPublisherId || "";
+                const repostTargetActivityOriginFeed = activity.repostConfiguration?.targetActivityOriginFeed || "";
+                const isRepost = repostTargetActivityId && repostTargetActivityPublisherId && repostTargetActivityOriginFeed;
+                const isReposter = sender && sender === repostTargetActivityPublisherId;
 
                 if (isRepost && !isReposter) {
-                    joinedDataRecords.get(activitySchemaKey)?.add(repostActivityId);
-                    joinedDataRecords.get(profileSchemaKey)?.add(repostActivityPublisherId);
+                    joinedDataRecords.get(activitySchemaKey)?.add(repostTargetActivityId);
+                    joinedDataRecords.get(profileSchemaKey)?.add(repostTargetActivityPublisherId);
 
-                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostActivityPublisherId]);
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostTargetActivityPublisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
                 if (isRepost) {
-                    const expectedStatisticsKey = ActivityStatisticsService.getExpectedKeyFromOptions(repostActivityOriginFeed, repostActivityId);
-                    joinedDataRecords.get(activityStatisticsSchemaKey)?.add(expectedStatisticsKey);
+                    const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostTargetActivityId);
+                    joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 
                     // Unique reactions
                     if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostActivityOriginFeed, repostActivityId, sender);
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostTargetActivityOriginFeed, repostTargetActivityId, sender);
                         functions.logger.info("Unique nested reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {
@@ -273,6 +273,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
     // Stage 7: Build response
     const populatePromises = [] as Promise<any>[];
+    let currentEpochMillis = Date.now();
+
     for (const obj of data) {
         const flamelinkId = FlamelinkHelpers.getFlamelinkIdFromObject(obj);
         const schema = FlamelinkHelpers.getFlamelinkSchemaFromObject(obj);
@@ -281,6 +283,11 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
         // Skip if no flamelink id or schema
         if (!flamelinkId || !schema) {
             continue;
+        }
+
+        // We append one millisecond to ensure that the order of the data is preserved.
+        if (obj._fl_meta_) {
+            obj._fl_meta_.lastFetchMillis = currentEpochMillis;
         }
 
         if (responseData.data[schema] === undefined) {
@@ -315,9 +322,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                     profile.removeFlaggedData(isConnected);
                     profile.removePrivateData();
+                    profile.notifyPartial();
                 }
 
-                
                 responseData.data[profileSchemaKey].push(profile);
                 break;
             case relationshipSchemaKey:
@@ -332,8 +339,8 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case reactionSchemaKey:
                 responseData.data[schema].push(new Reaction(obj));
                 break;
-            case activityStatisticsSchemaKey:
-                responseData.data[schema].push(new ActivityStatistics(obj));
+            case reactionStatisticsSchemaKey:
+                responseData.data[schema].push(new ReactionStatistics(obj));
                 break;
             case profileStatisticsSchemaKey:
                 responseData.data[schema].push(new ProfileStatistics(obj));
@@ -344,30 +351,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             default:
                 break;
         }
+
+        currentEpochMillis++;
     }
 
     // Stage 8: Wait for all population to complete
     await Promise.all(populatePromises);
 
-    // For now, the client will handle this.
-    // Stage 9: Enrich response
-    // const reactions = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionSchemaKey) as ReactionJSON[];
-    // const reactionStatistics = data.filter((obj) => obj && obj._fl_meta_?.schema === reactionStatisticsSchemaKey) as ReactionStatisticsJSON[];
-
-    // if (reactions && reactions.length > 0 && reactionStatistics && reactionStatistics.length > 0) {
-    //     const newStatistics = ReactionStatisticsService.enrichStatisticsWithUniqueUserReactions(reactionStatistics, reactions);
-    //     if (newStatistics) {
-    //         responseData.data[reactionStatisticsSchemaKey] = [];
-    //         for (const stat of newStatistics) {
-    //             if (!stat) {
-    //                 continue;
-    //             }
-
-    //             responseData.data[reactionStatisticsSchemaKey].push(new ReactionStatistics(stat));
-    //         }
-    //     }
-    // }
-
-    // Stage 10: Return response
+    // Stage 9: Return response
     return safeJsonStringify(responseData);
 }

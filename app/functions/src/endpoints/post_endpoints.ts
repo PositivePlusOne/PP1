@@ -20,25 +20,24 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
-import { PromotionsService } from "../services/promotions_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-        const feedId = request.data.feed || "";
-        const slugId = request.data.options?.slug || "";
+        const targetUserId = request.data.targetUserId || "";
+        const targetSlug = request.data.targetSlug || "";
         const limit = request.limit || 25;
         const cursor = request.cursor || "";
 
-        functions.logger.info(`Listing activities`, { uid, feedId, slugId, limit, cursor });
+        functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
 
-        if (!feedId || feedId.length === 0 || !slugId || slugId.length === 0) {
+        if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
           throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
         }
     
         const feedsClient = FeedService.getFeedsClient();
-        const feed = feedsClient.feed(feedId, slugId);
+        const feed = feedsClient.feed(targetSlug, targetUserId);
         const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
     
         // Convert window results to a list of IDs
@@ -50,13 +49,13 @@ export namespace PostEndpoints {
 
         // Get promotions from activities where the promotion key is set
         const promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
-        const promotions = await PromotionsService.getPromotions(promotionIds);
 
-        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds, promotions });
+        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
     
         return buildEndpointResponse(context, {
           sender: uid,
-          data: [...activities, ...promotions],
+          joins: [...promotionIds],
+          data: [...activities],
           limit: limit,
           cursor: paginationToken,
           seedData: {
@@ -125,9 +124,11 @@ export namespace PostEndpoints {
       },
       generalConfiguration: {
         type: "repost",
-        repostActivityId: activityId,
-        repostActivityPublisherId: publisherId,
-        repostActivityOriginFeed: activityOriginFeed,
+      },
+      repostConfiguration: {
+        targetActivityId: activityId,
+        targetActivityPublisherId: publisherId,
+        targetActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,
@@ -154,13 +155,12 @@ export namespace PostEndpoints {
     
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
-    const feed = request.data.feed || FeedName.User;
     const targets = request.data.targets || [] as string[];
 
     const title = request.data.title || "";
     const description = request.data.description || "";
 
-    if (!activityId || !feed) {
+    if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
     }
 
@@ -330,7 +330,7 @@ export namespace PostEndpoints {
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
-    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || (activity?.generalConfiguration?.repostActivityId && activity?.generalConfiguration?.repostActivityPublisherId);
+    const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || activity?.repostConfiguration?.targetActivityId;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }

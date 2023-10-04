@@ -14,7 +14,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
@@ -24,7 +24,6 @@ import 'package:app/providers/system/handlers/notifications/notification_handler
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import '../../../../providers/system/design_controller.dart';
 
 class PositiveNotificationTile extends StatefulHookConsumerWidget {
   const PositiveNotificationTile({
@@ -86,14 +85,14 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
 
   void reloadPresenter() {
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final NotificationHandler handler = notificationsController.getHandlerForPayload(widget.notification);
 
     Relationship? senderRelationship;
-    final Profile? senderProfile = cacheController.getFromCache(widget.notification.sender);
+    final Profile? senderProfile = cacheController.get(widget.notification.sender);
 
     if (widget.notification.userId.isNotEmpty && widget.notification.sender.isNotEmpty) {
-      senderRelationship = cacheController.getFromCache([widget.notification.sender, widget.notification.userId].asGUID);
+      senderRelationship = cacheController.get([widget.notification.sender, widget.notification.userId].asGUID);
     }
 
     presenter = NotificationPresenter(
@@ -151,7 +150,6 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   @override
   Widget build(BuildContext context) {
     final logger = ref.read(loggerProvider);
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final NotificationPayload payload = presenter.payload;
     final NotificationHandler handler = presenter.handler;
@@ -205,6 +203,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                 ignoring: true,
                 child: buildMarkdownWidgetFromBody(
                   body,
+                  brightness: foregroundColor.computedSystemBrightness,
                   lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
                   onTapLink: (_) {},
                 ),

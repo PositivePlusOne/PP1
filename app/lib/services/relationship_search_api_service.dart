@@ -22,7 +22,6 @@ class RelationshipSearchApiService {
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'relationship-listConnectedRelationships',
-      cacheOverwriteSchemaKeys: const {"users": false},
       pagination: Pagination(
         cursor: cursor,
         limit: limit,
@@ -36,7 +35,6 @@ class RelationshipSearchApiService {
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'relationship-listFollowRelationships',
-      cacheOverwriteSchemaKeys: const {"users": false},
       pagination: Pagination(
         cursor: cursor,
         limit: limit,
@@ -50,7 +48,6 @@ class RelationshipSearchApiService {
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'relationship-listFollowingRelationships',
-      cacheOverwriteSchemaKeys: const {"users": false},
       pagination: Pagination(
         cursor: cursor,
         limit: limit,
@@ -64,7 +61,6 @@ class RelationshipSearchApiService {
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'relationship-listBlockedRelationships',
-      cacheOverwriteSchemaKeys: const {"users": false},
       pagination: Pagination(
         cursor: cursor,
         limit: limit,

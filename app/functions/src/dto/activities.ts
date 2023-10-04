@@ -3,7 +3,6 @@ import { Mention, MentionJSON } from "./mentions";
 import { FlMeta, FlMetaJSON } from "./meta";
 
 export const activitySchemaKey = 'activities';
-export const activityStatisticsSchemaKey = "activityReactionStatistics";
 
 /**
  * The type of activity
@@ -23,58 +22,6 @@ export enum ActivityActionVerb {
   Bookmark = "bookmark",
 }
 
-export interface ActivityStatisticsJSON {
-    _fl_meta_?: FlMetaJSON;
-    feed?: string;
-    counts?: Record<string, number>;
-    unique_user_reactions?: Record<string, boolean>;
-    activity_id?: string;
-    reaction_id?: string;
-    user_id?: string;
-}
-
-export class ActivityStatistics {
-    _fl_meta_?: FlMeta;
-    feed: string;
-    counts: Record<string, number>;
-    unique_user_reactions: Record<string, boolean>;
-    activity_id: string;
-    reaction_id: string;
-    user_id: string;
-
-    constructor(json: ActivityStatisticsJSON) {
-        this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
-        this.feed = json.feed ?? "";
-        this.counts = json.counts ?? {};
-        this.unique_user_reactions = json.unique_user_reactions ?? {};
-        this.activity_id = json.activity_id ?? "";
-        this.reaction_id = json.reaction_id ?? "";
-        this.user_id = json.user_id ?? "";
-    }
-
-    public toJSON(): ActivityStatisticsJSON {
-        return {
-            feed: this.feed,
-            counts: this.counts,
-            unique_user_reactions: this.unique_user_reactions ?? {},
-            activity_id: this.activity_id,
-            reaction_id: this.reaction_id,
-            user_id: this.user_id,
-        };
-    }
-
-    static FromJSONList(jsonList: ActivityStatistics[]): ActivityStatistics[] {
-        const list: ActivityStatistics[] = [];
-        if (jsonList) {
-            jsonList.forEach((json) => {
-                list.push(new ActivityStatistics(json));
-            });
-        }
-
-        return list;
-    }
-}
-
 /**
  * The JSON representation of an activity
  * @export
@@ -86,6 +33,7 @@ export class ActivityStatistics {
  * @property {ActivityPricingInformationJSON} [pricingInformation]
  * @property {ActivityPublisherInformationJSON} [publisherInformation]
  * @property {ActivityEnrichmentConfigurationJSON} [enrichmentConfiguration]
+ * @property {ActivityRepostConfigurationJSON} [repostConfiguration]
  * @property {MediaJSON[]} [media]
  */
 export interface ActivityJSON {
@@ -96,6 +44,7 @@ export interface ActivityJSON {
   pricingInformation?: ActivityPricingInformationJSON;
   publisherInformation?: ActivityPublisherInformationJSON;
   enrichmentConfiguration?: ActivityEnrichmentConfigurationJSON;
+  repostConfiguration?: ActivityRepostConfigurationJSON;
   media?: MediaJSON[];
 }
 
@@ -110,6 +59,7 @@ export interface ActivityJSON {
  * @property {ActivityPricingInformation} [pricingInformation]
  * @property {ActivityPublisherInformation} [publisherInformation]
  * @property {ActivityEnrichmentConfiguration} [enrichmentConfiguration]
+ * @property {ActivityRepostConfiguration} [repostConfiguration]
  * @property {Media[]} media
  */
 export class Activity {
@@ -120,6 +70,7 @@ export class Activity {
   pricingInformation?: ActivityPricingInformation;
   publisherInformation?: ActivityPublisherInformation;
   enrichmentConfiguration?: ActivityEnrichmentConfiguration;
+  repostConfiguration?: ActivityRepostConfiguration;
   media: Media[];
 
   constructor(json: ActivityJSON) {
@@ -130,6 +81,7 @@ export class Activity {
     this.pricingInformation = json.pricingInformation && new ActivityPricingInformation(json.pricingInformation);
     this.publisherInformation = json.publisherInformation && new ActivityPublisherInformation(json.publisherInformation);
     this.enrichmentConfiguration = json.enrichmentConfiguration && new ActivityEnrichmentConfiguration(json.enrichmentConfiguration);
+    this.repostConfiguration = json.repostConfiguration && new ActivityRepostConfiguration(json.repostConfiguration);
     this.media = json.media ? json.media.map((item) => new Media(item)) : [];
   }
 }
@@ -167,9 +119,6 @@ export interface ActivityGeneralConfigurationJSON {
   style?: ActivityGeneralConfigurationStyle;
   content?: string;
   isSensitive?: boolean;
-  repostActivityId?: string;
-  repostActivityPublisherId?: string;
-  repostActivityOriginFeed?: string;
 }
 
 /**
@@ -185,18 +134,30 @@ export class ActivityGeneralConfiguration {
   style: ActivityGeneralConfigurationStyle;
   content: string;
   isSensitive: boolean;
-  repostActivityId: string;
-  repostActivityPublisherId: string;
-  repostActivityOriginFeed: string;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
     this.type = json.type || 'post';
     this.style = json.style || 'text';
     this.content = json.content || '';
     this.isSensitive = json.isSensitive || false;
-    this.repostActivityId = json.repostActivityId || '';
-    this.repostActivityPublisherId = json.repostActivityPublisherId || '';
-    this.repostActivityOriginFeed = json.repostActivityOriginFeed || '';
+  }
+}
+
+export interface ActivityRepostConfigurationJSON {
+  targetActivityId: string;
+  targetActivityPublisherId: string;
+  targetActivityOriginFeed: string;
+}
+
+export class ActivityRepostConfiguration {
+  targetActivityId: string;
+  targetActivityPublisherId: string;
+  targetActivityOriginFeed: string;
+
+  constructor(json: ActivityRepostConfigurationJSON) {
+    this.targetActivityId = json.targetActivityId;
+    this.targetActivityPublisherId = json.targetActivityPublisherId;
+    this.targetActivityOriginFeed = json.targetActivityOriginFeed;
   }
 }
 

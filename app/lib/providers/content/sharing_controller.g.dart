@@ -6,7 +6,7 @@ part of 'sharing_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$sharingControllerHash() => r'c5f5ac600d9d25a6911f25fbe0635d78e43a1ed1';
+String _$sharingControllerHash() => r'cb9a19459fa252267355480ceb819e7de72c59d1';
 
 /// See also [SharingController].
 @ProviderFor(SharingController)
@@ -23,4 +23,4 @@ final sharingControllerProvider =
 
 typedef _$SharingController = Notifier<SharingControllerState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

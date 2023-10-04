@@ -1,10 +1,11 @@
+// Dart imports:
+
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 
 part 'reactions.freezed.dart';
 part 'reactions.g.dart';
@@ -52,6 +53,16 @@ class ReactionType with _$ReactionType {
     }
   }
 
+  static List<ReactionType> values() {
+    return const <ReactionType>[
+      ReactionType.like(),
+      ReactionType.dislike(),
+      ReactionType.comment(),
+      ReactionType.bookmark(),
+      ReactionType.share(),
+    ];
+  }
+
   static String toJson(ReactionType reactionType) {
     return reactionType.when(
       unknownReaction: () => 'unknownReaction',
@@ -67,9 +78,8 @@ class ReactionType with _$ReactionType {
 @freezed
 class ReactionStatistics with _$ReactionStatistics {
   const factory ReactionStatistics({
-    @Default('') @JsonKey(name: 'feed') String feed,
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default({}) @JsonKey(name: 'counts') Map<String, int> counts,
-    @Default({}) @JsonKey(name: 'unique_user_reactions') Map<String, bool> uniqueUserReactions,
     @Default('') @JsonKey(name: 'activity_id') String activityId,
     @Default('') @JsonKey(name: 'reaction_id') String reactionId,
     @Default('') @JsonKey(name: 'user_id') String userId,
@@ -77,18 +87,51 @@ class ReactionStatistics with _$ReactionStatistics {
 
   factory ReactionStatistics.fromJson(Map<String, dynamic> json) => _$ReactionStatisticsFromJson(json);
 
-  static ReactionStatistics fromActivity(Activity activity, TargetFeed feed) {
+  static ReactionStatistics newEntry(Activity activity) {
     return ReactionStatistics(
-      feed: TargetFeed.toOrigin(feed),
-      counts: {},
-      uniqueUserReactions: {},
       activityId: activity.flMeta?.id ?? '',
       reactionId: '',
       userId: '',
+      counts: {},
     );
   }
+}
 
-  static String buildCacheKey(ReactionStatistics reactionStatistics) {
-    return 'statistics:${reactionStatistics.feed}:${reactionStatistics.activityId}:${reactionStatistics.reactionId}:${reactionStatistics.userId}';
+@freezed
+class TargetFeed with _$TargetFeed {
+  const factory TargetFeed({
+    @Default('') String targetSlug,
+    @Default('') String targetUserId,
+  }) = _TargetFeed;
+
+  factory TargetFeed.fromJson(Map<String, dynamic> json) => _$TargetFeedFromJson(json);
+
+  static TargetFeed fromTag(String tag) => TargetFeed(targetSlug: 'tags', targetUserId: tag);
+
+  static TargetFeed fromOrigin(String origin) {
+    final List<String> parts = origin.split(':');
+    final String feed = parts[0];
+    final String slug = parts[1];
+
+    return TargetFeed(targetSlug: feed, targetUserId: slug);
+  }
+
+  static TargetFeed search() {
+    return const TargetFeed(targetSlug: 'search', targetUserId: '');
+  }
+
+  static TargetFeed tag(String tag) {
+    return TargetFeed(targetSlug: 'tags', targetUserId: tag);
+  }
+
+  static String toOrigin(TargetFeed targetFeed) {
+    String slug = targetFeed.targetSlug;
+
+    //! If we have more aggregated feeds, we need to add them here
+    if (slug == 'timeline') {
+      slug = 'user';
+    }
+
+    return '$slug:${targetFeed.targetUserId}';
   }
 }

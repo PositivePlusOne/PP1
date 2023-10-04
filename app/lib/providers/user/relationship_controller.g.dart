@@ -7,7 +7,7 @@ part of 'relationship_controller.dart';
 // **************************************************************************
 
 String _$relationshipControllerHash() =>
-    r'f4f478a93ecae08a5e859d9e63241213a101e095';
+    r'3c9ecf759bb30c03ffe1d15fea2a989705f9216b';
 
 /// See also [RelationshipController].
 @ProviderFor(RelationshipController)
@@ -24,4 +24,4 @@ final relationshipControllerProvider = NotifierProvider<RelationshipController,
 
 typedef _$RelationshipController = Notifier<RelationshipControllerState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

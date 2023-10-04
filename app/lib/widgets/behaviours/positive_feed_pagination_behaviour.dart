@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -16,35 +15,42 @@ import 'package:sliver_tools/sliver_tools.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/common/events/force_feed_rebuild_event.dart';
-import 'package:app/providers/events/content/activity_events.dart';
+import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
+import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
 
-class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
+class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   const PositiveFeedPaginationBehaviour({
+    required this.currentProfile,
     required this.feed,
-    this.onPageLoaded,
+    required this.feedState,
     this.windowSize = 20,
     this.onHeaderTap,
     this.onMediaTap,
@@ -52,293 +58,133 @@ class PositiveFeedPaginationBehaviour extends StatefulHookConsumerWidget {
     super.key,
   });
 
+  final Profile? currentProfile;
   final TargetFeed feed;
+  final PositiveFeedState feedState;
   final int windowSize;
 
   final void Function(Activity activity)? onHeaderTap;
   final void Function(Activity activity, Media media)? onMediaTap;
 
-  final Function(Map<String, dynamic>)? onPageLoaded;
-
   final bool isSliver;
 
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
 
-  @override
-  ConsumerState<PositiveFeedPaginationBehaviour> createState() => _PositiveFeedPaginationBehaviourState();
-}
-
-class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPaginationBehaviour> {
-  late PositiveFeedState feedState;
-
-  StreamSubscription<ActivityCreatedEvent>? _onActivityCreatedSubscription;
-  StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
-  StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
-
-  StreamSubscription<ForceFeedRebuildEvent>? _onForceFeedRebuildSubscription;
-
-  String get expectedCacheKey => 'feeds:${widget.feed.feed}-${widget.feed.slug}';
-
-  bool requestedFirstWindow = false;
-
-  @override
-  void initState() {
-    super.initState();
-    setupListeners();
-    setupFeedState();
-  }
-
-  @override
-  void dispose() {
-    disposeListeners();
-    disposeFeedState();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(PositiveFeedPaginationBehaviour oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.feed.feed != widget.feed.feed || oldWidget.feed.slug != widget.feed.slug) {
-      disposeFeedState();
-      setupFeedState();
-    }
-  }
-
-  Future<void> setupListeners() async {
-    final EventBus eventBus = providerContainer.read(eventBusProvider);
-
-    await _onActivityCreatedSubscription?.cancel();
-    await _onActivityUpdatedSubscription?.cancel();
-    await _onActivityDeletedSubscription?.cancel();
-    await _onForceFeedRebuildSubscription?.cancel();
-
-    _onActivityCreatedSubscription = eventBus.on<ActivityCreatedEvent>().listen(onActivityCreated);
-    _onActivityUpdatedSubscription = eventBus.on<ActivityUpdatedEvent>().listen(onActivityUpdated);
-    _onActivityDeletedSubscription = eventBus.on<ActivityDeletedEvent>().listen(onActivityDeleted);
-    _onForceFeedRebuildSubscription = eventBus.on<ForceFeedRebuildEvent>().listen((_) => setStateIfMounted());
-  }
-
-  Future<void> disposeListeners() async {
-    await _onActivityCreatedSubscription?.cancel();
-    await _onActivityUpdatedSubscription?.cancel();
-    await _onActivityDeletedSubscription?.cancel();
-  }
-
-  void disposeFeedState() {
-    feedState.pagingController.removePageRequestListener(requestNextPage);
-  }
-
-  void setupFeedState() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-
-    logger.d('setupFeedState() - Loading state for ${widget.feed}');
-    final PositiveFeedState? cachedFeedState = cacheController.getFromCache(expectedCacheKey);
-    if (cachedFeedState != null) {
-      logger.d('setupFeedState() - Found cached state for ${widget.feed}');
-      feedState = cachedFeedState;
-      requestedFirstWindow = true;
-      feedState.pagingController.addPageRequestListener(requestNextPage);
-      return;
-    }
-
-    logger.d('setupFeedState() - No cached state for ${widget.feed}. Creating new state.');
-    final PagingController<String, Activity> pagingController = PagingController<String, Activity>(firstPageKey: '');
-    pagingController.addPageRequestListener(requestNextPage);
-
-    feedState = PositiveFeedState(
-      feed: widget.feed.feed,
-      slug: widget.feed.slug,
-      pagingController: pagingController,
-      currentPaginationKey: '',
-    );
-  }
-
-  void saveFeedState() {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-
-    logger.d('saveState() - Saving state for ${widget.feed}');
-    cacheController.addToCache(key: expectedCacheKey, value: feedState);
-  }
-
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
+    final ActivitiesController activitiesController = providerContainer.read(activitiesControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String profileId = profileController.currentProfile?.flMeta?.id ?? '';
 
     try {
       final EndpointResponse endpointResponse = await postApiService.listActivities(
-        widget.feed.feed,
-        widget.feed.slug,
+        targetSlug: feed.targetSlug,
+        targetUserId: feed.targetUserId,
         pagination: Pagination(
           cursor: feedState.currentPaginationKey,
         ),
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
-      String next = data.containsKey('next') ? data['next'].toString() : '';
+      String? next = data.containsKey('next') ? data['next'].toString() : null;
 
       // Check for weird backend loops (extra safety)
       if (next == feedState.currentPaginationKey) {
-        next = '';
+        next = null;
       }
 
-      requestedFirstWindow = true;
-      widget.onPageLoaded?.call(data);
-      appendActivityPage(data, next);
+      appendActivityPageToState(data, next);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
-      feedState.pagingController.error = ex;
+      activitiesController.notifyPageError(profileId: profileId, feed: feed, error: ex);
+    } finally {
+      saveActivitiesState();
     }
   }
 
-  void appendActivityPage(Map<String, dynamic> data, String nextPageKey) {
+  void appendActivityPageToState(Map<String, dynamic> data, String? next) {
     final Logger logger = providerContainer.read(loggerProvider);
 
-    feedState.currentPaginationKey = nextPageKey;
-    logger.i('requestNextTimelinePage() - nextPageKey: $nextPageKey - currentPaginationKey: ${feedState.currentPaginationKey}');
-
-    final List<String> windowIds = ((data.containsKey('windowIds') && data['windowIds'] is Iterable ? data['windowIds'] : []) as List).map((dynamic windowId) {
-      return windowId is String ? windowId : windowId.toString();
+    final List<dynamic> activities = data['activities'] as List<dynamic>;
+    final List<Activity> activityList = activities.map((dynamic activity) {
+      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
+      return Activity.fromJson(activityMap);
     }).toList();
 
-    final List<dynamic> activitiesRaw = data.containsKey('activities') && data['activities'] is Iterable ? data['activities'] : [];
-    final List<Activity> activities = activitiesRaw
-        .map((dynamic activity) {
-          try {
-            final Map<String, dynamic> activityData = json.decodeSafe(activity);
-            return Activity.fromJson(activityData);
-          } catch (ex) {
-            logger.e('requestNextTimelinePage() - ex: $ex');
-            return null;
-          }
-        })
-        .whereType<Activity>()
-        .where((activity) => activity.flMeta?.id != null && windowIds.contains(activity.flMeta?.id))
-        .toList();
-
-    // Remove all activities that are not included in the windowIds
-    // This is to prevent showing reposts that are not in the windowIds
-    final List<Activity> newActivities = activities.where((element) => windowIds.contains(element.flMeta?.id)).toList();
-    final bool hasNext = nextPageKey.isNotEmpty && newActivities.isNotEmpty;
-
-    logger.d('requestNextTimelinePage() - newActivities: $newActivities');
-
-    if (!hasNext) {
-      feedState.pagingController.appendSafeLastPage(newActivities);
-    } else {
-      feedState.pagingController.appendSafePage(newActivities, nextPageKey);
-    }
-
-    saveFeedState();
+    logger.d('appendActivityPageToState() - activityList.length: ${activityList.length}');
+    feedState.pagingController.appendPage(activityList, next);
   }
 
-  void onActivityCreated(ActivityCreatedEvent event) {
+  void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final Activity activity = event.activity;
-    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      feedState.pagingController.itemList?.insert(0, activity);
-      feedState.pagingController.itemList = feedState.pagingController.itemList;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    feedState.hasPerformedInitialLoad = true;
 
-      logger.d('onActivityCreated() - Added activity to feed: ${widget.feed} - activity: $activity');
-      setStateIfMounted();
+    if (feedState.pagingController.itemList?.isEmpty ?? true) {
+      logger.d('saveActivitiesState() - No activities to save');
+      feedState.pagingController.value = PagingState<String, Activity>(
+        itemList: feedState.pagingController.itemList,
+        error: null,
+        nextPageKey: null,
+      );
     }
+
+    logger.d('saveActivitiesState() - Saving activities');
+    final String newCacheKey = feedState.buildCacheKey();
+    cacheController.add(key: newCacheKey, value: feedState);
   }
 
-  void onActivityUpdated(ActivityUpdatedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final Activity activity = event.activity;
-    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == activity.flMeta?.id) ?? -1;
-      if (index >= 0) {
-        feedState.pagingController.itemList?[index] = activity;
-        feedState.pagingController.itemList = feedState.pagingController.itemList;
-
-        logger.d('onActivityUpdated() - Updated activity in feed: ${widget.feed} - activity: $activity');
-        setStateIfMounted();
-      }
-    }
-  }
-
-  void onActivityDeleted(ActivityDeletedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final String id = event.activity.flMeta?.id ?? '';
-    if (id.isEmpty) {
-      return;
-    }
-
-    if (event.targets.any((element) => element.feed == widget.feed.feed && element.slug == widget.feed.slug)) {
-      final int index = feedState.pagingController.itemList?.indexWhere((element) => element.flMeta?.id == id) ?? -1;
-      if (index >= 0) {
-        feedState.pagingController.itemList?.removeAt(index);
-        feedState.pagingController.itemList = feedState.pagingController.itemList;
-
-        logger.d('onActivityDeleted() - Deleted activity in feed: ${widget.feed} - activityId: ${event.activity}');
-        setStateIfMounted();
-      }
-    }
-  }
-
-  bool checkShouldDisplayNoPosts() {
+  bool checkShouldDisplayNoPosts({
+    Profile? currentProfile,
+    Relationship? relationship,
+  }) {
+    final bool requestedFirstWindow = feedState.hasPerformedInitialLoad;
     if (!requestedFirstWindow) {
       return false;
     }
 
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final Iterable<Activity>? activities = feedState.pagingController.itemList;
-    final bool canDisplayAny = activities?.any((element) => element.canDisplayOnFeed) ?? false;
+    final bool canDisplayAny = activities?.any((element) {
+          final String publisherId = element.publisherInformation?.publisherId ?? '';
+          final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
+          final Relationship? relationship = cacheController.get(relationshipId);
+          return element.canDisplayOnFeed(currentProfile, relationship);
+        }) ??
+        false;
 
     return !canDisplayAny;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
+    usePagingController(
+      controller: feedState.pagingController,
+      listener: requestNextPage,
+    );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts();
+    final Widget noPostsSliverWidget = SliverNoPostsPlaceholder(
+      typography: typography,
+      colors: colors,
+    );
+
+    final Widget noPostsWidget = NoPostsPlaceholder(
+      typography: typography,
+      colors: colors,
+    );
+
     if (shouldDisplayNoPosts) {
-      return SliverStack(
-        positionedAlignment: Alignment.bottomCenter,
-        children: <Widget>[
-          SliverPositioned(
-            left: 0.0,
-            right: 0.0,
-            top: kPaddingSmall,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 120.0),
-                child: Text(
-                  'No Posts to Display',
-                  textAlign: TextAlign.center,
-                  style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-                ),
-              ),
-            ),
-          ),
-          SliverFillRemaining(
-            fillOverscroll: false,
-            hasScrollBody: false,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: decorationBoxSize,
-                width: decorationBoxSize,
-                child: Stack(children: buildType2ScaffoldDecorations(colors)),
-              ),
-            ),
-          ),
-        ],
-      );
+      return noPostsSliverWidget;
     }
 
     const Widget loadingIndicator = PositivePostLoadingIndicator();
-    if (widget.isSliver) {
-      return buildSliverFeed(context, loadingIndicator);
+    if (isSliver) {
+      return buildSliverFeed(context, loadingIndicator, noPostsWidget);
     } else {
       return buildFeed(context, loadingIndicator);
     }
@@ -346,12 +192,18 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
 
   Widget buildSeparator(BuildContext context, int index) {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
-    if (activity == null) {
+    final String activityId = activity?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
       return const SizedBox(height: kPaddingLarge);
     }
 
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final String relationshipId = [activityId, currentProfileId].asGUID;
+    final Relationship? relationship = cacheController.get(relationshipId);
+
     // Remove the separator if we can't display the activity
-    final bool canDisplay = activity.canDisplayOnFeed;
+    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
@@ -360,19 +212,84 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   }
 
   Widget buildItem(BuildContext context, Activity item, int index) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final bool canDisplay = item.canDisplayOnFeed;
-    if (!canDisplay) {
-      logger.d('buildItem() - Skipping activity: ${item.flMeta?.id} - canDisplay: $canDisplay');
+    final Activity? tempActivity = feedState.pagingController.itemList?.elementAtOrNull(index);
+    final String activityId = tempActivity?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
       return const SizedBox.shrink();
     }
 
+    final String relationshipId = [activityId, currentProfileId].asGUID;
+    final String reposterRelationshipId = [tempActivity?.repostConfiguration?.targetActivityPublisherId ?? '', currentProfile?.flMeta?.id ?? ''].asGUID;
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [tempActivity]).toList();
+
+    return PositiveCacheWidget(
+      currentProfile: currentProfile,
+      cacheObjects: expectedCacheKeys,
+      onBuild: (context) => buildWidgetForFeed(
+        activityId: activityId,
+        currentProfileId: currentProfileId,
+        feed: feed,
+        item: item,
+        index: index,
+        relationshipId: relationshipId,
+        reposterRelationshipId: reposterRelationshipId,
+      ),
+    );
+  }
+
+  static Widget buildWidgetForFeed({
+    required String activityId,
+    required String currentProfileId,
+    required TargetFeed feed,
+    required Activity item,
+    required int index,
+    required String relationshipId,
+    required String reposterRelationshipId,
+  }) {
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final Relationship? relationship = cacheController.get(relationshipId);
+
+    final Activity? activity = cacheController.get(activityId);
+    final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId ?? '');
+    final Profile? currentProfile = cacheController.get(currentProfileId);
+    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey ?? '');
+
+    final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
+    final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
+
+    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
+    if (!canDisplay) {
+      return const SizedBox.shrink();
+    }
+
+    final String activityReactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+    final ReactionStatistics? activityReactionStatistics = cacheController.get(activityReactionStatisticsCacheKey);
+
+    final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile).toList();
+    final List<Reaction> currentProfileReactions = cacheController.list(expectedUniqueReactionKeys);
+
+    final String reactionsFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfileId,
+    );
+
+    final PositiveReactionsState? activityReactionFeedState = cacheController.get(reactionsFeedStateCacheKey);
+
     return PositiveActivityWidget(
-      key: ValueKey('homeFeedActivity-${item.flMeta?.id}'),
-      onImageTapped: widget.onMediaTap != null ? (media) => widget.onMediaTap?.call(item, media) : null,
-      onHeaderTapped: widget.onHeaderTap != null ? () => widget.onHeaderTap?.call(item) : null,
       activity: item,
-      targetFeed: widget.feed,
+      activityReactionStatistics: activityReactionStatistics,
+      activityPromotion: promotion,
+      currentProfile: currentProfile,
+      currentProfileReactions: currentProfileReactions,
+      activityReactionFeedState: activityReactionFeedState,
+      targetProfile: targetProfile,
+      targetRelationship: relationship,
+      reposterProfile: reposterProfile,
+      reposterRelationship: reposterRelationship,
+      targetFeed: feed,
       index: index,
     );
   }
@@ -380,19 +297,19 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
   // Since we can display an entire users feed, if we were to hide posts; then that will hide the entire feed
   // This will cause the pagination to loop forever, so we need to disable the presentation of the sliver feed
   bool get canDisplaySliverFeed {
-    final bool isUserFeed = widget.feed.feed == 'users';
+    final bool isUserFeed = feed.targetSlug == 'users';
     if (!isUserFeed) {
       return true;
     }
 
-    final String userId = widget.feed.slug;
+    final String userId = feed.targetUserId;
     final String currentUserId = providerContainer.read(profileControllerProvider.select((value) => value.currentProfile?.flMeta?.id)) ?? '';
     if (currentUserId.isEmpty) {
       return true;
     }
 
     final String guid = [userId, currentUserId].asGUID;
-    final Relationship? relationship = providerContainer.read(cacheControllerProvider.notifier).getFromCache(guid);
+    final Relationship? relationship = providerContainer.read(cacheControllerProvider).get(guid);
     if (relationship == null) {
       return true;
     }
@@ -402,10 +319,10 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
     return !states.contains(RelationshipState.targetBlocked) && !states.contains(RelationshipState.sourceHidden);
   }
 
-  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator) {
+  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator, Widget noPostsWidget) {
     final bool canDisplay = canDisplaySliverFeed;
     if (!canDisplay) {
-      return const SizedBox.shrink();
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
     return PagedSliverList.separated(
@@ -416,6 +333,7 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        noItemsFoundIndicatorBuilder: (context) => noPostsWidget,
         itemBuilder: (_, item, index) => buildItem(context, item, index),
       ),
     );
@@ -437,6 +355,109 @@ class _PositiveFeedPaginationBehaviourState extends ConsumerState<PositiveFeedPa
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         itemBuilder: (_, item, index) => buildItem(context, item, index),
       ),
+    );
+  }
+}
+
+class SliverNoPostsPlaceholder extends StatelessWidget {
+  const SliverNoPostsPlaceholder({
+    super.key,
+    required this.typography,
+    required this.colors,
+  });
+
+  final DesignTypographyModel typography;
+  final DesignColorsModel colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+    final double decorationBoxSize = min(screenSize.height / 2, 400);
+
+    return SliverStack(
+      positionedAlignment: Alignment.bottomCenter,
+      children: <Widget>[
+        SliverPositioned(
+          left: 0.0,
+          right: 0.0,
+          top: kPaddingSmall,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 120.0),
+              child: Text(
+                'No Posts to Display',
+                textAlign: TextAlign.center,
+                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ),
+        SliverFillRemaining(
+          fillOverscroll: false,
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType2ScaffoldDecorations(colors)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class NoPostsPlaceholder extends StatelessWidget {
+  const NoPostsPlaceholder({
+    super.key,
+    required this.typography,
+    required this.colors,
+  });
+
+  final DesignTypographyModel typography;
+  final DesignColorsModel colors;
+
+  @override
+  Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size screenSize = mediaQueryData.size;
+    final double decorationBoxSize = min(screenSize.height / 2, 400);
+
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: <Widget>[
+        Positioned(
+          left: 0.0,
+          right: 0.0,
+          top: kPaddingSmall,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 120.0),
+              child: Text(
+                'No Posts to Display',
+                textAlign: TextAlign.center,
+                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: PositiveTileEntryAnimation(
+            direction: AxisDirection.down,
+            child: SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType2ScaffoldDecorations(colors)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

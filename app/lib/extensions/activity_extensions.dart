@@ -2,18 +2,33 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
-import 'package:app/providers/events/content/activity_events.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/molecules/content/post_options_dialog.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
 
@@ -29,18 +44,104 @@ extension ActivityExt on Activity {
     return generalConfiguration?.content.isNotEmpty == true ? generalConfiguration!.content : '';
   }
 
+  TargetFeed get targetFeed {
+    return TargetFeed.fromOrigin(publisherInformation?.originFeed ?? '');
+  }
+
+  TargetFeed get repostTargetFeed {
+    return TargetFeed.fromOrigin(repostConfiguration?.targetActivityOriginFeed ?? '');
+  }
+
   List<TargetFeed> get tagTargetFeeds {
     final List<TargetFeed> targetFeeds = <TargetFeed>[];
     if (enrichmentConfiguration?.tags != null) {
       for (final String tag in enrichmentConfiguration!.tags) {
-        targetFeeds.add(TargetFeed('tags', tag));
+        targetFeeds.add(TargetFeed.tag(tag));
       }
     }
 
     return targetFeeds;
   }
 
-  Future<void> share(BuildContext context) async {
+  void appendActivityToProfileFeeds(String currentProfileId) {
+    final TargetFeed userFeed = TargetFeed(targetSlug: 'user', targetUserId: currentProfileId);
+    final TargetFeed timelineFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
+
+    final String expectedUserFeedCacheKey = PositiveFeedState.buildFeedCacheKey(userFeed);
+    final String expectedTimelineFeedCacheKey = PositiveFeedState.buildFeedCacheKey(timelineFeed);
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final PositiveFeedState? userFeedState = cacheController.get(expectedUserFeedCacheKey);
+    final PositiveFeedState? timelineFeedState = cacheController.get(expectedTimelineFeedCacheKey);
+
+    if (userFeedState != null) {
+      final PagingController<String, Activity> pagingController = userFeedState.pagingController;
+      final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+      final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+      if (exists) {
+        final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        currentItems[index] = this;
+      } else {
+        currentItems.insert(0, this);
+      }
+
+      pagingController.itemList = currentItems;
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      pagingController.notifyListeners();
+
+      cacheController.add(key: expectedUserFeedCacheKey, value: userFeedState);
+    }
+
+    if (timelineFeedState != null) {
+      final PagingController<String, Activity> pagingController = timelineFeedState.pagingController;
+      final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+      final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+      if (exists) {
+        final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        currentItems[index] = this;
+      } else {
+        currentItems.insert(0, this);
+      }
+
+      pagingController.itemList = currentItems;
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      pagingController.notifyListeners();
+
+      cacheController.add(key: expectedTimelineFeedCacheKey, value: timelineFeedState);
+    }
+
+    for (final String tag in enrichmentConfiguration?.tags ?? <String>[]) {
+      final TargetFeed tagFeed = TargetFeed.fromTag(tag);
+      final String expectedTagFeedCacheKey = PositiveFeedState.buildFeedCacheKey(tagFeed);
+
+      final PositiveFeedState? tagFeedState = cacheController.get(expectedTagFeedCacheKey);
+      if (tagFeedState != null) {
+        final PagingController<String, Activity> pagingController = tagFeedState.pagingController;
+        final List<Activity> currentItems = pagingController.itemList ?? <Activity>[];
+
+        final bool exists = currentItems.any((Activity activity) => activity.flMeta?.id == flMeta?.id);
+        if (exists) {
+          final int index = currentItems.indexWhere((Activity activity) => activity.flMeta?.id == flMeta?.id);
+          currentItems[index] = this;
+        } else {
+          currentItems.insert(0, this);
+        }
+
+        pagingController.itemList = currentItems;
+
+        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+        pagingController.notifyListeners();
+
+        cacheController.add(key: expectedTagFeedCacheKey, value: tagFeedState);
+      }
+    }
+  }
+
+  Future<void> share(BuildContext context, Profile? currentProfile) async {
     final SharingController sharingController = providerContainer.read(sharingControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
     if (publisherInformation?.originFeed.isEmpty ?? true == true) {
@@ -48,15 +149,17 @@ extension ActivityExt on Activity {
       throw Exception('publisherInformation.originFeed is empty');
     }
 
-    final (Activity activity, String feed) postOptions = (this, publisherInformation!.originFeed);
+    // typedef SharePostOptions = (Activity activity, String origin, String currentProfileId);
+    final String originFeed = publisherInformation?.originFeed ?? '';
+    final SharePostOptions postOptions = (this, originFeed, currentProfile?.flMeta?.id ?? '');
     await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
-  bool get canDisplayOnFeed {
-    final Relationship relationship = getRelationship();
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-
-    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(profileController.currentProfileId ?? '');
+  //* Verifies whether the activity can be included in the paged data.
+  //* Not the same as whether the post should be hidden due to blocked state
+  bool canDisplayOnFeed(Profile? currentProfile, Relationship? relationshipWithActivityPublisher) {
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final Set<RelationshipState> states = relationshipWithActivityPublisher?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
@@ -72,35 +175,342 @@ extension ActivityExt on Activity {
       public: () => true,
       followersAndConnections: () => isFollowing || hasFullyConnected,
       connections: () => hasFullyConnected,
-      signedIn: () => profileController.currentProfileId != null,
+      signedIn: () => currentProfileId.isNotEmpty,
       private: () => false,
       disabled: () => false,
     );
   }
 
-  Relationship getRelationship() {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+  ReactionStatistics getStatistics({
+    required Profile? currentProfile,
+    required ReactionType kind,
+  }) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    ReactionStatistics statistics = ReactionStatistics(
+      activityId: flMeta?.id ?? '',
+      counts: {},
+    );
 
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfileId,
+    );
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionStatistics? cachedStatistics = cacheController.get(expectedCacheKey);
+    if (cachedStatistics != null) {
+      logger.i('getStatisticsForActivity: $activityId, found in cache');
+      return cachedStatistics;
+    }
+
+    logger.i('getStatisticsForActivity: $activityId, not found in cache');
+    cacheController.add(key: expectedCacheKey, value: statistics, metadata: statistics.flMeta);
+
+    return statistics;
+  }
+
+  Relationship getPublisherRelationship(Profile currentProfile) {
     final String publisherId = publisherInformation?.publisherId ?? '';
-    final String currentUserId = profileController.currentProfileId ?? '';
+    final String currentProfileId = currentProfile.flMeta?.id ?? '';
 
-    if (publisherId.isEmpty || currentUserId.isEmpty) {
+    if (publisherId.isEmpty || currentProfileId.isEmpty) {
       return Relationship.empty(<String>[]);
     }
 
-    if (publisherId == currentUserId) {
-      return Relationship.owner(<String>[currentUserId]);
+    if (publisherId == currentProfileId) {
+      return Relationship.owner(<String>[currentProfileId]);
     }
 
-    final String expectedGUID = <String>[publisherId, currentUserId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache(expectedGUID);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final String expectedGUID = <String>[publisherId, currentProfileId].asGUID;
+    return cacheController.get(expectedGUID) ?? Relationship.empty(<String>[publisherId, currentProfileId]);
+  }
 
-    if (relationship != null) {
-      return relationship;
+  Relationship getReposterRelationship(Profile currentProfile) {
+    final String reposterId = repostConfiguration?.targetActivityPublisherId ?? '';
+    final String currentProfileId = currentProfile.flMeta?.id ?? '';
+
+    if (reposterId.isEmpty || currentProfileId.isEmpty) {
+      return Relationship.empty(<String>[]);
     }
 
-    return Relationship.empty(<String>[publisherId, currentUserId]);
+    if (reposterId == currentProfileId) {
+      return Relationship.owner(<String>[currentProfileId]);
+    }
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final String expectedGUID = <String>[reposterId, currentProfileId].asGUID;
+    return cacheController.get(expectedGUID) ?? Relationship.empty(<String>[reposterId, currentProfileId]);
+  }
+
+  Future<void> onPostOptionsSelected({
+    required BuildContext context,
+    required Profile? targetProfile,
+    required Profile? currentProfile,
+  }) async {
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (currentProfileId.isNotEmpty && currentProfileId == targetProfileId) {
+      await PositiveDialog.show(
+        title: '',
+        context: context,
+        barrierDismissible: true,
+        child: PostOptionsDialog(
+          onEditPostSelected: () => onPostEdited(),
+          onDeletePostSelected: () => onPostDeleted(context: context),
+        ),
+      );
+
+      return;
+    }
+
+    await PositiveDialog.show(
+      context: context,
+      useSafeArea: false,
+      child: ProfileModalDialog(
+        targetProfileId: targetProfileId,
+        currentProfileId: currentProfileId,
+        activityId: flMeta?.id ?? '',
+        types: const {
+          ProfileModalDialogOptionType.viewProfile,
+          ProfileModalDialogOptionType.follow,
+          ProfileModalDialogOptionType.connect,
+          ProfileModalDialogOptionType.message,
+          ProfileModalDialogOptionType.block,
+          ProfileModalDialogOptionType.report,
+          ProfileModalDialogOptionType.hidePosts,
+          ProfileModalDialogOptionType.reportPost,
+        },
+      ),
+    );
+  }
+
+  Future<void> onPostDeleted({
+    required BuildContext context,
+  }) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final AppRouter router = providerContainer.read(appRouterProvider);
+
+    await router.pop();
+    await PositiveDialog.show(
+      title: localisations.post_dialogue_delete_post,
+      context: context,
+      barrierDismissible: true,
+      child: PostDeleteConfirmDialog(
+        onDeletePostConfirmed: () => onPostDeleteConfirmed(
+          context: context,
+        ),
+      ),
+    );
+  }
+
+  Future<void> onPostDeleteConfirmed({
+    required BuildContext context,
+  }) async {
+    final ActivitiesController activityController = providerContainer.read(activitiesControllerProvider.notifier);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    try {
+      await activityController.deleteActivity(this);
+    } catch (e) {
+      logger.e("Error deleting activity: $e");
+
+      final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+        title: localisations.post_dialogue_delete_post_fail,
+        icon: UniconsLine.plus_circle,
+        backgroundColour: colours.black,
+      );
+
+      if (router.navigatorKey.currentContext != null) {
+        ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+      }
+
+      await router.pop();
+      return;
+    }
+
+    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+      title: localisations.post_dialogue_delete_post_success,
+      icon: UniconsLine.file_times_alt,
+      backgroundColour: colours.black,
+    );
+
+    if (router.navigatorKey.currentContext != null) {
+      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+    }
+
+    await router.pop();
+  }
+
+  Reaction? getUniqueReaction({
+    required Profile? currentProfile,
+    required PositiveReactionsState? reactionsFeedState,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      return null;
+    }
+
+    final List<Reaction> reactions = reactionsFeedState?.pagingController.itemList?.where((reaction) {
+          return reaction.userId == currentProfileId;
+        }).toList() ??
+        [];
+
+    if (reactions.length != 1) {
+      return null;
+    }
+
+    return reactions.first;
+  }
+
+  bool isActivityBookmarked({
+    required Profile? currentProfile,
+    required PositiveReactionsState? reactionsFeedState,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      return false;
+    }
+
+    return reactionsFeedState?.pagingController.itemList?.any((reaction) {
+          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.bookmark();
+        }) ==
+        true;
+  }
+
+  Future<void> onPostBookmarked({
+    required BuildContext context,
+    required Profile? currentProfile,
+    required PositiveReactionsState? reactionsFeedState,
+  }) async {
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+
+    final String activityId = flMeta?.id ?? '';
+    final String origin = publisherInformation?.originFeed ?? '';
+    final String profileId = currentProfile?.flMeta?.id ?? '';
+
+    if (profileId.isEmpty || activityId.isEmpty || origin.isEmpty) {
+      throw Exception('Invalid activity or user');
+    }
+
+    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    if (isBookmarked) {
+      await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
+      );
+      return;
+    }
+
+    await reactionsController.bookmarkActivity(origin: origin, activityId: activityId);
+    ScaffoldMessenger.of(context).showSnackBar(
+      PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
+    );
+  }
+
+  bool isActivityLiked({
+    required Profile? currentProfile,
+    required PositiveReactionsState reactionsFeedState,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty) {
+      return false;
+    }
+
+    return reactionsFeedState.pagingController.itemList?.any((reaction) {
+          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.like();
+        }) ==
+        true;
+  }
+
+  Future<void> onPostLiked({
+    required BuildContext context,
+    required Profile? currentProfile,
+    required PositiveReactionsState? reactionsFeedState,
+  }) async {
+    if (reactionsFeedState == null) {
+      throw Exception('reactionsFeedState is null');
+    }
+
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+
+    final String profileId = currentProfile?.flMeta?.id ?? '';
+    final String activityId = flMeta?.id ?? '';
+    final String origin = publisherInformation?.originFeed ?? '';
+
+    if (profileId.isEmpty || activityId.isEmpty || origin.isEmpty) {
+      throw Exception('Invalid activity or user');
+    }
+
+    final bool isLiked = isActivityLiked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    if (isLiked) {
+      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
+      );
+      return;
+    }
+
+    await reactionsController.likeActivity(origin: origin, activityId: activityId, uid: profileId);
+    ScaffoldMessenger.of(context).showSnackBar(
+      PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
+    );
+  }
+
+  Future<void> onPostEdited() async {
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    if (generalConfiguration == null) {
+      return;
+    }
+
+    await router.pop();
+    await router.push(
+      CreatePostRoute(
+        activityData: ActivityData(
+          activityID: flMeta?.id,
+          content: generalConfiguration?.content ?? '',
+          tags: enrichmentConfiguration?.tags ?? const [],
+          postType: PostType.getPostTypeFromActivity(this),
+          media: media,
+          commentPermissionMode: securityConfiguration?.commentMode,
+          visibilityMode: securityConfiguration?.viewMode,
+          allowSharing: securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),
+          //! This is currently shared between ALL media!
+          altText: media.any((element) => element.altText.isNotEmpty) ? media.firstWhere((element) => element.altText.isNotEmpty).altText : '',
+        ),
+        isEditPage: true,
+      ),
+    );
+  }
+
+  Future<void> requestFullscreenMedia(Media media, TargetFeed? feed) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final PostRoute postRoute = PostRoute(
+      activityId: flMeta?.id ?? '',
+      feed: feed ??
+          TargetFeed(
+            targetSlug: 'user',
+            targetUserId: publisherInformation?.publisherId ?? '',
+          ),
+    );
+
+    logger.i('Navigating to post ${flMeta?.id}');
+    await router.push(postRoute);
   }
 }
 
@@ -112,26 +522,16 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
   bool get isPrivate => this == const ActivitySecurityConfigurationMode.private();
   bool get isDisabled => this == const ActivitySecurityConfigurationMode.disabled();
 
-  bool canActOnActivity(
-    String activityId, {
-    String currentProfileId = '',
+  bool canActOnActivity({
+    required Activity? activity,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
   }) {
     final Logger logger = providerContainer.read(loggerProvider);
-    if (activityId.isEmpty) {
-      logger.e('canActOnSecurityMode() - activityId is empty');
-      return false;
-    }
-
-    if (currentProfileId.isEmpty) {
-      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-      currentProfileId = profileController.currentProfileId ?? '';
-    }
-
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
-    final Activity? activity = cacheController.getFromCache<Activity>(activityId);
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
-    if (activity == null || publisherProfileId.isEmpty) {
+    if (publisherProfileId.isEmpty) {
       logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');
       return false;
     }
@@ -156,15 +556,12 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
       return true;
     }
 
-    final String relationshipId = [currentProfileId, publisherProfileId].asGUID;
-    final Relationship? relationship = cacheController.getFromCache<Relationship>(relationshipId);
-
-    if (relationship == null) {
+    if (publisherRelationship == null) {
       logger.e('canActOnSecurityMode() - relationship is null');
       return false;
     }
 
-    final Set<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+    final Set<RelationshipState> relationshipStates = publisherRelationship.relationshipStatesForEntity(currentProfileId);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
 

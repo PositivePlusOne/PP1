@@ -12,6 +12,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import '../../../constants/design_constants.dart';
@@ -214,10 +215,13 @@ class PositiveScaffoldContent extends StatelessWidget {
                   hasScrollBody: false,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: decorationBoxSize,
-                      width: decorationBoxSize,
-                      child: Stack(children: decorations),
+                    child: PositiveTileEntryAnimation(
+                      direction: AxisDirection.down,
+                      child: SizedBox(
+                        height: decorationBoxSize,
+                        width: decorationBoxSize,
+                        child: Stack(children: decorations),
+                      ),
                     ),
                   ),
                 ),
@@ -228,10 +232,13 @@ class PositiveScaffoldContent extends StatelessWidget {
                   hasScrollBody: false,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: decorationBoxSize,
-                      width: decorationBoxSize,
-                      child: decorationWidget!,
+                    child: PositiveTileEntryAnimation(
+                      direction: AxisDirection.down,
+                      child: SizedBox(
+                        height: decorationBoxSize,
+                        width: decorationBoxSize,
+                        child: decorationWidget!,
+                      ),
                     ),
                   ),
                 ),

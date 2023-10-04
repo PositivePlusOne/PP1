@@ -6,7 +6,7 @@ part of 'account_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$accountViewModelHash() => r'81fc3a663c71ade36bebc15922d12e7ad71592af';
+String _$accountViewModelHash() => r'f8269b95dbfad7316b67cc6218d41bcd2c41eb7c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -85,8 +85,8 @@ class AccountViewModelProvider extends AutoDisposeNotifierProviderImpl<
     AccountViewModel, AccountViewModelState> {
   /// See also [AccountViewModel].
   AccountViewModelProvider(
-    this.feedbackType,
-  ) : super.internal(
+    FeedbackType feedbackType,
+  ) : this._internal(
           () => AccountViewModel()..feedbackType = feedbackType,
           from: accountViewModelProvider,
           name: r'accountViewModelProvider',
@@ -97,9 +97,51 @@ class AccountViewModelProvider extends AutoDisposeNotifierProviderImpl<
           dependencies: AccountViewModelFamily._dependencies,
           allTransitiveDependencies:
               AccountViewModelFamily._allTransitiveDependencies,
+          feedbackType: feedbackType,
         );
 
+  AccountViewModelProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.feedbackType,
+  }) : super.internal();
+
   final FeedbackType feedbackType;
+
+  @override
+  AccountViewModelState runNotifierBuild(
+    covariant AccountViewModel notifier,
+  ) {
+    return notifier.build(
+      feedbackType,
+    );
+  }
+
+  @override
+  Override overrideWith(AccountViewModel Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: AccountViewModelProvider._internal(
+        () => create()..feedbackType = feedbackType,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        feedbackType: feedbackType,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<AccountViewModel, AccountViewModelState>
+      createElement() {
+    return _AccountViewModelProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -114,15 +156,22 @@ class AccountViewModelProvider extends AutoDisposeNotifierProviderImpl<
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin AccountViewModelRef
+    on AutoDisposeNotifierProviderRef<AccountViewModelState> {
+  /// The parameter `feedbackType` of this provider.
+  FeedbackType get feedbackType;
+}
+
+class _AccountViewModelProviderElement
+    extends AutoDisposeNotifierProviderElement<AccountViewModel,
+        AccountViewModelState> with AccountViewModelRef {
+  _AccountViewModelProviderElement(super.provider);
 
   @override
-  AccountViewModelState runNotifierBuild(
-    covariant AccountViewModel notifier,
-  ) {
-    return notifier.build(
-      feedbackType,
-    );
-  }
+  FeedbackType get feedbackType =>
+      (origin as AccountViewModelProvider).feedbackType;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

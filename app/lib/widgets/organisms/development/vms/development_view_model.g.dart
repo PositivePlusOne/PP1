@@ -7,7 +7,7 @@ part of 'development_view_model.dart';
 // **************************************************************************
 
 String _$developmentViewModelHash() =>
-    r'de037a18390e358f78f6ae6235d2d504815ec53c';
+    r'b9d351fd55b2e0668a9fb48a3b00ce3fc002bf01';
 
 /// See also [DevelopmentViewModel].
 @ProviderFor(DevelopmentViewModel)
@@ -24,4 +24,4 @@ final developmentViewModelProvider = AutoDisposeNotifierProvider<
 
 typedef _$DevelopmentViewModel = AutoDisposeNotifier<DevelopmentViewModelState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

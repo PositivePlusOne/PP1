@@ -40,8 +40,8 @@ class GuidanceEntryPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final GuidanceControllerState gcs = ref.watch(guidanceControllerProvider);
     final GuidanceController gc = ref.read(guidanceControllerProvider.notifier);
-    final CacheController cc = ref.read(cacheControllerProvider.notifier);
-    final ContentBuilder? builder = cc.getFromCache(entryId);
+    final CacheController cc = ref.read(cacheControllerProvider);
+    final ContentBuilder? builder = cc.get(entryId);
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 

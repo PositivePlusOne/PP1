@@ -2,11 +2,14 @@
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 
+enum CacheKeyUpdatedEventType { created, updated, deleted }
+
 class CacheKeyUpdatedEvent {
   final String key;
+  final CacheKeyUpdatedEventType eventType;
   final dynamic value;
 
-  CacheKeyUpdatedEvent(this.key, this.value);
+  CacheKeyUpdatedEvent(this.key, this.eventType, this.value);
 
   @override
   String toString() {
@@ -16,8 +19,8 @@ class CacheKeyUpdatedEvent {
 
 extension CacheKeyUpdatedEventExt on CacheKeyUpdatedEvent {
   bool get isCurrentProfileChangeEvent {
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final String expectedCacheKey = profileController.state.currentProfile?.flMeta?.id ?? '';
+    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+    final String expectedCacheKey = profileControllerState.currentProfile?.flMeta?.id ?? '';
     if (expectedCacheKey.isEmpty) {
       return false;
     }

@@ -20,6 +20,7 @@ class Activity with _$Activity {
   const factory Activity({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     ActivityGeneralConfiguration? generalConfiguration,
+    ActivityRepostConfiguration? repostConfiguration,
     ActivitySecurityConfiguration? securityConfiguration,
     ActivityEventConfiguration? eventConfiguration,
     ActivityPricingInformation? pricingInformation,
@@ -32,15 +33,23 @@ class Activity with _$Activity {
 }
 
 @freezed
+class ActivityRepostConfiguration with _$ActivityRepostConfiguration {
+  const factory ActivityRepostConfiguration({
+    @Default('') String targetActivityId,
+    @Default('') String targetActivityPublisherId,
+    @Default('') String targetActivityOriginFeed,
+  }) = _ActivityRepostConfiguration;
+
+  factory ActivityRepostConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityRepostConfigurationFromJson(json);
+}
+
+@freezed
 class ActivityGeneralConfiguration with _$ActivityGeneralConfiguration {
   const factory ActivityGeneralConfiguration({
     @Default(ActivityGeneralConfigurationType.post()) @JsonKey(fromJson: ActivityGeneralConfigurationType.fromJson, toJson: ActivityGeneralConfigurationType.toJson) ActivityGeneralConfigurationType type,
     @Default(ActivityGeneralConfigurationStyle.text()) @JsonKey(fromJson: ActivityGeneralConfigurationStyle.fromJson, toJson: ActivityGeneralConfigurationStyle.toJson) ActivityGeneralConfigurationStyle style,
     @Default('') String content,
     @Default(false) bool isSensitive,
-    @Default('') String repostActivityId,
-    @Default('') String repostActivityPublisherId,
-    @Default('') String repostActivityOriginFeed,
   }) = _ActivityGeneralConfiguration;
 
   factory ActivityGeneralConfiguration.fromJson(Map<String, dynamic> json) => _$ActivityGeneralConfigurationFromJson(json);

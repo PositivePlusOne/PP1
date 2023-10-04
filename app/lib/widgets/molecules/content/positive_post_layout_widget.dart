@@ -16,6 +16,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -41,12 +42,12 @@ import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 
-class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
+class PositivePostLayoutWidget extends HookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
-    this.publisher,
+    required this.publisherProfile,
+    required this.publisherRelationship,
     this.promotion,
-    this.origin,
     this.isShortformPost = true,
     this.isShared = false,
     this.sidePadding = kPaddingSmall,
@@ -62,10 +63,9 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
     super.key,
   });
 
-  final Activity postContent;
-  final String? origin;
-
-  final Profile? publisher;
+  final Activity? postContent;
+  final Profile? publisherProfile;
+  final Relationship? publisherRelationship;
   final Promotion? promotion;
 
   final bool isShortformPost;
@@ -80,32 +80,19 @@ class PositivePostLayoutWidget extends StatefulHookConsumerWidget {
 
   final bool isLiked;
   final int totalLikes;
-  final Future<void> Function(BuildContext context)? onLike;
+  final FutureOr<void> Function(BuildContext context)? onLike;
 
   final bool isBookmarked;
-  final Future<void> Function(BuildContext context)? onBookmark;
+  final FutureOr<void> Function(BuildContext context)? onBookmark;
 
   final int totalComments;
 
-  @override
-  ConsumerState<PositivePostLayoutWidget> createState() => _PositivePostLayoutWidgetState();
-}
-
-class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWidget> {
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
 
-  late double sidePadding;
-
   @override
-  void initState() {
-    super.initState();
-    sidePadding = widget.isShortformPost ? widget.sidePadding : kPaddingNone;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ActivityGeneralConfigurationType? postType = widget.postContent.generalConfiguration?.type;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ActivityGeneralConfigurationType? postType = postContent?.generalConfiguration?.type;
     if (postType == null) {
       return const SizedBox.shrink();
     }
@@ -113,18 +100,23 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     return Material(
       type: MaterialType.transparency,
       child: postType.when<Widget>(
-        post: () => _postBuilder(context, ref),
-        event: () => _eventBuilder(context, ref),
-        clip: () => _clipBuilder(context, ref),
+        post: () => _postBuilder(context: context, ref: ref, currentProfile: publisherProfile, publisherRelationship: publisherRelationship),
+        event: () => _eventBuilder(context: context, ref: ref, currentProfile: publisherProfile, publisherRelationship: publisherRelationship),
+        clip: () => _clipBuilder(context: context, ref: ref, currentProfile: publisherProfile, publisherRelationship: publisherRelationship),
         repost: () => const SizedBox.shrink(),
       ),
     );
   }
 
-  Widget _eventBuilder(BuildContext context, WidgetRef ref) {
+  Widget _eventBuilder({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
+  }) {
     final Logger logger = ref.read(loggerProvider);
 
-    if (widget.postContent.eventConfiguration == null || widget.postContent.enrichmentConfiguration == null) {
+    if (postContent?.eventConfiguration == null || postContent?.enrichmentConfiguration == null) {
       logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
@@ -135,54 +127,60 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (widget.postContent.media.length == 1) ...[
+        if (postContent?.media.length == 1) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (widget.postContent.media.length == 1) ..._postListAttachedImages(),
+        if (postContent?.media.length == 1) ..._postListAttachedImages(),
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (widget.postContent.media.isNotEmpty)
+        if (postContent?.media.isNotEmpty ?? false) ...[
           LayoutBuilder(
             builder: (context, constraints) {
               return _postCarouselAttachedImages(context, constraints);
             },
           ),
 
-        //* -=-=-=- Post Actions -=-=-=- *\\
-        _postActions(),
+          //* -=-=-=- Post Actions -=-=-=- *\\
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
 
-        //* -=-=-=- Post Title -=-=-=- *\\
-        _postTitle(),
+          //* -=-=-=- Post Title -=-=-=- *\\
+          _postTitle(),
 
-        //* -=-=-=- Tags -=-=-=- *\\
-        if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
-          const SizedBox(height: kPaddingSmall),
-          _tags(),
-        ],
+          //* -=-=-=- Tags -=-=-=- *\\
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
+            const SizedBox(height: kPaddingSmall),
+            _tags(),
+          ],
 
-        //* -=-=-=- Location -=-=-=- *\\
-        if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
-          const SizedBox(height: kPaddingSmall),
-          _location(),
+          //* -=-=-=- Location -=-=-=- *\\
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
+            const SizedBox(height: kPaddingSmall),
+            _location(),
+          ],
         ],
       ],
     );
   }
 
-  Widget _postBuilder(BuildContext context, WidgetRef ref) {
+  Widget _postBuilder({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
+  }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         //* -=-=-=- Single attached image -=-=-=- *\\
-        if (widget.postContent.media.isNotEmpty) ...[
+        if (postContent?.media.isNotEmpty ?? false) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (widget.postContent.media.length == 1 || !widget.isShortformPost) ...<Widget>[
+        if (postContent?.media.length == 1 || !isShortformPost) ...<Widget>[
           ..._postListAttachedImages(),
         ],
         //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if (widget.postContent.media.length > 1 && widget.isShortformPost) ...[
+        if ((postContent?.media.length ?? 0) > 1 && isShortformPost) ...[
           LayoutBuilder(
             builder: (context, constraints) {
               return _postCarouselAttachedImages(context, constraints);
@@ -190,22 +188,27 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
           ),
         ],
         //* -=-=-=- promotion banner -=-=-=- *\\
-        if (widget.promotion != null) ...[
+        if (promotion != null) ...[
           const SizedBox(height: kPaddingSmall),
           _promotionBanner(),
         ],
         //* -=-=-=- Post Actions -=-=-=- *\\
-        _postActions(),
+        _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-        _markdownBody(),
+        _markdownBody(context: context, ref: ref),
       ],
     );
   }
 
-  Widget _clipBuilder(BuildContext context, WidgetRef ref) {
+  Widget _clipBuilder({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
+  }) {
     final Logger logger = ref.read(loggerProvider);
 
-    if (widget.postContent.eventConfiguration != null && widget.postContent.enrichmentConfiguration != null) {
+    if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
       logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
@@ -218,12 +221,12 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //* -=-=-=- Single attached image -=-=-=- *\\
-          if (widget.postContent.media.length == 1) ...[
+          if (postContent?.media.length == 1) ...[
             const SizedBox(height: kPaddingSmall),
           ],
-          if (widget.postContent.media.length == 1) ..._postListAttachedImages(),
+          if (postContent?.media.length == 1) ..._postListAttachedImages(),
           //* -=-=-=- attached video -=-=-=- *\\
-          if (widget.postContent.media.isNotEmpty) ...[
+          if (postContent?.media.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
             LayoutBuilder(
               builder: (context, constraints) {
@@ -233,21 +236,21 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
           ],
           _postAttachedVideo(),
           //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(),
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
           //* -=-=-=- Tags -=-=-=- *\\
-          if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
             _tags(),
           ],
           //* -=-=-=- Location -=-=-=- *\\
-          if (widget.postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
             _location(),
           ],
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-          _markdownBody(),
+          _markdownBody(context: context, ref: ref),
         ],
       ),
     );
@@ -257,12 +260,12 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   // Future<Widget> _repostBuilder(BuildContext context, WidgetRef ref) async {
   //   final Logger logger = ref.read(loggerProvider);
 
-  //   if (postContent.eventConfiguration != null && postContent.enrichmentConfiguration != null) {
+  //   if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
   //     logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
   //     return const SizedBox();
   //   }
   //   final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-  //   Activity activity = await activityController.getActivity(postContent.foreignKey);
+  //   Activity activity = await activityController.getActivity(postContent?.foreignKey);
 
   //   return Padding(
   //     padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
@@ -272,7 +275,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //       mainAxisAlignment: MainAxisAlignment.start,
   //       children: [
   //         //* -=-=-=- attached video -=-=-=- *\\
-  //         if (postContent.media.isNotEmpty) ...[
+  //         if (postContent?.media.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           LayoutBuilder(
   //             builder: (context, constraints) {
@@ -286,12 +289,12 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //         //* -=-=-=- Post Title -=-=-=- *\\
   //         _postTitle(),
   //         //* -=-=-=- Tags -=-=-=- *\\
-  //         if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //         if (postContent?.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           _tags(),
   //         ],
   //         //* -=-=-=- Location -=-=-=- *\\
-  //         if (postContent.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //         if (postContent?.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           _location(),
   //         ],
@@ -308,9 +311,9 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   // ignore: unused_element
   List<Widget> _postListAttachedImages() {
     final List<Widget> imageWidgetList = [];
-    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
+    final Color publisherColour = publisherProfile?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
 
-    for (Media media in widget.postContent.media) {
+    for (Media media in postContent?.media ?? []) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         imageWidgetList.add(
           Container(
@@ -325,7 +328,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
               child: PositiveMediaImage(
                 fit: BoxFit.cover,
                 media: media,
-                onTap: () => widget.onImageTap?.call(media),
+                onTap: () => onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
@@ -353,7 +356,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postCarouselAttachedImages(BuildContext context, BoxConstraints constraints) {
     final List<Widget> listBanners = [];
-    final Color publisherColour = widget.publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
+    final Color publisherColour = publisherProfile?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
     final double height = min(kCarouselMaxHeight, constraints.maxWidth);
 
     //! For a dynamically sized carousel we would need to convert this to a custom widget
@@ -361,7 +364,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     //? Calculations for image size are provided in the async function commented out below
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
-    for (Media media in widget.postContent.media) {
+    for (Media media in postContent?.media ?? []) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         listBanners.add(
           Padding(
@@ -430,7 +433,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
-    if (widget.postContent.media.first.type == MediaType.video_link) {
+    if (postContent?.media.first.type == MediaType.video_link) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
         child: const SizedBox(),
@@ -453,12 +456,12 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _promotionBanner() {
-    if (widget.promotion == null) {
+    if (promotion == null) {
       return const SizedBox();
     }
 
-    final String link = widget.promotion!.link;
-    final String linkText = widget.promotion!.linkText;
+    final String link = promotion!.link;
+    final String linkText = promotion!.linkText;
 
     if (link.isEmpty || linkText.isEmpty) {
       return const SizedBox();
@@ -485,43 +488,46 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-  Action Bar, likes, comments bookmark, link, -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _postActions() {
-    final bool isShared = widget.isShared;
+  Widget _postActions({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Profile? currentProfile,
+    required Relationship? publisherRelationship,
+  }) {
     if (isShared) {
       return const SizedBox.shrink();
     }
 
-    final Activity activity = widget.postContent;
     final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
-    final String publisherId = activity.publisherInformation?.publisherId ?? '';
+    final String publisherId = postContent?.publisherInformation?.publisherId ?? '';
 
-    final ActivitySecurityConfigurationMode shareMode = activity.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final ActivitySecurityConfigurationMode shareMode = postContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
 
-    final bool canActShare = shareMode.canActOnActivity(activity.flMeta?.id ?? '');
+    final bool canActShare = shareMode.canActOnActivity(activity: postContent, currentProfile: currentProfile, publisherRelationship: publisherRelationship);
     final bool isPublisher = currentProfileId == publisherId;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
         //TODO(S): like enabled and onlike functionality here
-        isLiked: widget.isLiked,
-        likes: widget.totalLikes,
-        likesEnabled: !widget.isBusy && !isPublisher,
-        onLike: widget.onLike,
+        isLiked: isLiked,
+        likes: totalLikes,
+        likesEnabled: !isBusy && !isPublisher,
+        onLike: onLike,
 
         //TODO(S): share enabled and on share functionality here
-        shareEnabled: !widget.isBusy && canActShare,
-        onShare: (context) => widget.postContent.share(context),
+        shareEnabled: !isBusy && canActShare,
+        onShare: (context) => postContent?.share(context, currentProfile),
 
         //TODO(S): comment enabled and on comment functionality here
-        comments: widget.totalComments,
-        commentsEnabled: !widget.isBusy,
+        comments: totalComments,
+        commentsEnabled: !isBusy,
         onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarkEnabled: !widget.isBusy,
-        bookmarked: widget.isBookmarked,
-        onBookmark: widget.onBookmark,
+        bookmarkEnabled: !isBusy,
+        bookmarked: isBookmarked,
+        onBookmark: onBookmark,
       ),
     );
   }
@@ -533,7 +539,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: Text(
-        widget.postContent.eventConfiguration!.name,
+        postContent?.eventConfiguration?.name ?? '',
         //TODO(S): this needs to be updated for non-left-to-right languages
         textAlign: TextAlign.left,
         style: typeography.styleTitle,
@@ -550,7 +556,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
       child: PositivePostHorizontalTags(
-        tags: widget.postContent.enrichmentConfiguration!.tags,
+        tags: postContent?.enrichmentConfiguration?.tags ?? [],
         typeography: typeography,
         colours: colours,
       ),
@@ -563,7 +569,7 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
       child: Row(
         children: [
           PositivePostIconTag(
-            text: widget.postContent.eventConfiguration!.location,
+            text: postContent?.eventConfiguration?.location ?? '',
             forwardIcon: UniconsLine.map_marker,
             typeography: typeography,
             colours: colours,
@@ -576,22 +582,25 @@ class _PositivePostLayoutWidgetState extends ConsumerState<PositivePostLayoutWid
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _markdownBody() {
+  Widget _markdownBody({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) {
     String parsedMarkdown = html2md.convert(
       //TODO(S): either fork the package, find a new one, or replace the whole markdown idea to get around some hard coded issues
       //? This is purest Jank, replace \n with an unusual string until after the markdown conversion as the converter is hardcoded to remove all whitespace
-      widget.postContent.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
+      postContent?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
     );
-    if (widget.isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
+    if (isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
       parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
       parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
     }
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    final List<Tag> tags = tagsController.resolveTags(widget.postContent.enrichmentConfiguration?.tags ?? []);
+    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? []);
 
     return PositiveTapBehaviour(
-      onTap: widget.onPostPageRequested,
+      onTap: onPostPageRequested,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
         child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),

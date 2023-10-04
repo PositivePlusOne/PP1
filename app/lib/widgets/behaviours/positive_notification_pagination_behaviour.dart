@@ -70,6 +70,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
   @override
   void didUpdateWidget(PositiveNotificationsPaginationBehaviour oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (oldWidget.uid != widget.uid) {
       disposeNotificationsState();
       setupNotificationsState();
@@ -92,10 +93,10 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   void setupNotificationsState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
     logger.d('setupNotificationsState() - Loading state for ${widget.uid}');
-    final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(getExpectedCacheKey(widget.uid));
+    final PositiveNotificationsState? cachedFeedState = cacheController.get(getExpectedCacheKey(widget.uid));
     if (cachedFeedState != null) {
       logger.d('setupNotificationsState() - Found cached state for ${widget.uid}');
       notificationsState = cachedFeedState;
@@ -119,10 +120,10 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   void saveNotificationsState() {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
     logger.d('saveState() - Saving notifications state for ${widget.uid}');
-    cacheController.addToCache(key: getExpectedCacheKey(widget.uid), value: notificationsState);
+    cacheController.add(key: getExpectedCacheKey(widget.uid), value: notificationsState);
   }
 
   Future<void> requestNextPage(String pageKey) async {

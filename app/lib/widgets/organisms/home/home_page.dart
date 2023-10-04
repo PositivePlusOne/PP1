@@ -7,13 +7,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
@@ -21,6 +25,7 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import 'components/hub_app_bar_content.dart';
 import 'components/positive_hub_floating_bar.dart';
@@ -37,8 +42,9 @@ class HomePage extends HookConsumerWidget {
 
     final UserController userController = ref.read(userControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
-
     final TagsControllerState tagsControllerState = ref.watch(tagsControllerProvider);
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -48,9 +54,22 @@ class HomePage extends HookConsumerWidget {
     final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [];
 
-    if (profileControllerState.currentProfile != null) {
+    final Profile? currentProfile = profileControllerState.currentProfile;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (currentProfile != null) {
       actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
     }
+
+    final TargetFeed targetFeed = TargetFeed(
+      targetSlug: 'timeline',
+      targetUserId: currentProfileId,
+    );
+
+    final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
+    final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: targetFeed, currentProfileId: currentProfileId);
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetFeed]).toList();
+    useCacheHook(keys: expectedCacheKeys);
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
@@ -77,7 +96,7 @@ class HomePage extends HookConsumerWidget {
             PositiveHubFloatingBar(
               index: state.currentTabIndex,
               onTapped: viewModel.onTabSelected,
-              topics: tagsControllerState.topicTags,
+              topics: tagsControllerState.topicTags.values.toList(),
               onTopicSelected: viewModel.onTopicSelected,
               onSeeMoreTopicsSelected: viewModel.onSeeMoreTopicsSelected,
               tabColours: <Color>[
@@ -97,8 +116,10 @@ class HomePage extends HookConsumerWidget {
         ),
         if (!isLoggedOut) ...<Widget>[
           PositiveFeedPaginationBehaviour(
-            feed: TargetFeed('timeline', userController.currentUser!.uid),
-            onPageLoaded: (_) {},
+            currentProfile: currentProfile,
+            feedState: feedState,
+            feed: targetFeed,
+            isSliver: true,
           ),
         ],
       ],

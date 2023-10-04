@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PostViewModelState {
   String get activityId => throw _privateConstructorUsedError;
-  Activity? get activity => throw _privateConstructorUsedError;
   TargetFeed get targetFeed => throw _privateConstructorUsedError;
   dynamic get currentCommentText => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
@@ -36,13 +35,12 @@ abstract class $PostViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String activityId,
-      Activity? activity,
       TargetFeed targetFeed,
       dynamic currentCommentText,
       bool isBusy,
       bool isRefreshing});
 
-  $ActivityCopyWith<$Res>? get activity;
+  $TargetFeedCopyWith<$Res> get targetFeed;
 }
 
 /// @nodoc
@@ -59,7 +57,6 @@ class _$PostViewModelStateCopyWithImpl<$Res, $Val extends PostViewModelState>
   @override
   $Res call({
     Object? activityId = null,
-    Object? activity = freezed,
     Object? targetFeed = null,
     Object? currentCommentText = freezed,
     Object? isBusy = null,
@@ -70,10 +67,6 @@ class _$PostViewModelStateCopyWithImpl<$Res, $Val extends PostViewModelState>
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
               as String,
-      activity: freezed == activity
-          ? _value.activity
-          : activity // ignore: cast_nullable_to_non_nullable
-              as Activity?,
       targetFeed: null == targetFeed
           ? _value.targetFeed
           : targetFeed // ignore: cast_nullable_to_non_nullable
@@ -95,13 +88,9 @@ class _$PostViewModelStateCopyWithImpl<$Res, $Val extends PostViewModelState>
 
   @override
   @pragma('vm:prefer-inline')
-  $ActivityCopyWith<$Res>? get activity {
-    if (_value.activity == null) {
-      return null;
-    }
-
-    return $ActivityCopyWith<$Res>(_value.activity!, (value) {
-      return _then(_value.copyWith(activity: value) as $Val);
+  $TargetFeedCopyWith<$Res> get targetFeed {
+    return $TargetFeedCopyWith<$Res>(_value.targetFeed, (value) {
+      return _then(_value.copyWith(targetFeed: value) as $Val);
     });
   }
 }
@@ -116,14 +105,13 @@ abstract class _$$_PostViewModelStateCopyWith<$Res>
   @useResult
   $Res call(
       {String activityId,
-      Activity? activity,
       TargetFeed targetFeed,
       dynamic currentCommentText,
       bool isBusy,
       bool isRefreshing});
 
   @override
-  $ActivityCopyWith<$Res>? get activity;
+  $TargetFeedCopyWith<$Res> get targetFeed;
 }
 
 /// @nodoc
@@ -138,7 +126,6 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? activityId = null,
-    Object? activity = freezed,
     Object? targetFeed = null,
     Object? currentCommentText = freezed,
     Object? isBusy = null,
@@ -149,10 +136,6 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
               as String,
-      activity: freezed == activity
-          ? _value.activity
-          : activity // ignore: cast_nullable_to_non_nullable
-              as Activity?,
       targetFeed: null == targetFeed
           ? _value.targetFeed
           : targetFeed // ignore: cast_nullable_to_non_nullable
@@ -177,7 +160,6 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
 class _$_PostViewModelState implements _PostViewModelState {
   const _$_PostViewModelState(
       {required this.activityId,
-      this.activity,
       required this.targetFeed,
       this.currentCommentText = '',
       this.isBusy = false,
@@ -185,8 +167,6 @@ class _$_PostViewModelState implements _PostViewModelState {
 
   @override
   final String activityId;
-  @override
-  final Activity? activity;
   @override
   final TargetFeed targetFeed;
   @override
@@ -201,7 +181,7 @@ class _$_PostViewModelState implements _PostViewModelState {
 
   @override
   String toString() {
-    return 'PostViewModelState(activityId: $activityId, activity: $activity, targetFeed: $targetFeed, currentCommentText: $currentCommentText, isBusy: $isBusy, isRefreshing: $isRefreshing)';
+    return 'PostViewModelState(activityId: $activityId, targetFeed: $targetFeed, currentCommentText: $currentCommentText, isBusy: $isBusy, isRefreshing: $isRefreshing)';
   }
 
   @override
@@ -211,8 +191,6 @@ class _$_PostViewModelState implements _PostViewModelState {
             other is _$_PostViewModelState &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId) &&
-            (identical(other.activity, activity) ||
-                other.activity == activity) &&
             (identical(other.targetFeed, targetFeed) ||
                 other.targetFeed == targetFeed) &&
             const DeepCollectionEquality()
@@ -226,7 +204,6 @@ class _$_PostViewModelState implements _PostViewModelState {
   int get hashCode => Object.hash(
       runtimeType,
       activityId,
-      activity,
       targetFeed,
       const DeepCollectionEquality().hash(currentCommentText),
       isBusy,
@@ -243,7 +220,6 @@ class _$_PostViewModelState implements _PostViewModelState {
 abstract class _PostViewModelState implements PostViewModelState {
   const factory _PostViewModelState(
       {required final String activityId,
-      final Activity? activity,
       required final TargetFeed targetFeed,
       final dynamic currentCommentText,
       final bool isBusy,
@@ -251,8 +227,6 @@ abstract class _PostViewModelState implements PostViewModelState {
 
   @override
   String get activityId;
-  @override
-  Activity? get activity;
   @override
   TargetFeed get targetFeed;
   @override

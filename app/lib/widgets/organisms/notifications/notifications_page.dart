@@ -13,6 +13,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
@@ -30,12 +31,12 @@ class NotificationsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
-    final NotificationsViewModelState state = ref.watch(notificationsViewModelProvider);
+    ref.watch(notificationsViewModelProvider);
 
-    final Profile? currentProfile = viewModel.getCurrentProfile();
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
     final List<Widget> actions = [];
     final List<String> cacheKeys = [];
@@ -44,10 +45,13 @@ class NotificationsPage extends HookConsumerWidget {
     if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) {
       actions.addAll(currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
       final String notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
-      final PositiveNotificationsState? cachedFeedState = cacheController.getFromCache(notificationCacheKey);
+      final PositiveNotificationsState? cachedFeedState = cacheController.get(notificationCacheKey);
       hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
       cacheKeys.add(notificationCacheKey);
     }
+
+    cacheKeys.addAll(viewModel.getSupportedProfileIds());
+    ref.watch(profileControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
@@ -73,7 +77,10 @@ class NotificationsPage extends HookConsumerWidget {
           ],
         ),
         if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) ...<Widget>[
-          PositiveNotificationsPaginationBehaviour(uid: currentProfile!.flMeta!.id!),
+          //TODO: load additional profile notification data after loading first profile
+          PositiveNotificationsPaginationBehaviour(
+            uid: currentProfile!.flMeta!.id!,
+          ),
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(child: SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData))),
         ],

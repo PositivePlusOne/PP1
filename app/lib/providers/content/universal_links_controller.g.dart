@@ -7,7 +7,7 @@ part of 'universal_links_controller.dart';
 // **************************************************************************
 
 String _$universalLinksControllerHash() =>
-    r'3e4f8adf7cc5162a1868d8302b8a4e7b3fe7e291';
+    r'f5d56bde9046f9e8f05de6702ae861a0182e2a36';
 
 /// See also [UniversalLinksController].
 @ProviderFor(UniversalLinksController)
@@ -24,4 +24,4 @@ final universalLinksControllerProvider =
 
 typedef _$UniversalLinksController = Notifier<UniversalLinksState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -148,13 +148,13 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const submitFeedback = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const submitFeedback = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await UserService.verifyAuthenticated(context, request.sender);
 
     const uid = context.auth?.uid || "";
-    const feedbackType = data.feedbackType || "unknown";
-    const reportType = data.reportType || "unknown";
-    const content = data.content || "";
+    const feedbackType = request.data.feedbackType || "unknown";
+    const reportType = request.data.reportType || "unknown";
+    const content = request.data.content || "";
 
     functions.logger.info("Submitting feedback", { uid, feedbackType, reportType, content });
     await SystemService.submitFeedback(uid, feedbackType, reportType, content);

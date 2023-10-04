@@ -40,10 +40,10 @@ class SearchApiService {
     });
 
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String cacheKey = json.encode(requestPayload);
 
-    final SearchResult<T>? cachedResponse = cacheController.getFromCache(cacheKey);
+    final SearchResult<T>? cachedResponse = cacheController.get(cacheKey);
     if (cachedResponse != null && cachedResponse.results.isNotEmpty) {
       logger.d('[SearchApiService] Found cached response for $cacheKey');
       return cachedResponse;
@@ -52,7 +52,6 @@ class SearchApiService {
     final EndpointResponse response = await getHttpsCallableResult(
       name: 'search-search',
       pagination: pagination,
-      cacheOverwriteSchemaKeys: const {"users": false},
       parameters: {
         'query': query,
         'index': index,
@@ -83,7 +82,7 @@ class SearchApiService {
 
     logger.d('[SearchApiService] Adding response to cache for $cacheKey');
     final SearchResult<T> result = SearchResult<T>(results: responseData, cursor: response.cursor ?? '');
-    cacheController.addToCache(key: cacheKey, value: result);
+    cacheController.add(key: cacheKey, value: result);
 
     return result;
   }

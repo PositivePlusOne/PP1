@@ -8,6 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -15,16 +16,19 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../behaviours/positive_feed_pagination_behaviour.dart';
 import '../../molecules/lists/positive_profile_actions_list.dart';
 import '../../molecules/lists/positive_profile_interests_list.dart';
@@ -45,6 +49,7 @@ class ProfilePage extends HookConsumerWidget {
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final AppRouter router = ref.read(appRouterProvider);
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -53,15 +58,27 @@ class ProfilePage extends HookConsumerWidget {
       state.profile?.flMeta?.id ?? '',
     ];
 
-    //* This is protected by the ProfileDisplayGuard
+    final Profile? currentProfile = controllerState.currentProfile;
     final Profile targetProfile = state.profile ?? Profile.empty();
     final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
     //* Check for a cover image
     final Media? coverImage = targetProfile.coverImage;
 
+    final TargetFeed targetFeed = TargetFeed(
+      targetSlug: 'user',
+      targetUserId: targetProfile.flMeta?.id ?? '',
+    );
+
+    final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
+    final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: targetFeed, currentProfileId: currentProfile?.flMeta?.id ?? '');
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetProfile, targetFeed]).toList();
+
     useLifecycleHook(viewModel);
     usePageRefreshHook();
+
+    useCacheHook(keys: expectedCacheKeys);
 
     PreferredSizeWidget? appBarBottomWidget;
     if (state.profile != null) {
@@ -78,6 +95,7 @@ class ProfilePage extends HookConsumerWidget {
             },
           ),
           PositiveProfileActionsList(
+            currentProfile: currentProfile,
             targetProfile: targetProfile,
             relationship: relationship,
           ),
@@ -141,7 +159,9 @@ class ProfilePage extends HookConsumerWidget {
           ),
         ),
         PositiveFeedPaginationBehaviour(
-          feed: TargetFeed('user', targetProfile.flMeta?.id ?? ''),
+          currentProfile: currentProfile,
+          feed: targetFeed,
+          feedState: feedState,
         ),
       ],
     );

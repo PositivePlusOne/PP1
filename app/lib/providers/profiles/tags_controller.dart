@@ -2,6 +2,7 @@
 
 // Dart imports:
 import 'dart:async';
+import 'dart:collection';
 
 // Package imports:
 import 'package:collection/collection.dart';
@@ -14,8 +15,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/events/content/activity_events.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 
@@ -25,72 +26,80 @@ part 'tags_controller.g.dart';
 @freezed
 class TagsControllerState with _$TagsControllerState {
   const factory TagsControllerState({
-    @Default(<Tag>[]) List<Tag> popularTags,
-    @Default(<Tag>[]) List<Tag> recentTags,
-    @Default(<Tag>[]) List<Tag> topicTags,
+    required HashMap<String, Tag> allTags,
+    required HashMap<String, Tag> popularTags,
+    required HashMap<String, Tag> recentTags,
+    required HashMap<String, Tag> topicTags,
   }) = _TagsControllerState;
 
-  factory TagsControllerState.initialState() => const TagsControllerState();
+  factory TagsControllerState.initialState() => TagsControllerState(
+        allTags: HashMap<String, Tag>(),
+        popularTags: HashMap<String, Tag>(),
+        recentTags: HashMap<String, Tag>(),
+        topicTags: HashMap<String, Tag>(),
+      );
 }
 
 @Riverpod(keepAlive: true)
 class TagsController extends _$TagsController {
-  StreamSubscription<ActivityCreatedEvent>? _onActivityCreatedSubscription;
-  StreamSubscription<ActivityUpdatedEvent>? _onActivityUpdatedSubscription;
-  StreamSubscription<ActivityDeletedEvent>? _onActivityDeletedSubscription;
+  StreamSubscription<CacheKeyUpdatedEvent>? _onCacheKeyUpdatedSubscription;
 
   @override
   TagsControllerState build() {
     return TagsControllerState.initialState();
   }
 
-  Iterable<Tag> get allTags {
-    final CacheControllerState cacheControllerState = providerContainer.read(cacheControllerProvider);
-    return cacheControllerState.cacheData.values.where((record) => record.value is Tag).map((record) => record.value as Tag);
-  }
-
   Iterable<Tag> get byAscendingPopularity {
-    return allTags.where((Tag tag) => tag.popularity > 0).toList()..sort((Tag a, Tag b) => a.popularity.compareTo(b.popularity));
+    return state.allTags.values.where((Tag tag) => tag.popularity > 0).toList()..sort((Tag a, Tag b) => a.popularity.compareTo(b.popularity));
   }
 
   bool tagExists(String key) {
-    return allTags.any((Tag tag) => tag.key == key);
+    return state.allTags.values.any((Tag tag) => tag.key == key);
   }
 
   Future<void> setupListeners() async {
-    await _onActivityCreatedSubscription?.cancel();
-    await _onActivityUpdatedSubscription?.cancel();
-    await _onActivityDeletedSubscription?.cancel();
-
     final EventBus eventBus = providerContainer.read(eventBusProvider);
-
-    _onActivityCreatedSubscription = eventBus.on<ActivityCreatedEvent>().listen(onActivityCreated);
-    _onActivityUpdatedSubscription = eventBus.on<ActivityUpdatedEvent>().listen(onActivityUpdated);
-    _onActivityDeletedSubscription = eventBus.on<ActivityDeletedEvent>().listen(onActivityDeleted);
+    await _onCacheKeyUpdatedSubscription?.cancel();
+    _onCacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
   }
 
-  void onActivityCreated(ActivityCreatedEvent event) {
-    addActivityToTagFeeds(event.activity);
-  }
+  void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
+    if (event.value.runtimeType is Tag) {
+      switch (event.eventType) {
+        case CacheKeyUpdatedEventType.created:
+          state = state.copyWith(allTags: state.allTags..[event.value.key] = event.value);
+          break;
+        case CacheKeyUpdatedEventType.updated:
+          break;
+        case CacheKeyUpdatedEventType.deleted:
+          state = state.copyWith(allTags: state.allTags..remove(event.value.key));
+          break;
+      }
+    }
 
-  void onActivityUpdated(ActivityUpdatedEvent event) {
-    removeActivityFromTagFeeds(event.activity);
-    addActivityToTagFeeds(event.activity);
-  }
-
-  void onActivityDeleted(ActivityDeletedEvent event) {
-    removeActivityFromTagFeeds(event.activity);
+    if (event.value.runtimeType is Activity) {
+      switch (event.eventType) {
+        case CacheKeyUpdatedEventType.created:
+          addActivityToTagFeeds(event.value);
+          break;
+        case CacheKeyUpdatedEventType.updated:
+          break;
+        case CacheKeyUpdatedEventType.deleted:
+          removeActivityFromTagFeeds(event.value);
+          break;
+      }
+    }
   }
 
   void addActivityToTagFeeds(Activity activity) {
     final Logger logger = ref.read(loggerProvider);
     final List<String> tags = activity.enrichmentConfiguration?.tags ?? [];
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     logger.i('Adding activity to tag feeds: $tags');
 
     for (final String tag in tags) {
       final String expectedCacheKey = 'feeds:tags-$tag';
-      final PositiveFeedState? feedState = cacheController.getFromCache<PositiveFeedState>(expectedCacheKey);
+      final PositiveFeedState? feedState = cacheController.get<PositiveFeedState>(expectedCacheKey);
       if (feedState != null) {
         logger.d('Adding activity to tag feed $tag');
         feedState.pagingController.itemList?.insert(0, activity);
@@ -101,12 +110,12 @@ class TagsController extends _$TagsController {
   void removeActivityFromTagFeeds(Activity activity) {
     final Logger logger = ref.read(loggerProvider);
     final List<String> tags = activity.enrichmentConfiguration?.tags ?? [];
-    final CacheController cacheController = ref.read(cacheControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     logger.i('Removing activity from tag feeds: $tags');
 
     for (final String tag in tags) {
       final String expectedCacheKey = 'feeds:tags-$tag';
-      final PositiveFeedState? feedState = cacheController.getFromCache<PositiveFeedState>(expectedCacheKey);
+      final PositiveFeedState? feedState = cacheController.get<PositiveFeedState>(expectedCacheKey);
       if (feedState != null) {
         logger.d('Removing activity from tag feed $tag');
         feedState.pagingController.itemList?.removeWhere((Activity a) => a.flMeta?.id == activity.flMeta?.id);
@@ -119,7 +128,8 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = Tag.fromJsonList(rawStatuses);
 
     logger.d('Updating recommended tags with $tags');
-    state = state.copyWith(popularTags: tags);
+    final HashMap<String, Tag> popularTags = HashMap<String, Tag>.fromIterable(tags, key: (tag) => tag?.key, value: (tag) => tag);
+    state = state.copyWith(popularTags: popularTags);
   }
 
   void updateTopicTags(List<dynamic> rawStatuses) {
@@ -127,7 +137,8 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = Tag.fromJsonList(rawStatuses);
 
     logger.d('Updating recommended tags with $tags');
-    state = state.copyWith(topicTags: tags);
+    final HashMap<String, Tag> topicTags = HashMap<String, Tag>.fromIterable(tags, key: (tag) => tag?.key, value: (tag) => tag);
+    state = state.copyWith(topicTags: topicTags);
   }
 
   void updateRecentTags(List<dynamic> rawStatuses) {
@@ -135,7 +146,8 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = Tag.fromJsonList(rawStatuses);
 
     logger.d('Updating recommended tags with $tags');
-    state = state.copyWith(recentTags: tags);
+    final HashMap<String, Tag> recentTags = HashMap<String, Tag>.fromIterable(tags, key: (tag) => tag?.key, value: (tag) => tag);
+    state = state.copyWith(recentTags: recentTags);
   }
 
 //? get Tags From Tags Controller, else return a new tag
@@ -143,7 +155,7 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = <Tag>[];
 
     for (final String string in strings) {
-      final Tag? tag = allTags.firstWhereOrNull((Tag t) => t.key == string);
+      final Tag? tag = state.allTags.values.firstWhereOrNull((Tag t) => t.key == string);
       if (tag != null) {
         tags.add(tag);
       } else {
@@ -177,9 +189,9 @@ class TagsController extends _$TagsController {
     }
 
     for (final String tag in tags) {
-      final Tag? existingTag = state.recentTags.firstWhereOrNull((Tag t) => t.key == tag);
+      final Tag? existingTag = state.recentTags[tag];
       if (existingTag == null) {
-        final Tag? newTag = allTags.firstWhereOrNull((Tag t) => t.key == tag);
+        final Tag? newTag = state.allTags.values.firstWhereOrNull((Tag t) => t.key == tag);
         if (newTag != null) {
           newTags.add(newTag);
         }
@@ -187,7 +199,10 @@ class TagsController extends _$TagsController {
     }
 
     logger.d('Adding tags to recent tags: $newTags');
-    state = state.copyWith(recentTags: [...state.recentTags, ...newTags]);
+    final HashMap<String, Tag> recentTags = HashMap<String, Tag>.from(state.recentTags);
+    for (final Tag tag in newTags) {
+      recentTags[tag.key] = tag;
+    }
   }
 
   List<Tag> resolveTags(List<String> tagStrings) {
@@ -195,11 +210,15 @@ class TagsController extends _$TagsController {
     final List<Tag> tags = [];
 
     for (final String tag in tagStrings) {
-      for (final Tag existingTag in allTags) {
-        if (existingTag.key == tag) {
-          tags.add(existingTag);
-        }
+      final Tag? existingTag = state.allTags[tag];
+      if (existingTag != null) {
+        tags.add(existingTag);
       }
+    }
+
+    if (tags.isEmpty) {
+      logger.d('No tags to resolve');
+      return tags;
     }
 
     logger.d('Resolved tags: $tags');
