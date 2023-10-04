@@ -375,6 +375,7 @@
     "page_search_events_not_found_title": "No Events\nFound",
     "page_search_events_not_found_body": "We couldn’t find any Events matching your search term",
     "page_search_tags_not_found_title": "No Tags\nFound",
+    "page_search_tags_not_found_body": "We couldn’t find any Tags matching your search term",
 
     "page_search_tab_posts": "Posts",
     "page_search_tab_profiles": "Profiles",

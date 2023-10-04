@@ -256,16 +256,24 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     );
   }
 
-  //TODO(S): Partial scaffold for repost, repost functionality not enabled yet
-  // Future<Widget> _repostBuilder(BuildContext context, WidgetRef ref) async {
+  //TODO(S): Partial scaffold for repost, repost functionality moved to another file
+  // Future<Widget> _repostBuilder(
+  //   BuildContext context,
+  //   WidgetRef ref,
+  //   Profile? currentProfile,
+  //   Relationship? publisherRelationship,
+  // ) async {
   //   final Logger logger = ref.read(loggerProvider);
 
-  //   if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
-  //     logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
+  //   if (postContent != null && postContent!.generalConfiguration != null && postContent!.enrichmentConfiguration != null) {
+  //     logger.d('widget.postContent does not have generalConfiguration and enrichmentConfiguration');
   //     return const SizedBox();
   //   }
-  //   final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-  //   Activity activity = await activityController.getActivity(postContent?.foreignKey);
+
+  //   // if (postContent?.generalConfiguration!.repostActivityId.isNotEmpty) {
+  //   //   logger.d('widget.postContent is missing repost data');
+  //   //   return const SizedBox();
+  //   // }
 
   //   return Padding(
   //     padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
@@ -275,7 +283,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //       mainAxisAlignment: MainAxisAlignment.start,
   //       children: [
   //         //* -=-=-=- attached video -=-=-=- *\\
-  //         if (postContent?.media.isNotEmpty) ...[
+  //         if (postContent!.media.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           LayoutBuilder(
   //             builder: (context, constraints) {
@@ -285,21 +293,21 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //         ],
   //         _postAttachedVideo(),
   //         //* -=-=-=- Post Actions -=-=-=- *\\
-  //         _postActions(),
+  //         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
   //         //* -=-=-=- Post Title -=-=-=- *\\
   //         _postTitle(),
   //         //* -=-=-=- Tags -=-=-=- *\\
-  //         if (postContent?.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           _tags(),
   //         ],
   //         //* -=-=-=- Location -=-=-=- *\\
-  //         if (postContent?.enrichmentConfiguration!.tags.isNotEmpty) ...[
+  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
   //           _location(),
   //         ],
   //         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-  //         _markdownBody(),
+  //         _markdownBody(context: context, ref: ref),
   //       ],
   //     ),
   //   );
