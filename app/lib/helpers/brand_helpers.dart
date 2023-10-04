@@ -21,6 +21,7 @@ import '../widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 
 MarkdownWidget buildMarkdownWidgetFromBody(
   String str, {
+  Brightness brightness = Brightness.light,
   List<Tag> tags = const [],
   EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
@@ -36,26 +37,28 @@ MarkdownWidget buildMarkdownWidgetFromBody(
     padding: EdgeInsets.zero,
     shrinkWrap: true,
     selectable: false,
-    config: MarkdownConfig(configs: buildMmarkdownWidgetConfig(onTapLink: onTapLink)),
+    config: MarkdownConfig(configs: buildMmarkdownWidgetConfig(onTapLink: onTapLink, brightness: brightness)),
     markdownGeneratorConfig: MarkdownGeneratorConfig(
       linesMargin: lineMargin,
     ),
   );
 }
 
-List<WidgetConfig> buildMmarkdownWidgetConfig({void Function(String link)? onTapLink}) {
+List<WidgetConfig> buildMmarkdownWidgetConfig({void Function(String link)? onTapLink, Brightness brightness = Brightness.light}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
+  final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
+
   return [
-    PreConfig(textStyle: typography.styleBody.copyWith(color: colors.black)),
-    H1Config(style: typography.styleHeroMedium.copyWith(color: colors.black)),
-    H2Config(style: typography.styleHeroSmall.copyWith(color: colors.black)),
-    H3Config(style: typography.styleTitle.copyWith(color: colors.black)),
-    H4Config(style: typography.styleTitleTwo.copyWith(color: colors.black)),
-    H5Config(style: typography.styleSubtitleBold.copyWith(color: colors.black)),
-    H6Config(style: typography.styleSubtextBold.copyWith(color: colors.black)),
-    PConfig(textStyle: typography.styleBody.copyWith(color: colors.black)),
+    PreConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
+    H1Config(style: typography.styleHeroMedium.copyWith(color: textColor)),
+    H2Config(style: typography.styleHeroSmall.copyWith(color: textColor)),
+    H3Config(style: typography.styleTitle.copyWith(color: textColor)),
+    H4Config(style: typography.styleTitleTwo.copyWith(color: textColor)),
+    H5Config(style: typography.styleSubtitleBold.copyWith(color: textColor)),
+    H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
+    PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
       style: typography.styleBody.copyWith(
         color: colors.linkBlue,
@@ -69,9 +72,9 @@ List<WidgetConfig> buildMmarkdownWidgetConfig({void Function(String link)? onTap
         }
       },
     ),
-    CodeConfig(style: typography.styleSubtitle.copyWith(color: colors.black, fontFamily: 'AlbertSans')),
-    BlockquoteConfig(sideColor: colors.purple, textColor: colors.black),
-    TableConfig(bodyStyle: typography.styleBody.copyWith(color: colors.black)),
+    CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),
+    BlockquoteConfig(sideColor: colors.purple, textColor: textColor),
+    TableConfig(bodyStyle: typography.styleBody.copyWith(color: textColor)),
     const ListConfig(marginLeft: kPaddingMedium),
     ImgConfig(
       builder: (url, attributes) => PositiveMediaImage(

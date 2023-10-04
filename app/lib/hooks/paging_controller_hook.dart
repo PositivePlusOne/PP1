@@ -74,7 +74,10 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     if (hook.controller != oldHook.controller) {
       disposeListeners();
       setupListeners();
-      requestPage();
+
+      if (hook.controller.nextPageKey != null && hook.controller.value.status == PagingStatus.loadingFirstPage) {
+        requestPage();
+      }
     }
   }
 

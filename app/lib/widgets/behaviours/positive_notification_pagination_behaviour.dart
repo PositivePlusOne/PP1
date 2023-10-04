@@ -70,6 +70,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
   @override
   void didUpdateWidget(PositiveNotificationsPaginationBehaviour oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (oldWidget.uid != widget.uid) {
       disposeNotificationsState();
       setupNotificationsState();

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:collection';
 
 // Package imports:
-import 'package:app/extensions/activity_extensions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -15,6 +14,7 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/providers/profiles/profile_controller.dart';

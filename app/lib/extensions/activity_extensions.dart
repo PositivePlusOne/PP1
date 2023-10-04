@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -28,6 +27,7 @@ import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_modal_dialog.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../dtos/database/activities/activities.dart';
 import '../dtos/database/common/media.dart';
