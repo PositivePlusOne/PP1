@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -171,12 +172,14 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       // Upload gallery entries
-      final List<Media> media = await Future.wait(galleryEntries.map(
-        (e) => e.createMedia(
-          filter: state.currentFilter,
-          altText: altTextController.text.trim(),
+      final List<Media> media = await Future.wait(
+        galleryEntries.map(
+          (e) => e.createMedia(
+            filter: state.currentFilter,
+            altText: altTextController.text.trim(),
+          ),
         ),
-      ));
+      );
 
       if (!state.isEditing) {
         await activityController.postActivity(
@@ -439,6 +442,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> onFlexButtonPressed(BuildContext context, Profile? currentProfile) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
@@ -454,7 +458,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        await onPostFinished(context, currentProfile);
+        await onPostFinished(context, profileController.currentProfile);
         break;
     }
   }

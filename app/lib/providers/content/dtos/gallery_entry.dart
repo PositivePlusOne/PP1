@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
@@ -7,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
+import 'package:image/image.dart' as img;
 
 // Project imports:
 import 'package:app/constants/compression_constants.dart';
@@ -75,7 +77,11 @@ class GalleryEntry {
       return;
     }
 
-    Uint8List data = await file?.readAsBytes() ?? Uint8List(0);
+    img.Image original = img.decodeImage(File(file!.path).readAsBytesSync())!;
+    img.Image fixed = img.copyRotate(original, angle: 0);
+    Uint8List data = img.encodeJpg(fixed);
+
+    // Uint8List data = fixed.toUint8List();
     if (data.isEmpty) {
       throw Exception('GalleryEntry.upload() data is empty');
     }
@@ -92,12 +98,14 @@ class GalleryEntry {
     // Check if in image
     if (mimeType.startsWith('image/')) {
       logger.d('upload() mimeType.startsWith(image/)');
+
       data = await FlutterImageCompress.compressWithList(
         data,
         keepExif: kImageCompressKeepExif,
         minHeight: kImageCompressMaxHeight,
         minWidth: kImageCompressMaxWidth,
         quality: kImageCompressMaxQuality,
+        autoCorrectionAngle: false,
         format: kImageCompressFormat,
       );
 
