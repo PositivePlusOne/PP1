@@ -233,11 +233,11 @@ class SearchPage extends ConsumerWidget {
                     // colours.teal,
                     colours.purple,
                   ],
-                  tabs: const <String>[
-                    'Posts',
-                    'People',
-                    // 'Events',
-                    'Tags',
+                  tabs: <String>[
+                    localisations.page_search_tab_posts,
+                    localisations.page_search_tab_profiles,
+                    // localisations.page_search_tab_events,
+                    localisations.page_search_tab_tags,
                   ],
                 ),
                 const SizedBox(height: kPaddingSmall),
