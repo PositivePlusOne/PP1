@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/content/activities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -118,6 +119,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     });
 
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfileId) ?? {};
 
@@ -132,12 +134,14 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptionType.follow:
           var following = relationshipStates.contains(RelationshipState.sourceFollowed);
           following ? await relationshipController.unfollowRelationship(targetProfileId) : await relationshipController.followRelationship(targetProfileId);
+          await activitiesController.resetProfileFeeds(profileId: currentProfileId);
           await appRouter.pop();
           ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following $targetDisplayNameHandle'));
           break;
         case ProfileModalDialogOptionType.connect:
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(targetProfileId) : await relationshipController.connectRelationship(targetProfileId);
           await appRouter.pop();
+          await activitiesController.resetProfileFeeds(profileId: currentProfileId);
           break;
         case ProfileModalDialogOptionType.message:
           await getStreamController.createConversation([targetProfileId], shouldPopDialog: true);
@@ -146,6 +150,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(targetProfileId) : await relationshipController.blockRelationship(targetProfileId);
           await appRouter.pop();
           ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} $targetDisplayNameHandle'));
+          await activitiesController.resetProfileFeeds(profileId: currentProfileId);
           break;
         case ProfileModalDialogOptionType.mute:
           relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(targetProfileId) : await relationshipController.muteRelationship(targetProfileId);
