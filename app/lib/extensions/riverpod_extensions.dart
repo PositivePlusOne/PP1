@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -142,18 +143,20 @@ void cacheReactionData(Map<String, dynamic> data) {
 void cacheReactionStatisticsData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+  final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
 
   final List<dynamic> reactionStatisticsRaw = (data.containsKey('reactionStatistics') ? data['reactionStatistics'] : []).map((dynamic reactionStatistic) => json.decodeSafe(reactionStatistic)).toList();
   final List<ReactionStatistics> reactionStatistics = reactionStatisticsRaw.map((dynamic stat) => ReactionStatistics.fromJson(stat)).toList();
 
   for (ReactionStatistics reactionStatistic in reactionStatistics) {
-    final String reactionStatisticsId = reactionStatistic.flMeta?.id ?? '';
-    if (reactionStatisticsId.isEmpty) {
+    final String activityId = reactionStatistic.activityId;
+    if (activityId.isEmpty) {
       logger.e('requestNextTimelinePage() - Failed to cache reaction statistics: $reactionStatistic');
       continue;
     }
 
-    cacheController.add(key: reactionStatisticsId, value: reactionStatistic, metadata: reactionStatistic.flMeta);
+    final String expectedCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+    cacheController.add(key: expectedCacheKey, value: reactionStatistic, metadata: reactionStatistic.flMeta);
   }
 }
 

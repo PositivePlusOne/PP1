@@ -18,7 +18,6 @@ _$_Reaction _$$_ReactionFromJson(Map<String, dynamic> json) => _$_Reaction(
           ? const ReactionType.unknownReaction()
           : ReactionType.fromJson(json['kind'] as String),
       text: json['text'] as String? ?? '',
-      origin: json['origin'] as String? ?? '',
       tags:
           (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -33,7 +32,6 @@ Map<String, dynamic> _$$_ReactionToJson(_$_Reaction instance) =>
       'user_id': instance.userId,
       'kind': ReactionType.toJson(instance.kind),
       'text': instance.text,
-      'origin': instance.origin,
       'tags': instance.tags,
     };
 

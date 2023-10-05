@@ -32,7 +32,6 @@ export namespace ReactionCommentNotification {
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
     const activityId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
     const reactionId = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
-    const origin = reaction.origin;
 
     if (!senderId || !receiverId || !activityId || !reactionId || !origin) {
         throw new Error("Unable to generate notification payload");

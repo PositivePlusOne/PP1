@@ -137,7 +137,6 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
       final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
       await reactionApiService.postReaction(
         activityId: state.activityId,
-        origin: TargetFeed.toOrigin(state.targetFeed),
         kind: 'comment',
         text: trimmedString,
       );

@@ -397,10 +397,9 @@ extension ActivityExt on Activity {
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
 
     final String activityId = flMeta?.id ?? '';
-    final String origin = publisherInformation?.originFeed ?? '';
     final String profileId = currentProfile?.flMeta?.id ?? '';
 
-    if (profileId.isEmpty || activityId.isEmpty || origin.isEmpty) {
+    if (profileId.isEmpty || activityId.isEmpty) {
       throw Exception('Invalid activity or user');
     }
 
@@ -413,7 +412,7 @@ extension ActivityExt on Activity {
       return;
     }
 
-    await reactionsController.bookmarkActivity(origin: origin, activityId: activityId);
+    await reactionsController.bookmarkActivity(activityId: activityId);
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
     );
@@ -450,9 +449,8 @@ extension ActivityExt on Activity {
 
     final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
-    final String origin = publisherInformation?.originFeed ?? '';
 
-    if (profileId.isEmpty || activityId.isEmpty || origin.isEmpty) {
+    if (profileId.isEmpty || activityId.isEmpty) {
       throw Exception('Invalid activity or user');
     }
 
@@ -465,7 +463,7 @@ extension ActivityExt on Activity {
       return;
     }
 
-    await reactionsController.likeActivity(origin: origin, activityId: activityId, uid: profileId);
+    await reactionsController.likeActivity(activityId: activityId, uid: profileId);
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
     );

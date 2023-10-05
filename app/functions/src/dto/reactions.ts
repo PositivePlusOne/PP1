@@ -9,7 +9,6 @@ export interface ReactionJSON {
     entry_id?: string;
     user_id?: string;
     kind?: string;
-    origin?: string;
     text?: string;
     tags?: string[];
 }
@@ -21,7 +20,6 @@ export class Reaction {
     entry_id?: string;
     user_id?: string;
     kind?: string;
-    origin?: string;
     text?: string;
     tags?: string[];
 
@@ -32,7 +30,6 @@ export class Reaction {
         this.entry_id = json.entry_id;
         this.user_id = json.user_id;
         this.kind = json.kind;
-        this.origin = json.origin;
         this.text = json.text;
         this.tags = json.tags;
     }
@@ -45,7 +42,6 @@ export class Reaction {
             entry_id: this.entry_id,
             user_id: this.user_id,
             kind: this.kind,
-            origin: this.origin,
             text: this.text,
             tags: this.tags,
         };
