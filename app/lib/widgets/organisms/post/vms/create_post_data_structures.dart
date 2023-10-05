@@ -88,7 +88,8 @@ enum CreatePostCurrentPage {
   editPhoto,
   createPostText,
   createPostImage,
-  createPostMultiImage;
+  createPostMultiImage,
+  createPostClip;
 
   bool get isCreationDialog => this == CreatePostCurrentPage.createPostText || this == CreatePostCurrentPage.createPostImage || this == CreatePostCurrentPage.createPostMultiImage;
 }
