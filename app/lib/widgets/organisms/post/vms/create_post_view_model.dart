@@ -385,7 +385,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     final List<GalleryEntry> entries = [];
     if (file.path.isNotEmpty) {
-      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(file, uploadImmediately: true);
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(file);
       entries.add(entry);
     }
 
@@ -393,15 +393,14 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    // state = state.copyWith(
-    //   galleryEntries: entries,
-    //   currentCreatePostPage: CreatePostCurrentPage.editPhoto,
-    //   editingGalleryEntry: entries.firstOrNull,
-    //   currentPostType: PostType.image,
-    //   activeButton: PositivePostNavigationActiveButton.flex,
-    //   activeButtonFlexText: localisations.shared_actions_next,
-    // );
-    print("e");
+    state = state.copyWith(
+      galleryEntries: entries,
+      currentCreatePostPage: CreatePostCurrentPage.createPostClip,
+      editingGalleryEntry: entries.firstOrNull,
+      currentPostType: PostType.clip,
+      activeButton: PositivePostNavigationActiveButton.flex,
+      activeButtonFlexText: localisations.shared_actions_next,
+    );
     return;
   }
 
@@ -537,6 +536,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
+      case CreatePostCurrentPage.createPostClip:
         await onPostFinished(context, profileController.currentProfile);
         break;
     }
