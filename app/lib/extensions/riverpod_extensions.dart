@@ -3,6 +3,7 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:app/providers/content/reactions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -157,6 +158,26 @@ void cacheReactionStatisticsData(Map<String, dynamic> data) {
 
     final String expectedCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
     cacheController.add(key: expectedCacheKey, value: reactionStatistic, metadata: reactionStatistic.flMeta);
+  }
+}
+
+void cacheProfileStatisticsData(Map<String, dynamic> data) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+  final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
+  final List<dynamic> profileStatisticsRaw = (data.containsKey('profileStatistics') ? data['profileStatistics'] : []).map((dynamic profileStatistic) => json.decodeSafe(profileStatistic)).toList();
+  final List<ProfileStatistics> profileStatistics = profileStatisticsRaw.map((dynamic stat) => ProfileStatistics.fromJson(stat)).toList();
+
+  for (ProfileStatistics profileStatistic in profileStatistics) {
+    final String profileId = profileStatistic.profileId;
+    if (profileId.isEmpty) {
+      logger.e('requestNextTimelinePage() - Failed to cache profile statistics: $profileStatistic');
+      continue;
+    }
+
+    final String expectedCacheKey = profileController.buildExpectedStatisticsCacheKey(profileId: profileId);
+    cacheController.add(key: expectedCacheKey, value: profileStatistic, metadata: profileStatistic.flMeta);
   }
 }
 

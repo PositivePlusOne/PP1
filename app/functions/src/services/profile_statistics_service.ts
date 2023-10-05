@@ -15,7 +15,7 @@ export namespace ProfileStatisticsService {
         return `statistics:user:${user_id}`;
     }
 
-    export async function getReactionStatisticsForProfile(userId: string): Promise<ProfileStatisicsJSON> {
+    export async function getStatisticsForProfile(userId: string): Promise<ProfileStatisicsJSON> {
         functions.logger.info("Getting profile statistics", { userId });
         const expectedKey = getExpectedKeyFromOptions(userId);
         
@@ -32,7 +32,7 @@ export namespace ProfileStatisticsService {
             return {};
         }
 
-        const stats = await getReactionStatisticsForProfile(userId);
+        const stats = await getStatisticsForProfile(userId);
         stats.counts ??= {};
         stats.counts[kind] = (stats.counts[kind] ?? 0) + offset;
         functions.logger.info(`Kind: ${kind}, offset: ${offset}, new count: ${stats.counts[kind]}`);

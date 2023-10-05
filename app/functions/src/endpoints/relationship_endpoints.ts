@@ -16,6 +16,7 @@ import { FeedService } from "../services/feed_service";
 import { FeedRequestJSON } from "../dto/feed_dtos";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { RelationshipJSON } from "../dto/relationships";
+import { ProfileStatisticsService } from "../services/profile_statistics_service";
 
 export namespace RelationshipEndpoints {
   export const getRelationship = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -304,6 +305,8 @@ export namespace RelationshipEndpoints {
 
     const newRelationship = await RelationshipService.followRelationship(uid, relationship);
 
+    await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
+    await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {
@@ -337,6 +340,8 @@ export namespace RelationshipEndpoints {
 
     const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
 
+    await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", -1);
+    await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", -1);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {

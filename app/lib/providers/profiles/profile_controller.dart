@@ -135,6 +135,12 @@ class ProfileController extends _$ProfileController {
     providerContainer.read(eventBusProvider).fire(const ProfileSwitchedEvent(''));
   }
 
+  String buildExpectedStatisticsCacheKey({
+    required String profileId,
+  }) {
+    return 'statistics:user:$profileId';
+  }
+
   void onSupportedProfilesUpdated(Set<String> availableProfileIds) {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);

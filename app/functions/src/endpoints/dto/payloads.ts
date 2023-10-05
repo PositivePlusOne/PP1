@@ -66,6 +66,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "guidanceDirectoryEntries": [],
             "reactions": [],
             "reactionStatistics": [],
+            "profileStatistics": [],
         },
     } as EndpointResponse;
 

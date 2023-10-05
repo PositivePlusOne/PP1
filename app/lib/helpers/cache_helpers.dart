@@ -19,6 +19,7 @@ Iterable<String> buildExpectedCacheKeysFromObjects(Profile? currentProfile, Iter
           Profile => cacheKeys.addAll(buildExpectedCacheKeysForProfile(currentProfile, obj)),
           Reaction => cacheKeys.addAll(buildExpectedCacheKeysForReaction(currentProfile, obj)),
           ReactionStatistics => cacheKeys.addAll(buildExpectedCacheKeysForReactionStatistics(currentProfile, obj)),
+          ProfileStatistics => cacheKeys.addAll(buildExpectedCacheKeysForProfileStatistics(currentProfile, obj)),
           Relationship => cacheKeys.addAll(buildExpectedCacheKeysForRelationship(currentProfile, obj)),
           TargetFeed => cacheKeys.addAll(buildExpectedCacheKeysForTargetFeed(currentProfile, obj)),
           String => cacheKeys.add(obj),
@@ -92,6 +93,23 @@ List<String> buildExpectedCacheKeysForReactionStatistics(Profile? currentProfile
 
   if (reactorId.isNotEmpty) {
     cacheKeys.add(reactorId);
+  }
+
+  return cacheKeys;
+}
+
+List<String> buildExpectedCacheKeysForProfileStatistics(Profile? currentProfile, ProfileStatistics statistics) {
+  final List<String> cacheKeys = [];
+
+  final String statisticsId = statistics.flMeta?.id ?? '';
+  final String profileId = statistics.profileId;
+
+  if (statisticsId.isNotEmpty) {
+    cacheKeys.add(statisticsId);
+  }
+
+  if (profileId.isNotEmpty) {
+    cacheKeys.add(profileId);
   }
 
   return cacheKeys;

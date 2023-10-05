@@ -31,7 +31,6 @@ class Profile with _$Profile {
     PositivePlace? place,
     @Default('') String biography,
     @Default([]) List<Media> media,
-    @Default(ProfileStatistics()) ProfileStatistics statistics,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();
@@ -41,9 +40,38 @@ class Profile with _$Profile {
 @freezed
 class ProfileStatistics with _$ProfileStatistics {
   const factory ProfileStatistics({
-    @Default(0) int followers,
-    @Default(0) int following,
+    @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+    @Default('') String profileId,
+    @Default({}) Map<String, int> counts,
   }) = _ProfileStatistics;
+
+  static Map<String, String> buildData(ProfileStatistics? profileStatistics) {
+    final Map<String, String> data = {
+      'Posts': '0',
+      'Shares': '0',
+      'Followers': '0',
+      'Following': '0',
+    };
+
+    for (final MapEntry<String, int> entry in profileStatistics?.counts.entries ?? []) {
+      switch (entry.key) {
+        case 'post':
+          data['Posts'] = entry.value.toString();
+          break;
+        case 'share':
+          data['Shares'] = entry.value.toString();
+          break;
+        case 'follow':
+          data['Followers'] = entry.value.toString();
+          break;
+        case 'following':
+          data['Following'] = entry.value.toString();
+          break;
+      }
+    }
+
+    return data;
+  }
 
   factory ProfileStatistics.fromJson(Map<String, Object?> json) => _$ProfileStatisticsFromJson(json);
 }
