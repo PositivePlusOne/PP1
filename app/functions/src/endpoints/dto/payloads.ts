@@ -66,6 +66,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "guidanceDirectoryEntries": [],
             "reactions": [],
             "reactionStatistics": [],
+            "profileStatistics": [],
         },
     } as EndpointResponse;
 
@@ -90,7 +91,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case activitySchemaKey:
                 const activity = obj as ActivityJSON;
                 const publisherId = activity.publisherInformation?.publisherId || "";
-                const originFeed = activity.publisherInformation?.originFeed || "";
                 const activityId = activity._fl_meta_?.fl_id || "";
                 const isActivityPublisher = sender && sender === publisherId;
 
@@ -101,7 +101,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
 
                 // Overall statistics
-                if (originFeed && activityId) {
+                if (activityId) {
                     const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(activityId);
                     joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 

@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -32,7 +35,7 @@ import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart'
 import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';
 
 @RoutePage()
-class ProfileAccentPhotoPage extends ConsumerWidget {
+class ProfileAccentPhotoPage extends HookConsumerWidget {
   const ProfileAccentPhotoPage({super.key});
 
   Color getTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
@@ -45,8 +48,8 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final ProfileFormController controller = ref.read(profileFormControllerProvider.notifier);
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
@@ -54,12 +57,22 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final Profile userProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile ?? Profile.empty()));
+    final Profile currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile ?? Profile.empty()));
+    final String profileId = currentProfile.flMeta?.id ?? '';
 
-    final Color currentAccentColor = userProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: profileId);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
+    final Map<String, String> profileStatisticsData = ProfileStatistics.buildData(profileStatistics);
+
+    final Color currentAccentColor = currentProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final bool hasAccentColorChanged = currentAccentColor != accentColor;
     final bool hasImageChanged = state.newProfileImage != null && state.newProfileImage!.path.isNotEmpty;
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [profileStatistics]).toList();
+    useCacheHook(keys: expectedCacheKeys);
 
     return PositiveScaffold(
       backgroundColor: colors.black,
@@ -123,7 +136,7 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
                         onTap: (_) => controller.onAccentColorSelected(colorHex),
                         child: AbsorbPointer(
                           child: PositiveProfileCircularIndicator(
-                            profile: userProfile,
+                            profile: currentProfile,
                             size: kIconMassive,
                             borderThickness: kBorderThicknessMedium,
                             ringColorOverride: colorHex.toSafeColorFromHex(defaultColor: colors.teal),
@@ -150,12 +163,9 @@ class ProfileAccentPhotoPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 PositiveProfileTile(
-                  profile: userProfile,
+                  profile: currentProfile,
                   imageOverridePath: state.newProfileImage?.path ?? "",
-                  metadata: {
-                    'Followers': '${userProfile.statistics.followers}',
-                    'Following': '${userProfile.statistics.following}',
-                  },
+                  metadata: profileStatisticsData,
                 ),
                 const Spacer(),
                 const SizedBox(height: kPaddingMedium),

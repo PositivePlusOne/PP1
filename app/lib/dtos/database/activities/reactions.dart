@@ -20,7 +20,6 @@ class Reaction with _$Reaction {
     @Default('') @JsonKey(name: 'user_id') String userId,
     @Default(ReactionType.unknownReaction()) @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson) ReactionType kind,
     @Default('') @JsonKey(name: 'text') String text,
-    @Default('') @JsonKey(name: 'origin') String origin,
     @Default([]) @JsonKey(name: 'tags') List<String> tags,
   }) = _Reaction;
 

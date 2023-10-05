@@ -19,14 +19,20 @@ export const featureFlagIncognito = 'incognito';
 export const featureFlagOrganisationControls = 'organisation';
 
 export interface ProfileStatisicsJSON {
+    _fl_meta_?: FlMetaJSON;
+    profileId?: string;
     counts?: Record<string, number>;
 }
 
 export class ProfileStatistics {
-    counts: Record<string, number>;
+    _fl_meta_?: FlMeta;
+    profileId?: string;
+    counts?: Record<string, number>;
 
     constructor(json: ProfileStatisicsJSON) {
-        this.counts = json.counts || {};
+        this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
+        this.profileId = json.profileId;
+        this.counts = json.counts;
     }
 }
 

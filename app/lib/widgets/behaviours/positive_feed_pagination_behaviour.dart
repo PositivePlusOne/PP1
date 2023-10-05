@@ -119,8 +119,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    feedState.hasPerformedInitialLoad = true;
 
+    if (feedState.pagingController.value.error != null || feedState.pagingController.value.status == PagingStatus.loadingFirstPage) {
+      logger.d('saveActivitiesState() - Not saving activities due to error or loading');
+      return;
+    }
+
+    feedState.hasPerformedInitialLoad = true;
     if (feedState.pagingController.itemList?.isEmpty ?? true) {
       logger.d('saveActivitiesState() - No activities to save');
       feedState.pagingController.value = PagingState<String, Activity>(

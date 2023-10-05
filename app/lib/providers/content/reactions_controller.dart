@@ -60,7 +60,6 @@ class ReactionsController extends _$ReactionsController {
         kind: reactionType,
         userId: currentProfile?.flMeta?.id ?? '',
         activityId: activity?.flMeta?.id ?? '',
-        origin: activity?.publisherInformation?.originFeed ?? '',
       );
 
       final List<String> keys = buildExpectedCacheKeysForReaction(currentProfile, stubReaction);
@@ -75,7 +74,7 @@ class ReactionsController extends _$ReactionsController {
       return reaction.flMeta!.id!;
     }
 
-    return 'reaction:${reaction.kind}:${reaction.origin}:${reaction.activityId}:${reaction.reactionId}:${reaction.userId}';
+    return 'reaction:${reaction.kind}:${reaction.activityId}:${reaction.reactionId}:${reaction.userId}';
   }
 
   String buildExpectedStatisticsCacheKey({
@@ -115,7 +114,7 @@ class ReactionsController extends _$ReactionsController {
     final Logger logger = ref.read(loggerProvider);
     if (activityId.isEmpty || currentProfileId.isEmpty) {
       logger.w('Cannot build positive reactions state for activity: $activityId and profile: $currentProfileId');
-      return PositiveReactionsState.empty();
+      return PositiveReactionsState.createNewFeedState('', '');
     }
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -164,7 +163,6 @@ class ReactionsController extends _$ReactionsController {
 
   Future<void> bookmarkActivity({
     required String activityId,
-    required String origin,
   }) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('CommunitiesController - bookmarkActivity - Bookmarking activity: $activityId');
@@ -172,7 +170,6 @@ class ReactionsController extends _$ReactionsController {
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     await reactionApiService.postReaction(
       activityId: activityId,
-      origin: origin,
       kind: 'bookmark',
     );
 
@@ -208,7 +205,6 @@ class ReactionsController extends _$ReactionsController {
 
   Future<void> likeActivity({
     required String activityId,
-    required String origin,
     required String uid,
   }) async {
     final Logger logger = ref.read(loggerProvider);
@@ -217,7 +213,6 @@ class ReactionsController extends _$ReactionsController {
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     await reactionApiService.postReaction(
       activityId: activityId,
-      origin: origin,
       kind: 'like',
     );
 

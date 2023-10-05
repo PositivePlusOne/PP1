@@ -68,13 +68,8 @@ class CacheHookState extends HookState<void, CacheHook> {
   void build(BuildContext context) {}
 
   void onCacheUpdated(CacheKeyUpdatedEvent event) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    logger.d('[CacheHook] onCacheUpdated]');
-
     final bool match = hook.matchOnContains ? hook.cacheKeys.any((key) => event.key.contains(key)) : hook.cacheKeys.any((key) => event.key == key);
-
     if (match) {
-      logger.d('[CacheHook] onCacheUpdated] Matched on ${event.key}');
       setState(() {});
     }
   }

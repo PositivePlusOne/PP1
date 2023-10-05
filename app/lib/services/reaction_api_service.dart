@@ -47,7 +47,6 @@ class ReactionApiService {
 
   FutureOr<Reaction> postReaction({
     required String activityId,
-    required String origin,
     required String kind,
     String text = '',
   }) async {
@@ -56,7 +55,6 @@ class ReactionApiService {
       selector: (response) => Reaction.fromJson(json.decodeSafe((response.data['reactions'] as Iterable).first)),
       parameters: {
         'activityId': activityId,
-        'origin': origin,
         'kind': kind,
         'text': text,
       },

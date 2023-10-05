@@ -28,7 +28,7 @@ export namespace ReactionService {
     }
 
     export function getExpectedKeyFromOptions(reaction: ReactionJSON): string {
-        if (!reaction.origin || !reaction.activity_id || !reaction.user_id || !reaction.kind) {
+        if (!!reaction.activity_id || !reaction.user_id || !reaction.kind) {
             functions.logger.error("Invalid reaction key", { reaction });
             return FlamelinkHelpers.generateIdentifier();
         }
@@ -36,7 +36,7 @@ export namespace ReactionService {
         // Check if it is a unique reaction
         // If so, we can determine the reaction ID from the kind
         if (isUniqueReactionKind(reaction.kind)) {
-            return `reaction:${reaction.kind}:${reaction.origin}:${reaction.activity_id}:${reaction.reaction_id ?? ''}:${reaction.user_id}`;
+            return `reaction:${reaction.kind}:${reaction.activity_id}:${reaction.reaction_id ?? ''}:${reaction.user_id}`;
         }
 
         return FlamelinkHelpers.generateIdentifier();
@@ -163,12 +163,11 @@ export namespace ReactionService {
     }
 
     export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<ReactionJSON> {
-        if (!reaction.activity_id || !reaction.origin || !reaction.kind || !reaction.user_id) {
+        if (!reaction.activity_id || !reaction.kind || !reaction.user_id) {
             throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
         }
 
         const expectedKey = getExpectedKeyFromOptions(reaction);
-        const expectedOrigin = reaction.origin;
         const expectedActivityId = reaction.activity_id;
         const expectedUserId = reaction.user_id;
         const expectedKind = reaction.kind;
@@ -199,7 +198,7 @@ export namespace ReactionService {
         }) as ReactionJSON;
 
         await Promise.all([
-            ReactionStatisticsService.updateReactionCountForActivity(expectedOrigin, expectedActivityId, expectedKind, 1),
+            ReactionStatisticsService.updateReactionCountForActivity(expectedActivityId, expectedKind, 1),
             ProfileStatisticsService.updateReactionCountForProfile(expectedUserId, expectedKind, 1),
         ]);
 
@@ -225,7 +224,7 @@ export namespace ReactionService {
 
     export async function deleteReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<void> {
         const id = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
-        if (!id || !reaction.activity_id || !reaction.origin || !reaction.kind || !reaction.user_id) {
+        if (!id || !reaction.activity_id || !reaction.kind || !reaction.user_id) {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
         }
 
@@ -234,7 +233,7 @@ export namespace ReactionService {
         }
 
         await Promise.all([
-            ReactionStatisticsService.updateReactionCountForActivity(reaction.origin, reaction.activity_id, reaction.kind, -1),
+            ReactionStatisticsService.updateReactionCountForActivity(reaction.activity_id, reaction.kind, -1),
             ProfileStatisticsService.updateReactionCountForProfile(reaction.user_id, reaction.kind, -1),
         ]);
 

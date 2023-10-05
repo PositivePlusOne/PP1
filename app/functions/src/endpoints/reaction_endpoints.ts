@@ -13,12 +13,11 @@ import { RelationshipService } from "../services/relationship_service";
 export namespace ReactionEndpoints {
     export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
-        const expectedOrigin = request.data.origin;
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const text = request.data.text || "";
 
-        if (!expectedOrigin || !activityId || !kind) {
+        if (!activityId || !kind) {
             throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
         }
 
@@ -46,7 +45,6 @@ export namespace ReactionEndpoints {
         // Build reaction
         const reactionJSON = {
             activity_id: activityId,
-            origin: expectedOrigin,
             reaction_id: "",
             user_id: uid,
             kind: kind,

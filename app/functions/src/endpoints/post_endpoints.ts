@@ -20,6 +20,7 @@ import { ConversationService } from "../services/conversation_service";
 import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
+import { ProfileStatisticsService } from "../services/profile_statistics_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -144,6 +145,8 @@ export namespace PostEndpoints {
 
     const userActivity = await ActivitiesService.postActivity(uid, FeedName.User, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
+
+    await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
     
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
@@ -187,6 +190,8 @@ export namespace PostEndpoints {
     const streamClient = ConversationService.getStreamChatInstance();
     const conversations = await ConversationService.getOneOnOneChannels(streamClient, uid, targets);
     await ConversationService.sendBulkMessage(conversations, uid, title, description);
+
+    await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -255,6 +260,8 @@ export namespace PostEndpoints {
 
     const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
+
+    await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", 1);
     
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
@@ -290,6 +297,14 @@ export namespace PostEndpoints {
     await DataService.deleteDocument({
       schemaKey: "activities",
       entryId: activityId,
+    });
+
+    functions.logger.info("Deleted user activity", { feedActivity: activity });
+    await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", -1);
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [activity],
     });
   });
 

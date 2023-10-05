@@ -46,6 +46,8 @@ class ProfilePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileViewModelState state = ref.watch(profileViewModelProvider);
     final ProfileViewModel viewModel = ref.read(profileViewModelProvider.notifier);
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState controllerState = ref.watch(profileControllerProvider);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -62,6 +64,10 @@ class ProfilePage extends HookConsumerWidget {
     final Profile targetProfile = state.profile ?? Profile.empty();
     final Relationship relationship = state.relationship ?? Relationship.empty(members);
 
+    final String expectedProfileStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: targetProfile.flMeta?.id ?? '');
+    final ProfileStatistics? profileStatistics = cacheController.get(expectedProfileStatisticsKey);
+    final Map<String, String> profileStatisticsData = ProfileStatistics.buildData(profileStatistics);
+
     //* Check for a cover image
     final Media? coverImage = targetProfile.coverImage;
 
@@ -73,7 +79,7 @@ class ProfilePage extends HookConsumerWidget {
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
     final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: targetFeed, currentProfileId: currentProfile?.flMeta?.id ?? '');
 
-    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetProfile, targetFeed]).toList();
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetProfile, targetFeed, profileStatistics]).toList();
 
     useLifecycleHook(viewModel);
     usePageRefreshHook();
@@ -89,10 +95,7 @@ class ProfilePage extends HookConsumerWidget {
             profile: state.profile ?? Profile.empty(),
             brightness: viewModel.appBarColor.impliedBrightness,
             enableProfileImageFullscreen: true,
-            metadata: {
-              'Followers': '${state.profile?.statistics.followers ?? 0}',
-              'Following': '${state.profile?.statistics.following ?? 0}',
-            },
+            metadata: profileStatisticsData,
           ),
           PositiveProfileActionsList(
             currentProfile: currentProfile,

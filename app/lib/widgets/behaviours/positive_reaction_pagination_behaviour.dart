@@ -64,8 +64,8 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-    if (reactionsState.pagingController.itemList?.isEmpty ?? true) {
-      logger.d('saveState() - No reactions to save for $reactionsState');
+    if (reactionsState.pagingController.value.error != null || reactionsState.pagingController.value.status == PagingStatus.loadingFirstPage) {
+      logger.d('saveState() - Not saving reactions state as there is an error or it is loading');
       return;
     }
 
@@ -89,6 +89,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
       String? next = data.containsKey('cursor') ? data['cursor'].toString() : '';
 
       // Check for weird backend loops (extra safety)
+      // statistics:activity:96d5fc30-623c-11ee-9782-5f6680786a6f
       if (next == reactionsState.currentPaginationKey) {
         next = null;
       }

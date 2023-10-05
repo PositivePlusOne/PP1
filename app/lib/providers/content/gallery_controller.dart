@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -21,6 +20,7 @@ import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 
 part 'gallery_controller.freezed.dart';
 part 'gallery_controller.g.dart';
