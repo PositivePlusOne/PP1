@@ -39,29 +39,29 @@ class _$BiometricsPreferencesViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_BiometricsPreferencesViewModelStateCopyWith<$Res> {
-  factory _$$_BiometricsPreferencesViewModelStateCopyWith(
-          _$_BiometricsPreferencesViewModelState value,
-          $Res Function(_$_BiometricsPreferencesViewModelState) then) =
-      __$$_BiometricsPreferencesViewModelStateCopyWithImpl<$Res>;
+abstract class _$$BiometricsPreferencesViewModelStateImplCopyWith<$Res> {
+  factory _$$BiometricsPreferencesViewModelStateImplCopyWith(
+          _$BiometricsPreferencesViewModelStateImpl value,
+          $Res Function(_$BiometricsPreferencesViewModelStateImpl) then) =
+      __$$BiometricsPreferencesViewModelStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_BiometricsPreferencesViewModelStateCopyWithImpl<$Res>
+class __$$BiometricsPreferencesViewModelStateImplCopyWithImpl<$Res>
     extends _$BiometricsPreferencesViewModelStateCopyWithImpl<$Res,
-        _$_BiometricsPreferencesViewModelState>
-    implements _$$_BiometricsPreferencesViewModelStateCopyWith<$Res> {
-  __$$_BiometricsPreferencesViewModelStateCopyWithImpl(
-      _$_BiometricsPreferencesViewModelState _value,
-      $Res Function(_$_BiometricsPreferencesViewModelState) _then)
+        _$BiometricsPreferencesViewModelStateImpl>
+    implements _$$BiometricsPreferencesViewModelStateImplCopyWith<$Res> {
+  __$$BiometricsPreferencesViewModelStateImplCopyWithImpl(
+      _$BiometricsPreferencesViewModelStateImpl _value,
+      $Res Function(_$BiometricsPreferencesViewModelStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_BiometricsPreferencesViewModelState
+class _$BiometricsPreferencesViewModelStateImpl
     implements _BiometricsPreferencesViewModelState {
-  const _$_BiometricsPreferencesViewModelState();
+  const _$BiometricsPreferencesViewModelStateImpl();
 
   @override
   String toString() {
@@ -72,7 +72,7 @@ class _$_BiometricsPreferencesViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BiometricsPreferencesViewModelState);
+            other is _$BiometricsPreferencesViewModelStateImpl);
   }
 
   @override
@@ -82,5 +82,5 @@ class _$_BiometricsPreferencesViewModelState
 abstract class _BiometricsPreferencesViewModelState
     implements BiometricsPreferencesViewModelState {
   const factory _BiometricsPreferencesViewModelState() =
-      _$_BiometricsPreferencesViewModelState;
+      _$BiometricsPreferencesViewModelStateImpl;
 }

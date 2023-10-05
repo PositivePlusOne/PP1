@@ -82,11 +82,12 @@ class _$SecurityControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SecurityControllerStateCopyWith<$Res>
+abstract class _$$SecurityControllerStateImplCopyWith<$Res>
     implements $SecurityControllerStateCopyWith<$Res> {
-  factory _$$_SecurityControllerStateCopyWith(_$_SecurityControllerState value,
-          $Res Function(_$_SecurityControllerState) then) =
-      __$$_SecurityControllerStateCopyWithImpl<$Res>;
+  factory _$$SecurityControllerStateImplCopyWith(
+          _$SecurityControllerStateImpl value,
+          $Res Function(_$SecurityControllerStateImpl) then) =
+      __$$SecurityControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -97,12 +98,13 @@ abstract class _$$_SecurityControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SecurityControllerStateCopyWithImpl<$Res>
+class __$$SecurityControllerStateImplCopyWithImpl<$Res>
     extends _$SecurityControllerStateCopyWithImpl<$Res,
-        _$_SecurityControllerState>
-    implements _$$_SecurityControllerStateCopyWith<$Res> {
-  __$$_SecurityControllerStateCopyWithImpl(_$_SecurityControllerState _value,
-      $Res Function(_$_SecurityControllerState) _then)
+        _$SecurityControllerStateImpl>
+    implements _$$SecurityControllerStateImplCopyWith<$Res> {
+  __$$SecurityControllerStateImplCopyWithImpl(
+      _$SecurityControllerStateImpl _value,
+      $Res Function(_$SecurityControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -113,7 +115,7 @@ class __$$_SecurityControllerStateCopyWithImpl<$Res>
     Object? biometricDevices = null,
     Object? isBiometricAuthenticationEnabled = null,
   }) {
-    return _then(_$_SecurityControllerState(
+    return _then(_$SecurityControllerStateImpl(
       canCheckBiometrics: null == canCheckBiometrics
           ? _value.canCheckBiometrics
           : canCheckBiometrics // ignore: cast_nullable_to_non_nullable
@@ -136,8 +138,8 @@ class __$$_SecurityControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SecurityControllerState implements _SecurityControllerState {
-  const _$_SecurityControllerState(
+class _$SecurityControllerStateImpl implements _SecurityControllerState {
+  const _$SecurityControllerStateImpl(
       {this.canCheckBiometrics = false,
       this.hasBiometrics = false,
       final List<BiometricType> biometricDevices = const [],
@@ -173,7 +175,7 @@ class _$_SecurityControllerState implements _SecurityControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SecurityControllerState &&
+            other is _$SecurityControllerStateImpl &&
             (identical(other.canCheckBiometrics, canCheckBiometrics) ||
                 other.canCheckBiometrics == canCheckBiometrics) &&
             (identical(other.hasBiometrics, hasBiometrics) ||
@@ -197,10 +199,9 @@ class _$_SecurityControllerState implements _SecurityControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SecurityControllerStateCopyWith<_$_SecurityControllerState>
-      get copyWith =>
-          __$$_SecurityControllerStateCopyWithImpl<_$_SecurityControllerState>(
-              this, _$identity);
+  _$$SecurityControllerStateImplCopyWith<_$SecurityControllerStateImpl>
+      get copyWith => __$$SecurityControllerStateImplCopyWithImpl<
+          _$SecurityControllerStateImpl>(this, _$identity);
 }
 
 abstract class _SecurityControllerState implements SecurityControllerState {
@@ -209,7 +210,7 @@ abstract class _SecurityControllerState implements SecurityControllerState {
           final bool hasBiometrics,
           final List<BiometricType> biometricDevices,
           final bool isBiometricAuthenticationEnabled}) =
-      _$_SecurityControllerState;
+      _$SecurityControllerStateImpl;
 
   @override
   bool get canCheckBiometrics;
@@ -221,6 +222,6 @@ abstract class _SecurityControllerState implements SecurityControllerState {
   bool get isBiometricAuthenticationEnabled;
   @override
   @JsonKey(ignore: true)
-  _$$_SecurityControllerStateCopyWith<_$_SecurityControllerState>
+  _$$SecurityControllerStateImplCopyWith<_$SecurityControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

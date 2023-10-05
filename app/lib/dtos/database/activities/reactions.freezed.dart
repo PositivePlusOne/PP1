@@ -143,10 +143,11 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
 }
 
 /// @nodoc
-abstract class _$$_ReactionCopyWith<$Res> implements $ReactionCopyWith<$Res> {
-  factory _$$_ReactionCopyWith(
-          _$_Reaction value, $Res Function(_$_Reaction) then) =
-      __$$_ReactionCopyWithImpl<$Res>;
+abstract class _$$ReactionImplCopyWith<$Res>
+    implements $ReactionCopyWith<$Res> {
+  factory _$$ReactionImplCopyWith(
+          _$ReactionImpl value, $Res Function(_$ReactionImpl) then) =
+      __$$ReactionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -167,11 +168,11 @@ abstract class _$$_ReactionCopyWith<$Res> implements $ReactionCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ReactionCopyWithImpl<$Res>
-    extends _$ReactionCopyWithImpl<$Res, _$_Reaction>
-    implements _$$_ReactionCopyWith<$Res> {
-  __$$_ReactionCopyWithImpl(
-      _$_Reaction _value, $Res Function(_$_Reaction) _then)
+class __$$ReactionImplCopyWithImpl<$Res>
+    extends _$ReactionCopyWithImpl<$Res, _$ReactionImpl>
+    implements _$$ReactionImplCopyWith<$Res> {
+  __$$ReactionImplCopyWithImpl(
+      _$ReactionImpl _value, $Res Function(_$ReactionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -186,7 +187,7 @@ class __$$_ReactionCopyWithImpl<$Res>
     Object? text = null,
     Object? tags = null,
   }) {
-    return _then(_$_Reaction(
+    return _then(_$ReactionImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -225,8 +226,8 @@ class __$$_ReactionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Reaction implements _Reaction {
-  const _$_Reaction(
+class _$ReactionImpl implements _Reaction {
+  const _$ReactionImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       @JsonKey(name: 'activity_id') this.activityId = '',
       @JsonKey(name: 'reaction_id') this.reactionId = '',
@@ -238,8 +239,8 @@ class _$_Reaction implements _Reaction {
       @JsonKey(name: 'tags') final List<String> tags = const []})
       : _tags = tags;
 
-  factory _$_Reaction.fromJson(Map<String, dynamic> json) =>
-      _$$_ReactionFromJson(json);
+  factory _$ReactionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ReactionImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -280,7 +281,7 @@ class _$_Reaction implements _Reaction {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Reaction &&
+            other is _$ReactionImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId) &&
@@ -301,12 +302,12 @@ class _$_Reaction implements _Reaction {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReactionCopyWith<_$_Reaction> get copyWith =>
-      __$$_ReactionCopyWithImpl<_$_Reaction>(this, _$identity);
+  _$$ReactionImplCopyWith<_$ReactionImpl> get copyWith =>
+      __$$ReactionImplCopyWithImpl<_$ReactionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ReactionToJson(
+    return _$$ReactionImplToJson(
       this,
     );
   }
@@ -322,9 +323,10 @@ abstract class _Reaction implements Reaction {
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       final ReactionType kind,
       @JsonKey(name: 'text') final String text,
-      @JsonKey(name: 'tags') final List<String> tags}) = _$_Reaction;
+      @JsonKey(name: 'tags') final List<String> tags}) = _$ReactionImpl;
 
-  factory _Reaction.fromJson(Map<String, dynamic> json) = _$_Reaction.fromJson;
+  factory _Reaction.fromJson(Map<String, dynamic> json) =
+      _$ReactionImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -352,7 +354,7 @@ abstract class _Reaction implements Reaction {
   List<String> get tags;
   @override
   @JsonKey(ignore: true)
-  _$$_ReactionCopyWith<_$_Reaction> get copyWith =>
+  _$$ReactionImplCopyWith<_$ReactionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -442,27 +444,28 @@ class _$ReactionTypeCopyWithImpl<$Res, $Val extends ReactionType>
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeUnknownReactionCopyWith<$Res> {
-  factory _$$_ReactionTypeUnknownReactionCopyWith(
-          _$_ReactionTypeUnknownReaction value,
-          $Res Function(_$_ReactionTypeUnknownReaction) then) =
-      __$$_ReactionTypeUnknownReactionCopyWithImpl<$Res>;
+abstract class _$$ReactionTypeUnknownReactionImplCopyWith<$Res> {
+  factory _$$ReactionTypeUnknownReactionImplCopyWith(
+          _$ReactionTypeUnknownReactionImpl value,
+          $Res Function(_$ReactionTypeUnknownReactionImpl) then) =
+      __$$ReactionTypeUnknownReactionImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeUnknownReactionCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeUnknownReaction>
-    implements _$$_ReactionTypeUnknownReactionCopyWith<$Res> {
-  __$$_ReactionTypeUnknownReactionCopyWithImpl(
-      _$_ReactionTypeUnknownReaction _value,
-      $Res Function(_$_ReactionTypeUnknownReaction) _then)
+class __$$ReactionTypeUnknownReactionImplCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$ReactionTypeUnknownReactionImpl>
+    implements _$$ReactionTypeUnknownReactionImplCopyWith<$Res> {
+  __$$ReactionTypeUnknownReactionImplCopyWithImpl(
+      _$ReactionTypeUnknownReactionImpl _value,
+      $Res Function(_$ReactionTypeUnknownReactionImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
-  const _$_ReactionTypeUnknownReaction();
+class _$ReactionTypeUnknownReactionImpl
+    implements _ReactionTypeUnknownReaction {
+  const _$ReactionTypeUnknownReactionImpl();
 
   @override
   String toString() {
@@ -473,7 +476,7 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReactionTypeUnknownReaction);
+            other is _$ReactionTypeUnknownReactionImpl);
   }
 
   @override
@@ -568,29 +571,30 @@ class _$_ReactionTypeUnknownReaction implements _ReactionTypeUnknownReaction {
 }
 
 abstract class _ReactionTypeUnknownReaction implements ReactionType {
-  const factory _ReactionTypeUnknownReaction() = _$_ReactionTypeUnknownReaction;
+  const factory _ReactionTypeUnknownReaction() =
+      _$ReactionTypeUnknownReactionImpl;
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeLikeCopyWith<$Res> {
-  factory _$$_ReactionTypeLikeCopyWith(
-          _$_ReactionTypeLike value, $Res Function(_$_ReactionTypeLike) then) =
-      __$$_ReactionTypeLikeCopyWithImpl<$Res>;
+abstract class _$$ReactionTypeLikeImplCopyWith<$Res> {
+  factory _$$ReactionTypeLikeImplCopyWith(_$ReactionTypeLikeImpl value,
+          $Res Function(_$ReactionTypeLikeImpl) then) =
+      __$$ReactionTypeLikeImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeLikeCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeLike>
-    implements _$$_ReactionTypeLikeCopyWith<$Res> {
-  __$$_ReactionTypeLikeCopyWithImpl(
-      _$_ReactionTypeLike _value, $Res Function(_$_ReactionTypeLike) _then)
+class __$$ReactionTypeLikeImplCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$ReactionTypeLikeImpl>
+    implements _$$ReactionTypeLikeImplCopyWith<$Res> {
+  __$$ReactionTypeLikeImplCopyWithImpl(_$ReactionTypeLikeImpl _value,
+      $Res Function(_$ReactionTypeLikeImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeLike implements _ReactionTypeLike {
-  const _$_ReactionTypeLike();
+class _$ReactionTypeLikeImpl implements _ReactionTypeLike {
+  const _$ReactionTypeLikeImpl();
 
   @override
   String toString() {
@@ -600,7 +604,7 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ReactionTypeLike);
+        (other.runtimeType == runtimeType && other is _$ReactionTypeLikeImpl);
   }
 
   @override
@@ -695,29 +699,29 @@ class _$_ReactionTypeLike implements _ReactionTypeLike {
 }
 
 abstract class _ReactionTypeLike implements ReactionType {
-  const factory _ReactionTypeLike() = _$_ReactionTypeLike;
+  const factory _ReactionTypeLike() = _$ReactionTypeLikeImpl;
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeDislikeCopyWith<$Res> {
-  factory _$$_ReactionTypeDislikeCopyWith(_$_ReactionTypeDislike value,
-          $Res Function(_$_ReactionTypeDislike) then) =
-      __$$_ReactionTypeDislikeCopyWithImpl<$Res>;
+abstract class _$$ReactionTypeDislikeImplCopyWith<$Res> {
+  factory _$$ReactionTypeDislikeImplCopyWith(_$ReactionTypeDislikeImpl value,
+          $Res Function(_$ReactionTypeDislikeImpl) then) =
+      __$$ReactionTypeDislikeImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeDislikeCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeDislike>
-    implements _$$_ReactionTypeDislikeCopyWith<$Res> {
-  __$$_ReactionTypeDislikeCopyWithImpl(_$_ReactionTypeDislike _value,
-      $Res Function(_$_ReactionTypeDislike) _then)
+class __$$ReactionTypeDislikeImplCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$ReactionTypeDislikeImpl>
+    implements _$$ReactionTypeDislikeImplCopyWith<$Res> {
+  __$$ReactionTypeDislikeImplCopyWithImpl(_$ReactionTypeDislikeImpl _value,
+      $Res Function(_$ReactionTypeDislikeImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeDislike implements _ReactionTypeDislike {
-  const _$_ReactionTypeDislike();
+class _$ReactionTypeDislikeImpl implements _ReactionTypeDislike {
+  const _$ReactionTypeDislikeImpl();
 
   @override
   String toString() {
@@ -727,7 +731,8 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ReactionTypeDislike);
+        (other.runtimeType == runtimeType &&
+            other is _$ReactionTypeDislikeImpl);
   }
 
   @override
@@ -822,29 +827,29 @@ class _$_ReactionTypeDislike implements _ReactionTypeDislike {
 }
 
 abstract class _ReactionTypeDislike implements ReactionType {
-  const factory _ReactionTypeDislike() = _$_ReactionTypeDislike;
+  const factory _ReactionTypeDislike() = _$ReactionTypeDislikeImpl;
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeCommentCopyWith<$Res> {
-  factory _$$_ReactionTypeCommentCopyWith(_$_ReactionTypeComment value,
-          $Res Function(_$_ReactionTypeComment) then) =
-      __$$_ReactionTypeCommentCopyWithImpl<$Res>;
+abstract class _$$ReactionTypeCommentImplCopyWith<$Res> {
+  factory _$$ReactionTypeCommentImplCopyWith(_$ReactionTypeCommentImpl value,
+          $Res Function(_$ReactionTypeCommentImpl) then) =
+      __$$ReactionTypeCommentImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeCommentCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeComment>
-    implements _$$_ReactionTypeCommentCopyWith<$Res> {
-  __$$_ReactionTypeCommentCopyWithImpl(_$_ReactionTypeComment _value,
-      $Res Function(_$_ReactionTypeComment) _then)
+class __$$ReactionTypeCommentImplCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$ReactionTypeCommentImpl>
+    implements _$$ReactionTypeCommentImplCopyWith<$Res> {
+  __$$ReactionTypeCommentImplCopyWithImpl(_$ReactionTypeCommentImpl _value,
+      $Res Function(_$ReactionTypeCommentImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeComment implements _ReactionTypeComment {
-  const _$_ReactionTypeComment();
+class _$ReactionTypeCommentImpl implements _ReactionTypeComment {
+  const _$ReactionTypeCommentImpl();
 
   @override
   String toString() {
@@ -854,7 +859,8 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ReactionTypeComment);
+        (other.runtimeType == runtimeType &&
+            other is _$ReactionTypeCommentImpl);
   }
 
   @override
@@ -949,29 +955,29 @@ class _$_ReactionTypeComment implements _ReactionTypeComment {
 }
 
 abstract class _ReactionTypeComment implements ReactionType {
-  const factory _ReactionTypeComment() = _$_ReactionTypeComment;
+  const factory _ReactionTypeComment() = _$ReactionTypeCommentImpl;
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeBookmarkCopyWith<$Res> {
-  factory _$$_ReactionTypeBookmarkCopyWith(_$_ReactionTypeBookmark value,
-          $Res Function(_$_ReactionTypeBookmark) then) =
-      __$$_ReactionTypeBookmarkCopyWithImpl<$Res>;
+abstract class _$$ReactionTypeBookmarkImplCopyWith<$Res> {
+  factory _$$ReactionTypeBookmarkImplCopyWith(_$ReactionTypeBookmarkImpl value,
+          $Res Function(_$ReactionTypeBookmarkImpl) then) =
+      __$$ReactionTypeBookmarkImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeBookmarkCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeBookmark>
-    implements _$$_ReactionTypeBookmarkCopyWith<$Res> {
-  __$$_ReactionTypeBookmarkCopyWithImpl(_$_ReactionTypeBookmark _value,
-      $Res Function(_$_ReactionTypeBookmark) _then)
+class __$$ReactionTypeBookmarkImplCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$ReactionTypeBookmarkImpl>
+    implements _$$ReactionTypeBookmarkImplCopyWith<$Res> {
+  __$$ReactionTypeBookmarkImplCopyWithImpl(_$ReactionTypeBookmarkImpl _value,
+      $Res Function(_$ReactionTypeBookmarkImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeBookmark implements _ReactionTypeBookmark {
-  const _$_ReactionTypeBookmark();
+class _$ReactionTypeBookmarkImpl implements _ReactionTypeBookmark {
+  const _$ReactionTypeBookmarkImpl();
 
   @override
   String toString() {
@@ -981,7 +987,8 @@ class _$_ReactionTypeBookmark implements _ReactionTypeBookmark {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ReactionTypeBookmark);
+        (other.runtimeType == runtimeType &&
+            other is _$ReactionTypeBookmarkImpl);
   }
 
   @override
@@ -1076,29 +1083,29 @@ class _$_ReactionTypeBookmark implements _ReactionTypeBookmark {
 }
 
 abstract class _ReactionTypeBookmark implements ReactionType {
-  const factory _ReactionTypeBookmark() = _$_ReactionTypeBookmark;
+  const factory _ReactionTypeBookmark() = _$ReactionTypeBookmarkImpl;
 }
 
 /// @nodoc
-abstract class _$$_ReactionTypeShareCopyWith<$Res> {
-  factory _$$_ReactionTypeShareCopyWith(_$_ReactionTypeShare value,
-          $Res Function(_$_ReactionTypeShare) then) =
-      __$$_ReactionTypeShareCopyWithImpl<$Res>;
+abstract class _$$ReactionTypeShareImplCopyWith<$Res> {
+  factory _$$ReactionTypeShareImplCopyWith(_$ReactionTypeShareImpl value,
+          $Res Function(_$ReactionTypeShareImpl) then) =
+      __$$ReactionTypeShareImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionTypeShareCopyWithImpl<$Res>
-    extends _$ReactionTypeCopyWithImpl<$Res, _$_ReactionTypeShare>
-    implements _$$_ReactionTypeShareCopyWith<$Res> {
-  __$$_ReactionTypeShareCopyWithImpl(
-      _$_ReactionTypeShare _value, $Res Function(_$_ReactionTypeShare) _then)
+class __$$ReactionTypeShareImplCopyWithImpl<$Res>
+    extends _$ReactionTypeCopyWithImpl<$Res, _$ReactionTypeShareImpl>
+    implements _$$ReactionTypeShareImplCopyWith<$Res> {
+  __$$ReactionTypeShareImplCopyWithImpl(_$ReactionTypeShareImpl _value,
+      $Res Function(_$ReactionTypeShareImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionTypeShare implements _ReactionTypeShare {
-  const _$_ReactionTypeShare();
+class _$ReactionTypeShareImpl implements _ReactionTypeShare {
+  const _$ReactionTypeShareImpl();
 
   @override
   String toString() {
@@ -1108,7 +1115,7 @@ class _$_ReactionTypeShare implements _ReactionTypeShare {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_ReactionTypeShare);
+        (other.runtimeType == runtimeType && other is _$ReactionTypeShareImpl);
   }
 
   @override
@@ -1203,7 +1210,7 @@ class _$_ReactionTypeShare implements _ReactionTypeShare {
 }
 
 abstract class _ReactionTypeShare implements ReactionType {
-  const factory _ReactionTypeShare() = _$_ReactionTypeShare;
+  const factory _ReactionTypeShare() = _$ReactionTypeShareImpl;
 }
 
 ReactionStatistics _$ReactionStatisticsFromJson(Map<String, dynamic> json) {
@@ -1302,11 +1309,11 @@ class _$ReactionStatisticsCopyWithImpl<$Res, $Val extends ReactionStatistics>
 }
 
 /// @nodoc
-abstract class _$$_ReactionStatisticsCopyWith<$Res>
+abstract class _$$ReactionStatisticsImplCopyWith<$Res>
     implements $ReactionStatisticsCopyWith<$Res> {
-  factory _$$_ReactionStatisticsCopyWith(_$_ReactionStatistics value,
-          $Res Function(_$_ReactionStatistics) then) =
-      __$$_ReactionStatisticsCopyWithImpl<$Res>;
+  factory _$$ReactionStatisticsImplCopyWith(_$ReactionStatisticsImpl value,
+          $Res Function(_$ReactionStatisticsImpl) then) =
+      __$$ReactionStatisticsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1321,11 +1328,11 @@ abstract class _$$_ReactionStatisticsCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ReactionStatisticsCopyWithImpl<$Res>
-    extends _$ReactionStatisticsCopyWithImpl<$Res, _$_ReactionStatistics>
-    implements _$$_ReactionStatisticsCopyWith<$Res> {
-  __$$_ReactionStatisticsCopyWithImpl(
-      _$_ReactionStatistics _value, $Res Function(_$_ReactionStatistics) _then)
+class __$$ReactionStatisticsImplCopyWithImpl<$Res>
+    extends _$ReactionStatisticsCopyWithImpl<$Res, _$ReactionStatisticsImpl>
+    implements _$$ReactionStatisticsImplCopyWith<$Res> {
+  __$$ReactionStatisticsImplCopyWithImpl(_$ReactionStatisticsImpl _value,
+      $Res Function(_$ReactionStatisticsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1337,7 +1344,7 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
     Object? reactionId = null,
     Object? userId = null,
   }) {
-    return _then(_$_ReactionStatistics(
+    return _then(_$ReactionStatisticsImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -1364,8 +1371,8 @@ class __$$_ReactionStatisticsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ReactionStatistics implements _ReactionStatistics {
-  const _$_ReactionStatistics(
+class _$ReactionStatisticsImpl implements _ReactionStatistics {
+  const _$ReactionStatisticsImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       @JsonKey(name: 'counts') final Map<String, int> counts = const {},
       @JsonKey(name: 'activity_id') this.activityId = '',
@@ -1373,8 +1380,8 @@ class _$_ReactionStatistics implements _ReactionStatistics {
       @JsonKey(name: 'user_id') this.userId = ''})
       : _counts = counts;
 
-  factory _$_ReactionStatistics.fromJson(Map<String, dynamic> json) =>
-      _$$_ReactionStatisticsFromJson(json);
+  factory _$ReactionStatisticsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ReactionStatisticsImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -1407,7 +1414,7 @@ class _$_ReactionStatistics implements _ReactionStatistics {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReactionStatistics &&
+            other is _$ReactionStatisticsImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             const DeepCollectionEquality().equals(other._counts, _counts) &&
             (identical(other.activityId, activityId) ||
@@ -1430,13 +1437,13 @@ class _$_ReactionStatistics implements _ReactionStatistics {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReactionStatisticsCopyWith<_$_ReactionStatistics> get copyWith =>
-      __$$_ReactionStatisticsCopyWithImpl<_$_ReactionStatistics>(
+  _$$ReactionStatisticsImplCopyWith<_$ReactionStatisticsImpl> get copyWith =>
+      __$$ReactionStatisticsImplCopyWithImpl<_$ReactionStatisticsImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ReactionStatisticsToJson(
+    return _$$ReactionStatisticsImplToJson(
       this,
     );
   }
@@ -1444,14 +1451,15 @@ class _$_ReactionStatistics implements _ReactionStatistics {
 
 abstract class _ReactionStatistics implements ReactionStatistics {
   const factory _ReactionStatistics(
-      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      @JsonKey(name: 'counts') final Map<String, int> counts,
-      @JsonKey(name: 'activity_id') final String activityId,
-      @JsonKey(name: 'reaction_id') final String reactionId,
-      @JsonKey(name: 'user_id') final String userId}) = _$_ReactionStatistics;
+          {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          @JsonKey(name: 'counts') final Map<String, int> counts,
+          @JsonKey(name: 'activity_id') final String activityId,
+          @JsonKey(name: 'reaction_id') final String reactionId,
+          @JsonKey(name: 'user_id') final String userId}) =
+      _$ReactionStatisticsImpl;
 
   factory _ReactionStatistics.fromJson(Map<String, dynamic> json) =
-      _$_ReactionStatistics.fromJson;
+      _$ReactionStatisticsImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -1470,7 +1478,7 @@ abstract class _ReactionStatistics implements ReactionStatistics {
   String get userId;
   @override
   @JsonKey(ignore: true)
-  _$$_ReactionStatisticsCopyWith<_$_ReactionStatistics> get copyWith =>
+  _$$ReactionStatisticsImplCopyWith<_$ReactionStatisticsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1528,22 +1536,22 @@ class _$TargetFeedCopyWithImpl<$Res, $Val extends TargetFeed>
 }
 
 /// @nodoc
-abstract class _$$_TargetFeedCopyWith<$Res>
+abstract class _$$TargetFeedImplCopyWith<$Res>
     implements $TargetFeedCopyWith<$Res> {
-  factory _$$_TargetFeedCopyWith(
-          _$_TargetFeed value, $Res Function(_$_TargetFeed) then) =
-      __$$_TargetFeedCopyWithImpl<$Res>;
+  factory _$$TargetFeedImplCopyWith(
+          _$TargetFeedImpl value, $Res Function(_$TargetFeedImpl) then) =
+      __$$TargetFeedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String targetSlug, String targetUserId});
 }
 
 /// @nodoc
-class __$$_TargetFeedCopyWithImpl<$Res>
-    extends _$TargetFeedCopyWithImpl<$Res, _$_TargetFeed>
-    implements _$$_TargetFeedCopyWith<$Res> {
-  __$$_TargetFeedCopyWithImpl(
-      _$_TargetFeed _value, $Res Function(_$_TargetFeed) _then)
+class __$$TargetFeedImplCopyWithImpl<$Res>
+    extends _$TargetFeedCopyWithImpl<$Res, _$TargetFeedImpl>
+    implements _$$TargetFeedImplCopyWith<$Res> {
+  __$$TargetFeedImplCopyWithImpl(
+      _$TargetFeedImpl _value, $Res Function(_$TargetFeedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1552,7 +1560,7 @@ class __$$_TargetFeedCopyWithImpl<$Res>
     Object? targetSlug = null,
     Object? targetUserId = null,
   }) {
-    return _then(_$_TargetFeed(
+    return _then(_$TargetFeedImpl(
       targetSlug: null == targetSlug
           ? _value.targetSlug
           : targetSlug // ignore: cast_nullable_to_non_nullable
@@ -1567,11 +1575,11 @@ class __$$_TargetFeedCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TargetFeed implements _TargetFeed {
-  const _$_TargetFeed({this.targetSlug = '', this.targetUserId = ''});
+class _$TargetFeedImpl implements _TargetFeed {
+  const _$TargetFeedImpl({this.targetSlug = '', this.targetUserId = ''});
 
-  factory _$_TargetFeed.fromJson(Map<String, dynamic> json) =>
-      _$$_TargetFeedFromJson(json);
+  factory _$TargetFeedImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TargetFeedImplFromJson(json);
 
   @override
   @JsonKey()
@@ -1589,7 +1597,7 @@ class _$_TargetFeed implements _TargetFeed {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TargetFeed &&
+            other is _$TargetFeedImpl &&
             (identical(other.targetSlug, targetSlug) ||
                 other.targetSlug == targetSlug) &&
             (identical(other.targetUserId, targetUserId) ||
@@ -1603,12 +1611,12 @@ class _$_TargetFeed implements _TargetFeed {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TargetFeedCopyWith<_$_TargetFeed> get copyWith =>
-      __$$_TargetFeedCopyWithImpl<_$_TargetFeed>(this, _$identity);
+  _$$TargetFeedImplCopyWith<_$TargetFeedImpl> get copyWith =>
+      __$$TargetFeedImplCopyWithImpl<_$TargetFeedImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TargetFeedToJson(
+    return _$$TargetFeedImplToJson(
       this,
     );
   }
@@ -1616,10 +1624,10 @@ class _$_TargetFeed implements _TargetFeed {
 
 abstract class _TargetFeed implements TargetFeed {
   const factory _TargetFeed(
-      {final String targetSlug, final String targetUserId}) = _$_TargetFeed;
+      {final String targetSlug, final String targetUserId}) = _$TargetFeedImpl;
 
   factory _TargetFeed.fromJson(Map<String, dynamic> json) =
-      _$_TargetFeed.fromJson;
+      _$TargetFeedImpl.fromJson;
 
   @override
   String get targetSlug;
@@ -1627,6 +1635,6 @@ abstract class _TargetFeed implements TargetFeed {
   String get targetUserId;
   @override
   @JsonKey(ignore: true)
-  _$$_TargetFeedCopyWith<_$_TargetFeed> get copyWith =>
+  _$$TargetFeedImplCopyWith<_$TargetFeedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

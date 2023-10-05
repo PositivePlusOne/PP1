@@ -74,11 +74,12 @@ class _$AccountViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AccountViewModelStateCopyWith<$Res>
+abstract class _$$AccountViewModelStateImplCopyWith<$Res>
     implements $AccountViewModelStateCopyWith<$Res> {
-  factory _$$_AccountViewModelStateCopyWith(_$_AccountViewModelState value,
-          $Res Function(_$_AccountViewModelState) then) =
-      __$$_AccountViewModelStateCopyWithImpl<$Res>;
+  factory _$$AccountViewModelStateImplCopyWith(
+          _$AccountViewModelStateImpl value,
+          $Res Function(_$AccountViewModelStateImpl) then) =
+      __$$AccountViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy, FeedbackWrapper feedback});
@@ -88,11 +89,12 @@ abstract class _$$_AccountViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountViewModelStateCopyWithImpl<$Res>
-    extends _$AccountViewModelStateCopyWithImpl<$Res, _$_AccountViewModelState>
-    implements _$$_AccountViewModelStateCopyWith<$Res> {
-  __$$_AccountViewModelStateCopyWithImpl(_$_AccountViewModelState _value,
-      $Res Function(_$_AccountViewModelState) _then)
+class __$$AccountViewModelStateImplCopyWithImpl<$Res>
+    extends _$AccountViewModelStateCopyWithImpl<$Res,
+        _$AccountViewModelStateImpl>
+    implements _$$AccountViewModelStateImplCopyWith<$Res> {
+  __$$AccountViewModelStateImplCopyWithImpl(_$AccountViewModelStateImpl _value,
+      $Res Function(_$AccountViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -101,7 +103,7 @@ class __$$_AccountViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? feedback = null,
   }) {
-    return _then(_$_AccountViewModelState(
+    return _then(_$AccountViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -116,8 +118,9 @@ class __$$_AccountViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountViewModelState implements _AccountViewModelState {
-  const _$_AccountViewModelState({this.isBusy = false, required this.feedback});
+class _$AccountViewModelStateImpl implements _AccountViewModelState {
+  const _$AccountViewModelStateImpl(
+      {this.isBusy = false, required this.feedback});
 
   @override
   @JsonKey()
@@ -134,7 +137,7 @@ class _$_AccountViewModelState implements _AccountViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AccountViewModelState &&
+            other is _$AccountViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.feedback, feedback) ||
                 other.feedback == feedback));
@@ -146,15 +149,15 @@ class _$_AccountViewModelState implements _AccountViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountViewModelStateCopyWith<_$_AccountViewModelState> get copyWith =>
-      __$$_AccountViewModelStateCopyWithImpl<_$_AccountViewModelState>(
-          this, _$identity);
+  _$$AccountViewModelStateImplCopyWith<_$AccountViewModelStateImpl>
+      get copyWith => __$$AccountViewModelStateImplCopyWithImpl<
+          _$AccountViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _AccountViewModelState implements AccountViewModelState {
   const factory _AccountViewModelState(
       {final bool isBusy,
-      required final FeedbackWrapper feedback}) = _$_AccountViewModelState;
+      required final FeedbackWrapper feedback}) = _$AccountViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -162,6 +165,6 @@ abstract class _AccountViewModelState implements AccountViewModelState {
   FeedbackWrapper get feedback;
   @override
   @JsonKey(ignore: true)
-  _$$_AccountViewModelStateCopyWith<_$_AccountViewModelState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$AccountViewModelStateImplCopyWith<_$AccountViewModelStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

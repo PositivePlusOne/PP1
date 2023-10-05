@@ -6,13 +6,13 @@ part of 'gender_controller.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GenderOption _$$_GenderOptionFromJson(Map<String, dynamic> json) =>
-    _$_GenderOption(
+_$GenderOptionImpl _$$GenderOptionImplFromJson(Map<String, dynamic> json) =>
+    _$GenderOptionImpl(
       label: json['label'] as String,
       value: json['value'] as String,
     );
 
-Map<String, dynamic> _$$_GenderOptionToJson(_$_GenderOption instance) =>
+Map<String, dynamic> _$$GenderOptionImplToJson(_$GenderOptionImpl instance) =>
     <String, dynamic>{
       'label': instance.label,
       'value': instance.value,

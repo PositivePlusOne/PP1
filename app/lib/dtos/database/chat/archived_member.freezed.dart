@@ -80,11 +80,11 @@ class _$ArchivedMemberCopyWithImpl<$Res, $Val extends ArchivedMember>
 }
 
 /// @nodoc
-abstract class _$$_ArchivedMemberCopyWith<$Res>
+abstract class _$$ArchivedMemberImplCopyWith<$Res>
     implements $ArchivedMemberCopyWith<$Res> {
-  factory _$$_ArchivedMemberCopyWith(
-          _$_ArchivedMember value, $Res Function(_$_ArchivedMember) then) =
-      __$$_ArchivedMemberCopyWithImpl<$Res>;
+  factory _$$ArchivedMemberImplCopyWith(_$ArchivedMemberImpl value,
+          $Res Function(_$ArchivedMemberImpl) then) =
+      __$$ArchivedMemberImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -94,11 +94,11 @@ abstract class _$$_ArchivedMemberCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ArchivedMemberCopyWithImpl<$Res>
-    extends _$ArchivedMemberCopyWithImpl<$Res, _$_ArchivedMember>
-    implements _$$_ArchivedMemberCopyWith<$Res> {
-  __$$_ArchivedMemberCopyWithImpl(
-      _$_ArchivedMember _value, $Res Function(_$_ArchivedMember) _then)
+class __$$ArchivedMemberImplCopyWithImpl<$Res>
+    extends _$ArchivedMemberCopyWithImpl<$Res, _$ArchivedMemberImpl>
+    implements _$$ArchivedMemberImplCopyWith<$Res> {
+  __$$ArchivedMemberImplCopyWithImpl(
+      _$ArchivedMemberImpl _value, $Res Function(_$ArchivedMemberImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -108,7 +108,7 @@ class __$$_ArchivedMemberCopyWithImpl<$Res>
     Object? dateArchived = freezed,
     Object? lastMessageId = freezed,
   }) {
-    return _then(_$_ArchivedMember(
+    return _then(_$ArchivedMemberImpl(
       memberId: freezed == memberId
           ? _value.memberId
           : memberId // ignore: cast_nullable_to_non_nullable
@@ -127,14 +127,14 @@ class __$$_ArchivedMemberCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ArchivedMember implements _ArchivedMember {
-  const _$_ArchivedMember(
+class _$ArchivedMemberImpl implements _ArchivedMember {
+  const _$ArchivedMemberImpl(
       {@JsonKey(name: 'member_id') this.memberId,
       @JsonKey(name: 'date_archived') this.dateArchived,
       @JsonKey(name: 'last_message_id') this.lastMessageId});
 
-  factory _$_ArchivedMember.fromJson(Map<String, dynamic> json) =>
-      _$$_ArchivedMemberFromJson(json);
+  factory _$ArchivedMemberImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ArchivedMemberImplFromJson(json);
 
   @override
   @JsonKey(name: 'member_id')
@@ -155,7 +155,7 @@ class _$_ArchivedMember implements _ArchivedMember {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ArchivedMember &&
+            other is _$ArchivedMemberImpl &&
             (identical(other.memberId, memberId) ||
                 other.memberId == memberId) &&
             (identical(other.dateArchived, dateArchived) ||
@@ -172,12 +172,13 @@ class _$_ArchivedMember implements _ArchivedMember {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ArchivedMemberCopyWith<_$_ArchivedMember> get copyWith =>
-      __$$_ArchivedMemberCopyWithImpl<_$_ArchivedMember>(this, _$identity);
+  _$$ArchivedMemberImplCopyWith<_$ArchivedMemberImpl> get copyWith =>
+      __$$ArchivedMemberImplCopyWithImpl<_$ArchivedMemberImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ArchivedMemberToJson(
+    return _$$ArchivedMemberImplToJson(
       this,
     );
   }
@@ -188,10 +189,10 @@ abstract class _ArchivedMember implements ArchivedMember {
           {@JsonKey(name: 'member_id') final String? memberId,
           @JsonKey(name: 'date_archived') final DateTime? dateArchived,
           @JsonKey(name: 'last_message_id') final String? lastMessageId}) =
-      _$_ArchivedMember;
+      _$ArchivedMemberImpl;
 
   factory _ArchivedMember.fromJson(Map<String, dynamic> json) =
-      _$_ArchivedMember.fromJson;
+      _$ArchivedMemberImpl.fromJson;
 
   @override
   @JsonKey(name: 'member_id')
@@ -204,6 +205,6 @@ abstract class _ArchivedMember implements ArchivedMember {
   String? get lastMessageId;
   @override
   @JsonKey(ignore: true)
-  _$$_ArchivedMemberCopyWith<_$_ArchivedMember> get copyWith =>
+  _$$ArchivedMemberImplCopyWith<_$ArchivedMemberImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

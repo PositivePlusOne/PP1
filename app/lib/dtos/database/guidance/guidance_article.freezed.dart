@@ -107,11 +107,11 @@ class _$GuidanceArticleCopyWithImpl<$Res, $Val extends GuidanceArticle>
 }
 
 /// @nodoc
-abstract class _$$_GuidanceArticleCopyWith<$Res>
+abstract class _$$GuidanceArticleImplCopyWith<$Res>
     implements $GuidanceArticleCopyWith<$Res> {
-  factory _$$_GuidanceArticleCopyWith(
-          _$_GuidanceArticle value, $Res Function(_$_GuidanceArticle) then) =
-      __$$_GuidanceArticleCopyWithImpl<$Res>;
+  factory _$$GuidanceArticleImplCopyWith(_$GuidanceArticleImpl value,
+          $Res Function(_$GuidanceArticleImpl) then) =
+      __$$GuidanceArticleImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -126,11 +126,11 @@ abstract class _$$_GuidanceArticleCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GuidanceArticleCopyWithImpl<$Res>
-    extends _$GuidanceArticleCopyWithImpl<$Res, _$_GuidanceArticle>
-    implements _$$_GuidanceArticleCopyWith<$Res> {
-  __$$_GuidanceArticleCopyWithImpl(
-      _$_GuidanceArticle _value, $Res Function(_$_GuidanceArticle) _then)
+class __$$GuidanceArticleImplCopyWithImpl<$Res>
+    extends _$GuidanceArticleCopyWithImpl<$Res, _$GuidanceArticleImpl>
+    implements _$$GuidanceArticleImplCopyWith<$Res> {
+  __$$GuidanceArticleImplCopyWithImpl(
+      _$GuidanceArticleImpl _value, $Res Function(_$GuidanceArticleImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -142,7 +142,7 @@ class __$$_GuidanceArticleCopyWithImpl<$Res>
     Object? locale = null,
     Object? flMeta = freezed,
   }) {
-    return _then(_$_GuidanceArticle(
+    return _then(_$GuidanceArticleImpl(
       documentId: null == documentId
           ? _value.documentId
           : documentId // ignore: cast_nullable_to_non_nullable
@@ -169,16 +169,16 @@ class __$$_GuidanceArticleCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GuidanceArticle implements _GuidanceArticle {
-  const _$_GuidanceArticle(
+class _$GuidanceArticleImpl implements _GuidanceArticle {
+  const _$GuidanceArticleImpl(
       {@JsonKey(name: 'id') required this.documentId,
       this.title = '',
       this.body = '',
       this.locale = 'en',
       @JsonKey(name: '_fl_meta_') this.flMeta});
 
-  factory _$_GuidanceArticle.fromJson(Map<String, dynamic> json) =>
-      _$$_GuidanceArticleFromJson(json);
+  factory _$GuidanceArticleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GuidanceArticleImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -205,7 +205,7 @@ class _$_GuidanceArticle implements _GuidanceArticle {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceArticle &&
+            other is _$GuidanceArticleImpl &&
             (identical(other.documentId, documentId) ||
                 other.documentId == documentId) &&
             (identical(other.title, title) || other.title == title) &&
@@ -222,12 +222,13 @@ class _$_GuidanceArticle implements _GuidanceArticle {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GuidanceArticleCopyWith<_$_GuidanceArticle> get copyWith =>
-      __$$_GuidanceArticleCopyWithImpl<_$_GuidanceArticle>(this, _$identity);
+  _$$GuidanceArticleImplCopyWith<_$GuidanceArticleImpl> get copyWith =>
+      __$$GuidanceArticleImplCopyWithImpl<_$GuidanceArticleImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GuidanceArticleToJson(
+    return _$$GuidanceArticleImplToJson(
       this,
     );
   }
@@ -235,14 +236,15 @@ class _$_GuidanceArticle implements _GuidanceArticle {
 
 abstract class _GuidanceArticle implements GuidanceArticle {
   const factory _GuidanceArticle(
-      {@JsonKey(name: 'id') required final String documentId,
-      final String title,
-      final String body,
-      final String locale,
-      @JsonKey(name: '_fl_meta_') final FlMeta? flMeta}) = _$_GuidanceArticle;
+          {@JsonKey(name: 'id') required final String documentId,
+          final String title,
+          final String body,
+          final String locale,
+          @JsonKey(name: '_fl_meta_') final FlMeta? flMeta}) =
+      _$GuidanceArticleImpl;
 
   factory _GuidanceArticle.fromJson(Map<String, dynamic> json) =
-      _$_GuidanceArticle.fromJson;
+      _$GuidanceArticleImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -258,6 +260,6 @@ abstract class _GuidanceArticle implements GuidanceArticle {
   FlMeta? get flMeta;
   @override
   @JsonKey(ignore: true)
-  _$$_GuidanceArticleCopyWith<_$_GuidanceArticle> get copyWith =>
+  _$$GuidanceArticleImplCopyWith<_$GuidanceArticleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -74,22 +74,22 @@ class _$EndpointResponseCopyWithImpl<$Res, $Val extends EndpointResponse>
 }
 
 /// @nodoc
-abstract class _$$_EndpointResponseCopyWith<$Res>
+abstract class _$$EndpointResponseImplCopyWith<$Res>
     implements $EndpointResponseCopyWith<$Res> {
-  factory _$$_EndpointResponseCopyWith(
-          _$_EndpointResponse value, $Res Function(_$_EndpointResponse) then) =
-      __$$_EndpointResponseCopyWithImpl<$Res>;
+  factory _$$EndpointResponseImplCopyWith(_$EndpointResponseImpl value,
+          $Res Function(_$EndpointResponseImpl) then) =
+      __$$EndpointResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Map<String, Object?> data, String? cursor, int limit});
 }
 
 /// @nodoc
-class __$$_EndpointResponseCopyWithImpl<$Res>
-    extends _$EndpointResponseCopyWithImpl<$Res, _$_EndpointResponse>
-    implements _$$_EndpointResponseCopyWith<$Res> {
-  __$$_EndpointResponseCopyWithImpl(
-      _$_EndpointResponse _value, $Res Function(_$_EndpointResponse) _then)
+class __$$EndpointResponseImplCopyWithImpl<$Res>
+    extends _$EndpointResponseCopyWithImpl<$Res, _$EndpointResponseImpl>
+    implements _$$EndpointResponseImplCopyWith<$Res> {
+  __$$EndpointResponseImplCopyWithImpl(_$EndpointResponseImpl _value,
+      $Res Function(_$EndpointResponseImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$_EndpointResponseCopyWithImpl<$Res>
     Object? cursor = freezed,
     Object? limit = null,
   }) {
-    return _then(_$_EndpointResponse(
+    return _then(_$EndpointResponseImpl(
       data: null == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
@@ -118,15 +118,15 @@ class __$$_EndpointResponseCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_EndpointResponse implements _EndpointResponse {
-  const _$_EndpointResponse(
+class _$EndpointResponseImpl implements _EndpointResponse {
+  const _$EndpointResponseImpl(
       {final Map<String, Object?> data = const {},
       this.cursor,
       this.limit = 10})
       : _data = data;
 
-  factory _$_EndpointResponse.fromJson(Map<String, dynamic> json) =>
-      _$$_EndpointResponseFromJson(json);
+  factory _$EndpointResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$EndpointResponseImplFromJson(json);
 
   final Map<String, Object?> _data;
   @override
@@ -152,7 +152,7 @@ class _$_EndpointResponse implements _EndpointResponse {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_EndpointResponse &&
+            other is _$EndpointResponseImpl &&
             const DeepCollectionEquality().equals(other._data, _data) &&
             (identical(other.cursor, cursor) || other.cursor == cursor) &&
             (identical(other.limit, limit) || other.limit == limit));
@@ -166,12 +166,13 @@ class _$_EndpointResponse implements _EndpointResponse {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_EndpointResponseCopyWith<_$_EndpointResponse> get copyWith =>
-      __$$_EndpointResponseCopyWithImpl<_$_EndpointResponse>(this, _$identity);
+  _$$EndpointResponseImplCopyWith<_$EndpointResponseImpl> get copyWith =>
+      __$$EndpointResponseImplCopyWithImpl<_$EndpointResponseImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EndpointResponseToJson(
+    return _$$EndpointResponseImplToJson(
       this,
     );
   }
@@ -181,10 +182,10 @@ abstract class _EndpointResponse implements EndpointResponse {
   const factory _EndpointResponse(
       {final Map<String, Object?> data,
       final String? cursor,
-      final int limit}) = _$_EndpointResponse;
+      final int limit}) = _$EndpointResponseImpl;
 
   factory _EndpointResponse.fromJson(Map<String, dynamic> json) =
-      _$_EndpointResponse.fromJson;
+      _$EndpointResponseImpl.fromJson;
 
   @override
   Map<String, Object?> get data;
@@ -194,6 +195,6 @@ abstract class _EndpointResponse implements EndpointResponse {
   int get limit;
   @override
   @JsonKey(ignore: true)
-  _$$_EndpointResponseCopyWith<_$_EndpointResponse> get copyWith =>
+  _$$EndpointResponseImplCopyWith<_$EndpointResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

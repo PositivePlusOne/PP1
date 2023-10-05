@@ -143,9 +143,10 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
 }
 
 /// @nodoc
-abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
-  factory _$$_FlMetaCopyWith(_$_FlMeta value, $Res Function(_$_FlMeta) then) =
-      __$$_FlMetaCopyWithImpl<$Res>;
+abstract class _$$FlMetaImplCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
+  factory _$$FlMetaImplCopyWith(
+          _$FlMetaImpl value, $Res Function(_$FlMetaImpl) then) =
+      __$$FlMetaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -166,10 +167,11 @@ abstract class _$$_FlMetaCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_FlMetaCopyWithImpl<$Res>
-    extends _$FlMetaCopyWithImpl<$Res, _$_FlMeta>
-    implements _$$_FlMetaCopyWith<$Res> {
-  __$$_FlMetaCopyWithImpl(_$_FlMeta _value, $Res Function(_$_FlMeta) _then)
+class __$$FlMetaImplCopyWithImpl<$Res>
+    extends _$FlMetaCopyWithImpl<$Res, _$FlMetaImpl>
+    implements _$$FlMetaImplCopyWith<$Res> {
+  __$$FlMetaImplCopyWithImpl(
+      _$FlMetaImpl _value, $Res Function(_$FlMetaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -188,7 +190,7 @@ class __$$_FlMetaCopyWithImpl<$Res>
     Object? schema = freezed,
     Object? schemaRefId = freezed,
   }) {
-    return _then(_$_FlMeta(
+    return _then(_$FlMetaImpl(
       createdBy: freezed == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
@@ -243,8 +245,8 @@ class __$$_FlMetaCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_FlMeta implements _FlMeta {
-  const _$_FlMeta(
+class _$FlMetaImpl implements _FlMeta {
+  const _$FlMetaImpl(
       {this.createdBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       this.createdDate,
@@ -260,8 +262,8 @@ class _$_FlMeta implements _FlMeta {
       this.schema = '',
       this.schemaRefId});
 
-  factory _$_FlMeta.fromJson(Map<String, dynamic> json) =>
-      _$$_FlMetaFromJson(json);
+  factory _$FlMetaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FlMetaImplFromJson(json);
 
   @override
   final String? createdBy;
@@ -305,7 +307,7 @@ class _$_FlMeta implements _FlMeta {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FlMeta &&
+            other is _$FlMetaImpl &&
             (identical(other.createdBy, createdBy) ||
                 other.createdBy == createdBy) &&
             (identical(other.createdDate, createdDate) ||
@@ -347,12 +349,12 @@ class _$_FlMeta implements _FlMeta {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FlMetaCopyWith<_$_FlMeta> get copyWith =>
-      __$$_FlMetaCopyWithImpl<_$_FlMeta>(this, _$identity);
+  _$$FlMetaImplCopyWith<_$FlMetaImpl> get copyWith =>
+      __$$FlMetaImplCopyWithImpl<_$FlMetaImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FlMetaToJson(
+    return _$$FlMetaImplToJson(
       this,
     );
   }
@@ -373,9 +375,9 @@ abstract class _FlMeta implements FlMeta {
       final String? env,
       final String? locale,
       final String? schema,
-      final String? schemaRefId}) = _$_FlMeta;
+      final String? schemaRefId}) = _$FlMetaImpl;
 
-  factory _FlMeta.fromJson(Map<String, dynamic> json) = _$_FlMeta.fromJson;
+  factory _FlMeta.fromJson(Map<String, dynamic> json) = _$FlMetaImpl.fromJson;
 
   @override
   String? get createdBy;
@@ -406,6 +408,6 @@ abstract class _FlMeta implements FlMeta {
   String? get schemaRefId;
   @override
   @JsonKey(ignore: true)
-  _$$_FlMetaCopyWith<_$_FlMeta> get copyWith =>
+  _$$FlMetaImplCopyWith<_$FlMetaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

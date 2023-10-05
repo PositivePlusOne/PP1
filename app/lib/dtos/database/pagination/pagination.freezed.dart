@@ -68,22 +68,22 @@ class _$PaginationCopyWithImpl<$Res, $Val extends Pagination>
 }
 
 /// @nodoc
-abstract class _$$_PaginationCopyWith<$Res>
+abstract class _$$PaginationImplCopyWith<$Res>
     implements $PaginationCopyWith<$Res> {
-  factory _$$_PaginationCopyWith(
-          _$_Pagination value, $Res Function(_$_Pagination) then) =
-      __$$_PaginationCopyWithImpl<$Res>;
+  factory _$$PaginationImplCopyWith(
+          _$PaginationImpl value, $Res Function(_$PaginationImpl) then) =
+      __$$PaginationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int? limit, String? cursor});
 }
 
 /// @nodoc
-class __$$_PaginationCopyWithImpl<$Res>
-    extends _$PaginationCopyWithImpl<$Res, _$_Pagination>
-    implements _$$_PaginationCopyWith<$Res> {
-  __$$_PaginationCopyWithImpl(
-      _$_Pagination _value, $Res Function(_$_Pagination) _then)
+class __$$PaginationImplCopyWithImpl<$Res>
+    extends _$PaginationCopyWithImpl<$Res, _$PaginationImpl>
+    implements _$$PaginationImplCopyWith<$Res> {
+  __$$PaginationImplCopyWithImpl(
+      _$PaginationImpl _value, $Res Function(_$PaginationImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_PaginationCopyWithImpl<$Res>
     Object? limit = freezed,
     Object? cursor = freezed,
   }) {
-    return _then(_$_Pagination(
+    return _then(_$PaginationImpl(
       limit: freezed == limit
           ? _value.limit
           : limit // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,11 @@ class __$$_PaginationCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Pagination implements _Pagination {
-  const _$_Pagination({this.limit, this.cursor});
+class _$PaginationImpl implements _Pagination {
+  const _$PaginationImpl({this.limit, this.cursor});
 
-  factory _$_Pagination.fromJson(Map<String, dynamic> json) =>
-      _$$_PaginationFromJson(json);
+  factory _$PaginationImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PaginationImplFromJson(json);
 
   @override
   final int? limit;
@@ -127,7 +127,7 @@ class _$_Pagination implements _Pagination {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Pagination &&
+            other is _$PaginationImpl &&
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.cursor, cursor) || other.cursor == cursor));
   }
@@ -139,12 +139,12 @@ class _$_Pagination implements _Pagination {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PaginationCopyWith<_$_Pagination> get copyWith =>
-      __$$_PaginationCopyWithImpl<_$_Pagination>(this, _$identity);
+  _$$PaginationImplCopyWith<_$PaginationImpl> get copyWith =>
+      __$$PaginationImplCopyWithImpl<_$PaginationImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PaginationToJson(
+    return _$$PaginationImplToJson(
       this,
     );
   }
@@ -152,10 +152,10 @@ class _$_Pagination implements _Pagination {
 
 abstract class _Pagination implements Pagination {
   const factory _Pagination({final int? limit, final String? cursor}) =
-      _$_Pagination;
+      _$PaginationImpl;
 
   factory _Pagination.fromJson(Map<String, dynamic> json) =
-      _$_Pagination.fromJson;
+      _$PaginationImpl.fromJson;
 
   @override
   int? get limit;
@@ -163,6 +163,6 @@ abstract class _Pagination implements Pagination {
   String? get cursor;
   @override
   @JsonKey(ignore: true)
-  _$$_PaginationCopyWith<_$_Pagination> get copyWith =>
+  _$$PaginationImplCopyWith<_$PaginationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

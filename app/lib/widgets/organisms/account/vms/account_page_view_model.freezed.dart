@@ -71,12 +71,12 @@ class _$AccountPageViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AccountPageViewModelStateCopyWith<$Res>
+abstract class _$$AccountPageViewModelStateImplCopyWith<$Res>
     implements $AccountPageViewModelStateCopyWith<$Res> {
-  factory _$$_AccountPageViewModelStateCopyWith(
-          _$_AccountPageViewModelState value,
-          $Res Function(_$_AccountPageViewModelState) then) =
-      __$$_AccountPageViewModelStateCopyWithImpl<$Res>;
+  factory _$$AccountPageViewModelStateImplCopyWith(
+          _$AccountPageViewModelStateImpl value,
+          $Res Function(_$AccountPageViewModelStateImpl) then) =
+      __$$AccountPageViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -84,13 +84,13 @@ abstract class _$$_AccountPageViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountPageViewModelStateCopyWithImpl<$Res>
+class __$$AccountPageViewModelStateImplCopyWithImpl<$Res>
     extends _$AccountPageViewModelStateCopyWithImpl<$Res,
-        _$_AccountPageViewModelState>
-    implements _$$_AccountPageViewModelStateCopyWith<$Res> {
-  __$$_AccountPageViewModelStateCopyWithImpl(
-      _$_AccountPageViewModelState _value,
-      $Res Function(_$_AccountPageViewModelState) _then)
+        _$AccountPageViewModelStateImpl>
+    implements _$$AccountPageViewModelStateImplCopyWith<$Res> {
+  __$$AccountPageViewModelStateImplCopyWithImpl(
+      _$AccountPageViewModelStateImpl _value,
+      $Res Function(_$AccountPageViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -100,7 +100,7 @@ class __$$_AccountPageViewModelStateCopyWithImpl<$Res>
     Object? profileAccentColour = null,
     Object? organisationAccentColour = null,
   }) {
-    return _then(_$_AccountPageViewModelState(
+    return _then(_$AccountPageViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -119,8 +119,8 @@ class __$$_AccountPageViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountPageViewModelState implements _AccountPageViewModelState {
-  const _$_AccountPageViewModelState(
+class _$AccountPageViewModelStateImpl implements _AccountPageViewModelState {
+  const _$AccountPageViewModelStateImpl(
       {this.isBusy = false,
       this.profileAccentColour = Colors.white,
       this.organisationAccentColour = Colors.white});
@@ -144,7 +144,7 @@ class _$_AccountPageViewModelState implements _AccountPageViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AccountPageViewModelState &&
+            other is _$AccountPageViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.profileAccentColour, profileAccentColour) ||
                 other.profileAccentColour == profileAccentColour) &&
@@ -160,16 +160,16 @@ class _$_AccountPageViewModelState implements _AccountPageViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountPageViewModelStateCopyWith<_$_AccountPageViewModelState>
-      get copyWith => __$$_AccountPageViewModelStateCopyWithImpl<
-          _$_AccountPageViewModelState>(this, _$identity);
+  _$$AccountPageViewModelStateImplCopyWith<_$AccountPageViewModelStateImpl>
+      get copyWith => __$$AccountPageViewModelStateImplCopyWithImpl<
+          _$AccountPageViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _AccountPageViewModelState implements AccountPageViewModelState {
   const factory _AccountPageViewModelState(
       {final bool isBusy,
       final Color profileAccentColour,
-      final Color organisationAccentColour}) = _$_AccountPageViewModelState;
+      final Color organisationAccentColour}) = _$AccountPageViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -179,6 +179,6 @@ abstract class _AccountPageViewModelState implements AccountPageViewModelState {
   Color get organisationAccentColour;
   @override
   @JsonKey(ignore: true)
-  _$$_AccountPageViewModelStateCopyWith<_$_AccountPageViewModelState>
+  _$$AccountPageViewModelStateImplCopyWith<_$AccountPageViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

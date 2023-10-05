@@ -209,11 +209,11 @@ class _$DesignColorsModelCopyWithImpl<$Res, $Val extends DesignColorsModel>
 }
 
 /// @nodoc
-abstract class _$$_DesignColorsModelCopyWith<$Res>
+abstract class _$$DesignColorsModelImplCopyWith<$Res>
     implements $DesignColorsModelCopyWith<$Res> {
-  factory _$$_DesignColorsModelCopyWith(_$_DesignColorsModel value,
-          $Res Function(_$_DesignColorsModel) then) =
-      __$$_DesignColorsModelCopyWithImpl<$Res>;
+  factory _$$DesignColorsModelImplCopyWith(_$DesignColorsModelImpl value,
+          $Res Function(_$DesignColorsModelImpl) then) =
+      __$$DesignColorsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -240,11 +240,11 @@ abstract class _$$_DesignColorsModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DesignColorsModelCopyWithImpl<$Res>
-    extends _$DesignColorsModelCopyWithImpl<$Res, _$_DesignColorsModel>
-    implements _$$_DesignColorsModelCopyWith<$Res> {
-  __$$_DesignColorsModelCopyWithImpl(
-      _$_DesignColorsModel _value, $Res Function(_$_DesignColorsModel) _then)
+class __$$DesignColorsModelImplCopyWithImpl<$Res>
+    extends _$DesignColorsModelCopyWithImpl<$Res, _$DesignColorsModelImpl>
+    implements _$$DesignColorsModelImplCopyWith<$Res> {
+  __$$DesignColorsModelImplCopyWithImpl(_$DesignColorsModelImpl _value,
+      $Res Function(_$DesignColorsModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -270,7 +270,7 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
     Object? transparent = null,
     Object? defaultUserColour = null,
   }) {
-    return _then(_$_DesignColorsModel(
+    return _then(_$DesignColorsModelImpl(
       teal: null == teal
           ? _value.teal
           : teal // ignore: cast_nullable_to_non_nullable
@@ -353,8 +353,8 @@ class __$$_DesignColorsModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DesignColorsModel implements _DesignColorsModel {
-  const _$_DesignColorsModel(
+class _$DesignColorsModelImpl implements _DesignColorsModel {
+  const _$DesignColorsModelImpl(
       {@JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required this.teal,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -392,8 +392,8 @@ class _$_DesignColorsModel implements _DesignColorsModel {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required this.defaultUserColour});
 
-  factory _$_DesignColorsModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DesignColorsModelFromJson(json);
+  factory _$DesignColorsModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DesignColorsModelImplFromJson(json);
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -462,7 +462,7 @@ class _$_DesignColorsModel implements _DesignColorsModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DesignColorsModel &&
+            other is _$DesignColorsModelImpl &&
             (identical(other.teal, teal) || other.teal == teal) &&
             (identical(other.purple, purple) || other.purple == purple) &&
             (identical(other.green, green) || other.green == green) &&
@@ -523,13 +523,13 @@ class _$_DesignColorsModel implements _DesignColorsModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DesignColorsModelCopyWith<_$_DesignColorsModel> get copyWith =>
-      __$$_DesignColorsModelCopyWithImpl<_$_DesignColorsModel>(
+  _$$DesignColorsModelImplCopyWith<_$DesignColorsModelImpl> get copyWith =>
+      __$$DesignColorsModelImplCopyWithImpl<_$DesignColorsModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DesignColorsModelToJson(
+    return _$$DesignColorsModelImplToJson(
       this,
     );
   }
@@ -574,10 +574,10 @@ abstract class _DesignColorsModel implements DesignColorsModel {
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
       required final Color transparent,
       @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
-      required final Color defaultUserColour}) = _$_DesignColorsModel;
+      required final Color defaultUserColour}) = _$DesignColorsModelImpl;
 
   factory _DesignColorsModel.fromJson(Map<String, dynamic> json) =
-      _$_DesignColorsModel.fromJson;
+      _$DesignColorsModelImpl.fromJson;
 
   @override
   @JsonKey(fromJson: colorFromJson, toJson: colorToJson)
@@ -638,6 +638,6 @@ abstract class _DesignColorsModel implements DesignColorsModel {
   Color get defaultUserColour;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignColorsModelCopyWith<_$_DesignColorsModel> get copyWith =>
+  _$$DesignColorsModelImplCopyWith<_$DesignColorsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -27,12 +27,24 @@ class ProfileReferenceImageCameraPage extends ConsumerWidget {
       caption = appLocalization.page_profile_image_selfie_ready;
     }
 
-    return PositiveCameraDialog(
-      useFaceDetection: true,
-      displayCameraShade: false,
-      onFaceDetected: (p0) => viewModel.onFaceDetected(p0),
-      onCameraImageTaken: (p0) => viewModel.onReferenceImageTaken(p0),
-      takePictureCaption: caption,
+    return WillPopScope(
+      onWillPop: () => onWillPopScope(context, state.isBusy),
+      child: PositiveCameraDialog(
+        useFaceDetection: true,
+        displayCameraShade: false,
+        onFaceDetected: (p0) => viewModel.onFaceDetected(p0),
+        onCameraImageTaken: (p0) => viewModel.onReferenceImageTaken(p0),
+        takePictureCaption: caption,
+        isBusy: state.isBusy,
+      ),
     );
+  }
+
+  Future<bool> onWillPopScope(BuildContext context, bool isBusy) async {
+    if (isBusy) {
+      return false;
+    }
+
+    return true;
   }
 }

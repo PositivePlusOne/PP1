@@ -6,9 +6,9 @@ part of 'notification_payload.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_NotificationPayload _$$_NotificationPayloadFromJson(
+_$NotificationPayloadImpl _$$NotificationPayloadImplFromJson(
         Map<String, dynamic> json) =>
-    _$_NotificationPayload(
+    _$NotificationPayloadImpl(
       id: json['id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
       sender: json['sender'] as String? ?? '',
@@ -28,8 +28,8 @@ _$_NotificationPayload _$$_NotificationPayloadFromJson(
           : NotificationPriority.fromJson(json['priority'] as String),
     );
 
-Map<String, dynamic> _$$_NotificationPayloadToJson(
-        _$_NotificationPayload instance) =>
+Map<String, dynamic> _$$NotificationPayloadImplToJson(
+        _$NotificationPayloadImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'user_id': instance.userId,

@@ -60,25 +60,25 @@ class _$NotificationsViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_NotificationsViewModelStateCopyWith<$Res>
+abstract class _$$NotificationsViewModelStateImplCopyWith<$Res>
     implements $NotificationsViewModelStateCopyWith<$Res> {
-  factory _$$_NotificationsViewModelStateCopyWith(
-          _$_NotificationsViewModelState value,
-          $Res Function(_$_NotificationsViewModelState) then) =
-      __$$_NotificationsViewModelStateCopyWithImpl<$Res>;
+  factory _$$NotificationsViewModelStateImplCopyWith(
+          _$NotificationsViewModelStateImpl value,
+          $Res Function(_$NotificationsViewModelStateImpl) then) =
+      __$$NotificationsViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy});
 }
 
 /// @nodoc
-class __$$_NotificationsViewModelStateCopyWithImpl<$Res>
+class __$$NotificationsViewModelStateImplCopyWithImpl<$Res>
     extends _$NotificationsViewModelStateCopyWithImpl<$Res,
-        _$_NotificationsViewModelState>
-    implements _$$_NotificationsViewModelStateCopyWith<$Res> {
-  __$$_NotificationsViewModelStateCopyWithImpl(
-      _$_NotificationsViewModelState _value,
-      $Res Function(_$_NotificationsViewModelState) _then)
+        _$NotificationsViewModelStateImpl>
+    implements _$$NotificationsViewModelStateImplCopyWith<$Res> {
+  __$$NotificationsViewModelStateImplCopyWithImpl(
+      _$NotificationsViewModelStateImpl _value,
+      $Res Function(_$NotificationsViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -86,7 +86,7 @@ class __$$_NotificationsViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
   }) {
-    return _then(_$_NotificationsViewModelState(
+    return _then(_$NotificationsViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -97,8 +97,9 @@ class __$$_NotificationsViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_NotificationsViewModelState implements _NotificationsViewModelState {
-  const _$_NotificationsViewModelState({this.isBusy = false});
+class _$NotificationsViewModelStateImpl
+    implements _NotificationsViewModelState {
+  const _$NotificationsViewModelStateImpl({this.isBusy = false});
 
   @override
   @JsonKey()
@@ -113,7 +114,7 @@ class _$_NotificationsViewModelState implements _NotificationsViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationsViewModelState &&
+            other is _$NotificationsViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
@@ -123,20 +124,20 @@ class _$_NotificationsViewModelState implements _NotificationsViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NotificationsViewModelStateCopyWith<_$_NotificationsViewModelState>
-      get copyWith => __$$_NotificationsViewModelStateCopyWithImpl<
-          _$_NotificationsViewModelState>(this, _$identity);
+  _$$NotificationsViewModelStateImplCopyWith<_$NotificationsViewModelStateImpl>
+      get copyWith => __$$NotificationsViewModelStateImplCopyWithImpl<
+          _$NotificationsViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _NotificationsViewModelState
     implements NotificationsViewModelState {
   const factory _NotificationsViewModelState({final bool isBusy}) =
-      _$_NotificationsViewModelState;
+      _$NotificationsViewModelStateImpl;
 
   @override
   bool get isBusy;
   @override
   @JsonKey(ignore: true)
-  _$$_NotificationsViewModelStateCopyWith<_$_NotificationsViewModelState>
+  _$$NotificationsViewModelStateImplCopyWith<_$NotificationsViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -78,20 +78,21 @@ class _$MentionCopyWithImpl<$Res, $Val extends Mention>
 }
 
 /// @nodoc
-abstract class _$$_MentionCopyWith<$Res> implements $MentionCopyWith<$Res> {
-  factory _$$_MentionCopyWith(
-          _$_Mention value, $Res Function(_$_Mention) then) =
-      __$$_MentionCopyWithImpl<$Res>;
+abstract class _$$MentionImplCopyWith<$Res> implements $MentionCopyWith<$Res> {
+  factory _$$MentionImplCopyWith(
+          _$MentionImpl value, $Res Function(_$MentionImpl) then) =
+      __$$MentionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int startIndex, int endIndex, String foreignKey, String schema});
 }
 
 /// @nodoc
-class __$$_MentionCopyWithImpl<$Res>
-    extends _$MentionCopyWithImpl<$Res, _$_Mention>
-    implements _$$_MentionCopyWith<$Res> {
-  __$$_MentionCopyWithImpl(_$_Mention _value, $Res Function(_$_Mention) _then)
+class __$$MentionImplCopyWithImpl<$Res>
+    extends _$MentionCopyWithImpl<$Res, _$MentionImpl>
+    implements _$$MentionImplCopyWith<$Res> {
+  __$$MentionImplCopyWithImpl(
+      _$MentionImpl _value, $Res Function(_$MentionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -102,7 +103,7 @@ class __$$_MentionCopyWithImpl<$Res>
     Object? foreignKey = null,
     Object? schema = null,
   }) {
-    return _then(_$_Mention(
+    return _then(_$MentionImpl(
       startIndex: null == startIndex
           ? _value.startIndex
           : startIndex // ignore: cast_nullable_to_non_nullable
@@ -125,15 +126,15 @@ class __$$_MentionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Mention implements _Mention {
-  const _$_Mention(
+class _$MentionImpl implements _Mention {
+  const _$MentionImpl(
       {this.startIndex = -1,
       this.endIndex = -1,
       this.foreignKey = '',
       this.schema = ''});
 
-  factory _$_Mention.fromJson(Map<String, dynamic> json) =>
-      _$$_MentionFromJson(json);
+  factory _$MentionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MentionImplFromJson(json);
 
   @override
   @JsonKey()
@@ -157,7 +158,7 @@ class _$_Mention implements _Mention {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Mention &&
+            other is _$MentionImpl &&
             (identical(other.startIndex, startIndex) ||
                 other.startIndex == startIndex) &&
             (identical(other.endIndex, endIndex) ||
@@ -175,12 +176,12 @@ class _$_Mention implements _Mention {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MentionCopyWith<_$_Mention> get copyWith =>
-      __$$_MentionCopyWithImpl<_$_Mention>(this, _$identity);
+  _$$MentionImplCopyWith<_$MentionImpl> get copyWith =>
+      __$$MentionImplCopyWithImpl<_$MentionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MentionToJson(
+    return _$$MentionImplToJson(
       this,
     );
   }
@@ -191,9 +192,9 @@ abstract class _Mention implements Mention {
       {final int startIndex,
       final int endIndex,
       final String foreignKey,
-      final String schema}) = _$_Mention;
+      final String schema}) = _$MentionImpl;
 
-  factory _Mention.fromJson(Map<String, dynamic> json) = _$_Mention.fromJson;
+  factory _Mention.fromJson(Map<String, dynamic> json) = _$MentionImpl.fromJson;
 
   @override
   int get startIndex;
@@ -205,6 +206,6 @@ abstract class _Mention implements Mention {
   String get schema;
   @override
   @JsonKey(ignore: true)
-  _$$_MentionCopyWith<_$_Mention> get copyWith =>
+  _$$MentionImplCopyWith<_$MentionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

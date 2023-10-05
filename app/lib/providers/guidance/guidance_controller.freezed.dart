@@ -73,11 +73,12 @@ class _$GuidanceControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_GuidanceControllerStateCopyWith<$Res>
+abstract class _$$GuidanceControllerStateImplCopyWith<$Res>
     implements $GuidanceControllerStateCopyWith<$Res> {
-  factory _$$_GuidanceControllerStateCopyWith(_$_GuidanceControllerState value,
-          $Res Function(_$_GuidanceControllerState) then) =
-      __$$_GuidanceControllerStateCopyWithImpl<$Res>;
+  factory _$$GuidanceControllerStateImplCopyWith(
+          _$GuidanceControllerStateImpl value,
+          $Res Function(_$GuidanceControllerStateImpl) then) =
+      __$$GuidanceControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -87,12 +88,13 @@ abstract class _$$_GuidanceControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GuidanceControllerStateCopyWithImpl<$Res>
+class __$$GuidanceControllerStateImplCopyWithImpl<$Res>
     extends _$GuidanceControllerStateCopyWithImpl<$Res,
-        _$_GuidanceControllerState>
-    implements _$$_GuidanceControllerStateCopyWith<$Res> {
-  __$$_GuidanceControllerStateCopyWithImpl(_$_GuidanceControllerState _value,
-      $Res Function(_$_GuidanceControllerState) _then)
+        _$GuidanceControllerStateImpl>
+    implements _$$GuidanceControllerStateImplCopyWith<$Res> {
+  __$$GuidanceControllerStateImplCopyWithImpl(
+      _$GuidanceControllerStateImpl _value,
+      $Res Function(_$GuidanceControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -102,7 +104,7 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
     Object? guidanceSection = freezed,
     Object? guidanceDirectorySearchTerm = freezed,
   }) {
-    return _then(_$_GuidanceControllerState(
+    return _then(_$GuidanceControllerStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -120,8 +122,8 @@ class __$$_GuidanceControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_GuidanceControllerState implements _GuidanceControllerState {
-  const _$_GuidanceControllerState(
+class _$GuidanceControllerStateImpl implements _GuidanceControllerState {
+  const _$GuidanceControllerStateImpl(
       {this.isBusy = false,
       this.guidanceSection = null,
       this.guidanceDirectorySearchTerm = ''});
@@ -145,7 +147,7 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceControllerState &&
+            other is _$GuidanceControllerStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.guidanceSection, guidanceSection) ||
                 other.guidanceSection == guidanceSection) &&
@@ -161,17 +163,17 @@ class _$_GuidanceControllerState implements _GuidanceControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>
-      get copyWith =>
-          __$$_GuidanceControllerStateCopyWithImpl<_$_GuidanceControllerState>(
-              this, _$identity);
+  _$$GuidanceControllerStateImplCopyWith<_$GuidanceControllerStateImpl>
+      get copyWith => __$$GuidanceControllerStateImplCopyWithImpl<
+          _$GuidanceControllerStateImpl>(this, _$identity);
 }
 
 abstract class _GuidanceControllerState implements GuidanceControllerState {
   const factory _GuidanceControllerState(
-      {final bool isBusy,
-      final GuidanceSection? guidanceSection,
-      final dynamic guidanceDirectorySearchTerm}) = _$_GuidanceControllerState;
+          {final bool isBusy,
+          final GuidanceSection? guidanceSection,
+          final dynamic guidanceDirectorySearchTerm}) =
+      _$GuidanceControllerStateImpl;
 
   @override
   bool get isBusy;
@@ -181,6 +183,6 @@ abstract class _GuidanceControllerState implements GuidanceControllerState {
   dynamic get guidanceDirectorySearchTerm;
   @override
   @JsonKey(ignore: true)
-  _$$_GuidanceControllerStateCopyWith<_$_GuidanceControllerState>
+  _$$GuidanceControllerStateImplCopyWith<_$GuidanceControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

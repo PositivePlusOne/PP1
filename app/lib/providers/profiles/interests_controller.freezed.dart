@@ -58,24 +58,25 @@ class _$InterestsControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_InterestsControllerStateCopyWith<$Res>
+abstract class _$$InterestsControllerStateImplCopyWith<$Res>
     implements $InterestsControllerStateCopyWith<$Res> {
-  factory _$$_InterestsControllerStateCopyWith(
-          _$_InterestsControllerState value,
-          $Res Function(_$_InterestsControllerState) then) =
-      __$$_InterestsControllerStateCopyWithImpl<$Res>;
+  factory _$$InterestsControllerStateImplCopyWith(
+          _$InterestsControllerStateImpl value,
+          $Res Function(_$InterestsControllerStateImpl) then) =
+      __$$InterestsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Map<String, String> interests});
 }
 
 /// @nodoc
-class __$$_InterestsControllerStateCopyWithImpl<$Res>
+class __$$InterestsControllerStateImplCopyWithImpl<$Res>
     extends _$InterestsControllerStateCopyWithImpl<$Res,
-        _$_InterestsControllerState>
-    implements _$$_InterestsControllerStateCopyWith<$Res> {
-  __$$_InterestsControllerStateCopyWithImpl(_$_InterestsControllerState _value,
-      $Res Function(_$_InterestsControllerState) _then)
+        _$InterestsControllerStateImpl>
+    implements _$$InterestsControllerStateImplCopyWith<$Res> {
+  __$$InterestsControllerStateImplCopyWithImpl(
+      _$InterestsControllerStateImpl _value,
+      $Res Function(_$InterestsControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -83,7 +84,7 @@ class __$$_InterestsControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? interests = null,
   }) {
-    return _then(_$_InterestsControllerState(
+    return _then(_$InterestsControllerStateImpl(
       interests: null == interests
           ? _value._interests
           : interests // ignore: cast_nullable_to_non_nullable
@@ -94,8 +95,8 @@ class __$$_InterestsControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_InterestsControllerState implements _InterestsControllerState {
-  const _$_InterestsControllerState(
+class _$InterestsControllerStateImpl implements _InterestsControllerState {
+  const _$InterestsControllerStateImpl(
       {final Map<String, String> interests = const {}})
       : _interests = interests;
 
@@ -117,7 +118,7 @@ class _$_InterestsControllerState implements _InterestsControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_InterestsControllerState &&
+            other is _$InterestsControllerStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._interests, _interests));
   }
@@ -129,19 +130,19 @@ class _$_InterestsControllerState implements _InterestsControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_InterestsControllerStateCopyWith<_$_InterestsControllerState>
-      get copyWith => __$$_InterestsControllerStateCopyWithImpl<
-          _$_InterestsControllerState>(this, _$identity);
+  _$$InterestsControllerStateImplCopyWith<_$InterestsControllerStateImpl>
+      get copyWith => __$$InterestsControllerStateImplCopyWithImpl<
+          _$InterestsControllerStateImpl>(this, _$identity);
 }
 
 abstract class _InterestsControllerState implements InterestsControllerState {
   const factory _InterestsControllerState(
-      {final Map<String, String> interests}) = _$_InterestsControllerState;
+      {final Map<String, String> interests}) = _$InterestsControllerStateImpl;
 
   @override
   Map<String, String> get interests;
   @override
   @JsonKey(ignore: true)
-  _$$_InterestsControllerStateCopyWith<_$_InterestsControllerState>
+  _$$InterestsControllerStateImplCopyWith<_$InterestsControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

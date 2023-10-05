@@ -98,11 +98,11 @@ class _$RelationshipMemberCopyWithImpl<$Res, $Val extends RelationshipMember>
 }
 
 /// @nodoc
-abstract class _$$_RelationshipMemberCopyWith<$Res>
+abstract class _$$RelationshipMemberImplCopyWith<$Res>
     implements $RelationshipMemberCopyWith<$Res> {
-  factory _$$_RelationshipMemberCopyWith(_$_RelationshipMember value,
-          $Res Function(_$_RelationshipMember) then) =
-      __$$_RelationshipMemberCopyWithImpl<$Res>;
+  factory _$$RelationshipMemberImplCopyWith(_$RelationshipMemberImpl value,
+          $Res Function(_$RelationshipMemberImpl) then) =
+      __$$RelationshipMemberImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,11 +115,11 @@ abstract class _$$_RelationshipMemberCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RelationshipMemberCopyWithImpl<$Res>
-    extends _$RelationshipMemberCopyWithImpl<$Res, _$_RelationshipMember>
-    implements _$$_RelationshipMemberCopyWith<$Res> {
-  __$$_RelationshipMemberCopyWithImpl(
-      _$_RelationshipMember _value, $Res Function(_$_RelationshipMember) _then)
+class __$$RelationshipMemberImplCopyWithImpl<$Res>
+    extends _$RelationshipMemberCopyWithImpl<$Res, _$RelationshipMemberImpl>
+    implements _$$RelationshipMemberImplCopyWith<$Res> {
+  __$$RelationshipMemberImplCopyWithImpl(_$RelationshipMemberImpl _value,
+      $Res Function(_$RelationshipMemberImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -132,7 +132,7 @@ class __$$_RelationshipMemberCopyWithImpl<$Res>
     Object? hasMuted = null,
     Object? memberId = null,
   }) {
-    return _then(_$_RelationshipMember(
+    return _then(_$RelationshipMemberImpl(
       hasBlocked: null == hasBlocked
           ? _value.hasBlocked
           : hasBlocked // ignore: cast_nullable_to_non_nullable
@@ -163,8 +163,8 @@ class __$$_RelationshipMemberCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RelationshipMember implements _RelationshipMember {
-  const _$_RelationshipMember(
+class _$RelationshipMemberImpl implements _RelationshipMember {
+  const _$RelationshipMemberImpl(
       {this.hasBlocked = false,
       this.hasConnected = false,
       this.hasFollowed = false,
@@ -172,8 +172,8 @@ class _$_RelationshipMember implements _RelationshipMember {
       this.hasMuted = false,
       this.memberId = ''});
 
-  factory _$_RelationshipMember.fromJson(Map<String, dynamic> json) =>
-      _$$_RelationshipMemberFromJson(json);
+  factory _$RelationshipMemberImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RelationshipMemberImplFromJson(json);
 
   @override
   @JsonKey()
@@ -203,7 +203,7 @@ class _$_RelationshipMember implements _RelationshipMember {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RelationshipMember &&
+            other is _$RelationshipMemberImpl &&
             (identical(other.hasBlocked, hasBlocked) ||
                 other.hasBlocked == hasBlocked) &&
             (identical(other.hasConnected, hasConnected) ||
@@ -226,13 +226,13 @@ class _$_RelationshipMember implements _RelationshipMember {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RelationshipMemberCopyWith<_$_RelationshipMember> get copyWith =>
-      __$$_RelationshipMemberCopyWithImpl<_$_RelationshipMember>(
+  _$$RelationshipMemberImplCopyWith<_$RelationshipMemberImpl> get copyWith =>
+      __$$RelationshipMemberImplCopyWithImpl<_$RelationshipMemberImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RelationshipMemberToJson(
+    return _$$RelationshipMemberImplToJson(
       this,
     );
   }
@@ -245,10 +245,10 @@ abstract class _RelationshipMember implements RelationshipMember {
       final bool hasFollowed,
       final bool hasHidden,
       final bool hasMuted,
-      final String memberId}) = _$_RelationshipMember;
+      final String memberId}) = _$RelationshipMemberImpl;
 
   factory _RelationshipMember.fromJson(Map<String, dynamic> json) =
-      _$_RelationshipMember.fromJson;
+      _$RelationshipMemberImpl.fromJson;
 
   @override
   bool get hasBlocked;
@@ -264,6 +264,6 @@ abstract class _RelationshipMember implements RelationshipMember {
   String get memberId;
   @override
   @JsonKey(ignore: true)
-  _$$_RelationshipMemberCopyWith<_$_RelationshipMember> get copyWith =>
+  _$$RelationshipMemberImplCopyWith<_$RelationshipMemberImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

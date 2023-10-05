@@ -6,7 +6,8 @@ part of 'promotions.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Promotion _$$_PromotionFromJson(Map<String, dynamic> json) => _$_Promotion(
+_$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
+    _$PromotionImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -26,7 +27,7 @@ _$_Promotion _$$_PromotionFromJson(Map<String, dynamic> json) => _$_Promotion(
       endTime: dateFromUnknown(json['endTime']),
     );
 
-Map<String, dynamic> _$$_PromotionToJson(_$_Promotion instance) =>
+Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'title': instance.title,
@@ -39,22 +40,25 @@ Map<String, dynamic> _$$_PromotionToJson(_$_Promotion instance) =>
       'endTime': dateToUnknown(instance.endTime),
     };
 
-_$_PromotionOwner _$$_PromotionOwnerFromJson(Map<String, dynamic> json) =>
-    _$_PromotionOwner(
+_$PromotionOwnerImpl _$$PromotionOwnerImplFromJson(Map<String, dynamic> json) =>
+    _$PromotionOwnerImpl(
       activityId: json['activityId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_PromotionOwnerToJson(_$_PromotionOwner instance) =>
+Map<String, dynamic> _$$PromotionOwnerImplToJson(
+        _$PromotionOwnerImpl instance) =>
     <String, dynamic>{
       'activityId': instance.activityId,
     };
 
-_$_PromotedActivity _$$_PromotedActivityFromJson(Map<String, dynamic> json) =>
-    _$_PromotedActivity(
+_$PromotedActivityImpl _$$PromotedActivityImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PromotedActivityImpl(
       activityId: json['activityId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_PromotedActivityToJson(_$_PromotedActivity instance) =>
+Map<String, dynamic> _$$PromotedActivityImplToJson(
+        _$PromotedActivityImpl instance) =>
     <String, dynamic>{
       'activityId': instance.activityId,
     };

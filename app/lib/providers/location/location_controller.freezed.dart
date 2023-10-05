@@ -63,22 +63,22 @@ class _$LocationOptionCopyWithImpl<$Res, $Val extends LocationOption>
 }
 
 /// @nodoc
-abstract class _$$_LocationOptionCopyWith<$Res>
+abstract class _$$LocationOptionImplCopyWith<$Res>
     implements $LocationOptionCopyWith<$Res> {
-  factory _$$_LocationOptionCopyWith(
-          _$_LocationOption value, $Res Function(_$_LocationOption) then) =
-      __$$_LocationOptionCopyWithImpl<$Res>;
+  factory _$$LocationOptionImplCopyWith(_$LocationOptionImpl value,
+          $Res Function(_$LocationOptionImpl) then) =
+      __$$LocationOptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String description, String placeId});
 }
 
 /// @nodoc
-class __$$_LocationOptionCopyWithImpl<$Res>
-    extends _$LocationOptionCopyWithImpl<$Res, _$_LocationOption>
-    implements _$$_LocationOptionCopyWith<$Res> {
-  __$$_LocationOptionCopyWithImpl(
-      _$_LocationOption _value, $Res Function(_$_LocationOption) _then)
+class __$$LocationOptionImplCopyWithImpl<$Res>
+    extends _$LocationOptionCopyWithImpl<$Res, _$LocationOptionImpl>
+    implements _$$LocationOptionImplCopyWith<$Res> {
+  __$$LocationOptionImplCopyWithImpl(
+      _$LocationOptionImpl _value, $Res Function(_$LocationOptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +87,7 @@ class __$$_LocationOptionCopyWithImpl<$Res>
     Object? description = null,
     Object? placeId = null,
   }) {
-    return _then(_$_LocationOption(
+    return _then(_$LocationOptionImpl(
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -102,8 +102,9 @@ class __$$_LocationOptionCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_LocationOption implements _LocationOption {
-  const _$_LocationOption({required this.description, required this.placeId});
+class _$LocationOptionImpl implements _LocationOption {
+  const _$LocationOptionImpl(
+      {required this.description, required this.placeId});
 
   @override
   final String description;
@@ -119,7 +120,7 @@ class _$_LocationOption implements _LocationOption {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LocationOption &&
+            other is _$LocationOptionImpl &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.placeId, placeId) || other.placeId == placeId));
@@ -131,14 +132,15 @@ class _$_LocationOption implements _LocationOption {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LocationOptionCopyWith<_$_LocationOption> get copyWith =>
-      __$$_LocationOptionCopyWithImpl<_$_LocationOption>(this, _$identity);
+  _$$LocationOptionImplCopyWith<_$LocationOptionImpl> get copyWith =>
+      __$$LocationOptionImplCopyWithImpl<_$LocationOptionImpl>(
+          this, _$identity);
 }
 
 abstract class _LocationOption implements LocationOption {
   const factory _LocationOption(
       {required final String description,
-      required final String placeId}) = _$_LocationOption;
+      required final String placeId}) = _$LocationOptionImpl;
 
   @override
   String get description;
@@ -146,7 +148,7 @@ abstract class _LocationOption implements LocationOption {
   String get placeId;
   @override
   @JsonKey(ignore: true)
-  _$$_LocationOptionCopyWith<_$_LocationOption> get copyWith =>
+  _$$LocationOptionImplCopyWith<_$LocationOptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -195,23 +197,25 @@ class _$LocationControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_LocationControllerStateCopyWith<$Res>
+abstract class _$$LocationControllerStateImplCopyWith<$Res>
     implements $LocationControllerStateCopyWith<$Res> {
-  factory _$$_LocationControllerStateCopyWith(_$_LocationControllerState value,
-          $Res Function(_$_LocationControllerState) then) =
-      __$$_LocationControllerStateCopyWithImpl<$Res>;
+  factory _$$LocationControllerStateImplCopyWith(
+          _$LocationControllerStateImpl value,
+          $Res Function(_$LocationControllerStateImpl) then) =
+      __$$LocationControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({PermissionStatus? locationPermission});
 }
 
 /// @nodoc
-class __$$_LocationControllerStateCopyWithImpl<$Res>
+class __$$LocationControllerStateImplCopyWithImpl<$Res>
     extends _$LocationControllerStateCopyWithImpl<$Res,
-        _$_LocationControllerState>
-    implements _$$_LocationControllerStateCopyWith<$Res> {
-  __$$_LocationControllerStateCopyWithImpl(_$_LocationControllerState _value,
-      $Res Function(_$_LocationControllerState) _then)
+        _$LocationControllerStateImpl>
+    implements _$$LocationControllerStateImplCopyWith<$Res> {
+  __$$LocationControllerStateImplCopyWithImpl(
+      _$LocationControllerStateImpl _value,
+      $Res Function(_$LocationControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -219,7 +223,7 @@ class __$$_LocationControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? locationPermission = freezed,
   }) {
-    return _then(_$_LocationControllerState(
+    return _then(_$LocationControllerStateImpl(
       locationPermission: freezed == locationPermission
           ? _value.locationPermission
           : locationPermission // ignore: cast_nullable_to_non_nullable
@@ -230,8 +234,8 @@ class __$$_LocationControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_LocationControllerState implements _LocationControllerState {
-  const _$_LocationControllerState({this.locationPermission});
+class _$LocationControllerStateImpl implements _LocationControllerState {
+  const _$LocationControllerStateImpl({this.locationPermission});
 
   @override
   final PermissionStatus? locationPermission;
@@ -245,7 +249,7 @@ class _$_LocationControllerState implements _LocationControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LocationControllerState &&
+            other is _$LocationControllerStateImpl &&
             (identical(other.locationPermission, locationPermission) ||
                 other.locationPermission == locationPermission));
   }
@@ -256,21 +260,20 @@ class _$_LocationControllerState implements _LocationControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LocationControllerStateCopyWith<_$_LocationControllerState>
-      get copyWith =>
-          __$$_LocationControllerStateCopyWithImpl<_$_LocationControllerState>(
-              this, _$identity);
+  _$$LocationControllerStateImplCopyWith<_$LocationControllerStateImpl>
+      get copyWith => __$$LocationControllerStateImplCopyWithImpl<
+          _$LocationControllerStateImpl>(this, _$identity);
 }
 
 abstract class _LocationControllerState implements LocationControllerState {
   const factory _LocationControllerState(
           {final PermissionStatus? locationPermission}) =
-      _$_LocationControllerState;
+      _$LocationControllerStateImpl;
 
   @override
   PermissionStatus? get locationPermission;
   @override
   @JsonKey(ignore: true)
-  _$$_LocationControllerStateCopyWith<_$_LocationControllerState>
+  _$$LocationControllerStateImplCopyWith<_$LocationControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -58,22 +58,24 @@ class _$PledgeControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_PledgeControllerStateCopyWith<$Res>
+abstract class _$$PledgeControllerStateImplCopyWith<$Res>
     implements $PledgeControllerStateCopyWith<$Res> {
-  factory _$$_PledgeControllerStateCopyWith(_$_PledgeControllerState value,
-          $Res Function(_$_PledgeControllerState) then) =
-      __$$_PledgeControllerStateCopyWithImpl<$Res>;
+  factory _$$PledgeControllerStateImplCopyWith(
+          _$PledgeControllerStateImpl value,
+          $Res Function(_$PledgeControllerStateImpl) then) =
+      __$$PledgeControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool arePledgesAccepted});
 }
 
 /// @nodoc
-class __$$_PledgeControllerStateCopyWithImpl<$Res>
-    extends _$PledgeControllerStateCopyWithImpl<$Res, _$_PledgeControllerState>
-    implements _$$_PledgeControllerStateCopyWith<$Res> {
-  __$$_PledgeControllerStateCopyWithImpl(_$_PledgeControllerState _value,
-      $Res Function(_$_PledgeControllerState) _then)
+class __$$PledgeControllerStateImplCopyWithImpl<$Res>
+    extends _$PledgeControllerStateCopyWithImpl<$Res,
+        _$PledgeControllerStateImpl>
+    implements _$$PledgeControllerStateImplCopyWith<$Res> {
+  __$$PledgeControllerStateImplCopyWithImpl(_$PledgeControllerStateImpl _value,
+      $Res Function(_$PledgeControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -81,7 +83,7 @@ class __$$_PledgeControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? arePledgesAccepted = null,
   }) {
-    return _then(_$_PledgeControllerState(
+    return _then(_$PledgeControllerStateImpl(
       arePledgesAccepted: null == arePledgesAccepted
           ? _value.arePledgesAccepted
           : arePledgesAccepted // ignore: cast_nullable_to_non_nullable
@@ -92,8 +94,8 @@ class __$$_PledgeControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_PledgeControllerState implements _PledgeControllerState {
-  const _$_PledgeControllerState({required this.arePledgesAccepted});
+class _$PledgeControllerStateImpl implements _PledgeControllerState {
+  const _$PledgeControllerStateImpl({required this.arePledgesAccepted});
 
   @override
   final bool arePledgesAccepted;
@@ -107,7 +109,7 @@ class _$_PledgeControllerState implements _PledgeControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PledgeControllerState &&
+            other is _$PledgeControllerStateImpl &&
             (identical(other.arePledgesAccepted, arePledgesAccepted) ||
                 other.arePledgesAccepted == arePledgesAccepted));
   }
@@ -118,19 +120,19 @@ class _$_PledgeControllerState implements _PledgeControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PledgeControllerStateCopyWith<_$_PledgeControllerState> get copyWith =>
-      __$$_PledgeControllerStateCopyWithImpl<_$_PledgeControllerState>(
-          this, _$identity);
+  _$$PledgeControllerStateImplCopyWith<_$PledgeControllerStateImpl>
+      get copyWith => __$$PledgeControllerStateImplCopyWithImpl<
+          _$PledgeControllerStateImpl>(this, _$identity);
 }
 
 abstract class _PledgeControllerState implements PledgeControllerState {
   const factory _PledgeControllerState(
-      {required final bool arePledgesAccepted}) = _$_PledgeControllerState;
+      {required final bool arePledgesAccepted}) = _$PledgeControllerStateImpl;
 
   @override
   bool get arePledgesAccepted;
   @override
   @JsonKey(ignore: true)
-  _$$_PledgeControllerStateCopyWith<_$_PledgeControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$PledgeControllerStateImplCopyWith<_$PledgeControllerStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

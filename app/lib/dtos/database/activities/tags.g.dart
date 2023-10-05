@@ -6,7 +6,7 @@ part of 'tags.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Tag _$$_TagFromJson(Map<String, dynamic> json) => _$_Tag(
+_$TagImpl _$$TagImplFromJson(Map<String, dynamic> json) => _$TagImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -22,7 +22,7 @@ _$_Tag _$$_TagFromJson(Map<String, dynamic> json) => _$_Tag(
           : TagTopic.fromJson(json['topic'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_TagToJson(_$_Tag instance) => <String, dynamic>{
+Map<String, dynamic> _$$TagImplToJson(_$TagImpl instance) => <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'key': instance.key,
       'fallback': instance.fallback,
@@ -33,19 +33,22 @@ Map<String, dynamic> _$$_TagToJson(_$_Tag instance) => <String, dynamic>{
       'topic': instance.topic?.toJson(),
     };
 
-_$_TagLocalization _$$_TagLocalizationFromJson(Map<String, dynamic> json) =>
-    _$_TagLocalization(
+_$TagLocalizationImpl _$$TagLocalizationImplFromJson(
+        Map<String, dynamic> json) =>
+    _$TagLocalizationImpl(
       locale: json['locale'] as String? ?? '',
       value: json['value'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_TagLocalizationToJson(_$_TagLocalization instance) =>
+Map<String, dynamic> _$$TagLocalizationImplToJson(
+        _$TagLocalizationImpl instance) =>
     <String, dynamic>{
       'locale': instance.locale,
       'value': instance.value,
     };
 
-_$_TagTopic _$$_TagTopicFromJson(Map<String, dynamic> json) => _$_TagTopic(
+_$TagTopicImpl _$$TagTopicImplFromJson(Map<String, dynamic> json) =>
+    _$TagTopicImpl(
       fallback: json['fallback'] as String? ?? '',
       localizations: json['localizations'] == null
           ? const []
@@ -53,7 +56,7 @@ _$_TagTopic _$$_TagTopicFromJson(Map<String, dynamic> json) => _$_TagTopic(
       isEnabled: json['isEnabled'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_TagTopicToJson(_$_TagTopic instance) =>
+Map<String, dynamic> _$$TagTopicImplToJson(_$TagTopicImpl instance) =>
     <String, dynamic>{
       'fallback': instance.fallback,
       'localizations':

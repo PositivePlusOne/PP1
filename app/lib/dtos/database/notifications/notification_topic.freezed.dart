@@ -111,23 +111,25 @@ class _$NotificationTopicCopyWithImpl<$Res, $Val extends NotificationTopic>
 }
 
 /// @nodoc
-abstract class _$$OtherCopyWith<$Res> {
-  factory _$$OtherCopyWith(_$Other value, $Res Function(_$Other) then) =
-      __$$OtherCopyWithImpl<$Res>;
+abstract class _$$OtherImplCopyWith<$Res> {
+  factory _$$OtherImplCopyWith(
+          _$OtherImpl value, $Res Function(_$OtherImpl) then) =
+      __$$OtherImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$OtherCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$Other>
-    implements _$$OtherCopyWith<$Res> {
-  __$$OtherCopyWithImpl(_$Other _value, $Res Function(_$Other) _then)
+class __$$OtherImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$OtherImpl>
+    implements _$$OtherImplCopyWith<$Res> {
+  __$$OtherImplCopyWithImpl(
+      _$OtherImpl _value, $Res Function(_$OtherImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Other implements Other {
-  const _$Other();
+class _$OtherImpl implements Other {
+  const _$OtherImpl();
 
   @override
   String toString() {
@@ -137,7 +139,7 @@ class _$Other implements Other {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Other);
+        (other.runtimeType == runtimeType && other is _$OtherImpl);
   }
 
   @override
@@ -243,29 +245,29 @@ class _$Other implements Other {
 }
 
 abstract class Other implements NotificationTopic {
-  const factory Other() = _$Other;
+  const factory Other() = _$OtherImpl;
 }
 
 /// @nodoc
-abstract class _$$PostLikesCopyWith<$Res> {
-  factory _$$PostLikesCopyWith(
-          _$PostLikes value, $Res Function(_$PostLikes) then) =
-      __$$PostLikesCopyWithImpl<$Res>;
+abstract class _$$PostLikesImplCopyWith<$Res> {
+  factory _$$PostLikesImplCopyWith(
+          _$PostLikesImpl value, $Res Function(_$PostLikesImpl) then) =
+      __$$PostLikesImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$PostLikesCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$PostLikes>
-    implements _$$PostLikesCopyWith<$Res> {
-  __$$PostLikesCopyWithImpl(
-      _$PostLikes _value, $Res Function(_$PostLikes) _then)
+class __$$PostLikesImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$PostLikesImpl>
+    implements _$$PostLikesImplCopyWith<$Res> {
+  __$$PostLikesImplCopyWithImpl(
+      _$PostLikesImpl _value, $Res Function(_$PostLikesImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$PostLikes implements PostLikes {
-  const _$PostLikes();
+class _$PostLikesImpl implements PostLikes {
+  const _$PostLikesImpl();
 
   @override
   String toString() {
@@ -275,7 +277,7 @@ class _$PostLikes implements PostLikes {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$PostLikes);
+        (other.runtimeType == runtimeType && other is _$PostLikesImpl);
   }
 
   @override
@@ -381,29 +383,29 @@ class _$PostLikes implements PostLikes {
 }
 
 abstract class PostLikes implements NotificationTopic {
-  const factory PostLikes() = _$PostLikes;
+  const factory PostLikes() = _$PostLikesImpl;
 }
 
 /// @nodoc
-abstract class _$$NewFollowerCopyWith<$Res> {
-  factory _$$NewFollowerCopyWith(
-          _$NewFollower value, $Res Function(_$NewFollower) then) =
-      __$$NewFollowerCopyWithImpl<$Res>;
+abstract class _$$NewFollowerImplCopyWith<$Res> {
+  factory _$$NewFollowerImplCopyWith(
+          _$NewFollowerImpl value, $Res Function(_$NewFollowerImpl) then) =
+      __$$NewFollowerImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$NewFollowerCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$NewFollower>
-    implements _$$NewFollowerCopyWith<$Res> {
-  __$$NewFollowerCopyWithImpl(
-      _$NewFollower _value, $Res Function(_$NewFollower) _then)
+class __$$NewFollowerImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$NewFollowerImpl>
+    implements _$$NewFollowerImplCopyWith<$Res> {
+  __$$NewFollowerImplCopyWithImpl(
+      _$NewFollowerImpl _value, $Res Function(_$NewFollowerImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$NewFollower implements NewFollower {
-  const _$NewFollower();
+class _$NewFollowerImpl implements NewFollower {
+  const _$NewFollowerImpl();
 
   @override
   String toString() {
@@ -413,7 +415,7 @@ class _$NewFollower implements NewFollower {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$NewFollower);
+        (other.runtimeType == runtimeType && other is _$NewFollowerImpl);
   }
 
   @override
@@ -519,29 +521,29 @@ class _$NewFollower implements NewFollower {
 }
 
 abstract class NewFollower implements NotificationTopic {
-  const factory NewFollower() = _$NewFollower;
+  const factory NewFollower() = _$NewFollowerImpl;
 }
 
 /// @nodoc
-abstract class _$$ConnectionRequestCopyWith<$Res> {
-  factory _$$ConnectionRequestCopyWith(
-          _$ConnectionRequest value, $Res Function(_$ConnectionRequest) then) =
-      __$$ConnectionRequestCopyWithImpl<$Res>;
+abstract class _$$ConnectionRequestImplCopyWith<$Res> {
+  factory _$$ConnectionRequestImplCopyWith(_$ConnectionRequestImpl value,
+          $Res Function(_$ConnectionRequestImpl) then) =
+      __$$ConnectionRequestImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$ConnectionRequestCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$ConnectionRequest>
-    implements _$$ConnectionRequestCopyWith<$Res> {
-  __$$ConnectionRequestCopyWithImpl(
-      _$ConnectionRequest _value, $Res Function(_$ConnectionRequest) _then)
+class __$$ConnectionRequestImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$ConnectionRequestImpl>
+    implements _$$ConnectionRequestImplCopyWith<$Res> {
+  __$$ConnectionRequestImplCopyWithImpl(_$ConnectionRequestImpl _value,
+      $Res Function(_$ConnectionRequestImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$ConnectionRequest implements ConnectionRequest {
-  const _$ConnectionRequest();
+class _$ConnectionRequestImpl implements ConnectionRequest {
+  const _$ConnectionRequestImpl();
 
   @override
   String toString() {
@@ -551,7 +553,7 @@ class _$ConnectionRequest implements ConnectionRequest {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ConnectionRequest);
+        (other.runtimeType == runtimeType && other is _$ConnectionRequestImpl);
   }
 
   @override
@@ -657,29 +659,29 @@ class _$ConnectionRequest implements ConnectionRequest {
 }
 
 abstract class ConnectionRequest implements NotificationTopic {
-  const factory ConnectionRequest() = _$ConnectionRequest;
+  const factory ConnectionRequest() = _$ConnectionRequestImpl;
 }
 
 /// @nodoc
-abstract class _$$NewCommentCopyWith<$Res> {
-  factory _$$NewCommentCopyWith(
-          _$NewComment value, $Res Function(_$NewComment) then) =
-      __$$NewCommentCopyWithImpl<$Res>;
+abstract class _$$NewCommentImplCopyWith<$Res> {
+  factory _$$NewCommentImplCopyWith(
+          _$NewCommentImpl value, $Res Function(_$NewCommentImpl) then) =
+      __$$NewCommentImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$NewCommentCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$NewComment>
-    implements _$$NewCommentCopyWith<$Res> {
-  __$$NewCommentCopyWithImpl(
-      _$NewComment _value, $Res Function(_$NewComment) _then)
+class __$$NewCommentImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$NewCommentImpl>
+    implements _$$NewCommentImplCopyWith<$Res> {
+  __$$NewCommentImplCopyWithImpl(
+      _$NewCommentImpl _value, $Res Function(_$NewCommentImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$NewComment implements NewComment {
-  const _$NewComment();
+class _$NewCommentImpl implements NewComment {
+  const _$NewCommentImpl();
 
   @override
   String toString() {
@@ -689,7 +691,7 @@ class _$NewComment implements NewComment {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$NewComment);
+        (other.runtimeType == runtimeType && other is _$NewCommentImpl);
   }
 
   @override
@@ -795,29 +797,29 @@ class _$NewComment implements NewComment {
 }
 
 abstract class NewComment implements NotificationTopic {
-  const factory NewComment() = _$NewComment;
+  const factory NewComment() = _$NewCommentImpl;
 }
 
 /// @nodoc
-abstract class _$$NewMessageCopyWith<$Res> {
-  factory _$$NewMessageCopyWith(
-          _$NewMessage value, $Res Function(_$NewMessage) then) =
-      __$$NewMessageCopyWithImpl<$Res>;
+abstract class _$$NewMessageImplCopyWith<$Res> {
+  factory _$$NewMessageImplCopyWith(
+          _$NewMessageImpl value, $Res Function(_$NewMessageImpl) then) =
+      __$$NewMessageImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$NewMessageCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$NewMessage>
-    implements _$$NewMessageCopyWith<$Res> {
-  __$$NewMessageCopyWithImpl(
-      _$NewMessage _value, $Res Function(_$NewMessage) _then)
+class __$$NewMessageImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$NewMessageImpl>
+    implements _$$NewMessageImplCopyWith<$Res> {
+  __$$NewMessageImplCopyWithImpl(
+      _$NewMessageImpl _value, $Res Function(_$NewMessageImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$NewMessage implements NewMessage {
-  const _$NewMessage();
+class _$NewMessageImpl implements NewMessage {
+  const _$NewMessageImpl();
 
   @override
   String toString() {
@@ -827,7 +829,7 @@ class _$NewMessage implements NewMessage {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$NewMessage);
+        (other.runtimeType == runtimeType && other is _$NewMessageImpl);
   }
 
   @override
@@ -933,29 +935,29 @@ class _$NewMessage implements NewMessage {
 }
 
 abstract class NewMessage implements NotificationTopic {
-  const factory NewMessage() = _$NewMessage;
+  const factory NewMessage() = _$NewMessageImpl;
 }
 
 /// @nodoc
-abstract class _$$PostSharedCopyWith<$Res> {
-  factory _$$PostSharedCopyWith(
-          _$PostShared value, $Res Function(_$PostShared) then) =
-      __$$PostSharedCopyWithImpl<$Res>;
+abstract class _$$PostSharedImplCopyWith<$Res> {
+  factory _$$PostSharedImplCopyWith(
+          _$PostSharedImpl value, $Res Function(_$PostSharedImpl) then) =
+      __$$PostSharedImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$PostSharedCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$PostShared>
-    implements _$$PostSharedCopyWith<$Res> {
-  __$$PostSharedCopyWithImpl(
-      _$PostShared _value, $Res Function(_$PostShared) _then)
+class __$$PostSharedImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$PostSharedImpl>
+    implements _$$PostSharedImplCopyWith<$Res> {
+  __$$PostSharedImplCopyWithImpl(
+      _$PostSharedImpl _value, $Res Function(_$PostSharedImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$PostShared implements PostShared {
-  const _$PostShared();
+class _$PostSharedImpl implements PostShared {
+  const _$PostSharedImpl();
 
   @override
   String toString() {
@@ -965,7 +967,7 @@ class _$PostShared implements PostShared {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$PostShared);
+        (other.runtimeType == runtimeType && other is _$PostSharedImpl);
   }
 
   @override
@@ -1071,29 +1073,29 @@ class _$PostShared implements PostShared {
 }
 
 abstract class PostShared implements NotificationTopic {
-  const factory PostShared() = _$PostShared;
+  const factory PostShared() = _$PostSharedImpl;
 }
 
 /// @nodoc
-abstract class _$$SharedEventCopyWith<$Res> {
-  factory _$$SharedEventCopyWith(
-          _$SharedEvent value, $Res Function(_$SharedEvent) then) =
-      __$$SharedEventCopyWithImpl<$Res>;
+abstract class _$$SharedEventImplCopyWith<$Res> {
+  factory _$$SharedEventImplCopyWith(
+          _$SharedEventImpl value, $Res Function(_$SharedEventImpl) then) =
+      __$$SharedEventImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SharedEventCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$SharedEvent>
-    implements _$$SharedEventCopyWith<$Res> {
-  __$$SharedEventCopyWithImpl(
-      _$SharedEvent _value, $Res Function(_$SharedEvent) _then)
+class __$$SharedEventImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$SharedEventImpl>
+    implements _$$SharedEventImplCopyWith<$Res> {
+  __$$SharedEventImplCopyWithImpl(
+      _$SharedEventImpl _value, $Res Function(_$SharedEventImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$SharedEvent implements SharedEvent {
-  const _$SharedEvent();
+class _$SharedEventImpl implements SharedEvent {
+  const _$SharedEventImpl();
 
   @override
   String toString() {
@@ -1103,7 +1105,7 @@ class _$SharedEvent implements SharedEvent {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$SharedEvent);
+        (other.runtimeType == runtimeType && other is _$SharedEventImpl);
   }
 
   @override
@@ -1209,5 +1211,5 @@ class _$SharedEvent implements SharedEvent {
 }
 
 abstract class SharedEvent implements NotificationTopic {
-  const factory SharedEvent() = _$SharedEvent;
+  const factory SharedEvent() = _$SharedEventImpl;
 }

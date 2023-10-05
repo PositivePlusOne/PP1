@@ -6,8 +6,9 @@ part of 'guidance_category.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GuidanceCategory _$$_GuidanceCategoryFromJson(Map<String, dynamic> json) =>
-    _$_GuidanceCategory(
+_$GuidanceCategoryImpl _$$GuidanceCategoryImplFromJson(
+        Map<String, dynamic> json) =>
+    _$GuidanceCategoryImpl(
       documentId: json['id'] as String,
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
@@ -21,7 +22,8 @@ _$_GuidanceCategory _$$_GuidanceCategoryFromJson(Map<String, dynamic> json) =>
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_GuidanceCategoryToJson(_$_GuidanceCategory instance) =>
+Map<String, dynamic> _$$GuidanceCategoryImplToJson(
+        _$GuidanceCategoryImpl instance) =>
     <String, dynamic>{
       'id': instance.documentId,
       'title': instance.title,
