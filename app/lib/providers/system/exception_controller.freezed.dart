@@ -72,12 +72,12 @@ class _$ExceptionControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ExceptionControllerStateCopyWith<$Res>
+abstract class _$$ExceptionControllerStateImplCopyWith<$Res>
     implements $ExceptionControllerStateCopyWith<$Res> {
-  factory _$$_ExceptionControllerStateCopyWith(
-          _$_ExceptionControllerState value,
-          $Res Function(_$_ExceptionControllerState) then) =
-      __$$_ExceptionControllerStateCopyWithImpl<$Res>;
+  factory _$$ExceptionControllerStateImplCopyWith(
+          _$ExceptionControllerStateImpl value,
+          $Res Function(_$ExceptionControllerStateImpl) then) =
+      __$$ExceptionControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -87,12 +87,13 @@ abstract class _$$_ExceptionControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ExceptionControllerStateCopyWithImpl<$Res>
+class __$$ExceptionControllerStateImplCopyWithImpl<$Res>
     extends _$ExceptionControllerStateCopyWithImpl<$Res,
-        _$_ExceptionControllerState>
-    implements _$$_ExceptionControllerStateCopyWith<$Res> {
-  __$$_ExceptionControllerStateCopyWithImpl(_$_ExceptionControllerState _value,
-      $Res Function(_$_ExceptionControllerState) _then)
+        _$ExceptionControllerStateImpl>
+    implements _$$ExceptionControllerStateImplCopyWith<$Res> {
+  __$$ExceptionControllerStateImplCopyWithImpl(
+      _$ExceptionControllerStateImpl _value,
+      $Res Function(_$ExceptionControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -102,7 +103,7 @@ class __$$_ExceptionControllerStateCopyWithImpl<$Res>
     Object? currentException = freezed,
     Object? currentExceptionRoute = freezed,
   }) {
-    return _then(_$_ExceptionControllerState(
+    return _then(_$ExceptionControllerStateImpl(
       isCrashlyticsListening: null == isCrashlyticsListening
           ? _value.isCrashlyticsListening
           : isCrashlyticsListening // ignore: cast_nullable_to_non_nullable
@@ -120,10 +121,10 @@ class __$$_ExceptionControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ExceptionControllerState
+class _$ExceptionControllerStateImpl
     with DiagnosticableTreeMixin
     implements _ExceptionControllerState {
-  const _$_ExceptionControllerState(
+  const _$ExceptionControllerStateImpl(
       {required this.isCrashlyticsListening,
       this.currentException,
       this.currentExceptionRoute});
@@ -156,7 +157,7 @@ class _$_ExceptionControllerState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ExceptionControllerState &&
+            other is _$ExceptionControllerStateImpl &&
             (identical(other.isCrashlyticsListening, isCrashlyticsListening) ||
                 other.isCrashlyticsListening == isCrashlyticsListening) &&
             const DeepCollectionEquality()
@@ -175,16 +176,16 @@ class _$_ExceptionControllerState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ExceptionControllerStateCopyWith<_$_ExceptionControllerState>
-      get copyWith => __$$_ExceptionControllerStateCopyWithImpl<
-          _$_ExceptionControllerState>(this, _$identity);
+  _$$ExceptionControllerStateImplCopyWith<_$ExceptionControllerStateImpl>
+      get copyWith => __$$ExceptionControllerStateImplCopyWithImpl<
+          _$ExceptionControllerStateImpl>(this, _$identity);
 }
 
 abstract class _ExceptionControllerState implements ExceptionControllerState {
   const factory _ExceptionControllerState(
       {required final bool isCrashlyticsListening,
       final Object? currentException,
-      final String? currentExceptionRoute}) = _$_ExceptionControllerState;
+      final String? currentExceptionRoute}) = _$ExceptionControllerStateImpl;
 
   @override
   bool get isCrashlyticsListening;
@@ -194,6 +195,6 @@ abstract class _ExceptionControllerState implements ExceptionControllerState {
   String? get currentExceptionRoute;
   @override
   @JsonKey(ignore: true)
-  _$$_ExceptionControllerStateCopyWith<_$_ExceptionControllerState>
+  _$$ExceptionControllerStateImplCopyWith<_$ExceptionControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

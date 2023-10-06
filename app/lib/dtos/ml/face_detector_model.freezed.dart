@@ -93,11 +93,11 @@ class _$FaceDetectionModelCopyWithImpl<$Res, $Val extends FaceDetectionModel>
 }
 
 /// @nodoc
-abstract class _$$_FaceDetectionModelCopyWith<$Res>
+abstract class _$$FaceDetectionModelImplCopyWith<$Res>
     implements $FaceDetectionModelCopyWith<$Res> {
-  factory _$$_FaceDetectionModelCopyWith(_$_FaceDetectionModel value,
-          $Res Function(_$_FaceDetectionModel) then) =
-      __$$_FaceDetectionModelCopyWithImpl<$Res>;
+  factory _$$FaceDetectionModelImplCopyWith(_$FaceDetectionModelImpl value,
+          $Res Function(_$FaceDetectionModelImpl) then) =
+      __$$FaceDetectionModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -110,11 +110,11 @@ abstract class _$$_FaceDetectionModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_FaceDetectionModelCopyWithImpl<$Res>
-    extends _$FaceDetectionModelCopyWithImpl<$Res, _$_FaceDetectionModel>
-    implements _$$_FaceDetectionModelCopyWith<$Res> {
-  __$$_FaceDetectionModelCopyWithImpl(
-      _$_FaceDetectionModel _value, $Res Function(_$_FaceDetectionModel) _then)
+class __$$FaceDetectionModelImplCopyWithImpl<$Res>
+    extends _$FaceDetectionModelCopyWithImpl<$Res, _$FaceDetectionModelImpl>
+    implements _$$FaceDetectionModelImplCopyWith<$Res> {
+  __$$FaceDetectionModelImplCopyWithImpl(_$FaceDetectionModelImpl _value,
+      $Res Function(_$FaceDetectionModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -127,7 +127,7 @@ class __$$_FaceDetectionModelCopyWithImpl<$Res>
     Object? imageRotation = null,
     Object? croppedSize = null,
   }) {
-    return _then(_$_FaceDetectionModel(
+    return _then(_$FaceDetectionModelImpl(
       faces: null == faces
           ? _value._faces
           : faces // ignore: cast_nullable_to_non_nullable
@@ -158,8 +158,8 @@ class __$$_FaceDetectionModelCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_FaceDetectionModel implements _FaceDetectionModel {
-  const _$_FaceDetectionModel(
+class _$FaceDetectionModelImpl implements _FaceDetectionModel {
+  const _$FaceDetectionModelImpl(
       {final List<Face> faces = const [],
       this.isFacingCamera = false,
       this.isInsideBoundingBox = false,
@@ -202,7 +202,7 @@ class _$_FaceDetectionModel implements _FaceDetectionModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FaceDetectionModel &&
+            other is _$FaceDetectionModelImpl &&
             const DeepCollectionEquality().equals(other._faces, _faces) &&
             (identical(other.isFacingCamera, isFacingCamera) ||
                 other.isFacingCamera == isFacingCamera) &&
@@ -229,8 +229,8 @@ class _$_FaceDetectionModel implements _FaceDetectionModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FaceDetectionModelCopyWith<_$_FaceDetectionModel> get copyWith =>
-      __$$_FaceDetectionModelCopyWithImpl<_$_FaceDetectionModel>(
+  _$$FaceDetectionModelImplCopyWith<_$FaceDetectionModelImpl> get copyWith =>
+      __$$FaceDetectionModelImplCopyWithImpl<_$FaceDetectionModelImpl>(
           this, _$identity);
 }
 
@@ -241,7 +241,7 @@ abstract class _FaceDetectionModel implements FaceDetectionModel {
       final bool isInsideBoundingBox,
       final Size absoluteImageSize,
       final InputImageRotation imageRotation,
-      final Size croppedSize}) = _$_FaceDetectionModel;
+      final Size croppedSize}) = _$FaceDetectionModelImpl;
 
   @override
   List<Face> get faces;
@@ -257,6 +257,6 @@ abstract class _FaceDetectionModel implements FaceDetectionModel {
   Size get croppedSize;
   @override
   @JsonKey(ignore: true)
-  _$$_FaceDetectionModelCopyWith<_$_FaceDetectionModel> get copyWith =>
+  _$$FaceDetectionModelImplCopyWith<_$FaceDetectionModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

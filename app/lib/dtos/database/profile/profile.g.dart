@@ -6,7 +6,8 @@ part of 'profile.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
+_$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
+    _$ProfileImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -42,7 +43,7 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
           const [],
     );
 
-Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
+Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'email': instance.email,
@@ -64,8 +65,9 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'media': instance.media.map((e) => e.toJson()).toList(),
     };
 
-_$_ProfileStatistics _$$_ProfileStatisticsFromJson(Map<String, dynamic> json) =>
-    _$_ProfileStatistics(
+_$ProfileStatisticsImpl _$$ProfileStatisticsImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ProfileStatisticsImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -76,8 +78,8 @@ _$_ProfileStatistics _$$_ProfileStatisticsFromJson(Map<String, dynamic> json) =>
           const {},
     );
 
-Map<String, dynamic> _$$_ProfileStatisticsToJson(
-        _$_ProfileStatistics instance) =>
+Map<String, dynamic> _$$ProfileStatisticsImplToJson(
+        _$ProfileStatisticsImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'profileId': instance.profileId,

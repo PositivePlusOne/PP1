@@ -109,7 +109,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
-    Object? currentFilter = null,
+    Object? currentFilter = freezed,
     Object? previousActivity = null,
     Object? activeButton = null,
   }) {
@@ -166,7 +166,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentFilter: null == currentFilter
+      currentFilter: freezed == currentFilter
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
@@ -201,12 +201,12 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
+abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
     implements $CreatePostViewModelStateCopyWith<$Res> {
-  factory _$$_CreatePostViewModelStateCopyWith(
-          _$_CreatePostViewModelState value,
-          $Res Function(_$_CreatePostViewModelState) then) =
-      __$$_CreatePostViewModelStateCopyWithImpl<$Res>;
+  factory _$$CreatePostViewModelStateImplCopyWith(
+          _$CreatePostViewModelStateImpl value,
+          $Res Function(_$CreatePostViewModelStateImpl) then) =
+      __$$CreatePostViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -240,12 +240,13 @@ abstract class _$$_CreatePostViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
+class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     extends _$CreatePostViewModelStateCopyWithImpl<$Res,
-        _$_CreatePostViewModelState>
-    implements _$$_CreatePostViewModelStateCopyWith<$Res> {
-  __$$_CreatePostViewModelStateCopyWithImpl(_$_CreatePostViewModelState _value,
-      $Res Function(_$_CreatePostViewModelState) _then)
+        _$CreatePostViewModelStateImpl>
+    implements _$$CreatePostViewModelStateImplCopyWith<$Res> {
+  __$$CreatePostViewModelStateImplCopyWithImpl(
+      _$CreatePostViewModelStateImpl _value,
+      $Res Function(_$CreatePostViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -264,11 +265,11 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
-    Object? currentFilter = null,
+    Object? currentFilter = freezed,
     Object? previousActivity = null,
     Object? activeButton = null,
   }) {
-    return _then(_$_CreatePostViewModelState(
+    return _then(_$CreatePostViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -321,7 +322,7 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentFilter: null == currentFilter
+      currentFilter: freezed == currentFilter
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
@@ -339,10 +340,10 @@ class __$$_CreatePostViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CreatePostViewModelState
+class _$CreatePostViewModelStateImpl
     with DiagnosticableTreeMixin
     implements _CreatePostViewModelState {
-  const _$_CreatePostViewModelState(
+  const _$CreatePostViewModelStateImpl(
       {this.isBusy = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
@@ -462,7 +463,7 @@ class _$_CreatePostViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CreatePostViewModelState &&
+            other is _$CreatePostViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.currentPostType, currentPostType) ||
                 other.currentPostType == currentPostType) &&
@@ -487,8 +488,8 @@ class _$_CreatePostViewModelState
                 other.activeButtonFlexText == activeButtonFlexText) &&
             (identical(other.saveToGallery, saveToGallery) ||
                 other.saveToGallery == saveToGallery) &&
-            (identical(other.currentFilter, currentFilter) ||
-                other.currentFilter == currentFilter) &&
+            const DeepCollectionEquality()
+                .equals(other.currentFilter, currentFilter) &&
             (identical(other.previousActivity, previousActivity) ||
                 other.previousActivity == previousActivity) &&
             (identical(other.activeButton, activeButton) ||
@@ -511,16 +512,16 @@ class _$_CreatePostViewModelState
       allowComments,
       activeButtonFlexText,
       saveToGallery,
-      currentFilter,
+      const DeepCollectionEquality().hash(currentFilter),
       previousActivity,
       activeButton);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CreatePostViewModelStateCopyWith<_$_CreatePostViewModelState>
-      get copyWith => __$$_CreatePostViewModelStateCopyWithImpl<
-          _$_CreatePostViewModelState>(this, _$identity);
+  _$$CreatePostViewModelStateImplCopyWith<_$CreatePostViewModelStateImpl>
+      get copyWith => __$$CreatePostViewModelStateImplCopyWithImpl<
+          _$CreatePostViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _CreatePostViewModelState implements CreatePostViewModelState {
@@ -547,7 +548,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           required final AwesomeFilter currentFilter,
           required final ActivityData previousActivity,
           final PositivePostNavigationActiveButton activeButton}) =
-      _$_CreatePostViewModelState;
+      _$CreatePostViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -589,6 +590,6 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   PositivePostNavigationActiveButton get activeButton;
   @override
   @JsonKey(ignore: true)
-  _$$_CreatePostViewModelStateCopyWith<_$_CreatePostViewModelState>
+  _$$CreatePostViewModelStateImplCopyWith<_$CreatePostViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

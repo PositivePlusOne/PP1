@@ -68,12 +68,12 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_NotificationsControllerStateCopyWith<$Res>
+abstract class _$$NotificationsControllerStateImplCopyWith<$Res>
     implements $NotificationsControllerStateCopyWith<$Res> {
-  factory _$$_NotificationsControllerStateCopyWith(
-          _$_NotificationsControllerState value,
-          $Res Function(_$_NotificationsControllerState) then) =
-      __$$_NotificationsControllerStateCopyWithImpl<$Res>;
+  factory _$$NotificationsControllerStateImplCopyWith(
+          _$NotificationsControllerStateImpl value,
+          $Res Function(_$NotificationsControllerStateImpl) then) =
+      __$$NotificationsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -82,13 +82,13 @@ abstract class _$$_NotificationsControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_NotificationsControllerStateCopyWithImpl<$Res>
+class __$$NotificationsControllerStateImplCopyWithImpl<$Res>
     extends _$NotificationsControllerStateCopyWithImpl<$Res,
-        _$_NotificationsControllerState>
-    implements _$$_NotificationsControllerStateCopyWith<$Res> {
-  __$$_NotificationsControllerStateCopyWithImpl(
-      _$_NotificationsControllerState _value,
-      $Res Function(_$_NotificationsControllerState) _then)
+        _$NotificationsControllerStateImpl>
+    implements _$$NotificationsControllerStateImplCopyWith<$Res> {
+  __$$NotificationsControllerStateImplCopyWithImpl(
+      _$NotificationsControllerStateImpl _value,
+      $Res Function(_$NotificationsControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -97,7 +97,7 @@ class __$$_NotificationsControllerStateCopyWithImpl<$Res>
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
   }) {
-    return _then(_$_NotificationsControllerState(
+    return _then(_$NotificationsControllerStateImpl(
       localNotificationsInitialized: null == localNotificationsInitialized
           ? _value.localNotificationsInitialized
           : localNotificationsInitialized // ignore: cast_nullable_to_non_nullable
@@ -112,8 +112,9 @@ class __$$_NotificationsControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_NotificationsControllerState implements _NotificationsControllerState {
-  const _$_NotificationsControllerState(
+class _$NotificationsControllerStateImpl
+    implements _NotificationsControllerState {
+  const _$NotificationsControllerStateImpl(
       {required this.localNotificationsInitialized,
       required this.remoteNotificationsInitialized});
 
@@ -131,7 +132,7 @@ class _$_NotificationsControllerState implements _NotificationsControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationsControllerState &&
+            other is _$NotificationsControllerStateImpl &&
             (identical(other.localNotificationsInitialized,
                     localNotificationsInitialized) ||
                 other.localNotificationsInitialized ==
@@ -149,9 +150,10 @@ class _$_NotificationsControllerState implements _NotificationsControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NotificationsControllerStateCopyWith<_$_NotificationsControllerState>
-      get copyWith => __$$_NotificationsControllerStateCopyWithImpl<
-          _$_NotificationsControllerState>(this, _$identity);
+  _$$NotificationsControllerStateImplCopyWith<
+          _$NotificationsControllerStateImpl>
+      get copyWith => __$$NotificationsControllerStateImplCopyWithImpl<
+          _$NotificationsControllerStateImpl>(this, _$identity);
 }
 
 abstract class _NotificationsControllerState
@@ -159,7 +161,7 @@ abstract class _NotificationsControllerState
   const factory _NotificationsControllerState(
           {required final bool localNotificationsInitialized,
           required final bool remoteNotificationsInitialized}) =
-      _$_NotificationsControllerState;
+      _$NotificationsControllerStateImpl;
 
   @override
   bool get localNotificationsInitialized;
@@ -167,6 +169,7 @@ abstract class _NotificationsControllerState
   bool get remoteNotificationsInitialized;
   @override
   @JsonKey(ignore: true)
-  _$$_NotificationsControllerStateCopyWith<_$_NotificationsControllerState>
+  _$$NotificationsControllerStateImplCopyWith<
+          _$NotificationsControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

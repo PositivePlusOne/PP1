@@ -58,22 +58,22 @@ class _$SplashViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SplashViewModelStateCopyWith<$Res>
+abstract class _$$SplashViewModelStateImplCopyWith<$Res>
     implements $SplashViewModelStateCopyWith<$Res> {
-  factory _$$_SplashViewModelStateCopyWith(_$_SplashViewModelState value,
-          $Res Function(_$_SplashViewModelState) then) =
-      __$$_SplashViewModelStateCopyWithImpl<$Res>;
+  factory _$$SplashViewModelStateImplCopyWith(_$SplashViewModelStateImpl value,
+          $Res Function(_$SplashViewModelStateImpl) then) =
+      __$$SplashViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({SplashStyle style});
 }
 
 /// @nodoc
-class __$$_SplashViewModelStateCopyWithImpl<$Res>
-    extends _$SplashViewModelStateCopyWithImpl<$Res, _$_SplashViewModelState>
-    implements _$$_SplashViewModelStateCopyWith<$Res> {
-  __$$_SplashViewModelStateCopyWithImpl(_$_SplashViewModelState _value,
-      $Res Function(_$_SplashViewModelState) _then)
+class __$$SplashViewModelStateImplCopyWithImpl<$Res>
+    extends _$SplashViewModelStateCopyWithImpl<$Res, _$SplashViewModelStateImpl>
+    implements _$$SplashViewModelStateImplCopyWith<$Res> {
+  __$$SplashViewModelStateImplCopyWithImpl(_$SplashViewModelStateImpl _value,
+      $Res Function(_$SplashViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -81,7 +81,7 @@ class __$$_SplashViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? style = null,
   }) {
-    return _then(_$_SplashViewModelState(
+    return _then(_$SplashViewModelStateImpl(
       style: null == style
           ? _value.style
           : style // ignore: cast_nullable_to_non_nullable
@@ -92,8 +92,8 @@ class __$$_SplashViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SplashViewModelState implements _SplashViewModelState {
-  const _$_SplashViewModelState({required this.style});
+class _$SplashViewModelStateImpl implements _SplashViewModelState {
+  const _$SplashViewModelStateImpl({required this.style});
 
   @override
   final SplashStyle style;
@@ -107,7 +107,7 @@ class _$_SplashViewModelState implements _SplashViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SplashViewModelState &&
+            other is _$SplashViewModelStateImpl &&
             (identical(other.style, style) || other.style == style));
   }
 
@@ -117,19 +117,20 @@ class _$_SplashViewModelState implements _SplashViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SplashViewModelStateCopyWith<_$_SplashViewModelState> get copyWith =>
-      __$$_SplashViewModelStateCopyWithImpl<_$_SplashViewModelState>(
-          this, _$identity);
+  _$$SplashViewModelStateImplCopyWith<_$SplashViewModelStateImpl>
+      get copyWith =>
+          __$$SplashViewModelStateImplCopyWithImpl<_$SplashViewModelStateImpl>(
+              this, _$identity);
 }
 
 abstract class _SplashViewModelState implements SplashViewModelState {
   const factory _SplashViewModelState({required final SplashStyle style}) =
-      _$_SplashViewModelState;
+      _$SplashViewModelStateImpl;
 
   @override
   SplashStyle get style;
   @override
   @JsonKey(ignore: true)
-  _$$_SplashViewModelStateCopyWith<_$_SplashViewModelState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SplashViewModelStateImplCopyWith<_$SplashViewModelStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

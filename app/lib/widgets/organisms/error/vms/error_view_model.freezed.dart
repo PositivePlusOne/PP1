@@ -57,22 +57,22 @@ class _$ErrorViewModelStateCopyWithImpl<$Res, $Val extends ErrorViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_ErrorViewModelStateCopyWith<$Res>
+abstract class _$$ErrorViewModelStateImplCopyWith<$Res>
     implements $ErrorViewModelStateCopyWith<$Res> {
-  factory _$$_ErrorViewModelStateCopyWith(_$_ErrorViewModelState value,
-          $Res Function(_$_ErrorViewModelState) then) =
-      __$$_ErrorViewModelStateCopyWithImpl<$Res>;
+  factory _$$ErrorViewModelStateImplCopyWith(_$ErrorViewModelStateImpl value,
+          $Res Function(_$ErrorViewModelStateImpl) then) =
+      __$$ErrorViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy});
 }
 
 /// @nodoc
-class __$$_ErrorViewModelStateCopyWithImpl<$Res>
-    extends _$ErrorViewModelStateCopyWithImpl<$Res, _$_ErrorViewModelState>
-    implements _$$_ErrorViewModelStateCopyWith<$Res> {
-  __$$_ErrorViewModelStateCopyWithImpl(_$_ErrorViewModelState _value,
-      $Res Function(_$_ErrorViewModelState) _then)
+class __$$ErrorViewModelStateImplCopyWithImpl<$Res>
+    extends _$ErrorViewModelStateCopyWithImpl<$Res, _$ErrorViewModelStateImpl>
+    implements _$$ErrorViewModelStateImplCopyWith<$Res> {
+  __$$ErrorViewModelStateImplCopyWithImpl(_$ErrorViewModelStateImpl _value,
+      $Res Function(_$ErrorViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -80,7 +80,7 @@ class __$$_ErrorViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
   }) {
-    return _then(_$_ErrorViewModelState(
+    return _then(_$ErrorViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -91,8 +91,8 @@ class __$$_ErrorViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ErrorViewModelState implements _ErrorViewModelState {
-  const _$_ErrorViewModelState({this.isBusy = false});
+class _$ErrorViewModelStateImpl implements _ErrorViewModelState {
+  const _$ErrorViewModelStateImpl({this.isBusy = false});
 
   @override
   @JsonKey()
@@ -107,7 +107,7 @@ class _$_ErrorViewModelState implements _ErrorViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ErrorViewModelState &&
+            other is _$ErrorViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
@@ -117,19 +117,19 @@ class _$_ErrorViewModelState implements _ErrorViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ErrorViewModelStateCopyWith<_$_ErrorViewModelState> get copyWith =>
-      __$$_ErrorViewModelStateCopyWithImpl<_$_ErrorViewModelState>(
+  _$$ErrorViewModelStateImplCopyWith<_$ErrorViewModelStateImpl> get copyWith =>
+      __$$ErrorViewModelStateImplCopyWithImpl<_$ErrorViewModelStateImpl>(
           this, _$identity);
 }
 
 abstract class _ErrorViewModelState implements ErrorViewModelState {
   const factory _ErrorViewModelState({final bool isBusy}) =
-      _$_ErrorViewModelState;
+      _$ErrorViewModelStateImpl;
 
   @override
   bool get isBusy;
   @override
   @JsonKey(ignore: true)
-  _$$_ErrorViewModelStateCopyWith<_$_ErrorViewModelState> get copyWith =>
+  _$$ErrorViewModelStateImplCopyWith<_$ErrorViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

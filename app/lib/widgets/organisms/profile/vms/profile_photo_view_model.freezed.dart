@@ -59,25 +59,25 @@ class _$ProfilePhotoViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfilePhotoViewModelStateCopyWith<$Res>
+abstract class _$$ProfilePhotoViewModelStateImplCopyWith<$Res>
     implements $ProfilePhotoViewModelStateCopyWith<$Res> {
-  factory _$$_ProfilePhotoViewModelStateCopyWith(
-          _$_ProfilePhotoViewModelState value,
-          $Res Function(_$_ProfilePhotoViewModelState) then) =
-      __$$_ProfilePhotoViewModelStateCopyWithImpl<$Res>;
+  factory _$$ProfilePhotoViewModelStateImplCopyWith(
+          _$ProfilePhotoViewModelStateImpl value,
+          $Res Function(_$ProfilePhotoViewModelStateImpl) then) =
+      __$$ProfilePhotoViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy});
 }
 
 /// @nodoc
-class __$$_ProfilePhotoViewModelStateCopyWithImpl<$Res>
+class __$$ProfilePhotoViewModelStateImplCopyWithImpl<$Res>
     extends _$ProfilePhotoViewModelStateCopyWithImpl<$Res,
-        _$_ProfilePhotoViewModelState>
-    implements _$$_ProfilePhotoViewModelStateCopyWith<$Res> {
-  __$$_ProfilePhotoViewModelStateCopyWithImpl(
-      _$_ProfilePhotoViewModelState _value,
-      $Res Function(_$_ProfilePhotoViewModelState) _then)
+        _$ProfilePhotoViewModelStateImpl>
+    implements _$$ProfilePhotoViewModelStateImplCopyWith<$Res> {
+  __$$ProfilePhotoViewModelStateImplCopyWithImpl(
+      _$ProfilePhotoViewModelStateImpl _value,
+      $Res Function(_$ProfilePhotoViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -85,7 +85,7 @@ class __$$_ProfilePhotoViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
   }) {
-    return _then(_$_ProfilePhotoViewModelState(
+    return _then(_$ProfilePhotoViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -96,8 +96,8 @@ class __$$_ProfilePhotoViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfilePhotoViewModelState implements _ProfilePhotoViewModelState {
-  const _$_ProfilePhotoViewModelState({this.isBusy = false});
+class _$ProfilePhotoViewModelStateImpl implements _ProfilePhotoViewModelState {
+  const _$ProfilePhotoViewModelStateImpl({this.isBusy = false});
 
   @override
   @JsonKey()
@@ -112,7 +112,7 @@ class _$_ProfilePhotoViewModelState implements _ProfilePhotoViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfilePhotoViewModelState &&
+            other is _$ProfilePhotoViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
@@ -122,20 +122,20 @@ class _$_ProfilePhotoViewModelState implements _ProfilePhotoViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfilePhotoViewModelStateCopyWith<_$_ProfilePhotoViewModelState>
-      get copyWith => __$$_ProfilePhotoViewModelStateCopyWithImpl<
-          _$_ProfilePhotoViewModelState>(this, _$identity);
+  _$$ProfilePhotoViewModelStateImplCopyWith<_$ProfilePhotoViewModelStateImpl>
+      get copyWith => __$$ProfilePhotoViewModelStateImplCopyWithImpl<
+          _$ProfilePhotoViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _ProfilePhotoViewModelState
     implements ProfilePhotoViewModelState {
   const factory _ProfilePhotoViewModelState({final bool isBusy}) =
-      _$_ProfilePhotoViewModelState;
+      _$ProfilePhotoViewModelStateImpl;
 
   @override
   bool get isBusy;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfilePhotoViewModelStateCopyWith<_$_ProfilePhotoViewModelState>
+  _$$ProfilePhotoViewModelStateImplCopyWith<_$ProfilePhotoViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

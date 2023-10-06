@@ -6,8 +6,9 @@ part of 'channel_extra_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ChannelExtraData _$$_ChannelExtraDataFromJson(Map<String, dynamic> json) =>
-    _$_ChannelExtraData(
+_$ChannelExtraDataImpl _$$ChannelExtraDataImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ChannelExtraDataImpl(
       hidden: json['hidden'] as bool?,
       disabled: json['disabled'] as bool?,
       archivedMembers: (json['archived_members'] as List<dynamic>?)
@@ -15,7 +16,8 @@ _$_ChannelExtraData _$$_ChannelExtraDataFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$$_ChannelExtraDataToJson(_$_ChannelExtraData instance) =>
+Map<String, dynamic> _$$ChannelExtraDataImplToJson(
+        _$ChannelExtraDataImpl instance) =>
     <String, dynamic>{
       'hidden': instance.hidden,
       'disabled': instance.disabled,

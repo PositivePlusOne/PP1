@@ -95,12 +95,12 @@ class _$GetStreamControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_GetStreamControllerStateCopyWith<$Res>
+abstract class _$$GetStreamControllerStateImplCopyWith<$Res>
     implements $GetStreamControllerStateCopyWith<$Res> {
-  factory _$$_GetStreamControllerStateCopyWith(
-          _$_GetStreamControllerState value,
-          $Res Function(_$_GetStreamControllerState) then) =
-      __$$_GetStreamControllerStateCopyWithImpl<$Res>;
+  factory _$$GetStreamControllerStateImplCopyWith(
+          _$GetStreamControllerStateImpl value,
+          $Res Function(_$GetStreamControllerStateImpl) then) =
+      __$$GetStreamControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -113,12 +113,13 @@ abstract class _$$_GetStreamControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GetStreamControllerStateCopyWithImpl<$Res>
+class __$$GetStreamControllerStateImplCopyWithImpl<$Res>
     extends _$GetStreamControllerStateCopyWithImpl<$Res,
-        _$_GetStreamControllerState>
-    implements _$$_GetStreamControllerStateCopyWith<$Res> {
-  __$$_GetStreamControllerStateCopyWithImpl(_$_GetStreamControllerState _value,
-      $Res Function(_$_GetStreamControllerState) _then)
+        _$GetStreamControllerStateImpl>
+    implements _$$GetStreamControllerStateImplCopyWith<$Res> {
+  __$$GetStreamControllerStateImplCopyWithImpl(
+      _$GetStreamControllerStateImpl _value,
+      $Res Function(_$GetStreamControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -131,7 +132,7 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
     Object? conversationChannelsWithMessages = null,
     Object? conversationMembers = null,
   }) {
-    return _then(_$_GetStreamControllerState(
+    return _then(_$GetStreamControllerStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -162,8 +163,8 @@ class __$$_GetStreamControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_GetStreamControllerState implements _GetStreamControllerState {
-  const _$_GetStreamControllerState(
+class _$GetStreamControllerStateImpl implements _GetStreamControllerState {
+  const _$GetStreamControllerStateImpl(
       {this.isBusy = false,
       this.hasFetchedInitialChannels = false,
       this.hasFetchedInitialRelationships = false,
@@ -222,7 +223,7 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GetStreamControllerState &&
+            other is _$GetStreamControllerStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.hasFetchedInitialChannels,
                     hasFetchedInitialChannels) ||
@@ -253,9 +254,9 @@ class _$_GetStreamControllerState implements _GetStreamControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GetStreamControllerStateCopyWith<_$_GetStreamControllerState>
-      get copyWith => __$$_GetStreamControllerStateCopyWithImpl<
-          _$_GetStreamControllerState>(this, _$identity);
+  _$$GetStreamControllerStateImplCopyWith<_$GetStreamControllerStateImpl>
+      get copyWith => __$$GetStreamControllerStateImplCopyWithImpl<
+          _$GetStreamControllerStateImpl>(this, _$identity);
 }
 
 abstract class _GetStreamControllerState implements GetStreamControllerState {
@@ -265,7 +266,7 @@ abstract class _GetStreamControllerState implements GetStreamControllerState {
       final bool hasFetchedInitialRelationships,
       final List<Channel> conversationChannels,
       final List<Channel> conversationChannelsWithMessages,
-      final List<Member> conversationMembers}) = _$_GetStreamControllerState;
+      final List<Member> conversationMembers}) = _$GetStreamControllerStateImpl;
 
   @override
   bool get isBusy;
@@ -281,6 +282,6 @@ abstract class _GetStreamControllerState implements GetStreamControllerState {
   List<Member> get conversationMembers;
   @override
   @JsonKey(ignore: true)
-  _$$_GetStreamControllerStateCopyWith<_$_GetStreamControllerState>
+  _$$GetStreamControllerStateImplCopyWith<_$GetStreamControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

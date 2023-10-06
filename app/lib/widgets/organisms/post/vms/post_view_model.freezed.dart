@@ -96,11 +96,11 @@ class _$PostViewModelStateCopyWithImpl<$Res, $Val extends PostViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_PostViewModelStateCopyWith<$Res>
+abstract class _$$PostViewModelStateImplCopyWith<$Res>
     implements $PostViewModelStateCopyWith<$Res> {
-  factory _$$_PostViewModelStateCopyWith(_$_PostViewModelState value,
-          $Res Function(_$_PostViewModelState) then) =
-      __$$_PostViewModelStateCopyWithImpl<$Res>;
+  factory _$$PostViewModelStateImplCopyWith(_$PostViewModelStateImpl value,
+          $Res Function(_$PostViewModelStateImpl) then) =
+      __$$PostViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,11 +115,11 @@ abstract class _$$_PostViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_PostViewModelStateCopyWithImpl<$Res>
-    extends _$PostViewModelStateCopyWithImpl<$Res, _$_PostViewModelState>
-    implements _$$_PostViewModelStateCopyWith<$Res> {
-  __$$_PostViewModelStateCopyWithImpl(
-      _$_PostViewModelState _value, $Res Function(_$_PostViewModelState) _then)
+class __$$PostViewModelStateImplCopyWithImpl<$Res>
+    extends _$PostViewModelStateCopyWithImpl<$Res, _$PostViewModelStateImpl>
+    implements _$$PostViewModelStateImplCopyWith<$Res> {
+  __$$PostViewModelStateImplCopyWithImpl(_$PostViewModelStateImpl _value,
+      $Res Function(_$PostViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -131,7 +131,7 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? isRefreshing = null,
   }) {
-    return _then(_$_PostViewModelState(
+    return _then(_$PostViewModelStateImpl(
       activityId: null == activityId
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
@@ -157,8 +157,8 @@ class __$$_PostViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_PostViewModelState implements _PostViewModelState {
-  const _$_PostViewModelState(
+class _$PostViewModelStateImpl implements _PostViewModelState {
+  const _$PostViewModelStateImpl(
       {required this.activityId,
       required this.targetFeed,
       this.currentCommentText = '',
@@ -188,7 +188,7 @@ class _$_PostViewModelState implements _PostViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PostViewModelState &&
+            other is _$PostViewModelStateImpl &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId) &&
             (identical(other.targetFeed, targetFeed) ||
@@ -212,8 +212,8 @@ class _$_PostViewModelState implements _PostViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PostViewModelStateCopyWith<_$_PostViewModelState> get copyWith =>
-      __$$_PostViewModelStateCopyWithImpl<_$_PostViewModelState>(
+  _$$PostViewModelStateImplCopyWith<_$PostViewModelStateImpl> get copyWith =>
+      __$$PostViewModelStateImplCopyWithImpl<_$PostViewModelStateImpl>(
           this, _$identity);
 }
 
@@ -223,7 +223,7 @@ abstract class _PostViewModelState implements PostViewModelState {
       required final TargetFeed targetFeed,
       final dynamic currentCommentText,
       final bool isBusy,
-      final bool isRefreshing}) = _$_PostViewModelState;
+      final bool isRefreshing}) = _$PostViewModelStateImpl;
 
   @override
   String get activityId;
@@ -237,6 +237,6 @@ abstract class _PostViewModelState implements PostViewModelState {
   bool get isRefreshing;
   @override
   @JsonKey(ignore: true)
-  _$$_PostViewModelStateCopyWith<_$_PostViewModelState> get copyWith =>
+  _$$PostViewModelStateImplCopyWith<_$PostViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

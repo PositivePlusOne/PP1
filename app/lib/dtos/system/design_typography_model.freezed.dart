@@ -211,11 +211,12 @@ class _$DesignTypographyModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_DesignTypographyModelCopyWith<$Res>
+abstract class _$$DesignTypographyModelImplCopyWith<$Res>
     implements $DesignTypographyModelCopyWith<$Res> {
-  factory _$$_DesignTypographyModelCopyWith(_$_DesignTypographyModel value,
-          $Res Function(_$_DesignTypographyModel) then) =
-      __$$_DesignTypographyModelCopyWithImpl<$Res>;
+  factory _$$DesignTypographyModelImplCopyWith(
+          _$DesignTypographyModelImpl value,
+          $Res Function(_$DesignTypographyModelImpl) then) =
+      __$$DesignTypographyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -256,11 +257,12 @@ abstract class _$$_DesignTypographyModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DesignTypographyModelCopyWithImpl<$Res>
-    extends _$DesignTypographyModelCopyWithImpl<$Res, _$_DesignTypographyModel>
-    implements _$$_DesignTypographyModelCopyWith<$Res> {
-  __$$_DesignTypographyModelCopyWithImpl(_$_DesignTypographyModel _value,
-      $Res Function(_$_DesignTypographyModel) _then)
+class __$$DesignTypographyModelImplCopyWithImpl<$Res>
+    extends _$DesignTypographyModelCopyWithImpl<$Res,
+        _$DesignTypographyModelImpl>
+    implements _$$DesignTypographyModelImplCopyWith<$Res> {
+  __$$DesignTypographyModelImplCopyWithImpl(_$DesignTypographyModelImpl _value,
+      $Res Function(_$DesignTypographyModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -284,7 +286,7 @@ class __$$_DesignTypographyModelCopyWithImpl<$Res>
     Object? styleFieldAction = null,
     Object? styleNotification = null,
   }) {
-    return _then(_$_DesignTypographyModel(
+    return _then(_$DesignTypographyModelImpl(
       styleHero: null == styleHero
           ? _value.styleHero
           : styleHero // ignore: cast_nullable_to_non_nullable
@@ -359,8 +361,8 @@ class __$$_DesignTypographyModelCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_DesignTypographyModel implements _DesignTypographyModel {
-  _$_DesignTypographyModel(
+class _$DesignTypographyModelImpl implements _DesignTypographyModel {
+  _$DesignTypographyModelImpl(
       {@JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required this.styleHero,
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
@@ -396,8 +398,8 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
       @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
       required this.styleNotification});
 
-  factory _$_DesignTypographyModel.fromJson(Map<String, dynamic> json) =>
-      _$$_DesignTypographyModelFromJson(json);
+  factory _$DesignTypographyModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DesignTypographyModelImplFromJson(json);
 
   @override
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
@@ -460,7 +462,7 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DesignTypographyModel &&
+            other is _$DesignTypographyModelImpl &&
             (identical(other.styleHero, styleHero) ||
                 other.styleHero == styleHero) &&
             (identical(other.styleHeroMedium, styleHeroMedium) ||
@@ -522,13 +524,13 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DesignTypographyModelCopyWith<_$_DesignTypographyModel> get copyWith =>
-      __$$_DesignTypographyModelCopyWithImpl<_$_DesignTypographyModel>(
-          this, _$identity);
+  _$$DesignTypographyModelImplCopyWith<_$DesignTypographyModelImpl>
+      get copyWith => __$$DesignTypographyModelImplCopyWithImpl<
+          _$DesignTypographyModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_DesignTypographyModelToJson(
+    return _$$DesignTypographyModelImplToJson(
       this,
     );
   }
@@ -536,43 +538,44 @@ class _$_DesignTypographyModel implements _DesignTypographyModel {
 
 abstract class _DesignTypographyModel implements DesignTypographyModel {
   factory _DesignTypographyModel(
-      {@JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleHero,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleHeroMedium,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleHeroSmall,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleHeroExtraSmall,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleBody,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleTitle,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleTitleTwo,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleSubtitle,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleSubtitleBold,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleBold,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleSubtext,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleSubtextBold,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleButtonRegular,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleButtonBold,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleTopic,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleFieldAction,
-      @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
-      required final TextStyle styleNotification}) = _$_DesignTypographyModel;
+          {@JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleHero,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleHeroMedium,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleHeroSmall,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleHeroExtraSmall,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleBody,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleTitle,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleTitleTwo,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleSubtitle,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleSubtitleBold,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleBold,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleSubtext,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleSubtextBold,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleButtonRegular,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleButtonBold,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleTopic,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleFieldAction,
+          @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
+          required final TextStyle styleNotification}) =
+      _$DesignTypographyModelImpl;
 
   factory _DesignTypographyModel.fromJson(Map<String, dynamic> json) =
-      _$_DesignTypographyModel.fromJson;
+      _$DesignTypographyModelImpl.fromJson;
 
   @override
   @JsonKey(fromJson: textStyleFromJson, toJson: textStyleToJson)
@@ -627,6 +630,6 @@ abstract class _DesignTypographyModel implements DesignTypographyModel {
   TextStyle get styleNotification;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignTypographyModelCopyWith<_$_DesignTypographyModel> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DesignTypographyModelImplCopyWith<_$DesignTypographyModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

@@ -1,13 +1,11 @@
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/profiles/gender_controller.dart';
-import 'package:app/providers/profiles/hiv_status_controller.dart';
-import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
@@ -17,11 +15,8 @@ import '../gen/app_router.dart';
 class ProfileSetupGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final InterestsControllerState interestsControllerState = providerContainer.read(interestsControllerProvider);
-    final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
+    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     final ProfileFormController profileFormController = providerContainer.read(profileFormControllerProvider.notifier);
-    final HivStatusController hivStatusController = providerContainer.read(hivStatusControllerProvider.notifier);
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final User? user = userController.currentUser;
@@ -32,7 +27,16 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasName = profileController.state.currentProfile?.name.isNotEmpty ?? false;
+    final Profile? currentProfile = profileControllerState.currentProfile;
+    final String currentUserId = user.uid;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    if (currentUserId != currentProfileId) {
+      resolver.next(true);
+      return;
+    }
+
+    final bool hasName = currentProfile?.name.isNotEmpty ?? false;
     if (!hasName) {
       profileFormController.resetState(FormMode.create);
 
@@ -47,7 +51,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasDisplayName = profileController.state.currentProfile?.displayName.isNotEmpty ?? false;
+    final bool hasDisplayName = currentProfile?.displayName.isNotEmpty ?? false;
     if (!hasDisplayName) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -56,7 +60,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasBirthday = profileController.state.currentProfile?.birthday.isNotEmpty ?? false;
+    final bool hasBirthday = currentProfile?.birthday.isNotEmpty ?? false;
     if (!hasBirthday) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -65,7 +69,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    // final bool hasSetGender = profileController.state.currentProfile?.genders.isNotEmpty ?? false;
+    // final bool hasSetGender = currentProfile?.genders.isNotEmpty ?? false;
     // final bool hasGendersInState = genderControllerState.options.isNotEmpty;
     // if (!hasSetGender && hasGendersInState) {
     //   profileFormController.resetState(FormMode.create);
@@ -75,7 +79,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    // final bool hasSetHivStatus = profileController.state.currentProfile?.hivStatus.isNotEmpty ?? false;
+    // final bool hasSetHivStatus = currentProfile?.hivStatus.isNotEmpty ?? false;
     // final bool hasHivStatusInState = hivStatusController.state.hivStatuses.isNotEmpty;
     // if (!hasSetHivStatus && hasHivStatusInState) {
     //   profileFormController.resetState(FormMode.create);
@@ -85,7 +89,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    // final bool hasInterests = profileController.state.currentProfile?.interests.isNotEmpty ?? false;
+    // final bool hasInterests = currentProfile?.interests.isNotEmpty ?? false;
     // final bool hasInterestsInState = interestsControllerState.interests.isNotEmpty;
     // if (!hasInterests && hasInterestsInState) {
     //   profileFormController.resetState(FormMode.create);
@@ -95,7 +99,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    // final PositivePlace? place = profileController.state.currentProfile?.place;
+    // final PositivePlace? place = currentProfile?.place;
     // final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
     // if (!hasLocation) {
     //   profileFormController.resetState(FormMode.create);
@@ -105,7 +109,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    final bool hasProfileReferenceImage = profileController.state.currentProfile?.referenceImage != null;
+    final bool hasProfileReferenceImage = currentProfile?.referenceImage != null;
     if (!hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -114,7 +118,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasProfileImage = profileController.state.currentProfile?.profileImage != null;
+    final bool hasProfileImage = currentProfile?.profileImage != null;
     if (!hasProfileImage) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
@@ -123,7 +127,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       return;
     }
 
-    final bool hasAccentColor = profileController.state.currentProfile?.accentColor.isNotEmpty ?? false;
+    final bool hasAccentColor = currentProfile?.accentColor.isNotEmpty ?? false;
     if (!hasAccentColor) {
       profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);

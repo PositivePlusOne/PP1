@@ -6,8 +6,8 @@ part of 'relationship.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Relationship _$$_RelationshipFromJson(Map<String, dynamic> json) =>
-    _$_Relationship(
+_$RelationshipImpl _$$RelationshipImplFromJson(Map<String, dynamic> json) =>
+    _$RelationshipImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -27,7 +27,7 @@ _$_Relationship _$$_RelationshipFromJson(Map<String, dynamic> json) =>
       muted: json['muted'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_RelationshipToJson(_$_Relationship instance) =>
+Map<String, dynamic> _$$RelationshipImplToJson(_$RelationshipImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'members': instance.members.map((e) => e.toJson()).toList(),

@@ -40,12 +40,13 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
     final ProfileReferenceImageViewModel viewModel = ref.watch(profileReferenceImageViewModelProvider.notifier);
 
     return PositiveScaffold(
+      isBusy: state.isBusy,
       decorations: buildType4ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             Row(
-              children: [
+              children: <Widget>[
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.black,

@@ -6,7 +6,8 @@ part of 'hiv_status_controller.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_HivStatus _$$_HivStatusFromJson(Map<String, dynamic> json) => _$_HivStatus(
+_$HivStatusImpl _$$HivStatusImplFromJson(Map<String, dynamic> json) =>
+    _$HivStatusImpl(
       value: json['value'] as String,
       label: json['label'] as String,
       children: (json['children'] as List<dynamic>?)
@@ -14,7 +15,7 @@ _$_HivStatus _$$_HivStatusFromJson(Map<String, dynamic> json) => _$_HivStatus(
           .toList(),
     );
 
-Map<String, dynamic> _$$_HivStatusToJson(_$_HivStatus instance) =>
+Map<String, dynamic> _$$HivStatusImplToJson(_$HivStatusImpl instance) =>
     <String, dynamic>{
       'value': instance.value,
       'label': instance.label,

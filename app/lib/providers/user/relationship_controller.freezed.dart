@@ -39,28 +39,29 @@ class _$RelationshipControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_RelationshipControllerStateCopyWith<$Res> {
-  factory _$$_RelationshipControllerStateCopyWith(
-          _$_RelationshipControllerState value,
-          $Res Function(_$_RelationshipControllerState) then) =
-      __$$_RelationshipControllerStateCopyWithImpl<$Res>;
+abstract class _$$RelationshipControllerStateImplCopyWith<$Res> {
+  factory _$$RelationshipControllerStateImplCopyWith(
+          _$RelationshipControllerStateImpl value,
+          $Res Function(_$RelationshipControllerStateImpl) then) =
+      __$$RelationshipControllerStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_RelationshipControllerStateCopyWithImpl<$Res>
+class __$$RelationshipControllerStateImplCopyWithImpl<$Res>
     extends _$RelationshipControllerStateCopyWithImpl<$Res,
-        _$_RelationshipControllerState>
-    implements _$$_RelationshipControllerStateCopyWith<$Res> {
-  __$$_RelationshipControllerStateCopyWithImpl(
-      _$_RelationshipControllerState _value,
-      $Res Function(_$_RelationshipControllerState) _then)
+        _$RelationshipControllerStateImpl>
+    implements _$$RelationshipControllerStateImplCopyWith<$Res> {
+  __$$RelationshipControllerStateImplCopyWithImpl(
+      _$RelationshipControllerStateImpl _value,
+      $Res Function(_$RelationshipControllerStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_RelationshipControllerState implements _RelationshipControllerState {
-  const _$_RelationshipControllerState();
+class _$RelationshipControllerStateImpl
+    implements _RelationshipControllerState {
+  const _$RelationshipControllerStateImpl();
 
   @override
   String toString() {
@@ -71,7 +72,7 @@ class _$_RelationshipControllerState implements _RelationshipControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RelationshipControllerState);
+            other is _$RelationshipControllerStateImpl);
   }
 
   @override
@@ -80,5 +81,6 @@ class _$_RelationshipControllerState implements _RelationshipControllerState {
 
 abstract class _RelationshipControllerState
     implements RelationshipControllerState {
-  const factory _RelationshipControllerState() = _$_RelationshipControllerState;
+  const factory _RelationshipControllerState() =
+      _$RelationshipControllerStateImpl;
 }

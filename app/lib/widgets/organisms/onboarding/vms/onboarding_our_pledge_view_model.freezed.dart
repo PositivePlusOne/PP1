@@ -60,25 +60,25 @@ class _$OnboardingOurPledgeViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_OnboardingOurPledgeViewModelStateCopyWith<$Res>
+abstract class _$$OnboardingOurPledgeViewModelStateImplCopyWith<$Res>
     implements $OnboardingOurPledgeViewModelStateCopyWith<$Res> {
-  factory _$$_OnboardingOurPledgeViewModelStateCopyWith(
-          _$_OnboardingOurPledgeViewModelState value,
-          $Res Function(_$_OnboardingOurPledgeViewModelState) then) =
-      __$$_OnboardingOurPledgeViewModelStateCopyWithImpl<$Res>;
+  factory _$$OnboardingOurPledgeViewModelStateImplCopyWith(
+          _$OnboardingOurPledgeViewModelStateImpl value,
+          $Res Function(_$OnboardingOurPledgeViewModelStateImpl) then) =
+      __$$OnboardingOurPledgeViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool hasAcceptedPledge});
 }
 
 /// @nodoc
-class __$$_OnboardingOurPledgeViewModelStateCopyWithImpl<$Res>
+class __$$OnboardingOurPledgeViewModelStateImplCopyWithImpl<$Res>
     extends _$OnboardingOurPledgeViewModelStateCopyWithImpl<$Res,
-        _$_OnboardingOurPledgeViewModelState>
-    implements _$$_OnboardingOurPledgeViewModelStateCopyWith<$Res> {
-  __$$_OnboardingOurPledgeViewModelStateCopyWithImpl(
-      _$_OnboardingOurPledgeViewModelState _value,
-      $Res Function(_$_OnboardingOurPledgeViewModelState) _then)
+        _$OnboardingOurPledgeViewModelStateImpl>
+    implements _$$OnboardingOurPledgeViewModelStateImplCopyWith<$Res> {
+  __$$OnboardingOurPledgeViewModelStateImplCopyWithImpl(
+      _$OnboardingOurPledgeViewModelStateImpl _value,
+      $Res Function(_$OnboardingOurPledgeViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -86,7 +86,7 @@ class __$$_OnboardingOurPledgeViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? hasAcceptedPledge = null,
   }) {
-    return _then(_$_OnboardingOurPledgeViewModelState(
+    return _then(_$OnboardingOurPledgeViewModelStateImpl(
       hasAcceptedPledge: null == hasAcceptedPledge
           ? _value.hasAcceptedPledge
           : hasAcceptedPledge // ignore: cast_nullable_to_non_nullable
@@ -97,9 +97,10 @@ class __$$_OnboardingOurPledgeViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_OnboardingOurPledgeViewModelState
+class _$OnboardingOurPledgeViewModelStateImpl
     implements _OnboardingOurPledgeViewModelState {
-  const _$_OnboardingOurPledgeViewModelState({this.hasAcceptedPledge = false});
+  const _$OnboardingOurPledgeViewModelStateImpl(
+      {this.hasAcceptedPledge = false});
 
   @override
   @JsonKey()
@@ -114,7 +115,7 @@ class _$_OnboardingOurPledgeViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_OnboardingOurPledgeViewModelState &&
+            other is _$OnboardingOurPledgeViewModelStateImpl &&
             (identical(other.hasAcceptedPledge, hasAcceptedPledge) ||
                 other.hasAcceptedPledge == hasAcceptedPledge));
   }
@@ -125,22 +126,22 @@ class _$_OnboardingOurPledgeViewModelState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_OnboardingOurPledgeViewModelStateCopyWith<
-          _$_OnboardingOurPledgeViewModelState>
-      get copyWith => __$$_OnboardingOurPledgeViewModelStateCopyWithImpl<
-          _$_OnboardingOurPledgeViewModelState>(this, _$identity);
+  _$$OnboardingOurPledgeViewModelStateImplCopyWith<
+          _$OnboardingOurPledgeViewModelStateImpl>
+      get copyWith => __$$OnboardingOurPledgeViewModelStateImplCopyWithImpl<
+          _$OnboardingOurPledgeViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _OnboardingOurPledgeViewModelState
     implements OnboardingOurPledgeViewModelState {
   const factory _OnboardingOurPledgeViewModelState(
-      {final bool hasAcceptedPledge}) = _$_OnboardingOurPledgeViewModelState;
+      {final bool hasAcceptedPledge}) = _$OnboardingOurPledgeViewModelStateImpl;
 
   @override
   bool get hasAcceptedPledge;
   @override
   @JsonKey(ignore: true)
-  _$$_OnboardingOurPledgeViewModelStateCopyWith<
-          _$_OnboardingOurPledgeViewModelState>
+  _$$OnboardingOurPledgeViewModelStateImplCopyWith<
+          _$OnboardingOurPledgeViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

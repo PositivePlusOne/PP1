@@ -63,22 +63,22 @@ class _$GenderSelectStateCopyWithImpl<$Res, $Val extends GenderSelectState>
 }
 
 /// @nodoc
-abstract class _$$_GenderSelectStateCopyWith<$Res>
+abstract class _$$GenderSelectStateImplCopyWith<$Res>
     implements $GenderSelectStateCopyWith<$Res> {
-  factory _$$_GenderSelectStateCopyWith(_$_GenderSelectState value,
-          $Res Function(_$_GenderSelectState) then) =
-      __$$_GenderSelectStateCopyWithImpl<$Res>;
+  factory _$$GenderSelectStateImplCopyWith(_$GenderSelectStateImpl value,
+          $Res Function(_$GenderSelectStateImpl) then) =
+      __$$GenderSelectStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? searchQuery, List<GenderOption> options});
 }
 
 /// @nodoc
-class __$$_GenderSelectStateCopyWithImpl<$Res>
-    extends _$GenderSelectStateCopyWithImpl<$Res, _$_GenderSelectState>
-    implements _$$_GenderSelectStateCopyWith<$Res> {
-  __$$_GenderSelectStateCopyWithImpl(
-      _$_GenderSelectState _value, $Res Function(_$_GenderSelectState) _then)
+class __$$GenderSelectStateImplCopyWithImpl<$Res>
+    extends _$GenderSelectStateCopyWithImpl<$Res, _$GenderSelectStateImpl>
+    implements _$$GenderSelectStateImplCopyWith<$Res> {
+  __$$GenderSelectStateImplCopyWithImpl(_$GenderSelectStateImpl _value,
+      $Res Function(_$GenderSelectStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +87,7 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
     Object? searchQuery = freezed,
     Object? options = null,
   }) {
-    return _then(_$_GenderSelectState(
+    return _then(_$GenderSelectStateImpl(
       searchQuery: freezed == searchQuery
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
@@ -102,8 +102,8 @@ class __$$_GenderSelectStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_GenderSelectState extends _GenderSelectState {
-  const _$_GenderSelectState(
+class _$GenderSelectStateImpl extends _GenderSelectState {
+  const _$GenderSelectStateImpl(
       {this.searchQuery,
       final List<GenderOption> options = const <GenderOption>[]})
       : _options = options,
@@ -129,7 +129,7 @@ class _$_GenderSelectState extends _GenderSelectState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GenderSelectState &&
+            other is _$GenderSelectStateImpl &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
             const DeepCollectionEquality().equals(other._options, _options));
@@ -142,15 +142,15 @@ class _$_GenderSelectState extends _GenderSelectState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GenderSelectStateCopyWith<_$_GenderSelectState> get copyWith =>
-      __$$_GenderSelectStateCopyWithImpl<_$_GenderSelectState>(
+  _$$GenderSelectStateImplCopyWith<_$GenderSelectStateImpl> get copyWith =>
+      __$$GenderSelectStateImplCopyWithImpl<_$GenderSelectStateImpl>(
           this, _$identity);
 }
 
 abstract class _GenderSelectState extends GenderSelectState {
   const factory _GenderSelectState(
       {final String? searchQuery,
-      final List<GenderOption> options}) = _$_GenderSelectState;
+      final List<GenderOption> options}) = _$GenderSelectStateImpl;
   const _GenderSelectState._() : super._();
 
   @override
@@ -159,6 +159,6 @@ abstract class _GenderSelectState extends GenderSelectState {
   List<GenderOption> get options;
   @override
   @JsonKey(ignore: true)
-  _$$_GenderSelectStateCopyWith<_$_GenderSelectState> get copyWith =>
+  _$$GenderSelectStateImplCopyWith<_$GenderSelectStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

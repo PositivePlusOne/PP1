@@ -121,11 +121,11 @@ class _$FeedbackWrapperCopyWithImpl<$Res, $Val extends FeedbackWrapper>
 }
 
 /// @nodoc
-abstract class _$$_FeedbackWrapperCopyWith<$Res>
+abstract class _$$FeedbackWrapperImplCopyWith<$Res>
     implements $FeedbackWrapperCopyWith<$Res> {
-  factory _$$_FeedbackWrapperCopyWith(
-          _$_FeedbackWrapper value, $Res Function(_$_FeedbackWrapper) then) =
-      __$$_FeedbackWrapperCopyWithImpl<$Res>;
+  factory _$$FeedbackWrapperImplCopyWith(_$FeedbackWrapperImpl value,
+          $Res Function(_$FeedbackWrapperImpl) then) =
+      __$$FeedbackWrapperImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -145,11 +145,11 @@ abstract class _$$_FeedbackWrapperCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_FeedbackWrapperCopyWithImpl<$Res>
-    extends _$FeedbackWrapperCopyWithImpl<$Res, _$_FeedbackWrapper>
-    implements _$$_FeedbackWrapperCopyWith<$Res> {
-  __$$_FeedbackWrapperCopyWithImpl(
-      _$_FeedbackWrapper _value, $Res Function(_$_FeedbackWrapper) _then)
+class __$$FeedbackWrapperImplCopyWithImpl<$Res>
+    extends _$FeedbackWrapperCopyWithImpl<$Res, _$FeedbackWrapperImpl>
+    implements _$$FeedbackWrapperImplCopyWith<$Res> {
+  __$$FeedbackWrapperImplCopyWithImpl(
+      _$FeedbackWrapperImpl _value, $Res Function(_$FeedbackWrapperImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -160,7 +160,7 @@ class __$$_FeedbackWrapperCopyWithImpl<$Res>
     Object? reportType = null,
     Object? content = null,
   }) {
-    return _then(_$_FeedbackWrapper(
+    return _then(_$FeedbackWrapperImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -183,8 +183,8 @@ class __$$_FeedbackWrapperCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_FeedbackWrapper implements _FeedbackWrapper {
-  const _$_FeedbackWrapper(
+class _$FeedbackWrapperImpl implements _FeedbackWrapper {
+  const _$FeedbackWrapperImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       @JsonKey(fromJson: FeedbackType.fromJson, toJson: FeedbackType.toJson)
       this.feedbackType = const FeedbackType.unknown(),
@@ -192,8 +192,8 @@ class _$_FeedbackWrapper implements _FeedbackWrapper {
       this.reportType = const ReportType.unknown(),
       this.content = ''});
 
-  factory _$_FeedbackWrapper.fromJson(Map<String, dynamic> json) =>
-      _$$_FeedbackWrapperFromJson(json);
+  factory _$FeedbackWrapperImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FeedbackWrapperImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -217,7 +217,7 @@ class _$_FeedbackWrapper implements _FeedbackWrapper {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_FeedbackWrapper &&
+            other is _$FeedbackWrapperImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.feedbackType, feedbackType) ||
                 other.feedbackType == feedbackType) &&
@@ -234,12 +234,13 @@ class _$_FeedbackWrapper implements _FeedbackWrapper {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_FeedbackWrapperCopyWith<_$_FeedbackWrapper> get copyWith =>
-      __$$_FeedbackWrapperCopyWithImpl<_$_FeedbackWrapper>(this, _$identity);
+  _$$FeedbackWrapperImplCopyWith<_$FeedbackWrapperImpl> get copyWith =>
+      __$$FeedbackWrapperImplCopyWithImpl<_$FeedbackWrapperImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_FeedbackWrapperToJson(
+    return _$$FeedbackWrapperImplToJson(
       this,
     );
   }
@@ -252,10 +253,10 @@ abstract class _FeedbackWrapper implements FeedbackWrapper {
       final FeedbackType feedbackType,
       @JsonKey(fromJson: ReportType.fromJson, toJson: ReportType.toJson)
       final ReportType reportType,
-      final String content}) = _$_FeedbackWrapper;
+      final String content}) = _$FeedbackWrapperImpl;
 
   factory _FeedbackWrapper.fromJson(Map<String, dynamic> json) =
-      _$_FeedbackWrapper.fromJson;
+      _$FeedbackWrapperImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -270,6 +271,6 @@ abstract class _FeedbackWrapper implements FeedbackWrapper {
   String get content;
   @override
   @JsonKey(ignore: true)
-  _$$_FeedbackWrapperCopyWith<_$_FeedbackWrapper> get copyWith =>
+  _$$FeedbackWrapperImplCopyWith<_$FeedbackWrapperImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

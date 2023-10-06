@@ -73,21 +73,22 @@ class _$HivStatusCopyWithImpl<$Res, $Val extends HivStatus>
 }
 
 /// @nodoc
-abstract class _$$_HivStatusCopyWith<$Res> implements $HivStatusCopyWith<$Res> {
-  factory _$$_HivStatusCopyWith(
-          _$_HivStatus value, $Res Function(_$_HivStatus) then) =
-      __$$_HivStatusCopyWithImpl<$Res>;
+abstract class _$$HivStatusImplCopyWith<$Res>
+    implements $HivStatusCopyWith<$Res> {
+  factory _$$HivStatusImplCopyWith(
+          _$HivStatusImpl value, $Res Function(_$HivStatusImpl) then) =
+      __$$HivStatusImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String value, String label, List<HivStatus>? children});
 }
 
 /// @nodoc
-class __$$_HivStatusCopyWithImpl<$Res>
-    extends _$HivStatusCopyWithImpl<$Res, _$_HivStatus>
-    implements _$$_HivStatusCopyWith<$Res> {
-  __$$_HivStatusCopyWithImpl(
-      _$_HivStatus _value, $Res Function(_$_HivStatus) _then)
+class __$$HivStatusImplCopyWithImpl<$Res>
+    extends _$HivStatusCopyWithImpl<$Res, _$HivStatusImpl>
+    implements _$$HivStatusImplCopyWith<$Res> {
+  __$$HivStatusImplCopyWithImpl(
+      _$HivStatusImpl _value, $Res Function(_$HivStatusImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -97,7 +98,7 @@ class __$$_HivStatusCopyWithImpl<$Res>
     Object? label = null,
     Object? children = freezed,
   }) {
-    return _then(_$_HivStatus(
+    return _then(_$HivStatusImpl(
       value: null == value
           ? _value.value
           : value // ignore: cast_nullable_to_non_nullable
@@ -116,15 +117,15 @@ class __$$_HivStatusCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_HivStatus implements _HivStatus {
-  const _$_HivStatus(
+class _$HivStatusImpl implements _HivStatus {
+  const _$HivStatusImpl(
       {required this.value,
       required this.label,
       final List<HivStatus>? children})
       : _children = children;
 
-  factory _$_HivStatus.fromJson(Map<String, dynamic> json) =>
-      _$$_HivStatusFromJson(json);
+  factory _$HivStatusImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HivStatusImplFromJson(json);
 
   @override
   final String value;
@@ -149,7 +150,7 @@ class _$_HivStatus implements _HivStatus {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HivStatus &&
+            other is _$HivStatusImpl &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.label, label) || other.label == label) &&
             const DeepCollectionEquality().equals(other._children, _children));
@@ -163,12 +164,12 @@ class _$_HivStatus implements _HivStatus {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HivStatusCopyWith<_$_HivStatus> get copyWith =>
-      __$$_HivStatusCopyWithImpl<_$_HivStatus>(this, _$identity);
+  _$$HivStatusImplCopyWith<_$HivStatusImpl> get copyWith =>
+      __$$HivStatusImplCopyWithImpl<_$HivStatusImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_HivStatusToJson(
+    return _$$HivStatusImplToJson(
       this,
     );
   }
@@ -178,10 +179,10 @@ abstract class _HivStatus implements HivStatus {
   const factory _HivStatus(
       {required final String value,
       required final String label,
-      final List<HivStatus>? children}) = _$_HivStatus;
+      final List<HivStatus>? children}) = _$HivStatusImpl;
 
   factory _HivStatus.fromJson(Map<String, dynamic> json) =
-      _$_HivStatus.fromJson;
+      _$HivStatusImpl.fromJson;
 
   @override
   String get value;
@@ -191,7 +192,7 @@ abstract class _HivStatus implements HivStatus {
   List<HivStatus>? get children;
   @override
   @JsonKey(ignore: true)
-  _$$_HivStatusCopyWith<_$_HivStatus> get copyWith =>
+  _$$HivStatusImplCopyWith<_$HivStatusImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -239,24 +240,25 @@ class _$HivStatusControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_HivStatusControllerStateCopyWith<$Res>
+abstract class _$$HivStatusControllerStateImplCopyWith<$Res>
     implements $HivStatusControllerStateCopyWith<$Res> {
-  factory _$$_HivStatusControllerStateCopyWith(
-          _$_HivStatusControllerState value,
-          $Res Function(_$_HivStatusControllerState) then) =
-      __$$_HivStatusControllerStateCopyWithImpl<$Res>;
+  factory _$$HivStatusControllerStateImplCopyWith(
+          _$HivStatusControllerStateImpl value,
+          $Res Function(_$HivStatusControllerStateImpl) then) =
+      __$$HivStatusControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<HivStatus> hivStatuses});
 }
 
 /// @nodoc
-class __$$_HivStatusControllerStateCopyWithImpl<$Res>
+class __$$HivStatusControllerStateImplCopyWithImpl<$Res>
     extends _$HivStatusControllerStateCopyWithImpl<$Res,
-        _$_HivStatusControllerState>
-    implements _$$_HivStatusControllerStateCopyWith<$Res> {
-  __$$_HivStatusControllerStateCopyWithImpl(_$_HivStatusControllerState _value,
-      $Res Function(_$_HivStatusControllerState) _then)
+        _$HivStatusControllerStateImpl>
+    implements _$$HivStatusControllerStateImplCopyWith<$Res> {
+  __$$HivStatusControllerStateImplCopyWithImpl(
+      _$HivStatusControllerStateImpl _value,
+      $Res Function(_$HivStatusControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -264,7 +266,7 @@ class __$$_HivStatusControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? hivStatuses = null,
   }) {
-    return _then(_$_HivStatusControllerState(
+    return _then(_$HivStatusControllerStateImpl(
       hivStatuses: null == hivStatuses
           ? _value._hivStatuses
           : hivStatuses // ignore: cast_nullable_to_non_nullable
@@ -275,8 +277,8 @@ class __$$_HivStatusControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_HivStatusControllerState implements _HivStatusControllerState {
-  const _$_HivStatusControllerState(
+class _$HivStatusControllerStateImpl implements _HivStatusControllerState {
+  const _$HivStatusControllerStateImpl(
       {final List<HivStatus> hivStatuses = const <HivStatus>[]})
       : _hivStatuses = hivStatuses;
 
@@ -298,7 +300,7 @@ class _$_HivStatusControllerState implements _HivStatusControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HivStatusControllerState &&
+            other is _$HivStatusControllerStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._hivStatuses, _hivStatuses));
   }
@@ -310,19 +312,19 @@ class _$_HivStatusControllerState implements _HivStatusControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HivStatusControllerStateCopyWith<_$_HivStatusControllerState>
-      get copyWith => __$$_HivStatusControllerStateCopyWithImpl<
-          _$_HivStatusControllerState>(this, _$identity);
+  _$$HivStatusControllerStateImplCopyWith<_$HivStatusControllerStateImpl>
+      get copyWith => __$$HivStatusControllerStateImplCopyWithImpl<
+          _$HivStatusControllerStateImpl>(this, _$identity);
 }
 
 abstract class _HivStatusControllerState implements HivStatusControllerState {
   const factory _HivStatusControllerState({final List<HivStatus> hivStatuses}) =
-      _$_HivStatusControllerState;
+      _$HivStatusControllerStateImpl;
 
   @override
   List<HivStatus> get hivStatuses;
   @override
   @JsonKey(ignore: true)
-  _$$_HivStatusControllerStateCopyWith<_$_HivStatusControllerState>
+  _$$HivStatusControllerStateImplCopyWith<_$HivStatusControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

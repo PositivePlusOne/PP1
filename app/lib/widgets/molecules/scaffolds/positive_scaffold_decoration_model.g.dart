@@ -6,20 +6,20 @@ part of 'positive_scaffold_decoration_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PositiveScaffoldDecorationModel _$$_PositiveScaffoldDecorationModelFromJson(
-        Map<String, dynamic> json) =>
-    _$_PositiveScaffoldDecorationModel(
-      asset: json['asset'] as String,
-      alignment: alignmentFromJson(json['alignment'] as String),
-      color: colorFromJson(json['color'] as String),
-      scale: (json['scale'] as num).toDouble(),
-      offsetX: (json['offset_x'] as num).toDouble(),
-      offsetY: (json['offset_y'] as num).toDouble(),
-      rotationDegrees: (json['rotation_degrees'] as num).toDouble(),
-    );
+_$PositiveScaffoldDecorationModelImpl
+    _$$PositiveScaffoldDecorationModelImplFromJson(Map<String, dynamic> json) =>
+        _$PositiveScaffoldDecorationModelImpl(
+          asset: json['asset'] as String,
+          alignment: alignmentFromJson(json['alignment'] as String),
+          color: colorFromJson(json['color'] as String),
+          scale: (json['scale'] as num).toDouble(),
+          offsetX: (json['offset_x'] as num).toDouble(),
+          offsetY: (json['offset_y'] as num).toDouble(),
+          rotationDegrees: (json['rotation_degrees'] as num).toDouble(),
+        );
 
-Map<String, dynamic> _$$_PositiveScaffoldDecorationModelToJson(
-        _$_PositiveScaffoldDecorationModel instance) =>
+Map<String, dynamic> _$$PositiveScaffoldDecorationModelImplToJson(
+        _$PositiveScaffoldDecorationModelImpl instance) =>
     <String, dynamic>{
       'asset': instance.asset,
       'alignment': alignmentToJson(instance.alignment),

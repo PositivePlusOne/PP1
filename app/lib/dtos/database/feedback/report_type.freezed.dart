@@ -93,23 +93,25 @@ class _$ReportTypeCopyWithImpl<$Res, $Val extends ReportType>
 }
 
 /// @nodoc
-abstract class _$$UnknownCopyWith<$Res> {
-  factory _$$UnknownCopyWith(_$Unknown value, $Res Function(_$Unknown) then) =
-      __$$UnknownCopyWithImpl<$Res>;
+abstract class _$$UnknownImplCopyWith<$Res> {
+  factory _$$UnknownImplCopyWith(
+          _$UnknownImpl value, $Res Function(_$UnknownImpl) then) =
+      __$$UnknownImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$UnknownCopyWithImpl<$Res>
-    extends _$ReportTypeCopyWithImpl<$Res, _$Unknown>
-    implements _$$UnknownCopyWith<$Res> {
-  __$$UnknownCopyWithImpl(_$Unknown _value, $Res Function(_$Unknown) _then)
+class __$$UnknownImplCopyWithImpl<$Res>
+    extends _$ReportTypeCopyWithImpl<$Res, _$UnknownImpl>
+    implements _$$UnknownImplCopyWith<$Res> {
+  __$$UnknownImplCopyWithImpl(
+      _$UnknownImpl _value, $Res Function(_$UnknownImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Unknown implements Unknown {
-  const _$Unknown();
+class _$UnknownImpl implements Unknown {
+  const _$UnknownImpl();
 
   @override
   String toString() {
@@ -119,7 +121,7 @@ class _$Unknown implements Unknown {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Unknown);
+        (other.runtimeType == runtimeType && other is _$UnknownImpl);
   }
 
   @override
@@ -207,29 +209,29 @@ class _$Unknown implements Unknown {
 }
 
 abstract class Unknown implements ReportType {
-  const factory Unknown() = _$Unknown;
+  const factory Unknown() = _$UnknownImpl;
 }
 
 /// @nodoc
-abstract class _$$InappropriateContentCopyWith<$Res> {
-  factory _$$InappropriateContentCopyWith(_$InappropriateContent value,
-          $Res Function(_$InappropriateContent) then) =
-      __$$InappropriateContentCopyWithImpl<$Res>;
+abstract class _$$InappropriateContentImplCopyWith<$Res> {
+  factory _$$InappropriateContentImplCopyWith(_$InappropriateContentImpl value,
+          $Res Function(_$InappropriateContentImpl) then) =
+      __$$InappropriateContentImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$InappropriateContentCopyWithImpl<$Res>
-    extends _$ReportTypeCopyWithImpl<$Res, _$InappropriateContent>
-    implements _$$InappropriateContentCopyWith<$Res> {
-  __$$InappropriateContentCopyWithImpl(_$InappropriateContent _value,
-      $Res Function(_$InappropriateContent) _then)
+class __$$InappropriateContentImplCopyWithImpl<$Res>
+    extends _$ReportTypeCopyWithImpl<$Res, _$InappropriateContentImpl>
+    implements _$$InappropriateContentImplCopyWith<$Res> {
+  __$$InappropriateContentImplCopyWithImpl(_$InappropriateContentImpl _value,
+      $Res Function(_$InappropriateContentImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$InappropriateContent implements InappropriateContent {
-  const _$InappropriateContent();
+class _$InappropriateContentImpl implements InappropriateContent {
+  const _$InappropriateContentImpl();
 
   @override
   String toString() {
@@ -239,7 +241,8 @@ class _$InappropriateContent implements InappropriateContent {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InappropriateContent);
+        (other.runtimeType == runtimeType &&
+            other is _$InappropriateContentImpl);
   }
 
   @override
@@ -327,26 +330,28 @@ class _$InappropriateContent implements InappropriateContent {
 }
 
 abstract class InappropriateContent implements ReportType {
-  const factory InappropriateContent() = _$InappropriateContent;
+  const factory InappropriateContent() = _$InappropriateContentImpl;
 }
 
 /// @nodoc
-abstract class _$$SpamCopyWith<$Res> {
-  factory _$$SpamCopyWith(_$Spam value, $Res Function(_$Spam) then) =
-      __$$SpamCopyWithImpl<$Res>;
+abstract class _$$SpamImplCopyWith<$Res> {
+  factory _$$SpamImplCopyWith(
+          _$SpamImpl value, $Res Function(_$SpamImpl) then) =
+      __$$SpamImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$SpamCopyWithImpl<$Res> extends _$ReportTypeCopyWithImpl<$Res, _$Spam>
-    implements _$$SpamCopyWith<$Res> {
-  __$$SpamCopyWithImpl(_$Spam _value, $Res Function(_$Spam) _then)
+class __$$SpamImplCopyWithImpl<$Res>
+    extends _$ReportTypeCopyWithImpl<$Res, _$SpamImpl>
+    implements _$$SpamImplCopyWith<$Res> {
+  __$$SpamImplCopyWithImpl(_$SpamImpl _value, $Res Function(_$SpamImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Spam implements Spam {
-  const _$Spam();
+class _$SpamImpl implements Spam {
+  const _$SpamImpl();
 
   @override
   String toString() {
@@ -356,7 +361,7 @@ class _$Spam implements Spam {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Spam);
+        (other.runtimeType == runtimeType && other is _$SpamImpl);
   }
 
   @override
@@ -444,29 +449,29 @@ class _$Spam implements Spam {
 }
 
 abstract class Spam implements ReportType {
-  const factory Spam() = _$Spam;
+  const factory Spam() = _$SpamImpl;
 }
 
 /// @nodoc
-abstract class _$$HarassmentCopyWith<$Res> {
-  factory _$$HarassmentCopyWith(
-          _$Harassment value, $Res Function(_$Harassment) then) =
-      __$$HarassmentCopyWithImpl<$Res>;
+abstract class _$$HarassmentImplCopyWith<$Res> {
+  factory _$$HarassmentImplCopyWith(
+          _$HarassmentImpl value, $Res Function(_$HarassmentImpl) then) =
+      __$$HarassmentImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$HarassmentCopyWithImpl<$Res>
-    extends _$ReportTypeCopyWithImpl<$Res, _$Harassment>
-    implements _$$HarassmentCopyWith<$Res> {
-  __$$HarassmentCopyWithImpl(
-      _$Harassment _value, $Res Function(_$Harassment) _then)
+class __$$HarassmentImplCopyWithImpl<$Res>
+    extends _$ReportTypeCopyWithImpl<$Res, _$HarassmentImpl>
+    implements _$$HarassmentImplCopyWith<$Res> {
+  __$$HarassmentImplCopyWithImpl(
+      _$HarassmentImpl _value, $Res Function(_$HarassmentImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Harassment implements Harassment {
-  const _$Harassment();
+class _$HarassmentImpl implements Harassment {
+  const _$HarassmentImpl();
 
   @override
   String toString() {
@@ -476,7 +481,7 @@ class _$Harassment implements Harassment {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Harassment);
+        (other.runtimeType == runtimeType && other is _$HarassmentImpl);
   }
 
   @override
@@ -564,27 +569,29 @@ class _$Harassment implements Harassment {
 }
 
 abstract class Harassment implements ReportType {
-  const factory Harassment() = _$Harassment;
+  const factory Harassment() = _$HarassmentImpl;
 }
 
 /// @nodoc
-abstract class _$$OtherCopyWith<$Res> {
-  factory _$$OtherCopyWith(_$Other value, $Res Function(_$Other) then) =
-      __$$OtherCopyWithImpl<$Res>;
+abstract class _$$OtherImplCopyWith<$Res> {
+  factory _$$OtherImplCopyWith(
+          _$OtherImpl value, $Res Function(_$OtherImpl) then) =
+      __$$OtherImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$OtherCopyWithImpl<$Res>
-    extends _$ReportTypeCopyWithImpl<$Res, _$Other>
-    implements _$$OtherCopyWith<$Res> {
-  __$$OtherCopyWithImpl(_$Other _value, $Res Function(_$Other) _then)
+class __$$OtherImplCopyWithImpl<$Res>
+    extends _$ReportTypeCopyWithImpl<$Res, _$OtherImpl>
+    implements _$$OtherImplCopyWith<$Res> {
+  __$$OtherImplCopyWithImpl(
+      _$OtherImpl _value, $Res Function(_$OtherImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Other implements Other {
-  const _$Other();
+class _$OtherImpl implements Other {
+  const _$OtherImpl();
 
   @override
   String toString() {
@@ -594,7 +601,7 @@ class _$Other implements Other {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Other);
+        (other.runtimeType == runtimeType && other is _$OtherImpl);
   }
 
   @override
@@ -682,5 +689,5 @@ class _$Other implements Other {
 }
 
 abstract class Other implements ReportType {
-  const factory Other() = _$Other;
+  const factory Other() = _$OtherImpl;
 }

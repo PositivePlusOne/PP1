@@ -6,8 +6,8 @@ part of 'positive_place.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_PositivePlace _$$_PositivePlaceFromJson(Map<String, dynamic> json) =>
-    _$_PositivePlace(
+_$PositivePlaceImpl _$$PositivePlaceImplFromJson(Map<String, dynamic> json) =>
+    _$PositivePlaceImpl(
       description: json['description'] as String? ?? '',
       placeId: json['placeId'] as String? ?? '',
       latitude: (json['latitude'] as num?)?.toDouble(),
@@ -15,7 +15,7 @@ _$_PositivePlace _$$_PositivePlaceFromJson(Map<String, dynamic> json) =>
       optOut: json['optOut'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_PositivePlaceToJson(_$_PositivePlace instance) =>
+Map<String, dynamic> _$$PositivePlaceImplToJson(_$PositivePlaceImpl instance) =>
     <String, dynamic>{
       'description': instance.description,
       'placeId': instance.placeId,

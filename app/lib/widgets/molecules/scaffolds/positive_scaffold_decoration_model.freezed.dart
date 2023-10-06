@@ -71,7 +71,7 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? asset = null,
-    Object? alignment = null,
+    Object? alignment = freezed,
     Object? color = null,
     Object? scale = null,
     Object? offsetX = null,
@@ -83,7 +83,7 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
           ? _value.asset
           : asset // ignore: cast_nullable_to_non_nullable
               as String,
-      alignment: null == alignment
+      alignment: freezed == alignment
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
@@ -112,12 +112,12 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_PositiveScaffoldDecorationModelCopyWith<$Res>
+abstract class _$$PositiveScaffoldDecorationModelImplCopyWith<$Res>
     implements $PositiveScaffoldDecorationModelCopyWith<$Res> {
-  factory _$$_PositiveScaffoldDecorationModelCopyWith(
-          _$_PositiveScaffoldDecorationModel value,
-          $Res Function(_$_PositiveScaffoldDecorationModel) then) =
-      __$$_PositiveScaffoldDecorationModelCopyWithImpl<$Res>;
+  factory _$$PositiveScaffoldDecorationModelImplCopyWith(
+          _$PositiveScaffoldDecorationModelImpl value,
+          $Res Function(_$PositiveScaffoldDecorationModelImpl) then) =
+      __$$PositiveScaffoldDecorationModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -132,32 +132,32 @@ abstract class _$$_PositiveScaffoldDecorationModelCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_PositiveScaffoldDecorationModelCopyWithImpl<$Res>
+class __$$PositiveScaffoldDecorationModelImplCopyWithImpl<$Res>
     extends _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
-        _$_PositiveScaffoldDecorationModel>
-    implements _$$_PositiveScaffoldDecorationModelCopyWith<$Res> {
-  __$$_PositiveScaffoldDecorationModelCopyWithImpl(
-      _$_PositiveScaffoldDecorationModel _value,
-      $Res Function(_$_PositiveScaffoldDecorationModel) _then)
+        _$PositiveScaffoldDecorationModelImpl>
+    implements _$$PositiveScaffoldDecorationModelImplCopyWith<$Res> {
+  __$$PositiveScaffoldDecorationModelImplCopyWithImpl(
+      _$PositiveScaffoldDecorationModelImpl _value,
+      $Res Function(_$PositiveScaffoldDecorationModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? asset = null,
-    Object? alignment = null,
+    Object? alignment = freezed,
     Object? color = null,
     Object? scale = null,
     Object? offsetX = null,
     Object? offsetY = null,
     Object? rotationDegrees = null,
   }) {
-    return _then(_$_PositiveScaffoldDecorationModel(
+    return _then(_$PositiveScaffoldDecorationModelImpl(
       asset: null == asset
           ? _value.asset
           : asset // ignore: cast_nullable_to_non_nullable
               as String,
-      alignment: null == alignment
+      alignment: freezed == alignment
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
@@ -188,9 +188,9 @@ class __$$_PositiveScaffoldDecorationModelCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class _$_PositiveScaffoldDecorationModel
+class _$PositiveScaffoldDecorationModelImpl
     implements _PositiveScaffoldDecorationModel {
-  const _$_PositiveScaffoldDecorationModel(
+  const _$PositiveScaffoldDecorationModelImpl(
       {required this.asset,
       @JsonKey(fromJson: alignmentFromJson, toJson: alignmentToJson)
       required this.alignment,
@@ -201,9 +201,9 @@ class _$_PositiveScaffoldDecorationModel
       required this.offsetY,
       required this.rotationDegrees});
 
-  factory _$_PositiveScaffoldDecorationModel.fromJson(
+  factory _$PositiveScaffoldDecorationModelImpl.fromJson(
           Map<String, dynamic> json) =>
-      _$$_PositiveScaffoldDecorationModelFromJson(json);
+      _$$PositiveScaffoldDecorationModelImplFromJson(json);
 
   @override
   final String asset;
@@ -231,10 +231,9 @@ class _$_PositiveScaffoldDecorationModel
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PositiveScaffoldDecorationModel &&
+            other is _$PositiveScaffoldDecorationModelImpl &&
             (identical(other.asset, asset) || other.asset == asset) &&
-            (identical(other.alignment, alignment) ||
-                other.alignment == alignment) &&
+            const DeepCollectionEquality().equals(other.alignment, alignment) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.scale, scale) || other.scale == scale) &&
             (identical(other.offsetX, offsetX) || other.offsetX == offsetX) &&
@@ -245,20 +244,27 @@ class _$_PositiveScaffoldDecorationModel
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, asset, alignment, color, scale,
-      offsetX, offsetY, rotationDegrees);
+  int get hashCode => Object.hash(
+      runtimeType,
+      asset,
+      const DeepCollectionEquality().hash(alignment),
+      color,
+      scale,
+      offsetX,
+      offsetY,
+      rotationDegrees);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PositiveScaffoldDecorationModelCopyWith<
-          _$_PositiveScaffoldDecorationModel>
-      get copyWith => __$$_PositiveScaffoldDecorationModelCopyWithImpl<
-          _$_PositiveScaffoldDecorationModel>(this, _$identity);
+  _$$PositiveScaffoldDecorationModelImplCopyWith<
+          _$PositiveScaffoldDecorationModelImpl>
+      get copyWith => __$$PositiveScaffoldDecorationModelImplCopyWithImpl<
+          _$PositiveScaffoldDecorationModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PositiveScaffoldDecorationModelToJson(
+    return _$$PositiveScaffoldDecorationModelImplToJson(
       this,
     );
   }
@@ -276,10 +282,10 @@ abstract class _PositiveScaffoldDecorationModel
           required final double offsetX,
           required final double offsetY,
           required final double rotationDegrees}) =
-      _$_PositiveScaffoldDecorationModel;
+      _$PositiveScaffoldDecorationModelImpl;
 
   factory _PositiveScaffoldDecorationModel.fromJson(Map<String, dynamic> json) =
-      _$_PositiveScaffoldDecorationModel.fromJson;
+      _$PositiveScaffoldDecorationModelImpl.fromJson;
 
   @override
   String get asset;
@@ -299,7 +305,7 @@ abstract class _PositiveScaffoldDecorationModel
   double get rotationDegrees;
   @override
   @JsonKey(ignore: true)
-  _$$_PositiveScaffoldDecorationModelCopyWith<
-          _$_PositiveScaffoldDecorationModel>
+  _$$PositiveScaffoldDecorationModelImplCopyWith<
+          _$PositiveScaffoldDecorationModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

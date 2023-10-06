@@ -158,11 +158,12 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryCopyWith<$Res>
+abstract class _$$GuidanceDirectoryEntryImplCopyWith<$Res>
     implements $GuidanceDirectoryEntryCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryCopyWith(_$_GuidanceDirectoryEntry value,
-          $Res Function(_$_GuidanceDirectoryEntry) then) =
-      __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>;
+  factory _$$GuidanceDirectoryEntryImplCopyWith(
+          _$GuidanceDirectoryEntryImpl value,
+          $Res Function(_$GuidanceDirectoryEntryImpl) then) =
+      __$$GuidanceDirectoryEntryImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -187,12 +188,13 @@ abstract class _$$_GuidanceDirectoryEntryCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntry>
-    implements _$$_GuidanceDirectoryEntryCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryCopyWithImpl(_$_GuidanceDirectoryEntry _value,
-      $Res Function(_$_GuidanceDirectoryEntry) _then)
+        _$GuidanceDirectoryEntryImpl>
+    implements _$$GuidanceDirectoryEntryImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryImplCopyWithImpl(
+      _$GuidanceDirectoryEntryImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -208,7 +210,7 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
     Object? profile = freezed,
     Object? services = null,
   }) {
-    return _then(_$_GuidanceDirectoryEntry(
+    return _then(_$GuidanceDirectoryEntryImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -251,8 +253,8 @@ class __$$_GuidanceDirectoryEntryCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
-  const _$_GuidanceDirectoryEntry(
+class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
+  const _$GuidanceDirectoryEntryImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.title = '',
       this.description = '',
@@ -268,8 +270,8 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
       final List<GuidanceDirectoryEntryService> services = const []})
       : _services = services;
 
-  factory _$_GuidanceDirectoryEntry.fromJson(Map<String, dynamic> json) =>
-      _$$_GuidanceDirectoryEntryFromJson(json);
+  factory _$GuidanceDirectoryEntryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GuidanceDirectoryEntryImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -314,7 +316,7 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntry &&
+            other is _$GuidanceDirectoryEntryImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
@@ -346,13 +348,13 @@ class _$_GuidanceDirectoryEntry implements _GuidanceDirectoryEntry {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GuidanceDirectoryEntryCopyWith<_$_GuidanceDirectoryEntry> get copyWith =>
-      __$$_GuidanceDirectoryEntryCopyWithImpl<_$_GuidanceDirectoryEntry>(
-          this, _$identity);
+  _$$GuidanceDirectoryEntryImplCopyWith<_$GuidanceDirectoryEntryImpl>
+      get copyWith => __$$GuidanceDirectoryEntryImplCopyWithImpl<
+          _$GuidanceDirectoryEntryImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GuidanceDirectoryEntryToJson(
+    return _$$GuidanceDirectoryEntryImplToJson(
       this,
     );
   }
@@ -374,10 +376,10 @@ abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
               fromJson: GuidanceDirectoryEntryService.listFromJson,
               toJson: GuidanceDirectoryEntryService.listToJson)
           final List<GuidanceDirectoryEntryService> services}) =
-      _$_GuidanceDirectoryEntry;
+      _$GuidanceDirectoryEntryImpl;
 
   factory _GuidanceDirectoryEntry.fromJson(Map<String, dynamic> json) =
-      _$_GuidanceDirectoryEntry.fromJson;
+      _$GuidanceDirectoryEntryImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -404,8 +406,8 @@ abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
   List<GuidanceDirectoryEntryService> get services;
   @override
   @JsonKey(ignore: true)
-  _$$_GuidanceDirectoryEntryCopyWith<_$_GuidanceDirectoryEntry> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$GuidanceDirectoryEntryImplCopyWith<_$GuidanceDirectoryEntryImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -511,29 +513,29 @@ class _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryServiceHivSupportCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryServiceHivSupportCopyWith(
-          _$_GuidanceDirectoryEntryServiceHivSupport value,
-          $Res Function(_$_GuidanceDirectoryEntryServiceHivSupport) then) =
-      __$$_GuidanceDirectoryEntryServiceHivSupportCopyWithImpl<$Res>;
+abstract class _$$GuidanceDirectoryEntryServiceHivSupportImplCopyWith<$Res> {
+  factory _$$GuidanceDirectoryEntryServiceHivSupportImplCopyWith(
+          _$GuidanceDirectoryEntryServiceHivSupportImpl value,
+          $Res Function(_$GuidanceDirectoryEntryServiceHivSupportImpl) then) =
+      __$$GuidanceDirectoryEntryServiceHivSupportImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryServiceHivSupportCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryServiceHivSupportImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntryServiceHivSupport>
-    implements _$$_GuidanceDirectoryEntryServiceHivSupportCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryServiceHivSupportCopyWithImpl(
-      _$_GuidanceDirectoryEntryServiceHivSupport _value,
-      $Res Function(_$_GuidanceDirectoryEntryServiceHivSupport) _then)
+        _$GuidanceDirectoryEntryServiceHivSupportImpl>
+    implements _$$GuidanceDirectoryEntryServiceHivSupportImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryServiceHivSupportImplCopyWithImpl(
+      _$GuidanceDirectoryEntryServiceHivSupportImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryServiceHivSupportImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_GuidanceDirectoryEntryServiceHivSupport
+class _$GuidanceDirectoryEntryServiceHivSupportImpl
     implements _GuidanceDirectoryEntryServiceHivSupport {
-  const _$_GuidanceDirectoryEntryServiceHivSupport();
+  const _$GuidanceDirectoryEntryServiceHivSupportImpl();
 
   @override
   String toString() {
@@ -544,7 +546,7 @@ class _$_GuidanceDirectoryEntryServiceHivSupport
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntryServiceHivSupport);
+            other is _$GuidanceDirectoryEntryServiceHivSupportImpl);
   }
 
   @override
@@ -655,33 +657,33 @@ class _$_GuidanceDirectoryEntryServiceHivSupport
 abstract class _GuidanceDirectoryEntryServiceHivSupport
     implements GuidanceDirectoryEntryService {
   const factory _GuidanceDirectoryEntryServiceHivSupport() =
-      _$_GuidanceDirectoryEntryServiceHivSupport;
+      _$GuidanceDirectoryEntryServiceHivSupportImpl;
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryServiceCounsellingCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryServiceCounsellingCopyWith(
-          _$_GuidanceDirectoryEntryServiceCounselling value,
-          $Res Function(_$_GuidanceDirectoryEntryServiceCounselling) then) =
-      __$$_GuidanceDirectoryEntryServiceCounsellingCopyWithImpl<$Res>;
+abstract class _$$GuidanceDirectoryEntryServiceCounsellingImplCopyWith<$Res> {
+  factory _$$GuidanceDirectoryEntryServiceCounsellingImplCopyWith(
+          _$GuidanceDirectoryEntryServiceCounsellingImpl value,
+          $Res Function(_$GuidanceDirectoryEntryServiceCounsellingImpl) then) =
+      __$$GuidanceDirectoryEntryServiceCounsellingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryServiceCounsellingCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryServiceCounsellingImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntryServiceCounselling>
-    implements _$$_GuidanceDirectoryEntryServiceCounsellingCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryServiceCounsellingCopyWithImpl(
-      _$_GuidanceDirectoryEntryServiceCounselling _value,
-      $Res Function(_$_GuidanceDirectoryEntryServiceCounselling) _then)
+        _$GuidanceDirectoryEntryServiceCounsellingImpl>
+    implements _$$GuidanceDirectoryEntryServiceCounsellingImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryServiceCounsellingImplCopyWithImpl(
+      _$GuidanceDirectoryEntryServiceCounsellingImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryServiceCounsellingImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_GuidanceDirectoryEntryServiceCounselling
+class _$GuidanceDirectoryEntryServiceCounsellingImpl
     implements _GuidanceDirectoryEntryServiceCounselling {
-  const _$_GuidanceDirectoryEntryServiceCounselling();
+  const _$GuidanceDirectoryEntryServiceCounsellingImpl();
 
   @override
   String toString() {
@@ -692,7 +694,7 @@ class _$_GuidanceDirectoryEntryServiceCounselling
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntryServiceCounselling);
+            other is _$GuidanceDirectoryEntryServiceCounsellingImpl);
   }
 
   @override
@@ -803,33 +805,36 @@ class _$_GuidanceDirectoryEntryServiceCounselling
 abstract class _GuidanceDirectoryEntryServiceCounselling
     implements GuidanceDirectoryEntryService {
   const factory _GuidanceDirectoryEntryServiceCounselling() =
-      _$_GuidanceDirectoryEntryServiceCounselling;
+      _$GuidanceDirectoryEntryServiceCounsellingImpl;
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryServiceFinancialAdviceCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryServiceFinancialAdviceCopyWith(
-          _$_GuidanceDirectoryEntryServiceFinancialAdvice value,
-          $Res Function(_$_GuidanceDirectoryEntryServiceFinancialAdvice) then) =
-      __$$_GuidanceDirectoryEntryServiceFinancialAdviceCopyWithImpl<$Res>;
+abstract class _$$GuidanceDirectoryEntryServiceFinancialAdviceImplCopyWith<
+    $Res> {
+  factory _$$GuidanceDirectoryEntryServiceFinancialAdviceImplCopyWith(
+          _$GuidanceDirectoryEntryServiceFinancialAdviceImpl value,
+          $Res Function(_$GuidanceDirectoryEntryServiceFinancialAdviceImpl)
+              then) =
+      __$$GuidanceDirectoryEntryServiceFinancialAdviceImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryServiceFinancialAdviceCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryServiceFinancialAdviceImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntryServiceFinancialAdvice>
-    implements _$$_GuidanceDirectoryEntryServiceFinancialAdviceCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryServiceFinancialAdviceCopyWithImpl(
-      _$_GuidanceDirectoryEntryServiceFinancialAdvice _value,
-      $Res Function(_$_GuidanceDirectoryEntryServiceFinancialAdvice) _then)
+        _$GuidanceDirectoryEntryServiceFinancialAdviceImpl>
+    implements
+        _$$GuidanceDirectoryEntryServiceFinancialAdviceImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryServiceFinancialAdviceImplCopyWithImpl(
+      _$GuidanceDirectoryEntryServiceFinancialAdviceImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryServiceFinancialAdviceImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_GuidanceDirectoryEntryServiceFinancialAdvice
+class _$GuidanceDirectoryEntryServiceFinancialAdviceImpl
     implements _GuidanceDirectoryEntryServiceFinancialAdvice {
-  const _$_GuidanceDirectoryEntryServiceFinancialAdvice();
+  const _$GuidanceDirectoryEntryServiceFinancialAdviceImpl();
 
   @override
   String toString() {
@@ -840,7 +845,7 @@ class _$_GuidanceDirectoryEntryServiceFinancialAdvice
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntryServiceFinancialAdvice);
+            other is _$GuidanceDirectoryEntryServiceFinancialAdviceImpl);
   }
 
   @override
@@ -951,33 +956,33 @@ class _$_GuidanceDirectoryEntryServiceFinancialAdvice
 abstract class _GuidanceDirectoryEntryServiceFinancialAdvice
     implements GuidanceDirectoryEntryService {
   const factory _GuidanceDirectoryEntryServiceFinancialAdvice() =
-      _$_GuidanceDirectoryEntryServiceFinancialAdvice;
+      _$GuidanceDirectoryEntryServiceFinancialAdviceImpl;
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryServiceTestingCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryServiceTestingCopyWith(
-          _$_GuidanceDirectoryEntryServiceTesting value,
-          $Res Function(_$_GuidanceDirectoryEntryServiceTesting) then) =
-      __$$_GuidanceDirectoryEntryServiceTestingCopyWithImpl<$Res>;
+abstract class _$$GuidanceDirectoryEntryServiceTestingImplCopyWith<$Res> {
+  factory _$$GuidanceDirectoryEntryServiceTestingImplCopyWith(
+          _$GuidanceDirectoryEntryServiceTestingImpl value,
+          $Res Function(_$GuidanceDirectoryEntryServiceTestingImpl) then) =
+      __$$GuidanceDirectoryEntryServiceTestingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryServiceTestingCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryServiceTestingImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntryServiceTesting>
-    implements _$$_GuidanceDirectoryEntryServiceTestingCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryServiceTestingCopyWithImpl(
-      _$_GuidanceDirectoryEntryServiceTesting _value,
-      $Res Function(_$_GuidanceDirectoryEntryServiceTesting) _then)
+        _$GuidanceDirectoryEntryServiceTestingImpl>
+    implements _$$GuidanceDirectoryEntryServiceTestingImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryServiceTestingImplCopyWithImpl(
+      _$GuidanceDirectoryEntryServiceTestingImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryServiceTestingImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_GuidanceDirectoryEntryServiceTesting
+class _$GuidanceDirectoryEntryServiceTestingImpl
     implements _GuidanceDirectoryEntryServiceTesting {
-  const _$_GuidanceDirectoryEntryServiceTesting();
+  const _$GuidanceDirectoryEntryServiceTestingImpl();
 
   @override
   String toString() {
@@ -988,7 +993,7 @@ class _$_GuidanceDirectoryEntryServiceTesting
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntryServiceTesting);
+            other is _$GuidanceDirectoryEntryServiceTestingImpl);
   }
 
   @override
@@ -1099,33 +1104,33 @@ class _$_GuidanceDirectoryEntryServiceTesting
 abstract class _GuidanceDirectoryEntryServiceTesting
     implements GuidanceDirectoryEntryService {
   const factory _GuidanceDirectoryEntryServiceTesting() =
-      _$_GuidanceDirectoryEntryServiceTesting;
+      _$GuidanceDirectoryEntryServiceTestingImpl;
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryServiceSexualHealthCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryServiceSexualHealthCopyWith(
-          _$_GuidanceDirectoryEntryServiceSexualHealth value,
-          $Res Function(_$_GuidanceDirectoryEntryServiceSexualHealth) then) =
-      __$$_GuidanceDirectoryEntryServiceSexualHealthCopyWithImpl<$Res>;
+abstract class _$$GuidanceDirectoryEntryServiceSexualHealthImplCopyWith<$Res> {
+  factory _$$GuidanceDirectoryEntryServiceSexualHealthImplCopyWith(
+          _$GuidanceDirectoryEntryServiceSexualHealthImpl value,
+          $Res Function(_$GuidanceDirectoryEntryServiceSexualHealthImpl) then) =
+      __$$GuidanceDirectoryEntryServiceSexualHealthImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryServiceSexualHealthCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryServiceSexualHealthImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntryServiceSexualHealth>
-    implements _$$_GuidanceDirectoryEntryServiceSexualHealthCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryServiceSexualHealthCopyWithImpl(
-      _$_GuidanceDirectoryEntryServiceSexualHealth _value,
-      $Res Function(_$_GuidanceDirectoryEntryServiceSexualHealth) _then)
+        _$GuidanceDirectoryEntryServiceSexualHealthImpl>
+    implements _$$GuidanceDirectoryEntryServiceSexualHealthImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryServiceSexualHealthImplCopyWithImpl(
+      _$GuidanceDirectoryEntryServiceSexualHealthImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryServiceSexualHealthImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_GuidanceDirectoryEntryServiceSexualHealth
+class _$GuidanceDirectoryEntryServiceSexualHealthImpl
     implements _GuidanceDirectoryEntryServiceSexualHealth {
-  const _$_GuidanceDirectoryEntryServiceSexualHealth();
+  const _$GuidanceDirectoryEntryServiceSexualHealthImpl();
 
   @override
   String toString() {
@@ -1136,7 +1141,7 @@ class _$_GuidanceDirectoryEntryServiceSexualHealth
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntryServiceSexualHealth);
+            other is _$GuidanceDirectoryEntryServiceSexualHealthImpl);
   }
 
   @override
@@ -1247,33 +1252,33 @@ class _$_GuidanceDirectoryEntryServiceSexualHealth
 abstract class _GuidanceDirectoryEntryServiceSexualHealth
     implements GuidanceDirectoryEntryService {
   const factory _GuidanceDirectoryEntryServiceSexualHealth() =
-      _$_GuidanceDirectoryEntryServiceSexualHealth;
+      _$GuidanceDirectoryEntryServiceSexualHealthImpl;
 }
 
 /// @nodoc
-abstract class _$$_GuidanceDirectoryEntryServiceUnknownCopyWith<$Res> {
-  factory _$$_GuidanceDirectoryEntryServiceUnknownCopyWith(
-          _$_GuidanceDirectoryEntryServiceUnknown value,
-          $Res Function(_$_GuidanceDirectoryEntryServiceUnknown) then) =
-      __$$_GuidanceDirectoryEntryServiceUnknownCopyWithImpl<$Res>;
+abstract class _$$GuidanceDirectoryEntryServiceUnknownImplCopyWith<$Res> {
+  factory _$$GuidanceDirectoryEntryServiceUnknownImplCopyWith(
+          _$GuidanceDirectoryEntryServiceUnknownImpl value,
+          $Res Function(_$GuidanceDirectoryEntryServiceUnknownImpl) then) =
+      __$$GuidanceDirectoryEntryServiceUnknownImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_GuidanceDirectoryEntryServiceUnknownCopyWithImpl<$Res>
+class __$$GuidanceDirectoryEntryServiceUnknownImplCopyWithImpl<$Res>
     extends _$GuidanceDirectoryEntryServiceCopyWithImpl<$Res,
-        _$_GuidanceDirectoryEntryServiceUnknown>
-    implements _$$_GuidanceDirectoryEntryServiceUnknownCopyWith<$Res> {
-  __$$_GuidanceDirectoryEntryServiceUnknownCopyWithImpl(
-      _$_GuidanceDirectoryEntryServiceUnknown _value,
-      $Res Function(_$_GuidanceDirectoryEntryServiceUnknown) _then)
+        _$GuidanceDirectoryEntryServiceUnknownImpl>
+    implements _$$GuidanceDirectoryEntryServiceUnknownImplCopyWith<$Res> {
+  __$$GuidanceDirectoryEntryServiceUnknownImplCopyWithImpl(
+      _$GuidanceDirectoryEntryServiceUnknownImpl _value,
+      $Res Function(_$GuidanceDirectoryEntryServiceUnknownImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_GuidanceDirectoryEntryServiceUnknown
+class _$GuidanceDirectoryEntryServiceUnknownImpl
     implements _GuidanceDirectoryEntryServiceUnknown {
-  const _$_GuidanceDirectoryEntryServiceUnknown();
+  const _$GuidanceDirectoryEntryServiceUnknownImpl();
 
   @override
   String toString() {
@@ -1284,7 +1289,7 @@ class _$_GuidanceDirectoryEntryServiceUnknown
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceDirectoryEntryServiceUnknown);
+            other is _$GuidanceDirectoryEntryServiceUnknownImpl);
   }
 
   @override
@@ -1395,5 +1400,5 @@ class _$_GuidanceDirectoryEntryServiceUnknown
 abstract class _GuidanceDirectoryEntryServiceUnknown
     implements GuidanceDirectoryEntryService {
   const factory _GuidanceDirectoryEntryServiceUnknown() =
-      _$_GuidanceDirectoryEntryServiceUnknown;
+      _$GuidanceDirectoryEntryServiceUnknownImpl;
 }

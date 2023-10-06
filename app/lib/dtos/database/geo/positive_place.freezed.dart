@@ -91,11 +91,11 @@ class _$PositivePlaceCopyWithImpl<$Res, $Val extends PositivePlace>
 }
 
 /// @nodoc
-abstract class _$$_PositivePlaceCopyWith<$Res>
+abstract class _$$PositivePlaceImplCopyWith<$Res>
     implements $PositivePlaceCopyWith<$Res> {
-  factory _$$_PositivePlaceCopyWith(
-          _$_PositivePlace value, $Res Function(_$_PositivePlace) then) =
-      __$$_PositivePlaceCopyWithImpl<$Res>;
+  factory _$$PositivePlaceImplCopyWith(
+          _$PositivePlaceImpl value, $Res Function(_$PositivePlaceImpl) then) =
+      __$$PositivePlaceImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -107,11 +107,11 @@ abstract class _$$_PositivePlaceCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_PositivePlaceCopyWithImpl<$Res>
-    extends _$PositivePlaceCopyWithImpl<$Res, _$_PositivePlace>
-    implements _$$_PositivePlaceCopyWith<$Res> {
-  __$$_PositivePlaceCopyWithImpl(
-      _$_PositivePlace _value, $Res Function(_$_PositivePlace) _then)
+class __$$PositivePlaceImplCopyWithImpl<$Res>
+    extends _$PositivePlaceCopyWithImpl<$Res, _$PositivePlaceImpl>
+    implements _$$PositivePlaceImplCopyWith<$Res> {
+  __$$PositivePlaceImplCopyWithImpl(
+      _$PositivePlaceImpl _value, $Res Function(_$PositivePlaceImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -123,7 +123,7 @@ class __$$_PositivePlaceCopyWithImpl<$Res>
     Object? longitude = freezed,
     Object? optOut = null,
   }) {
-    return _then(_$_PositivePlace(
+    return _then(_$PositivePlaceImpl(
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -150,16 +150,16 @@ class __$$_PositivePlaceCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PositivePlace implements _PositivePlace {
-  const _$_PositivePlace(
+class _$PositivePlaceImpl implements _PositivePlace {
+  const _$PositivePlaceImpl(
       {this.description = '',
       this.placeId = '',
       this.latitude,
       this.longitude,
       this.optOut = false});
 
-  factory _$_PositivePlace.fromJson(Map<String, dynamic> json) =>
-      _$$_PositivePlaceFromJson(json);
+  factory _$PositivePlaceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PositivePlaceImplFromJson(json);
 
   @override
   @JsonKey()
@@ -184,7 +184,7 @@ class _$_PositivePlace implements _PositivePlace {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PositivePlace &&
+            other is _$PositivePlaceImpl &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.placeId, placeId) || other.placeId == placeId) &&
@@ -203,12 +203,12 @@ class _$_PositivePlace implements _PositivePlace {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PositivePlaceCopyWith<_$_PositivePlace> get copyWith =>
-      __$$_PositivePlaceCopyWithImpl<_$_PositivePlace>(this, _$identity);
+  _$$PositivePlaceImplCopyWith<_$PositivePlaceImpl> get copyWith =>
+      __$$PositivePlaceImplCopyWithImpl<_$PositivePlaceImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PositivePlaceToJson(
+    return _$$PositivePlaceImplToJson(
       this,
     );
   }
@@ -220,10 +220,10 @@ abstract class _PositivePlace implements PositivePlace {
       final String placeId,
       final double? latitude,
       final double? longitude,
-      final bool optOut}) = _$_PositivePlace;
+      final bool optOut}) = _$PositivePlaceImpl;
 
   factory _PositivePlace.fromJson(Map<String, dynamic> json) =
-      _$_PositivePlace.fromJson;
+      _$PositivePlaceImpl.fromJson;
 
   @override
   String get description;
@@ -237,6 +237,6 @@ abstract class _PositivePlace implements PositivePlace {
   bool get optOut;
   @override
   @JsonKey(ignore: true)
-  _$$_PositivePlaceCopyWith<_$_PositivePlace> get copyWith =>
+  _$$PositivePlaceImplCopyWith<_$PositivePlaceImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

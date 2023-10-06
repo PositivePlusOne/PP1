@@ -70,11 +70,11 @@ class _$HomeViewModelStateCopyWithImpl<$Res, $Val extends HomeViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_HomeViewModelStateCopyWith<$Res>
+abstract class _$$HomeViewModelStateImplCopyWith<$Res>
     implements $HomeViewModelStateCopyWith<$Res> {
-  factory _$$_HomeViewModelStateCopyWith(_$_HomeViewModelState value,
-          $Res Function(_$_HomeViewModelState) then) =
-      __$$_HomeViewModelStateCopyWithImpl<$Res>;
+  factory _$$HomeViewModelStateImplCopyWith(_$HomeViewModelStateImpl value,
+          $Res Function(_$HomeViewModelStateImpl) then) =
+      __$$HomeViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -82,11 +82,11 @@ abstract class _$$_HomeViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_HomeViewModelStateCopyWithImpl<$Res>
-    extends _$HomeViewModelStateCopyWithImpl<$Res, _$_HomeViewModelState>
-    implements _$$_HomeViewModelStateCopyWith<$Res> {
-  __$$_HomeViewModelStateCopyWithImpl(
-      _$_HomeViewModelState _value, $Res Function(_$_HomeViewModelState) _then)
+class __$$HomeViewModelStateImplCopyWithImpl<$Res>
+    extends _$HomeViewModelStateCopyWithImpl<$Res, _$HomeViewModelStateImpl>
+    implements _$$HomeViewModelStateImplCopyWith<$Res> {
+  __$$HomeViewModelStateImplCopyWithImpl(_$HomeViewModelStateImpl _value,
+      $Res Function(_$HomeViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -96,7 +96,7 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
     Object? hasDoneInitialChecks = null,
     Object? currentTabIndex = freezed,
   }) {
-    return _then(_$_HomeViewModelState(
+    return _then(_$HomeViewModelStateImpl(
       isRefreshing: null == isRefreshing
           ? _value.isRefreshing
           : isRefreshing // ignore: cast_nullable_to_non_nullable
@@ -114,8 +114,8 @@ class __$$_HomeViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_HomeViewModelState implements _HomeViewModelState {
-  const _$_HomeViewModelState(
+class _$HomeViewModelStateImpl implements _HomeViewModelState {
+  const _$HomeViewModelStateImpl(
       {this.isRefreshing = false,
       this.hasDoneInitialChecks = false,
       this.currentTabIndex = 0});
@@ -139,7 +139,7 @@ class _$_HomeViewModelState implements _HomeViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_HomeViewModelState &&
+            other is _$HomeViewModelStateImpl &&
             (identical(other.isRefreshing, isRefreshing) ||
                 other.isRefreshing == isRefreshing) &&
             (identical(other.hasDoneInitialChecks, hasDoneInitialChecks) ||
@@ -158,8 +158,8 @@ class _$_HomeViewModelState implements _HomeViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_HomeViewModelStateCopyWith<_$_HomeViewModelState> get copyWith =>
-      __$$_HomeViewModelStateCopyWithImpl<_$_HomeViewModelState>(
+  _$$HomeViewModelStateImplCopyWith<_$HomeViewModelStateImpl> get copyWith =>
+      __$$HomeViewModelStateImplCopyWithImpl<_$HomeViewModelStateImpl>(
           this, _$identity);
 }
 
@@ -167,7 +167,7 @@ abstract class _HomeViewModelState implements HomeViewModelState {
   const factory _HomeViewModelState(
       {final bool isRefreshing,
       final bool hasDoneInitialChecks,
-      final dynamic currentTabIndex}) = _$_HomeViewModelState;
+      final dynamic currentTabIndex}) = _$HomeViewModelStateImpl;
 
   @override
   bool get isRefreshing;
@@ -177,6 +177,6 @@ abstract class _HomeViewModelState implements HomeViewModelState {
   dynamic get currentTabIndex;
   @override
   @JsonKey(ignore: true)
-  _$$_HomeViewModelStateCopyWith<_$_HomeViewModelState> get copyWith =>
+  _$$HomeViewModelStateImplCopyWith<_$HomeViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

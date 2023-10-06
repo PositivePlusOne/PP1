@@ -87,23 +87,25 @@ class _$FeedbackTypeCopyWithImpl<$Res, $Val extends FeedbackType>
 }
 
 /// @nodoc
-abstract class _$$UnknownCopyWith<$Res> {
-  factory _$$UnknownCopyWith(_$Unknown value, $Res Function(_$Unknown) then) =
-      __$$UnknownCopyWithImpl<$Res>;
+abstract class _$$UnknownImplCopyWith<$Res> {
+  factory _$$UnknownImplCopyWith(
+          _$UnknownImpl value, $Res Function(_$UnknownImpl) then) =
+      __$$UnknownImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$UnknownCopyWithImpl<$Res>
-    extends _$FeedbackTypeCopyWithImpl<$Res, _$Unknown>
-    implements _$$UnknownCopyWith<$Res> {
-  __$$UnknownCopyWithImpl(_$Unknown _value, $Res Function(_$Unknown) _then)
+class __$$UnknownImplCopyWithImpl<$Res>
+    extends _$FeedbackTypeCopyWithImpl<$Res, _$UnknownImpl>
+    implements _$$UnknownImplCopyWith<$Res> {
+  __$$UnknownImplCopyWithImpl(
+      _$UnknownImpl _value, $Res Function(_$UnknownImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Unknown implements Unknown {
-  const _$Unknown();
+class _$UnknownImpl implements Unknown {
+  const _$UnknownImpl();
 
   @override
   String toString() {
@@ -113,7 +115,7 @@ class _$Unknown implements Unknown {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$Unknown);
+        (other.runtimeType == runtimeType && other is _$UnknownImpl);
   }
 
   @override
@@ -195,29 +197,29 @@ class _$Unknown implements Unknown {
 }
 
 abstract class Unknown implements FeedbackType {
-  const factory Unknown() = _$Unknown;
+  const factory Unknown() = _$UnknownImpl;
 }
 
 /// @nodoc
-abstract class _$$UserReportCopyWith<$Res> {
-  factory _$$UserReportCopyWith(
-          _$UserReport value, $Res Function(_$UserReport) then) =
-      __$$UserReportCopyWithImpl<$Res>;
+abstract class _$$UserReportImplCopyWith<$Res> {
+  factory _$$UserReportImplCopyWith(
+          _$UserReportImpl value, $Res Function(_$UserReportImpl) then) =
+      __$$UserReportImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$UserReportCopyWithImpl<$Res>
-    extends _$FeedbackTypeCopyWithImpl<$Res, _$UserReport>
-    implements _$$UserReportCopyWith<$Res> {
-  __$$UserReportCopyWithImpl(
-      _$UserReport _value, $Res Function(_$UserReport) _then)
+class __$$UserReportImplCopyWithImpl<$Res>
+    extends _$FeedbackTypeCopyWithImpl<$Res, _$UserReportImpl>
+    implements _$$UserReportImplCopyWith<$Res> {
+  __$$UserReportImplCopyWithImpl(
+      _$UserReportImpl _value, $Res Function(_$UserReportImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$UserReport implements UserReport {
-  const _$UserReport();
+class _$UserReportImpl implements UserReport {
+  const _$UserReportImpl();
 
   @override
   String toString() {
@@ -227,7 +229,7 @@ class _$UserReport implements UserReport {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$UserReport);
+        (other.runtimeType == runtimeType && other is _$UserReportImpl);
   }
 
   @override
@@ -309,29 +311,29 @@ class _$UserReport implements UserReport {
 }
 
 abstract class UserReport implements FeedbackType {
-  const factory UserReport() = _$UserReport;
+  const factory UserReport() = _$UserReportImpl;
 }
 
 /// @nodoc
-abstract class _$$PostReportCopyWith<$Res> {
-  factory _$$PostReportCopyWith(
-          _$PostReport value, $Res Function(_$PostReport) then) =
-      __$$PostReportCopyWithImpl<$Res>;
+abstract class _$$PostReportImplCopyWith<$Res> {
+  factory _$$PostReportImplCopyWith(
+          _$PostReportImpl value, $Res Function(_$PostReportImpl) then) =
+      __$$PostReportImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$PostReportCopyWithImpl<$Res>
-    extends _$FeedbackTypeCopyWithImpl<$Res, _$PostReport>
-    implements _$$PostReportCopyWith<$Res> {
-  __$$PostReportCopyWithImpl(
-      _$PostReport _value, $Res Function(_$PostReport) _then)
+class __$$PostReportImplCopyWithImpl<$Res>
+    extends _$FeedbackTypeCopyWithImpl<$Res, _$PostReportImpl>
+    implements _$$PostReportImplCopyWith<$Res> {
+  __$$PostReportImplCopyWithImpl(
+      _$PostReportImpl _value, $Res Function(_$PostReportImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$PostReport implements PostReport {
-  const _$PostReport();
+class _$PostReportImpl implements PostReport {
+  const _$PostReportImpl();
 
   @override
   String toString() {
@@ -341,7 +343,7 @@ class _$PostReport implements PostReport {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$PostReport);
+        (other.runtimeType == runtimeType && other is _$PostReportImpl);
   }
 
   @override
@@ -423,29 +425,29 @@ class _$PostReport implements PostReport {
 }
 
 abstract class PostReport implements FeedbackType {
-  const factory PostReport() = _$PostReport;
+  const factory PostReport() = _$PostReportImpl;
 }
 
 /// @nodoc
-abstract class _$$GenericFeedbackCopyWith<$Res> {
-  factory _$$GenericFeedbackCopyWith(
-          _$GenericFeedback value, $Res Function(_$GenericFeedback) then) =
-      __$$GenericFeedbackCopyWithImpl<$Res>;
+abstract class _$$GenericFeedbackImplCopyWith<$Res> {
+  factory _$$GenericFeedbackImplCopyWith(_$GenericFeedbackImpl value,
+          $Res Function(_$GenericFeedbackImpl) then) =
+      __$$GenericFeedbackImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$GenericFeedbackCopyWithImpl<$Res>
-    extends _$FeedbackTypeCopyWithImpl<$Res, _$GenericFeedback>
-    implements _$$GenericFeedbackCopyWith<$Res> {
-  __$$GenericFeedbackCopyWithImpl(
-      _$GenericFeedback _value, $Res Function(_$GenericFeedback) _then)
+class __$$GenericFeedbackImplCopyWithImpl<$Res>
+    extends _$FeedbackTypeCopyWithImpl<$Res, _$GenericFeedbackImpl>
+    implements _$$GenericFeedbackImplCopyWith<$Res> {
+  __$$GenericFeedbackImplCopyWithImpl(
+      _$GenericFeedbackImpl _value, $Res Function(_$GenericFeedbackImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$GenericFeedback implements GenericFeedback {
-  const _$GenericFeedback();
+class _$GenericFeedbackImpl implements GenericFeedback {
+  const _$GenericFeedbackImpl();
 
   @override
   String toString() {
@@ -455,7 +457,7 @@ class _$GenericFeedback implements GenericFeedback {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$GenericFeedback);
+        (other.runtimeType == runtimeType && other is _$GenericFeedbackImpl);
   }
 
   @override
@@ -537,5 +539,5 @@ class _$GenericFeedback implements GenericFeedback {
 }
 
 abstract class GenericFeedback implements FeedbackType {
-  const factory GenericFeedback() = _$GenericFeedback;
+  const factory GenericFeedback() = _$GenericFeedbackImpl;
 }

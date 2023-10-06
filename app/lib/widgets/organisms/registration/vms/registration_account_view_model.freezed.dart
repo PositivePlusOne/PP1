@@ -60,25 +60,25 @@ class _$RegistrationAccountViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_RegistrationAccountViewModelStateCopyWith<$Res>
+abstract class _$$RegistrationAccountViewModelStateImplCopyWith<$Res>
     implements $RegistrationAccountViewModelStateCopyWith<$Res> {
-  factory _$$_RegistrationAccountViewModelStateCopyWith(
-          _$_RegistrationAccountViewModelState value,
-          $Res Function(_$_RegistrationAccountViewModelState) then) =
-      __$$_RegistrationAccountViewModelStateCopyWithImpl<$Res>;
+  factory _$$RegistrationAccountViewModelStateImplCopyWith(
+          _$RegistrationAccountViewModelStateImpl value,
+          $Res Function(_$RegistrationAccountViewModelStateImpl) then) =
+      __$$RegistrationAccountViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy});
 }
 
 /// @nodoc
-class __$$_RegistrationAccountViewModelStateCopyWithImpl<$Res>
+class __$$RegistrationAccountViewModelStateImplCopyWithImpl<$Res>
     extends _$RegistrationAccountViewModelStateCopyWithImpl<$Res,
-        _$_RegistrationAccountViewModelState>
-    implements _$$_RegistrationAccountViewModelStateCopyWith<$Res> {
-  __$$_RegistrationAccountViewModelStateCopyWithImpl(
-      _$_RegistrationAccountViewModelState _value,
-      $Res Function(_$_RegistrationAccountViewModelState) _then)
+        _$RegistrationAccountViewModelStateImpl>
+    implements _$$RegistrationAccountViewModelStateImplCopyWith<$Res> {
+  __$$RegistrationAccountViewModelStateImplCopyWithImpl(
+      _$RegistrationAccountViewModelStateImpl _value,
+      $Res Function(_$RegistrationAccountViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -86,7 +86,7 @@ class __$$_RegistrationAccountViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? isBusy = null,
   }) {
-    return _then(_$_RegistrationAccountViewModelState(
+    return _then(_$RegistrationAccountViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -97,9 +97,9 @@ class __$$_RegistrationAccountViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_RegistrationAccountViewModelState
+class _$RegistrationAccountViewModelStateImpl
     implements _RegistrationAccountViewModelState {
-  const _$_RegistrationAccountViewModelState({this.isBusy = false});
+  const _$RegistrationAccountViewModelStateImpl({this.isBusy = false});
 
   @override
   @JsonKey()
@@ -114,7 +114,7 @@ class _$_RegistrationAccountViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RegistrationAccountViewModelState &&
+            other is _$RegistrationAccountViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
@@ -124,22 +124,22 @@ class _$_RegistrationAccountViewModelState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RegistrationAccountViewModelStateCopyWith<
-          _$_RegistrationAccountViewModelState>
-      get copyWith => __$$_RegistrationAccountViewModelStateCopyWithImpl<
-          _$_RegistrationAccountViewModelState>(this, _$identity);
+  _$$RegistrationAccountViewModelStateImplCopyWith<
+          _$RegistrationAccountViewModelStateImpl>
+      get copyWith => __$$RegistrationAccountViewModelStateImplCopyWithImpl<
+          _$RegistrationAccountViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _RegistrationAccountViewModelState
     implements RegistrationAccountViewModelState {
   const factory _RegistrationAccountViewModelState({final bool isBusy}) =
-      _$_RegistrationAccountViewModelState;
+      _$RegistrationAccountViewModelStateImpl;
 
   @override
   bool get isBusy;
   @override
   @JsonKey(ignore: true)
-  _$$_RegistrationAccountViewModelStateCopyWith<
-          _$_RegistrationAccountViewModelState>
+  _$$RegistrationAccountViewModelStateImplCopyWith<
+          _$RegistrationAccountViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

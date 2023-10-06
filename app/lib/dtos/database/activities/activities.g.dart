@@ -6,7 +6,8 @@ part of 'activities.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
+_$ActivityImpl _$$ActivityImplFromJson(Map<String, dynamic> json) =>
+    _$ActivityImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -43,7 +44,7 @@ _$_Activity _$$_ActivityFromJson(Map<String, dynamic> json) => _$_Activity(
           : Media.fromJsonList(json['media'] as List),
     );
 
-Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>
+Map<String, dynamic> _$$ActivityImplToJson(_$ActivityImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'generalConfiguration': instance.generalConfiguration?.toJson(),
@@ -56,9 +57,9 @@ Map<String, dynamic> _$$_ActivityToJson(_$_Activity instance) =>
       'media': instance.media.map((e) => e.toJson()).toList(),
     };
 
-_$_ActivityRepostConfiguration _$$_ActivityRepostConfigurationFromJson(
+_$ActivityRepostConfigurationImpl _$$ActivityRepostConfigurationImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ActivityRepostConfiguration(
+    _$ActivityRepostConfigurationImpl(
       targetActivityId: json['targetActivityId'] as String? ?? '',
       targetActivityPublisherId:
           json['targetActivityPublisherId'] as String? ?? '',
@@ -66,17 +67,17 @@ _$_ActivityRepostConfiguration _$$_ActivityRepostConfigurationFromJson(
           json['targetActivityOriginFeed'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_ActivityRepostConfigurationToJson(
-        _$_ActivityRepostConfiguration instance) =>
+Map<String, dynamic> _$$ActivityRepostConfigurationImplToJson(
+        _$ActivityRepostConfigurationImpl instance) =>
     <String, dynamic>{
       'targetActivityId': instance.targetActivityId,
       'targetActivityPublisherId': instance.targetActivityPublisherId,
       'targetActivityOriginFeed': instance.targetActivityOriginFeed,
     };
 
-_$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
+_$ActivityGeneralConfigurationImpl _$$ActivityGeneralConfigurationImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ActivityGeneralConfiguration(
+    _$ActivityGeneralConfigurationImpl(
       type: json['type'] == null
           ? const ActivityGeneralConfigurationType.post()
           : ActivityGeneralConfigurationType.fromJson(json['type'] as String),
@@ -87,8 +88,8 @@ _$_ActivityGeneralConfiguration _$$_ActivityGeneralConfigurationFromJson(
       isSensitive: json['isSensitive'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
-        _$_ActivityGeneralConfiguration instance) =>
+Map<String, dynamic> _$$ActivityGeneralConfigurationImplToJson(
+        _$ActivityGeneralConfigurationImpl instance) =>
     <String, dynamic>{
       'type': ActivityGeneralConfigurationType.toJson(instance.type),
       'style': ActivityGeneralConfigurationStyle.toJson(instance.style),
@@ -96,26 +97,26 @@ Map<String, dynamic> _$$_ActivityGeneralConfigurationToJson(
       'isSensitive': instance.isSensitive,
     };
 
-_$_ActivitySecurityConfiguration _$$_ActivitySecurityConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    _$_ActivitySecurityConfiguration(
-      context: json['context'] as String? ?? '',
-      viewMode: json['viewMode'] == null
-          ? const ActivitySecurityConfigurationMode.private()
-          : ActivitySecurityConfigurationMode.fromJson(
-              json['viewMode'] as String),
-      commentMode: json['commentMode'] == null
-          ? const ActivitySecurityConfigurationMode.signedIn()
-          : ActivitySecurityConfigurationMode.fromJson(
-              json['commentMode'] as String),
-      shareMode: json['shareMode'] == null
-          ? const ActivitySecurityConfigurationMode.private()
-          : ActivitySecurityConfigurationMode.fromJson(
-              json['shareMode'] as String),
-    );
+_$ActivitySecurityConfigurationImpl
+    _$$ActivitySecurityConfigurationImplFromJson(Map<String, dynamic> json) =>
+        _$ActivitySecurityConfigurationImpl(
+          context: json['context'] as String? ?? '',
+          viewMode: json['viewMode'] == null
+              ? const ActivitySecurityConfigurationMode.private()
+              : ActivitySecurityConfigurationMode.fromJson(
+                  json['viewMode'] as String),
+          commentMode: json['commentMode'] == null
+              ? const ActivitySecurityConfigurationMode.signedIn()
+              : ActivitySecurityConfigurationMode.fromJson(
+                  json['commentMode'] as String),
+          shareMode: json['shareMode'] == null
+              ? const ActivitySecurityConfigurationMode.private()
+              : ActivitySecurityConfigurationMode.fromJson(
+                  json['shareMode'] as String),
+        );
 
-Map<String, dynamic> _$$_ActivitySecurityConfigurationToJson(
-        _$_ActivitySecurityConfiguration instance) =>
+Map<String, dynamic> _$$ActivitySecurityConfigurationImplToJson(
+        _$ActivitySecurityConfigurationImpl instance) =>
     <String, dynamic>{
       'context': instance.context,
       'viewMode': ActivitySecurityConfigurationMode.toJson(instance.viewMode),
@@ -124,9 +125,9 @@ Map<String, dynamic> _$$_ActivitySecurityConfigurationToJson(
       'shareMode': ActivitySecurityConfigurationMode.toJson(instance.shareMode),
     };
 
-_$_ActivityEventConfiguration _$$_ActivityEventConfigurationFromJson(
+_$ActivityEventConfigurationImpl _$$ActivityEventConfigurationImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ActivityEventConfiguration(
+    _$ActivityEventConfigurationImpl(
       venue: json['venue'],
       name: json['name'] as String? ?? '',
       schedule: json['schedule'] == null
@@ -137,8 +138,8 @@ _$_ActivityEventConfiguration _$$_ActivityEventConfigurationFromJson(
       isCancelled: json['isCancelled'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$$_ActivityEventConfigurationToJson(
-        _$_ActivityEventConfiguration instance) =>
+Map<String, dynamic> _$$ActivityEventConfigurationImplToJson(
+        _$ActivityEventConfigurationImpl instance) =>
     <String, dynamic>{
       'venue': instance.venue,
       'name': instance.name,
@@ -148,8 +149,9 @@ Map<String, dynamic> _$$_ActivityEventConfigurationToJson(
       'isCancelled': instance.isCancelled,
     };
 
-_$_ActivitySchedule _$$_ActivityScheduleFromJson(Map<String, dynamic> json) =>
-    _$_ActivitySchedule(
+_$ActivityScheduleImpl _$$ActivityScheduleImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ActivityScheduleImpl(
       recurrenceRule: json['recurrenceRule'] as String? ?? '',
       start: json['start'] == null
           ? null
@@ -157,16 +159,17 @@ _$_ActivitySchedule _$$_ActivityScheduleFromJson(Map<String, dynamic> json) =>
       end: json['end'] == null ? null : DateTime.parse(json['end'] as String),
     );
 
-Map<String, dynamic> _$$_ActivityScheduleToJson(_$_ActivitySchedule instance) =>
+Map<String, dynamic> _$$ActivityScheduleImplToJson(
+        _$ActivityScheduleImpl instance) =>
     <String, dynamic>{
       'recurrenceRule': instance.recurrenceRule,
       'start': instance.start?.toIso8601String(),
       'end': instance.end?.toIso8601String(),
     };
 
-_$_ActivityPricingInformation _$$_ActivityPricingInformationFromJson(
+_$ActivityPricingInformationImpl _$$ActivityPricingInformationImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ActivityPricingInformation(
+    _$ActivityPricingInformationImpl(
       productId: json['productId'] as String? ?? '',
       externalStoreInformation: json['externalStoreInformation'] == null
           ? null
@@ -174,17 +177,17 @@ _$_ActivityPricingInformation _$$_ActivityPricingInformationFromJson(
               json['externalStoreInformation'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_ActivityPricingInformationToJson(
-        _$_ActivityPricingInformation instance) =>
+Map<String, dynamic> _$$ActivityPricingInformationImplToJson(
+        _$ActivityPricingInformationImpl instance) =>
     <String, dynamic>{
       'productId': instance.productId,
       'externalStoreInformation': instance.externalStoreInformation?.toJson(),
     };
 
-_$_ActivityPricingExternalStoreInformation
-    _$$_ActivityPricingExternalStoreInformationFromJson(
+_$ActivityPricingExternalStoreInformationImpl
+    _$$ActivityPricingExternalStoreInformationImplFromJson(
             Map<String, dynamic> json) =>
-        _$_ActivityPricingExternalStoreInformation(
+        _$ActivityPricingExternalStoreInformationImpl(
           costExact: json['costExact'] as String? ?? '',
           costMinimum: json['costMinimum'] as String? ?? '',
           costMaximum: json['costMaximum'] as String? ?? '',
@@ -195,8 +198,8 @@ _$_ActivityPricingExternalStoreInformation
                   json['pricingStrategy'] as String),
         );
 
-Map<String, dynamic> _$$_ActivityPricingExternalStoreInformationToJson(
-        _$_ActivityPricingExternalStoreInformation instance) =>
+Map<String, dynamic> _$$ActivityPricingExternalStoreInformationImplToJson(
+        _$ActivityPricingExternalStoreInformationImpl instance) =>
     <String, dynamic>{
       'costExact': instance.costExact,
       'costMinimum': instance.costMinimum,
@@ -206,33 +209,35 @@ Map<String, dynamic> _$$_ActivityPricingExternalStoreInformationToJson(
               instance.pricingStrategy),
     };
 
-_$_ActivityPublisherInformation _$$_ActivityPublisherInformationFromJson(
+_$ActivityPublisherInformationImpl _$$ActivityPublisherInformationImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ActivityPublisherInformation(
+    _$ActivityPublisherInformationImpl(
       originFeed: json['originFeed'] as String? ?? '',
       publisherId: json['publisherId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_ActivityPublisherInformationToJson(
-        _$_ActivityPublisherInformation instance) =>
+Map<String, dynamic> _$$ActivityPublisherInformationImplToJson(
+        _$ActivityPublisherInformationImpl instance) =>
     <String, dynamic>{
       'originFeed': instance.originFeed,
       'publisherId': instance.publisherId,
     };
 
-_$_ActivityEnrichmentConfiguration _$$_ActivityEnrichmentConfigurationFromJson(
-        Map<String, dynamic> json) =>
-    _$_ActivityEnrichmentConfiguration(
-      tags: json['tags'] == null ? const [] : stringListFromJson(json['tags']),
-      promotionKey: json['promotionKey'] as String? ?? '',
-      publishLocation: json['publishLocation'] as String? ?? '',
-      mentions: json['mentions'] == null
-          ? const []
-          : Mention.fromJsonList(json['mentions'] as List),
-    );
+_$ActivityEnrichmentConfigurationImpl
+    _$$ActivityEnrichmentConfigurationImplFromJson(Map<String, dynamic> json) =>
+        _$ActivityEnrichmentConfigurationImpl(
+          tags: json['tags'] == null
+              ? const []
+              : stringListFromJson(json['tags']),
+          promotionKey: json['promotionKey'] as String? ?? '',
+          publishLocation: json['publishLocation'] as String? ?? '',
+          mentions: json['mentions'] == null
+              ? const []
+              : Mention.fromJsonList(json['mentions'] as List),
+        );
 
-Map<String, dynamic> _$$_ActivityEnrichmentConfigurationToJson(
-        _$_ActivityEnrichmentConfiguration instance) =>
+Map<String, dynamic> _$$ActivityEnrichmentConfigurationImplToJson(
+        _$ActivityEnrichmentConfigurationImpl instance) =>
     <String, dynamic>{
       'tags': instance.tags,
       'promotionKey': instance.promotionKey,

@@ -58,25 +58,25 @@ class _$DevelopmentViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_DevelopmentViewModelStateCopyWith<$Res>
+abstract class _$$DevelopmentViewModelStateImplCopyWith<$Res>
     implements $DevelopmentViewModelStateCopyWith<$Res> {
-  factory _$$_DevelopmentViewModelStateCopyWith(
-          _$_DevelopmentViewModelState value,
-          $Res Function(_$_DevelopmentViewModelState) then) =
-      __$$_DevelopmentViewModelStateCopyWithImpl<$Res>;
+  factory _$$DevelopmentViewModelStateImplCopyWith(
+          _$DevelopmentViewModelStateImpl value,
+          $Res Function(_$DevelopmentViewModelStateImpl) then) =
+      __$$DevelopmentViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String status});
 }
 
 /// @nodoc
-class __$$_DevelopmentViewModelStateCopyWithImpl<$Res>
+class __$$DevelopmentViewModelStateImplCopyWithImpl<$Res>
     extends _$DevelopmentViewModelStateCopyWithImpl<$Res,
-        _$_DevelopmentViewModelState>
-    implements _$$_DevelopmentViewModelStateCopyWith<$Res> {
-  __$$_DevelopmentViewModelStateCopyWithImpl(
-      _$_DevelopmentViewModelState _value,
-      $Res Function(_$_DevelopmentViewModelState) _then)
+        _$DevelopmentViewModelStateImpl>
+    implements _$$DevelopmentViewModelStateImplCopyWith<$Res> {
+  __$$DevelopmentViewModelStateImplCopyWithImpl(
+      _$DevelopmentViewModelStateImpl _value,
+      $Res Function(_$DevelopmentViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -84,7 +84,7 @@ class __$$_DevelopmentViewModelStateCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
   }) {
-    return _then(_$_DevelopmentViewModelState(
+    return _then(_$DevelopmentViewModelStateImpl(
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -95,8 +95,8 @@ class __$$_DevelopmentViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_DevelopmentViewModelState implements _DevelopmentViewModelState {
-  const _$_DevelopmentViewModelState({this.status = 'Pending...'});
+class _$DevelopmentViewModelStateImpl implements _DevelopmentViewModelState {
+  const _$DevelopmentViewModelStateImpl({this.status = 'Pending...'});
 
   @override
   @JsonKey()
@@ -111,7 +111,7 @@ class _$_DevelopmentViewModelState implements _DevelopmentViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DevelopmentViewModelState &&
+            other is _$DevelopmentViewModelStateImpl &&
             (identical(other.status, status) || other.status == status));
   }
 
@@ -121,19 +121,19 @@ class _$_DevelopmentViewModelState implements _DevelopmentViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DevelopmentViewModelStateCopyWith<_$_DevelopmentViewModelState>
-      get copyWith => __$$_DevelopmentViewModelStateCopyWithImpl<
-          _$_DevelopmentViewModelState>(this, _$identity);
+  _$$DevelopmentViewModelStateImplCopyWith<_$DevelopmentViewModelStateImpl>
+      get copyWith => __$$DevelopmentViewModelStateImplCopyWithImpl<
+          _$DevelopmentViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _DevelopmentViewModelState implements DevelopmentViewModelState {
   const factory _DevelopmentViewModelState({final String status}) =
-      _$_DevelopmentViewModelState;
+      _$DevelopmentViewModelStateImpl;
 
   @override
   String get status;
   @override
   @JsonKey(ignore: true)
-  _$$_DevelopmentViewModelStateCopyWith<_$_DevelopmentViewModelState>
+  _$$DevelopmentViewModelStateImplCopyWith<_$DevelopmentViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

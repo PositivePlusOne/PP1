@@ -68,22 +68,22 @@ class _$GenderOptionCopyWithImpl<$Res, $Val extends GenderOption>
 }
 
 /// @nodoc
-abstract class _$$_GenderOptionCopyWith<$Res>
+abstract class _$$GenderOptionImplCopyWith<$Res>
     implements $GenderOptionCopyWith<$Res> {
-  factory _$$_GenderOptionCopyWith(
-          _$_GenderOption value, $Res Function(_$_GenderOption) then) =
-      __$$_GenderOptionCopyWithImpl<$Res>;
+  factory _$$GenderOptionImplCopyWith(
+          _$GenderOptionImpl value, $Res Function(_$GenderOptionImpl) then) =
+      __$$GenderOptionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String label, String value});
 }
 
 /// @nodoc
-class __$$_GenderOptionCopyWithImpl<$Res>
-    extends _$GenderOptionCopyWithImpl<$Res, _$_GenderOption>
-    implements _$$_GenderOptionCopyWith<$Res> {
-  __$$_GenderOptionCopyWithImpl(
-      _$_GenderOption _value, $Res Function(_$_GenderOption) _then)
+class __$$GenderOptionImplCopyWithImpl<$Res>
+    extends _$GenderOptionCopyWithImpl<$Res, _$GenderOptionImpl>
+    implements _$$GenderOptionImplCopyWith<$Res> {
+  __$$GenderOptionImplCopyWithImpl(
+      _$GenderOptionImpl _value, $Res Function(_$GenderOptionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -92,7 +92,7 @@ class __$$_GenderOptionCopyWithImpl<$Res>
     Object? label = null,
     Object? value = null,
   }) {
-    return _then(_$_GenderOption(
+    return _then(_$GenderOptionImpl(
       label: null == label
           ? _value.label
           : label // ignore: cast_nullable_to_non_nullable
@@ -107,11 +107,12 @@ class __$$_GenderOptionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GenderOption extends _GenderOption {
-  const _$_GenderOption({required this.label, required this.value}) : super._();
+class _$GenderOptionImpl extends _GenderOption {
+  const _$GenderOptionImpl({required this.label, required this.value})
+      : super._();
 
-  factory _$_GenderOption.fromJson(Map<String, dynamic> json) =>
-      _$$_GenderOptionFromJson(json);
+  factory _$GenderOptionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GenderOptionImplFromJson(json);
 
   @override
   final String label;
@@ -127,7 +128,7 @@ class _$_GenderOption extends _GenderOption {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GenderOption &&
+            other is _$GenderOptionImpl &&
             (identical(other.label, label) || other.label == label) &&
             (identical(other.value, value) || other.value == value));
   }
@@ -139,12 +140,12 @@ class _$_GenderOption extends _GenderOption {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GenderOptionCopyWith<_$_GenderOption> get copyWith =>
-      __$$_GenderOptionCopyWithImpl<_$_GenderOption>(this, _$identity);
+  _$$GenderOptionImplCopyWith<_$GenderOptionImpl> get copyWith =>
+      __$$GenderOptionImplCopyWithImpl<_$GenderOptionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GenderOptionToJson(
+    return _$$GenderOptionImplToJson(
       this,
     );
   }
@@ -153,11 +154,11 @@ class _$_GenderOption extends _GenderOption {
 abstract class _GenderOption extends GenderOption {
   const factory _GenderOption(
       {required final String label,
-      required final String value}) = _$_GenderOption;
+      required final String value}) = _$GenderOptionImpl;
   const _GenderOption._() : super._();
 
   factory _GenderOption.fromJson(Map<String, dynamic> json) =
-      _$_GenderOption.fromJson;
+      _$GenderOptionImpl.fromJson;
 
   @override
   String get label;
@@ -165,7 +166,7 @@ abstract class _GenderOption extends GenderOption {
   String get value;
   @override
   @JsonKey(ignore: true)
-  _$$_GenderOptionCopyWith<_$_GenderOption> get copyWith =>
+  _$$GenderOptionImplCopyWith<_$GenderOptionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -213,22 +214,24 @@ class _$GenderControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_GenderControllerStateCopyWith<$Res>
+abstract class _$$GenderControllerStateImplCopyWith<$Res>
     implements $GenderControllerStateCopyWith<$Res> {
-  factory _$$_GenderControllerStateCopyWith(_$_GenderControllerState value,
-          $Res Function(_$_GenderControllerState) then) =
-      __$$_GenderControllerStateCopyWithImpl<$Res>;
+  factory _$$GenderControllerStateImplCopyWith(
+          _$GenderControllerStateImpl value,
+          $Res Function(_$GenderControllerStateImpl) then) =
+      __$$GenderControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<GenderOption> options});
 }
 
 /// @nodoc
-class __$$_GenderControllerStateCopyWithImpl<$Res>
-    extends _$GenderControllerStateCopyWithImpl<$Res, _$_GenderControllerState>
-    implements _$$_GenderControllerStateCopyWith<$Res> {
-  __$$_GenderControllerStateCopyWithImpl(_$_GenderControllerState _value,
-      $Res Function(_$_GenderControllerState) _then)
+class __$$GenderControllerStateImplCopyWithImpl<$Res>
+    extends _$GenderControllerStateCopyWithImpl<$Res,
+        _$GenderControllerStateImpl>
+    implements _$$GenderControllerStateImplCopyWith<$Res> {
+  __$$GenderControllerStateImplCopyWithImpl(_$GenderControllerStateImpl _value,
+      $Res Function(_$GenderControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -236,7 +239,7 @@ class __$$_GenderControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? options = null,
   }) {
-    return _then(_$_GenderControllerState(
+    return _then(_$GenderControllerStateImpl(
       options: null == options
           ? _value._options
           : options // ignore: cast_nullable_to_non_nullable
@@ -247,8 +250,8 @@ class __$$_GenderControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_GenderControllerState extends _GenderControllerState {
-  const _$_GenderControllerState(
+class _$GenderControllerStateImpl extends _GenderControllerState {
+  const _$GenderControllerStateImpl(
       {final List<GenderOption> options = const <GenderOption>[]})
       : _options = options,
         super._();
@@ -271,7 +274,7 @@ class _$_GenderControllerState extends _GenderControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GenderControllerState &&
+            other is _$GenderControllerStateImpl &&
             const DeepCollectionEquality().equals(other._options, _options));
   }
 
@@ -282,20 +285,20 @@ class _$_GenderControllerState extends _GenderControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GenderControllerStateCopyWith<_$_GenderControllerState> get copyWith =>
-      __$$_GenderControllerStateCopyWithImpl<_$_GenderControllerState>(
-          this, _$identity);
+  _$$GenderControllerStateImplCopyWith<_$GenderControllerStateImpl>
+      get copyWith => __$$GenderControllerStateImplCopyWithImpl<
+          _$GenderControllerStateImpl>(this, _$identity);
 }
 
 abstract class _GenderControllerState extends GenderControllerState {
   const factory _GenderControllerState({final List<GenderOption> options}) =
-      _$_GenderControllerState;
+      _$GenderControllerStateImpl;
   const _GenderControllerState._() : super._();
 
   @override
   List<GenderOption> get options;
   @override
   @JsonKey(ignore: true)
-  _$$_GenderControllerStateCopyWith<_$_GenderControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$GenderControllerStateImplCopyWith<_$GenderControllerStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

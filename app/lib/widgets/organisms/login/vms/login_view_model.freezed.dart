@@ -75,22 +75,22 @@ class _$LoginViewModelStateCopyWithImpl<$Res, $Val extends LoginViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_LoginViewModelStateCopyWith<$Res>
+abstract class _$$LoginViewModelStateImplCopyWith<$Res>
     implements $LoginViewModelStateCopyWith<$Res> {
-  factory _$$_LoginViewModelStateCopyWith(_$_LoginViewModelState value,
-          $Res Function(_$_LoginViewModelState) then) =
-      __$$_LoginViewModelStateCopyWithImpl<$Res>;
+  factory _$$LoginViewModelStateImplCopyWith(_$LoginViewModelStateImpl value,
+          $Res Function(_$LoginViewModelStateImpl) then) =
+      __$$LoginViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy, String email, String password, String serverError});
 }
 
 /// @nodoc
-class __$$_LoginViewModelStateCopyWithImpl<$Res>
-    extends _$LoginViewModelStateCopyWithImpl<$Res, _$_LoginViewModelState>
-    implements _$$_LoginViewModelStateCopyWith<$Res> {
-  __$$_LoginViewModelStateCopyWithImpl(_$_LoginViewModelState _value,
-      $Res Function(_$_LoginViewModelState) _then)
+class __$$LoginViewModelStateImplCopyWithImpl<$Res>
+    extends _$LoginViewModelStateCopyWithImpl<$Res, _$LoginViewModelStateImpl>
+    implements _$$LoginViewModelStateImplCopyWith<$Res> {
+  __$$LoginViewModelStateImplCopyWithImpl(_$LoginViewModelStateImpl _value,
+      $Res Function(_$LoginViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -101,7 +101,7 @@ class __$$_LoginViewModelStateCopyWithImpl<$Res>
     Object? password = null,
     Object? serverError = null,
   }) {
-    return _then(_$_LoginViewModelState(
+    return _then(_$LoginViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -124,8 +124,8 @@ class __$$_LoginViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_LoginViewModelState implements _LoginViewModelState {
-  const _$_LoginViewModelState(
+class _$LoginViewModelStateImpl implements _LoginViewModelState {
+  const _$LoginViewModelStateImpl(
       {this.isBusy = false,
       this.email = '',
       this.password = '',
@@ -153,7 +153,7 @@ class _$_LoginViewModelState implements _LoginViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_LoginViewModelState &&
+            other is _$LoginViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
@@ -169,8 +169,8 @@ class _$_LoginViewModelState implements _LoginViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_LoginViewModelStateCopyWith<_$_LoginViewModelState> get copyWith =>
-      __$$_LoginViewModelStateCopyWithImpl<_$_LoginViewModelState>(
+  _$$LoginViewModelStateImplCopyWith<_$LoginViewModelStateImpl> get copyWith =>
+      __$$LoginViewModelStateImplCopyWithImpl<_$LoginViewModelStateImpl>(
           this, _$identity);
 }
 
@@ -179,7 +179,7 @@ abstract class _LoginViewModelState implements LoginViewModelState {
       {final bool isBusy,
       final String email,
       final String password,
-      final String serverError}) = _$_LoginViewModelState;
+      final String serverError}) = _$LoginViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -191,6 +191,6 @@ abstract class _LoginViewModelState implements LoginViewModelState {
   String get serverError;
   @override
   @JsonKey(ignore: true)
-  _$$_LoginViewModelStateCopyWith<_$_LoginViewModelState> get copyWith =>
+  _$$LoginViewModelStateImplCopyWith<_$LoginViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

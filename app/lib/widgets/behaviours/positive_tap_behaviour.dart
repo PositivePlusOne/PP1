@@ -4,6 +4,7 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PositiveTapBehaviour extends StatefulWidget {
   const PositiveTapBehaviour({
@@ -36,6 +37,7 @@ class PositiveTapBehaviourState extends State<PositiveTapBehaviour> {
   }
 
   void _onTapUp(TapUpDetails details) {
+    HapticFeedback.lightImpact();
     setState(() {
       _isTapped = false;
     });

@@ -108,11 +108,12 @@ class _$SystemControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SystemControllerStateCopyWith<$Res>
+abstract class _$$SystemControllerStateImplCopyWith<$Res>
     implements $SystemControllerStateCopyWith<$Res> {
-  factory _$$_SystemControllerStateCopyWith(_$_SystemControllerState value,
-          $Res Function(_$_SystemControllerState) then) =
-      __$$_SystemControllerStateCopyWithImpl<$Res>;
+  factory _$$SystemControllerStateImplCopyWith(
+          _$SystemControllerStateImpl value,
+          $Res Function(_$SystemControllerStateImpl) then) =
+      __$$SystemControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -127,11 +128,12 @@ abstract class _$$_SystemControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SystemControllerStateCopyWithImpl<$Res>
-    extends _$SystemControllerStateCopyWithImpl<$Res, _$_SystemControllerState>
-    implements _$$_SystemControllerStateCopyWith<$Res> {
-  __$$_SystemControllerStateCopyWithImpl(_$_SystemControllerState _value,
-      $Res Function(_$_SystemControllerState) _then)
+class __$$SystemControllerStateImplCopyWithImpl<$Res>
+    extends _$SystemControllerStateCopyWithImpl<$Res,
+        _$SystemControllerStateImpl>
+    implements _$$SystemControllerStateImplCopyWith<$Res> {
+  __$$SystemControllerStateImplCopyWithImpl(_$SystemControllerStateImpl _value,
+      $Res Function(_$SystemControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -146,7 +148,7 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
     Object? version = freezed,
     Object? buildNumber = freezed,
   }) {
-    return _then(_$_SystemControllerState(
+    return _then(_$SystemControllerStateImpl(
       environment: null == environment
           ? _value.environment
           : environment // ignore: cast_nullable_to_non_nullable
@@ -184,10 +186,10 @@ class __$$_SystemControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SystemControllerState
+class _$SystemControllerStateImpl
     with DiagnosticableTreeMixin
     implements _SystemControllerState {
-  const _$_SystemControllerState(
+  const _$SystemControllerStateImpl(
       {required this.environment,
       required this.showingSemanticsDebugger,
       required this.showingDebugMessages,
@@ -241,7 +243,7 @@ class _$_SystemControllerState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SystemControllerState &&
+            other is _$SystemControllerStateImpl &&
             (identical(other.environment, environment) ||
                 other.environment == environment) &&
             (identical(
@@ -274,9 +276,9 @@ class _$_SystemControllerState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SystemControllerStateCopyWith<_$_SystemControllerState> get copyWith =>
-      __$$_SystemControllerStateCopyWithImpl<_$_SystemControllerState>(
-          this, _$identity);
+  _$$SystemControllerStateImplCopyWith<_$SystemControllerStateImpl>
+      get copyWith => __$$SystemControllerStateImplCopyWithImpl<
+          _$SystemControllerStateImpl>(this, _$identity);
 }
 
 abstract class _SystemControllerState implements SystemControllerState {
@@ -288,7 +290,7 @@ abstract class _SystemControllerState implements SystemControllerState {
       final String? appName,
       final String? packageName,
       final String? version,
-      final String? buildNumber}) = _$_SystemControllerState;
+      final String? buildNumber}) = _$SystemControllerStateImpl;
 
   @override
   SystemEnvironment get environment;
@@ -308,6 +310,6 @@ abstract class _SystemControllerState implements SystemControllerState {
   String? get buildNumber;
   @override
   @JsonKey(ignore: true)
-  _$$_SystemControllerStateCopyWith<_$_SystemControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SystemControllerStateImplCopyWith<_$SystemControllerStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

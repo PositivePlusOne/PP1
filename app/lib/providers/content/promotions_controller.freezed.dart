@@ -37,28 +37,28 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_PromotionsControllerStateCopyWith<$Res> {
-  factory _$$_PromotionsControllerStateCopyWith(
-          _$_PromotionsControllerState value,
-          $Res Function(_$_PromotionsControllerState) then) =
-      __$$_PromotionsControllerStateCopyWithImpl<$Res>;
+abstract class _$$PromotionsControllerStateImplCopyWith<$Res> {
+  factory _$$PromotionsControllerStateImplCopyWith(
+          _$PromotionsControllerStateImpl value,
+          $Res Function(_$PromotionsControllerStateImpl) then) =
+      __$$PromotionsControllerStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_PromotionsControllerStateCopyWithImpl<$Res>
+class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
     extends _$PromotionsControllerStateCopyWithImpl<$Res,
-        _$_PromotionsControllerState>
-    implements _$$_PromotionsControllerStateCopyWith<$Res> {
-  __$$_PromotionsControllerStateCopyWithImpl(
-      _$_PromotionsControllerState _value,
-      $Res Function(_$_PromotionsControllerState) _then)
+        _$PromotionsControllerStateImpl>
+    implements _$$PromotionsControllerStateImplCopyWith<$Res> {
+  __$$PromotionsControllerStateImplCopyWithImpl(
+      _$PromotionsControllerStateImpl _value,
+      $Res Function(_$PromotionsControllerStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_PromotionsControllerState implements _PromotionsControllerState {
-  const _$_PromotionsControllerState();
+class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
+  const _$PromotionsControllerStateImpl();
 
   @override
   String toString() {
@@ -69,7 +69,7 @@ class _$_PromotionsControllerState implements _PromotionsControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PromotionsControllerState);
+            other is _$PromotionsControllerStateImpl);
   }
 
   @override
@@ -77,5 +77,5 @@ class _$_PromotionsControllerState implements _PromotionsControllerState {
 }
 
 abstract class _PromotionsControllerState implements PromotionsControllerState {
-  const factory _PromotionsControllerState() = _$_PromotionsControllerState;
+  const factory _PromotionsControllerState() = _$PromotionsControllerStateImpl;
 }

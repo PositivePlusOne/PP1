@@ -39,29 +39,29 @@ class _$NotificationPreferencesViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_NotificationPreferencesViewModelStateCopyWith<$Res> {
-  factory _$$_NotificationPreferencesViewModelStateCopyWith(
-          _$_NotificationPreferencesViewModelState value,
-          $Res Function(_$_NotificationPreferencesViewModelState) then) =
-      __$$_NotificationPreferencesViewModelStateCopyWithImpl<$Res>;
+abstract class _$$NotificationPreferencesViewModelStateImplCopyWith<$Res> {
+  factory _$$NotificationPreferencesViewModelStateImplCopyWith(
+          _$NotificationPreferencesViewModelStateImpl value,
+          $Res Function(_$NotificationPreferencesViewModelStateImpl) then) =
+      __$$NotificationPreferencesViewModelStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_NotificationPreferencesViewModelStateCopyWithImpl<$Res>
+class __$$NotificationPreferencesViewModelStateImplCopyWithImpl<$Res>
     extends _$NotificationPreferencesViewModelStateCopyWithImpl<$Res,
-        _$_NotificationPreferencesViewModelState>
-    implements _$$_NotificationPreferencesViewModelStateCopyWith<$Res> {
-  __$$_NotificationPreferencesViewModelStateCopyWithImpl(
-      _$_NotificationPreferencesViewModelState _value,
-      $Res Function(_$_NotificationPreferencesViewModelState) _then)
+        _$NotificationPreferencesViewModelStateImpl>
+    implements _$$NotificationPreferencesViewModelStateImplCopyWith<$Res> {
+  __$$NotificationPreferencesViewModelStateImplCopyWithImpl(
+      _$NotificationPreferencesViewModelStateImpl _value,
+      $Res Function(_$NotificationPreferencesViewModelStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_NotificationPreferencesViewModelState
+class _$NotificationPreferencesViewModelStateImpl
     implements _NotificationPreferencesViewModelState {
-  const _$_NotificationPreferencesViewModelState();
+  const _$NotificationPreferencesViewModelStateImpl();
 
   @override
   String toString() {
@@ -72,7 +72,7 @@ class _$_NotificationPreferencesViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationPreferencesViewModelState);
+            other is _$NotificationPreferencesViewModelStateImpl);
   }
 
   @override
@@ -82,5 +82,5 @@ class _$_NotificationPreferencesViewModelState
 abstract class _NotificationPreferencesViewModelState
     implements NotificationPreferencesViewModelState {
   const factory _NotificationPreferencesViewModelState() =
-      _$_NotificationPreferencesViewModelState;
+      _$NotificationPreferencesViewModelStateImpl;
 }

@@ -39,29 +39,29 @@ class _$OnboardingGuidanceViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_OnboardingGuidanceViewModelStateCopyWith<$Res> {
-  factory _$$_OnboardingGuidanceViewModelStateCopyWith(
-          _$_OnboardingGuidanceViewModelState value,
-          $Res Function(_$_OnboardingGuidanceViewModelState) then) =
-      __$$_OnboardingGuidanceViewModelStateCopyWithImpl<$Res>;
+abstract class _$$OnboardingGuidanceViewModelStateImplCopyWith<$Res> {
+  factory _$$OnboardingGuidanceViewModelStateImplCopyWith(
+          _$OnboardingGuidanceViewModelStateImpl value,
+          $Res Function(_$OnboardingGuidanceViewModelStateImpl) then) =
+      __$$OnboardingGuidanceViewModelStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_OnboardingGuidanceViewModelStateCopyWithImpl<$Res>
+class __$$OnboardingGuidanceViewModelStateImplCopyWithImpl<$Res>
     extends _$OnboardingGuidanceViewModelStateCopyWithImpl<$Res,
-        _$_OnboardingGuidanceViewModelState>
-    implements _$$_OnboardingGuidanceViewModelStateCopyWith<$Res> {
-  __$$_OnboardingGuidanceViewModelStateCopyWithImpl(
-      _$_OnboardingGuidanceViewModelState _value,
-      $Res Function(_$_OnboardingGuidanceViewModelState) _then)
+        _$OnboardingGuidanceViewModelStateImpl>
+    implements _$$OnboardingGuidanceViewModelStateImplCopyWith<$Res> {
+  __$$OnboardingGuidanceViewModelStateImplCopyWithImpl(
+      _$OnboardingGuidanceViewModelStateImpl _value,
+      $Res Function(_$OnboardingGuidanceViewModelStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_OnboardingGuidanceViewModelState
+class _$OnboardingGuidanceViewModelStateImpl
     implements _OnboardingGuidanceViewModelState {
-  const _$_OnboardingGuidanceViewModelState();
+  const _$OnboardingGuidanceViewModelStateImpl();
 
   @override
   String toString() {
@@ -72,7 +72,7 @@ class _$_OnboardingGuidanceViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_OnboardingGuidanceViewModelState);
+            other is _$OnboardingGuidanceViewModelStateImpl);
   }
 
   @override
@@ -82,5 +82,5 @@ class _$_OnboardingGuidanceViewModelState
 abstract class _OnboardingGuidanceViewModelState
     implements OnboardingGuidanceViewModelState {
   const factory _OnboardingGuidanceViewModelState() =
-      _$_OnboardingGuidanceViewModelState;
+      _$OnboardingGuidanceViewModelStateImpl;
 }

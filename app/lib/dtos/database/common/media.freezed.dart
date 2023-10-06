@@ -117,9 +117,10 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
 }
 
 /// @nodoc
-abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
-  factory _$$_MediaCopyWith(_$_Media value, $Res Function(_$_Media) then) =
-      __$$_MediaCopyWithImpl<$Res>;
+abstract class _$$MediaImplCopyWith<$Res> implements $MediaCopyWith<$Res> {
+  factory _$$MediaImplCopyWith(
+          _$MediaImpl value, $Res Function(_$MediaImpl) then) =
+      __$$MediaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -135,9 +136,11 @@ abstract class _$$_MediaCopyWith<$Res> implements $MediaCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
-    implements _$$_MediaCopyWith<$Res> {
-  __$$_MediaCopyWithImpl(_$_Media _value, $Res Function(_$_Media) _then)
+class __$$MediaImplCopyWithImpl<$Res>
+    extends _$MediaCopyWithImpl<$Res, _$MediaImpl>
+    implements _$$MediaImplCopyWith<$Res> {
+  __$$MediaImplCopyWithImpl(
+      _$MediaImpl _value, $Res Function(_$MediaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -153,7 +156,7 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
     Object? isSensitive = freezed,
     Object? isPrivate = freezed,
   }) {
-    return _then(_$_Media(
+    return _then(_$MediaImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -190,8 +193,8 @@ class __$$_MediaCopyWithImpl<$Res> extends _$MediaCopyWithImpl<$Res, _$_Media>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Media implements _Media {
-  const _$_Media(
+class _$MediaImpl implements _Media {
+  const _$MediaImpl(
       {this.name = '',
       this.bucketPath = '',
       this.url = '',
@@ -203,8 +206,8 @@ class _$_Media implements _Media {
       this.isPrivate = false})
       : _thumbnails = thumbnails;
 
-  factory _$_Media.fromJson(Map<String, dynamic> json) =>
-      _$$_MediaFromJson(json);
+  factory _$MediaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MediaImplFromJson(json);
 
   @override
   @JsonKey()
@@ -249,7 +252,7 @@ class _$_Media implements _Media {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Media &&
+            other is _$MediaImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.bucketPath, bucketPath) ||
                 other.bucketPath == bucketPath) &&
@@ -282,12 +285,12 @@ class _$_Media implements _Media {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MediaCopyWith<_$_Media> get copyWith =>
-      __$$_MediaCopyWithImpl<_$_Media>(this, _$identity);
+  _$$MediaImplCopyWith<_$MediaImpl> get copyWith =>
+      __$$MediaImplCopyWithImpl<_$MediaImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MediaToJson(
+    return _$$MediaImplToJson(
       this,
     );
   }
@@ -303,9 +306,9 @@ abstract class _Media implements Media {
       final MediaType type,
       final int priority,
       final dynamic isSensitive,
-      final dynamic isPrivate}) = _$_Media;
+      final dynamic isPrivate}) = _$MediaImpl;
 
-  factory _Media.fromJson(Map<String, dynamic> json) = _$_Media.fromJson;
+  factory _Media.fromJson(Map<String, dynamic> json) = _$MediaImpl.fromJson;
 
   @override
   String get name;
@@ -327,7 +330,7 @@ abstract class _Media implements Media {
   dynamic get isPrivate;
   @override
   @JsonKey(ignore: true)
-  _$$_MediaCopyWith<_$_Media> get copyWith =>
+  _$$MediaImplCopyWith<_$MediaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -397,22 +400,22 @@ class _$MediaThumbnailCopyWithImpl<$Res, $Val extends MediaThumbnail>
 }
 
 /// @nodoc
-abstract class _$$_MediaThumbnailCopyWith<$Res>
+abstract class _$$MediaThumbnailImplCopyWith<$Res>
     implements $MediaThumbnailCopyWith<$Res> {
-  factory _$$_MediaThumbnailCopyWith(
-          _$_MediaThumbnail value, $Res Function(_$_MediaThumbnail) then) =
-      __$$_MediaThumbnailCopyWithImpl<$Res>;
+  factory _$$MediaThumbnailImplCopyWith(_$MediaThumbnailImpl value,
+          $Res Function(_$MediaThumbnailImpl) then) =
+      __$$MediaThumbnailImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String bucketPath, String url, int width, int height});
 }
 
 /// @nodoc
-class __$$_MediaThumbnailCopyWithImpl<$Res>
-    extends _$MediaThumbnailCopyWithImpl<$Res, _$_MediaThumbnail>
-    implements _$$_MediaThumbnailCopyWith<$Res> {
-  __$$_MediaThumbnailCopyWithImpl(
-      _$_MediaThumbnail _value, $Res Function(_$_MediaThumbnail) _then)
+class __$$MediaThumbnailImplCopyWithImpl<$Res>
+    extends _$MediaThumbnailCopyWithImpl<$Res, _$MediaThumbnailImpl>
+    implements _$$MediaThumbnailImplCopyWith<$Res> {
+  __$$MediaThumbnailImplCopyWithImpl(
+      _$MediaThumbnailImpl _value, $Res Function(_$MediaThumbnailImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -423,7 +426,7 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
     Object? width = null,
     Object? height = null,
   }) {
-    return _then(_$_MediaThumbnail(
+    return _then(_$MediaThumbnailImpl(
       bucketPath: null == bucketPath
           ? _value.bucketPath
           : bucketPath // ignore: cast_nullable_to_non_nullable
@@ -446,12 +449,12 @@ class __$$_MediaThumbnailCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_MediaThumbnail implements _MediaThumbnail {
-  const _$_MediaThumbnail(
+class _$MediaThumbnailImpl implements _MediaThumbnail {
+  const _$MediaThumbnailImpl(
       {this.bucketPath = '', this.url = '', this.width = -1, this.height = -1});
 
-  factory _$_MediaThumbnail.fromJson(Map<String, dynamic> json) =>
-      _$$_MediaThumbnailFromJson(json);
+  factory _$MediaThumbnailImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MediaThumbnailImplFromJson(json);
 
   @override
   @JsonKey()
@@ -475,7 +478,7 @@ class _$_MediaThumbnail implements _MediaThumbnail {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_MediaThumbnail &&
+            other is _$MediaThumbnailImpl &&
             (identical(other.bucketPath, bucketPath) ||
                 other.bucketPath == bucketPath) &&
             (identical(other.url, url) || other.url == url) &&
@@ -490,12 +493,13 @@ class _$_MediaThumbnail implements _MediaThumbnail {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MediaThumbnailCopyWith<_$_MediaThumbnail> get copyWith =>
-      __$$_MediaThumbnailCopyWithImpl<_$_MediaThumbnail>(this, _$identity);
+  _$$MediaThumbnailImplCopyWith<_$MediaThumbnailImpl> get copyWith =>
+      __$$MediaThumbnailImplCopyWithImpl<_$MediaThumbnailImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MediaThumbnailToJson(
+    return _$$MediaThumbnailImplToJson(
       this,
     );
   }
@@ -506,10 +510,10 @@ abstract class _MediaThumbnail implements MediaThumbnail {
       {final String bucketPath,
       final String url,
       final int width,
-      final int height}) = _$_MediaThumbnail;
+      final int height}) = _$MediaThumbnailImpl;
 
   factory _MediaThumbnail.fromJson(Map<String, dynamic> json) =
-      _$_MediaThumbnail.fromJson;
+      _$MediaThumbnailImpl.fromJson;
 
   @override
   String get bucketPath;
@@ -521,6 +525,6 @@ abstract class _MediaThumbnail implements MediaThumbnail {
   int get height;
   @override
   @JsonKey(ignore: true)
-  _$$_MediaThumbnailCopyWith<_$_MediaThumbnail> get copyWith =>
+  _$$MediaThumbnailImplCopyWith<_$MediaThumbnailImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

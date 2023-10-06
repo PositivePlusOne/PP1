@@ -6,8 +6,9 @@ part of 'feedback_wrapper.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_FeedbackWrapper _$$_FeedbackWrapperFromJson(Map<String, dynamic> json) =>
-    _$_FeedbackWrapper(
+_$FeedbackWrapperImpl _$$FeedbackWrapperImplFromJson(
+        Map<String, dynamic> json) =>
+    _$FeedbackWrapperImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -20,7 +21,8 @@ _$_FeedbackWrapper _$$_FeedbackWrapperFromJson(Map<String, dynamic> json) =>
       content: json['content'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_FeedbackWrapperToJson(_$_FeedbackWrapper instance) =>
+Map<String, dynamic> _$$FeedbackWrapperImplToJson(
+        _$FeedbackWrapperImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'feedbackType': FeedbackType.toJson(instance.feedbackType),

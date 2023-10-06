@@ -50,6 +50,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.topChildren,
     this.onCameraImageTaken,
     this.onFaceDetected,
+    this.previewFile,
     this.cameraNavigation,
     this.overlayWidgets = const [],
     this.takePictureCaption,
@@ -65,6 +66,9 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final Future<void> Function(XFile imagePath)? onCameraImageTaken;
   final void Function(FaceDetectionModel? model)? onFaceDetected;
+
+  // This is useful for when you want to "pause" the camera and show a preview of the image
+  final XFile? previewFile;
 
   final bool useFaceDetection;
 
@@ -464,6 +468,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     // Add a shade to the top and bottom of the screen, leaving a square in the middle
     final Size screenSize = MediaQuery.of(context).size;
     final double smallestSide = screenSize.width < screenSize.height ? screenSize.width : screenSize.height;
+
+    if (widget.previewFile != null) {
+      children.add(Positioned.fill(child: Image.file(File(widget.previewFile!.path), fit: BoxFit.cover)));
+    }
 
     if (widget.displayCameraShade) {
       children.add(Column(

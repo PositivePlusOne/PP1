@@ -184,11 +184,11 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
 }
 
 /// @nodoc
-abstract class _$$_ProfileFormStateCopyWith<$Res>
+abstract class _$$ProfileFormStateImplCopyWith<$Res>
     implements $ProfileFormStateCopyWith<$Res> {
-  factory _$$_ProfileFormStateCopyWith(
-          _$_ProfileFormState value, $Res Function(_$_ProfileFormState) then) =
-      __$$_ProfileFormStateCopyWithImpl<$Res>;
+  factory _$$ProfileFormStateImplCopyWith(_$ProfileFormStateImpl value,
+          $Res Function(_$ProfileFormStateImpl) then) =
+      __$$ProfileFormStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -215,11 +215,11 @@ abstract class _$$_ProfileFormStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProfileFormStateCopyWithImpl<$Res>
-    extends _$ProfileFormStateCopyWithImpl<$Res, _$_ProfileFormState>
-    implements _$$_ProfileFormStateCopyWith<$Res> {
-  __$$_ProfileFormStateCopyWithImpl(
-      _$_ProfileFormState _value, $Res Function(_$_ProfileFormState) _then)
+class __$$ProfileFormStateImplCopyWithImpl<$Res>
+    extends _$ProfileFormStateCopyWithImpl<$Res, _$ProfileFormStateImpl>
+    implements _$$ProfileFormStateImplCopyWith<$Res> {
+  __$$ProfileFormStateImplCopyWithImpl(_$ProfileFormStateImpl _value,
+      $Res Function(_$ProfileFormStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -243,7 +243,7 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
     Object? visibilityFlags = null,
     Object? newProfileImage = freezed,
   }) {
-    return _then(_$_ProfileFormState(
+    return _then(_$ProfileFormStateImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -318,8 +318,8 @@ class __$$_ProfileFormStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileFormState implements _ProfileFormState {
-  const _$_ProfileFormState(
+class _$ProfileFormStateImpl implements _ProfileFormState {
+  const _$ProfileFormStateImpl(
       {required this.name,
       required this.displayName,
       required this.birthday,
@@ -406,7 +406,7 @@ class _$_ProfileFormState implements _ProfileFormState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileFormState &&
+            other is _$ProfileFormStateImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.displayName, displayName) ||
                 other.displayName == displayName) &&
@@ -464,8 +464,9 @@ class _$_ProfileFormState implements _ProfileFormState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileFormStateCopyWith<_$_ProfileFormState> get copyWith =>
-      __$$_ProfileFormStateCopyWithImpl<_$_ProfileFormState>(this, _$identity);
+  _$$ProfileFormStateImplCopyWith<_$ProfileFormStateImpl> get copyWith =>
+      __$$ProfileFormStateImplCopyWithImpl<_$ProfileFormStateImpl>(
+          this, _$identity);
 }
 
 abstract class _ProfileFormState implements ProfileFormState {
@@ -486,7 +487,7 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final bool isBusy,
       required final FormMode formMode,
       required final Map<String, bool> visibilityFlags,
-      required final XFile? newProfileImage}) = _$_ProfileFormState;
+      required final XFile? newProfileImage}) = _$ProfileFormStateImpl;
 
   @override
   String get name;
@@ -524,6 +525,6 @@ abstract class _ProfileFormState implements ProfileFormState {
   XFile? get newProfileImage;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileFormStateCopyWith<_$_ProfileFormState> get copyWith =>
+  _$$ProfileFormStateImplCopyWith<_$ProfileFormStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
