@@ -58,11 +58,19 @@ class GalleryController extends _$GalleryController {
   }
 
   String get userFolderPath {
+    // this means that if you are logged and managing an organisation - you see the gallery of that org
+    // and upload images for that org
     if (state.currentProfileId == null) {
       return '';
     }
 
     return '/users/${state.currentProfileId}';
+    // if you didn't want to do the above and instead wanted to upload to your own folder, you could
+    // choose to show your own gallery and upload to there too (as you are permitted to do so)
+    /*
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    return '/users/${profileController.currentUserId}';
+    */
   }
 
   String get rootGalleryPath {
