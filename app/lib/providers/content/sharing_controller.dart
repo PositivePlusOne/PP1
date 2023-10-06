@@ -101,8 +101,8 @@ class SharingController extends _$SharingController implements ISharingControlle
     };
 
     // returning the message as created with the author and external link
-    final localizations = AppLocalizations.of(context);
-    return (localizations!.post_share_message_title, localizations!.post_share_message_content(displayName, externalLink));
+    final localizations = AppLocalizations.of(context)!;
+    return (localizations.post_share_message_title, localizations.post_share_message_content(displayName, externalLink));
   }
 
   @override

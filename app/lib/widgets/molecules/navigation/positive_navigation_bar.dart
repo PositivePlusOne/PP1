@@ -137,7 +137,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
         routeInfo = const ChatConversationsRoute();
         break;
       case NavigationBarIndex.search:
-        routeInfo = SearchRoute(defaultTab: SearchTab.tags);
+        routeInfo = SearchRoute(defaultTab: SearchTab.posts);
         break;
       case NavigationBarIndex.hub:
       default:
