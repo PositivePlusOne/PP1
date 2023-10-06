@@ -10,16 +10,16 @@ service firebase.storage {
 
     match /users/{userId}/gallery/{allPaths=**} {
       allow read: if true;
-      allow update: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow delete: if request.auth != null && request.auth.uid == userId;
+      allow update: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managed_profiles);
+      allow create: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managed_profiles);
+      allow delete: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managed_profiles);
     }
 
     match /users/{userId}/public/{allPaths=**} {
       allow read: if true;
-      allow update: if request.auth != null && request.auth.uid == userId;
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow delete: if request.auth != null && request.auth.uid == userId;
+      allow update: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managed_profiles);
+      allow create: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managed_profiles);
+      allow delete: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managed_profiles);
     }
 
     match /users/{userId}/private/{allPaths=**} {

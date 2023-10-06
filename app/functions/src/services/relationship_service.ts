@@ -578,11 +578,25 @@ export namespace RelationshipService {
       throw new Error("Relationship does not have a flamelink id");
     }
 
+    // First check to make sure the sender has an auth provider
+    const firebaseAuth = adminApp.auth();
+    const senderIdentity = await firebaseAuth.getUser(sender);
+    if (!senderIdentity) {
+      throw new Error("Sender does not have an identity");
+    }
+
+    const currentManagedProfiles = senderIdentity.customClaims?.managedProfiles ?? [];
+    const newManagedProfiles = [...currentManagedProfiles];
+
     let relationshipManagedFlag = false;
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
           member.canManage = canManage;
+        } else if (canManage) {
+          newManagedProfiles.push(member.memberId);
+        } else {
+          newManagedProfiles.splice(newManagedProfiles.indexOf(member.memberId), 1);
         }
 
         if (member.canManage) {
@@ -594,6 +608,20 @@ export namespace RelationshipService {
     relationship.managed = relationshipManagedFlag;
     relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     resetRelationshipPaginationCache(relationship);
+
+    // Add the new managed profiles to the sender's identity
+    await firebaseAuth.setCustomUserClaims(sender, {
+      managedProfiles: newManagedProfiles,
+    });
+
+    if (canManage) {
+      newManagedProfiles.push(flamelinkId);
+    } else {
+      const index = newManagedProfiles.indexOf(flamelinkId);
+      if (index > -1) {
+        newManagedProfiles.splice(index, 1);
+      }
+    }
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
