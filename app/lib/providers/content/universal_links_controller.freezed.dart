@@ -72,11 +72,11 @@ class _$UniversalLinksStateCopyWithImpl<$Res, $Val extends UniversalLinksState>
 }
 
 /// @nodoc
-abstract class _$$_UniversalLinksStateCopyWith<$Res>
+abstract class _$$UniversalLinksStateImplCopyWith<$Res>
     implements $UniversalLinksStateCopyWith<$Res> {
-  factory _$$_UniversalLinksStateCopyWith(_$_UniversalLinksState value,
-          $Res Function(_$_UniversalLinksState) then) =
-      __$$_UniversalLinksStateCopyWithImpl<$Res>;
+  factory _$$UniversalLinksStateImplCopyWith(_$UniversalLinksStateImpl value,
+          $Res Function(_$UniversalLinksStateImpl) then) =
+      __$$UniversalLinksStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -86,11 +86,11 @@ abstract class _$$_UniversalLinksStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UniversalLinksStateCopyWithImpl<$Res>
-    extends _$UniversalLinksStateCopyWithImpl<$Res, _$_UniversalLinksState>
-    implements _$$_UniversalLinksStateCopyWith<$Res> {
-  __$$_UniversalLinksStateCopyWithImpl(_$_UniversalLinksState _value,
-      $Res Function(_$_UniversalLinksState) _then)
+class __$$UniversalLinksStateImplCopyWithImpl<$Res>
+    extends _$UniversalLinksStateCopyWithImpl<$Res, _$UniversalLinksStateImpl>
+    implements _$$UniversalLinksStateImplCopyWith<$Res> {
+  __$$UniversalLinksStateImplCopyWithImpl(_$UniversalLinksStateImpl _value,
+      $Res Function(_$UniversalLinksStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -100,7 +100,7 @@ class __$$_UniversalLinksStateCopyWithImpl<$Res>
     Object? latestUniversalLink = freezed,
     Object? isUniversalLinkHandled = null,
   }) {
-    return _then(_$_UniversalLinksState(
+    return _then(_$UniversalLinksStateImpl(
       expectedUniversalLinkScheme: null == expectedUniversalLinkScheme
           ? _value.expectedUniversalLinkScheme
           : expectedUniversalLinkScheme // ignore: cast_nullable_to_non_nullable
@@ -119,8 +119,8 @@ class __$$_UniversalLinksStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UniversalLinksState implements _UniversalLinksState {
-  const _$_UniversalLinksState(
+class _$UniversalLinksStateImpl implements _UniversalLinksState {
+  const _$UniversalLinksStateImpl(
       {this.expectedUniversalLinkScheme = 'pp1',
       this.latestUniversalLink,
       this.isUniversalLinkHandled = false});
@@ -143,7 +143,7 @@ class _$_UniversalLinksState implements _UniversalLinksState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UniversalLinksState &&
+            other is _$UniversalLinksStateImpl &&
             (identical(other.expectedUniversalLinkScheme,
                     expectedUniversalLinkScheme) ||
                 other.expectedUniversalLinkScheme ==
@@ -161,8 +161,8 @@ class _$_UniversalLinksState implements _UniversalLinksState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UniversalLinksStateCopyWith<_$_UniversalLinksState> get copyWith =>
-      __$$_UniversalLinksStateCopyWithImpl<_$_UniversalLinksState>(
+  _$$UniversalLinksStateImplCopyWith<_$UniversalLinksStateImpl> get copyWith =>
+      __$$UniversalLinksStateImplCopyWithImpl<_$UniversalLinksStateImpl>(
           this, _$identity);
 }
 
@@ -170,7 +170,7 @@ abstract class _UniversalLinksState implements UniversalLinksState {
   const factory _UniversalLinksState(
       {final String expectedUniversalLinkScheme,
       final Uri? latestUniversalLink,
-      final bool isUniversalLinkHandled}) = _$_UniversalLinksState;
+      final bool isUniversalLinkHandled}) = _$UniversalLinksStateImpl;
 
   @override
   String get expectedUniversalLinkScheme;
@@ -180,6 +180,6 @@ abstract class _UniversalLinksState implements UniversalLinksState {
   bool get isUniversalLinkHandled;
   @override
   @JsonKey(ignore: true)
-  _$$_UniversalLinksStateCopyWith<_$_UniversalLinksState> get copyWith =>
+  _$$UniversalLinksStateImplCopyWith<_$UniversalLinksStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

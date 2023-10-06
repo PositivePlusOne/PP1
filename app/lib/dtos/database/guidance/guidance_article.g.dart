@@ -6,8 +6,9 @@ part of 'guidance_article.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GuidanceArticle _$$_GuidanceArticleFromJson(Map<String, dynamic> json) =>
-    _$_GuidanceArticle(
+_$GuidanceArticleImpl _$$GuidanceArticleImplFromJson(
+        Map<String, dynamic> json) =>
+    _$GuidanceArticleImpl(
       documentId: json['id'] as String,
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
@@ -17,7 +18,8 @@ _$_GuidanceArticle _$$_GuidanceArticleFromJson(Map<String, dynamic> json) =>
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_GuidanceArticleToJson(_$_GuidanceArticle instance) =>
+Map<String, dynamic> _$$GuidanceArticleImplToJson(
+        _$GuidanceArticleImpl instance) =>
     <String, dynamic>{
       'id': instance.documentId,
       'title': instance.title,

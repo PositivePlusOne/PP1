@@ -58,25 +58,25 @@ class _$ActivitiesControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ActivitiesControllerStateCopyWith<$Res>
+abstract class _$$ActivitiesControllerStateImplCopyWith<$Res>
     implements $ActivitiesControllerStateCopyWith<$Res> {
-  factory _$$_ActivitiesControllerStateCopyWith(
-          _$_ActivitiesControllerState value,
-          $Res Function(_$_ActivitiesControllerState) then) =
-      __$$_ActivitiesControllerStateCopyWithImpl<$Res>;
+  factory _$$ActivitiesControllerStateImplCopyWith(
+          _$ActivitiesControllerStateImpl value,
+          $Res Function(_$ActivitiesControllerStateImpl) then) =
+      __$$ActivitiesControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Map<String, Activity> activities});
 }
 
 /// @nodoc
-class __$$_ActivitiesControllerStateCopyWithImpl<$Res>
+class __$$ActivitiesControllerStateImplCopyWithImpl<$Res>
     extends _$ActivitiesControllerStateCopyWithImpl<$Res,
-        _$_ActivitiesControllerState>
-    implements _$$_ActivitiesControllerStateCopyWith<$Res> {
-  __$$_ActivitiesControllerStateCopyWithImpl(
-      _$_ActivitiesControllerState _value,
-      $Res Function(_$_ActivitiesControllerState) _then)
+        _$ActivitiesControllerStateImpl>
+    implements _$$ActivitiesControllerStateImplCopyWith<$Res> {
+  __$$ActivitiesControllerStateImplCopyWithImpl(
+      _$ActivitiesControllerStateImpl _value,
+      $Res Function(_$ActivitiesControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -84,7 +84,7 @@ class __$$_ActivitiesControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? activities = null,
   }) {
-    return _then(_$_ActivitiesControllerState(
+    return _then(_$ActivitiesControllerStateImpl(
       activities: null == activities
           ? _value._activities
           : activities // ignore: cast_nullable_to_non_nullable
@@ -95,8 +95,8 @@ class __$$_ActivitiesControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ActivitiesControllerState implements _ActivitiesControllerState {
-  const _$_ActivitiesControllerState(
+class _$ActivitiesControllerStateImpl implements _ActivitiesControllerState {
+  const _$ActivitiesControllerStateImpl(
       {required final Map<String, Activity> activities})
       : _activities = activities;
 
@@ -117,7 +117,7 @@ class _$_ActivitiesControllerState implements _ActivitiesControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ActivitiesControllerState &&
+            other is _$ActivitiesControllerStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._activities, _activities));
   }
@@ -129,20 +129,20 @@ class _$_ActivitiesControllerState implements _ActivitiesControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ActivitiesControllerStateCopyWith<_$_ActivitiesControllerState>
-      get copyWith => __$$_ActivitiesControllerStateCopyWithImpl<
-          _$_ActivitiesControllerState>(this, _$identity);
+  _$$ActivitiesControllerStateImplCopyWith<_$ActivitiesControllerStateImpl>
+      get copyWith => __$$ActivitiesControllerStateImplCopyWithImpl<
+          _$ActivitiesControllerStateImpl>(this, _$identity);
 }
 
 abstract class _ActivitiesControllerState implements ActivitiesControllerState {
   const factory _ActivitiesControllerState(
           {required final Map<String, Activity> activities}) =
-      _$_ActivitiesControllerState;
+      _$ActivitiesControllerStateImpl;
 
   @override
   Map<String, Activity> get activities;
   @override
   @JsonKey(ignore: true)
-  _$$_ActivitiesControllerStateCopyWith<_$_ActivitiesControllerState>
+  _$$ActivitiesControllerStateImplCopyWith<_$ActivitiesControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -123,11 +123,11 @@ class _$GuidanceCategoryCopyWithImpl<$Res, $Val extends GuidanceCategory>
 }
 
 /// @nodoc
-abstract class _$$_GuidanceCategoryCopyWith<$Res>
+abstract class _$$GuidanceCategoryImplCopyWith<$Res>
     implements $GuidanceCategoryCopyWith<$Res> {
-  factory _$$_GuidanceCategoryCopyWith(
-          _$_GuidanceCategory value, $Res Function(_$_GuidanceCategory) then) =
-      __$$_GuidanceCategoryCopyWithImpl<$Res>;
+  factory _$$GuidanceCategoryImplCopyWith(_$GuidanceCategoryImpl value,
+          $Res Function(_$GuidanceCategoryImpl) then) =
+      __$$GuidanceCategoryImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -145,11 +145,11 @@ abstract class _$$_GuidanceCategoryCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GuidanceCategoryCopyWithImpl<$Res>
-    extends _$GuidanceCategoryCopyWithImpl<$Res, _$_GuidanceCategory>
-    implements _$$_GuidanceCategoryCopyWith<$Res> {
-  __$$_GuidanceCategoryCopyWithImpl(
-      _$_GuidanceCategory _value, $Res Function(_$_GuidanceCategory) _then)
+class __$$GuidanceCategoryImplCopyWithImpl<$Res>
+    extends _$GuidanceCategoryCopyWithImpl<$Res, _$GuidanceCategoryImpl>
+    implements _$$GuidanceCategoryImplCopyWith<$Res> {
+  __$$GuidanceCategoryImplCopyWithImpl(_$GuidanceCategoryImpl _value,
+      $Res Function(_$GuidanceCategoryImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -163,7 +163,7 @@ class __$$_GuidanceCategoryCopyWithImpl<$Res>
     Object? priority = null,
     Object? flMeta = freezed,
   }) {
-    return _then(_$_GuidanceCategory(
+    return _then(_$GuidanceCategoryImpl(
       documentId: null == documentId
           ? _value.documentId
           : documentId // ignore: cast_nullable_to_non_nullable
@@ -198,8 +198,8 @@ class __$$_GuidanceCategoryCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_GuidanceCategory implements _GuidanceCategory {
-  const _$_GuidanceCategory(
+class _$GuidanceCategoryImpl implements _GuidanceCategory {
+  const _$GuidanceCategoryImpl(
       {@JsonKey(name: 'id') required this.documentId,
       this.title = '',
       this.body = '',
@@ -209,8 +209,8 @@ class _$_GuidanceCategory implements _GuidanceCategory {
       this.priority = 0,
       @JsonKey(name: '_fl_meta_') this.flMeta});
 
-  factory _$_GuidanceCategory.fromJson(Map<String, dynamic> json) =>
-      _$$_GuidanceCategoryFromJson(json);
+  factory _$GuidanceCategoryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GuidanceCategoryImplFromJson(json);
 
   @override
   @JsonKey(name: 'id')
@@ -243,7 +243,7 @@ class _$_GuidanceCategory implements _GuidanceCategory {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GuidanceCategory &&
+            other is _$GuidanceCategoryImpl &&
             (identical(other.documentId, documentId) ||
                 other.documentId == documentId) &&
             (identical(other.title, title) || other.title == title) &&
@@ -263,12 +263,13 @@ class _$_GuidanceCategory implements _GuidanceCategory {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GuidanceCategoryCopyWith<_$_GuidanceCategory> get copyWith =>
-      __$$_GuidanceCategoryCopyWithImpl<_$_GuidanceCategory>(this, _$identity);
+  _$$GuidanceCategoryImplCopyWith<_$GuidanceCategoryImpl> get copyWith =>
+      __$$GuidanceCategoryImplCopyWithImpl<_$GuidanceCategoryImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_GuidanceCategoryToJson(
+    return _$$GuidanceCategoryImplToJson(
       this,
     );
   }
@@ -283,10 +284,11 @@ abstract class _GuidanceCategory implements GuidanceCategory {
       @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
       final DocumentReference<Object?>? parent,
       final int priority,
-      @JsonKey(name: '_fl_meta_') final FlMeta? flMeta}) = _$_GuidanceCategory;
+      @JsonKey(name: '_fl_meta_')
+      final FlMeta? flMeta}) = _$GuidanceCategoryImpl;
 
   factory _GuidanceCategory.fromJson(Map<String, dynamic> json) =
-      _$_GuidanceCategory.fromJson;
+      _$GuidanceCategoryImpl.fromJson;
 
   @override
   @JsonKey(name: 'id')
@@ -307,6 +309,6 @@ abstract class _GuidanceCategory implements GuidanceCategory {
   FlMeta? get flMeta;
   @override
   @JsonKey(ignore: true)
-  _$$_GuidanceCategoryCopyWith<_$_GuidanceCategory> get copyWith =>
+  _$$GuidanceCategoryImplCopyWith<_$GuidanceCategoryImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -6,7 +6,7 @@ part of 'fl_meta.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_FlMeta _$$_FlMetaFromJson(Map<String, dynamic> json) => _$_FlMeta(
+_$FlMetaImpl _$$FlMetaImplFromJson(Map<String, dynamic> json) => _$FlMetaImpl(
       createdBy: json['createdBy'] as String?,
       createdDate: dateFromUnknown(json['createdDate']),
       lastModifiedBy: json['lastModifiedBy'] as String?,
@@ -21,7 +21,8 @@ _$_FlMeta _$$_FlMetaFromJson(Map<String, dynamic> json) => _$_FlMeta(
       schemaRefId: json['schemaRefId'] as String?,
     );
 
-Map<String, dynamic> _$$_FlMetaToJson(_$_FlMeta instance) => <String, dynamic>{
+Map<String, dynamic> _$$FlMetaImplToJson(_$FlMetaImpl instance) =>
+    <String, dynamic>{
       'createdBy': instance.createdBy,
       'createdDate': dateToUnknown(instance.createdDate),
       'lastModifiedBy': instance.lastModifiedBy,

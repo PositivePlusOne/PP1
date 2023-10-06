@@ -143,11 +143,11 @@ class _$SearchViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SearchViewModelStateCopyWith<$Res>
+abstract class _$$SearchViewModelStateImplCopyWith<$Res>
     implements $SearchViewModelStateCopyWith<$Res> {
-  factory _$$_SearchViewModelStateCopyWith(_$_SearchViewModelState value,
-          $Res Function(_$_SearchViewModelState) then) =
-      __$$_SearchViewModelStateCopyWithImpl<$Res>;
+  factory _$$SearchViewModelStateImplCopyWith(_$SearchViewModelStateImpl value,
+          $Res Function(_$SearchViewModelStateImpl) then) =
+      __$$SearchViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -167,11 +167,11 @@ abstract class _$$_SearchViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SearchViewModelStateCopyWithImpl<$Res>
-    extends _$SearchViewModelStateCopyWithImpl<$Res, _$_SearchViewModelState>
-    implements _$$_SearchViewModelStateCopyWith<$Res> {
-  __$$_SearchViewModelStateCopyWithImpl(_$_SearchViewModelState _value,
-      $Res Function(_$_SearchViewModelState) _then)
+class __$$SearchViewModelStateImplCopyWithImpl<$Res>
+    extends _$SearchViewModelStateCopyWithImpl<$Res, _$SearchViewModelStateImpl>
+    implements _$$SearchViewModelStateImplCopyWith<$Res> {
+  __$$SearchViewModelStateImplCopyWithImpl(_$SearchViewModelStateImpl _value,
+      $Res Function(_$SearchViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -191,7 +191,7 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
     Object? hasSearchedPosts = null,
     Object? hasSearchedUsers = null,
   }) {
-    return _then(_$_SearchViewModelState(
+    return _then(_$SearchViewModelStateImpl(
       currentTab: null == currentTab
           ? _value.currentTab
           : currentTab // ignore: cast_nullable_to_non_nullable
@@ -250,8 +250,8 @@ class __$$_SearchViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_SearchViewModelState implements _SearchViewModelState {
-  const _$_SearchViewModelState(
+class _$SearchViewModelStateImpl implements _SearchViewModelState {
+  const _$SearchViewModelStateImpl(
       {required this.currentTab,
       this.isBusy = false,
       this.isSearching = false,
@@ -338,7 +338,7 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SearchViewModelState &&
+            other is _$SearchViewModelStateImpl &&
             (identical(other.currentTab, currentTab) ||
                 other.currentTab == currentTab) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
@@ -386,9 +386,10 @@ class _$_SearchViewModelState implements _SearchViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SearchViewModelStateCopyWith<_$_SearchViewModelState> get copyWith =>
-      __$$_SearchViewModelStateCopyWithImpl<_$_SearchViewModelState>(
-          this, _$identity);
+  _$$SearchViewModelStateImplCopyWith<_$SearchViewModelStateImpl>
+      get copyWith =>
+          __$$SearchViewModelStateImplCopyWithImpl<_$SearchViewModelStateImpl>(
+              this, _$identity);
 }
 
 abstract class _SearchViewModelState implements SearchViewModelState {
@@ -405,7 +406,7 @@ abstract class _SearchViewModelState implements SearchViewModelState {
       final String searchTagsCursor,
       final bool hasSearchedTags,
       final bool hasSearchedPosts,
-      final bool hasSearchedUsers}) = _$_SearchViewModelState;
+      final bool hasSearchedUsers}) = _$SearchViewModelStateImpl;
 
   @override
   SearchTab get currentTab;
@@ -435,6 +436,6 @@ abstract class _SearchViewModelState implements SearchViewModelState {
   bool get hasSearchedUsers;
   @override
   @JsonKey(ignore: true)
-  _$$_SearchViewModelStateCopyWith<_$_SearchViewModelState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$SearchViewModelStateImplCopyWith<_$SearchViewModelStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

@@ -83,11 +83,12 @@ class _$DesignControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_DesignControllerStateCopyWith<$Res>
+abstract class _$$DesignControllerStateImplCopyWith<$Res>
     implements $DesignControllerStateCopyWith<$Res> {
-  factory _$$_DesignControllerStateCopyWith(_$_DesignControllerState value,
-          $Res Function(_$_DesignControllerState) then) =
-      __$$_DesignControllerStateCopyWithImpl<$Res>;
+  factory _$$DesignControllerStateImplCopyWith(
+          _$DesignControllerStateImpl value,
+          $Res Function(_$DesignControllerStateImpl) then) =
+      __$$DesignControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DesignTypographyModel typography, DesignColorsModel colors});
@@ -99,11 +100,12 @@ abstract class _$$_DesignControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_DesignControllerStateCopyWithImpl<$Res>
-    extends _$DesignControllerStateCopyWithImpl<$Res, _$_DesignControllerState>
-    implements _$$_DesignControllerStateCopyWith<$Res> {
-  __$$_DesignControllerStateCopyWithImpl(_$_DesignControllerState _value,
-      $Res Function(_$_DesignControllerState) _then)
+class __$$DesignControllerStateImplCopyWithImpl<$Res>
+    extends _$DesignControllerStateCopyWithImpl<$Res,
+        _$DesignControllerStateImpl>
+    implements _$$DesignControllerStateImplCopyWith<$Res> {
+  __$$DesignControllerStateImplCopyWithImpl(_$DesignControllerStateImpl _value,
+      $Res Function(_$DesignControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -112,7 +114,7 @@ class __$$_DesignControllerStateCopyWithImpl<$Res>
     Object? typography = null,
     Object? colors = null,
   }) {
-    return _then(_$_DesignControllerState(
+    return _then(_$DesignControllerStateImpl(
       typography: null == typography
           ? _value.typography
           : typography // ignore: cast_nullable_to_non_nullable
@@ -127,8 +129,8 @@ class __$$_DesignControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_DesignControllerState implements _DesignControllerState {
-  const _$_DesignControllerState(
+class _$DesignControllerStateImpl implements _DesignControllerState {
+  const _$DesignControllerStateImpl(
       {required this.typography, required this.colors});
 
   @override
@@ -145,7 +147,7 @@ class _$_DesignControllerState implements _DesignControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_DesignControllerState &&
+            other is _$DesignControllerStateImpl &&
             (identical(other.typography, typography) ||
                 other.typography == typography) &&
             (identical(other.colors, colors) || other.colors == colors));
@@ -157,15 +159,15 @@ class _$_DesignControllerState implements _DesignControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_DesignControllerStateCopyWith<_$_DesignControllerState> get copyWith =>
-      __$$_DesignControllerStateCopyWithImpl<_$_DesignControllerState>(
-          this, _$identity);
+  _$$DesignControllerStateImplCopyWith<_$DesignControllerStateImpl>
+      get copyWith => __$$DesignControllerStateImplCopyWithImpl<
+          _$DesignControllerStateImpl>(this, _$identity);
 }
 
 abstract class _DesignControllerState implements DesignControllerState {
   const factory _DesignControllerState(
       {required final DesignTypographyModel typography,
-      required final DesignColorsModel colors}) = _$_DesignControllerState;
+      required final DesignColorsModel colors}) = _$DesignControllerStateImpl;
 
   @override
   DesignTypographyModel get typography;
@@ -173,6 +175,6 @@ abstract class _DesignControllerState implements DesignControllerState {
   DesignColorsModel get colors;
   @override
   @JsonKey(ignore: true)
-  _$$_DesignControllerStateCopyWith<_$_DesignControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$DesignControllerStateImplCopyWith<_$DesignControllerStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

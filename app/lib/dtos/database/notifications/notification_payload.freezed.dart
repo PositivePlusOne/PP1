@@ -182,11 +182,11 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
 }
 
 /// @nodoc
-abstract class _$$_NotificationPayloadCopyWith<$Res>
+abstract class _$$NotificationPayloadImplCopyWith<$Res>
     implements $NotificationPayloadCopyWith<$Res> {
-  factory _$$_NotificationPayloadCopyWith(_$_NotificationPayload value,
-          $Res Function(_$_NotificationPayload) then) =
-      __$$_NotificationPayloadCopyWithImpl<$Res>;
+  factory _$$NotificationPayloadImplCopyWith(_$NotificationPayloadImpl value,
+          $Res Function(_$NotificationPayloadImpl) then) =
+      __$$NotificationPayloadImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -222,11 +222,11 @@ abstract class _$$_NotificationPayloadCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_NotificationPayloadCopyWithImpl<$Res>
-    extends _$NotificationPayloadCopyWithImpl<$Res, _$_NotificationPayload>
-    implements _$$_NotificationPayloadCopyWith<$Res> {
-  __$$_NotificationPayloadCopyWithImpl(_$_NotificationPayload _value,
-      $Res Function(_$_NotificationPayload) _then)
+class __$$NotificationPayloadImplCopyWithImpl<$Res>
+    extends _$NotificationPayloadCopyWithImpl<$Res, _$NotificationPayloadImpl>
+    implements _$$NotificationPayloadImplCopyWith<$Res> {
+  __$$NotificationPayloadImplCopyWithImpl(_$NotificationPayloadImpl _value,
+      $Res Function(_$NotificationPayloadImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -244,7 +244,7 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
     Object? action = null,
     Object? priority = null,
   }) {
-    return _then(_$_NotificationPayload(
+    return _then(_$NotificationPayloadImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -295,8 +295,8 @@ class __$$_NotificationPayloadCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_NotificationPayload implements _NotificationPayload {
-  const _$_NotificationPayload(
+class _$NotificationPayloadImpl implements _NotificationPayload {
+  const _$NotificationPayloadImpl(
       {this.id = '',
       @JsonKey(name: 'user_id') this.userId = '',
       this.sender = '',
@@ -322,8 +322,8 @@ class _$_NotificationPayload implements _NotificationPayload {
       this.priority = const NotificationPriority.defaultPriority()})
       : _extraData = extraData;
 
-  factory _$_NotificationPayload.fromJson(Map<String, dynamic> json) =>
-      _$$_NotificationPayloadFromJson(json);
+  factory _$NotificationPayloadImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NotificationPayloadImplFromJson(json);
 
   @override
   @JsonKey()
@@ -378,7 +378,7 @@ class _$_NotificationPayload implements _NotificationPayload {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationPayload &&
+            other is _$NotificationPayloadImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.sender, sender) || other.sender == sender) &&
@@ -414,13 +414,13 @@ class _$_NotificationPayload implements _NotificationPayload {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_NotificationPayloadCopyWith<_$_NotificationPayload> get copyWith =>
-      __$$_NotificationPayloadCopyWithImpl<_$_NotificationPayload>(
+  _$$NotificationPayloadImplCopyWith<_$NotificationPayloadImpl> get copyWith =>
+      __$$NotificationPayloadImplCopyWithImpl<_$NotificationPayloadImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_NotificationPayloadToJson(
+    return _$$NotificationPayloadImplToJson(
       this,
     );
   }
@@ -449,10 +449,10 @@ abstract class _NotificationPayload implements NotificationPayload {
       @JsonKey(
           fromJson: NotificationPriority.fromJson,
           toJson: NotificationPriority.toJson)
-      final NotificationPriority priority}) = _$_NotificationPayload;
+      final NotificationPriority priority}) = _$NotificationPayloadImpl;
 
   factory _NotificationPayload.fromJson(Map<String, dynamic> json) =
-      _$_NotificationPayload.fromJson;
+      _$NotificationPayloadImpl.fromJson;
 
   @override
   String get id;
@@ -488,7 +488,7 @@ abstract class _NotificationPayload implements NotificationPayload {
   NotificationPriority get priority;
   @override
   @JsonKey(ignore: true)
-  _$$_NotificationPayloadCopyWith<_$_NotificationPayload> get copyWith =>
+  _$$NotificationPayloadImplCopyWith<_$NotificationPayloadImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -561,25 +561,28 @@ class _$NotificationPriorityCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_NotificationPriorityLowCopyWith<$Res> {
-  factory _$$_NotificationPriorityLowCopyWith(_$_NotificationPriorityLow value,
-          $Res Function(_$_NotificationPriorityLow) then) =
-      __$$_NotificationPriorityLowCopyWithImpl<$Res>;
+abstract class _$$NotificationPriorityLowImplCopyWith<$Res> {
+  factory _$$NotificationPriorityLowImplCopyWith(
+          _$NotificationPriorityLowImpl value,
+          $Res Function(_$NotificationPriorityLowImpl) then) =
+      __$$NotificationPriorityLowImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_NotificationPriorityLowCopyWithImpl<$Res>
-    extends _$NotificationPriorityCopyWithImpl<$Res, _$_NotificationPriorityLow>
-    implements _$$_NotificationPriorityLowCopyWith<$Res> {
-  __$$_NotificationPriorityLowCopyWithImpl(_$_NotificationPriorityLow _value,
-      $Res Function(_$_NotificationPriorityLow) _then)
+class __$$NotificationPriorityLowImplCopyWithImpl<$Res>
+    extends _$NotificationPriorityCopyWithImpl<$Res,
+        _$NotificationPriorityLowImpl>
+    implements _$$NotificationPriorityLowImplCopyWith<$Res> {
+  __$$NotificationPriorityLowImplCopyWithImpl(
+      _$NotificationPriorityLowImpl _value,
+      $Res Function(_$NotificationPriorityLowImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_NotificationPriorityLow implements _NotificationPriorityLow {
-  const _$_NotificationPriorityLow();
+class _$NotificationPriorityLowImpl implements _NotificationPriorityLow {
+  const _$NotificationPriorityLowImpl();
 
   @override
   String toString() {
@@ -590,7 +593,7 @@ class _$_NotificationPriorityLow implements _NotificationPriorityLow {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationPriorityLow);
+            other is _$NotificationPriorityLowImpl);
   }
 
   @override
@@ -667,32 +670,33 @@ class _$_NotificationPriorityLow implements _NotificationPriorityLow {
 }
 
 abstract class _NotificationPriorityLow implements NotificationPriority {
-  const factory _NotificationPriorityLow() = _$_NotificationPriorityLow;
+  const factory _NotificationPriorityLow() = _$NotificationPriorityLowImpl;
 }
 
 /// @nodoc
-abstract class _$$_NotificationPriorityDefaultCopyWith<$Res> {
-  factory _$$_NotificationPriorityDefaultCopyWith(
-          _$_NotificationPriorityDefault value,
-          $Res Function(_$_NotificationPriorityDefault) then) =
-      __$$_NotificationPriorityDefaultCopyWithImpl<$Res>;
+abstract class _$$NotificationPriorityDefaultImplCopyWith<$Res> {
+  factory _$$NotificationPriorityDefaultImplCopyWith(
+          _$NotificationPriorityDefaultImpl value,
+          $Res Function(_$NotificationPriorityDefaultImpl) then) =
+      __$$NotificationPriorityDefaultImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_NotificationPriorityDefaultCopyWithImpl<$Res>
+class __$$NotificationPriorityDefaultImplCopyWithImpl<$Res>
     extends _$NotificationPriorityCopyWithImpl<$Res,
-        _$_NotificationPriorityDefault>
-    implements _$$_NotificationPriorityDefaultCopyWith<$Res> {
-  __$$_NotificationPriorityDefaultCopyWithImpl(
-      _$_NotificationPriorityDefault _value,
-      $Res Function(_$_NotificationPriorityDefault) _then)
+        _$NotificationPriorityDefaultImpl>
+    implements _$$NotificationPriorityDefaultImplCopyWith<$Res> {
+  __$$NotificationPriorityDefaultImplCopyWithImpl(
+      _$NotificationPriorityDefaultImpl _value,
+      $Res Function(_$NotificationPriorityDefaultImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_NotificationPriorityDefault implements _NotificationPriorityDefault {
-  const _$_NotificationPriorityDefault();
+class _$NotificationPriorityDefaultImpl
+    implements _NotificationPriorityDefault {
+  const _$NotificationPriorityDefaultImpl();
 
   @override
   String toString() {
@@ -703,7 +707,7 @@ class _$_NotificationPriorityDefault implements _NotificationPriorityDefault {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationPriorityDefault);
+            other is _$NotificationPriorityDefaultImpl);
   }
 
   @override
@@ -780,31 +784,33 @@ class _$_NotificationPriorityDefault implements _NotificationPriorityDefault {
 }
 
 abstract class _NotificationPriorityDefault implements NotificationPriority {
-  const factory _NotificationPriorityDefault() = _$_NotificationPriorityDefault;
+  const factory _NotificationPriorityDefault() =
+      _$NotificationPriorityDefaultImpl;
 }
 
 /// @nodoc
-abstract class _$$_NotificationPriorityHighCopyWith<$Res> {
-  factory _$$_NotificationPriorityHighCopyWith(
-          _$_NotificationPriorityHigh value,
-          $Res Function(_$_NotificationPriorityHigh) then) =
-      __$$_NotificationPriorityHighCopyWithImpl<$Res>;
+abstract class _$$NotificationPriorityHighImplCopyWith<$Res> {
+  factory _$$NotificationPriorityHighImplCopyWith(
+          _$NotificationPriorityHighImpl value,
+          $Res Function(_$NotificationPriorityHighImpl) then) =
+      __$$NotificationPriorityHighImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_NotificationPriorityHighCopyWithImpl<$Res>
+class __$$NotificationPriorityHighImplCopyWithImpl<$Res>
     extends _$NotificationPriorityCopyWithImpl<$Res,
-        _$_NotificationPriorityHigh>
-    implements _$$_NotificationPriorityHighCopyWith<$Res> {
-  __$$_NotificationPriorityHighCopyWithImpl(_$_NotificationPriorityHigh _value,
-      $Res Function(_$_NotificationPriorityHigh) _then)
+        _$NotificationPriorityHighImpl>
+    implements _$$NotificationPriorityHighImplCopyWith<$Res> {
+  __$$NotificationPriorityHighImplCopyWithImpl(
+      _$NotificationPriorityHighImpl _value,
+      $Res Function(_$NotificationPriorityHighImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_NotificationPriorityHigh implements _NotificationPriorityHigh {
-  const _$_NotificationPriorityHigh();
+class _$NotificationPriorityHighImpl implements _NotificationPriorityHigh {
+  const _$NotificationPriorityHighImpl();
 
   @override
   String toString() {
@@ -815,7 +821,7 @@ class _$_NotificationPriorityHigh implements _NotificationPriorityHigh {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_NotificationPriorityHigh);
+            other is _$NotificationPriorityHighImpl);
   }
 
   @override
@@ -892,5 +898,5 @@ class _$_NotificationPriorityHigh implements _NotificationPriorityHigh {
 }
 
 abstract class _NotificationPriorityHigh implements NotificationPriority {
-  const factory _NotificationPriorityHigh() = _$_NotificationPriorityHigh;
+  const factory _NotificationPriorityHigh() = _$NotificationPriorityHighImpl;
 }

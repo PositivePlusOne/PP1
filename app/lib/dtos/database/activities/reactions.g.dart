@@ -6,7 +6,8 @@ part of 'reactions.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Reaction _$$_ReactionFromJson(Map<String, dynamic> json) => _$_Reaction(
+_$ReactionImpl _$$ReactionImplFromJson(Map<String, dynamic> json) =>
+    _$ReactionImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -23,7 +24,7 @@ _$_Reaction _$$_ReactionFromJson(Map<String, dynamic> json) => _$_Reaction(
               const [],
     );
 
-Map<String, dynamic> _$$_ReactionToJson(_$_Reaction instance) =>
+Map<String, dynamic> _$$ReactionImplToJson(_$ReactionImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'activity_id': instance.activityId,
@@ -35,9 +36,9 @@ Map<String, dynamic> _$$_ReactionToJson(_$_Reaction instance) =>
       'tags': instance.tags,
     };
 
-_$_ReactionStatistics _$$_ReactionStatisticsFromJson(
+_$ReactionStatisticsImpl _$$ReactionStatisticsImplFromJson(
         Map<String, dynamic> json) =>
-    _$_ReactionStatistics(
+    _$ReactionStatisticsImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -50,8 +51,8 @@ _$_ReactionStatistics _$$_ReactionStatisticsFromJson(
       userId: json['user_id'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_ReactionStatisticsToJson(
-        _$_ReactionStatistics instance) =>
+Map<String, dynamic> _$$ReactionStatisticsImplToJson(
+        _$ReactionStatisticsImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'counts': instance.counts,
@@ -60,13 +61,13 @@ Map<String, dynamic> _$$_ReactionStatisticsToJson(
       'user_id': instance.userId,
     };
 
-_$_TargetFeed _$$_TargetFeedFromJson(Map<String, dynamic> json) =>
-    _$_TargetFeed(
+_$TargetFeedImpl _$$TargetFeedImplFromJson(Map<String, dynamic> json) =>
+    _$TargetFeedImpl(
       targetSlug: json['targetSlug'] as String? ?? '',
       targetUserId: json['targetUserId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_TargetFeedToJson(_$_TargetFeed instance) =>
+Map<String, dynamic> _$$TargetFeedImplToJson(_$TargetFeedImpl instance) =>
     <String, dynamic>{
       'targetSlug': instance.targetSlug,
       'targetUserId': instance.targetUserId,

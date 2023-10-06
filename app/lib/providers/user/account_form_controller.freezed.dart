@@ -117,11 +117,11 @@ class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
 }
 
 /// @nodoc
-abstract class _$$_AccountFormStateCopyWith<$Res>
+abstract class _$$AccountFormStateImplCopyWith<$Res>
     implements $AccountFormStateCopyWith<$Res> {
-  factory _$$_AccountFormStateCopyWith(
-          _$_AccountFormState value, $Res Function(_$_AccountFormState) then) =
-      __$$_AccountFormStateCopyWithImpl<$Res>;
+  factory _$$AccountFormStateImplCopyWith(_$AccountFormStateImpl value,
+          $Res Function(_$AccountFormStateImpl) then) =
+      __$$AccountFormStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -139,11 +139,11 @@ abstract class _$$_AccountFormStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountFormStateCopyWithImpl<$Res>
-    extends _$AccountFormStateCopyWithImpl<$Res, _$_AccountFormState>
-    implements _$$_AccountFormStateCopyWith<$Res> {
-  __$$_AccountFormStateCopyWithImpl(
-      _$_AccountFormState _value, $Res Function(_$_AccountFormState) _then)
+class __$$AccountFormStateImplCopyWithImpl<$Res>
+    extends _$AccountFormStateCopyWithImpl<$Res, _$AccountFormStateImpl>
+    implements _$$AccountFormStateImplCopyWith<$Res> {
+  __$$AccountFormStateImplCopyWithImpl(_$AccountFormStateImpl _value,
+      $Res Function(_$AccountFormStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -158,7 +158,7 @@ class __$$_AccountFormStateCopyWithImpl<$Res>
     Object? formMode = null,
     Object? editTarget = null,
   }) {
-    return _then(_$_AccountFormState(
+    return _then(_$AccountFormStateImpl(
       emailAddress: null == emailAddress
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
@@ -197,8 +197,8 @@ class __$$_AccountFormStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountFormState implements _AccountFormState {
-  const _$_AccountFormState(
+class _$AccountFormStateImpl implements _AccountFormState {
+  const _$AccountFormStateImpl(
       {required this.emailAddress,
       required this.password,
       required this.country,
@@ -234,7 +234,7 @@ class _$_AccountFormState implements _AccountFormState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AccountFormState &&
+            other is _$AccountFormStateImpl &&
             (identical(other.emailAddress, emailAddress) ||
                 other.emailAddress == emailAddress) &&
             (identical(other.password, password) ||
@@ -257,8 +257,9 @@ class _$_AccountFormState implements _AccountFormState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountFormStateCopyWith<_$_AccountFormState> get copyWith =>
-      __$$_AccountFormStateCopyWithImpl<_$_AccountFormState>(this, _$identity);
+  _$$AccountFormStateImplCopyWith<_$AccountFormStateImpl> get copyWith =>
+      __$$AccountFormStateImplCopyWithImpl<_$AccountFormStateImpl>(
+          this, _$identity);
 }
 
 abstract class _AccountFormState implements AccountFormState {
@@ -270,7 +271,7 @@ abstract class _AccountFormState implements AccountFormState {
       required final String pin,
       required final bool isBusy,
       required final FormMode formMode,
-      required final AccountEditTarget editTarget}) = _$_AccountFormState;
+      required final AccountEditTarget editTarget}) = _$AccountFormStateImpl;
 
   @override
   String get emailAddress;
@@ -290,6 +291,6 @@ abstract class _AccountFormState implements AccountFormState {
   AccountEditTarget get editTarget;
   @override
   @JsonKey(ignore: true)
-  _$$_AccountFormStateCopyWith<_$_AccountFormState> get copyWith =>
+  _$$AccountFormStateImplCopyWith<_$AccountFormStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -90,12 +90,12 @@ class _$AccountPreferencesViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AccountPreferencesViewModelStateCopyWith<$Res>
+abstract class _$$AccountPreferencesViewModelStateImplCopyWith<$Res>
     implements $AccountPreferencesViewModelStateCopyWith<$Res> {
-  factory _$$_AccountPreferencesViewModelStateCopyWith(
-          _$_AccountPreferencesViewModelState value,
-          $Res Function(_$_AccountPreferencesViewModelState) then) =
-      __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>;
+  factory _$$AccountPreferencesViewModelStateImplCopyWith(
+          _$AccountPreferencesViewModelStateImpl value,
+          $Res Function(_$AccountPreferencesViewModelStateImpl) then) =
+      __$$AccountPreferencesViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -107,13 +107,13 @@ abstract class _$$_AccountPreferencesViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
+class __$$AccountPreferencesViewModelStateImplCopyWithImpl<$Res>
     extends _$AccountPreferencesViewModelStateCopyWithImpl<$Res,
-        _$_AccountPreferencesViewModelState>
-    implements _$$_AccountPreferencesViewModelStateCopyWith<$Res> {
-  __$$_AccountPreferencesViewModelStateCopyWithImpl(
-      _$_AccountPreferencesViewModelState _value,
-      $Res Function(_$_AccountPreferencesViewModelState) _then)
+        _$AccountPreferencesViewModelStateImpl>
+    implements _$$AccountPreferencesViewModelStateImplCopyWith<$Res> {
+  __$$AccountPreferencesViewModelStateImplCopyWithImpl(
+      _$AccountPreferencesViewModelStateImpl _value,
+      $Res Function(_$AccountPreferencesViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -125,7 +125,7 @@ class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
     Object? areBiometricsEnabled = null,
     Object? areMarketingEmailsEnabled = null,
   }) {
-    return _then(_$_AccountPreferencesViewModelState(
+    return _then(_$AccountPreferencesViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -152,9 +152,9 @@ class __$$_AccountPreferencesViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountPreferencesViewModelState
+class _$AccountPreferencesViewModelStateImpl
     implements _AccountPreferencesViewModelState {
-  const _$_AccountPreferencesViewModelState(
+  const _$AccountPreferencesViewModelStateImpl(
       {this.isBusy = false,
       final Set<String> notificationSubscribedTopics = const {},
       this.isIncognitoEnabled = false,
@@ -194,7 +194,7 @@ class _$_AccountPreferencesViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AccountPreferencesViewModelState &&
+            other is _$AccountPreferencesViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             const DeepCollectionEquality().equals(
                 other._notificationSubscribedTopics,
@@ -220,10 +220,10 @@ class _$_AccountPreferencesViewModelState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountPreferencesViewModelStateCopyWith<
-          _$_AccountPreferencesViewModelState>
-      get copyWith => __$$_AccountPreferencesViewModelStateCopyWithImpl<
-          _$_AccountPreferencesViewModelState>(this, _$identity);
+  _$$AccountPreferencesViewModelStateImplCopyWith<
+          _$AccountPreferencesViewModelStateImpl>
+      get copyWith => __$$AccountPreferencesViewModelStateImplCopyWithImpl<
+          _$AccountPreferencesViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _AccountPreferencesViewModelState
@@ -234,7 +234,7 @@ abstract class _AccountPreferencesViewModelState
           final bool isIncognitoEnabled,
           final bool areBiometricsEnabled,
           final bool areMarketingEmailsEnabled}) =
-      _$_AccountPreferencesViewModelState;
+      _$AccountPreferencesViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -248,7 +248,7 @@ abstract class _AccountPreferencesViewModelState
   bool get areMarketingEmailsEnabled;
   @override
   @JsonKey(ignore: true)
-  _$$_AccountPreferencesViewModelStateCopyWith<
-          _$_AccountPreferencesViewModelState>
+  _$$AccountPreferencesViewModelStateImplCopyWith<
+          _$AccountPreferencesViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -81,11 +81,11 @@ class _$CacheRecordCopyWithImpl<$Res, $Val extends CacheRecord>
 }
 
 /// @nodoc
-abstract class _$$_CacheRecordCopyWith<$Res>
+abstract class _$$CacheRecordImplCopyWith<$Res>
     implements $CacheRecordCopyWith<$Res> {
-  factory _$$_CacheRecordCopyWith(
-          _$_CacheRecord value, $Res Function(_$_CacheRecord) then) =
-      __$$_CacheRecordCopyWithImpl<$Res>;
+  factory _$$CacheRecordImplCopyWith(
+          _$CacheRecordImpl value, $Res Function(_$CacheRecordImpl) then) =
+      __$$CacheRecordImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String key, Object value, FlMeta metadata});
@@ -95,11 +95,11 @@ abstract class _$$_CacheRecordCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CacheRecordCopyWithImpl<$Res>
-    extends _$CacheRecordCopyWithImpl<$Res, _$_CacheRecord>
-    implements _$$_CacheRecordCopyWith<$Res> {
-  __$$_CacheRecordCopyWithImpl(
-      _$_CacheRecord _value, $Res Function(_$_CacheRecord) _then)
+class __$$CacheRecordImplCopyWithImpl<$Res>
+    extends _$CacheRecordCopyWithImpl<$Res, _$CacheRecordImpl>
+    implements _$$CacheRecordImplCopyWith<$Res> {
+  __$$CacheRecordImplCopyWithImpl(
+      _$CacheRecordImpl _value, $Res Function(_$CacheRecordImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -109,7 +109,7 @@ class __$$_CacheRecordCopyWithImpl<$Res>
     Object? value = null,
     Object? metadata = null,
   }) {
-    return _then(_$_CacheRecord(
+    return _then(_$CacheRecordImpl(
       key: null == key
           ? _value.key
           : key // ignore: cast_nullable_to_non_nullable
@@ -125,12 +125,12 @@ class __$$_CacheRecordCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_CacheRecord implements _CacheRecord {
-  const _$_CacheRecord(
+class _$CacheRecordImpl implements _CacheRecord {
+  const _$CacheRecordImpl(
       {required this.key, required this.value, required this.metadata});
 
-  factory _$_CacheRecord.fromJson(Map<String, dynamic> json) =>
-      _$$_CacheRecordFromJson(json);
+  factory _$CacheRecordImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CacheRecordImplFromJson(json);
 
   @override
   final String key;
@@ -148,7 +148,7 @@ class _$_CacheRecord implements _CacheRecord {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CacheRecord &&
+            other is _$CacheRecordImpl &&
             (identical(other.key, key) || other.key == key) &&
             const DeepCollectionEquality().equals(other.value, value) &&
             (identical(other.metadata, metadata) ||
@@ -163,12 +163,12 @@ class _$_CacheRecord implements _CacheRecord {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CacheRecordCopyWith<_$_CacheRecord> get copyWith =>
-      __$$_CacheRecordCopyWithImpl<_$_CacheRecord>(this, _$identity);
+  _$$CacheRecordImplCopyWith<_$CacheRecordImpl> get copyWith =>
+      __$$CacheRecordImplCopyWithImpl<_$CacheRecordImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CacheRecordToJson(
+    return _$$CacheRecordImplToJson(
       this,
     );
   }
@@ -178,10 +178,10 @@ abstract class _CacheRecord implements CacheRecord {
   const factory _CacheRecord(
       {required final String key,
       required final Object value,
-      required final FlMeta metadata}) = _$_CacheRecord;
+      required final FlMeta metadata}) = _$CacheRecordImpl;
 
   factory _CacheRecord.fromJson(Map<String, dynamic> json) =
-      _$_CacheRecord.fromJson;
+      _$CacheRecordImpl.fromJson;
 
   @override
   String get key;
@@ -191,6 +191,6 @@ abstract class _CacheRecord implements CacheRecord {
   FlMeta get metadata;
   @override
   @JsonKey(ignore: true)
-  _$$_CacheRecordCopyWith<_$_CacheRecord> get copyWith =>
+  _$$CacheRecordImplCopyWith<_$CacheRecordImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

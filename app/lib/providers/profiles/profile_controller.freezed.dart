@@ -78,11 +78,12 @@ class _$ProfileControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfileControllerStateCopyWith<$Res>
+abstract class _$$ProfileControllerStateImplCopyWith<$Res>
     implements $ProfileControllerStateCopyWith<$Res> {
-  factory _$$_ProfileControllerStateCopyWith(_$_ProfileControllerState value,
-          $Res Function(_$_ProfileControllerState) then) =
-      __$$_ProfileControllerStateCopyWithImpl<$Res>;
+  factory _$$ProfileControllerStateImplCopyWith(
+          _$ProfileControllerStateImpl value,
+          $Res Function(_$ProfileControllerStateImpl) then) =
+      __$$ProfileControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Profile? currentProfile, Set<String> availableProfileIds});
@@ -92,12 +93,13 @@ abstract class _$$_ProfileControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProfileControllerStateCopyWithImpl<$Res>
+class __$$ProfileControllerStateImplCopyWithImpl<$Res>
     extends _$ProfileControllerStateCopyWithImpl<$Res,
-        _$_ProfileControllerState>
-    implements _$$_ProfileControllerStateCopyWith<$Res> {
-  __$$_ProfileControllerStateCopyWithImpl(_$_ProfileControllerState _value,
-      $Res Function(_$_ProfileControllerState) _then)
+        _$ProfileControllerStateImpl>
+    implements _$$ProfileControllerStateImplCopyWith<$Res> {
+  __$$ProfileControllerStateImplCopyWithImpl(
+      _$ProfileControllerStateImpl _value,
+      $Res Function(_$ProfileControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -106,7 +108,7 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
     Object? currentProfile = freezed,
     Object? availableProfileIds = null,
   }) {
-    return _then(_$_ProfileControllerState(
+    return _then(_$ProfileControllerStateImpl(
       currentProfile: freezed == currentProfile
           ? _value.currentProfile
           : currentProfile // ignore: cast_nullable_to_non_nullable
@@ -121,8 +123,8 @@ class __$$_ProfileControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileControllerState implements _ProfileControllerState {
-  const _$_ProfileControllerState(
+class _$ProfileControllerStateImpl implements _ProfileControllerState {
+  const _$ProfileControllerStateImpl(
       {this.currentProfile, final Set<String> availableProfileIds = const {}})
       : _availableProfileIds = availableProfileIds;
 
@@ -147,7 +149,7 @@ class _$_ProfileControllerState implements _ProfileControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileControllerState &&
+            other is _$ProfileControllerStateImpl &&
             (identical(other.currentProfile, currentProfile) ||
                 other.currentProfile == currentProfile) &&
             const DeepCollectionEquality()
@@ -161,15 +163,15 @@ class _$_ProfileControllerState implements _ProfileControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>
-      __$$_ProfileControllerStateCopyWithImpl<_$_ProfileControllerState>(
-          this, _$identity);
+  _$$ProfileControllerStateImplCopyWith<_$ProfileControllerStateImpl>
+      get copyWith => __$$ProfileControllerStateImplCopyWithImpl<
+          _$ProfileControllerStateImpl>(this, _$identity);
 }
 
 abstract class _ProfileControllerState implements ProfileControllerState {
   const factory _ProfileControllerState(
       {final Profile? currentProfile,
-      final Set<String> availableProfileIds}) = _$_ProfileControllerState;
+      final Set<String> availableProfileIds}) = _$ProfileControllerStateImpl;
 
   @override
   Profile? get currentProfile;
@@ -177,6 +179,6 @@ abstract class _ProfileControllerState implements ProfileControllerState {
   Set<String> get availableProfileIds;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileControllerStateCopyWith<_$_ProfileControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ProfileControllerStateImplCopyWith<_$ProfileControllerStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

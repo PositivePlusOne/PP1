@@ -79,11 +79,11 @@ class _$TagsControllerStateCopyWithImpl<$Res, $Val extends TagsControllerState>
 }
 
 /// @nodoc
-abstract class _$$_TagsControllerStateCopyWith<$Res>
+abstract class _$$TagsControllerStateImplCopyWith<$Res>
     implements $TagsControllerStateCopyWith<$Res> {
-  factory _$$_TagsControllerStateCopyWith(_$_TagsControllerState value,
-          $Res Function(_$_TagsControllerState) then) =
-      __$$_TagsControllerStateCopyWithImpl<$Res>;
+  factory _$$TagsControllerStateImplCopyWith(_$TagsControllerStateImpl value,
+          $Res Function(_$TagsControllerStateImpl) then) =
+      __$$TagsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -94,11 +94,11 @@ abstract class _$$_TagsControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TagsControllerStateCopyWithImpl<$Res>
-    extends _$TagsControllerStateCopyWithImpl<$Res, _$_TagsControllerState>
-    implements _$$_TagsControllerStateCopyWith<$Res> {
-  __$$_TagsControllerStateCopyWithImpl(_$_TagsControllerState _value,
-      $Res Function(_$_TagsControllerState) _then)
+class __$$TagsControllerStateImplCopyWithImpl<$Res>
+    extends _$TagsControllerStateCopyWithImpl<$Res, _$TagsControllerStateImpl>
+    implements _$$TagsControllerStateImplCopyWith<$Res> {
+  __$$TagsControllerStateImplCopyWithImpl(_$TagsControllerStateImpl _value,
+      $Res Function(_$TagsControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -109,7 +109,7 @@ class __$$_TagsControllerStateCopyWithImpl<$Res>
     Object? recentTags = null,
     Object? topicTags = null,
   }) {
-    return _then(_$_TagsControllerState(
+    return _then(_$TagsControllerStateImpl(
       allTags: null == allTags
           ? _value.allTags
           : allTags // ignore: cast_nullable_to_non_nullable
@@ -132,8 +132,8 @@ class __$$_TagsControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TagsControllerState implements _TagsControllerState {
-  const _$_TagsControllerState(
+class _$TagsControllerStateImpl implements _TagsControllerState {
+  const _$TagsControllerStateImpl(
       {required this.allTags,
       required this.popularTags,
       required this.recentTags,
@@ -157,7 +157,7 @@ class _$_TagsControllerState implements _TagsControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TagsControllerState &&
+            other is _$TagsControllerStateImpl &&
             const DeepCollectionEquality().equals(other.allTags, allTags) &&
             const DeepCollectionEquality()
                 .equals(other.popularTags, popularTags) &&
@@ -177,17 +177,18 @@ class _$_TagsControllerState implements _TagsControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TagsControllerStateCopyWith<_$_TagsControllerState> get copyWith =>
-      __$$_TagsControllerStateCopyWithImpl<_$_TagsControllerState>(
+  _$$TagsControllerStateImplCopyWith<_$TagsControllerStateImpl> get copyWith =>
+      __$$TagsControllerStateImplCopyWithImpl<_$TagsControllerStateImpl>(
           this, _$identity);
 }
 
 abstract class _TagsControllerState implements TagsControllerState {
   const factory _TagsControllerState(
-      {required final HashMap<String, Tag> allTags,
-      required final HashMap<String, Tag> popularTags,
-      required final HashMap<String, Tag> recentTags,
-      required final HashMap<String, Tag> topicTags}) = _$_TagsControllerState;
+          {required final HashMap<String, Tag> allTags,
+          required final HashMap<String, Tag> popularTags,
+          required final HashMap<String, Tag> recentTags,
+          required final HashMap<String, Tag> topicTags}) =
+      _$TagsControllerStateImpl;
 
   @override
   HashMap<String, Tag> get allTags;
@@ -199,6 +200,6 @@ abstract class _TagsControllerState implements TagsControllerState {
   HashMap<String, Tag> get topicTags;
   @override
   @JsonKey(ignore: true)
-  _$$_TagsControllerStateCopyWith<_$_TagsControllerState> get copyWith =>
+  _$$TagsControllerStateImplCopyWith<_$TagsControllerStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

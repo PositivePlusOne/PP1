@@ -39,29 +39,29 @@ class _$OnboardingWelcomeViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_OnboardingWelcomeViewModelStateCopyWith<$Res> {
-  factory _$$_OnboardingWelcomeViewModelStateCopyWith(
-          _$_OnboardingWelcomeViewModelState value,
-          $Res Function(_$_OnboardingWelcomeViewModelState) then) =
-      __$$_OnboardingWelcomeViewModelStateCopyWithImpl<$Res>;
+abstract class _$$OnboardingWelcomeViewModelStateImplCopyWith<$Res> {
+  factory _$$OnboardingWelcomeViewModelStateImplCopyWith(
+          _$OnboardingWelcomeViewModelStateImpl value,
+          $Res Function(_$OnboardingWelcomeViewModelStateImpl) then) =
+      __$$OnboardingWelcomeViewModelStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_OnboardingWelcomeViewModelStateCopyWithImpl<$Res>
+class __$$OnboardingWelcomeViewModelStateImplCopyWithImpl<$Res>
     extends _$OnboardingWelcomeViewModelStateCopyWithImpl<$Res,
-        _$_OnboardingWelcomeViewModelState>
-    implements _$$_OnboardingWelcomeViewModelStateCopyWith<$Res> {
-  __$$_OnboardingWelcomeViewModelStateCopyWithImpl(
-      _$_OnboardingWelcomeViewModelState _value,
-      $Res Function(_$_OnboardingWelcomeViewModelState) _then)
+        _$OnboardingWelcomeViewModelStateImpl>
+    implements _$$OnboardingWelcomeViewModelStateImplCopyWith<$Res> {
+  __$$OnboardingWelcomeViewModelStateImplCopyWithImpl(
+      _$OnboardingWelcomeViewModelStateImpl _value,
+      $Res Function(_$OnboardingWelcomeViewModelStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_OnboardingWelcomeViewModelState
+class _$OnboardingWelcomeViewModelStateImpl
     implements _OnboardingWelcomeViewModelState {
-  const _$_OnboardingWelcomeViewModelState();
+  const _$OnboardingWelcomeViewModelStateImpl();
 
   @override
   String toString() {
@@ -72,7 +72,7 @@ class _$_OnboardingWelcomeViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_OnboardingWelcomeViewModelState);
+            other is _$OnboardingWelcomeViewModelStateImpl);
   }
 
   @override
@@ -82,5 +82,5 @@ class _$_OnboardingWelcomeViewModelState
 abstract class _OnboardingWelcomeViewModelState
     implements OnboardingWelcomeViewModelState {
   const factory _OnboardingWelcomeViewModelState() =
-      _$_OnboardingWelcomeViewModelState;
+      _$OnboardingWelcomeViewModelStateImpl;
 }

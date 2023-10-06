@@ -6,7 +6,7 @@ part of 'media.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
+_$MediaImpl _$$MediaImplFromJson(Map<String, dynamic> json) => _$MediaImpl(
       name: json['name'] as String? ?? '',
       bucketPath: json['bucketPath'] as String? ?? '',
       url: json['url'] as String? ?? '',
@@ -22,7 +22,8 @@ _$_Media _$$_MediaFromJson(Map<String, dynamic> json) => _$_Media(
       isPrivate: json['isPrivate'] ?? false,
     );
 
-Map<String, dynamic> _$$_MediaToJson(_$_Media instance) => <String, dynamic>{
+Map<String, dynamic> _$$MediaImplToJson(_$MediaImpl instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'bucketPath': instance.bucketPath,
       'url': instance.url,
@@ -44,15 +45,16 @@ const _$MediaTypeEnumMap = {
   MediaType.bucket_path: 'bucket_path',
 };
 
-_$_MediaThumbnail _$$_MediaThumbnailFromJson(Map<String, dynamic> json) =>
-    _$_MediaThumbnail(
+_$MediaThumbnailImpl _$$MediaThumbnailImplFromJson(Map<String, dynamic> json) =>
+    _$MediaThumbnailImpl(
       bucketPath: json['bucketPath'] as String? ?? '',
       url: json['url'] as String? ?? '',
       width: json['width'] as int? ?? -1,
       height: json['height'] as int? ?? -1,
     );
 
-Map<String, dynamic> _$$_MediaThumbnailToJson(_$_MediaThumbnail instance) =>
+Map<String, dynamic> _$$MediaThumbnailImplToJson(
+        _$MediaThumbnailImpl instance) =>
     <String, dynamic>{
       'bucketPath': instance.bucketPath,
       'url': instance.url,

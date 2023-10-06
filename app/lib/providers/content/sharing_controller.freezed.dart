@@ -37,26 +37,28 @@ class _$SharingControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_SharingControllerStateCopyWith<$Res> {
-  factory _$$_SharingControllerStateCopyWith(_$_SharingControllerState value,
-          $Res Function(_$_SharingControllerState) then) =
-      __$$_SharingControllerStateCopyWithImpl<$Res>;
+abstract class _$$SharingControllerStateImplCopyWith<$Res> {
+  factory _$$SharingControllerStateImplCopyWith(
+          _$SharingControllerStateImpl value,
+          $Res Function(_$SharingControllerStateImpl) then) =
+      __$$SharingControllerStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_SharingControllerStateCopyWithImpl<$Res>
+class __$$SharingControllerStateImplCopyWithImpl<$Res>
     extends _$SharingControllerStateCopyWithImpl<$Res,
-        _$_SharingControllerState>
-    implements _$$_SharingControllerStateCopyWith<$Res> {
-  __$$_SharingControllerStateCopyWithImpl(_$_SharingControllerState _value,
-      $Res Function(_$_SharingControllerState) _then)
+        _$SharingControllerStateImpl>
+    implements _$$SharingControllerStateImplCopyWith<$Res> {
+  __$$SharingControllerStateImplCopyWithImpl(
+      _$SharingControllerStateImpl _value,
+      $Res Function(_$SharingControllerStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_SharingControllerState implements _SharingControllerState {
-  const _$_SharingControllerState();
+class _$SharingControllerStateImpl implements _SharingControllerState {
+  const _$SharingControllerStateImpl();
 
   @override
   String toString() {
@@ -67,7 +69,7 @@ class _$_SharingControllerState implements _SharingControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_SharingControllerState);
+            other is _$SharingControllerStateImpl);
   }
 
   @override
@@ -75,5 +77,5 @@ class _$_SharingControllerState implements _SharingControllerState {
 }
 
 abstract class _SharingControllerState implements SharingControllerState {
-  const factory _SharingControllerState() = _$_SharingControllerState;
+  const factory _SharingControllerState() = _$SharingControllerStateImpl;
 }

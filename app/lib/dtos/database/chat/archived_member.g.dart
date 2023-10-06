@@ -6,8 +6,8 @@ part of 'archived_member.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_ArchivedMember _$$_ArchivedMemberFromJson(Map<String, dynamic> json) =>
-    _$_ArchivedMember(
+_$ArchivedMemberImpl _$$ArchivedMemberImplFromJson(Map<String, dynamic> json) =>
+    _$ArchivedMemberImpl(
       memberId: json['member_id'] as String?,
       dateArchived: json['date_archived'] == null
           ? null
@@ -15,7 +15,8 @@ _$_ArchivedMember _$$_ArchivedMemberFromJson(Map<String, dynamic> json) =>
       lastMessageId: json['last_message_id'] as String?,
     );
 
-Map<String, dynamic> _$$_ArchivedMemberToJson(_$_ArchivedMember instance) =>
+Map<String, dynamic> _$$ArchivedMemberImplToJson(
+        _$ArchivedMemberImpl instance) =>
     <String, dynamic>{
       'member_id': instance.memberId,
       'date_archived': instance.dateArchived?.toIso8601String(),

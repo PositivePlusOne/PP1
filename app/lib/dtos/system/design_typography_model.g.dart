@@ -6,9 +6,9 @@ part of 'design_typography_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_DesignTypographyModel _$$_DesignTypographyModelFromJson(
+_$DesignTypographyModelImpl _$$DesignTypographyModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$_DesignTypographyModel(
+    _$DesignTypographyModelImpl(
       styleHero: textStyleFromJson(json['styleHero'] as Map<String, dynamic>),
       styleHeroMedium:
           textStyleFromJson(json['styleHeroMedium'] as Map<String, dynamic>),
@@ -40,8 +40,8 @@ _$_DesignTypographyModel _$$_DesignTypographyModelFromJson(
           textStyleFromJson(json['styleNotification'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_DesignTypographyModelToJson(
-        _$_DesignTypographyModel instance) =>
+Map<String, dynamic> _$$DesignTypographyModelImplToJson(
+        _$DesignTypographyModelImpl instance) =>
     <String, dynamic>{
       'styleHero': textStyleToJson(instance.styleHero),
       'styleHeroMedium': textStyleToJson(instance.styleHeroMedium),

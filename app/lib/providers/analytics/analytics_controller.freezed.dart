@@ -37,27 +37,28 @@ class _$AnalyticsControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AnalyticsControllerStateCopyWith<$Res> {
-  factory _$$_AnalyticsControllerStateCopyWith(
-          _$_AnalyticsControllerState value,
-          $Res Function(_$_AnalyticsControllerState) then) =
-      __$$_AnalyticsControllerStateCopyWithImpl<$Res>;
+abstract class _$$AnalyticsControllerStateImplCopyWith<$Res> {
+  factory _$$AnalyticsControllerStateImplCopyWith(
+          _$AnalyticsControllerStateImpl value,
+          $Res Function(_$AnalyticsControllerStateImpl) then) =
+      __$$AnalyticsControllerStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_AnalyticsControllerStateCopyWithImpl<$Res>
+class __$$AnalyticsControllerStateImplCopyWithImpl<$Res>
     extends _$AnalyticsControllerStateCopyWithImpl<$Res,
-        _$_AnalyticsControllerState>
-    implements _$$_AnalyticsControllerStateCopyWith<$Res> {
-  __$$_AnalyticsControllerStateCopyWithImpl(_$_AnalyticsControllerState _value,
-      $Res Function(_$_AnalyticsControllerState) _then)
+        _$AnalyticsControllerStateImpl>
+    implements _$$AnalyticsControllerStateImplCopyWith<$Res> {
+  __$$AnalyticsControllerStateImplCopyWithImpl(
+      _$AnalyticsControllerStateImpl _value,
+      $Res Function(_$AnalyticsControllerStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_AnalyticsControllerState implements _AnalyticsControllerState {
-  const _$_AnalyticsControllerState();
+class _$AnalyticsControllerStateImpl implements _AnalyticsControllerState {
+  const _$AnalyticsControllerStateImpl();
 
   @override
   String toString() {
@@ -68,7 +69,7 @@ class _$_AnalyticsControllerState implements _AnalyticsControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AnalyticsControllerState);
+            other is _$AnalyticsControllerStateImpl);
   }
 
   @override
@@ -76,5 +77,5 @@ class _$_AnalyticsControllerState implements _AnalyticsControllerState {
 }
 
 abstract class _AnalyticsControllerState implements AnalyticsControllerState {
-  const factory _AnalyticsControllerState() = _$_AnalyticsControllerState;
+  const factory _AnalyticsControllerState() = _$AnalyticsControllerStateImpl;
 }

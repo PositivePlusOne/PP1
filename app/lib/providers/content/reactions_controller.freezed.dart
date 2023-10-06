@@ -37,27 +37,28 @@ class _$ReactionsControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ReactionsControllerStateCopyWith<$Res> {
-  factory _$$_ReactionsControllerStateCopyWith(
-          _$_ReactionsControllerState value,
-          $Res Function(_$_ReactionsControllerState) then) =
-      __$$_ReactionsControllerStateCopyWithImpl<$Res>;
+abstract class _$$ReactionsControllerStateImplCopyWith<$Res> {
+  factory _$$ReactionsControllerStateImplCopyWith(
+          _$ReactionsControllerStateImpl value,
+          $Res Function(_$ReactionsControllerStateImpl) then) =
+      __$$ReactionsControllerStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_ReactionsControllerStateCopyWithImpl<$Res>
+class __$$ReactionsControllerStateImplCopyWithImpl<$Res>
     extends _$ReactionsControllerStateCopyWithImpl<$Res,
-        _$_ReactionsControllerState>
-    implements _$$_ReactionsControllerStateCopyWith<$Res> {
-  __$$_ReactionsControllerStateCopyWithImpl(_$_ReactionsControllerState _value,
-      $Res Function(_$_ReactionsControllerState) _then)
+        _$ReactionsControllerStateImpl>
+    implements _$$ReactionsControllerStateImplCopyWith<$Res> {
+  __$$ReactionsControllerStateImplCopyWithImpl(
+      _$ReactionsControllerStateImpl _value,
+      $Res Function(_$ReactionsControllerStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_ReactionsControllerState implements _ReactionsControllerState {
-  const _$_ReactionsControllerState();
+class _$ReactionsControllerStateImpl implements _ReactionsControllerState {
+  const _$ReactionsControllerStateImpl();
 
   @override
   String toString() {
@@ -68,7 +69,7 @@ class _$_ReactionsControllerState implements _ReactionsControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReactionsControllerState);
+            other is _$ReactionsControllerStateImpl);
   }
 
   @override
@@ -76,5 +77,5 @@ class _$_ReactionsControllerState implements _ReactionsControllerState {
 }
 
 abstract class _ReactionsControllerState implements ReactionsControllerState {
-  const factory _ReactionsControllerState() = _$_ReactionsControllerState;
+  const factory _ReactionsControllerState() = _$ReactionsControllerStateImpl;
 }

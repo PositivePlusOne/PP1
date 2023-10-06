@@ -118,11 +118,11 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
 }
 
 /// @nodoc
-abstract class _$$_ChatViewModelStateCopyWith<$Res>
+abstract class _$$ChatViewModelStateImplCopyWith<$Res>
     implements $ChatViewModelStateCopyWith<$Res> {
-  factory _$$_ChatViewModelStateCopyWith(_$_ChatViewModelState value,
-          $Res Function(_$_ChatViewModelState) then) =
-      __$$_ChatViewModelStateCopyWithImpl<$Res>;
+  factory _$$ChatViewModelStateImplCopyWith(_$ChatViewModelStateImpl value,
+          $Res Function(_$ChatViewModelStateImpl) then) =
+      __$$ChatViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -139,11 +139,11 @@ abstract class _$$_ChatViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ChatViewModelStateCopyWithImpl<$Res>
-    extends _$ChatViewModelStateCopyWithImpl<$Res, _$_ChatViewModelState>
-    implements _$$_ChatViewModelStateCopyWith<$Res> {
-  __$$_ChatViewModelStateCopyWithImpl(
-      _$_ChatViewModelState _value, $Res Function(_$_ChatViewModelState) _then)
+class __$$ChatViewModelStateImplCopyWithImpl<$Res>
+    extends _$ChatViewModelStateCopyWithImpl<$Res, _$ChatViewModelStateImpl>
+    implements _$$ChatViewModelStateImplCopyWith<$Res> {
+  __$$ChatViewModelStateImplCopyWithImpl(_$ChatViewModelStateImpl _value,
+      $Res Function(_$ChatViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -157,7 +157,7 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
     Object? currentChannelExtraData = freezed,
     Object? selectedMembers = null,
   }) {
-    return _then(_$_ChatViewModelState(
+    return _then(_$ChatViewModelStateImpl(
       lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
           ? _value.lastRelationshipsUpdated
           : lastRelationshipsUpdated // ignore: cast_nullable_to_non_nullable
@@ -192,8 +192,8 @@ class __$$_ChatViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ChatViewModelState implements _ChatViewModelState {
-  const _$_ChatViewModelState(
+class _$ChatViewModelStateImpl implements _ChatViewModelState {
+  const _$ChatViewModelStateImpl(
       {this.lastRelationshipsUpdated,
       this.lastChannelsUpdated,
       this.searchQuery = '',
@@ -236,7 +236,7 @@ class _$_ChatViewModelState implements _ChatViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ChatViewModelState &&
+            other is _$ChatViewModelStateImpl &&
             (identical(
                     other.lastRelationshipsUpdated, lastRelationshipsUpdated) ||
                 other.lastRelationshipsUpdated == lastRelationshipsUpdated) &&
@@ -270,8 +270,8 @@ class _$_ChatViewModelState implements _ChatViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ChatViewModelStateCopyWith<_$_ChatViewModelState> get copyWith =>
-      __$$_ChatViewModelStateCopyWithImpl<_$_ChatViewModelState>(
+  _$$ChatViewModelStateImplCopyWith<_$ChatViewModelStateImpl> get copyWith =>
+      __$$ChatViewModelStateImplCopyWithImpl<_$ChatViewModelStateImpl>(
           this, _$identity);
 }
 
@@ -283,7 +283,7 @@ abstract class _ChatViewModelState implements ChatViewModelState {
       final DateTime? currentChannelLastUpdated,
       final Channel? currentChannel,
       final ChannelExtraData? currentChannelExtraData,
-      final List<String> selectedMembers}) = _$_ChatViewModelState;
+      final List<String> selectedMembers}) = _$ChatViewModelStateImpl;
 
   @override // Chat List Properties
   DateTime? get lastRelationshipsUpdated;
@@ -301,6 +301,6 @@ abstract class _ChatViewModelState implements ChatViewModelState {
   List<String> get selectedMembers;
   @override
   @JsonKey(ignore: true)
-  _$$_ChatViewModelStateCopyWith<_$_ChatViewModelState> get copyWith =>
+  _$$ChatViewModelStateImplCopyWith<_$ChatViewModelStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

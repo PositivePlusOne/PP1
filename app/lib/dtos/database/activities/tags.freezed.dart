@@ -136,9 +136,9 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
-  factory _$$_TagCopyWith(_$_Tag value, $Res Function(_$_Tag) then) =
-      __$$_TagCopyWithImpl<$Res>;
+abstract class _$$TagImplCopyWith<$Res> implements $TagCopyWith<$Res> {
+  factory _$$TagImplCopyWith(_$TagImpl value, $Res Function(_$TagImpl) then) =
+      __$$TagImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -160,9 +160,9 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
-    implements _$$_TagCopyWith<$Res> {
-  __$$_TagCopyWithImpl(_$_Tag _value, $Res Function(_$_Tag) _then)
+class __$$TagImplCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$TagImpl>
+    implements _$$TagImplCopyWith<$Res> {
+  __$$TagImplCopyWithImpl(_$TagImpl _value, $Res Function(_$TagImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -176,7 +176,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
     Object? localizations = null,
     Object? topic = freezed,
   }) {
-    return _then(_$_Tag(
+    return _then(_$TagImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -211,8 +211,8 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Tag implements _Tag {
-  const _$_Tag(
+class _$TagImpl implements _Tag {
+  const _$TagImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.key = '',
       this.fallback = '',
@@ -225,7 +225,8 @@ class _$_Tag implements _Tag {
       this.topic})
       : _localizations = localizations;
 
-  factory _$_Tag.fromJson(Map<String, dynamic> json) => _$$_TagFromJson(json);
+  factory _$TagImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TagImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -265,7 +266,7 @@ class _$_Tag implements _Tag {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Tag &&
+            other is _$TagImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.key, key) || other.key == key) &&
             (identical(other.fallback, fallback) ||
@@ -294,12 +295,12 @@ class _$_Tag implements _Tag {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TagCopyWith<_$_Tag> get copyWith =>
-      __$$_TagCopyWithImpl<_$_Tag>(this, _$identity);
+  _$$TagImplCopyWith<_$TagImpl> get copyWith =>
+      __$$TagImplCopyWithImpl<_$TagImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TagToJson(
+    return _$$TagImplToJson(
       this,
     );
   }
@@ -316,9 +317,9 @@ abstract class _Tag implements Tag {
           fromJson: TagLocalization.fromJsonLocalizations,
           toJson: TagLocalization.toJsonLocalizations)
       final List<TagLocalization> localizations,
-      final TagTopic? topic}) = _$_Tag;
+      final TagTopic? topic}) = _$TagImpl;
 
-  factory _Tag.fromJson(Map<String, dynamic> json) = _$_Tag.fromJson;
+  factory _Tag.fromJson(Map<String, dynamic> json) = _$TagImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -340,7 +341,8 @@ abstract class _Tag implements Tag {
   TagTopic? get topic;
   @override
   @JsonKey(ignore: true)
-  _$$_TagCopyWith<_$_Tag> get copyWith => throw _privateConstructorUsedError;
+  _$$TagImplCopyWith<_$TagImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 TagLocalization _$TagLocalizationFromJson(Map<String, dynamic> json) {
@@ -397,22 +399,22 @@ class _$TagLocalizationCopyWithImpl<$Res, $Val extends TagLocalization>
 }
 
 /// @nodoc
-abstract class _$$_TagLocalizationCopyWith<$Res>
+abstract class _$$TagLocalizationImplCopyWith<$Res>
     implements $TagLocalizationCopyWith<$Res> {
-  factory _$$_TagLocalizationCopyWith(
-          _$_TagLocalization value, $Res Function(_$_TagLocalization) then) =
-      __$$_TagLocalizationCopyWithImpl<$Res>;
+  factory _$$TagLocalizationImplCopyWith(_$TagLocalizationImpl value,
+          $Res Function(_$TagLocalizationImpl) then) =
+      __$$TagLocalizationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String locale, String value});
 }
 
 /// @nodoc
-class __$$_TagLocalizationCopyWithImpl<$Res>
-    extends _$TagLocalizationCopyWithImpl<$Res, _$_TagLocalization>
-    implements _$$_TagLocalizationCopyWith<$Res> {
-  __$$_TagLocalizationCopyWithImpl(
-      _$_TagLocalization _value, $Res Function(_$_TagLocalization) _then)
+class __$$TagLocalizationImplCopyWithImpl<$Res>
+    extends _$TagLocalizationCopyWithImpl<$Res, _$TagLocalizationImpl>
+    implements _$$TagLocalizationImplCopyWith<$Res> {
+  __$$TagLocalizationImplCopyWithImpl(
+      _$TagLocalizationImpl _value, $Res Function(_$TagLocalizationImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -421,7 +423,7 @@ class __$$_TagLocalizationCopyWithImpl<$Res>
     Object? locale = null,
     Object? value = null,
   }) {
-    return _then(_$_TagLocalization(
+    return _then(_$TagLocalizationImpl(
       locale: null == locale
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
@@ -436,11 +438,11 @@ class __$$_TagLocalizationCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TagLocalization implements _TagLocalization {
-  const _$_TagLocalization({this.locale = '', this.value = ''});
+class _$TagLocalizationImpl implements _TagLocalization {
+  const _$TagLocalizationImpl({this.locale = '', this.value = ''});
 
-  factory _$_TagLocalization.fromJson(Map<String, dynamic> json) =>
-      _$$_TagLocalizationFromJson(json);
+  factory _$TagLocalizationImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TagLocalizationImplFromJson(json);
 
   @override
   @JsonKey()
@@ -458,7 +460,7 @@ class _$_TagLocalization implements _TagLocalization {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TagLocalization &&
+            other is _$TagLocalizationImpl &&
             (identical(other.locale, locale) || other.locale == locale) &&
             (identical(other.value, value) || other.value == value));
   }
@@ -470,12 +472,13 @@ class _$_TagLocalization implements _TagLocalization {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TagLocalizationCopyWith<_$_TagLocalization> get copyWith =>
-      __$$_TagLocalizationCopyWithImpl<_$_TagLocalization>(this, _$identity);
+  _$$TagLocalizationImplCopyWith<_$TagLocalizationImpl> get copyWith =>
+      __$$TagLocalizationImplCopyWithImpl<_$TagLocalizationImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TagLocalizationToJson(
+    return _$$TagLocalizationImplToJson(
       this,
     );
   }
@@ -483,10 +486,10 @@ class _$_TagLocalization implements _TagLocalization {
 
 abstract class _TagLocalization implements TagLocalization {
   const factory _TagLocalization({final String locale, final String value}) =
-      _$_TagLocalization;
+      _$TagLocalizationImpl;
 
   factory _TagLocalization.fromJson(Map<String, dynamic> json) =
-      _$_TagLocalization.fromJson;
+      _$TagLocalizationImpl.fromJson;
 
   @override
   String get locale;
@@ -494,7 +497,7 @@ abstract class _TagLocalization implements TagLocalization {
   String get value;
   @override
   @JsonKey(ignore: true)
-  _$$_TagLocalizationCopyWith<_$_TagLocalization> get copyWith =>
+  _$$TagLocalizationImplCopyWith<_$TagLocalizationImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -566,10 +569,11 @@ class _$TagTopicCopyWithImpl<$Res, $Val extends TagTopic>
 }
 
 /// @nodoc
-abstract class _$$_TagTopicCopyWith<$Res> implements $TagTopicCopyWith<$Res> {
-  factory _$$_TagTopicCopyWith(
-          _$_TagTopic value, $Res Function(_$_TagTopic) then) =
-      __$$_TagTopicCopyWithImpl<$Res>;
+abstract class _$$TagTopicImplCopyWith<$Res>
+    implements $TagTopicCopyWith<$Res> {
+  factory _$$TagTopicImplCopyWith(
+          _$TagTopicImpl value, $Res Function(_$TagTopicImpl) then) =
+      __$$TagTopicImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -582,11 +586,11 @@ abstract class _$$_TagTopicCopyWith<$Res> implements $TagTopicCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_TagTopicCopyWithImpl<$Res>
-    extends _$TagTopicCopyWithImpl<$Res, _$_TagTopic>
-    implements _$$_TagTopicCopyWith<$Res> {
-  __$$_TagTopicCopyWithImpl(
-      _$_TagTopic _value, $Res Function(_$_TagTopic) _then)
+class __$$TagTopicImplCopyWithImpl<$Res>
+    extends _$TagTopicCopyWithImpl<$Res, _$TagTopicImpl>
+    implements _$$TagTopicImplCopyWith<$Res> {
+  __$$TagTopicImplCopyWithImpl(
+      _$TagTopicImpl _value, $Res Function(_$TagTopicImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -596,7 +600,7 @@ class __$$_TagTopicCopyWithImpl<$Res>
     Object? localizations = null,
     Object? isEnabled = null,
   }) {
-    return _then(_$_TagTopic(
+    return _then(_$TagTopicImpl(
       fallback: null == fallback
           ? _value.fallback
           : fallback // ignore: cast_nullable_to_non_nullable
@@ -615,8 +619,8 @@ class __$$_TagTopicCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_TagTopic implements _TagTopic {
-  const _$_TagTopic(
+class _$TagTopicImpl implements _TagTopic {
+  const _$TagTopicImpl(
       {this.fallback = '',
       @JsonKey(
           fromJson: TagLocalization.fromJsonLocalizations,
@@ -625,8 +629,8 @@ class _$_TagTopic implements _TagTopic {
       this.isEnabled = false})
       : _localizations = localizations;
 
-  factory _$_TagTopic.fromJson(Map<String, dynamic> json) =>
-      _$$_TagTopicFromJson(json);
+  factory _$TagTopicImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TagTopicImplFromJson(json);
 
   @override
   @JsonKey()
@@ -655,7 +659,7 @@ class _$_TagTopic implements _TagTopic {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_TagTopic &&
+            other is _$TagTopicImpl &&
             (identical(other.fallback, fallback) ||
                 other.fallback == fallback) &&
             const DeepCollectionEquality()
@@ -672,12 +676,12 @@ class _$_TagTopic implements _TagTopic {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_TagTopicCopyWith<_$_TagTopic> get copyWith =>
-      __$$_TagTopicCopyWithImpl<_$_TagTopic>(this, _$identity);
+  _$$TagTopicImplCopyWith<_$TagTopicImpl> get copyWith =>
+      __$$TagTopicImplCopyWithImpl<_$TagTopicImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_TagTopicToJson(
+    return _$$TagTopicImplToJson(
       this,
     );
   }
@@ -690,9 +694,10 @@ abstract class _TagTopic implements TagTopic {
           fromJson: TagLocalization.fromJsonLocalizations,
           toJson: TagLocalization.toJsonLocalizations)
       final List<TagLocalization> localizations,
-      final bool isEnabled}) = _$_TagTopic;
+      final bool isEnabled}) = _$TagTopicImpl;
 
-  factory _TagTopic.fromJson(Map<String, dynamic> json) = _$_TagTopic.fromJson;
+  factory _TagTopic.fromJson(Map<String, dynamic> json) =
+      _$TagTopicImpl.fromJson;
 
   @override
   String get fallback;
@@ -705,6 +710,6 @@ abstract class _TagTopic implements TagTopic {
   bool get isEnabled;
   @override
   @JsonKey(ignore: true)
-  _$$_TagTopicCopyWith<_$_TagTopic> get copyWith =>
+  _$$TagTopicImplCopyWith<_$TagTopicImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

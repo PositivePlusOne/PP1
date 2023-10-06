@@ -212,10 +212,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
 }
 
 /// @nodoc
-abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
-  factory _$$_ProfileCopyWith(
-          _$_Profile value, $Res Function(_$_Profile) then) =
-      __$$_ProfileCopyWithImpl<$Res>;
+abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
+  factory _$$ProfileImplCopyWith(
+          _$ProfileImpl value, $Res Function(_$ProfileImpl) then) =
+      __$$ProfileImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -245,10 +245,11 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ProfileCopyWithImpl<$Res>
-    extends _$ProfileCopyWithImpl<$Res, _$_Profile>
-    implements _$$_ProfileCopyWith<$Res> {
-  __$$_ProfileCopyWithImpl(_$_Profile _value, $Res Function(_$_Profile) _then)
+class __$$ProfileImplCopyWithImpl<$Res>
+    extends _$ProfileCopyWithImpl<$Res, _$ProfileImpl>
+    implements _$$ProfileImplCopyWith<$Res> {
+  __$$ProfileImplCopyWithImpl(
+      _$ProfileImpl _value, $Res Function(_$ProfileImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -273,7 +274,7 @@ class __$$_ProfileCopyWithImpl<$Res>
     Object? biography = null,
     Object? media = null,
   }) {
-    return _then(_$_Profile(
+    return _then(_$ProfileImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -352,8 +353,8 @@ class __$$_ProfileCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Profile implements _Profile {
-  const _$_Profile(
+class _$ProfileImpl implements _Profile {
+  const _$ProfileImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.email = '',
       this.phoneNumber = '',
@@ -382,8 +383,8 @@ class _$_Profile implements _Profile {
         _featureFlags = featureFlags,
         _media = media;
 
-  factory _$_Profile.fromJson(Map<String, dynamic> json) =>
-      _$$_ProfileFromJson(json);
+  factory _$ProfileImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProfileImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -477,7 +478,7 @@ class _$_Profile implements _Profile {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Profile &&
+            other is _$ProfileImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phoneNumber, phoneNumber) ||
@@ -535,12 +536,12 @@ class _$_Profile implements _Profile {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileCopyWith<_$_Profile> get copyWith =>
-      __$$_ProfileCopyWithImpl<_$_Profile>(this, _$identity);
+  _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>
+      __$$ProfileImplCopyWithImpl<_$ProfileImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProfileToJson(
+    return _$$ProfileImplToJson(
       this,
     );
   }
@@ -565,9 +566,9 @@ abstract class _Profile implements Profile {
       final bool placeSkipped,
       final PositivePlace? place,
       final String biography,
-      final List<Media> media}) = _$_Profile;
+      final List<Media> media}) = _$ProfileImpl;
 
-  factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
+  factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -612,7 +613,7 @@ abstract class _Profile implements Profile {
   List<Media> get media;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileCopyWith<_$_Profile> get copyWith =>
+  _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -694,11 +695,11 @@ class _$ProfileStatisticsCopyWithImpl<$Res, $Val extends ProfileStatistics>
 }
 
 /// @nodoc
-abstract class _$$_ProfileStatisticsCopyWith<$Res>
+abstract class _$$ProfileStatisticsImplCopyWith<$Res>
     implements $ProfileStatisticsCopyWith<$Res> {
-  factory _$$_ProfileStatisticsCopyWith(_$_ProfileStatistics value,
-          $Res Function(_$_ProfileStatistics) then) =
-      __$$_ProfileStatisticsCopyWithImpl<$Res>;
+  factory _$$ProfileStatisticsImplCopyWith(_$ProfileStatisticsImpl value,
+          $Res Function(_$ProfileStatisticsImpl) then) =
+      __$$ProfileStatisticsImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -711,11 +712,11 @@ abstract class _$$_ProfileStatisticsCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProfileStatisticsCopyWithImpl<$Res>
-    extends _$ProfileStatisticsCopyWithImpl<$Res, _$_ProfileStatistics>
-    implements _$$_ProfileStatisticsCopyWith<$Res> {
-  __$$_ProfileStatisticsCopyWithImpl(
-      _$_ProfileStatistics _value, $Res Function(_$_ProfileStatistics) _then)
+class __$$ProfileStatisticsImplCopyWithImpl<$Res>
+    extends _$ProfileStatisticsCopyWithImpl<$Res, _$ProfileStatisticsImpl>
+    implements _$$ProfileStatisticsImplCopyWith<$Res> {
+  __$$ProfileStatisticsImplCopyWithImpl(_$ProfileStatisticsImpl _value,
+      $Res Function(_$ProfileStatisticsImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -725,7 +726,7 @@ class __$$_ProfileStatisticsCopyWithImpl<$Res>
     Object? profileId = null,
     Object? counts = null,
   }) {
-    return _then(_$_ProfileStatistics(
+    return _then(_$ProfileStatisticsImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -744,15 +745,15 @@ class __$$_ProfileStatisticsCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ProfileStatistics implements _ProfileStatistics {
-  const _$_ProfileStatistics(
+class _$ProfileStatisticsImpl implements _ProfileStatistics {
+  const _$ProfileStatisticsImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.profileId = '',
       final Map<String, int> counts = const {}})
       : _counts = counts;
 
-  factory _$_ProfileStatistics.fromJson(Map<String, dynamic> json) =>
-      _$$_ProfileStatisticsFromJson(json);
+  factory _$ProfileStatisticsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ProfileStatisticsImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -778,7 +779,7 @@ class _$_ProfileStatistics implements _ProfileStatistics {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileStatistics &&
+            other is _$ProfileStatisticsImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.profileId, profileId) ||
                 other.profileId == profileId) &&
@@ -793,13 +794,13 @@ class _$_ProfileStatistics implements _ProfileStatistics {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileStatisticsCopyWith<_$_ProfileStatistics> get copyWith =>
-      __$$_ProfileStatisticsCopyWithImpl<_$_ProfileStatistics>(
+  _$$ProfileStatisticsImplCopyWith<_$ProfileStatisticsImpl> get copyWith =>
+      __$$ProfileStatisticsImplCopyWithImpl<_$ProfileStatisticsImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProfileStatisticsToJson(
+    return _$$ProfileStatisticsImplToJson(
       this,
     );
   }
@@ -809,10 +810,10 @@ abstract class _ProfileStatistics implements ProfileStatistics {
   const factory _ProfileStatistics(
       {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
       final String profileId,
-      final Map<String, int> counts}) = _$_ProfileStatistics;
+      final Map<String, int> counts}) = _$ProfileStatisticsImpl;
 
   factory _ProfileStatistics.fromJson(Map<String, dynamic> json) =
-      _$_ProfileStatistics.fromJson;
+      _$ProfileStatisticsImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -823,6 +824,6 @@ abstract class _ProfileStatistics implements ProfileStatistics {
   Map<String, int> get counts;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileStatisticsCopyWith<_$_ProfileStatistics> get copyWith =>
+  _$$ProfileStatisticsImplCopyWith<_$ProfileStatisticsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

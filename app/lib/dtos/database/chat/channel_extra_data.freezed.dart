@@ -80,11 +80,11 @@ class _$ChannelExtraDataCopyWithImpl<$Res, $Val extends ChannelExtraData>
 }
 
 /// @nodoc
-abstract class _$$_ChannelExtraDataCopyWith<$Res>
+abstract class _$$ChannelExtraDataImplCopyWith<$Res>
     implements $ChannelExtraDataCopyWith<$Res> {
-  factory _$$_ChannelExtraDataCopyWith(
-          _$_ChannelExtraData value, $Res Function(_$_ChannelExtraData) then) =
-      __$$_ChannelExtraDataCopyWithImpl<$Res>;
+  factory _$$ChannelExtraDataImplCopyWith(_$ChannelExtraDataImpl value,
+          $Res Function(_$ChannelExtraDataImpl) then) =
+      __$$ChannelExtraDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -95,11 +95,11 @@ abstract class _$$_ChannelExtraDataCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ChannelExtraDataCopyWithImpl<$Res>
-    extends _$ChannelExtraDataCopyWithImpl<$Res, _$_ChannelExtraData>
-    implements _$$_ChannelExtraDataCopyWith<$Res> {
-  __$$_ChannelExtraDataCopyWithImpl(
-      _$_ChannelExtraData _value, $Res Function(_$_ChannelExtraData) _then)
+class __$$ChannelExtraDataImplCopyWithImpl<$Res>
+    extends _$ChannelExtraDataCopyWithImpl<$Res, _$ChannelExtraDataImpl>
+    implements _$$ChannelExtraDataImplCopyWith<$Res> {
+  __$$ChannelExtraDataImplCopyWithImpl(_$ChannelExtraDataImpl _value,
+      $Res Function(_$ChannelExtraDataImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -109,7 +109,7 @@ class __$$_ChannelExtraDataCopyWithImpl<$Res>
     Object? disabled = freezed,
     Object? archivedMembers = freezed,
   }) {
-    return _then(_$_ChannelExtraData(
+    return _then(_$ChannelExtraDataImpl(
       hidden: freezed == hidden
           ? _value.hidden
           : hidden // ignore: cast_nullable_to_non_nullable
@@ -128,16 +128,16 @@ class __$$_ChannelExtraDataCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_ChannelExtraData implements _ChannelExtraData {
-  const _$_ChannelExtraData(
+class _$ChannelExtraDataImpl implements _ChannelExtraData {
+  const _$ChannelExtraDataImpl(
       {this.hidden,
       this.disabled,
       @JsonKey(name: 'archived_members')
       final List<ArchivedMember>? archivedMembers})
       : _archivedMembers = archivedMembers;
 
-  factory _$_ChannelExtraData.fromJson(Map<String, dynamic> json) =>
-      _$$_ChannelExtraDataFromJson(json);
+  factory _$ChannelExtraDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChannelExtraDataImplFromJson(json);
 
   @override
   final bool? hidden;
@@ -163,7 +163,7 @@ class _$_ChannelExtraData implements _ChannelExtraData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ChannelExtraData &&
+            other is _$ChannelExtraDataImpl &&
             (identical(other.hidden, hidden) || other.hidden == hidden) &&
             (identical(other.disabled, disabled) ||
                 other.disabled == disabled) &&
@@ -179,12 +179,13 @@ class _$_ChannelExtraData implements _ChannelExtraData {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ChannelExtraDataCopyWith<_$_ChannelExtraData> get copyWith =>
-      __$$_ChannelExtraDataCopyWithImpl<_$_ChannelExtraData>(this, _$identity);
+  _$$ChannelExtraDataImplCopyWith<_$ChannelExtraDataImpl> get copyWith =>
+      __$$ChannelExtraDataImplCopyWithImpl<_$ChannelExtraDataImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ChannelExtraDataToJson(
+    return _$$ChannelExtraDataImplToJson(
       this,
     );
   }
@@ -195,10 +196,10 @@ abstract class _ChannelExtraData implements ChannelExtraData {
       {final bool? hidden,
       final bool? disabled,
       @JsonKey(name: 'archived_members')
-      final List<ArchivedMember>? archivedMembers}) = _$_ChannelExtraData;
+      final List<ArchivedMember>? archivedMembers}) = _$ChannelExtraDataImpl;
 
   factory _ChannelExtraData.fromJson(Map<String, dynamic> json) =
-      _$_ChannelExtraData.fromJson;
+      _$ChannelExtraDataImpl.fromJson;
 
   @override
   bool? get hidden;
@@ -209,6 +210,6 @@ abstract class _ChannelExtraData implements ChannelExtraData {
   List<ArchivedMember>? get archivedMembers;
   @override
   @JsonKey(ignore: true)
-  _$$_ChannelExtraDataCopyWith<_$_ChannelExtraData> get copyWith =>
+  _$$ChannelExtraDataImplCopyWith<_$ChannelExtraDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -73,11 +73,12 @@ class _$GalleryControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_GalleryControllerStateCopyWith<$Res>
+abstract class _$$GalleryControllerStateImplCopyWith<$Res>
     implements $GalleryControllerStateCopyWith<$Res> {
-  factory _$$_GalleryControllerStateCopyWith(_$_GalleryControllerState value,
-          $Res Function(_$_GalleryControllerState) then) =
-      __$$_GalleryControllerStateCopyWithImpl<$Res>;
+  factory _$$GalleryControllerStateImplCopyWith(
+          _$GalleryControllerStateImpl value,
+          $Res Function(_$GalleryControllerStateImpl) then) =
+      __$$GalleryControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -87,12 +88,13 @@ abstract class _$$_GalleryControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_GalleryControllerStateCopyWithImpl<$Res>
+class __$$GalleryControllerStateImplCopyWithImpl<$Res>
     extends _$GalleryControllerStateCopyWithImpl<$Res,
-        _$_GalleryControllerState>
-    implements _$$_GalleryControllerStateCopyWith<$Res> {
-  __$$_GalleryControllerStateCopyWithImpl(_$_GalleryControllerState _value,
-      $Res Function(_$_GalleryControllerState) _then)
+        _$GalleryControllerStateImpl>
+    implements _$$GalleryControllerStateImplCopyWith<$Res> {
+  __$$GalleryControllerStateImplCopyWithImpl(
+      _$GalleryControllerStateImpl _value,
+      $Res Function(_$GalleryControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -102,7 +104,7 @@ class __$$_GalleryControllerStateCopyWithImpl<$Res>
     Object? galleryLastUpdated = freezed,
     Object? galleryEntries = null,
   }) {
-    return _then(_$_GalleryControllerState(
+    return _then(_$GalleryControllerStateImpl(
       currentProfileId: freezed == currentProfileId
           ? _value.currentProfileId
           : currentProfileId // ignore: cast_nullable_to_non_nullable
@@ -121,8 +123,8 @@ class __$$_GalleryControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_GalleryControllerState implements _GalleryControllerState {
-  const _$_GalleryControllerState(
+class _$GalleryControllerStateImpl implements _GalleryControllerState {
+  const _$GalleryControllerStateImpl(
       {this.currentProfileId,
       this.galleryLastUpdated,
       final List<GalleryEntry> galleryEntries = const []})
@@ -150,7 +152,7 @@ class _$_GalleryControllerState implements _GalleryControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_GalleryControllerState &&
+            other is _$GalleryControllerStateImpl &&
             (identical(other.currentProfileId, currentProfileId) ||
                 other.currentProfileId == currentProfileId) &&
             (identical(other.galleryLastUpdated, galleryLastUpdated) ||
@@ -166,16 +168,16 @@ class _$_GalleryControllerState implements _GalleryControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_GalleryControllerStateCopyWith<_$_GalleryControllerState> get copyWith =>
-      __$$_GalleryControllerStateCopyWithImpl<_$_GalleryControllerState>(
-          this, _$identity);
+  _$$GalleryControllerStateImplCopyWith<_$GalleryControllerStateImpl>
+      get copyWith => __$$GalleryControllerStateImplCopyWithImpl<
+          _$GalleryControllerStateImpl>(this, _$identity);
 }
 
 abstract class _GalleryControllerState implements GalleryControllerState {
   const factory _GalleryControllerState(
       {final String? currentProfileId,
       final DateTime? galleryLastUpdated,
-      final List<GalleryEntry> galleryEntries}) = _$_GalleryControllerState;
+      final List<GalleryEntry> galleryEntries}) = _$GalleryControllerStateImpl;
 
   @override
   String? get currentProfileId;
@@ -185,6 +187,6 @@ abstract class _GalleryControllerState implements GalleryControllerState {
   List<GalleryEntry> get galleryEntries;
   @override
   @JsonKey(ignore: true)
-  _$$_GalleryControllerStateCopyWith<_$_GalleryControllerState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$GalleryControllerStateImplCopyWith<_$GalleryControllerStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

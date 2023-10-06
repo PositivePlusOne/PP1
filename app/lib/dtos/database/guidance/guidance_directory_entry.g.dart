@@ -6,9 +6,9 @@ part of 'guidance_directory_entry.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_GuidanceDirectoryEntry _$$_GuidanceDirectoryEntryFromJson(
+_$GuidanceDirectoryEntryImpl _$$GuidanceDirectoryEntryImplFromJson(
         Map<String, dynamic> json) =>
-    _$_GuidanceDirectoryEntry(
+    _$GuidanceDirectoryEntryImpl(
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -27,8 +27,8 @@ _$_GuidanceDirectoryEntry _$$_GuidanceDirectoryEntryFromJson(
               json['services'] as List),
     );
 
-Map<String, dynamic> _$$_GuidanceDirectoryEntryToJson(
-        _$_GuidanceDirectoryEntry instance) =>
+Map<String, dynamic> _$$GuidanceDirectoryEntryImplToJson(
+        _$GuidanceDirectoryEntryImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'title': instance.title,

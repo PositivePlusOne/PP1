@@ -151,12 +151,12 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_CommunitiesControllerStateCopyWith<$Res>
+abstract class _$$CommunitiesControllerStateImplCopyWith<$Res>
     implements $CommunitiesControllerStateCopyWith<$Res> {
-  factory _$$_CommunitiesControllerStateCopyWith(
-          _$_CommunitiesControllerState value,
-          $Res Function(_$_CommunitiesControllerState) then) =
-      __$$_CommunitiesControllerStateCopyWithImpl<$Res>;
+  factory _$$CommunitiesControllerStateImplCopyWith(
+          _$CommunitiesControllerStateImpl value,
+          $Res Function(_$CommunitiesControllerStateImpl) then) =
+      __$$CommunitiesControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -177,13 +177,13 @@ abstract class _$$_CommunitiesControllerStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_CommunitiesControllerStateCopyWithImpl<$Res>
+class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
     extends _$CommunitiesControllerStateCopyWithImpl<$Res,
-        _$_CommunitiesControllerState>
-    implements _$$_CommunitiesControllerStateCopyWith<$Res> {
-  __$$_CommunitiesControllerStateCopyWithImpl(
-      _$_CommunitiesControllerState _value,
-      $Res Function(_$_CommunitiesControllerState) _then)
+        _$CommunitiesControllerStateImpl>
+    implements _$$CommunitiesControllerStateImplCopyWith<$Res> {
+  __$$CommunitiesControllerStateImplCopyWithImpl(
+      _$CommunitiesControllerStateImpl _value,
+      $Res Function(_$CommunitiesControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -204,7 +204,7 @@ class __$$_CommunitiesControllerStateCopyWithImpl<$Res>
     Object? connectedPaginationCursor = null,
     Object? hasMoreConnected = null,
   }) {
-    return _then(_$_CommunitiesControllerState(
+    return _then(_$CommunitiesControllerStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -267,8 +267,8 @@ class __$$_CommunitiesControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CommunitiesControllerState implements _CommunitiesControllerState {
-  const _$_CommunitiesControllerState(
+class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
+  const _$CommunitiesControllerStateImpl(
       {this.isBusy = false,
       this.selectedCommunityType = CommunityType.connected,
       final Set<String> followerProfileIds = const {},
@@ -368,7 +368,7 @@ class _$_CommunitiesControllerState implements _CommunitiesControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CommunitiesControllerState &&
+            other is _$CommunitiesControllerStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.selectedCommunityType, selectedCommunityType) ||
                 other.selectedCommunityType == selectedCommunityType) &&
@@ -423,9 +423,9 @@ class _$_CommunitiesControllerState implements _CommunitiesControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CommunitiesControllerStateCopyWith<_$_CommunitiesControllerState>
-      get copyWith => __$$_CommunitiesControllerStateCopyWithImpl<
-          _$_CommunitiesControllerState>(this, _$identity);
+  _$$CommunitiesControllerStateImplCopyWith<_$CommunitiesControllerStateImpl>
+      get copyWith => __$$CommunitiesControllerStateImplCopyWithImpl<
+          _$CommunitiesControllerStateImpl>(this, _$identity);
 }
 
 abstract class _CommunitiesControllerState
@@ -444,7 +444,7 @@ abstract class _CommunitiesControllerState
       final bool hasMoreBlocked,
       final Set<String> connectedProfileIds,
       final String connectedPaginationCursor,
-      final bool hasMoreConnected}) = _$_CommunitiesControllerState;
+      final bool hasMoreConnected}) = _$CommunitiesControllerStateImpl;
 
   @override
   bool get isBusy;
@@ -476,6 +476,6 @@ abstract class _CommunitiesControllerState
   bool get hasMoreConnected;
   @override
   @JsonKey(ignore: true)
-  _$$_CommunitiesControllerStateCopyWith<_$_CommunitiesControllerState>
+  _$$CommunitiesControllerStateImplCopyWith<_$CommunitiesControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

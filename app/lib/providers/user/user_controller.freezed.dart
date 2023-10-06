@@ -57,22 +57,22 @@ class _$UserControllerStateCopyWithImpl<$Res, $Val extends UserControllerState>
 }
 
 /// @nodoc
-abstract class _$$_UserControllerStateCopyWith<$Res>
+abstract class _$$UserControllerStateImplCopyWith<$Res>
     implements $UserControllerStateCopyWith<$Res> {
-  factory _$$_UserControllerStateCopyWith(_$_UserControllerState value,
-          $Res Function(_$_UserControllerState) then) =
-      __$$_UserControllerStateCopyWithImpl<$Res>;
+  factory _$$UserControllerStateImplCopyWith(_$UserControllerStateImpl value,
+          $Res Function(_$UserControllerStateImpl) then) =
+      __$$UserControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DateTime last2FACheck});
 }
 
 /// @nodoc
-class __$$_UserControllerStateCopyWithImpl<$Res>
-    extends _$UserControllerStateCopyWithImpl<$Res, _$_UserControllerState>
-    implements _$$_UserControllerStateCopyWith<$Res> {
-  __$$_UserControllerStateCopyWithImpl(_$_UserControllerState _value,
-      $Res Function(_$_UserControllerState) _then)
+class __$$UserControllerStateImplCopyWithImpl<$Res>
+    extends _$UserControllerStateCopyWithImpl<$Res, _$UserControllerStateImpl>
+    implements _$$UserControllerStateImplCopyWith<$Res> {
+  __$$UserControllerStateImplCopyWithImpl(_$UserControllerStateImpl _value,
+      $Res Function(_$UserControllerStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -80,7 +80,7 @@ class __$$_UserControllerStateCopyWithImpl<$Res>
   $Res call({
     Object? last2FACheck = null,
   }) {
-    return _then(_$_UserControllerState(
+    return _then(_$UserControllerStateImpl(
       last2FACheck: null == last2FACheck
           ? _value.last2FACheck
           : last2FACheck // ignore: cast_nullable_to_non_nullable
@@ -91,8 +91,8 @@ class __$$_UserControllerStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UserControllerState implements _UserControllerState {
-  const _$_UserControllerState({required this.last2FACheck});
+class _$UserControllerStateImpl implements _UserControllerState {
+  const _$UserControllerStateImpl({required this.last2FACheck});
 
   @override
   final DateTime last2FACheck;
@@ -106,7 +106,7 @@ class _$_UserControllerState implements _UserControllerState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UserControllerState &&
+            other is _$UserControllerStateImpl &&
             (identical(other.last2FACheck, last2FACheck) ||
                 other.last2FACheck == last2FACheck));
   }
@@ -117,19 +117,19 @@ class _$_UserControllerState implements _UserControllerState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserControllerStateCopyWith<_$_UserControllerState> get copyWith =>
-      __$$_UserControllerStateCopyWithImpl<_$_UserControllerState>(
+  _$$UserControllerStateImplCopyWith<_$UserControllerStateImpl> get copyWith =>
+      __$$UserControllerStateImplCopyWithImpl<_$UserControllerStateImpl>(
           this, _$identity);
 }
 
 abstract class _UserControllerState implements UserControllerState {
   const factory _UserControllerState({required final DateTime last2FACheck}) =
-      _$_UserControllerState;
+      _$UserControllerStateImpl;
 
   @override
   DateTime get last2FACheck;
   @override
   @JsonKey(ignore: true)
-  _$$_UserControllerStateCopyWith<_$_UserControllerState> get copyWith =>
+  _$$UserControllerStateImplCopyWith<_$UserControllerStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

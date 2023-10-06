@@ -83,12 +83,12 @@ class _$ProfileReferenceImageViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfileReferenceImageViewModelStateCopyWith<$Res>
+abstract class _$$ProfileReferenceImageViewModelStateImplCopyWith<$Res>
     implements $ProfileReferenceImageViewModelStateCopyWith<$Res> {
-  factory _$$_ProfileReferenceImageViewModelStateCopyWith(
-          _$_ProfileReferenceImageViewModelState value,
-          $Res Function(_$_ProfileReferenceImageViewModelState) then) =
-      __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>;
+  factory _$$ProfileReferenceImageViewModelStateImplCopyWith(
+          _$ProfileReferenceImageViewModelStateImpl value,
+          $Res Function(_$ProfileReferenceImageViewModelStateImpl) then) =
+      __$$ProfileReferenceImageViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool isBusy, FaceDetectionModel? faceDetectionModel});
@@ -98,13 +98,13 @@ abstract class _$$_ProfileReferenceImageViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>
+class __$$ProfileReferenceImageViewModelStateImplCopyWithImpl<$Res>
     extends _$ProfileReferenceImageViewModelStateCopyWithImpl<$Res,
-        _$_ProfileReferenceImageViewModelState>
-    implements _$$_ProfileReferenceImageViewModelStateCopyWith<$Res> {
-  __$$_ProfileReferenceImageViewModelStateCopyWithImpl(
-      _$_ProfileReferenceImageViewModelState _value,
-      $Res Function(_$_ProfileReferenceImageViewModelState) _then)
+        _$ProfileReferenceImageViewModelStateImpl>
+    implements _$$ProfileReferenceImageViewModelStateImplCopyWith<$Res> {
+  __$$ProfileReferenceImageViewModelStateImplCopyWithImpl(
+      _$ProfileReferenceImageViewModelStateImpl _value,
+      $Res Function(_$ProfileReferenceImageViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -113,7 +113,7 @@ class __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? faceDetectionModel = freezed,
   }) {
-    return _then(_$_ProfileReferenceImageViewModelState(
+    return _then(_$ProfileReferenceImageViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -128,9 +128,9 @@ class __$$_ProfileReferenceImageViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileReferenceImageViewModelState
+class _$ProfileReferenceImageViewModelStateImpl
     implements _ProfileReferenceImageViewModelState {
-  const _$_ProfileReferenceImageViewModelState(
+  const _$ProfileReferenceImageViewModelStateImpl(
       {this.isBusy = false, this.faceDetectionModel});
 
   @override
@@ -148,7 +148,7 @@ class _$_ProfileReferenceImageViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileReferenceImageViewModelState &&
+            other is _$ProfileReferenceImageViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.faceDetectionModel, faceDetectionModel) ||
                 other.faceDetectionModel == faceDetectionModel));
@@ -160,17 +160,17 @@ class _$_ProfileReferenceImageViewModelState
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileReferenceImageViewModelStateCopyWith<
-          _$_ProfileReferenceImageViewModelState>
-      get copyWith => __$$_ProfileReferenceImageViewModelStateCopyWithImpl<
-          _$_ProfileReferenceImageViewModelState>(this, _$identity);
+  _$$ProfileReferenceImageViewModelStateImplCopyWith<
+          _$ProfileReferenceImageViewModelStateImpl>
+      get copyWith => __$$ProfileReferenceImageViewModelStateImplCopyWithImpl<
+          _$ProfileReferenceImageViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _ProfileReferenceImageViewModelState
     implements ProfileReferenceImageViewModelState {
   const factory _ProfileReferenceImageViewModelState(
           {final bool isBusy, final FaceDetectionModel? faceDetectionModel}) =
-      _$_ProfileReferenceImageViewModelState;
+      _$ProfileReferenceImageViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -178,7 +178,7 @@ abstract class _ProfileReferenceImageViewModelState
   FaceDetectionModel? get faceDetectionModel;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileReferenceImageViewModelStateCopyWith<
-          _$_ProfileReferenceImageViewModelState>
+  _$$ProfileReferenceImageViewModelStateImplCopyWith<
+          _$ProfileReferenceImageViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

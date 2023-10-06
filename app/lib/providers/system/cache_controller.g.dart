@@ -6,14 +6,14 @@ part of 'cache_controller.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_CacheRecord _$$_CacheRecordFromJson(Map<String, dynamic> json) =>
-    _$_CacheRecord(
+_$CacheRecordImpl _$$CacheRecordImplFromJson(Map<String, dynamic> json) =>
+    _$CacheRecordImpl(
       key: json['key'] as String,
       value: json['value'] as Object,
       metadata: FlMeta.fromJson(json['metadata'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$$_CacheRecordToJson(_$_CacheRecord instance) =>
+Map<String, dynamic> _$$CacheRecordImplToJson(_$CacheRecordImpl instance) =>
     <String, dynamic>{
       'key': instance.key,
       'value': instance.value,

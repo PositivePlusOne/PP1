@@ -97,11 +97,12 @@ class _$ProfileViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_ProfileViewModelStateCopyWith<$Res>
+abstract class _$$ProfileViewModelStateImplCopyWith<$Res>
     implements $ProfileViewModelStateCopyWith<$Res> {
-  factory _$$_ProfileViewModelStateCopyWith(_$_ProfileViewModelState value,
-          $Res Function(_$_ProfileViewModelState) then) =
-      __$$_ProfileViewModelStateCopyWithImpl<$Res>;
+  factory _$$ProfileViewModelStateImplCopyWith(
+          _$ProfileViewModelStateImpl value,
+          $Res Function(_$ProfileViewModelStateImpl) then) =
+      __$$ProfileViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Profile? profile, Relationship? relationship, bool isBusy});
@@ -113,11 +114,12 @@ abstract class _$$_ProfileViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ProfileViewModelStateCopyWithImpl<$Res>
-    extends _$ProfileViewModelStateCopyWithImpl<$Res, _$_ProfileViewModelState>
-    implements _$$_ProfileViewModelStateCopyWith<$Res> {
-  __$$_ProfileViewModelStateCopyWithImpl(_$_ProfileViewModelState _value,
-      $Res Function(_$_ProfileViewModelState) _then)
+class __$$ProfileViewModelStateImplCopyWithImpl<$Res>
+    extends _$ProfileViewModelStateCopyWithImpl<$Res,
+        _$ProfileViewModelStateImpl>
+    implements _$$ProfileViewModelStateImplCopyWith<$Res> {
+  __$$ProfileViewModelStateImplCopyWithImpl(_$ProfileViewModelStateImpl _value,
+      $Res Function(_$ProfileViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -127,7 +129,7 @@ class __$$_ProfileViewModelStateCopyWithImpl<$Res>
     Object? relationship = freezed,
     Object? isBusy = null,
   }) {
-    return _then(_$_ProfileViewModelState(
+    return _then(_$ProfileViewModelStateImpl(
       profile: freezed == profile
           ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
@@ -146,8 +148,8 @@ class __$$_ProfileViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ProfileViewModelState implements _ProfileViewModelState {
-  const _$_ProfileViewModelState(
+class _$ProfileViewModelStateImpl implements _ProfileViewModelState {
+  const _$ProfileViewModelStateImpl(
       {this.profile, this.relationship, this.isBusy = false});
 
   @override
@@ -167,7 +169,7 @@ class _$_ProfileViewModelState implements _ProfileViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ProfileViewModelState &&
+            other is _$ProfileViewModelStateImpl &&
             (identical(other.profile, profile) || other.profile == profile) &&
             (identical(other.relationship, relationship) ||
                 other.relationship == relationship) &&
@@ -180,16 +182,16 @@ class _$_ProfileViewModelState implements _ProfileViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ProfileViewModelStateCopyWith<_$_ProfileViewModelState> get copyWith =>
-      __$$_ProfileViewModelStateCopyWithImpl<_$_ProfileViewModelState>(
-          this, _$identity);
+  _$$ProfileViewModelStateImplCopyWith<_$ProfileViewModelStateImpl>
+      get copyWith => __$$ProfileViewModelStateImplCopyWithImpl<
+          _$ProfileViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _ProfileViewModelState implements ProfileViewModelState {
   const factory _ProfileViewModelState(
       {final Profile? profile,
       final Relationship? relationship,
-      final bool isBusy}) = _$_ProfileViewModelState;
+      final bool isBusy}) = _$ProfileViewModelStateImpl;
 
   @override
   Profile? get profile;
@@ -199,6 +201,6 @@ abstract class _ProfileViewModelState implements ProfileViewModelState {
   bool get isBusy;
   @override
   @JsonKey(ignore: true)
-  _$$_ProfileViewModelStateCopyWith<_$_ProfileViewModelState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ProfileViewModelStateImplCopyWith<_$ProfileViewModelStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

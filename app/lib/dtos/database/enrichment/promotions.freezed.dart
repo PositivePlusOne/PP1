@@ -137,10 +137,11 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
 }
 
 /// @nodoc
-abstract class _$$_PromotionCopyWith<$Res> implements $PromotionCopyWith<$Res> {
-  factory _$$_PromotionCopyWith(
-          _$_Promotion value, $Res Function(_$_Promotion) then) =
-      __$$_PromotionCopyWithImpl<$Res>;
+abstract class _$$PromotionImplCopyWith<$Res>
+    implements $PromotionCopyWith<$Res> {
+  factory _$$PromotionImplCopyWith(
+          _$PromotionImpl value, $Res Function(_$PromotionImpl) then) =
+      __$$PromotionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -161,11 +162,11 @@ abstract class _$$_PromotionCopyWith<$Res> implements $PromotionCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_PromotionCopyWithImpl<$Res>
-    extends _$PromotionCopyWithImpl<$Res, _$_Promotion>
-    implements _$$_PromotionCopyWith<$Res> {
-  __$$_PromotionCopyWithImpl(
-      _$_Promotion _value, $Res Function(_$_Promotion) _then)
+class __$$PromotionImplCopyWithImpl<$Res>
+    extends _$PromotionCopyWithImpl<$Res, _$PromotionImpl>
+    implements _$$PromotionImplCopyWith<$Res> {
+  __$$PromotionImplCopyWithImpl(
+      _$PromotionImpl _value, $Res Function(_$PromotionImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -181,7 +182,7 @@ class __$$_PromotionCopyWithImpl<$Res>
     Object? startTime = freezed,
     Object? endTime = freezed,
   }) {
-    return _then(_$_Promotion(
+    return _then(_$PromotionImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -224,8 +225,8 @@ class __$$_PromotionCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Promotion implements _Promotion {
-  const _$_Promotion(
+class _$PromotionImpl implements _Promotion {
+  const _$PromotionImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.title = '',
       this.descriptionMarkdown = '',
@@ -238,8 +239,8 @@ class _$_Promotion implements _Promotion {
       : _owners = owners,
         _activities = activities;
 
-  factory _$_Promotion.fromJson(Map<String, dynamic> json) =>
-      _$$_PromotionFromJson(json);
+  factory _$PromotionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PromotionImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -290,7 +291,7 @@ class _$_Promotion implements _Promotion {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Promotion &&
+            other is _$PromotionImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.descriptionMarkdown, descriptionMarkdown) ||
@@ -323,12 +324,12 @@ class _$_Promotion implements _Promotion {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PromotionCopyWith<_$_Promotion> get copyWith =>
-      __$$_PromotionCopyWithImpl<_$_Promotion>(this, _$identity);
+  _$$PromotionImplCopyWith<_$PromotionImpl> get copyWith =>
+      __$$PromotionImplCopyWithImpl<_$PromotionImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PromotionToJson(
+    return _$$PromotionImplToJson(
       this,
     );
   }
@@ -346,10 +347,10 @@ abstract class _Promotion implements Promotion {
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       final String? startTime,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      final String? endTime}) = _$_Promotion;
+      final String? endTime}) = _$PromotionImpl;
 
   factory _Promotion.fromJson(Map<String, dynamic> json) =
-      _$_Promotion.fromJson;
+      _$PromotionImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -374,7 +375,7 @@ abstract class _Promotion implements Promotion {
   String? get endTime;
   @override
   @JsonKey(ignore: true)
-  _$$_PromotionCopyWith<_$_Promotion> get copyWith =>
+  _$$PromotionImplCopyWith<_$PromotionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -426,22 +427,22 @@ class _$PromotionOwnerCopyWithImpl<$Res, $Val extends PromotionOwner>
 }
 
 /// @nodoc
-abstract class _$$_PromotionOwnerCopyWith<$Res>
+abstract class _$$PromotionOwnerImplCopyWith<$Res>
     implements $PromotionOwnerCopyWith<$Res> {
-  factory _$$_PromotionOwnerCopyWith(
-          _$_PromotionOwner value, $Res Function(_$_PromotionOwner) then) =
-      __$$_PromotionOwnerCopyWithImpl<$Res>;
+  factory _$$PromotionOwnerImplCopyWith(_$PromotionOwnerImpl value,
+          $Res Function(_$PromotionOwnerImpl) then) =
+      __$$PromotionOwnerImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String activityId});
 }
 
 /// @nodoc
-class __$$_PromotionOwnerCopyWithImpl<$Res>
-    extends _$PromotionOwnerCopyWithImpl<$Res, _$_PromotionOwner>
-    implements _$$_PromotionOwnerCopyWith<$Res> {
-  __$$_PromotionOwnerCopyWithImpl(
-      _$_PromotionOwner _value, $Res Function(_$_PromotionOwner) _then)
+class __$$PromotionOwnerImplCopyWithImpl<$Res>
+    extends _$PromotionOwnerCopyWithImpl<$Res, _$PromotionOwnerImpl>
+    implements _$$PromotionOwnerImplCopyWith<$Res> {
+  __$$PromotionOwnerImplCopyWithImpl(
+      _$PromotionOwnerImpl _value, $Res Function(_$PromotionOwnerImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -449,7 +450,7 @@ class __$$_PromotionOwnerCopyWithImpl<$Res>
   $Res call({
     Object? activityId = null,
   }) {
-    return _then(_$_PromotionOwner(
+    return _then(_$PromotionOwnerImpl(
       activityId: null == activityId
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
@@ -460,11 +461,11 @@ class __$$_PromotionOwnerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PromotionOwner implements _PromotionOwner {
-  const _$_PromotionOwner({this.activityId = ''});
+class _$PromotionOwnerImpl implements _PromotionOwner {
+  const _$PromotionOwnerImpl({this.activityId = ''});
 
-  factory _$_PromotionOwner.fromJson(Map<String, dynamic> json) =>
-      _$$_PromotionOwnerFromJson(json);
+  factory _$PromotionOwnerImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PromotionOwnerImplFromJson(json);
 
   @override
   @JsonKey()
@@ -479,7 +480,7 @@ class _$_PromotionOwner implements _PromotionOwner {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PromotionOwner &&
+            other is _$PromotionOwnerImpl &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId));
   }
@@ -491,28 +492,30 @@ class _$_PromotionOwner implements _PromotionOwner {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PromotionOwnerCopyWith<_$_PromotionOwner> get copyWith =>
-      __$$_PromotionOwnerCopyWithImpl<_$_PromotionOwner>(this, _$identity);
+  _$$PromotionOwnerImplCopyWith<_$PromotionOwnerImpl> get copyWith =>
+      __$$PromotionOwnerImplCopyWithImpl<_$PromotionOwnerImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PromotionOwnerToJson(
+    return _$$PromotionOwnerImplToJson(
       this,
     );
   }
 }
 
 abstract class _PromotionOwner implements PromotionOwner {
-  const factory _PromotionOwner({final String activityId}) = _$_PromotionOwner;
+  const factory _PromotionOwner({final String activityId}) =
+      _$PromotionOwnerImpl;
 
   factory _PromotionOwner.fromJson(Map<String, dynamic> json) =
-      _$_PromotionOwner.fromJson;
+      _$PromotionOwnerImpl.fromJson;
 
   @override
   String get activityId;
   @override
   @JsonKey(ignore: true)
-  _$$_PromotionOwnerCopyWith<_$_PromotionOwner> get copyWith =>
+  _$$PromotionOwnerImplCopyWith<_$PromotionOwnerImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -564,22 +567,22 @@ class _$PromotedActivityCopyWithImpl<$Res, $Val extends PromotedActivity>
 }
 
 /// @nodoc
-abstract class _$$_PromotedActivityCopyWith<$Res>
+abstract class _$$PromotedActivityImplCopyWith<$Res>
     implements $PromotedActivityCopyWith<$Res> {
-  factory _$$_PromotedActivityCopyWith(
-          _$_PromotedActivity value, $Res Function(_$_PromotedActivity) then) =
-      __$$_PromotedActivityCopyWithImpl<$Res>;
+  factory _$$PromotedActivityImplCopyWith(_$PromotedActivityImpl value,
+          $Res Function(_$PromotedActivityImpl) then) =
+      __$$PromotedActivityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String activityId});
 }
 
 /// @nodoc
-class __$$_PromotedActivityCopyWithImpl<$Res>
-    extends _$PromotedActivityCopyWithImpl<$Res, _$_PromotedActivity>
-    implements _$$_PromotedActivityCopyWith<$Res> {
-  __$$_PromotedActivityCopyWithImpl(
-      _$_PromotedActivity _value, $Res Function(_$_PromotedActivity) _then)
+class __$$PromotedActivityImplCopyWithImpl<$Res>
+    extends _$PromotedActivityCopyWithImpl<$Res, _$PromotedActivityImpl>
+    implements _$$PromotedActivityImplCopyWith<$Res> {
+  __$$PromotedActivityImplCopyWithImpl(_$PromotedActivityImpl _value,
+      $Res Function(_$PromotedActivityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -587,7 +590,7 @@ class __$$_PromotedActivityCopyWithImpl<$Res>
   $Res call({
     Object? activityId = null,
   }) {
-    return _then(_$_PromotedActivity(
+    return _then(_$PromotedActivityImpl(
       activityId: null == activityId
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
@@ -598,11 +601,11 @@ class __$$_PromotedActivityCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_PromotedActivity implements _PromotedActivity {
-  const _$_PromotedActivity({this.activityId = ''});
+class _$PromotedActivityImpl implements _PromotedActivity {
+  const _$PromotedActivityImpl({this.activityId = ''});
 
-  factory _$_PromotedActivity.fromJson(Map<String, dynamic> json) =>
-      _$$_PromotedActivityFromJson(json);
+  factory _$PromotedActivityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PromotedActivityImplFromJson(json);
 
   @override
   @JsonKey()
@@ -617,7 +620,7 @@ class _$_PromotedActivity implements _PromotedActivity {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_PromotedActivity &&
+            other is _$PromotedActivityImpl &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId));
   }
@@ -629,12 +632,13 @@ class _$_PromotedActivity implements _PromotedActivity {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_PromotedActivityCopyWith<_$_PromotedActivity> get copyWith =>
-      __$$_PromotedActivityCopyWithImpl<_$_PromotedActivity>(this, _$identity);
+  _$$PromotedActivityImplCopyWith<_$PromotedActivityImpl> get copyWith =>
+      __$$PromotedActivityImplCopyWithImpl<_$PromotedActivityImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PromotedActivityToJson(
+    return _$$PromotedActivityImplToJson(
       this,
     );
   }
@@ -642,15 +646,15 @@ class _$_PromotedActivity implements _PromotedActivity {
 
 abstract class _PromotedActivity implements PromotedActivity {
   const factory _PromotedActivity({final String activityId}) =
-      _$_PromotedActivity;
+      _$PromotedActivityImpl;
 
   factory _PromotedActivity.fromJson(Map<String, dynamic> json) =
-      _$_PromotedActivity.fromJson;
+      _$PromotedActivityImpl.fromJson;
 
   @override
   String get activityId;
   @override
   @JsonKey(ignore: true)
-  _$$_PromotedActivityCopyWith<_$_PromotedActivity> get copyWith =>
+  _$$PromotedActivityImplCopyWith<_$PromotedActivityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

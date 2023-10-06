@@ -140,11 +140,11 @@ class _$RelationshipCopyWithImpl<$Res, $Val extends Relationship>
 }
 
 /// @nodoc
-abstract class _$$_RelationshipCopyWith<$Res>
+abstract class _$$RelationshipImplCopyWith<$Res>
     implements $RelationshipCopyWith<$Res> {
-  factory _$$_RelationshipCopyWith(
-          _$_Relationship value, $Res Function(_$_Relationship) then) =
-      __$$_RelationshipCopyWithImpl<$Res>;
+  factory _$$RelationshipImplCopyWith(
+          _$RelationshipImpl value, $Res Function(_$RelationshipImpl) then) =
+      __$$RelationshipImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -166,11 +166,11 @@ abstract class _$$_RelationshipCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RelationshipCopyWithImpl<$Res>
-    extends _$RelationshipCopyWithImpl<$Res, _$_Relationship>
-    implements _$$_RelationshipCopyWith<$Res> {
-  __$$_RelationshipCopyWithImpl(
-      _$_Relationship _value, $Res Function(_$_Relationship) _then)
+class __$$RelationshipImplCopyWithImpl<$Res>
+    extends _$RelationshipCopyWithImpl<$Res, _$RelationshipImpl>
+    implements _$$RelationshipImplCopyWith<$Res> {
+  __$$RelationshipImplCopyWithImpl(
+      _$RelationshipImpl _value, $Res Function(_$RelationshipImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -186,7 +186,7 @@ class __$$_RelationshipCopyWithImpl<$Res>
     Object? hidden = null,
     Object? muted = null,
   }) {
-    return _then(_$_Relationship(
+    return _then(_$RelationshipImpl(
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -229,8 +229,8 @@ class __$$_RelationshipCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Relationship implements _Relationship {
-  const _$_Relationship(
+class _$RelationshipImpl implements _Relationship {
+  const _$RelationshipImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       final List<RelationshipMember> members = const [],
       @JsonKey(
@@ -246,8 +246,8 @@ class _$_Relationship implements _Relationship {
       : _members = members,
         _flags = flags;
 
-  factory _$_Relationship.fromJson(Map<String, dynamic> json) =>
-      _$$_RelationshipFromJson(json);
+  factory _$RelationshipImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RelationshipImplFromJson(json);
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -300,7 +300,7 @@ class _$_Relationship implements _Relationship {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Relationship &&
+            other is _$RelationshipImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             const DeepCollectionEquality().equals(other._members, _members) &&
             const DeepCollectionEquality().equals(other._flags, _flags) &&
@@ -332,12 +332,12 @@ class _$_Relationship implements _Relationship {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RelationshipCopyWith<_$_Relationship> get copyWith =>
-      __$$_RelationshipCopyWithImpl<_$_Relationship>(this, _$identity);
+  _$$RelationshipImplCopyWith<_$RelationshipImpl> get copyWith =>
+      __$$RelationshipImplCopyWithImpl<_$RelationshipImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RelationshipToJson(
+    return _$$RelationshipImplToJson(
       this,
     );
   }
@@ -356,10 +356,10 @@ abstract class _Relationship implements Relationship {
       final bool connected,
       final bool following,
       final bool hidden,
-      final bool muted}) = _$_Relationship;
+      final bool muted}) = _$RelationshipImpl;
 
   factory _Relationship.fromJson(Map<String, dynamic> json) =
-      _$_Relationship.fromJson;
+      _$RelationshipImpl.fromJson;
 
   @override
   @JsonKey(name: '_fl_meta_')
@@ -385,7 +385,7 @@ abstract class _Relationship implements Relationship {
   bool get muted;
   @override
   @JsonKey(ignore: true)
-  _$$_RelationshipCopyWith<_$_Relationship> get copyWith =>
+  _$$RelationshipImplCopyWith<_$RelationshipImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -447,29 +447,29 @@ class _$RelationshipFlagCopyWithImpl<$Res, $Val extends RelationshipFlag>
 }
 
 /// @nodoc
-abstract class _$$_RelationshipFlagOrganisationManagerCopyWith<$Res> {
-  factory _$$_RelationshipFlagOrganisationManagerCopyWith(
-          _$_RelationshipFlagOrganisationManager value,
-          $Res Function(_$_RelationshipFlagOrganisationManager) then) =
-      __$$_RelationshipFlagOrganisationManagerCopyWithImpl<$Res>;
+abstract class _$$RelationshipFlagOrganisationManagerImplCopyWith<$Res> {
+  factory _$$RelationshipFlagOrganisationManagerImplCopyWith(
+          _$RelationshipFlagOrganisationManagerImpl value,
+          $Res Function(_$RelationshipFlagOrganisationManagerImpl) then) =
+      __$$RelationshipFlagOrganisationManagerImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_RelationshipFlagOrganisationManagerCopyWithImpl<$Res>
+class __$$RelationshipFlagOrganisationManagerImplCopyWithImpl<$Res>
     extends _$RelationshipFlagCopyWithImpl<$Res,
-        _$_RelationshipFlagOrganisationManager>
-    implements _$$_RelationshipFlagOrganisationManagerCopyWith<$Res> {
-  __$$_RelationshipFlagOrganisationManagerCopyWithImpl(
-      _$_RelationshipFlagOrganisationManager _value,
-      $Res Function(_$_RelationshipFlagOrganisationManager) _then)
+        _$RelationshipFlagOrganisationManagerImpl>
+    implements _$$RelationshipFlagOrganisationManagerImplCopyWith<$Res> {
+  __$$RelationshipFlagOrganisationManagerImplCopyWithImpl(
+      _$RelationshipFlagOrganisationManagerImpl _value,
+      $Res Function(_$RelationshipFlagOrganisationManagerImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_RelationshipFlagOrganisationManager
+class _$RelationshipFlagOrganisationManagerImpl
     implements _RelationshipFlagOrganisationManager {
-  const _$_RelationshipFlagOrganisationManager();
+  const _$RelationshipFlagOrganisationManagerImpl();
 
   @override
   String toString() {
@@ -480,7 +480,7 @@ class _$_RelationshipFlagOrganisationManager
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RelationshipFlagOrganisationManager);
+            other is _$RelationshipFlagOrganisationManagerImpl);
   }
 
   @override
@@ -549,5 +549,5 @@ class _$_RelationshipFlagOrganisationManager
 abstract class _RelationshipFlagOrganisationManager
     implements RelationshipFlag {
   const factory _RelationshipFlagOrganisationManager() =
-      _$_RelationshipFlagOrganisationManager;
+      _$RelationshipFlagOrganisationManagerImpl;
 }

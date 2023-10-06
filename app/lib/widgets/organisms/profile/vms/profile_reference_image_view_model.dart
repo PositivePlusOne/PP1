@@ -69,9 +69,10 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    state = state.copyWith(isBusy: true);
+    state = state.copyWith();
 
     try {
+      state = state.copyWith(isBusy: true);
       await profileController.updateReferenceImage(result);
       logger.i("Reference image saved, navigating to profile");
 

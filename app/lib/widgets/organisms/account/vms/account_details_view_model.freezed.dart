@@ -82,12 +82,12 @@ class _$AccountDetailsViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_AccountDetailsViewModelStateCopyWith<$Res>
+abstract class _$$AccountDetailsViewModelStateImplCopyWith<$Res>
     implements $AccountDetailsViewModelStateCopyWith<$Res> {
-  factory _$$_AccountDetailsViewModelStateCopyWith(
-          _$_AccountDetailsViewModelState value,
-          $Res Function(_$_AccountDetailsViewModelState) then) =
-      __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>;
+  factory _$$AccountDetailsViewModelStateImplCopyWith(
+          _$AccountDetailsViewModelStateImpl value,
+          $Res Function(_$AccountDetailsViewModelStateImpl) then) =
+      __$$AccountDetailsViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -98,13 +98,13 @@ abstract class _$$_AccountDetailsViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>
+class __$$AccountDetailsViewModelStateImplCopyWithImpl<$Res>
     extends _$AccountDetailsViewModelStateCopyWithImpl<$Res,
-        _$_AccountDetailsViewModelState>
-    implements _$$_AccountDetailsViewModelStateCopyWith<$Res> {
-  __$$_AccountDetailsViewModelStateCopyWithImpl(
-      _$_AccountDetailsViewModelState _value,
-      $Res Function(_$_AccountDetailsViewModelState) _then)
+        _$AccountDetailsViewModelStateImpl>
+    implements _$$AccountDetailsViewModelStateImplCopyWith<$Res> {
+  __$$AccountDetailsViewModelStateImplCopyWithImpl(
+      _$AccountDetailsViewModelStateImpl _value,
+      $Res Function(_$AccountDetailsViewModelStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -115,7 +115,7 @@ class __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>
     Object? facebookUserInfo = freezed,
     Object? appleUserInfo = freezed,
   }) {
-    return _then(_$_AccountDetailsViewModelState(
+    return _then(_$AccountDetailsViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -138,8 +138,9 @@ class __$$_AccountDetailsViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_AccountDetailsViewModelState implements _AccountDetailsViewModelState {
-  const _$_AccountDetailsViewModelState(
+class _$AccountDetailsViewModelStateImpl
+    implements _AccountDetailsViewModelState {
+  const _$AccountDetailsViewModelStateImpl(
       {this.isBusy = false,
       this.googleUserInfo,
       this.facebookUserInfo,
@@ -164,7 +165,7 @@ class _$_AccountDetailsViewModelState implements _AccountDetailsViewModelState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_AccountDetailsViewModelState &&
+            other is _$AccountDetailsViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.googleUserInfo, googleUserInfo) ||
                 other.googleUserInfo == googleUserInfo) &&
@@ -181,9 +182,10 @@ class _$_AccountDetailsViewModelState implements _AccountDetailsViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_AccountDetailsViewModelStateCopyWith<_$_AccountDetailsViewModelState>
-      get copyWith => __$$_AccountDetailsViewModelStateCopyWithImpl<
-          _$_AccountDetailsViewModelState>(this, _$identity);
+  _$$AccountDetailsViewModelStateImplCopyWith<
+          _$AccountDetailsViewModelStateImpl>
+      get copyWith => __$$AccountDetailsViewModelStateImplCopyWithImpl<
+          _$AccountDetailsViewModelStateImpl>(this, _$identity);
 }
 
 abstract class _AccountDetailsViewModelState
@@ -192,7 +194,7 @@ abstract class _AccountDetailsViewModelState
       {final bool isBusy,
       final UserInfo? googleUserInfo,
       final UserInfo? facebookUserInfo,
-      final UserInfo? appleUserInfo}) = _$_AccountDetailsViewModelState;
+      final UserInfo? appleUserInfo}) = _$AccountDetailsViewModelStateImpl;
 
   @override
   bool get isBusy;
@@ -204,6 +206,7 @@ abstract class _AccountDetailsViewModelState
   UserInfo? get appleUserInfo;
   @override
   @JsonKey(ignore: true)
-  _$$_AccountDetailsViewModelStateCopyWith<_$_AccountDetailsViewModelState>
+  _$$AccountDetailsViewModelStateImplCopyWith<
+          _$AccountDetailsViewModelStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

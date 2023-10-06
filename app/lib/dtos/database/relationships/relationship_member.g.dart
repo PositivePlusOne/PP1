@@ -6,9 +6,9 @@ part of 'relationship_member.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_RelationshipMember _$$_RelationshipMemberFromJson(
+_$RelationshipMemberImpl _$$RelationshipMemberImplFromJson(
         Map<String, dynamic> json) =>
-    _$_RelationshipMember(
+    _$RelationshipMemberImpl(
       hasBlocked: json['hasBlocked'] as bool? ?? false,
       hasConnected: json['hasConnected'] as bool? ?? false,
       hasFollowed: json['hasFollowed'] as bool? ?? false,
@@ -17,8 +17,8 @@ _$_RelationshipMember _$$_RelationshipMemberFromJson(
       memberId: json['memberId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$_RelationshipMemberToJson(
-        _$_RelationshipMember instance) =>
+Map<String, dynamic> _$$RelationshipMemberImplToJson(
+        _$RelationshipMemberImpl instance) =>
     <String, dynamic>{
       'hasBlocked': instance.hasBlocked,
       'hasConnected': instance.hasConnected,

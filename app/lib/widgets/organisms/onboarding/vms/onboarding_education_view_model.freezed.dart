@@ -39,29 +39,29 @@ class _$OnboardingEducationViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_OnboardingEducationViewModelStateCopyWith<$Res> {
-  factory _$$_OnboardingEducationViewModelStateCopyWith(
-          _$_OnboardingEducationViewModelState value,
-          $Res Function(_$_OnboardingEducationViewModelState) then) =
-      __$$_OnboardingEducationViewModelStateCopyWithImpl<$Res>;
+abstract class _$$OnboardingEducationViewModelStateImplCopyWith<$Res> {
+  factory _$$OnboardingEducationViewModelStateImplCopyWith(
+          _$OnboardingEducationViewModelStateImpl value,
+          $Res Function(_$OnboardingEducationViewModelStateImpl) then) =
+      __$$OnboardingEducationViewModelStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_OnboardingEducationViewModelStateCopyWithImpl<$Res>
+class __$$OnboardingEducationViewModelStateImplCopyWithImpl<$Res>
     extends _$OnboardingEducationViewModelStateCopyWithImpl<$Res,
-        _$_OnboardingEducationViewModelState>
-    implements _$$_OnboardingEducationViewModelStateCopyWith<$Res> {
-  __$$_OnboardingEducationViewModelStateCopyWithImpl(
-      _$_OnboardingEducationViewModelState _value,
-      $Res Function(_$_OnboardingEducationViewModelState) _then)
+        _$OnboardingEducationViewModelStateImpl>
+    implements _$$OnboardingEducationViewModelStateImplCopyWith<$Res> {
+  __$$OnboardingEducationViewModelStateImplCopyWithImpl(
+      _$OnboardingEducationViewModelStateImpl _value,
+      $Res Function(_$OnboardingEducationViewModelStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_OnboardingEducationViewModelState
+class _$OnboardingEducationViewModelStateImpl
     implements _OnboardingEducationViewModelState {
-  const _$_OnboardingEducationViewModelState();
+  const _$OnboardingEducationViewModelStateImpl();
 
   @override
   String toString() {
@@ -72,7 +72,7 @@ class _$_OnboardingEducationViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_OnboardingEducationViewModelState);
+            other is _$OnboardingEducationViewModelStateImpl);
   }
 
   @override
@@ -82,5 +82,5 @@ class _$_OnboardingEducationViewModelState
 abstract class _OnboardingEducationViewModelState
     implements OnboardingEducationViewModelState {
   const factory _OnboardingEducationViewModelState() =
-      _$_OnboardingEducationViewModelState;
+      _$OnboardingEducationViewModelStateImpl;
 }

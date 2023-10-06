@@ -39,29 +39,29 @@ class _$OnboardingConnectViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_OnboardingConnectViewModelStateCopyWith<$Res> {
-  factory _$$_OnboardingConnectViewModelStateCopyWith(
-          _$_OnboardingConnectViewModelState value,
-          $Res Function(_$_OnboardingConnectViewModelState) then) =
-      __$$_OnboardingConnectViewModelStateCopyWithImpl<$Res>;
+abstract class _$$OnboardingConnectViewModelStateImplCopyWith<$Res> {
+  factory _$$OnboardingConnectViewModelStateImplCopyWith(
+          _$OnboardingConnectViewModelStateImpl value,
+          $Res Function(_$OnboardingConnectViewModelStateImpl) then) =
+      __$$OnboardingConnectViewModelStateImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$_OnboardingConnectViewModelStateCopyWithImpl<$Res>
+class __$$OnboardingConnectViewModelStateImplCopyWithImpl<$Res>
     extends _$OnboardingConnectViewModelStateCopyWithImpl<$Res,
-        _$_OnboardingConnectViewModelState>
-    implements _$$_OnboardingConnectViewModelStateCopyWith<$Res> {
-  __$$_OnboardingConnectViewModelStateCopyWithImpl(
-      _$_OnboardingConnectViewModelState _value,
-      $Res Function(_$_OnboardingConnectViewModelState) _then)
+        _$OnboardingConnectViewModelStateImpl>
+    implements _$$OnboardingConnectViewModelStateImplCopyWith<$Res> {
+  __$$OnboardingConnectViewModelStateImplCopyWithImpl(
+      _$OnboardingConnectViewModelStateImpl _value,
+      $Res Function(_$OnboardingConnectViewModelStateImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_OnboardingConnectViewModelState
+class _$OnboardingConnectViewModelStateImpl
     implements _OnboardingConnectViewModelState {
-  const _$_OnboardingConnectViewModelState();
+  const _$OnboardingConnectViewModelStateImpl();
 
   @override
   String toString() {
@@ -72,7 +72,7 @@ class _$_OnboardingConnectViewModelState
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_OnboardingConnectViewModelState);
+            other is _$OnboardingConnectViewModelStateImpl);
   }
 
   @override
@@ -82,5 +82,5 @@ class _$_OnboardingConnectViewModelState
 abstract class _OnboardingConnectViewModelState
     implements OnboardingConnectViewModelState {
   const factory _OnboardingConnectViewModelState() =
-      _$_OnboardingConnectViewModelState;
+      _$OnboardingConnectViewModelStateImpl;
 }
