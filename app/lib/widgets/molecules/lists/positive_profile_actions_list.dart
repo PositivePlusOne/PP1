@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/content/activities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -78,9 +79,11 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Follow tapped');
 
-    if (targetUserId.isEmpty) {
+    if (targetUserId.isEmpty || currentProfileId.isEmpty) {
       logger.e('Failed to follow user: targetUserId is empty');
       return;
     }
@@ -91,6 +94,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.followRelationship(targetUserId);
+      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You are now following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to follow user. Error: $e');
@@ -109,9 +113,11 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Unfollow tapped');
 
-    if (targetUserId.isEmpty) {
+    if (targetUserId.isEmpty || currentProfileId.isEmpty) {
       logger.e('Failed to unfollow user: targetUserId is empty');
       return;
     }
@@ -122,6 +128,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.unfollowRelationship(targetUserId);
+      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have stopped following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to unfollow user. Error: $e');
