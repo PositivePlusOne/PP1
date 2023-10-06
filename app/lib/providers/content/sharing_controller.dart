@@ -11,6 +11,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:unicons/unicons.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -46,7 +47,7 @@ class SharingControllerState with _$SharingControllerState {
 abstract class ISharingController {
   SharingControllerState build();
   Rect getShareTarget(BuildContext context);
-  ShareMessage getShareMessage(BuildContext context, ShareTarget target, {SharePostOptions? postOptions});
+  Future<ShareMessage> getShareMessage(BuildContext context, ShareTarget target, {SharePostOptions? postOptions});
   Iterable<Widget> buildShareActions(BuildContext context, Rect origin, ShareTarget target, {SharePostOptions? postOptions});
   Iterable<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions postOptions);
   Future<void> showShareDialog(BuildContext context, ShareTarget target, {SharePostOptions? postOptions});
@@ -77,11 +78,18 @@ class SharingController extends _$SharingController implements ISharingControlle
   }
 
   @override
-  ShareMessage getShareMessage(BuildContext context, ShareTarget target, {SharePostOptions? postOptions}) {
+  Future<ShareMessage> getShareMessage(BuildContext context, ShareTarget target, {SharePostOptions? postOptions}) async {
     // final AppLocalizations localizations = AppLocalizations.of(context)!;
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final String displayName = getSafeDisplayNameFromProfile(profileController.state.currentProfile);
+    final sourceUid = postOptions?.$3;
+    String displayName = getSafeDisplayNameFromProfile(profileController.state.currentProfile);
+    if (sourceUid != null) {
+      // there is a third variable in the options - this being the author of the post - so let's show this as the source of the post
+      final sourceProfile = await profileController.getProfile(sourceUid);
+      displayName = getSafeDisplayNameFromProfile(sourceProfile);
+    }
+    // create the link to the post
     final String externalLink = switch (target) {
       ShareTarget.post => universalLinksController
           .buildPostRouteLink(
@@ -92,11 +100,9 @@ class SharingController extends _$SharingController implements ISharingControlle
           .toString(),
     };
 
-    //* Mock message, this is to be replaced with a proper message
-    const String title = 'Psst!';
-    final String message = 'Check out this post from $displayName.\n$externalLink';
-
-    return (title, message);
+    // returning the message as created with the author and external link
+    final localizations = AppLocalizations.of(context);
+    return (localizations!.post_share_message_title, localizations!.post_share_message_content(displayName, externalLink));
   }
 
   @override
@@ -159,7 +165,7 @@ class SharingController extends _$SharingController implements ISharingControlle
   @override
   Future<void> shareExternally(BuildContext context, ShareTarget target, Rect origin, {SharePostOptions? postOptions}) async {
     final Logger logger = ref.read(loggerProvider);
-    final ShareMessage message = getShareMessage(context, target, postOptions: postOptions);
+    final ShareMessage message = await getShareMessage(context, target, postOptions: postOptions);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final String title = message.$1;
@@ -199,7 +205,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     logger.d('Sharing via connection chat');
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final SharePostOptions postOptions = (activity, origin, currentProfileId);
-    final ShareMessage message = getShareMessage(context, ShareTarget.post, postOptions: postOptions);
+    final ShareMessage message = await getShareMessage(context, ShareTarget.post, postOptions: postOptions);
 
     final String title = message.$1;
     final String text = message.$2;

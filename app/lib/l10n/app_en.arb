@@ -463,6 +463,9 @@
     "post_report_dialog_title": "Report Post",
     "post_report_dialog_body": "If you believe this post is breaking the Positive +1 rules, please complete a report and we will investigate.",
 
+    "post_share_message_title": "Psst!",
+    "post_share_message_content": "Check out this post from {authorName}.\n{externalLink}",
+
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",
