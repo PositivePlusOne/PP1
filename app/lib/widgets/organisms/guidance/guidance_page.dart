@@ -51,6 +51,7 @@ class GuidancePage extends ConsumerWidget {
         safeAreaQueryData: mediaQuery,
         foregroundColor: colors.black,
         backgroundColor: colors.colorGray1,
+        decorationColor: colors.transparent,
         trailType: PositiveAppBarTrailType.convex,
         trailing: actions,
       ),
