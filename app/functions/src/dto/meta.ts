@@ -56,6 +56,8 @@ export class FlMeta {
         return {
             createdBy: this.createdBy,
             createdDate: this.createdDate,
+            ownedBy: this.ownedBy,
+            ownedAsOfDate: this.ownedAsOfDate,
             docId: this.docId,
             fl_id: this.fl_id,
             env: this.env,
@@ -64,6 +66,8 @@ export class FlMeta {
             schemaRefId: this.schemaRefId,
             lastModifiedBy: this.lastModifiedBy,
             lastModifiedDate: this.lastModifiedDate,
+            lastFetchMillis: this.lastFetchMillis,
+            isPartial: this.isPartial,
         };
     }
 }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -144,6 +145,8 @@ extension ActivityExt on Activity {
   Future<void> share(BuildContext context, Profile? currentProfile) async {
     final SharingController sharingController = providerContainer.read(sharingControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
+
     if (publisherInformation?.originFeed.isEmpty ?? true == true) {
       logger.e('publisherInformation.originFeed is empty');
       throw Exception('publisherInformation.originFeed is empty');
@@ -151,7 +154,13 @@ extension ActivityExt on Activity {
 
     // typedef SharePostOptions = (Activity activity, String origin, String currentProfileId);
     final String originFeed = publisherInformation?.originFeed ?? '';
-    final SharePostOptions postOptions = (this, originFeed, currentProfile?.flMeta?.id ?? '');
+    final SharePostOptions postOptions = (
+      activity: this,
+      origin: originFeed,
+      currentProfile: currentProfile,
+      currentUser: firebaseAuth.currentUser,
+    );
+
     await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 

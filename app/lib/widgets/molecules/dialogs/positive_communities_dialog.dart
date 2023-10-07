@@ -17,6 +17,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -265,6 +266,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
     ref.watch(widget.controllerProvider);
+
+    useLifecycleHook(controller);
 
     final Widget child = switch (controller.state.selectedCommunityType) {
       CommunityType.following => buildRelationshipList(

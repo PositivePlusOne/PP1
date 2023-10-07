@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,10 +11,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/relationship_search_api_service.dart';
@@ -84,8 +85,7 @@ enum CommunityType {
 }
 
 @Riverpod(keepAlive: true)
-class CommunitiesController extends _$CommunitiesController {
-  StreamSubscription<User?>? _userChangesSubscription;
+class CommunitiesController extends _$CommunitiesController with LifecycleMixin {
   StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
   bool get hasLoadedInitialData => state.followerProfileIds.isNotEmpty || state.followingProfileIds.isNotEmpty || state.blockedProfileIds.isNotEmpty || state.connectedProfileIds.isNotEmpty;
@@ -101,22 +101,25 @@ class CommunitiesController extends _$CommunitiesController {
     );
   }
 
+  @override
+  void onFirstRender() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('CommunitiesController - onFirstRender - First render');
+    setupListeners();
+
+    if (!hasLoadedInitialData) {
+      logger.i('CommunitiesController - setupListeners - Loading initial community data');
+      loadInitialCommunityData();
+    }
+  }
+
   Future<void> setupListeners() async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
     final Logger logger = ref.read(loggerProvider);
-
-    await _userChangesSubscription?.cancel();
-    _userChangesSubscription = userController.userChangedController.stream.listen(onUserChanged);
 
     await _cacheKeyUpdatedSubscription?.cancel();
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheRecordUpdated);
     logger.i('CommunitiesController - setupListeners - User changes subscription setup');
-
-    if (!hasLoadedInitialData) {
-      logger.i('CommunitiesController - setupListeners - Loading initial community data');
-      unawaited(onUserChanged(userController.currentUser));
-    }
   }
 
   void setSelectedCommunityType(dynamic value) {
@@ -191,19 +194,6 @@ class CommunitiesController extends _$CommunitiesController {
         state = state.copyWith(blockedProfileIds: {...state.blockedProfileIds.where((element) => element != otherMemberId)});
       }
     }
-  }
-
-  Future<void> onUserChanged(User? user) async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('CommunitiesController - onUserChanged - User changed');
-
-    if (user == null) {
-      logger.i('CommunitiesController - onUserChanged - User is null');
-      resetCommunityData();
-      return;
-    }
-
-    unawaited(loadInitialCommunityData());
   }
 
   void resetCommunityData({User? user}) {

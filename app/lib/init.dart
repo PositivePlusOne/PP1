@@ -21,7 +21,6 @@ import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -46,7 +45,6 @@ Future<void> setupApplication() async {
   final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
   final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
   final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
-  final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
   final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
   final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
@@ -96,7 +94,6 @@ Future<void> setupApplication() async {
   await analyticsController.flushEvents();
   await userController.setupListeners();
   await relationshipController.setupListeners();
-  await communitiesController.setupListeners();
   await notificationsController.setupListeners();
   await profileController.setupListeners();
   await galleryController.setupListeners();

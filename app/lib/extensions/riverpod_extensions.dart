@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/content/reactions_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -15,6 +13,8 @@ import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/reactions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../dtos/database/activities/tags.dart';

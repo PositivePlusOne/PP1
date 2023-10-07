@@ -10,7 +10,6 @@ import { ConversationService } from "./conversation_service";
 import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
 import { CacheService } from "./cache_service";
 import { RelationshipState } from "./types/relationship_state";
-import { ProfileService } from "./profile_service";
 import { ProfileJSON } from "../dto/profile";
 
 // Used for interrogating information between two users.
@@ -638,7 +637,7 @@ export namespace RelationshipService {
       entryId: targetId,
       data: target,
     });
-  };
+  }
 
   export async function manageRelationship(sender: string, relationship: RelationshipJSON, canManage: boolean): Promise<any> {
     functions.logger.info("Managing relationship", {

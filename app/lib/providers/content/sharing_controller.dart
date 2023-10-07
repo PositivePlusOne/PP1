@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:unicons/unicons.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -61,7 +62,13 @@ enum ShareTarget {
   post,
 }
 
-typedef SharePostOptions = (Activity activity, String origin, String currentProfileId);
+typedef SharePostOptions = ({
+  Activity activity,
+  String origin,
+  Profile? currentProfile,
+  User? currentUser,
+});
+
 typedef ShareMessage = (String title, String message);
 
 @Riverpod(keepAlive: true)
@@ -81,21 +88,15 @@ class SharingController extends _$SharingController implements ISharingControlle
   Future<ShareMessage> getShareMessage(BuildContext context, ShareTarget target, {SharePostOptions? postOptions}) async {
     // final AppLocalizations localizations = AppLocalizations.of(context)!;
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final sourceUid = postOptions?.$3;
-    String displayName = getSafeDisplayNameFromProfile(profileController.state.currentProfile);
-    if (sourceUid != null) {
-      // there is a third variable in the options - this being the author of the post - so let's show this as the source of the post
-      final sourceProfile = await profileController.getProfile(sourceUid);
-      displayName = getSafeDisplayNameFromProfile(sourceProfile);
-    }
+    String displayName = getSafeDisplayNameFromProfile(postOptions?.currentProfile);
+
     // create the link to the post
     final String externalLink = switch (target) {
       ShareTarget.post => universalLinksController
           .buildPostRouteLink(
-            postOptions!.$1.flMeta!.id!,
+            postOptions!.activity.flMeta?.id ?? '',
             '',
-            postOptions.$2,
+            postOptions.origin,
           )
           .toString(),
     };
@@ -114,7 +115,11 @@ class SharingController extends _$SharingController implements ISharingControlle
 
   @override
   List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions? postOptions) {
-    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(CommunityType.connected);
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
+      currentUser: postOptions?.currentUser,
+      currentProfile: postOptions?.currentProfile,
+    );
+
     final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
@@ -186,8 +191,8 @@ class SharingController extends _$SharingController implements ISharingControlle
     final Logger logger = ref.read(loggerProvider);
     logger.d('Sharing via connections');
 
-    final String activityID = postOptions?.$1.flMeta?.id ?? '';
-    final String origin = postOptions?.$2 ?? '';
+    final String activityID = postOptions?.activity.flMeta?.id ?? '';
+    final String origin = postOptions?.origin ?? '';
     if (activityID.isEmpty || origin.isEmpty) {
       throw Exception('Activity is missing an ID');
     }
@@ -202,10 +207,10 @@ class SharingController extends _$SharingController implements ISharingControlle
   Future<void> shareViaConnectionChat(BuildContext context, Profile? currentProfile, Activity activity, String origin, List<String> profileIds) async {
     final Logger logger = ref.read(loggerProvider);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
     logger.d('Sharing via connection chat');
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    final SharePostOptions postOptions = (activity, origin, currentProfileId);
+    final SharePostOptions postOptions = (activity: activity, origin: origin, currentProfile: currentProfile, currentUser: firebaseAuth.currentUser);
     final ShareMessage message = await getShareMessage(context, ShareTarget.post, postOptions: postOptions);
 
     final String title = message.$1;
@@ -230,7 +235,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     }
 
     logger.d('Sharing to feed');
-    final String activityId = postOptions.$1.flMeta?.id ?? '';
+    final String activityId = postOptions.activity.flMeta?.id ?? '';
     if (activityId.isEmpty) {
       throw Exception('Activity is missing an ID');
     }
@@ -240,7 +245,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
     final Activity? sharedActivity = activities.firstOrNull;
 
-    sharedActivity?.appendActivityToProfileFeeds(postOptions.$3);
+    sharedActivity?.appendActivityToProfileFeeds(postOptions.currentProfile?.flMeta?.id ?? '');
 
     await appRouter.pop();
 
