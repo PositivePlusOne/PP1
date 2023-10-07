@@ -40,7 +40,7 @@ class LocationController extends _$LocationController {
     return LocationControllerState.initialState();
   }
 
-  Future<void> attemptToGetNotificationPermissions() async {
+  Future<void> attemptToGetLocationPermissions() async {
     final Logger logger = ref.read(loggerProvider);
     final PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
 
@@ -55,7 +55,7 @@ class LocationController extends _$LocationController {
 
     try {
       if (includeLocationAsRegion) {
-        await attemptToGetNotificationPermissions();
+        await attemptToGetLocationPermissions();
         if (state.locationPermission != PermissionStatus.granted) {
           throw Exception(state.locationPermission);
         }
@@ -89,7 +89,7 @@ class LocationController extends _$LocationController {
     final Logger logger = ref.read(loggerProvider);
 
     try {
-      await attemptToGetNotificationPermissions();
+      await attemptToGetLocationPermissions();
       if (state.locationPermission != PermissionStatus.granted) {
         throw Exception(state.locationPermission);
       }

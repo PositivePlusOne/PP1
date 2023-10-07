@@ -38,7 +38,6 @@ import 'package:app/providers/system/system_controller.dart';
 
 // ignore: unused_import
 
-
 part 'third_party.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -228,7 +227,7 @@ FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
 
 @Riverpod(keepAlive: true)
 FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
-  return Permission.contacts.request();
+  return Permission.notification.request();
 }
 
 @Riverpod(keepAlive: true)

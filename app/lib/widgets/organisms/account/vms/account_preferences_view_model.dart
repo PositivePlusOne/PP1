@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
@@ -116,7 +119,25 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
     final bool isBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
     final bool newValue = !isBiometricsEnabled;
+    final localizations = AppLocalizations.of(context)!;
     logger.d('Toggling biometric permissions to $newValue');
+
+    if (newValue) {
+      // we are turning on, do we have biometrics?
+      final availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
+      if (availableBiometrics.isEmpty) {
+        // there are none
+        final payload = NotificationPayload(
+          title: localizations.page_profile_biometrics_error_title,
+          body: localizations.page_profile_biometrics_none_available,
+        );
+        // which we want to show
+        final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
+        await handler.onNotificationDisplayed(payload, true);
+        // and don't change the setting
+        return;
+      }
+    }
 
     await sharedPreferences.setBool(kBiometricsAcceptedKey, newValue);
     state = state.copyWith(areBiometricsEnabled: newValue);
@@ -124,14 +145,14 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     late final NotificationPayload payload;
 
     if (newValue) {
-      payload = const NotificationPayload(
-        title: 'Thanks!',
-        body: 'We have enabled enhanced protection through the use of your biometric data.',
+      payload = NotificationPayload(
+        title: localizations.page_profile_biometrics_success_title,
+        body: localizations.page_profile_biometrics_success_body,
       );
     } else {
-      payload = const NotificationPayload(
-        title: 'Biometrics Disabled',
-        body: 'Your biometric preference was removed successfully.',
+      payload = NotificationPayload(
+        title: localizations.page_profile_biometrics_disabled_title,
+        body: localizations.page_profile_biometrics_disabled_body,
       );
     }
 
@@ -171,6 +192,11 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
       final String key = NotificationTopic.toJson(topic);
       final bool newState = !state.notificationSubscribedTopics.contains(key);
       logger.d('Toggling notification topic $key to $newState');
+
+      if (newState && !(await Permission.notification.isGranted)) {
+        // we just selected to enable some kind of notification but the permissions are not valid
+        ref.read(notificationPermissionsProvider.future);
+      }
 
       final AccountPreferencesViewModelState expectedNewState = state.copyWith(
         notificationSubscribedTopics: newState ? state.notificationSubscribedTopics.union(<String>{key}) : state.notificationSubscribedTopics.difference(<String>{key}),

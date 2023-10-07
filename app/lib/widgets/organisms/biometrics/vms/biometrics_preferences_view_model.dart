@@ -91,9 +91,6 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
     await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesEnabled);
     await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
 
-    // Request first permissions so that the dialog is shown
-    await ref.read(notificationPermissionsProvider.future);
-
     appRouter.removeWhere((route) => true);
     appRouter.push(const HomeRoute());
   }
