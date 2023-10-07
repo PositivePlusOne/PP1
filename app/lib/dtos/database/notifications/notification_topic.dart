@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
@@ -7,16 +8,16 @@ import 'package:app/constants/key_constants.dart';
 part 'notification_topic.freezed.dart';
 
 extension NotificationTopicExt on NotificationTopic {
-  String get toLocalizedTopic {
+  String toLocalizedTopic(AppLocalizations localizations) {
     return when(
-      other: () => 'Post Likes',
-      newFollower: () => 'New Follower',
-      connectionRequest: () => 'Connection Request',
-      newComment: () => 'New Comment',
-      newMessage: () => 'New Message',
-      postShared: () => 'Post Shared',
-      sharedEvent: () => 'Shared Event',
-      postLikes: () => 'Post Likes',
+      other: () => localizations.notification_topic_title_other,
+      newFollower: () => localizations.notification_topic_title_new_follower,
+      connectionRequest: () => localizations.notification_topic_title_connection_request,
+      newComment: () => localizations.notification_topic_title_new_comment,
+      newMessage: () => localizations.notification_topic_title_new_message,
+      postShared: () => localizations.notification_topic_title_post_shared,
+      sharedEvent: () => localizations.notification_topic_title_shared_event,
+      postLikes: () => localizations.notification_topic_title_post_likes,
     );
   }
 
