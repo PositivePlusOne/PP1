@@ -98,7 +98,11 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider();
+    final CommunitiesController communitiesController = ref.watch(communitiesControllerProvider.notifier);
+
     return PositiveCommunitiesDialog(
+      communitiesController: communitiesController,
       supportedCommunityTypes: const [CommunityType.connected],
       selectedCommunityType: CommunityType.connected,
       actionLabel: 'Share',

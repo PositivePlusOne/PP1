@@ -114,6 +114,7 @@ class SharingController extends _$SharingController implements ISharingControlle
 
   @override
   List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions? postOptions) {
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(CommunityType.connected);
     final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));

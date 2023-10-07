@@ -36,6 +36,7 @@ import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
 
 class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   const PositiveCommunitiesDialog({
+    required this.communitiesController,
     required this.selectedCommunityType,
     required this.supportedCommunityTypes,
     this.mode = CommunitiesDialogMode.view,
@@ -47,6 +48,8 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     this.isEnabled = true,
     super.key,
   });
+
+  final CommunitiesController communitiesController;
 
   final CommunityType selectedCommunityType;
   final List<CommunityType> supportedCommunityTypes;
@@ -83,6 +86,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   late PagingController<String, String> _followersPagingController;
   late PagingController<String, String> _connectionsPagingController;
   late PagingController<String, String> _blockedPagingController;
+  late PagingController<String, String> _managedPagingController;
 
   @override
   void initState() {
@@ -91,31 +95,35 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   }
 
   void setupControllers({bool setupRefreshController = true}) {
-    final CommunitiesController controller = ref.read(communitiesControllerProvider.notifier);
-
-    _followingPagingController = PagingController<String, String>(firstPageKey: controller.state.followingPaginationCursor);
-    _followersPagingController = PagingController<String, String>(firstPageKey: controller.state.followerPaginationCursor);
-    _connectionsPagingController = PagingController<String, String>(firstPageKey: controller.state.connectedPaginationCursor);
-    _blockedPagingController = PagingController<String, String>(firstPageKey: controller.state.blockedPaginationCursor);
+    _followingPagingController = PagingController<String, String>(firstPageKey: widget.communitiesController.state.followingPaginationCursor);
+    _followersPagingController = PagingController<String, String>(firstPageKey: widget.communitiesController.state.followerPaginationCursor);
+    _connectionsPagingController = PagingController<String, String>(firstPageKey: widget.communitiesController.state.connectedPaginationCursor);
+    _blockedPagingController = PagingController<String, String>(firstPageKey: widget.communitiesController.state.blockedPaginationCursor);
+    _managedPagingController = PagingController<String, String>(firstPageKey: widget.communitiesController.state.managedPaginationCursor);
 
     _followingPagingController.value = PagingState<String, String>(
-      nextPageKey: controller.state.followingPaginationCursor,
-      itemList: controller.state.followingProfileIds.toList(),
+      nextPageKey: widget.communitiesController.state.followingPaginationCursor,
+      itemList: widget.communitiesController.state.followingProfileIds.toList(),
     );
 
     _followersPagingController.value = PagingState<String, String>(
-      nextPageKey: controller.state.followerPaginationCursor,
-      itemList: controller.state.followerProfileIds.toList(),
+      nextPageKey: widget.communitiesController.state.followerPaginationCursor,
+      itemList: widget.communitiesController.state.followerProfileIds.toList(),
     );
 
     _connectionsPagingController.value = PagingState<String, String>(
-      nextPageKey: controller.state.connectedPaginationCursor,
-      itemList: controller.state.connectedProfileIds.toList(),
+      nextPageKey: widget.communitiesController.state.connectedPaginationCursor,
+      itemList: widget.communitiesController.state.connectedProfileIds.toList(),
     );
 
     _blockedPagingController.value = PagingState<String, String>(
-      nextPageKey: controller.state.blockedPaginationCursor,
-      itemList: controller.state.blockedProfileIds.toList(),
+      nextPageKey: widget.communitiesController.state.blockedPaginationCursor,
+      itemList: widget.communitiesController.state.blockedProfileIds.toList(),
+    );
+
+    _managedPagingController.value = PagingState<String, String>(
+      nextPageKey: widget.communitiesController.state.managedPaginationCursor,
+      itemList: widget.communitiesController.state.managedProfileIds.toList(),
     );
 
     // Add listeners
@@ -123,12 +131,12 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     _followersPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.followers));
     _connectionsPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.connected));
     _blockedPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.blocked));
+    _managedPagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.managed));
   }
 
-  Future<void> requestRefresh() async {
+  Future<void> requestRefresh(CommunitiesController controller) async {
     final Logger logger = ref.read(loggerProvider);
-    final CommunitiesController controller = ref.read(communitiesControllerProvider.notifier);
-    final CommunityType communityType = controller.state.selectedCommunityType;
+    final CommunityType communityType = widget.communitiesController.state.selectedCommunityType;
 
     try {
       logger.d('PositiveCommunitiesDialog - requestRefresh - Loading next community data: $communityType');
@@ -142,14 +150,14 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   }
 
   Future<void> requestNextPage(String cursor, CommunityType communityType) async {
-    final CommunitiesController controller = ref.read(communitiesControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
     final bool canLoadNext = switch (communityType) {
-      CommunityType.following => !controller.state.hasMoreFollowing,
-      CommunityType.followers => !controller.state.hasMoreFollowers,
-      CommunityType.connected => !controller.state.hasMoreConnected,
-      CommunityType.blocked => !controller.state.hasMoreBlocked,
+      CommunityType.following => !widget.communitiesController.state.hasMoreFollowing,
+      CommunityType.followers => !widget.communitiesController.state.hasMoreFollowers,
+      CommunityType.connected => !widget.communitiesController.state.hasMoreConnected,
+      CommunityType.blocked => !widget.communitiesController.state.hasMoreBlocked,
+      CommunityType.managed => !widget.communitiesController.state.hasMoreManaged,
     };
 
     if (!canLoadNext) {
@@ -167,18 +175,22 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         case CommunityType.blocked:
           _blockedPagingController.appendSafeLastPage<String>([]);
           break;
+        case CommunityType.managed:
+          _managedPagingController.appendSafeLastPage<String>([]);
+          break;
       }
 
       return;
     }
 
     try {
-      await controller.loadNextCommunityData(type: communityType);
+      await widget.communitiesController.loadNextCommunityData(type: communityType);
       () => switch (communityType) {
-            CommunityType.following => _followingPagingController.appendSafePage(controller.state.followingProfileIds.toList(), controller.state.followingPaginationCursor),
-            CommunityType.followers => _followersPagingController.appendSafePage(controller.state.followerProfileIds.toList(), controller.state.followerPaginationCursor),
-            CommunityType.connected => _connectionsPagingController.appendSafePage(controller.state.connectedProfileIds.toList(), controller.state.connectedPaginationCursor),
-            CommunityType.blocked => _blockedPagingController.appendSafePage(controller.state.blockedProfileIds.toList(), controller.state.blockedPaginationCursor),
+            CommunityType.following => _followingPagingController.appendSafePage(widget.communitiesController.state.followingProfileIds.toList(), widget.communitiesController.state.followingPaginationCursor),
+            CommunityType.followers => _followersPagingController.appendSafePage(widget.communitiesController.state.followerProfileIds.toList(), widget.communitiesController.state.followerPaginationCursor),
+            CommunityType.connected => _connectionsPagingController.appendSafePage(widget.communitiesController.state.connectedProfileIds.toList(), widget.communitiesController.state.connectedPaginationCursor),
+            CommunityType.blocked => _blockedPagingController.appendSafePage(widget.communitiesController.state.blockedProfileIds.toList(), widget.communitiesController.state.blockedPaginationCursor),
+            CommunityType.managed => _managedPagingController.appendSafePage(widget.communitiesController.state.managedProfileIds.toList(), widget.communitiesController.state.managedPaginationCursor),
           };
     } catch (ex) {
       logger.e('Error loading next page: $ex');
@@ -200,25 +212,29 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       case CommunityType.blocked:
         _blockedPagingController.error = error;
         break;
+      case CommunityType.managed:
+        _managedPagingController.error = error;
+        break;
     }
   }
 
   void onCommunityTypeChanged(CommunityType value) {
-    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
-    communitiesController.setSelectedCommunityType(value);
+    widget.communitiesController.setSelectedCommunityType(value);
 
     final bool hasMoreData = switch (value) {
-      CommunityType.following => communitiesController.state.hasMoreFollowing,
-      CommunityType.followers => communitiesController.state.hasMoreFollowers,
-      CommunityType.connected => communitiesController.state.hasMoreConnected,
-      CommunityType.blocked => communitiesController.state.hasMoreBlocked,
+      CommunityType.following => widget.communitiesController.state.hasMoreFollowing,
+      CommunityType.followers => widget.communitiesController.state.hasMoreFollowers,
+      CommunityType.connected => widget.communitiesController.state.hasMoreConnected,
+      CommunityType.blocked => widget.communitiesController.state.hasMoreBlocked,
+      CommunityType.managed => widget.communitiesController.state.hasMoreManaged,
     };
 
     final String cursor = switch (value) {
-      CommunityType.following => communitiesController.state.followingPaginationCursor,
-      CommunityType.followers => communitiesController.state.followerPaginationCursor,
-      CommunityType.connected => communitiesController.state.connectedPaginationCursor,
-      CommunityType.blocked => communitiesController.state.blockedPaginationCursor,
+      CommunityType.following => widget.communitiesController.state.followingPaginationCursor,
+      CommunityType.followers => widget.communitiesController.state.followerPaginationCursor,
+      CommunityType.connected => widget.communitiesController.state.connectedPaginationCursor,
+      CommunityType.blocked => widget.communitiesController.state.blockedPaginationCursor,
+      CommunityType.managed => widget.communitiesController.state.managedPaginationCursor,
     };
 
     if (hasMoreData) {
@@ -238,13 +254,15 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final ProfileControllerState profileController = ref.watch(profileControllerProvider);
-    final Profile? currentProfile = profileController.currentProfile;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+
+    final Profile? currentProfile = profileControllerState.currentProfile;
+    final bool isManagedProfile = profileController.isCurrentManagedProfile;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final CommunityType communityType = ref.watch(communitiesControllerProvider).selectedCommunityType;
 
-    final Widget child = switch (communityType) {
+    final Widget child = switch (widget.communitiesController.state.selectedCommunityType) {
       CommunityType.following => buildRelationshipList(
           context: context,
           controller: _followingPagingController,
@@ -269,6 +287,12 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           cacheController: cacheController,
           senderProfile: currentProfile,
         ),
+      CommunityType.managed => buildRelationshipList(
+          context: context,
+          controller: _managedPagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
     };
 
     return PositiveScaffold(
@@ -280,13 +304,13 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             const SizedBox(height: kPaddingSmall),
             if (widget.supportedCommunityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
-                values: CommunityType.values,
-                initialValue: ref.watch(communitiesControllerProvider).selectedCommunityType,
+                values: widget.supportedCommunityTypes,
+                initialValue: isManagedProfile ? CommunityType.managed : CommunityType.connected,
                 onValueChanged: (value) => onCommunityTypeChanged(value),
                 backgroundColour: colors.white,
                 labelText: 'User Type',
-                valueStringBuilder: (value) => (value as CommunityType).toLocale,
-                placeholderStringBuilder: (value) => (value as CommunityType).toLocale,
+                valueStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
+                placeholderStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
               ),
               const SizedBox(height: kPaddingSmall),
             ],

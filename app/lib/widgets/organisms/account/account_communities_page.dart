@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,11 +18,17 @@ class AccountCommunitiesPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final CommunityType communityType = ref.watch(communitiesControllerProvider.select((value) => value.selectedCommunityType));
+    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
+    final bool isManaged = profileController.isCurrentManagedProfile;
+
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(initialType: isManaged ? CommunityType.managed : CommunityType.connected);
+    final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
+    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
 
     return PositiveCommunitiesDialog(
-      selectedCommunityType: communityType,
-      supportedCommunityTypes: CommunityType.values,
+      communitiesController: communitiesController,
+      selectedCommunityType: communitiesControllerState.selectedCommunityType,
+      supportedCommunityTypes: isManaged ? CommunityType.managedProfileCommunityTypes : CommunityType.userProfileCommunityTypes,
     );
   }
 }

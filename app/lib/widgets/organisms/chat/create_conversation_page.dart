@@ -54,6 +54,7 @@ class CreateConversationPage extends HookConsumerWidget {
 
     useLifecycleHook(chatViewModel);
 
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider();
     final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
 
     final Set<String> connectedProfileIds = communitiesControllerState.connectedProfileIds;

@@ -12,6 +12,8 @@ class FlMeta with _$FlMeta {
   const factory FlMeta({
     String? createdBy,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdDate,
+    String? ownedBy,
+    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? ownedAsOfDate,
     String? lastModifiedBy,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? lastModifiedDate,
     @Default(-1) int lastFetchMillis,

@@ -517,4 +517,33 @@ export namespace RelationshipEndpoints {
       },
     });
   });
+
+  export const listManagedRelationships = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+
+    const cursor = request.cursor || "";
+    const limit = request.limit || 10;
+
+    const paginationResult = await RelationshipService.getManagedRelationships(uid, { cursor, limit });
+    const profileIds = [] as string[];
+
+    for (const relationship of paginationResult.data) {
+      for (const member of relationship.members || []) {
+        if (member.memberId && member.memberId !== uid) {
+          profileIds.push(member.memberId);
+        }
+      }
+    }
+
+    const profiles = await ProfileService.getMultipleProfiles(profileIds);
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: profiles,
+      cursor: paginationResult.pagination.cursor,
+      limit: paginationResult.pagination.limit,
+      seedData: {
+        relationships: paginationResult.data,
+      },
+    });
+  });
 }

@@ -10,12 +10,15 @@ import { ConversationService } from "./conversation_service";
 import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
 import { CacheService } from "./cache_service";
 import { RelationshipState } from "./types/relationship_state";
+import { ProfileService } from "./profile_service";
+import { ProfileJSON } from "../dto/profile";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
 export namespace RelationshipService {
   export const FOLLOWING_CACHE_KEY_PREFIX = "following:";
   export const FOLLOWERS_CACHE_KEY_PREFIX = "followers:";
+  export const MANAGER_CACHE_KEY_PREFIX = "manages:";
   export const MUTED_CACHE_KEY_PREFIX = "muted:";
   export const BLOCKED_CACHE_KEY_PREFIX = "blocked:";
   export const HIDDEN_CACHE_KEY_PREFIX = "hidden:";
@@ -375,6 +378,49 @@ export namespace RelationshipService {
     };
   }
 
+  export async function getManagedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
+    const adminFirestore = adminApp.firestore();
+    const cacheKey = MANAGER_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    let data = await CacheService.get(cacheKey);
+
+    if (!data) {
+      const relationshipsSnapshot = await adminFirestore
+        .collection("fl_content")
+        .orderBy("searchIndexRelationshipManages")
+        .where("_fl_meta_.schema", "==", "relationships")
+        .where("searchIndexRelationshipManages", ">=", uid)
+        .where("searchIndexRelationshipManages", "<=", uid + "\uf8ff")
+        .where("managed", "==", true)
+        .limit(pagination.limit ?? 10)
+        .startAfter(pagination.cursor)
+        .get();
+
+      data = relationshipsSnapshot.docs.map((doc) => doc.data());
+    }
+
+    const hasData = data.length !== 0;
+    const responsePagination = {
+      limit: pagination.limit,
+      cursor: '',
+    } as Pagination;
+
+    if (!hasData) {
+      return { data: [], pagination: responsePagination };
+    }
+
+    CacheService.setInCache(cacheKey, data);
+
+    const last = data[data.length - 1];
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+
+    responsePagination.cursor = lastId;
+
+    return {
+      data: data,
+      pagination: responsePagination,
+    };
+  }
+
   /**
    * Gets the muted relationships for the given user.
    * @param {string} uid the user to get the muted relationships for.
@@ -457,28 +503,6 @@ export namespace RelationshipService {
     });
 
     return relationships;
-  }
-
-  export async function getManagedRelationships(uid: string): Promise<RelationshipJSON[]> {
-    functions.logger.info("Getting managed relationships", {
-      uid,
-    });
-
-    const managedRelationships = await DataService.getDocumentWindowRaw({
-      schemaKey: "relationships",
-      where: [
-        { fieldPath: "_fl_meta_.schema", op: "==", value: "relationships" },
-        { fieldPath: "searchIndexRelationshipManages", op: ">=", value: uid },
-        { fieldPath: "searchIndexRelationshipManages", op: "<=", value: uid + "\uf8ff" },
-        { fieldPath: "managed", op: "==", value: true },
-      ],
-    }) as RelationshipJSON[];
-
-    functions.logger.info("Managed relationships", {
-      managedRelationships,
-    });
-
-    return managedRelationships ?? [];
   }
 
   /**
@@ -565,6 +589,56 @@ export namespace RelationshipService {
       data: relationship,
     });
   }
+
+  // Note, this is purely visual for now, with all of the checks being done by the relationship and custom claims.
+  export async function setOwnership(sender: ProfileJSON, target: ProfileJSON): Promise<any> {
+    // Sets the "ownedBy" field of the flMeta to the sender's id.
+    // This is used to highlight which person is the primary owner, for example in an organisation
+
+    functions.logger.info("Setting ownership", {
+      sender,
+      target,
+    });
+
+    const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(sender);
+    const targetId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+
+    if (!senderId || !targetId || !sender._fl_meta_ || !target._fl_meta_) {
+      throw new Error("Sender or target does not have a flamelink id or meta data");
+    }
+
+    target._fl_meta_.ownedBy = senderId;
+    target._fl_meta_.ownedAsOfDate = new Date().toISOString();
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: targetId,
+      data: target,
+    });
+  }
+
+  export async function removeOwnership(target: ProfileJSON): Promise<any> {
+    // Removes the "ownedBy" field of the flMeta.
+    // This is used to highlight which person is the primary owner, for example in an organisation
+
+    functions.logger.info("Removing ownership", {
+      target,
+    });
+
+    const targetId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
+
+    if (!targetId || !target._fl_meta_) {
+      throw new Error("Target does not have a flamelink id or meta data");
+    }
+
+    target._fl_meta_.ownedBy = '';
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: targetId,
+      data: target,
+    });
+  };
 
   export async function manageRelationship(sender: string, relationship: RelationshipJSON, canManage: boolean): Promise<any> {
     functions.logger.info("Managing relationship", {
