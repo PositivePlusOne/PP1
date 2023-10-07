@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 // Package imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,7 +78,7 @@ class ProfileController extends _$ProfileController {
   }
 
   bool get isCurrentlyOrganisation {
-    return state.currentProfile?.featureFlags.contains(kFeatureFlagOrganisation) ?? false;
+    return state.currentProfile?.isOrganisation ?? false;
   }
 
   bool get hasSetupProfile {

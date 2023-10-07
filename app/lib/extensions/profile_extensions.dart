@@ -124,13 +124,17 @@ extension UserProfileExtensions on Profile {
     return DateTime.now().difference(DateTime.parse(birthday)).inDays ~/ 365;
   }
 
-  // Checks the following properties, and comma seperates them if they are not empty and the visibility flag is set to true
+  /// small function to return if this profile is the profile of an organisation - as taken
+  /// from the featureFlags data - does it contain the entry 'organisation'
+  bool get isOrganisation => featureFlags.contains(kFeatureFlagOrganisation);
+
+  /// Checks the following properties, and comma seperates them if they are not empty and the visibility flag is set to true
   String getTagline(AppLocalizations localizations) {
     final List<String> taglineParts = [];
     final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
 
-    if (birthday.isNotEmpty) {
+    if (birthday.isNotEmpty && !isOrganisation) {
       taglineParts.add('$age');
     }
 
@@ -138,7 +142,7 @@ extension UserProfileExtensions on Profile {
       taglineParts.add(place!.description);
     }
 
-    if (hivStatus.isNotEmpty) {
+    if (hivStatus.isNotEmpty && !isOrganisation) {
       for (var status in hivControllerState.hivStatuses) {
         if (status.children == null) continue;
 
@@ -151,7 +155,7 @@ extension UserProfileExtensions on Profile {
       }
     }
 
-    if (genders.isNotEmpty) {
+    if (genders.isNotEmpty && !isOrganisation) {
       for (final String gender in genders) {
         if (!genderControllerState.options.any((element) => element.value == gender)) {
           continue;

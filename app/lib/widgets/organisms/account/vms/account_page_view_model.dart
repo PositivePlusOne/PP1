@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -39,14 +40,14 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Profile? profile = profileController.currentProfile;
     pageController = PageController(
-      initialPage: (profile?.featureFlags.contains(kFeatureFlagOrganisation) ?? true) ? 1 : 0,
+      initialPage: (profile?.isOrganisation ?? true) ? 1 : 0,
     );
     return AccountPageViewModelState.initialState();
   }
 
   void onProfileChange(int profileIndex, ProfileControllerState profileState, ProfileSwitchMixin mixin) {
     final Profile targetProfile = mixin.getSupportedProfiles()[profileIndex];
-    final bool isOrganisation = targetProfile.featureFlags.contains(kFeatureFlagOrganisation);
+    final bool isOrganisation = targetProfile.isOrganisation;
     final Color accentColour = targetProfile.accentColor.toSafeColorFromHex();
 
     final int targetPage = (isOrganisation ? 1 : 0);
@@ -83,5 +84,4 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
       profileAccentColour: profile?.accentColor.toColorFromHex() ?? Colors.white,
     );
   }
-
 }
