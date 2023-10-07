@@ -2,6 +2,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/fluent_validation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -9,6 +10,15 @@ import 'package:permission_handler/permission_handler.dart';
 enum LocalizationContextFlags {
   form,
 }
+
+/// a global cached instance so we can quickly get the strings without a context
+AppLocalizations? _instance;
+
+/// for when you don't have a context to create a new instance, you can use the static cached one
+AppLocalizations get appLocalizations => _instance!;
+
+/// only needs to be called the once (every time the local changes) to cache the current instance
+void cacheAppLocalizations(BuildContext context) => _instance = AppLocalizations.of(context);
 
 extension LocalizationExtensions on AppLocalizations {
   String fromObject(Object? error) {
