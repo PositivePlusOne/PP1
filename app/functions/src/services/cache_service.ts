@@ -27,7 +27,7 @@ export namespace CacheService {
 
         functions.logger.info(`Connecting to Redis at ${redisHost}:${redisPort}.`);
         redisClient = new redis.Redis(redisPort, redisHost, {
-            commandTimeout: 10000,
+            commandTimeout: 30000,
         });
 
         return redisClient;

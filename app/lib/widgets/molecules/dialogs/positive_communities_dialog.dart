@@ -154,11 +154,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final Logger logger = ref.read(loggerProvider);
 
     final bool canLoadNext = switch (communityType) {
-      CommunityType.following => !controller.state.hasMoreFollowing,
-      CommunityType.followers => !controller.state.hasMoreFollowers,
-      CommunityType.connected => !controller.state.hasMoreConnected,
-      CommunityType.blocked => !controller.state.hasMoreBlocked,
-      CommunityType.managed => !controller.state.hasMoreManaged,
+      CommunityType.following => controller.state.hasMoreFollowing,
+      CommunityType.followers => controller.state.hasMoreFollowers,
+      CommunityType.connected => controller.state.hasMoreConnected,
+      CommunityType.blocked => controller.state.hasMoreBlocked,
+      CommunityType.managed => controller.state.hasMoreManaged,
     };
 
     if (!canLoadNext) {
