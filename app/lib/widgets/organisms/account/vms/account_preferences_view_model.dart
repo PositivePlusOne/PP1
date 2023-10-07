@@ -2,6 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,11 +19,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import '../../../../constants/key_constants.dart';
@@ -115,7 +117,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   Future<void> toggleBiometrics(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     final bool isBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
     final bool newValue = !isBiometricsEnabled;
@@ -127,13 +129,9 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
       final availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
       if (availableBiometrics.isEmpty) {
         // there are none
-        final payload = NotificationPayload(
-          title: localizations.page_profile_biometrics_error_title,
-          body: localizations.page_profile_biometrics_none_available,
-        );
-        // which we want to show
-        final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
-        await handler.onNotificationDisplayed(payload, true);
+        ScaffoldMessenger.of(context).showSnackBar(PositiveErrorSnackBar(
+          text: localizations.page_profile_biometrics_none_available,
+        ));
         // and don't change the setting
         return;
       }
@@ -142,22 +140,16 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     await sharedPreferences.setBool(kBiometricsAcceptedKey, newValue);
     state = state.copyWith(areBiometricsEnabled: newValue);
 
-    late final NotificationPayload payload;
-
+    // inform nicely what was just done
     if (newValue) {
-      payload = NotificationPayload(
-        title: localizations.page_profile_biometrics_success_title,
-        body: localizations.page_profile_biometrics_success_body,
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: localizations.page_profile_biometrics_success_body, icon: Icons.fingerprint, backgroundColour: colours.black),
       );
     } else {
-      payload = NotificationPayload(
-        title: localizations.page_profile_biometrics_disabled_title,
-        body: localizations.page_profile_biometrics_disabled_body,
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: localizations.page_profile_biometrics_disabled_body, icon: Icons.fingerprint, backgroundColour: colours.black),
       );
     }
-
-    final NotificationHandler handler = notificationsController.getHandlerForPayload(payload);
-    await handler.onNotificationDisplayed(payload, true);
   }
 
   Future<void> toggleMarketingEmails(BuildContext context) async {
