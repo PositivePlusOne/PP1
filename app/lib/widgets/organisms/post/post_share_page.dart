@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -90,6 +91,7 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
   @override
   Widget build(BuildContext context) {
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final User? currentUser = ref.watch(firebaseAuthProvider.select((value) => value.currentUser));
     final Profile? currentProfile = profileControllerState.currentProfile;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -98,13 +100,15 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
-    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider();
-    final CommunitiesController communitiesController = ref.watch(communitiesControllerProvider.notifier);
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
+      currentProfile: currentProfile,
+      currentUser: currentUser,
+    );
+
+    ref.watch(communitiesControllerProvider.notifier);
 
     return PositiveCommunitiesDialog(
-      communitiesController: communitiesController,
-      supportedCommunityTypes: const [CommunityType.connected],
-      selectedCommunityType: CommunityType.connected,
+      controllerProvider: communitiesControllerProvider,
       actionLabel: 'Share',
       onActionPressed: () => onShareSelected(context, activity, currentProfile),
       isEnabled: !isBusy,

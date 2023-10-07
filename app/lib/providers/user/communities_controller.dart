@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -26,28 +27,38 @@ part 'communities_controller.g.dart';
 @freezed
 class CommunitiesControllerState with _$CommunitiesControllerState {
   const factory CommunitiesControllerState({
-    CommunityType? selectedCommunityType,
+    required User? currentUser,
+    required Profile? currentProfile,
+    required CommunityType selectedCommunityType,
     @Default(false) bool isBusy,
-    @Default({}) Map<String, String> followerProfileIds,
+    @Default({}) Set<String> followerProfileIds,
     @Default('') String followerPaginationCursor,
     @Default(true) bool hasMoreFollowers,
-    @Default({}) Map<String, String> followingProfileIds,
+    @Default({}) Set<String> followingProfileIds,
     @Default('') String followingPaginationCursor,
     @Default(true) bool hasMoreFollowing,
-    @Default({}) Map<String, String> blockedProfileIds,
+    @Default({}) Set<String> blockedProfileIds,
     @Default('') String blockedPaginationCursor,
     @Default(true) bool hasMoreBlocked,
-    @Default({}) Map<String, String> connectedProfileIds,
+    @Default({}) Set<String> connectedProfileIds,
     @Default('') String connectedPaginationCursor,
     @Default(true) bool hasMoreConnected,
-    @Default({}) Map<String, String> managedProfileIds,
+    @Default({}) Set<String> managedProfileIds,
     @Default('') String managedPaginationCursor,
     @Default(true) bool hasMoreManaged,
   }) = _CommunitiesControllerState;
 
-  factory CommunitiesControllerState.initialState({CommunityType initialType = CommunityType.connected}) => CommunitiesControllerState(
-        selectedCommunityType: initialType,
-      );
+  factory CommunitiesControllerState.initialState({
+    required Profile? currentProfile,
+    required User? currentUser,
+  }) {
+    final bool isManagedProfile = currentProfile != null && currentUser != null && currentProfile.flMeta?.id != currentUser.uid;
+    return CommunitiesControllerState(
+      currentUser: currentUser,
+      currentProfile: currentProfile,
+      selectedCommunityType: isManagedProfile ? CommunityType.managed : CommunityType.connected,
+    );
+  }
 }
 
 enum CommunityType {
@@ -57,8 +68,8 @@ enum CommunityType {
   connected,
   managed;
 
-  static List<CommunityType> get userProfileCommunityTypes => {CommunityType.followers, CommunityType.following, CommunityType.blocked, CommunityType.connected}.toList();
-  static List<CommunityType> get managedProfileCommunityTypes => {CommunityType.followers, CommunityType.following, CommunityType.managed}.toList();
+  static const List<CommunityType> userProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.blocked, CommunityType.connected];
+  static const List<CommunityType> managedProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.managed];
 
   // The community locales are inverted as the backend uses the opposite terminology
   String toLocale(bool isManagedProfile) {
@@ -80,8 +91,14 @@ class CommunitiesController extends _$CommunitiesController {
   bool get hasLoadedInitialData => state.followerProfileIds.isNotEmpty || state.followingProfileIds.isNotEmpty || state.blockedProfileIds.isNotEmpty || state.connectedProfileIds.isNotEmpty;
 
   @override
-  CommunitiesControllerState build() {
-    return CommunitiesControllerState.initialState();
+  CommunitiesControllerState build({
+    required Profile? currentProfile,
+    required User? currentUser,
+  }) {
+    return CommunitiesControllerState.initialState(
+      currentProfile: currentProfile,
+      currentUser: currentUser,
+    );
   }
 
   Future<void> setupListeners() async {

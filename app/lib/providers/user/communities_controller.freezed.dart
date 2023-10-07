@@ -16,8 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CommunitiesControllerState {
-  CommunityType? get selectedCommunityType =>
-      throw _privateConstructorUsedError;
+  User? get currentUser => throw _privateConstructorUsedError;
+  Profile? get currentProfile => throw _privateConstructorUsedError;
+  CommunityType get selectedCommunityType => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   Set<String> get followerProfileIds => throw _privateConstructorUsedError;
   String get followerPaginationCursor => throw _privateConstructorUsedError;
@@ -48,7 +49,9 @@ abstract class $CommunitiesControllerStateCopyWith<$Res> {
           CommunitiesControllerState>;
   @useResult
   $Res call(
-      {CommunityType? selectedCommunityType,
+      {User? currentUser,
+      Profile? currentProfile,
+      CommunityType selectedCommunityType,
       bool isBusy,
       Set<String> followerProfileIds,
       String followerPaginationCursor,
@@ -65,6 +68,8 @@ abstract class $CommunitiesControllerStateCopyWith<$Res> {
       Set<String> managedProfileIds,
       String managedPaginationCursor,
       bool hasMoreManaged});
+
+  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -81,7 +86,9 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedCommunityType = freezed,
+    Object? currentUser = freezed,
+    Object? currentProfile = freezed,
+    Object? selectedCommunityType = null,
     Object? isBusy = null,
     Object? followerProfileIds = null,
     Object? followerPaginationCursor = null,
@@ -100,10 +107,18 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
     Object? hasMoreManaged = null,
   }) {
     return _then(_value.copyWith(
-      selectedCommunityType: freezed == selectedCommunityType
+      currentUser: freezed == currentUser
+          ? _value.currentUser
+          : currentUser // ignore: cast_nullable_to_non_nullable
+              as User?,
+      currentProfile: freezed == currentProfile
+          ? _value.currentProfile
+          : currentProfile // ignore: cast_nullable_to_non_nullable
+              as Profile?,
+      selectedCommunityType: null == selectedCommunityType
           ? _value.selectedCommunityType
           : selectedCommunityType // ignore: cast_nullable_to_non_nullable
-              as CommunityType?,
+              as CommunityType,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -170,6 +185,18 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
               as bool,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileCopyWith<$Res>? get currentProfile {
+    if (_value.currentProfile == null) {
+      return null;
+    }
+
+    return $ProfileCopyWith<$Res>(_value.currentProfile!, (value) {
+      return _then(_value.copyWith(currentProfile: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -182,7 +209,9 @@ abstract class _$$CommunitiesControllerStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {CommunityType? selectedCommunityType,
+      {User? currentUser,
+      Profile? currentProfile,
+      CommunityType selectedCommunityType,
       bool isBusy,
       Set<String> followerProfileIds,
       String followerPaginationCursor,
@@ -199,6 +228,9 @@ abstract class _$$CommunitiesControllerStateImplCopyWith<$Res>
       Set<String> managedProfileIds,
       String managedPaginationCursor,
       bool hasMoreManaged});
+
+  @override
+  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -214,7 +246,9 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedCommunityType = freezed,
+    Object? currentUser = freezed,
+    Object? currentProfile = freezed,
+    Object? selectedCommunityType = null,
     Object? isBusy = null,
     Object? followerProfileIds = null,
     Object? followerPaginationCursor = null,
@@ -233,10 +267,18 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
     Object? hasMoreManaged = null,
   }) {
     return _then(_$CommunitiesControllerStateImpl(
-      selectedCommunityType: freezed == selectedCommunityType
+      currentUser: freezed == currentUser
+          ? _value.currentUser
+          : currentUser // ignore: cast_nullable_to_non_nullable
+              as User?,
+      currentProfile: freezed == currentProfile
+          ? _value.currentProfile
+          : currentProfile // ignore: cast_nullable_to_non_nullable
+              as Profile?,
+      selectedCommunityType: null == selectedCommunityType
           ? _value.selectedCommunityType
           : selectedCommunityType // ignore: cast_nullable_to_non_nullable
-              as CommunityType?,
+              as CommunityType,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -309,7 +351,9 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
 
 class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
   const _$CommunitiesControllerStateImpl(
-      {this.selectedCommunityType,
+      {required this.currentUser,
+      required this.currentProfile,
+      required this.selectedCommunityType,
       this.isBusy = false,
       final Set<String> followerProfileIds = const {},
       this.followerPaginationCursor = '',
@@ -333,7 +377,11 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
         _managedProfileIds = managedProfileIds;
 
   @override
-  final CommunityType? selectedCommunityType;
+  final User? currentUser;
+  @override
+  final Profile? currentProfile;
+  @override
+  final CommunityType selectedCommunityType;
   @override
   @JsonKey()
   final bool isBusy;
@@ -420,7 +468,7 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
 
   @override
   String toString() {
-    return 'CommunitiesControllerState(selectedCommunityType: $selectedCommunityType, isBusy: $isBusy, followerProfileIds: $followerProfileIds, followerPaginationCursor: $followerPaginationCursor, hasMoreFollowers: $hasMoreFollowers, followingProfileIds: $followingProfileIds, followingPaginationCursor: $followingPaginationCursor, hasMoreFollowing: $hasMoreFollowing, blockedProfileIds: $blockedProfileIds, blockedPaginationCursor: $blockedPaginationCursor, hasMoreBlocked: $hasMoreBlocked, connectedProfileIds: $connectedProfileIds, connectedPaginationCursor: $connectedPaginationCursor, hasMoreConnected: $hasMoreConnected, managedProfileIds: $managedProfileIds, managedPaginationCursor: $managedPaginationCursor, hasMoreManaged: $hasMoreManaged)';
+    return 'CommunitiesControllerState(currentUser: $currentUser, currentProfile: $currentProfile, selectedCommunityType: $selectedCommunityType, isBusy: $isBusy, followerProfileIds: $followerProfileIds, followerPaginationCursor: $followerPaginationCursor, hasMoreFollowers: $hasMoreFollowers, followingProfileIds: $followingProfileIds, followingPaginationCursor: $followingPaginationCursor, hasMoreFollowing: $hasMoreFollowing, blockedProfileIds: $blockedProfileIds, blockedPaginationCursor: $blockedPaginationCursor, hasMoreBlocked: $hasMoreBlocked, connectedProfileIds: $connectedProfileIds, connectedPaginationCursor: $connectedPaginationCursor, hasMoreConnected: $hasMoreConnected, managedProfileIds: $managedProfileIds, managedPaginationCursor: $managedPaginationCursor, hasMoreManaged: $hasMoreManaged)';
   }
 
   @override
@@ -428,6 +476,10 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommunitiesControllerStateImpl &&
+            (identical(other.currentUser, currentUser) ||
+                other.currentUser == currentUser) &&
+            (identical(other.currentProfile, currentProfile) ||
+                other.currentProfile == currentProfile) &&
             (identical(other.selectedCommunityType, selectedCommunityType) ||
                 other.selectedCommunityType == selectedCommunityType) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
@@ -467,25 +519,28 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      selectedCommunityType,
-      isBusy,
-      const DeepCollectionEquality().hash(_followerProfileIds),
-      followerPaginationCursor,
-      hasMoreFollowers,
-      const DeepCollectionEquality().hash(_followingProfileIds),
-      followingPaginationCursor,
-      hasMoreFollowing,
-      const DeepCollectionEquality().hash(_blockedProfileIds),
-      blockedPaginationCursor,
-      hasMoreBlocked,
-      const DeepCollectionEquality().hash(_connectedProfileIds),
-      connectedPaginationCursor,
-      hasMoreConnected,
-      const DeepCollectionEquality().hash(_managedProfileIds),
-      managedPaginationCursor,
-      hasMoreManaged);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        currentUser,
+        currentProfile,
+        selectedCommunityType,
+        isBusy,
+        const DeepCollectionEquality().hash(_followerProfileIds),
+        followerPaginationCursor,
+        hasMoreFollowers,
+        const DeepCollectionEquality().hash(_followingProfileIds),
+        followingPaginationCursor,
+        hasMoreFollowing,
+        const DeepCollectionEquality().hash(_blockedProfileIds),
+        blockedPaginationCursor,
+        hasMoreBlocked,
+        const DeepCollectionEquality().hash(_connectedProfileIds),
+        connectedPaginationCursor,
+        hasMoreConnected,
+        const DeepCollectionEquality().hash(_managedProfileIds),
+        managedPaginationCursor,
+        hasMoreManaged
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -498,7 +553,9 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
 abstract class _CommunitiesControllerState
     implements CommunitiesControllerState {
   const factory _CommunitiesControllerState(
-      {final CommunityType? selectedCommunityType,
+      {required final User? currentUser,
+      required final Profile? currentProfile,
+      required final CommunityType selectedCommunityType,
       final bool isBusy,
       final Set<String> followerProfileIds,
       final String followerPaginationCursor,
@@ -517,7 +574,11 @@ abstract class _CommunitiesControllerState
       final bool hasMoreManaged}) = _$CommunitiesControllerStateImpl;
 
   @override
-  CommunityType? get selectedCommunityType;
+  User? get currentUser;
+  @override
+  Profile? get currentProfile;
+  @override
+  CommunityType get selectedCommunityType;
   @override
   bool get isBusy;
   @override

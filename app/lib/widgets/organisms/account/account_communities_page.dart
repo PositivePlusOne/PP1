@@ -1,7 +1,10 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/third_party.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,17 +21,13 @@ class AccountCommunitiesPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProfileController profileController = ref.watch(profileControllerProvider.notifier);
-    final bool isManaged = profileController.isCurrentManagedProfile;
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final User? currentUser = ref.watch(firebaseAuthProvider.select((value) => value.currentUser));
 
-    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(initialType: isManaged ? CommunityType.managed : CommunityType.connected);
-    final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
-    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
+    final CommunitiesControllerProvider provider = communitiesControllerProvider(currentProfile: currentProfile, currentUser: currentUser);
 
     return PositiveCommunitiesDialog(
-      communitiesController: communitiesController,
-      selectedCommunityType: communitiesControllerState.selectedCommunityType,
-      supportedCommunityTypes: isManaged ? CommunityType.managedProfileCommunityTypes : CommunityType.userProfileCommunityTypes,
+      controllerProvider: provider,
     );
   }
 }
