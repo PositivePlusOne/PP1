@@ -6,6 +6,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/organisms/biometrics/vms/biometrics_preferences_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -118,6 +119,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     final Logger logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final BiometricsPreferencesViewModel biometricsViewModel = ref.watch(biometricsPreferencesViewModelProvider.notifier);
 
     final bool isBiometricsEnabled = sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false;
     final bool newValue = !isBiometricsEnabled;
@@ -142,10 +144,15 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
     // inform nicely what was just done
     if (newValue) {
+      // be sure that we are authenticated
+      await biometricsViewModel.onPermitSelected();
+
+      // and show them that we now are happy
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: localizations.page_profile_biometrics_success_body, icon: Icons.fingerprint, backgroundColour: colours.black),
       );
     } else {
+      // and let them know that's disabled
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: localizations.page_profile_biometrics_disabled_body, icon: Icons.fingerprint, backgroundColour: colours.black),
       );
