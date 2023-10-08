@@ -31,9 +31,10 @@ export namespace ReactionCommentNotification {
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
     const activityId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
-    const reactionId = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
 
-    if (!senderId || !receiverId || !activityId || !reactionId || !origin) {
+    const reactionId = FlamelinkHelpers.getFlamelinkIdFromObject(reaction) || "";
+
+    if (!senderId || !receiverId || !activityId) {
         throw new Error("Unable to generate notification payload");
     }
 
@@ -47,7 +48,6 @@ export namespace ReactionCommentNotification {
       extra_data: {
         activity_id: activityId,
         reaction_id: reactionId,
-        origin,
       },
       topic: NotificationTopic.NEW_COMMENT,
       action: NotificationAction.POST_COMMENTED,

@@ -23,6 +23,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/splash/splash_page.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 
 part 'post_view_model.freezed.dart';
@@ -65,11 +66,10 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
 
   Future<bool> onWillPopScope() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final bool comeFromDeepLink = appRouter.stack.any((element) => element is SplashRoute);
+    final bool comeFromDeepLink = appRouter.stack.any((element) => element.child is SplashPage);
 
     if (comeFromDeepLink) {
-      appRouter.removeWhere((route) => true);
-      appRouter.navigate(const HomeRoute());
+      appRouter.replaceAll([const HomeRoute()]);
     } else {
       appRouter.removeLast();
     }

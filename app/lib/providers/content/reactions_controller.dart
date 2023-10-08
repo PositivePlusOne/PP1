@@ -11,7 +11,6 @@ import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
@@ -62,8 +61,8 @@ class ReactionsController extends _$ReactionsController {
         activityId: activity?.flMeta?.id ?? '',
       );
 
-      final List<String> keys = buildExpectedCacheKeysForReaction(currentProfile, stubReaction);
-      cacheKeys.addAll(keys);
+      final String cacheKey = buildExpectedReactionKey(stubReaction);
+      cacheKeys.add(cacheKey);
     }
 
     return cacheKeys;
@@ -74,7 +73,7 @@ class ReactionsController extends _$ReactionsController {
       return reaction.flMeta!.id!;
     }
 
-    return 'reaction:${reaction.kind}:${reaction.activityId}:${reaction.reactionId}:${reaction.userId}';
+    return 'reaction:${ReactionType.toJson(reaction.kind)}:${reaction.activityId}:${reaction.reactionId}:${reaction.userId}';
   }
 
   String buildExpectedStatisticsCacheKey({
@@ -178,7 +177,7 @@ class ReactionsController extends _$ReactionsController {
 
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Reaction? bookmarkReaction = activity.getUniqueReaction(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    final Reaction? bookmarkReaction = activity.getUniqueReaction(currentProfile: currentProfile, kind: const ReactionType.bookmark());
 
     if (bookmarkReaction == null) {
       throw Exception('No bookmark found for activity: $activity');
@@ -213,14 +212,13 @@ class ReactionsController extends _$ReactionsController {
   Future<void> unlikeActivity({
     required Activity activity,
     required Profile? currentProfile,
-    required PositiveReactionsState reactionsFeedState,
   }) async {
     final Logger logger = ref.read(loggerProvider);
 
     logger.i('CommunitiesController - unlikeActivity - Removing like from activity: $activity');
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Reaction? likeReaction = activity.getUniqueReaction(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    final Reaction? likeReaction = activity.getUniqueReaction(currentProfile: currentProfile, kind: const ReactionType.like());
     if (likeReaction == null) {
       throw Exception('No like found for activity: $activity');
     }

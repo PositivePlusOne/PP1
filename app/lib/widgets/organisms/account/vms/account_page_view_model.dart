@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import '../../../../hooks/lifecycle_hook.dart';

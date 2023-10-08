@@ -53,15 +53,17 @@ export namespace ReactionEndpoints {
 
         const isUniqueReaction = ReactionService.isUniqueReactionKind(kind);
         if (isUniqueReaction) {
-            functions.logger.debug("Checking meets unique reaction criteria");
             const expectedReactionKey = ReactionService.getExpectedKeyFromOptions(reactionJSON);
             const existingReaction = await ReactionService.getReaction(expectedReactionKey);
+            functions.logger.debug("Checking meets unique reaction criteria", { expectedReactionKey, existingReaction });
             if (existingReaction) {
                 throw new functions.https.HttpsError("already-exists", "Unique reaction already exists for this activity and user");
             }
         }
 
         const streamClient = FeedService.getFeedsUserClient(uid);
+
+        functions.logger.info("Adding reaction", { reactionJSON });
         const reaction = await ReactionService.addReaction(streamClient, reactionJSON);
 
         await ReactionService.processNotifications(kind, uid, activity, reaction);

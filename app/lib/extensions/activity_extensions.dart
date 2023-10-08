@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -359,25 +360,13 @@ extension ActivityExt on Activity {
 
   Reaction? getUniqueReaction({
     required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
+    required ReactionType kind,
   }) {
-    final String activityId = flMeta?.id ?? '';
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
-      return null;
-    }
-
-    final List<Reaction> reactions = reactionsFeedState?.pagingController.itemList?.where((reaction) {
-          return reaction.userId == currentProfileId;
-        }).toList() ??
-        [];
-
-    if (reactions.length != 1) {
-      return null;
-    }
-
-    return reactions.first;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final List<String> cacheKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: this, currentProfile: currentProfile);
+    final List<Reaction> reactions = cacheController.list(cacheKeys).whereType<Reaction>().toList();
+    return reactions.firstWhereOrNull((element) => element.kind == kind);
   }
 
   void incrementReactionCount({
@@ -405,23 +394,6 @@ extension ActivityExt on Activity {
     cacheController.add(key: feedStateKey, value: newState);
   }
 
-  bool isActivityBookmarked({
-    required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
-  }) {
-    final String activityId = flMeta?.id ?? '';
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
-      return false;
-    }
-
-    return reactionsFeedState?.pagingController.itemList?.any((reaction) {
-          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.bookmark();
-        }) ==
-        true;
-  }
-
   Future<void> onPostBookmarked({
     required BuildContext context,
     required Profile? currentProfile,
@@ -437,7 +409,7 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile);
     if (isBookmarked) {
       await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -454,19 +426,22 @@ extension ActivityExt on Activity {
 
   bool isActivityLiked({
     required Profile? currentProfile,
-    required PositiveReactionsState reactionsFeedState,
+  }) =>
+      hasUniqueReaction(currentProfile: currentProfile, kind: const ReactionType.like());
+
+  bool isActivityBookmarked({
+    required Profile? currentProfile,
+  }) =>
+      hasUniqueReaction(currentProfile: currentProfile, kind: const ReactionType.bookmark());
+
+  bool hasUniqueReaction({
+    required Profile? currentProfile,
+    required ReactionType kind,
   }) {
-    final String activityId = flMeta?.id ?? '';
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
-      return false;
-    }
-
-    return reactionsFeedState.pagingController.itemList?.any((reaction) {
-          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.like();
-        }) ==
-        true;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final List<String> cacheKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: this, currentProfile: currentProfile);
+    return cacheController.list(cacheKeys).any((element) => element is Reaction && element.kind == kind);
   }
 
   Future<void> onPostLiked({
@@ -481,8 +456,6 @@ extension ActivityExt on Activity {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
 
-    final PositiveReactionsState feedState = reactionsController.getPositiveReactionsStateForActivity(activity: activity, currentProfile: currentProfile);
-
     final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
 
@@ -490,9 +463,9 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isLiked = isActivityLiked(currentProfile: currentProfile, reactionsFeedState: feedState);
+    final bool isLiked = isActivityLiked(currentProfile: currentProfile);
     if (isLiked) {
-      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: feedState);
+      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile);
       incrementReactionCount(kind: const ReactionType.like(), offset: -1);
 
       ScaffoldMessenger.of(context).showSnackBar(

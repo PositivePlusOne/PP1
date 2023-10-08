@@ -107,7 +107,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                     // Unique reactions
                     if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForActivitiesAndUser([activity], sender);
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(activityId, sender);
                         functions.logger.info("Unique reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {
@@ -137,7 +137,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                     // Unique reactions
                     if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostTargetActivityOriginFeed, repostTargetActivityId, sender);
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostTargetActivityId, sender);
                         functions.logger.info("Unique nested reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {

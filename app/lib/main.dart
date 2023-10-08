@@ -12,8 +12,8 @@ import 'package:app/observers/route_analytics_observer.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
-import 'init.dart';
 import './extensions/localization_extensions.dart';
+import 'init.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 

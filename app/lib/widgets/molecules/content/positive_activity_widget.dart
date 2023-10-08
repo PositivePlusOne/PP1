@@ -21,7 +21,7 @@ import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
 
-class PositiveActivityWidget extends HookConsumerWidget {
+class PositiveActivityWidget extends StatefulHookConsumerWidget {
   const PositiveActivityWidget({
     required this.targetFeed,
     required this.activity,
@@ -65,35 +65,40 @@ class PositiveActivityWidget extends HookConsumerWidget {
   final bool isShared;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => PositiveActivityWidgetState();
+}
+
+class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> {
+  @override
+  Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final bool isLiked = currentProfileReactions.any((reaction) => reaction.kind == const ReactionType.like());
-    final bool isBookmarked = currentProfileReactions.any((reaction) => reaction.kind == const ReactionType.bookmark());
+    final bool isLiked = widget.currentProfileReactions.any((reaction) => reaction.kind == const ReactionType.like());
+    final bool isBookmarked = widget.currentProfileReactions.any((reaction) => reaction.kind == const ReactionType.bookmark());
 
-    final int totalLikes = activityReactionStatistics?.counts["like"] ?? 0;
-    final int totalComments = activityReactionStatistics?.counts["comment"] ?? 0;
+    final int totalLikes = widget.activityReactionStatistics?.counts["like"] ?? 0;
+    final int totalComments = widget.activityReactionStatistics?.counts["comment"] ?? 0;
 
-    final bool isRepost = activity?.repostConfiguration?.targetActivityPublisherId.isNotEmpty ?? false;
-    final Relationship? actualRelationship = isRepost ? reposterRelationship : targetRelationship;
+    final bool isRepost = widget.activity?.repostConfiguration?.targetActivityPublisherId.isNotEmpty ?? false;
+    final Relationship? actualRelationship = isRepost ? widget.reposterRelationship : widget.targetRelationship;
 
-    final ActivitySecurityConfigurationMode viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final ActivitySecurityConfigurationMode viewMode = widget.activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
     final bool canView = viewMode.canActOnActivity(
-      activity: activity,
-      currentProfile: currentProfile,
+      activity: widget.activity,
+      currentProfile: widget.currentProfile,
       publisherRelationship: actualRelationship,
     );
 
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    final String publisherId = activity?.publisherInformation?.publisherId ?? '';
+    final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
+    final String publisherId = widget.activity?.publisherInformation?.publisherId ?? '';
     final bool isPublisher = currentProfileId == publisherId;
 
-    final ActivitySecurityConfigurationMode shareMode = activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final ActivitySecurityConfigurationMode shareMode = widget.activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
 
     final bool canActShare = shareMode.canActOnActivity(
-      activity: activity,
-      currentProfile: currentProfile,
+      activity: widget.activity,
+      currentProfile: widget.currentProfile,
       publisherRelationship: actualRelationship,
     );
 
@@ -101,15 +106,15 @@ class PositiveActivityWidget extends HookConsumerWidget {
       return Column(
         children: <Widget>[
           ActivityPostHeadingWidget(
-            flMetaData: activity?.flMeta,
-            isShared: isShared,
-            publisher: reposterProfile,
-            promotion: activityPromotion,
+            flMetaData: widget.activity?.flMeta,
+            isShared: widget.isShared,
+            publisher: widget.reposterProfile,
+            promotion: widget.activityPromotion,
             onOptions: () {
-              activity?.onPostOptionsSelected(
+              widget.activity?.onPostOptionsSelected(
                 context: context,
-                targetProfile: targetProfile,
-                currentProfile: currentProfile,
+                targetProfile: widget.targetProfile,
+                currentProfile: widget.currentProfile,
               );
             },
           ),
@@ -121,20 +126,20 @@ class PositiveActivityWidget extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(kBorderRadiusSmall),
             ),
             child: PositiveActivityWidget(
-              activity: activity,
-              activityReactionStatistics: activityReactionStatistics,
-              activityPromotion: activityPromotion,
-              activityReactionFeedState: activityReactionFeedState,
-              targetProfile: targetProfile,
-              targetRelationship: targetRelationship,
-              currentProfile: currentProfile,
-              currentProfileReactions: currentProfileReactions,
+              activity: widget.activity,
+              activityReactionStatistics: widget.activityReactionStatistics,
+              activityPromotion: widget.activityPromotion,
+              activityReactionFeedState: widget.activityReactionFeedState,
+              targetProfile: widget.targetProfile,
+              targetRelationship: widget.targetRelationship,
+              currentProfile: widget.currentProfile,
+              currentProfileReactions: widget.currentProfileReactions,
               reposterProfile: null,
               reposterRelationship: null,
-              index: index,
-              isEnabled: isEnabled,
-              isFullscreen: isFullscreen,
-              targetFeed: targetFeed,
+              index: widget.index,
+              isEnabled: widget.isEnabled,
+              isFullscreen: widget.isFullscreen,
+              targetFeed: widget.targetFeed,
               isShared: true,
             ),
           ),
@@ -142,20 +147,20 @@ class PositiveActivityWidget extends HookConsumerWidget {
             isLiked: isLiked,
             likes: totalLikes,
             likesEnabled: !isPublisher,
-            onLike: (context) => activity?.onPostLiked(
+            onLike: (context) => widget.activity?.onPostLiked(
               context: context,
-              currentProfile: currentProfile,
-              activity: activity,
+              currentProfile: widget.currentProfile,
+              activity: widget.activity,
             ),
             shareEnabled: canActShare,
             onShare: (_) {},
             comments: totalComments,
             onComment: (_) {},
             bookmarked: isBookmarked,
-            onBookmark: (context) => activity?.onPostBookmarked(
+            onBookmark: (context) => widget.activity?.onPostBookmarked(
               context: context,
-              currentProfile: currentProfile,
-              reactionsFeedState: activityReactionFeedState,
+              currentProfile: widget.currentProfile,
+              reactionsFeedState: widget.activityReactionFeedState,
             ),
           ),
         ],
@@ -163,48 +168,48 @@ class PositiveActivityWidget extends HookConsumerWidget {
     }
 
     return IgnorePointer(
-      ignoring: !isEnabled,
+      ignoring: !widget.isEnabled,
       child: Column(
         children: <Widget>[
           PositiveTapBehaviour(
             child: ActivityPostHeadingWidget(
-              flMetaData: activity?.flMeta,
-              publisher: targetProfile,
-              promotion: activityPromotion,
-              onOptions: () => activity?.onPostOptionsSelected(
+              flMetaData: widget.activity?.flMeta,
+              publisher: widget.targetProfile,
+              promotion: widget.activityPromotion,
+              onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
-                targetProfile: targetProfile,
-                currentProfile: currentProfile,
+                targetProfile: widget.targetProfile,
+                currentProfile: widget.currentProfile,
               ),
-              isShared: isShared,
+              isShared: widget.isShared,
             ),
           ),
           if (canView) ...<Widget>[
             PositivePostLayoutWidget(
-              postContent: activity,
-              publisherProfile: targetProfile,
-              publisherRelationship: targetRelationship,
-              promotion: activityPromotion,
-              isShortformPost: !isFullscreen,
-              sidePadding: isShared ? kPaddingExtraSmall : kPaddingSmall,
-              onLike: (context) => activity?.onPostLiked(
+              postContent: widget.activity,
+              publisherProfile: widget.targetProfile,
+              publisherRelationship: widget.targetRelationship,
+              promotion: widget.activityPromotion,
+              isShortformPost: !widget.isFullscreen,
+              sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
+              onLike: (context) => widget.activity?.onPostLiked(
                 context: context,
-                currentProfile: currentProfile,
-                activity: activity,
+                currentProfile: widget.currentProfile,
+                activity: widget.activity,
               ),
               isLiked: isLiked,
               totalLikes: totalLikes,
               totalComments: totalComments,
               isBookmarked: isBookmarked,
-              onBookmark: (context) => activity?.onPostBookmarked(
+              onBookmark: (context) => widget.activity?.onPostBookmarked(
                 context: context,
-                currentProfile: currentProfile,
-                reactionsFeedState: activityReactionFeedState,
+                currentProfile: widget.currentProfile,
+                reactionsFeedState: widget.activityReactionFeedState,
               ),
-              isBusy: !isEnabled,
-              onPostPageRequested: activity?.requestPostRoute,
-              isShared: isShared,
-              onImageTap: (media) => isFullscreen ? activity?.requestFullscreenMedia(media) : activity?.requestPostRoute(context),
+              isBusy: !widget.isEnabled,
+              onPostPageRequested: widget.activity?.requestPostRoute,
+              isShared: widget.isShared,
+              onImageTap: (media) => widget.isFullscreen ? widget.activity?.requestFullscreenMedia(media) : widget.activity?.requestPostRoute(context),
             ),
           ] else ...<Widget>[
             Padding(
