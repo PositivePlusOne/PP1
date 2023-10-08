@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
@@ -13,9 +12,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/activity_post_heading_widget.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
@@ -149,7 +145,7 @@ class PositiveActivityWidget extends HookConsumerWidget {
             onLike: (context) => activity?.onPostLiked(
               context: context,
               currentProfile: currentProfile,
-              reactionsFeedState: activityReactionFeedState,
+              activity: activity,
             ),
             shareEnabled: canActShare,
             onShare: (_) {},
@@ -194,7 +190,7 @@ class PositiveActivityWidget extends HookConsumerWidget {
               onLike: (context) => activity?.onPostLiked(
                 context: context,
                 currentProfile: currentProfile,
-                reactionsFeedState: activityReactionFeedState,
+                activity: activity,
               ),
               isLiked: isLiked,
               totalLikes: totalLikes,

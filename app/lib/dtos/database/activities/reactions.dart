@@ -4,7 +4,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'reactions.freezed.dart';
@@ -86,9 +85,9 @@ class ReactionStatistics with _$ReactionStatistics {
 
   factory ReactionStatistics.fromJson(Map<String, dynamic> json) => _$ReactionStatisticsFromJson(json);
 
-  static ReactionStatistics newEntry(Activity activity) {
+  static ReactionStatistics newEntry(String activityId) {
     return ReactionStatistics(
-      activityId: activity.flMeta?.id ?? '',
+      activityId: activityId,
       reactionId: '',
       userId: '',
       counts: {},

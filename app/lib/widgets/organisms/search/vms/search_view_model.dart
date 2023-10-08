@@ -4,7 +4,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -18,6 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/search_api_service.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/profile/profile.dart';

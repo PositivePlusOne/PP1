@@ -380,6 +380,31 @@ extension ActivityExt on Activity {
     return reactions.first;
   }
 
+  void incrementReactionCount({
+    required ReactionType kind,
+    required int offset,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    if (activityId.isEmpty) {
+      return;
+    }
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final String feedStateKey = reactionsController.buildExpectedStatisticsCacheKey(
+      activityId: activityId,
+    );
+
+    final ReactionStatistics cachedState = reactionsController.getStatisticsForActivity(activityId: activityId);
+    final Map<String, int> counts = {...cachedState.counts};
+
+    final String kindStr = ReactionType.toJson(kind);
+    counts[kindStr] = counts[kindStr] ?? 0 + offset;
+
+    final ReactionStatistics newState = cachedState.copyWith(counts: counts);
+    cacheController.add(key: feedStateKey, value: newState);
+  }
+
   bool isActivityBookmarked({
     required Profile? currentProfile,
     required PositiveReactionsState? reactionsFeedState,
@@ -447,14 +472,16 @@ extension ActivityExt on Activity {
   Future<void> onPostLiked({
     required BuildContext context,
     required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
+    required Activity? activity,
   }) async {
-    if (reactionsFeedState == null) {
+    if (activity == null) {
       throw Exception('reactionsFeedState is null');
     }
 
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+
+    final PositiveReactionsState feedState = reactionsController.getPositiveReactionsStateForActivity(activity: activity, currentProfile: currentProfile);
 
     final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
@@ -463,16 +490,19 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isLiked = isActivityLiked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    final bool isLiked = isActivityLiked(currentProfile: currentProfile, reactionsFeedState: feedState);
     if (isLiked) {
-      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: feedState);
+      incrementReactionCount(kind: const ReactionType.like(), offset: -1);
+
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
       return;
     }
 
-    await reactionsController.likeActivity(activityId: activityId, uid: profileId);
+    await reactionsController.likeActivity(activityId: activityId);
+    incrementReactionCount(kind: const ReactionType.like(), offset: 1);
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
     );

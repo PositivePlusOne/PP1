@@ -46,7 +46,7 @@ class PositiveReactionsState with PositivePaginationControllerState {
     );
   }
 
-  static buildReactionsCacheKey({
+  static String buildReactionsCacheKey({
     required String activityId,
     required String profileId,
   }) {

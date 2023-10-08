@@ -84,11 +84,9 @@ class ReactionsController extends _$ReactionsController {
   }
 
   ReactionStatistics getStatisticsForActivity({
-    required Activity activity,
-    required Reaction? reaction,
+    required String activityId,
   }) {
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String activityId = activity.flMeta?.id ?? '';
     final String cacheKey = buildExpectedStatisticsCacheKey(
       activityId: activityId,
     );
@@ -98,16 +96,15 @@ class ReactionsController extends _$ReactionsController {
       return statistics;
     }
 
-    final ReactionStatistics newStatistics = ReactionStatistics.newEntry(activity);
+    final ReactionStatistics newStatistics = ReactionStatistics.newEntry(activityId);
     cacheController.add(key: cacheKey, value: newStatistics, metadata: newStatistics.flMeta);
 
     return newStatistics;
   }
 
-  PositiveReactionsState getPositiveReactionsStateForActivityAndKind({
+  PositiveReactionsState getPositiveReactionsStateForActivity({
     required Activity activity,
     required Profile? currentProfile,
-    required ReactionType kind,
   }) {
     final String activityId = activity.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
@@ -118,20 +115,21 @@ class ReactionsController extends _$ReactionsController {
     }
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final PositiveReactionsState state = PositiveReactionsState.buildReactionsCacheKey(
+    final String cacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfileId,
     );
 
     // Check if we have the state in the cache, if not, add it
-    final String cacheKey = state.buildCacheKey();
     final PositiveReactionsState? cachedState = cacheController.get(cacheKey);
     if (cachedState != null) {
       return cachedState;
     }
 
     logger.i('Adding positive reactions state to cache: $cacheKey');
+    final PositiveReactionsState state = PositiveReactionsState.createNewFeedState(activityId, currentProfileId);
     cacheController.add(key: cacheKey, value: state);
+
     return state;
   }
 
@@ -140,25 +138,19 @@ class ReactionsController extends _$ReactionsController {
     required Profile? currentProfile,
   }) {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    final List<Reaction> reactions = <Reaction>[];
-
-    for (final String kind in kAllReactionTypes) {
-      final ReactionType reactionType = ReactionType.fromJson(kind);
-      final PositiveReactionsState state = getPositiveReactionsStateForActivityAndKind(
-        activity: activity,
-        currentProfile: currentProfile,
-        kind: reactionType,
-      );
-
-      final List<Reaction> ownReactions = state.pagingController.itemList?.where((reaction) {
-            return reaction.userId == currentProfileId;
-          }).toList() ??
-          [];
-
-      reactions.addAll(ownReactions);
+    if (currentProfileId.isEmpty) {
+      return [];
     }
 
-    return reactions;
+    final PositiveReactionsState state = getPositiveReactionsStateForActivity(
+      activity: activity,
+      currentProfile: currentProfile,
+    );
+
+    return state.pagingController.itemList?.where((reaction) {
+          return reaction.userId == currentProfileId;
+        }).toList() ??
+        [];
   }
 
   Future<void> bookmarkActivity({
@@ -205,7 +197,6 @@ class ReactionsController extends _$ReactionsController {
 
   Future<void> likeActivity({
     required String activityId,
-    required String uid,
   }) async {
     final Logger logger = ref.read(loggerProvider);
     logger.i('CommunitiesController - likeActivity - Liking activity: $activityId');

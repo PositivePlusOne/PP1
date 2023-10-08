@@ -17,11 +17,13 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 
 part 'post_view_model.freezed.dart';
 part 'post_view_model.g.dart';
@@ -135,11 +137,44 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
       logger.i('Posting comment');
       state = state.copyWith(isBusy: true);
       final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-      await reactionApiService.postReaction(
+      final Reaction newReaction = await reactionApiService.postReaction(
         activityId: state.activityId,
         kind: 'comment',
         text: trimmedString,
       );
+
+      // Add the reaction to the reactions feed
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      final Activity? activity = cacheController.get<Activity>(state.activityId);
+      final Profile? currentProfile = cacheController.get<Profile>(profileController.currentProfileId ?? '');
+      if (activity == null || currentProfile == null) {
+        logger.e('Activity or current profile is null');
+        return;
+      }
+
+      final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
+      final String reactionsCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+        activityId: activityId,
+        profileId: profileController.currentProfileId ?? '',
+      );
+
+      final PositiveReactionsState reactionsState = cacheController.get<PositiveReactionsState>(reactionsCacheKey) ?? PositiveReactionsState.createNewFeedState(activityId, profileController.currentProfileId ?? '');
+      reactionsState.pagingController.itemList?.add(newReaction);
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      reactionsState.pagingController.notifyListeners();
+
+      // Update the reaction counts
+      final String reactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+      ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
+
+      final Map<String, int> counts = {...reactionStatistics.counts};
+      counts['comment'] = counts['comment'] ?? 0 + 1;
+      reactionStatistics = reactionStatistics.copyWith(counts: counts);
+
+      // Save new state
+      cacheController.add(key: reactionsCacheKey, value: reactionsState);
+      cacheController.add(key: reactionStatisticsCacheKey, value: reactionStatistics);
 
       commentTextController.clear();
       state = state.copyWith(currentCommentText: '');

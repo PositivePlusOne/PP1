@@ -1,7 +1,12 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+
+// Project imports:
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
-import 'package:flutter/material.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 extension MessageExtensions on Message {
   static const Set<String> validMessageUriSchemes = {
