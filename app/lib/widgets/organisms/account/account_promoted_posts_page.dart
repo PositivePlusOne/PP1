@@ -74,65 +74,48 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
     final Size screenSize = mediaQueryData.size;
 
     return PositiveScaffold(
+      decorations: buildType5ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            Stack(
+            PositiveBackButton(isDisabled: state.isBusy),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localisations.page_account_promote_posts_title,
+              style: typography.styleHero.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              localisations.page_account_promote_posts_body,
+              style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveTransparentSheet(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: kPaddingSplashTextBreak),
-                  child: SizedBox(
-                    width: screenSize.width,
-                    height: screenSize.width,
-                    child: Stack(
-                      children: buildType5ScaffoldDecorations(colors),
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    PositiveBackButton(isDisabled: state.isBusy),
-                    const SizedBox(height: kPaddingMedium),
-                    Text(
-                      localisations.page_account_promote_posts_title,
-                      style: typography.styleHero.copyWith(color: colors.black),
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    Text(
-                      localisations.page_account_promote_posts_body,
-                      style: typography.styleBody.copyWith(color: colors.black),
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    PositiveTransparentSheet(
-                      children: [
-                        ..._bullets(
-                          [
-                            localisations.page_account_promote_posts_body_one,
-                            localisations.page_account_promote_posts_body_two,
-                            localisations.page_account_promote_posts_body_three,
-                            localisations.page_account_promote_posts_body_four,
-                            localisations.page_account_promote_posts_body_five,
-                            localisations.page_account_promote_posts_body_six,
-                          ],
-                          colors,
-                          typography,
-                        ),
-                        PositiveRichText(
-                          body: "To get started, drop us a line at\n{}",
-                          onActionTapped: (_) => 'mailto:promote@positiveplusone.com'.attemptToLaunchURL(),
-                          actionColor: colors.linkBlue,
-                          actions: const <String>["promote@positiveplusone.com"],
-                        ),
-                      ],
-                    ),
+                ..._bullets(
+                  [
+                    localisations.page_account_promote_posts_body_one,
+                    localisations.page_account_promote_posts_body_two,
+                    localisations.page_account_promote_posts_body_three,
+                    localisations.page_account_promote_posts_body_four,
+                    localisations.page_account_promote_posts_body_five,
+                    localisations.page_account_promote_posts_body_six,
                   ],
+                  colors,
+                  typography,
+                ),
+                PositiveRichText(
+                  body: "To get started, drop us a line at\n{}",
+                  onActionTapped: (_) => 'mailto:promote@positiveplusone.com'.attemptToLaunchURL(),
+                  actionColor: colors.linkBlue,
+                  actions: const <String>["promote@positiveplusone.com"],
                 ),
               ],
-            )
+            ),
           ],
         ),
       ],
-      trailingWidgets: <Widget>[
+      footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
           onTapped: () => appRouter.pop(),
