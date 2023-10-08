@@ -280,6 +280,15 @@
     "page_account_actions_change_delete_account_finished_body": "Your account deletion has been started and you will no longer be able to access your account. You will receive an email once your account has been deleted.",
     "page_account_actions_change_delete_account_finished_button": "Close App",
 
+    "page_account_promote_posts_title": "Promote your posts",
+    "page_account_promote_posts_body": "To promote your posts, you'll need to get set up with payment details and one of our promotion plans.",
+    "page_account_promote_posts_body_one": "Features",
+    "page_account_promote_posts_body_two": "And",
+    "page_account_promote_posts_body_three": "Benefits",
+    "page_account_promote_posts_body_four": "Of",
+    "page_account_promote_posts_body_five": "Promoted",
+    "page_account_promote_posts_body_six": "Posts",
+    "page_account_close_button": "Got it",
 
     "page_account_actions_change_email_address_title": "Change Email Address",
     "page_account_actions_change_email_address_body": "Switching emails? Great! What's your shiny new email address?",
@@ -295,11 +304,6 @@
     "page_account_actions_change_phone_body": "Switching digits? Perfect! What's your new number?\n\nIn the future, we may use your number for account security purposes.",
     "page_account_actions_change_phone_updated_title": "All Done!",
     "page_account_actions_change_phone_updated_body": "We've got your new number. You're all set.",
-
-    "page_account_actions_change_password_title": "Change Password",
-    "page_account_actions_change_password_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
-    "page_account_actions_change_password_updated_title": "Great",
-    "page_account_actions_change_password_updated_body": "We've got your new password. You're ready to go.",
 
     "page_account_actions_change_password_title": "Change Password",
     "page_account_actions_change_password_body": "Time for a password makeover? Fab! Go ahead and create a new one.",
