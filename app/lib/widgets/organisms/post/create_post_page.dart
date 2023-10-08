@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'dart:io' as io;
+
+import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
+import 'package:app/widgets/organisms/post/post_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -65,6 +69,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final currentProfileId = currentProfile?.flMeta?.id;
 
+    //? Aspect ratio of the available screen space
+    final double aspectRatio = (mediaQueryData.size.width - mediaQueryData.padding.right - mediaQueryData.padding.left) / (mediaQueryData.size.height - mediaQueryData.padding.bottom - mediaQueryData.padding.top);
+
+    //? phone reserved bottom padding + navigation bar height + padding between navigation and bottom of the screen
+    final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
+
     return WillPopScope(
       onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
       child: Scaffold(
@@ -82,11 +92,14 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   child: PositiveCamera(
                     onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
                     onCameraVideoTaken: (video) => viewModel.onVideoTaken(context, video),
+                    //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                     cameraNavigation: (_) {
-                      return const SizedBox(
-                        height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
+                      return SizedBox(
+                        //? designs say this should be kPaddingExtraLarge however this looks very wrong on my phone
+                        height: bottomNavigationArea + kPaddingMediumLarge,
                       );
                     },
+                    //? Widget found near the bottom of the screen next to the take photo button
                     leftActionWidget: state.currentPostType == PostType.image
                         ? CameraFloatingButton.postWithoutImage(
                             active: true,
@@ -104,6 +117,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   ),
                 ),
               ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-                  Edit Photo                  -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
                 PositiveImageEditor(
                   galleryEntry: state.editingGalleryEntry,
@@ -154,7 +170,22 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 ),
               ],
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-                 Clip Editor                  -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) ...<Widget>[
+                Positioned.fill(
+                  child: VideoEditor(
+                    onTapClose: (_) => appRouter.pop(),
+                    file: io.File(state.editingGalleryEntry!.file!.path),
+                    function: (io.File file) => viewModel.onClipEditFinish(context, file),
+                    bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
+                    topNavigationSize: kIconLarge + kPaddingSmall * 2,
+                    targetVideoAspectRatio: aspectRatio,
+                  ),
+                ),
+              ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-              Bottom Navigation               -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               Positioned(
                 bottom: kPaddingMedium + mediaQueryData.padding.bottom,

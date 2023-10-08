@@ -28,6 +28,8 @@ const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
 const Duration kAnimationDurationHintPreview = Duration(milliseconds: 3000);
 
+const double kMaxClipDurationSeconds = 180;
+
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 
 // Paddings and margins
