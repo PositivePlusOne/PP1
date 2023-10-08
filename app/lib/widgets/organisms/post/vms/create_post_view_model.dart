@@ -2,10 +2,12 @@
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:io' as io;
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,6 +32,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
+import 'package:video_trimmer/video_trimmer.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
@@ -378,14 +381,42 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  //? Create image Post here!
+  //? Create video Post here
   Future<void> onVideoTaken(BuildContext context, XFile file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
     final List<GalleryEntry> entries = [];
     if (file.path.isNotEmpty) {
-      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(file);
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(
+        file,
+        uploadImmediately: false,
+      );
+      entries.add(entry);
+    }
+
+    if (entries.isEmpty) {
+      return;
+    }
+
+    state = state.copyWith(
+      galleryEntries: entries,
+      currentCreatePostPage: CreatePostCurrentPage.createPostEditClip,
+      editingGalleryEntry: entries.firstOrNull,
+      currentPostType: PostType.clip,
+      activeButton: PositivePostNavigationActiveButton.flex,
+      activeButtonFlexText: localisations.shared_actions_next,
+    );
+    return;
+  }
+
+  Future<void> onClipEditFinish(BuildContext context, io.File file) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
+
+    final List<GalleryEntry> entries = [];
+    if (file.path.isNotEmpty) {
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(XFile.fromData(await file.readAsBytes()), uploadImmediately: true);
       entries.add(entry);
     }
 
@@ -532,6 +563,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           currentCreatePostPage: CreatePostCurrentPage.createPostImage,
           activeButtonFlexText: localisations.page_create_post_create,
         );
+        break;
+      case CreatePostCurrentPage.createPostEditClip:
         break;
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:

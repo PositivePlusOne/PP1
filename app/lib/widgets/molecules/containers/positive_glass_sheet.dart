@@ -23,6 +23,9 @@ class PositiveGlassSheet extends ConsumerWidget {
     this.excludeBlur = false,
     this.heroTag = '',
     this.isBusy = false,
+    this.borderRadius = kBorderRadiusMassive,
+    this.horizontalPadding = kPaddingSmallMedium,
+    this.verticalPadding = kPaddingSmallMedium,
     super.key,
   });
 
@@ -34,6 +37,10 @@ class PositiveGlassSheet extends ConsumerWidget {
 
   final double sigmaBlur;
   final bool excludeBlur;
+
+  final double borderRadius;
+  final double verticalPadding;
+  final double horizontalPadding;
 
   final String heroTag;
 
@@ -49,15 +56,15 @@ class PositiveGlassSheet extends ConsumerWidget {
     Widget child = IgnorePointer(
       ignoring: isBusy,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+        borderRadius: BorderRadius.circular(borderRadius),
         child: PositiveBlurBehaviour(
           excludeBlur: excludeBlur,
           child: AnimatedContainer(
             duration: kAnimationDurationRegular,
             width: double.infinity,
-            padding: const EdgeInsets.all(kPaddingSmallMedium),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+              borderRadius: BorderRadius.circular(borderRadius),
               color: isBusy ? colors.white : colors.colorGray3.withOpacity(PositiveGlassSheet.kGlassContainerOpacity),
             ),
             child: Column(
