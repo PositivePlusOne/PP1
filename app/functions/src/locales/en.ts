@@ -28,6 +28,17 @@ export const enTranslations = {
     transMan: "Trans Man",
     transWomen: "Trans Woman",
   },
+  companySectors: {
+    charity: "Charity",
+    multinational: "Multinational Organisation",
+    government: "Government Body",
+    healthcare_private: "Healthcare (Private)",
+    healthcare_public: "Healthcare (Public)",
+    pharmaceutical: "Pharmaceutical Company",
+    diagnostics: "Diagnostics Company",
+    other: "Other Company",
+    not_for_profit: "Other not-for-profit",
+  },
   hivStatus: {
     livingWithHiv: {
       label: "Living with HIV",

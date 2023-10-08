@@ -32,6 +32,9 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
       featureFlags: json['featureFlags'] == null
           ? const {}
           : stringSetFromJson(json['featureFlags']),
+      companySectors: json['companySectors'] == null
+          ? const {}
+          : stringSetFromJson(json['companySectors']),
       placeSkipped: json['placeSkipped'] as bool? ?? false,
       place: json['place'] == null
           ? null
@@ -59,6 +62,7 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'interests': instance.interests.toList(),
       'visibilityFlags': instance.visibilityFlags.toList(),
       'featureFlags': instance.featureFlags.toList(),
+      'companySectors': instance.companySectors.toList(),
       'placeSkipped': instance.placeSkipped,
       'place': instance.place?.toJson(),
       'biography': instance.biography,

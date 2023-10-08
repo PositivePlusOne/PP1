@@ -52,6 +52,14 @@ export namespace SearchEndpoints {
     return JSON.stringify(data);
   });
 
+  //* Deprecated: Moving to SystemEndpoints.getBuildInformation
+  export const getCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+    const locale = data.locale || "en";
+    const companySectors = await LocalizationsService.getDefaultCompanySectors(locale);
+
+    return safeJsonStringify(companySectors);
+  });
+
   export const search = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Searching data from algolia");
     const uid = await UserService.verifyAuthenticated(context, request.sender);

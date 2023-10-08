@@ -8,7 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';

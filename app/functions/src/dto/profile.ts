@@ -13,6 +13,7 @@ export const visibilityFlagInterests = 'interests';
 export const visibilityFlagGenders = 'genders';
 export const visibilityFlagLocation = 'location';
 export const visibilityFlagHivStatus = 'hiv_status';
+export const visibilityFlagCompanySectors = 'company_sectors';
 
 export const featureFlagMarketing = 'marketing';
 export const featureFlagIncognito = 'incognito';
@@ -51,6 +52,7 @@ export interface ProfileJSON {
     hivStatus?: string;
     genders?: StringSetFromJson;
     interests?: StringSetFromJson;
+    companySectors?: StringSetFromJson;
     visibilityFlags?: StringSetFromJson;
     featureFlags?: StringSetFromJson;
     placeSkipped?: boolean;
@@ -76,6 +78,7 @@ export class Profile {
     hivStatus: string;
     genders: StringSetFromJson;
     interests: StringSetFromJson;
+    companySectors: StringSetFromJson;
     visibilityFlags: StringSetFromJson;
     featureFlags: StringSetFromJson;
     placeSkipped: boolean;
@@ -97,6 +100,7 @@ export class Profile {
         this.hivStatus = json.hivStatus || '';
         this.genders = json.genders || new Set();
         this.interests = json.interests || new Set();
+        this.companySectors = json.companySectors || new Set();
         this.visibilityFlags = json.visibilityFlags || new Set();
         this.featureFlags = json.featureFlags || new Set();
         this.placeSkipped = json.placeSkipped || false;
@@ -137,6 +141,10 @@ export class Profile {
 
         if (hideInfo || !visibilityFlags.includes(visibilityFlagHivStatus)) {
             this.hivStatus = '';
+        }
+
+        if (hideInfo || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
+            this.companySectors = new Set();
         }
 
         this.visibilityFlags = new Set();

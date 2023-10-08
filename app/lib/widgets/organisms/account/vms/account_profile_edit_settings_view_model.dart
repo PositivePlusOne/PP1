@@ -37,6 +37,7 @@ class AccountProfileEditSettingsViewModelState with _$AccountProfileEditSettings
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateHIVStatus,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateLocation,
     @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateYouInterests,
+    @Default(PositiveTogglableState.loading) PositiveTogglableState toggleStateCompanySectors,
     @Default(false) bool isBusy,
 
     //? The current error to be shown to the user
@@ -129,6 +130,13 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
         state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.active);
       } else {
         state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.inactive);
+      }
+    }
+    if (!pendingFlags.contains(kVisibilityFlagCompanySectors)) {
+      if (profile.visibilityFlags.any((element) => element == kVisibilityFlagCompanySectors)) {
+        state = state.copyWith(toggleStateCompanySectors: PositiveTogglableState.active);
+      } else {
+        state = state.copyWith(toggleStateCompanySectors: PositiveTogglableState.inactive);
       }
     }
   }
@@ -227,6 +235,11 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
           toggleStateHIVStatus: PositiveTogglableState.updating,
         );
         break;
+      case kVisibilityFlagCompanySectors:
+        state = state.copyWith(
+          toggleStateCompanySectors: PositiveTogglableState.updating,
+        );
+        break;
       default:
         return;
     }
@@ -280,6 +293,12 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
     router.push(const ProfileLocationRoute());
+  }
+
+  void onCompanySectorsUpdate(BuildContext context) {
+    final router = ref.read(appRouterProvider);
+    ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
+    router.push(const ProfileCompanySectorSelectRoute());
   }
 
   Future<void> onProfileImageChangeSelected() async {

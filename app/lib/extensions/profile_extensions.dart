@@ -16,6 +16,7 @@ import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
+import 'package:app/providers/profiles/company_sectors_controller.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
@@ -87,6 +88,7 @@ extension UserProfileExtensions on Profile {
       kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? true,
       kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true,
       kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? true,
+      kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? true,
     };
 
     final List<(String flag, bool newValue)> overrideFlags = [];
@@ -133,9 +135,21 @@ extension UserProfileExtensions on Profile {
     final List<String> taglineParts = [];
     final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
     final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
+    final CompanySectorsControllerState companySectorsControllerState = providerContainer.read(companySectorsControllerProvider);
 
     if (birthday.isNotEmpty && !isOrganisation) {
       taglineParts.add('$age');
+    }
+
+    if (companySectors.isNotEmpty && isOrganisation) {
+      // show the company's sector(s)
+      for (final String companySector in companySectors) {
+        if (!companySectorsControllerState.options.any((element) => element.value == companySector)) {
+          continue;
+        }
+
+        taglineParts.add(companySectorsControllerState.options.firstWhere((element) => element.value == companySector).label);
+      }
     }
 
     if (place != null && place!.description.isNotEmpty) {
@@ -182,6 +196,21 @@ extension UserProfileExtensions on Profile {
       }
 
       taglineParts.add(genderControllerState.options.firstWhere((element) => element.value == gender).label);
+    }
+
+    return taglineParts.join(', ');
+  }
+
+  String get formattedCompanySectorsIgnoreFlags {
+    final List<String> taglineParts = [];
+    final CompanySectorsControllerState companySectorsControllerState = providerContainer.read(companySectorsControllerProvider);
+
+    for (final String companySector in companySectors) {
+      if (!companySectorsControllerState.options.any((element) => element.value == companySector)) {
+        continue;
+      }
+
+      taglineParts.add(companySectorsControllerState.options.firstWhere((element) => element.value == companySector).label);
     }
 
     return taglineParts.join(', ');

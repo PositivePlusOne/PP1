@@ -39,6 +39,8 @@ mixin _$Profile {
   Set<String> get visibilityFlags => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get companySectors => throw _privateConstructorUsedError;
   bool get placeSkipped => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
@@ -69,6 +71,7 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
       bool placeSkipped,
       PositivePlace? place,
       String biography,
@@ -105,6 +108,7 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
+    Object? companySectors = null,
     Object? placeSkipped = null,
     Object? place = freezed,
     Object? biography = null,
@@ -166,6 +170,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
       featureFlags: null == featureFlags
           ? _value.featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      companySectors: null == companySectors
+          ? _value.companySectors
+          : companySectors // ignore: cast_nullable_to_non_nullable
               as Set<String>,
       placeSkipped: null == placeSkipped
           ? _value.placeSkipped
@@ -233,6 +241,7 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
       bool placeSkipped,
       PositivePlace? place,
       String biography,
@@ -269,6 +278,7 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? interests = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
+    Object? companySectors = null,
     Object? placeSkipped = null,
     Object? place = freezed,
     Object? biography = null,
@@ -331,6 +341,10 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value._featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
+      companySectors: null == companySectors
+          ? _value._companySectors
+          : companySectors // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
       placeSkipped: null == placeSkipped
           ? _value.placeSkipped
           : placeSkipped // ignore: cast_nullable_to_non_nullable
@@ -373,6 +387,8 @@ class _$ProfileImpl implements _Profile {
       final Set<String> visibilityFlags = const {},
       @JsonKey(fromJson: stringSetFromJson)
       final Set<String> featureFlags = const {},
+      @JsonKey(fromJson: stringSetFromJson)
+      final Set<String> companySectors = const {},
       this.placeSkipped = false,
       this.place,
       this.biography = '',
@@ -381,6 +397,7 @@ class _$ProfileImpl implements _Profile {
         _interests = interests,
         _visibilityFlags = visibilityFlags,
         _featureFlags = featureFlags,
+        _companySectors = companySectors,
         _media = media;
 
   factory _$ProfileImpl.fromJson(Map<String, dynamic> json) =>
@@ -452,6 +469,15 @@ class _$ProfileImpl implements _Profile {
     return EqualUnmodifiableSetView(_featureFlags);
   }
 
+  final Set<String> _companySectors;
+  @override
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get companySectors {
+    if (_companySectors is EqualUnmodifiableSetView) return _companySectors;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_companySectors);
+  }
+
   @override
   @JsonKey()
   final bool placeSkipped;
@@ -471,7 +497,7 @@ class _$ProfileImpl implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, companySectors: $companySectors, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media)';
   }
 
   @override
@@ -502,6 +528,8 @@ class _$ProfileImpl implements _Profile {
                 .equals(other._visibilityFlags, _visibilityFlags) &&
             const DeepCollectionEquality()
                 .equals(other._featureFlags, _featureFlags) &&
+            const DeepCollectionEquality()
+                .equals(other._companySectors, _companySectors) &&
             (identical(other.placeSkipped, placeSkipped) ||
                 other.placeSkipped == placeSkipped) &&
             (identical(other.place, place) || other.place == place) &&
@@ -512,26 +540,28 @@ class _$ProfileImpl implements _Profile {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      flMeta,
-      email,
-      phoneNumber,
-      locale,
-      fcmToken,
-      name,
-      displayName,
-      birthday,
-      accentColor,
-      hivStatus,
-      const DeepCollectionEquality().hash(_genders),
-      const DeepCollectionEquality().hash(_interests),
-      const DeepCollectionEquality().hash(_visibilityFlags),
-      const DeepCollectionEquality().hash(_featureFlags),
-      placeSkipped,
-      place,
-      biography,
-      const DeepCollectionEquality().hash(_media));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        flMeta,
+        email,
+        phoneNumber,
+        locale,
+        fcmToken,
+        name,
+        displayName,
+        birthday,
+        accentColor,
+        hivStatus,
+        const DeepCollectionEquality().hash(_genders),
+        const DeepCollectionEquality().hash(_interests),
+        const DeepCollectionEquality().hash(_visibilityFlags),
+        const DeepCollectionEquality().hash(_featureFlags),
+        const DeepCollectionEquality().hash(_companySectors),
+        placeSkipped,
+        place,
+        biography,
+        const DeepCollectionEquality().hash(_media)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -563,6 +593,7 @@ abstract class _Profile implements Profile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
+      @JsonKey(fromJson: stringSetFromJson) final Set<String> companySectors,
       final bool placeSkipped,
       final PositivePlace? place,
       final String biography,
@@ -603,6 +634,9 @@ abstract class _Profile implements Profile {
   @override
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags;
+  @override
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get companySectors;
   @override
   bool get placeSkipped;
   @override
