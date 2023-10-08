@@ -4,6 +4,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -160,6 +161,9 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     if (searchTerm.isEmpty) {
       return;
     }
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Profile? currentProfile = profileController.currentProfile;
 
     updateHasSearched(true);
 

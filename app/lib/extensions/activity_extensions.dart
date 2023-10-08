@@ -504,19 +504,34 @@ extension ActivityExt on Activity {
     );
   }
 
-  Future<void> requestFullscreenMedia(Media media, TargetFeed? feed) async {
+  Future<void> requestFullscreenMedia(Media media) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final AppRouter router = providerContainer.read(appRouterProvider);
-    final PostRoute postRoute = PostRoute(
-      activityId: flMeta?.id ?? '',
-      feed: feed ??
-          TargetFeed(
-            targetSlug: 'user',
-            targetUserId: publisherInformation?.publisherId ?? '',
-          ),
+    final MediaRoute mediaRoute = MediaRoute(
+      media: media,
     );
 
-    logger.i('Navigating to post ${flMeta?.id}');
+    logger.i('Navigating to media ${media.name}');
+    await router.push(mediaRoute);
+  }
+
+  Future<void> requestPostRoute(BuildContext context) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final String activityId = flMeta?.id ?? '';
+
+    final PostRoute postRoute = PostRoute(
+      activityId: activityId,
+      feed: targetFeed,
+    );
+
+    // Check if we are already on the post page.
+    if (router.current.name == PostRoute.name) {
+      logger.i('Already on post $activityId');
+      return;
+    }
+
+    logger.i('Navigating to post $activityId');
     await router.push(postRoute);
   }
 }

@@ -1,9 +1,12 @@
 // Flutter imports:
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
@@ -23,7 +26,7 @@ import '../providers/profiles/profile_controller.dart';
 import '../providers/system/design_controller.dart';
 import '../widgets/atoms/buttons/positive_button.dart';
 
-extension UserProfileExtensions on Profile {
+extension ProfileExtensions on Profile {
   Media? get profileImage {
     return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/profile'));
   }

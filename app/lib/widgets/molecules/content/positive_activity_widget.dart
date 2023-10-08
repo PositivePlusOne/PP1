@@ -68,26 +68,6 @@ class PositiveActivityWidget extends HookConsumerWidget {
   final bool isFullscreen;
   final bool isShared;
 
-  Future<void> requestPostRoute(BuildContext context) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final AppRouter router = providerContainer.read(appRouterProvider);
-    final String activityId = activity?.flMeta?.id ?? '';
-
-    final PostRoute postRoute = PostRoute(
-      activityId: activityId,
-      feed: targetFeed,
-    );
-
-    // Check if we are already on the post page.
-    if (router.current.name == PostRoute.name) {
-      logger.i('Already on post $activityId');
-      return;
-    }
-
-    logger.i('Navigating to post $activityId');
-    await router.push(postRoute);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
@@ -226,8 +206,9 @@ class PositiveActivityWidget extends HookConsumerWidget {
                 reactionsFeedState: activityReactionFeedState,
               ),
               isBusy: !isEnabled,
-              onPostPageRequested: requestPostRoute,
+              onPostPageRequested: activity?.requestPostRoute,
               isShared: isShared,
+              onImageTap: (media) => isFullscreen ? activity?.requestFullscreenMedia(media) : activity?.requestPostRoute(context),
             ),
           ] else ...<Widget>[
             Padding(

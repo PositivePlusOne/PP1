@@ -109,6 +109,10 @@ class TargetFeed with _$TargetFeed {
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');
+    if (parts.length != 2) {
+      return TargetFeed.empty();
+    }
+
     final String feed = parts[0];
     final String slug = parts[1];
 
@@ -121,6 +125,10 @@ class TargetFeed with _$TargetFeed {
 
   static TargetFeed tag(String tag) {
     return TargetFeed(targetSlug: 'tags', targetUserId: tag);
+  }
+
+  static TargetFeed empty() {
+    return const TargetFeed(targetSlug: '', targetUserId: '');
   }
 
   static String toOrigin(TargetFeed targetFeed) {
