@@ -13,6 +13,7 @@ import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import 'init.dart';
+import './extensions/localization_extensions.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
 
@@ -41,6 +42,9 @@ class App extends ConsumerWidget {
           textHeightBehavior: const TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
           child: child ?? const SizedBox.shrink(),
         );
+
+        // building the app (locale is set) - let's initialise our locale from this top level by caching the localization
+        cacheAppLocalizations(context);
 
         return StreamChatWrapper.wrap(context, textHeightChild);
       },
