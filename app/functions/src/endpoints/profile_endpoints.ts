@@ -285,6 +285,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    //TODO! @Ryan - need to check your new auth for users who are allowed to edit company data
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const companySectors = request.data.companySectors || [];
     const visibilityFlags = request.data.visibilityFlags || [];

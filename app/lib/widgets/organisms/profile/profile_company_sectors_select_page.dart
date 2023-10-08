@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -18,7 +17,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
@@ -26,13 +24,8 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/buttons/select_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
-import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
-import 'package:app/widgets/organisms/profile/vms/company_sectors_select_view_model.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
 import '../../molecules/scaffolds/positive_scaffold.dart';
 
@@ -45,13 +38,13 @@ class ProfileCompanySectorSelectPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final bool hasCompanySectorsVisibilityFlag = ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagCompanySectors] ?? false;
+    // final bool hasCompanySectorsVisibilityFlag = ref.watch(profileFormControllerProvider).visibilityFlags[kVisibilityFlagCompanySectors] ?? false;
 
     final ProfileControllerState profileController = ref.watch(profileControllerProvider);
     final ProfileFormController formController = ref.read(profileFormControllerProvider.notifier);
     final ProfileFormState formControllerState = ref.watch(profileFormControllerProvider);
 
-    final bool isBusy = ref.watch(profileFormControllerProvider.select((value) => value.isBusy));
+    // final bool isBusy = ref.watch(profileFormControllerProvider.select((value) => value.isBusy));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
@@ -155,24 +148,29 @@ class _SelectionDropdown extends ConsumerWidget {
     final profileFormController = ref.watch(profileFormControllerProvider);
     final ProfileFormController profileFormControllerNotifier = ref.read(profileFormControllerProvider.notifier);
 
-    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
-    final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-    final locale = AppLocalizations.of(context)!;
-
     // what's the currently selected option?
-    CompanySectorsOption? initialOption;
+    CompanySectorsOption initialOption = viewModel.options.last;
     if (profileFormController.companySectors.isNotEmpty) {
       // we have some, just use the first as the selection
       final currentSelection = profileFormController.companySectors.first;
-      initialOption = viewModel.options.firstWhere((element) => element.value == currentSelection);
+      initialOption = viewModel.options.firstWhere((element) => element.value == currentSelection, orElse: () => viewModel.options.last);
     }
 
-    return PositiveTextFieldDropdown<CompanySectorsOption?>(
-      initialValue: initialOption,
-      onValueChanged: (value) => profileFormControllerNotifier.onCompanySectorSelected(value == null ? '' : value.toString()),
-      values: [null, ...viewModel.options],
-      placeholderStringBuilder: (value) => value == null ? 'null' : value.toString(),
-      valueStringBuilder: (value) => value == null ? 'null' : value.toString(),
-    );
+    return PositiveTextFieldDropdown<CompanySectorsOption>(
+        initialValue: initialOption,
+        onValueChanged: (value) {
+          if (value != null && value is CompanySectorsOption) {
+            profileFormControllerNotifier.onCompanySectorSelected(value.value);
+          }
+        },
+        values: viewModel.options,
+        placeholderStringBuilder: (value) => value == null ? '' : (value as CompanySectorsOption).label,
+        valueStringBuilder: (value) {
+          if (value != null && value is CompanySectorsOption) {
+            return value.label;
+          } else {
+            return '';
+          }
+        });
   }
 }

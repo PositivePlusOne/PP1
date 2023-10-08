@@ -62,8 +62,11 @@ TBC
 A tonne of code will be auto generated while you develop on this app.  
 You can setup the listener by running the following command:
 `flutter pub run build_runner watch --delete-conflicting-outputs`
+or
+`dart run build_runner build`
+to just run the once when you add a new freezed file for example
 
-### I cannot attch my node debugger to Firebase Functions
+### I cannot attach my node debugger to Firebase Functions
 
 There is a known bug for this here: `https://github.com/firebase/firebase-tools/issues/4166`.  
 You can fix it by downgrading `firebase-tools`.  
