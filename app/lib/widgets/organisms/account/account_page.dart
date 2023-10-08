@@ -33,10 +33,13 @@ class AccountPage extends HookConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AccountPageViewModel viewModel = ref.read(accountPageViewModelProvider.notifier);
     final AccountPageViewModelState state = ref.watch(accountPageViewModelProvider);
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
     useLifecycleHook(viewModel);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final bool isManagedProfile = profileController.isCurrentManagedProfile;
 
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
@@ -46,7 +49,7 @@ class AccountPage extends HookConsumerWidget {
       ),
       PositiveButton.appBarIcon(
         colors: colors,
-        icon: UniconsLine.user,
+        icon: isManagedProfile ? UniconsLine.building : UniconsLine.user,
         onTapped: () {},
         isDisabled: true,
       ),

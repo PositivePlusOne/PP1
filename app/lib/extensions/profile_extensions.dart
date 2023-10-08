@@ -50,6 +50,8 @@ extension UserProfileExtensions on Profile {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
+    final bool isManagedProfile = profileController.isCurrentManagedProfile;
+
     // Add notification information
     int unreadCount = 0;
     bool showNotificationBadge = false;
@@ -68,7 +70,7 @@ extension UserProfileExtensions on Profile {
         PositiveButton.appBarIcon(
           colors: colors,
           primaryColor: color,
-          icon: UniconsLine.user,
+          icon: isManagedProfile ? UniconsLine.building : UniconsLine.user,
           onTapped: onProfileAccountActionSelected,
           isDisabled: disableAccount,
           includeBadge: showNotificationBadge,
