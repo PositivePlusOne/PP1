@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/chat_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -311,6 +312,7 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
 
   return StreamMessageWidget(
     messageTheme: themeData,
+    onMessageTap: (message) => message.handleMessageTapped(context),
     bottomRowBuilderWithDefaultWidget: (context, message, widget) => widget.copyWith(
       messageTheme: bottomRowThemeData,
       showTimeStamp: false,

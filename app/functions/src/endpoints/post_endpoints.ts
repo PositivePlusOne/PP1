@@ -102,10 +102,6 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
-    if (activityOriginPosterId === uid) {
-      throw new functions.https.HttpsError("invalid-argument", "Cannot share own activity");
-    }
-
     const isRepost = activity.generalConfiguration?.type === "repost";
     if (isRepost) {
       throw new functions.https.HttpsError("invalid-argument", "Cannot share a repost");

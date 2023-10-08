@@ -317,6 +317,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (!isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
+
                     const relationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
                     const isConnected = relationshipMember?.hasConnected || false;
 
