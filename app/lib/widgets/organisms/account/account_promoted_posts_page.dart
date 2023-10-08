@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'dart:math';
 
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -9,9 +8,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
@@ -22,17 +19,11 @@ import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/user/promoted_posts_controller.dart';
-import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
-import '../../../helpers/dialog_hint_helpers.dart';
-import '../../../services/third_party.dart';
 import '../../../helpers/brand_helpers.dart';
 
 @RoutePage()
@@ -68,10 +59,7 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
     final Locale locale = Localizations.localeOf(context);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
-    final AccountFormController controller = ref.read(provider.notifier);
     final AccountFormState state = ref.watch(provider);
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
 
     return PositiveScaffold(
       decorations: buildType5ScaffoldDecorations(colors),
