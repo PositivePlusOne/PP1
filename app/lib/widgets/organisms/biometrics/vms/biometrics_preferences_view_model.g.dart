@@ -7,7 +7,7 @@ part of 'biometrics_preferences_view_model.dart';
 // **************************************************************************
 
 String _$biometricsPreferencesViewModelHash() =>
-    r'abcb80dce43362c636601166107f18054fee54c6';
+    r'8db9b5894546e53e1a15b849afddc88fa634bf72';
 
 /// See also [BiometricsPreferencesViewModel].
 @ProviderFor(BiometricsPreferencesViewModel)

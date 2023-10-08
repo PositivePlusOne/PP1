@@ -16,7 +16,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/database/profile/profile.dart';
