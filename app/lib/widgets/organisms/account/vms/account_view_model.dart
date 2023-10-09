@@ -162,6 +162,14 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     appRouter.push(const AccountDetailsRoute());
   }
 
+  Future<void> onPromotedPostsbuttonSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('onAccountDetailsButtonSelected');
+    appRouter.push(const AccountPromotedPostsRoute());
+  }
+
   Future<void> onMyCommunitiesButtonPressed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);

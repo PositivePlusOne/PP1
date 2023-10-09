@@ -143,7 +143,7 @@ class AccountOptionsPane extends ConsumerWidget {
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_promoted,
-        onTapped: viewModel.onAccountDetailsButtonSelected,
+        onTapped: viewModel.onPromotedPostsbuttonSelected,
       ),
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
