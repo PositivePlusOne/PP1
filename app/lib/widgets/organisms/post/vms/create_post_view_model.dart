@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +15,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';

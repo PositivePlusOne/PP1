@@ -84,12 +84,9 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       onTapped: viewModel.onToggleNotifications,
                     ),
                     const SizedBox(width: kPaddingSmall),
-                    PositiveButton.appBarIcon(
-                      colors: colors,
-                      icon: UniconsLine.user,
-                      primaryColor: colors.colorGray3,
-                      style: PositiveButtonStyle.primary,
-                      onTapped: viewModel.onAccount,
+                    PositiveProfileCircularIndicator(
+                      profile: profile,
+                      onTap: viewModel.onAccount,
                     ),
                   ],
                 ),

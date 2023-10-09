@@ -13,6 +13,7 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
@@ -39,7 +40,6 @@ class AccountPage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final bool isManagedProfile = profileController.isCurrentManagedProfile;
 
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
@@ -47,11 +47,9 @@ class AccountPage extends HookConsumerWidget {
         icon: UniconsLine.bell,
         onTapped: () => onProfileNotificationsActionSelected(shouldReplace: true),
       ),
-      PositiveButton.appBarIcon(
-        colors: colors,
-        icon: isManagedProfile ? UniconsLine.building : UniconsLine.user,
-        onTapped: () {},
-        isDisabled: true,
+      PositiveProfileCircularIndicator(
+        profile: profileController.currentProfile,
+        onTap: onProfileAccountActionSelected,
       ),
     ];
 
