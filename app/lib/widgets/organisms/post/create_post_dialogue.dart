@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -175,7 +176,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               colours: colours,
               textStyle: textStyle,
               localisations: localisations,
-              tags: tags,
+              tags: TagHelpers.filterReservedTagStrings(tags),
               typography: typography,
               isBusy: isBusy,
               onTap: onTagsPressed,
@@ -334,7 +335,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     colours: colours,
                     textStyle: textStyle,
                     localisations: localisations,
-                    tags: tags,
+                    tags: TagHelpers.filterReservedTagStrings(tags),
                     typography: typography,
                     onTap: onTagsPressed,
                   ),

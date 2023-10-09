@@ -305,9 +305,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     // get the current tags
     final newTags = [...state.tags];
     // and toggle the state
-    if (newTags.indexWhere((element) => element.startsWith('promoted')) != -1) {
+    if (isPromotedPost) {
       // there is at least one tag that shows this is a promoted activity, remove them all
-      newTags.removeWhere((element) => element.startsWith('promoted'));
+      newTags.removeWhere((element) => TagHelpers.isPromoted(element));
     } else {
       // this is not a promoted activity, add the required tags
       newTags.addAll(TagHelpers.createPromotedTags(userId: userId));

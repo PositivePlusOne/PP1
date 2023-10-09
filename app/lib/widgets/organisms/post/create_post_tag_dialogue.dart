@@ -81,7 +81,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     );
 
     filteredTags.clear();
-    filteredTags.addAll(response.results);
+    filteredTags.addAll(TagHelpers.filterReservedTags(response.results));
 
     if (!filteredTags.any((element) => element.key == formattedSearchString)) {
       if (!selectedTags.any((element) => element.key == formattedSearchString)) {
@@ -166,8 +166,11 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
       }
     }
 
+    // selected tags might well include hidden reserved ones, let's just show the others
+    final visibleTags = TagHelpers.filterReservedTags(selectedTags);
+
     //? Add currently selected tags to the top of the list
-    for (Tag tag in selectedTags) {
+    for (Tag tag in visibleTags) {
       tagWidgets.add(
         TagLabel(
           tag: tag,
@@ -180,12 +183,12 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
     //? add the first 20 filtered tags to the list
     for (var i = 0; i < min(maxTagsPerPage, filteredTags.length); i++) {
-      if (selectedTags.contains(filteredTags[i])) continue;
+      if (visibleTags.contains(filteredTags[i])) continue;
       tagWidgets.add(
         TagLabel(
           tag: filteredTags[i],
           onTap: (context) => onTagTapped(context, filteredTags[i]),
-          isSelected: selectedTags.contains(filteredTags[i]) ? true : false,
+          isSelected: visibleTags.contains(filteredTags[i]) ? true : false,
         ),
       );
     }

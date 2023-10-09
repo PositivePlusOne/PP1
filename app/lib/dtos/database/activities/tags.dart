@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -91,6 +92,12 @@ class TagHelpers {
 
   /// helper to determine if a tag (as a string) represents an activity that is promoted
   static bool isPromoted(String tag) => tag.startsWith(_kPromotedKey);
+
+  /// helper to filter out (remove) all the tags that are special reserved strings (ie 'promoted*')
+  static List<Tag> filterReservedTags(List<Tag> tags) => tags.whereNot((element) => isPromoted(element.key)).toList();
+
+  /// helper to filter out (remove) all the tag strings that are special reserved strings (ie 'promoted*')
+  static List<String> filterReservedTagStrings(List<String> tags) => tags.whereNot((element) => isPromoted(element)).toList();
 
   static String getTagLocalizedName(Tag tag, Locale locale) {
     if (tag.localizations.any((TagLocalization localization) => localization.locale == locale.languageCode)) {
