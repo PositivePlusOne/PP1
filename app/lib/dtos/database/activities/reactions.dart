@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
@@ -111,7 +112,7 @@ class TargetFeed with _$TargetFeed {
   /// posted by that particular user. uses tags:
   /// tags:promoted
   /// tags:promoted-{userId}
-  static TargetFeed fromPromoted({String? userId}) => TargetFeed(targetSlug: 'tags', targetUserId: 'promoted${userId == null ? '' : '-$userId'}');
+  static TargetFeed fromPromoted({String? userId}) => TargetFeed(targetSlug: 'tags', targetUserId: TagHelpers.createPromotedTag(userId: userId));
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');

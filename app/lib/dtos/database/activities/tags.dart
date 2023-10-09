@@ -80,6 +80,18 @@ class TagTopic with _$TagTopic {
 }
 
 class TagHelpers {
+  static const String _kPromotedKey = 'promoted';
+  static const String _kFallbackKey = 'fallback';
+  static const String _kKeyKey = 'key';
+  // helper to create the tags that should be appended when an activity is promoted
+  static List<String> createPromotedTags({required String userId}) => [createPromotedTag(), createPromotedTag(userId: userId)];
+
+  /// helper to create the tag to be in the list of tags to show an activity is promoted
+  static String createPromotedTag({String? userId}) => '$_kPromotedKey${userId == null ? '' : '-$userId'}';
+
+  /// helper to determine if a tag (as a string) represents an activity that is promoted
+  static bool isPromoted(String tag) => tag.startsWith(_kPromotedKey);
+
   static String getTagLocalizedName(Tag tag, Locale locale) {
     if (tag.localizations.any((TagLocalization localization) => localization.locale == locale.languageCode)) {
       return tag.localizations.firstWhere((TagLocalization localization) => localization.locale == locale.languageCode).value;
@@ -89,15 +101,15 @@ class TagHelpers {
   }
 
   static bool matches(Tag tag, Map<String, dynamic> map) {
-    if (tag.key != map['key']) {
+    if (tag.key != map[_kKeyKey]) {
       return false;
     }
 
-    if (tag.fallback != map['fallback']) {
+    if (tag.fallback != map[_kFallbackKey]) {
       return false;
     }
 
-    if (tag.promoted != map['promoted']) {
+    if (tag.promoted != map[_kPromotedKey]) {
       return false;
     }
 

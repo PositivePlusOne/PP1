@@ -1,23 +1,18 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
-import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
-import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
@@ -51,8 +46,12 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
     final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
     final AccountFormState state = ref.watch(provider);
 
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
     // tracking the selected tab with hook for when it changes
     final selectedTab = useState(0);
+    final itemHubCount = useState('?');
+    final itemChatCount = useState('?');
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final currentProfileId = profileController.currentProfileId;
@@ -64,7 +63,16 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
       // now we finally have the stats, we can see how many promotions we have remaining
       remainingPromotions = profileStatistics?.promotionsPermitted ?? 0;
     }
-
+    // get our feed for all promoted activities from this user
+    final feed = TargetFeed.fromPromoted(userId: currentProfileId);
+    // and the state for that
+    final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(feed);
+    final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: feed, currentProfileId: currentProfileId!);
+    feedState.pagingController.addListener(() {
+      log.i('page updated ${feedState.pagingController.itemList?.length ?? 0}');
+      // and set this value to update the view
+      itemHubCount.value = feedState.pagingController.itemList?.length.toString() ?? itemHubCount.value;
+    });
     return PositiveScaffold(
       decorations: buildType5ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
@@ -89,12 +97,18 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTabBar(
-              tabs: [localisations.page_profile_promoted_posts_tab_hub(3), localisations.page_profile_promoted_posts_tab_chat(2)],
+              tabs: [localisations.page_profile_promoted_posts_tab_hub(itemHubCount.value), localisations.page_profile_promoted_posts_tab_chat(itemChatCount.value)],
               onTapped: (index) => selectedTab.value = index,
               tabColours: [colors.green, colors.green],
               index: selectedTab.value,
             ),
+            const SizedBox(height: kPaddingMedium),
           ],
+        ),
+        PositiveFeedPaginationBehaviour(
+          feed: feed,
+          currentProfile: profileController.currentProfile,
+          feedState: feedState,
         ),
       ],
     );

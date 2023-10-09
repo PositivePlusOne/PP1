@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -26,43 +25,14 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 
-/// this is a page to show the feed of activities for all promoted activities, commonly created
-/// with a user ID to show the activities that user in particular has promoted, but can be called
-/// with a null [userId] to show all the promoted activities
 @RoutePage()
-class PromotedFeedPage extends _TargetFeedPage {
-  /// constructor to just use the base class and create the feed required
-  PromotedFeedPage({String? userId, Key? key})
-      : super(
-            key: key,
-            feed: TargetFeed.fromPromoted(userId: userId),
-            // the title is fixed from the localizations
-            displayTitle: appLocalizations.shared_promotions_title);
-}
-
-/// this is a page to show the feed of activities for a particular tag specified
-@RoutePage()
-class TagFeedPage extends _TargetFeedPage {
-  /// constructor to just use the base class and create the feed required
-  TagFeedPage({
-    Key? key,
-    required Tag tag,
-  }) : super(
-          key: key,
-          feed: TargetFeed.fromTag(tag.key),
-          displayTitle: tag.topic?.fallback ?? tag.fallback,
-        );
-}
-
-/// a common base class to show a target feed of data from a tag created in the derived classes [PromotedFeedPage] or [TagFeedPage]
-class _TargetFeedPage extends HookConsumerWidget {
-  final TargetFeed feed;
-  final String displayTitle;
-  const _TargetFeedPage({
+class TagFeedPage extends HookConsumerWidget {
+  const TagFeedPage({
     super.key,
-    required this.feed,
-    required this.displayTitle,
+    required this.tag,
   });
+
+  final Tag tag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,6 +42,8 @@ class _TargetFeedPage extends HookConsumerWidget {
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+
+    final TargetFeed feed = TargetFeed.fromTag(tag.key);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
@@ -94,7 +66,7 @@ class _TargetFeedPage extends HookConsumerWidget {
         SliverPinnedHeader(
           child: PositiveTapBehaviour(
             onTap: (_) => appRouter.removeLast(),
-            child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, displayTitle: displayTitle, typography: typography),
+            child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, tag: tag, typography: typography),
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
@@ -113,13 +85,13 @@ class TagPagePinnedHeader extends StatelessWidget {
     super.key,
     required this.mediaQueryData,
     required this.colors,
-    required this.displayTitle,
+    required this.tag,
     required this.typography,
   });
 
   final MediaQueryData mediaQueryData;
   final DesignColorsModel colors;
-  final String displayTitle;
+  final Tag tag;
   final DesignTypographyModel typography;
 
   @override
@@ -144,7 +116,7 @@ class TagPagePinnedHeader extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                displayTitle,
+                tag.topic?.fallback ?? tag.fallback,
                 style: typography.styleHeroExtraSmall.copyWith(color: colors.black),
               ),
             ),

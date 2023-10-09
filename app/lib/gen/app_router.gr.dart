@@ -462,17 +462,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    PromotedFeedRoute.name: (routeData) {
-      final args = routeData.argsAs<PromotedFeedRouteArgs>(
-          orElse: () => const PromotedFeedRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: PromotedFeedPage(
-          userId: args.userId,
-          key: args.key,
-        ),
-      );
-    },
     RegistrationAccountRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -1820,44 +1809,6 @@ class ProfileWelcomeBackRouteArgs {
   @override
   String toString() {
     return 'ProfileWelcomeBackRouteArgs{nextPage: $nextPage, key: $key}';
-  }
-}
-
-/// generated route for
-/// [PromotedFeedPage]
-class PromotedFeedRoute extends PageRouteInfo<PromotedFeedRouteArgs> {
-  PromotedFeedRoute({
-    String? userId,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          PromotedFeedRoute.name,
-          args: PromotedFeedRouteArgs(
-            userId: userId,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'PromotedFeedRoute';
-
-  static const PageInfo<PromotedFeedRouteArgs> page =
-      PageInfo<PromotedFeedRouteArgs>(name);
-}
-
-class PromotedFeedRouteArgs {
-  const PromotedFeedRouteArgs({
-    this.userId,
-    this.key,
-  });
-
-  final String? userId;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'PromotedFeedRouteArgs{userId: $userId, key: $key}';
   }
 }
 

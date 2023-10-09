@@ -471,6 +471,7 @@
     "page_create_post_alt_text": "Alt Text",
     "page_create_post_save": "Save to Gallery",
     "page_create_post_allow_sharing": "Allow Sharing",
+    "page_create_post_promoted_post": "Promote ({permittedPromotions} remaining)",
     "page_create_post_visibility": "Visible To",
     "page_create_post_comments": "Allow Comments",
     "page_create_post_create": "Create Post",
