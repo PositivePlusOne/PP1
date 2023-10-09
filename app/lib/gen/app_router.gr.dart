@@ -63,6 +63,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountPromotedPostsPage(),
       );
     },
+    AccountPromotedPostsPromotionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountPromotedPostsPromotionPage(),
+      );
+    },
     AccountUpdateEmailAddressRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -645,6 +651,20 @@ class AccountPromotedPostsRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountPromotedPostsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountPromotedPostsPromotionPage]
+class AccountPromotedPostsPromotionRoute extends PageRouteInfo<void> {
+  const AccountPromotedPostsPromotionRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountPromotedPostsPromotionRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountPromotedPostsPromotionRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

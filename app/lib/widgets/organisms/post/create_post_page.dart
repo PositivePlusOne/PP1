@@ -63,6 +63,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final currentProfileId = currentProfile?.flMeta?.id;
 
     return WillPopScope(
       onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
@@ -131,10 +132,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTagsPressed: (context) => viewModel.onTagsPressed(context),
                     onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
                     onUpdateAllowComments: viewModel.onUpdateAllowComments,
+                    onUpdatePromotedPost: (ctx) => viewModel.onUpdatePromotePost(ctx, currentProfileId!),
                     onUpdateSaveToGallery: state.isEditing ? null : viewModel.onUpdateSaveToGallery,
                     onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                     valueAllowSharing: state.allowSharing,
                     valueSaveToGallery: state.saveToGallery,
+                    valuePromotedPost: viewModel.isPromotedPost,
                     galleryEntries: state.galleryEntries,
                     tags: state.tags,
                     initialValueAllowComments: state.allowComments,

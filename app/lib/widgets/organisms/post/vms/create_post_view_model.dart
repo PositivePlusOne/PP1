@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -299,6 +300,23 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   void onUpdateAllowSharing(BuildContext context) {
     state = state.copyWith(allowSharing: !state.allowSharing);
   }
+
+  void onUpdatePromotePost(BuildContext context, String userId) {
+    // get the current tags
+    final newTags = [...state.tags];
+    // and toggle the state
+    if (isPromotedPost) {
+      // there is at least one tag that shows this is a promoted activity, remove them all
+      newTags.removeWhere((element) => TagHelpers.isPromoted(element));
+    } else {
+      // this is not a promoted activity, add the required tags
+      newTags.addAll(TagHelpers.createPromotedTags(userId: userId));
+    }
+    // and put these new tags back into the state
+    state = state.copyWith(tags: newTags);
+  }
+
+  bool get isPromotedPost => state.tags.indexWhere((element) => TagHelpers.isPromoted(element)) != -1;
 
   void onUpdateVisibleTo(ActivitySecurityConfigurationMode mode) {
     state = state.copyWith(visibleTo: mode);

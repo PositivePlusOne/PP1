@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -162,12 +163,29 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     appRouter.push(const AccountDetailsRoute());
   }
 
-  Future<void> onPromotedPostsbuttonSelected() async {
+  Future<void> onPromotedPostsButtonSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('onAccountDetailsButtonSelected');
-    appRouter.push(const AccountPromotedPostsRoute());
+    // need to get the profile to see which screen we want to show them
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final currentProfileId = profileController.currentProfileId;
+    if (null != currentProfileId) {
+      final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: currentProfileId);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
+      // now we finally have the stats, we can see if we are permitted to create promotions (permitted >= 0)
+      final numberPermitted = profileStatistics?.promotionsPermitted;
+      if (numberPermitted != null && numberPermitted != ProfileStatistics.kPromotionsNotPermitted) {
+        // okay then, they are allowed to create promotions so show the proper page
+        appRouter.push(const AccountPromotedPostsRoute());
+        // and return prematurely so we don't go to the other page
+        return;
+      }
+    }
+    // if we get here, we aren't allowed to create promotions, there's a special page for that
+    appRouter.push(const AccountPromotedPostsPromotionRoute());
   }
 
   Future<void> onMyCommunitiesButtonPressed() async {

@@ -13,6 +13,7 @@ import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
+import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/chat_create_page.dart';
@@ -193,7 +194,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),
         AutoRoute(page: AccountPreferencesRoute.page, path: '/account/preferences', guards: kCommonGuards),
         AutoRoute(page: AccountConnectSocialRoute.page, path: '/account/connect/social', guards: kCommonGuards),
-        AutoRoute(page: AccountPromotedPostsRoute.page, path: '/account/posts/promoted', guards: kCommonGuards),
+        AutoRoute(page: AccountPromotedPostsRoute.page, path: '/account/posts/promoted_posts', guards: kCommonGuards),
+        AutoRoute(page: AccountPromotedPostsPromotionRoute.page, path: '/account/posts/promoted_promotion', guards: kCommonGuards),
         //* Notifications
         AutoRoute(page: NotificationsRoute.page, path: '/notifications', guards: kCommonGuards),
         //* Guidance

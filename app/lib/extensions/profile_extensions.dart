@@ -254,3 +254,20 @@ extension ProfileExtensions on Profile {
     return visibilityFlags.contains(kFeatureFlagIncognito);
   }
 }
+
+extension ProfileStatisticsExtensions on ProfileStatistics {
+  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  int get posts => counts[ProfileStatistics.kInternalPostKey] ?? 0;
+
+  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  int get shares => counts[ProfileStatistics.kInternalShareKey] ?? 0;
+
+  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  int get followers => counts[ProfileStatistics.kInternalFollowersKey] ?? 0;
+
+  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  int get following => counts[ProfileStatistics.kInternalFollowingKey] ?? 0;
+
+  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to -1 which is the error (never permitted) case)
+  int get promotionsPermitted => counts[ProfileStatistics.kInternalPromotionsPermittedKey] ?? ProfileStatistics.kPromotionsNotPermitted;
+}

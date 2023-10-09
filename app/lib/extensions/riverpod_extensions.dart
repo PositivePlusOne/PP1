@@ -30,6 +30,7 @@ extension ProviderContainerExt on ProviderContainer {
     cacheTagData(data);
     cacheGuidanceDirectoryEntries(data);
     cachePromotionData(data);
+    cacheProfileStatisticsData(data);
   }
 }
 
@@ -43,6 +44,7 @@ extension AutoDisposeFutureProviderRefExt on AutoDisposeFutureProviderRef {
     cacheTagData(data);
     cacheGuidanceDirectoryEntries(data);
     cachePromotionData(data);
+    cacheProfileStatisticsData(data);
   }
 }
 
@@ -56,6 +58,7 @@ extension NotifierProviderRefExt on NotifierProviderRef {
     cacheTagData(data);
     cacheGuidanceDirectoryEntries(data);
     cachePromotionData(data);
+    cacheProfileStatisticsData(data);
   }
 }
 
@@ -69,6 +72,7 @@ extension WidgetRefExt on WidgetRef {
     cacheTagData(data);
     cacheGuidanceDirectoryEntries(data);
     cachePromotionData(data);
+    cacheProfileStatisticsData(data);
   }
 }
 
@@ -166,7 +170,7 @@ void cacheProfileStatisticsData(Map<String, dynamic> data) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
   final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
-  final List<dynamic> profileStatisticsRaw = (data.containsKey('profileStatistics') ? data['profileStatistics'] : []).map((dynamic profileStatistic) => json.decodeSafe(profileStatistic)).toList();
+  final List<dynamic> profileStatisticsRaw = (data.containsKey('userStatistics') ? data['userStatistics'] : []).map((dynamic profileStatistic) => json.decodeSafe(profileStatistic)).toList();
   final List<ProfileStatistics> profileStatistics = profileStatisticsRaw.map((dynamic stat) => ProfileStatistics.fromJson(stat)).toList();
 
   for (ProfileStatistics profileStatistic in profileStatistics) {

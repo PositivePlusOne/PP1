@@ -1,6 +1,11 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -39,12 +44,14 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.altTextController,
     this.onUpdateSaveToGallery,
     this.onUpdateAllowSharing,
+    this.onUpdatePromotedPost,
     this.onUpdateVisibleTo,
     this.onUpdateAllowComments,
     this.galleryEntries = const [],
     this.prepopulatedActivity,
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
+    this.valuePromotedPost = false,
     this.tags = const [],
     this.trailingWidget,
     this.initialValueSharingVisibility = const ActivitySecurityConfigurationMode.public(),
@@ -66,6 +73,7 @@ class CreatePostDialogue extends HookConsumerWidget {
   final void Function(BuildContext context) onTagsPressed;
   final Function(BuildContext context)? onUpdateSaveToGallery;
   final Function(BuildContext context)? onUpdateAllowSharing;
+  final Function(BuildContext context)? onUpdatePromotedPost;
   final Function(ActivitySecurityConfigurationMode)? onUpdateVisibleTo;
   final Function(ActivitySecurityConfigurationMode)? onUpdateAllowComments;
 
@@ -74,6 +82,7 @@ class CreatePostDialogue extends HookConsumerWidget {
 
   final bool valueAllowSharing;
   final bool valueSaveToGallery;
+  final bool valuePromotedPost;
 
   final Widget? trailingWidget;
 
@@ -84,6 +93,23 @@ class CreatePostDialogue extends HookConsumerWidget {
     } else {
       return createPostLayout(context, ref);
     }
+  }
+
+  int _getRemainingPromotions(WidgetRef ref) {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final currentProfile = profileController.currentProfile;
+    final currentProfileId = profileController.currentProfileId;
+    int remainingPromotions = ProfileStatistics.kPromotionsNotPermitted;
+    if (null != currentProfile && null != currentProfileId && currentProfile.isOrganisation) {
+      // an organisation might be able to create promoted posts, let's get how many they are permitted
+      final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: profileController.currentProfileId!);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
+      // now we finally have the stats, we can see how many promotions we have remaining
+      remainingPromotions = profileStatistics?.promotionsPermitted ?? ProfileStatistics.kPromotionsNotPermitted;
+    }
+    // returning the result
+    return remainingPromotions;
   }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -98,6 +124,8 @@ class CreatePostDialogue extends HookConsumerWidget {
     final AppRouter router = ref.read(appRouterProvider);
 
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
+    // we also need the number of promotions this user is allowed (-1 if never any)
+    final remainingPromotions = _getRemainingPromotions(ref);
 
     return Container(
       color: colours.black.withAlpha(230),
@@ -148,7 +176,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               colours: colours,
               textStyle: textStyle,
               localisations: localisations,
-              tags: tags,
+              tags: TagHelpers.filterReservedTagStrings(tags),
               typography: typography,
               isBusy: isBusy,
               onTap: onTagsPressed,
@@ -191,6 +219,19 @@ class CreatePostDialogue extends HookConsumerWidget {
               text: localisations.page_create_post_allow_sharing,
             ),
             const SizedBox(height: kPaddingSmall),
+
+            //* -=-=-=-=- Promoted Post -=-=-=-=- *\\
+            if (remainingPromotions > 0) ...[
+              // only showing if they are permitted
+              CreatePostToggleContainer(
+                value: valuePromotedPost,
+                colours: colours,
+                onTap: isBusy ? (context) {} : onUpdatePromotedPost,
+                textStyle: textStyle,
+                text: localisations.page_create_post_promoted_post(remainingPromotions),
+              ),
+              const SizedBox(height: kPaddingSmall),
+            ],
 
             //* -=-=-=-=- Sharing Visibility -=-=-=-=- *\\
             CreatePostBox(
@@ -252,6 +293,9 @@ class CreatePostDialogue extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final AppRouter router = ref.read(appRouterProvider);
 
+    // we also need the number of promotions this user is allowed (-1 if never any)
+    final remainingPromotions = _getRemainingPromotions(ref);
+
     final TextStyle textStyle = typography.styleButtonRegular.copyWith(color: colours.white);
 
     final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
@@ -291,7 +335,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     colours: colours,
                     textStyle: textStyle,
                     localisations: localisations,
-                    tags: tags,
+                    tags: TagHelpers.filterReservedTagStrings(tags),
                     typography: typography,
                     onTap: onTagsPressed,
                   ),
@@ -326,6 +370,18 @@ class CreatePostDialogue extends HookConsumerWidget {
                     text: localisations.page_create_post_allow_sharing,
                   ),
                   const SizedBox(height: kPaddingSmall),
+                  //* -=-=-=-=- Promoted Post -=-=-=-=- *\\
+                  if (remainingPromotions > 0) ...[
+                    // only showing if they are permitted
+                    CreatePostToggleContainer(
+                      value: valuePromotedPost,
+                      colours: colours,
+                      onTap: onUpdatePromotedPost,
+                      textStyle: textStyle,
+                      text: localisations.page_create_post_promoted_post(remainingPromotions),
+                    ),
+                    const SizedBox(height: kPaddingSmall),
+                  ],
                   CreatePostBox(
                     colours: colours,
                     forceBorder: true,
@@ -478,12 +534,14 @@ class CreatePostToggleContainer extends StatelessWidget {
     required this.text,
     required this.onTap,
     required this.value,
+    this.enabled = true,
   });
 
   final DesignColorsModel colours;
   final TextStyle textStyle;
   final String text;
   final bool value;
+  final bool enabled;
   final Function(BuildContext context)? onTap;
 
   @override
@@ -505,7 +563,7 @@ class CreatePostToggleContainer extends StatelessWidget {
               activeColour: colours.white,
               inactiveColour: colours.colorGray4,
               ignoring: true,
-              isEnabled: false,
+              isEnabled: enabled,
             ),
           ],
         ),

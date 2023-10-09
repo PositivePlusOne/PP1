@@ -52,6 +52,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required this.feedState,
     this.windowSize = 20,
     this.isSliver = true,
+    this.onPageLoaded,
     super.key,
   });
 
@@ -59,6 +60,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final TargetFeed feed;
   final PositiveFeedState feedState;
   final int windowSize;
+  final void Function()? onPageLoaded;
 
   final bool isSliver;
 
