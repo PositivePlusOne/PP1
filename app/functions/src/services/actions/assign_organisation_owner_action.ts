@@ -5,8 +5,8 @@ import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { RelationshipService } from '../relationship_service';
 
-export namespace AssignOrganisationMemberAction {
-    export async function assignOrganisationMember(action: AdminQuickActionJSON): Promise<void> {
+export namespace AssignOrganisationOwnerAction {
+    export async function assignOrganisationOwner(action: AdminQuickActionJSON): Promise<void> {
         const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
         if (!action || !actionId) {
             functions.logger.error(`No action ID specified`);
@@ -49,8 +49,8 @@ export namespace AssignOrganisationMemberAction {
             return Promise.resolve();
         }
 
-        await RelationshipService.manageRelationship(sourceProfileId, relationship, true);
-        AdminQuickActionService.appendOutput(action, `Successfully updated managed relationship.`);
+        await RelationshipService.setOwnership(sourceProfile, targetProfile);
+        AdminQuickActionService.appendOutput(action, `Successfully updated ownership.`);
 
         AdminQuickActionService.appendOutput(action, `Adding the organisation flag to the profile ${targetProfileId} if it doesn't already exist.`);
 

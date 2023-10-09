@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -26,6 +27,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -46,13 +48,21 @@ class CreateConversationPage extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
-    final String currentUserProfileId = profileControllerState.currentProfile?.flMeta?.id ?? '';
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final String currentUserProfileId = currentProfile?.flMeta?.id ?? '';
+
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final firebaseUser = firebaseAuth.currentUser;
 
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
 
     useLifecycleHook(chatViewModel);
+
+    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
+      currentUser: firebaseUser,
+      currentProfile: currentProfile,
+    );
 
     final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
 

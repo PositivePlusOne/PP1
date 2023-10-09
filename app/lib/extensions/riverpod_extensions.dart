@@ -2,8 +2,6 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/providers/content/reactions_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -15,6 +13,8 @@ import 'package:app/dtos/database/guidance/guidance_directory_entry.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/reactions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import '../dtos/database/activities/tags.dart';
@@ -122,19 +122,19 @@ void cacheReactionData(Map<String, dynamic> data) {
   final Logger logger = providerContainer.read(loggerProvider);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
-  final List<dynamic> reactions = (data.containsKey('reactions') ? data['reactions'] : []).map((dynamic reaction) => json.decodeSafe(reaction)).toList();
+  final List<dynamic> reactionsDynamic = (data.containsKey('reactions') ? data['reactions'] : []).map((dynamic reaction) => json.decodeSafe(reaction)).toList();
+  final List<Reaction> reactions = reactionsDynamic.map((dynamic reaction) => Reaction.fromJson(reaction)).toList();
 
-  for (final dynamic reaction in reactions) {
+  for (final Reaction reaction in reactions) {
     try {
       logger.d('requestNextTimelinePage() - parsing reaction: $reaction');
-      final Reaction newReaction = Reaction.fromJson(reaction);
-      final String reactionId = newReaction.flMeta?.id ?? '';
+      final String reactionId = reaction.flMeta?.id ?? '';
       if (reactionId.isEmpty) {
         logger.e('requestNextTimelinePage() - Failed to cache reaction: $reaction');
         continue;
       }
 
-      cacheController.add(key: reactionId, value: newReaction, metadata: newReaction.flMeta);
+      cacheController.add(key: reactionId, value: reaction, metadata: reaction.flMeta);
     } catch (ex) {
       logger.e('requestNextTimelinePage() - Failed to cache reaction: $reaction - ex: $ex');
     }

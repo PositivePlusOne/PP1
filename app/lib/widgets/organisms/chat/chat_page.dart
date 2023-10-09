@@ -20,6 +20,7 @@ import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/chat_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -311,6 +312,7 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
 
   return StreamMessageWidget(
     messageTheme: themeData,
+    onMessageTap: (message) => message.handleMessageTapped(context),
     bottomRowBuilderWithDefaultWidget: (context, message, widget) => widget.copyWith(
       messageTheme: bottomRowThemeData,
       showTimeStamp: false,

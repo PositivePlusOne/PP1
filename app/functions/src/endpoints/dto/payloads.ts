@@ -107,7 +107,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                     // Unique reactions
                     if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForActivitiesAndUser([activity], sender);
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(activityId, sender);
                         functions.logger.info("Unique reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {
@@ -137,7 +137,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
 
                     // Unique reactions
                     if (sender) {
-                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostTargetActivityOriginFeed, repostTargetActivityId, sender);
+                        const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(repostTargetActivityId, sender);
                         functions.logger.info("Unique nested reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {
@@ -317,6 +317,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (!isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
+
                     const relationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
                     const isConnected = relationshipMember?.hasConnected || false;
 

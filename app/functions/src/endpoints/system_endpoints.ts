@@ -18,6 +18,7 @@ import { TagsService } from "../services/tags_service";
 import { ProfileJSON } from "../dto/profile";
 import { RelationshipJSON } from "../dto/relationships";
 import { RelationshipService } from "../services/relationship_service";
+import { Pagination } from "../helpers/pagination";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -57,6 +58,11 @@ export namespace SystemEndpoints {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
 
+    const pagination = {
+      windowSize: request.data.windowSize || 10,
+      cursor: request.data.cursor || "",
+    } as Pagination;
+
     const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managedRelationships, companySectors] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
@@ -67,10 +73,9 @@ export namespace SystemEndpoints {
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("user", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
-      uid ? RelationshipService.getManagedRelationships(uid) : Promise.resolve([]),
+      uid ? RelationshipService.getManagedRelationships(uid, pagination) : Promise.resolve({data: [], pagination: {}}),
       LocalizationsService.getDefaultCompanySectors(locale),
     ]);
-
 
     const joinRecords = [] as string[];
     const interestResponse = {} as any;
@@ -100,21 +105,19 @@ export namespace SystemEndpoints {
     }
 
     const managedProfileFetchPromises = [];
-    if (managedRelationships && managedRelationships.length > 0) {
-      for (const relationship of managedRelationships) {
-        if (!relationship) {
+    for (const relationship of managedRelationships?.data || []) {
+      if (!relationship) {
+        continue;
+      }
+
+      const members = (relationship as RelationshipJSON).members || [];
+      for (const member of members) {
+        if (!member?.memberId || supportedProfileIds.includes(member.memberId)) {
           continue;
         }
 
-        const members = (relationship as RelationshipJSON).members || [];
-        for (const member of members) {
-          if (!member?.memberId || supportedProfileIds.includes(member.memberId)) {
-            continue;
-          }
-
-          supportedProfileIds.push(member.memberId);
-          managedProfileFetchPromises.push(ProfileService.getProfile(member.memberId));
-        }
+        supportedProfileIds.push(member.memberId);
+        managedProfileFetchPromises.push(ProfileService.getProfile(member.memberId));
       }
     }
 
@@ -200,7 +203,7 @@ export namespace SystemEndpoints {
 
   //   // Get the firebase application name
   //   const appName = process.env.GCLOUD_PROJECT || "";
-    
+
   //   // Verify the app name if not positiveplusone-production
   //   if (appName === "positiveplusone-production") {
   //     throw new Error("Nice try.");

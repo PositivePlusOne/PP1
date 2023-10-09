@@ -17,7 +17,6 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -52,8 +51,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required this.feed,
     required this.feedState,
     this.windowSize = 20,
-    this.onHeaderTap,
-    this.onMediaTap,
     this.isSliver = true,
     super.key,
   });
@@ -62,9 +59,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final TargetFeed feed;
   final PositiveFeedState feedState;
   final int windowSize;
-
-  final void Function(Activity activity)? onHeaderTap;
-  final void Function(Activity activity, Media media)? onMediaTap;
 
   final bool isSliver;
 

@@ -11,10 +11,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/relationship_search_api_service.dart';
@@ -26,8 +28,10 @@ part 'communities_controller.g.dart';
 @freezed
 class CommunitiesControllerState with _$CommunitiesControllerState {
   const factory CommunitiesControllerState({
+    required User? currentUser,
+    required Profile? currentProfile,
+    required CommunityType selectedCommunityType,
     @Default(false) bool isBusy,
-    @Default(CommunityType.connected) CommunityType selectedCommunityType,
     @Default({}) Set<String> followerProfileIds,
     @Default('') String followerPaginationCursor,
     @Default(true) bool hasMoreFollowers,
@@ -40,56 +44,82 @@ class CommunitiesControllerState with _$CommunitiesControllerState {
     @Default({}) Set<String> connectedProfileIds,
     @Default('') String connectedPaginationCursor,
     @Default(true) bool hasMoreConnected,
+    @Default({}) Set<String> managedProfileIds,
+    @Default('') String managedPaginationCursor,
+    @Default(true) bool hasMoreManaged,
   }) = _CommunitiesControllerState;
 
-  factory CommunitiesControllerState.initialState() => const CommunitiesControllerState();
+  factory CommunitiesControllerState.initialState({
+    required Profile? currentProfile,
+    required User? currentUser,
+  }) {
+    final bool isManagedProfile = currentProfile != null && currentUser != null && currentProfile.flMeta?.id != currentUser.uid;
+    return CommunitiesControllerState(
+      currentUser: currentUser,
+      currentProfile: currentProfile,
+      selectedCommunityType: isManagedProfile ? CommunityType.managed : CommunityType.connected,
+    );
+  }
 }
 
 enum CommunityType {
   followers,
   following,
   blocked,
-  connected;
+  connected,
+  managed;
+
+  static const List<CommunityType> userProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.blocked, CommunityType.connected];
+  static const List<CommunityType> managedProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.managed];
 
   // The community locales are inverted as the backend uses the opposite terminology
-  String get toLocale {
+  String toLocale(bool isManagedProfile) {
     return switch (this) {
       CommunityType.followers => 'Following',
       CommunityType.following => 'Followers',
       CommunityType.blocked => 'Blocked',
       CommunityType.connected => 'Connections',
+      CommunityType.managed => isManagedProfile ? 'Team Members' : 'Managed',
     };
   }
 }
 
 @Riverpod(keepAlive: true)
-class CommunitiesController extends _$CommunitiesController {
-  StreamSubscription<User?>? _userChangesSubscription;
+class CommunitiesController extends _$CommunitiesController with LifecycleMixin {
   StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
   bool get hasLoadedInitialData => state.followerProfileIds.isNotEmpty || state.followingProfileIds.isNotEmpty || state.blockedProfileIds.isNotEmpty || state.connectedProfileIds.isNotEmpty;
 
   @override
-  CommunitiesControllerState build() {
-    return CommunitiesControllerState.initialState();
+  CommunitiesControllerState build({
+    required Profile? currentProfile,
+    required User? currentUser,
+  }) {
+    return CommunitiesControllerState.initialState(
+      currentProfile: currentProfile,
+      currentUser: currentUser,
+    );
+  }
+
+  @override
+  void onFirstRender() {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('CommunitiesController - onFirstRender - First render');
+    setupListeners();
+
+    if (!hasLoadedInitialData) {
+      logger.i('CommunitiesController - setupListeners - Loading initial community data');
+      loadInitialCommunityData();
+    }
   }
 
   Future<void> setupListeners() async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
     final Logger logger = ref.read(loggerProvider);
-
-    await _userChangesSubscription?.cancel();
-    _userChangesSubscription = userController.userChangedController.stream.listen(onUserChanged);
 
     await _cacheKeyUpdatedSubscription?.cancel();
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheRecordUpdated);
     logger.i('CommunitiesController - setupListeners - User changes subscription setup');
-
-    if (!hasLoadedInitialData) {
-      logger.i('CommunitiesController - setupListeners - Loading initial community data');
-      unawaited(onUserChanged(userController.currentUser));
-    }
   }
 
   void setSelectedCommunityType(dynamic value) {
@@ -166,19 +196,6 @@ class CommunitiesController extends _$CommunitiesController {
     }
   }
 
-  Future<void> onUserChanged(User? user) async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('CommunitiesController - onUserChanged - User changed');
-
-    if (user == null) {
-      logger.i('CommunitiesController - onUserChanged - User is null');
-      resetCommunityData();
-      return;
-    }
-
-    unawaited(loadInitialCommunityData());
-  }
-
   void resetCommunityData({User? user}) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('CommunitiesController - resetCommunityData - Resetting community data');
@@ -197,6 +214,9 @@ class CommunitiesController extends _$CommunitiesController {
       connectedProfileIds: {},
       connectedPaginationCursor: '',
       hasMoreConnected: true,
+      managedProfileIds: {},
+      managedPaginationCursor: '',
+      hasMoreManaged: true,
     );
   }
 
@@ -225,6 +245,11 @@ class CommunitiesController extends _$CommunitiesController {
           blockedPaginationCursor: '',
           hasMoreBlocked: true,
         ),
+      CommunityType.managed => state.copyWith(
+          managedProfileIds: {},
+          managedPaginationCursor: '',
+          hasMoreManaged: true,
+        ),
     };
   }
 
@@ -248,6 +273,7 @@ class CommunitiesController extends _$CommunitiesController {
       loadNextCommunityData(type: CommunityType.following),
       loadNextCommunityData(type: CommunityType.blocked),
       loadNextCommunityData(type: CommunityType.connected),
+      loadNextCommunityData(type: CommunityType.managed),
     ]);
   }
 
@@ -268,6 +294,7 @@ class CommunitiesController extends _$CommunitiesController {
       CommunityType.followers => state.hasMoreFollowers,
       CommunityType.following => state.hasMoreFollowing,
       CommunityType.blocked => state.hasMoreBlocked,
+      CommunityType.managed => state.hasMoreManaged,
     };
 
     if (!canGetNext) {
@@ -281,6 +308,7 @@ class CommunitiesController extends _$CommunitiesController {
       CommunityType.followers => await relationshipSearchApiService.listFollowedRelationships(cursor: state.followerPaginationCursor),
       CommunityType.following => await relationshipSearchApiService.listFollowingRelationships(cursor: state.followingPaginationCursor),
       CommunityType.blocked => await relationshipSearchApiService.listBlockedRelationships(cursor: state.blockedPaginationCursor),
+      CommunityType.managed => await relationshipSearchApiService.listManagedRelationships(cursor: state.managedPaginationCursor),
     };
 
     final Map<String, dynamic> data = response.data;
@@ -313,6 +341,7 @@ class CommunitiesController extends _$CommunitiesController {
       CommunityType.followers => state.followerPaginationCursor,
       CommunityType.following => state.followingPaginationCursor,
       CommunityType.blocked => state.blockedPaginationCursor,
+      CommunityType.managed => state.managedPaginationCursor,
     };
 
     final bool hasMoreData = cursor.isNotEmpty && relationships.isNotEmpty && cursor != currentCursor;
@@ -323,6 +352,7 @@ class CommunitiesController extends _$CommunitiesController {
       CommunityType.followers => state.copyWith(followerPaginationCursor: cursor, hasMoreFollowers: hasMoreData, followerProfileIds: {...state.followerProfileIds, ...newRelationshipIds}),
       CommunityType.following => state.copyWith(followingPaginationCursor: cursor, hasMoreFollowing: hasMoreData, followingProfileIds: {...state.followingProfileIds, ...newRelationshipIds}),
       CommunityType.blocked => state.copyWith(blockedPaginationCursor: cursor, hasMoreBlocked: hasMoreData, blockedProfileIds: {...state.blockedProfileIds, ...newRelationshipIds}),
+      CommunityType.managed => state.copyWith(managedPaginationCursor: cursor, hasMoreManaged: hasMoreData, managedProfileIds: {...state.managedProfileIds, ...newRelationshipIds}),
     };
 
     logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data');

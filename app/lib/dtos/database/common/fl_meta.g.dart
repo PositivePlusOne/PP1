@@ -9,6 +9,8 @@ part of 'fl_meta.dart';
 _$FlMetaImpl _$$FlMetaImplFromJson(Map<String, dynamic> json) => _$FlMetaImpl(
       createdBy: json['createdBy'] as String?,
       createdDate: dateFromUnknown(json['createdDate']),
+      ownedBy: json['ownedBy'] as String?,
+      ownedAsOfDate: dateFromUnknown(json['ownedAsOfDate']),
       lastModifiedBy: json['lastModifiedBy'] as String?,
       lastModifiedDate: dateFromUnknown(json['lastModifiedDate']),
       lastFetchMillis: json['lastFetchMillis'] as int? ?? -1,
@@ -25,6 +27,8 @@ Map<String, dynamic> _$$FlMetaImplToJson(_$FlMetaImpl instance) =>
     <String, dynamic>{
       'createdBy': instance.createdBy,
       'createdDate': dateToUnknown(instance.createdDate),
+      'ownedBy': instance.ownedBy,
+      'ownedAsOfDate': dateToUnknown(instance.ownedAsOfDate),
       'lastModifiedBy': instance.lastModifiedBy,
       'lastModifiedDate': dateToUnknown(instance.lastModifiedDate),
       'lastFetchMillis': instance.lastFetchMillis,

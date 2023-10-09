@@ -93,6 +93,16 @@ class CacheController {
     processEvents(newCacheRecord, hasRecord ? CacheKeyUpdatedEventType.updated : CacheKeyUpdatedEventType.created);
   }
 
+  bool any(Iterable<String> keys) {
+    for (final String key in keys) {
+      if (cacheData.containsKey(key)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Iterable<T> listAll<T>() {
     final List<T> results = [];
     for (final CacheRecord record in cacheData.values) {

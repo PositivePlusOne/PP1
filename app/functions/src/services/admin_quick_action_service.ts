@@ -6,6 +6,8 @@ import { DataService } from "./data_service";
 
 import { AssignOrganisationMemberAction } from "./actions/assign_organisation_member_action";
 import { RemoveOrganisationMemberAction } from "./actions/remove_organisation_member_action";
+import { AssignOrganisationOwnerAction } from "./actions/assign_organisation_owner_action";
+import { RemoveOrganisationOwnerAction } from "./actions/remove_organisation_owner_action";
 
 export namespace AdminQuickActionService {
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
@@ -21,12 +23,19 @@ export namespace AdminQuickActionService {
             updateStatus(action, 'processing');
             await saveQuickAction(action);
 
+            // TODO(ryan): Find a nice way to automate this.
             switch (action.action) {
                 case 'removeOrganisationMember':
                     await RemoveOrganisationMemberAction.removeOrganisationMember(action);
                     break;
                 case 'assignOrganisationMember':
                     await AssignOrganisationMemberAction.assignOrganisationMember(action);
+                    break;
+                case 'assignOrganisationOwner':
+                    await AssignOrganisationOwnerAction.assignOrganisationOwner(action);
+                    break;
+                case 'removeOrganisationOwner':
+                    await RemoveOrganisationOwnerAction.removeOrganisationOwner(action);
                     break;
                 default:
                     appendOutput(action, `No action handler defined for action ${action.action}`);

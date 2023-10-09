@@ -62,7 +62,7 @@ class PositivePostActions extends HookConsumerWidget {
       padding: padding,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
+        children: <Widget>[
           PositiveTapBehaviour(
             onTap: onLike,
             isEnabled: likesEnabled,

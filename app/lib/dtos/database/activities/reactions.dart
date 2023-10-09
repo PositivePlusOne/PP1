@@ -4,7 +4,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 
 part 'reactions.freezed.dart';
@@ -86,9 +85,9 @@ class ReactionStatistics with _$ReactionStatistics {
 
   factory ReactionStatistics.fromJson(Map<String, dynamic> json) => _$ReactionStatisticsFromJson(json);
 
-  static ReactionStatistics newEntry(Activity activity) {
+  static ReactionStatistics newEntry(String activityId) {
     return ReactionStatistics(
-      activityId: activity.flMeta?.id ?? '',
+      activityId: activityId,
       reactionId: '',
       userId: '',
       counts: {},
@@ -109,6 +108,10 @@ class TargetFeed with _$TargetFeed {
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');
+    if (parts.length != 2) {
+      return TargetFeed.empty();
+    }
+
     final String feed = parts[0];
     final String slug = parts[1];
 
@@ -121,6 +124,10 @@ class TargetFeed with _$TargetFeed {
 
   static TargetFeed tag(String tag) {
     return TargetFeed(targetSlug: 'tags', targetUserId: tag);
+  }
+
+  static TargetFeed empty() {
+    return const TargetFeed(targetSlug: '', targetUserId: '');
   }
 
   static String toOrigin(TargetFeed targetFeed) {

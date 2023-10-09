@@ -28,18 +28,15 @@ export namespace ReactionService {
     }
 
     export function getExpectedKeyFromOptions(reaction: ReactionJSON): string {
-        if (!!reaction.activity_id || !reaction.user_id || !reaction.kind) {
-            functions.logger.error("Invalid reaction key", { reaction });
+        const isUnique = isUniqueReactionKind(reaction.kind ?? "");
+        functions.logger.debug("Generating reaction key", { reaction, isUnique });
+
+        if (!isUnique) {
+            functions.logger.debug("Reaction is not unique, generating random key");
             return FlamelinkHelpers.generateIdentifier();
         }
 
-        // Check if it is a unique reaction
-        // If so, we can determine the reaction ID from the kind
-        if (isUniqueReactionKind(reaction.kind)) {
-            return `reaction:${reaction.kind}:${reaction.activity_id}:${reaction.reaction_id ?? ''}:${reaction.user_id}`;
-        }
-
-        return FlamelinkHelpers.generateIdentifier();
+        return `reaction:${reaction.kind}:${reaction.activity_id}:${reaction.reaction_id ?? ''}:${reaction.user_id}`;
     }
 
     export async function verifyReactionKind(kind: string, userId: string, activity: ActivityJSON, relationship: RelationshipJSON): Promise<void> {
@@ -59,11 +56,11 @@ export namespace ReactionService {
 
         // Check flags on the activity 
         const relationshipStates = RelationshipService.relationshipStatesForEntity(userId, relationship);
-        const viewMode = activity?.securityConfiguration?.viewMode || "disabled";
-        const likesMode = activity?.securityConfiguration?.likesMode || "disabled";
-        const commentMode = activity?.securityConfiguration?.commentMode || "disabled";
-        const shareMode = activity?.securityConfiguration?.shareMode || "disabled";
-        const bookmarksMode = activity?.securityConfiguration?.bookmarksMode || "disabled";
+        const viewMode = activity?.securityConfiguration?.viewMode || "public";
+        const likesMode = activity?.securityConfiguration?.likesMode || "public";
+        const commentMode = activity?.securityConfiguration?.commentMode || "public";
+        const shareMode = activity?.securityConfiguration?.shareMode || "public";
+        const bookmarksMode = activity?.securityConfiguration?.bookmarksMode || "public";
 
         const isFullyConnected = relationshipStates.has(RelationshipState.sourceConnected) && relationshipStates.has(RelationshipState.targetConnected);
         const isBlocked = relationshipStates.has(RelationshipState.targetBlocked);
@@ -202,6 +199,8 @@ export namespace ReactionService {
             ProfileStatisticsService.updateReactionCountForProfile(expectedUserId, expectedKind, 1),
         ]);
 
+        functions.logger.info("Added reaction", { reaction });
+
         return reaction;
     }
 
@@ -266,68 +265,15 @@ export namespace ReactionService {
         return reactions.filter((reaction: ReactionJSON) => reaction !== null);
     }
 
-    export function buildUniqueReactionKeysForOptions(originFeed: string, activityId: string, userId: string): string[] {
+    export function buildUniqueReactionKeysForOptions(activityId: string, userId: string): string[] {
         const expectedKeys = [] as string[];
-        for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
-            const kind = UNIQUE_REACTIONS[index];
-            if (!kind) {
-                continue;
-            }
 
-            const expectedReactionJson = {
+        for (const kind of UNIQUE_REACTIONS) {
+            expectedKeys.push(getExpectedKeyFromOptions({
                 activity_id: activityId,
                 user_id: userId,
                 kind: kind,
-                origin: originFeed,
-            } as ReactionJSON;
-
-            const key = getExpectedKeyFromOptions(expectedReactionJson);
-            if (expectedKeys.includes(key)) {
-                continue;
-            }
-
-            expectedKeys.push(key);
-        }
-
-        return expectedKeys;
-    }
-
-    export function buildUniqueReactionKeysForActivitiesAndUser(activities: ActivityJSON[], userId: string): string[] {
-        if (!activities || activities.length === 0 || !userId) {
-            functions.logger.info("No activities or user ID provided", { activities, userId });
-            return [];
-        }
-        
-        const expectedKeys = [] as string[];
-        for (let index = 0; index < UNIQUE_REACTIONS.length; index++) {
-            const kind = UNIQUE_REACTIONS[index];
-            if (!kind) {
-                continue;
-            }
-
-            for (let index = 0; index < activities.length; index++) {
-                const activity = activities[index] as ActivityJSON;
-                const activityId = activity?._fl_meta_?.fl_id ?? "";
-                const originFeed = activity?.publisherInformation?.originFeed ?? "";
-                if (!activityId || !originFeed) {
-                    functions.logger.error("Missing activity ID or origin feed", { activityId, originFeed, activity });
-                    continue;
-                }
-
-                const expectedReactionJson = {
-                    activity_id: activityId,
-                    user_id: userId,
-                    kind: kind,
-                    origin: originFeed,
-                } as ReactionJSON;
-
-                const key = getExpectedKeyFromOptions(expectedReactionJson);
-                if (expectedKeys.includes(key) || !key.startsWith(kind)) {
-                    continue;
-                }
-
-                expectedKeys.push(key);
-            }
+            } as ReactionJSON));
         }
 
         return expectedKeys;

@@ -67,4 +67,17 @@ class RelationshipSearchApiService {
       ),
     );
   }
+
+  FutureOr<EndpointResponse> listManagedRelationships({
+    String cursor = '',
+    int limit = kDefaultLimit,
+  }) async {
+    return await getHttpsCallableResult<EndpointResponse>(
+      name: 'relationship-listManagedRelationships',
+      pagination: Pagination(
+        cursor: cursor,
+        limit: limit,
+      ),
+    );
+  }
 }

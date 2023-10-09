@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -144,6 +146,8 @@ extension ActivityExt on Activity {
   Future<void> share(BuildContext context, Profile? currentProfile) async {
     final SharingController sharingController = providerContainer.read(sharingControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
+
     if (publisherInformation?.originFeed.isEmpty ?? true == true) {
       logger.e('publisherInformation.originFeed is empty');
       throw Exception('publisherInformation.originFeed is empty');
@@ -151,7 +155,13 @@ extension ActivityExt on Activity {
 
     // typedef SharePostOptions = (Activity activity, String origin, String currentProfileId);
     final String originFeed = publisherInformation?.originFeed ?? '';
-    final SharePostOptions postOptions = (this, originFeed, currentProfile?.flMeta?.id ?? '');
+    final SharePostOptions postOptions = (
+      activity: this,
+      origin: originFeed,
+      currentProfile: currentProfile,
+      currentUser: firebaseAuth.currentUser,
+    );
+
     await sharingController.showShareDialog(context, ShareTarget.post, postOptions: postOptions);
   }
 
@@ -350,42 +360,37 @@ extension ActivityExt on Activity {
 
   Reaction? getUniqueReaction({
     required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
+    required ReactionType kind,
   }) {
-    final String activityId = flMeta?.id ?? '';
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
-      return null;
-    }
-
-    final List<Reaction> reactions = reactionsFeedState?.pagingController.itemList?.where((reaction) {
-          return reaction.userId == currentProfileId;
-        }).toList() ??
-        [];
-
-    if (reactions.length != 1) {
-      return null;
-    }
-
-    return reactions.first;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final List<String> cacheKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: this, currentProfile: currentProfile);
+    final List<Reaction> reactions = cacheController.list(cacheKeys).whereType<Reaction>().toList();
+    return reactions.firstWhereOrNull((element) => element.kind == kind);
   }
 
-  bool isActivityBookmarked({
-    required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
+  void incrementReactionCount({
+    required ReactionStatistics cachedState,
+    required ReactionType kind,
+    required int offset,
   }) {
     final String activityId = flMeta?.id ?? '';
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
-      return false;
+    if (activityId.isEmpty) {
+      return;
     }
 
-    return reactionsFeedState?.pagingController.itemList?.any((reaction) {
-          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.bookmark();
-        }) ==
-        true;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final String feedStateKey = reactionsController.buildExpectedStatisticsCacheKey(
+      activityId: activityId,
+    );
+
+    final Map<String, int> counts = {...cachedState.counts};
+    final String kindStr = ReactionType.toJson(kind);
+    counts[kindStr] = (counts[kindStr] ?? 0) + offset;
+
+    final ReactionStatistics newState = cachedState.copyWith(counts: counts);
+    cacheController.add(key: feedStateKey, value: newState);
   }
 
   Future<void> onPostBookmarked({
@@ -403,7 +408,7 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile);
     if (isBookmarked) {
       await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -420,27 +425,30 @@ extension ActivityExt on Activity {
 
   bool isActivityLiked({
     required Profile? currentProfile,
-    required PositiveReactionsState reactionsFeedState,
+  }) =>
+      hasUniqueReaction(currentProfile: currentProfile, kind: const ReactionType.like());
+
+  bool isActivityBookmarked({
+    required Profile? currentProfile,
+  }) =>
+      hasUniqueReaction(currentProfile: currentProfile, kind: const ReactionType.bookmark());
+
+  bool hasUniqueReaction({
+    required Profile? currentProfile,
+    required ReactionType kind,
   }) {
-    final String activityId = flMeta?.id ?? '';
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
-      return false;
-    }
-
-    return reactionsFeedState.pagingController.itemList?.any((reaction) {
-          return reaction.userId == currentProfileId && reaction.kind == const ReactionType.like();
-        }) ==
-        true;
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final List<String> cacheKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: this, currentProfile: currentProfile);
+    return cacheController.list(cacheKeys).any((element) => element is Reaction && element.kind == kind);
   }
 
   Future<void> onPostLiked({
     required BuildContext context,
     required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
+    required Activity? activity,
   }) async {
-    if (reactionsFeedState == null) {
+    if (activity == null) {
       throw Exception('reactionsFeedState is null');
     }
 
@@ -454,16 +462,17 @@ extension ActivityExt on Activity {
       throw Exception('Invalid activity or user');
     }
 
-    final bool isLiked = isActivityLiked(currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+    final bool isLiked = isActivityLiked(currentProfile: currentProfile);
+
     if (isLiked) {
-      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile);
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
       return;
     }
 
-    await reactionsController.likeActivity(activityId: activityId, uid: profileId);
+    await reactionsController.likeActivity(activityId: activityId);
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
     );
@@ -495,19 +504,34 @@ extension ActivityExt on Activity {
     );
   }
 
-  Future<void> requestFullscreenMedia(Media media, TargetFeed? feed) async {
+  Future<void> requestFullscreenMedia(Media media) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final AppRouter router = providerContainer.read(appRouterProvider);
-    final PostRoute postRoute = PostRoute(
-      activityId: flMeta?.id ?? '',
-      feed: feed ??
-          TargetFeed(
-            targetSlug: 'user',
-            targetUserId: publisherInformation?.publisherId ?? '',
-          ),
+    final MediaRoute mediaRoute = MediaRoute(
+      media: media,
     );
 
-    logger.i('Navigating to post ${flMeta?.id}');
+    logger.i('Navigating to media ${media.name}');
+    await router.push(mediaRoute);
+  }
+
+  Future<void> requestPostRoute(BuildContext context) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final String activityId = flMeta?.id ?? '';
+
+    final PostRoute postRoute = PostRoute(
+      activityId: activityId,
+      feed: targetFeed,
+    );
+
+    // Check if we are already on the post page.
+    if (router.current.name == PostRoute.name) {
+      logger.i('Already on post $activityId');
+      return;
+    }
+
+    logger.i('Navigating to post $activityId');
     await router.push(postRoute);
   }
 }
