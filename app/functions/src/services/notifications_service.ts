@@ -6,6 +6,7 @@ import { DefaultGenerics, StreamClient } from "getstream";
 import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { FeedStatisticsService } from "./feed_statistics_service";
 
 export namespace NotificationsService {
   export function prepareNewNotification(notification: NotificationPayload): NotificationPayload {
@@ -67,6 +68,8 @@ export namespace NotificationsService {
       object: notification,
       foreign_id: notification.id,
     });
+
+    await FeedStatisticsService.updateCountForFeedStatistics("notification", uid, "total_posts", 1);
   }
 
   export async function listNotificationWindow(client: StreamClient<DefaultGenerics>, uid: string, windowSize: number, next: string): Promise<NotificationPayloadResponse> {
