@@ -10,6 +10,7 @@ import { DataService } from "./data_service";
 import { FeedName } from "../constants/default_feeds";
 import { FeedEntry } from "../dto/stream";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { FeedStatisticsService } from "./feed_statistics_service";
 
 export namespace ActivitiesService {
   /**
@@ -251,6 +252,8 @@ export namespace ActivitiesService {
     };
 
     await feed.addActivity(getStreamActivity);
+    
+    await FeedStatisticsService.updateCountForFeedStatistics(feedName, actorId, "total_posts", 1);
   }
 
   /**
@@ -279,5 +282,7 @@ export namespace ActivitiesService {
 
     const feed = FeedService.getFeedsClient().feed(feedName, actorId);
     await feed.removeActivity({ foreign_id: activityId });
+
+    await FeedStatisticsService.updateCountForFeedStatistics(feedName, actorId, "total_posts", -1);
   }
 }
