@@ -6,6 +6,8 @@ import { FeedRequestJSON } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { ProfileJSON } from "../dto/profile";
+import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace FeedService {
 
@@ -62,18 +64,32 @@ export namespace FeedService {
    * @param {string} userId the user's ID.
    * @return {Promise<void>} a promise that resolves when the integrity check is complete.
    */
-  export async function verifyDefaultFeedSubscriptionsForUser(client: StreamClient<DefaultGenerics>, userId: string): Promise<void> {
-    functions.logger.info("Verifying default feed subscriptions for user", { userId });
+  export async function verifyDefaultFeedSubscriptionsForUser(client: StreamClient<DefaultGenerics>, profile: ProfileJSON): Promise<void> {
+    functions.logger.info("Verifying default feed subscriptions for user", { profile });
+    const userId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!userId) {
+      functions.logger.error("Missing user ID");
+      return;
+    }
+
     const userTimelineFeed = client.feed("timeline", userId);
+    const additionalTags = profile.tags ?? [];
 
     try {
       // Assumption check: The users flat feed should include predefined feeds including their own user feed.
       functions.logger.info("Verifying default timeline feed subscriptions for user", { userId });
       const expectedFeeds = [...DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS, { targetSlug: "user", targetUserId: userId }] as FeedRequestJSON[];
-      for (const expectedFeed of expectedFeeds) {
-        const userTimelineFeedFollowing = await userTimelineFeed.following();
-        const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id === expectedFeed.targetSlug && feed.target_id === expectedFeed.targetUserId);
+      for (const additionalTag of additionalTags) {
+        if (additionalTag.length === 0) {
+          continue;
+        }
+        
+        expectedFeeds.push({ targetSlug: "tags", targetUserId: additionalTag });
+      }
 
+      const userTimelineFeedFollowing = await userTimelineFeed.following();
+      for (const expectedFeed of expectedFeeds) {
+        const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id.split(":")[0] === expectedFeed.targetSlug && feed.feed_id.split(":")[1] === expectedFeed.targetUserId);
         if (!isFollowing) {
           functions.logger.info("Following feed", { feed: expectedFeed });
           await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetUserId);

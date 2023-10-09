@@ -173,11 +173,13 @@ export namespace SystemEndpoints {
 
     const chatClient = ConversationService.getStreamChatInstance();
     const chatToken = ConversationService.getUserToken(chatClient, uid);
-
+    
     // We should check here the integrity of the user's feeds.
     // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
     const feedsClient = FeedService.getFeedsClient();
-    await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, uid);
+    
+    const profile = await ProfileService.getProfile(uid);
+    await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, profile);
 
     return buildEndpointResponse(context, {
       sender: uid,

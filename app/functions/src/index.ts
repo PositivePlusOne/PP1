@@ -17,6 +17,7 @@ import { StorageEndpoints } from "./endpoints/storage_endpoints";
 import { PostEndpoints } from "./endpoints/post_endpoints";
 import { ReactionEndpoints } from "./endpoints/reaction_endpoints";
 import { QuickActionHandler } from "./handlers/quick_action_handler";
+import { EnrichmentEndpoints } from "./endpoints/enrichment_endpoints";
 
 export const adminApp = admin.initializeApp();
 export const applicationConfig = config().config;
@@ -44,3 +45,4 @@ exports.guidance = GuidanceEndpoints;
 exports.conversation = ConversationEndpoints;
 exports.post = PostEndpoints;
 exports.reaction = ReactionEndpoints;
+exports.enrichment = EnrichmentEndpoints;

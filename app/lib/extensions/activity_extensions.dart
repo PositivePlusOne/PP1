@@ -21,6 +21,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
+import 'package:app/providers/enrichment/activity_enrichment_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -515,11 +516,18 @@ extension ActivityExt on Activity {
     await router.push(mediaRoute);
   }
 
-  Future<void> requestPostRoute(BuildContext context) async {
+  Future<void> requestPostRoute({
+    required BuildContext context,
+    required Profile? currentProfile,
+  }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final AppRouter router = providerContainer.read(appRouterProvider);
-    final String activityId = flMeta?.id ?? '';
+    final String profileId = currentProfile?.flMeta?.id ?? '';
 
+    final ActivityEnrichmentController activityEnrichmentController = providerContainer.read(activityEnrichmentControllerProvider(profileId).notifier);
+    activityEnrichmentController.registerActivityAction(const ActivityEnrichmentTagAction.openPost(), this);
+
+    final String activityId = flMeta?.id ?? '';
     final PostRoute postRoute = PostRoute(
       activityId: activityId,
       feed: targetFeed,
