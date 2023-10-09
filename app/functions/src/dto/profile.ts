@@ -19,6 +19,8 @@ export const featureFlagMarketing = 'marketing';
 export const featureFlagIncognito = 'incognito';
 export const featureFlagOrganisationControls = 'organisation';
 
+export const maximumProfileTags = 10;
+
 export interface ProfileStatisicsJSON {
     _fl_meta_?: FlMetaJSON;
     profileId?: string;
@@ -54,6 +56,7 @@ export interface ProfileJSON {
     interests?: StringSetFromJson;
     companySectors?: StringSetFromJson;
     visibilityFlags?: StringSetFromJson;
+    tags?: StringSetFromJson;
     featureFlags?: StringSetFromJson;
     placeSkipped?: boolean;
     place?: PlaceJSON;
@@ -81,6 +84,7 @@ export class Profile {
     companySectors: StringSetFromJson;
     visibilityFlags: StringSetFromJson;
     featureFlags: StringSetFromJson;
+    tags: StringSetFromJson;
     placeSkipped: boolean;
     place?: Place;
     biography: string;
@@ -103,6 +107,7 @@ export class Profile {
         this.companySectors = json.companySectors || new Set();
         this.visibilityFlags = json.visibilityFlags || new Set();
         this.featureFlags = json.featureFlags || new Set();
+        this.tags = json.tags || new Set();
         this.placeSkipped = json.placeSkipped || false;
         this.place = json.place && new Place(json.place);
         this.biography = json.biography || '';
@@ -179,29 +184,4 @@ export class Profile {
             this.media.filter((media) => !media.isPrivate).length > 0 ? 'hasPublicMedia' : '',
         ];
     }
-
-    // async appendFollowersAndFollowingData(): Promise<void> {
-    //     if (!this._fl_meta_?.fl_id || this.statistics) {
-    //         return;
-    //     }
-
-    //     const cacheKey = `profile-stats-${this._fl_meta_.fl_id}`;
-    //     const cachedStats = await CacheService.get(cacheKey) as ProfileStatisicsJSON | undefined;
-    //     if (cachedStats) {
-    //         this.statistics = new ProfileStatisics(cachedStats);
-    //         return;
-    //     }
-
-    //     const client = FeedService.getFeedsClient();
-    //     const feed = client.feed("user", this._fl_meta_!.fl_id!);
-    //     const followStats = await feed.followStats();
-
-    //     const stats = {
-    //         followers: followStats.results.followers.count,
-    //         following: followStats.results.following.count,
-    //     } as ProfileStatisicsJSON;
-
-    //     this.statistics = new ProfileStatisics(stats);
-    //     await CacheService.setInCache(cacheKey, stats, 300); // Expires every 5 minutes
-    // }
 }

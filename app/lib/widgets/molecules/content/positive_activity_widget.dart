@@ -236,9 +236,14 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               onBookmark: (context) => _onInternalBookmarkRequested(context),
               bookmarkEnabled: !isBookmarking,
               isBusy: !widget.isEnabled,
-              onPostPageRequested: widget.activity?.requestPostRoute,
+              onPostPageRequested: (context) => widget.activity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
               isShared: widget.isShared,
-              onImageTap: (media) => widget.isFullscreen ? widget.activity?.requestFullscreenMedia(media) : widget.activity?.requestPostRoute(context),
+              onImageTap: (media) => widget.isFullscreen
+                  ? widget.activity?.requestFullscreenMedia(media)
+                  : widget.activity?.requestPostRoute(
+                      context: context,
+                      currentProfile: widget.currentProfile,
+                    ),
             ),
           ] else ...<Widget>[
             Padding(
