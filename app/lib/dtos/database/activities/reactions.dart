@@ -104,7 +104,14 @@ class TargetFeed with _$TargetFeed {
 
   factory TargetFeed.fromJson(Map<String, dynamic> json) => _$TargetFeedFromJson(json);
 
+  /// static helper to return the target feed properly formatted to get all activities with the specifed tag
   static TargetFeed fromTag(String tag) => TargetFeed(targetSlug: 'tags', targetUserId: tag);
+
+  /// static helper to return the feed to collect all 'promoted' activities, if you pass a {userId} then this will return all the promoted activities
+  /// posted by that particular user. uses tags:
+  /// tags:promoted
+  /// tags:promoted-{userId}
+  static TargetFeed fromPromoted({String? userId}) => TargetFeed(targetSlug: 'tags', targetUserId: 'promoted${userId == null ? '' : '-$userId'}');
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');

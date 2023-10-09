@@ -1,9 +1,16 @@
 // Flutter imports:
+import 'package:app/services/third_party.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
@@ -12,6 +19,7 @@ import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:flutter/material.dart';
 
@@ -26,40 +34,36 @@ import '../../../providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import '../../../helpers/brand_helpers.dart';
 
+/// this is a page to show the organisation's promoted posts - by accessing the feed that is tagged with
+/// 'promotion:{userId}' which is a specially constructed tag for orgs to track all their specially constructed posts
 @RoutePage()
 class AccountPromotedPostsPage extends HookConsumerWidget {
   const AccountPromotedPostsPage({super.key});
 
-  List<Widget> _bullets(
-    List<String> points,
-    DesignColorsModel colors,
-    DesignTypographyModel typography,
-  ) =>
-      points
-          .map((e) => Padding(
-                padding: const EdgeInsets.only(
-                  bottom: kPaddingMedium,
-                  left: kPaddingMedium,
-                ),
-                child: PositiveBulletedText(
-                  text: Text(
-                    e,
-                    style: typography.styleBody.copyWith(color: colors.black),
-                  ),
-                ),
-              ))
-          .toList();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppRouter appRouter = ref.read(appRouterProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final log = ref.read(loggerProvider);
 
     final Locale locale = Localizations.localeOf(context);
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
     final AccountFormState state = ref.watch(provider);
+
+    // tracking the selected tab with hook for when it changes
+    final selectedTab = useState(0);
+
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final currentProfileId = profileController.currentProfileId;
+    int remainingPromotions = 0;
+    if (null != currentProfileId) {
+      final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: currentProfileId);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
+      // now we finally have the stats, we can see how many promotions we have remaining
+      remainingPromotions = profileStatistics?.promotionsPermitted ?? 0;
+    }
 
     return PositiveScaffold(
       decorations: buildType5ScaffoldDecorations(colors),
@@ -67,50 +71,30 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
         PositiveBasicSliverList(
           children: <Widget>[
             PositiveBackButton(isDisabled: state.isBusy),
-            const SizedBox(height: kPaddingMedium),
-            Text(
-              localisations.page_account_promote_posts_title,
-              style: typography.styleHero.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingMedium),
-            Text(
-              localisations.page_account_promote_posts_body,
-              style: typography.styleBody.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingMedium),
-            PositiveTransparentSheet(
+            PositiveGlassSheet(
               children: [
-                ..._bullets(
-                  [
-                    localisations.page_account_promote_posts_body_one,
-                    localisations.page_account_promote_posts_body_two,
-                    localisations.page_account_promote_posts_body_three,
-                    localisations.page_account_promote_posts_body_four,
-                    localisations.page_account_promote_posts_body_five,
-                    localisations.page_account_promote_posts_body_six,
+                Row(
+                  children: [
+                    // expanding the text to right-align the number to the end of the row
+                    Expanded(
+                      child: Text(
+                        localisations.page_profile_promoted_posts_posts_remaining,
+                        style: typography.styleSubtitleBold,
+                      ),
+                    ),
+                    Text(remainingPromotions.toString(), style: typography.styleSubtitleBold),
                   ],
-                  colors,
-                  typography,
-                ),
-                PositiveRichText(
-                  body: "To get started, drop us a line at\n{}",
-                  onActionTapped: (_) => 'mailto:promote@positiveplusone.com'.attemptToLaunchURL(),
-                  actionColor: colors.linkBlue,
-                  actions: const <String>["promote@positiveplusone.com"],
                 ),
               ],
             ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveTabBar(
+              tabs: [localisations.page_profile_promoted_posts_tab_hub(3), localisations.page_profile_promoted_posts_tab_chat(2)],
+              onTapped: (index) => selectedTab.value = index,
+              tabColours: [colors.green, colors.green],
+              index: selectedTab.value,
+            ),
           ],
-        ),
-      ],
-      footerWidgets: <Widget>[
-        PositiveButton(
-          colors: colors,
-          onTapped: () => appRouter.pop(),
-          label: localisations.page_account_close_button,
-          layout: PositiveButtonLayout.textOnly,
-          style: PositiveButtonStyle.primary,
-          primaryColor: colors.white,
         ),
       ],
     );
