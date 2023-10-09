@@ -21,6 +21,7 @@ mixin _$ProfileFormState {
   String get birthday => throw _privateConstructorUsedError;
   Set<String> get interests => throw _privateConstructorUsedError;
   Set<String> get genders => throw _privateConstructorUsedError;
+  Set<String> get companySectors => throw _privateConstructorUsedError;
   String? get hivStatus => throw _privateConstructorUsedError;
   String? get hivStatusCategory => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
@@ -51,6 +52,7 @@ abstract class $ProfileFormStateCopyWith<$Res> {
       String birthday,
       Set<String> interests,
       Set<String> genders,
+      Set<String> companySectors,
       String? hivStatus,
       String? hivStatusCategory,
       String biography,
@@ -85,6 +87,7 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
     Object? birthday = null,
     Object? interests = null,
     Object? genders = null,
+    Object? companySectors = null,
     Object? hivStatus = freezed,
     Object? hivStatusCategory = freezed,
     Object? biography = null,
@@ -118,6 +121,10 @@ class _$ProfileFormStateCopyWithImpl<$Res, $Val extends ProfileFormState>
       genders: null == genders
           ? _value.genders
           : genders // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      companySectors: null == companySectors
+          ? _value.companySectors
+          : companySectors // ignore: cast_nullable_to_non_nullable
               as Set<String>,
       hivStatus: freezed == hivStatus
           ? _value.hivStatus
@@ -197,6 +204,7 @@ abstract class _$$ProfileFormStateImplCopyWith<$Res>
       String birthday,
       Set<String> interests,
       Set<String> genders,
+      Set<String> companySectors,
       String? hivStatus,
       String? hivStatusCategory,
       String biography,
@@ -230,6 +238,7 @@ class __$$ProfileFormStateImplCopyWithImpl<$Res>
     Object? birthday = null,
     Object? interests = null,
     Object? genders = null,
+    Object? companySectors = null,
     Object? hivStatus = freezed,
     Object? hivStatusCategory = freezed,
     Object? biography = null,
@@ -263,6 +272,10 @@ class __$$ProfileFormStateImplCopyWithImpl<$Res>
       genders: null == genders
           ? _value._genders
           : genders // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      companySectors: null == companySectors
+          ? _value._companySectors
+          : companySectors // ignore: cast_nullable_to_non_nullable
               as Set<String>,
       hivStatus: freezed == hivStatus
           ? _value.hivStatus
@@ -325,6 +338,7 @@ class _$ProfileFormStateImpl implements _ProfileFormState {
       required this.birthday,
       required final Set<String> interests,
       required final Set<String> genders,
+      required final Set<String> companySectors,
       this.hivStatus,
       this.hivStatusCategory,
       required this.biography,
@@ -339,6 +353,7 @@ class _$ProfileFormStateImpl implements _ProfileFormState {
       required this.newProfileImage})
       : _interests = interests,
         _genders = genders,
+        _companySectors = companySectors,
         _visibilityFlags = visibilityFlags;
 
   @override
@@ -361,6 +376,14 @@ class _$ProfileFormStateImpl implements _ProfileFormState {
     if (_genders is EqualUnmodifiableSetView) return _genders;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableSetView(_genders);
+  }
+
+  final Set<String> _companySectors;
+  @override
+  Set<String> get companySectors {
+    if (_companySectors is EqualUnmodifiableSetView) return _companySectors;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_companySectors);
   }
 
   @override
@@ -399,7 +422,7 @@ class _$ProfileFormStateImpl implements _ProfileFormState {
 
   @override
   String toString() {
-    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImage: $newProfileImage)';
+    return 'ProfileFormState(name: $name, displayName: $displayName, birthday: $birthday, interests: $interests, genders: $genders, companySectors: $companySectors, hivStatus: $hivStatus, hivStatusCategory: $hivStatusCategory, biography: $biography, accentColor: $accentColor, isFocused: $isFocused, locationSearchQuery: $locationSearchQuery, hasFailedLocationSearch: $hasFailedLocationSearch, place: $place, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, newProfileImage: $newProfileImage)';
   }
 
   @override
@@ -415,6 +438,8 @@ class _$ProfileFormStateImpl implements _ProfileFormState {
             const DeepCollectionEquality()
                 .equals(other._interests, _interests) &&
             const DeepCollectionEquality().equals(other._genders, _genders) &&
+            const DeepCollectionEquality()
+                .equals(other._companySectors, _companySectors) &&
             (identical(other.hivStatus, hivStatus) ||
                 other.hivStatus == hivStatus) &&
             (identical(other.hivStatusCategory, hivStatusCategory) ||
@@ -448,6 +473,7 @@ class _$ProfileFormStateImpl implements _ProfileFormState {
       birthday,
       const DeepCollectionEquality().hash(_interests),
       const DeepCollectionEquality().hash(_genders),
+      const DeepCollectionEquality().hash(_companySectors),
       hivStatus,
       hivStatusCategory,
       biography,
@@ -476,6 +502,7 @@ abstract class _ProfileFormState implements ProfileFormState {
       required final String birthday,
       required final Set<String> interests,
       required final Set<String> genders,
+      required final Set<String> companySectors,
       final String? hivStatus,
       final String? hivStatusCategory,
       required final String biography,
@@ -499,6 +526,8 @@ abstract class _ProfileFormState implements ProfileFormState {
   Set<String> get interests;
   @override
   Set<String> get genders;
+  @override
+  Set<String> get companySectors;
   @override
   String? get hivStatus;
   @override

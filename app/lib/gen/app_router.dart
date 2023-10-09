@@ -38,6 +38,7 @@ import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/profile_company_sectors_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
@@ -161,6 +162,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
+        AutoRoute(page: ProfileCompanySectorSelectRoute.page, path: '/profile/setup/companysectors', guards: [signedInGuard]),
         AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/references/start', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageCameraRoute.page, path: '/profile/setup/references/camera', guards: [signedInGuard]),

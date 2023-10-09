@@ -411,6 +411,21 @@ class ProfileApiService {
     );
   }
 
+  FutureOr<Map<String, Object?>> updateCompanySectors({
+    required List<String> companySectors,
+    Set<String> visibilityFlags = const {},
+  }) async {
+    final String currentUid = providerContainer.read(profileControllerProvider.notifier).currentProfileId ?? '';
+    return await getHttpsCallableResult<Map<String, Object?>>(
+      name: 'profile-updateCompanySectors',
+      selector: (response) => json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == currentUid)),
+      parameters: {
+        'companySectors': companySectors,
+        'visibilityFlags': visibilityFlags.toList(),
+      },
+    );
+  }
+
   FutureOr<Map<String, Object?>> updatePlace({
     required String description,
     required String placeId,

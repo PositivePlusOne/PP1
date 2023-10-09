@@ -284,6 +284,34 @@ export namespace ProfileEndpoints {
     });
   });
 
+  export const updateCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    //TODO! @Ryan - need to check your new auth for users who are allowed to edit company data
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const companySectors = request.data.companySectors || [];
+    const visibilityFlags = request.data.visibilityFlags || [];
+    functions.logger.info("Updating profile company sectors", {
+      uid,
+      companySectors,
+    });
+
+    if (!(companySectors instanceof Array)) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of company sectors");
+    }
+
+    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    const newProfile = await ProfileService.updateCompanySectors(uid, companySectors);
+
+    functions.logger.info("Profile company sectors updated", {
+      uid,
+      companySectors,
+    });
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [newProfile],
+    });
+  });
+
   export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 

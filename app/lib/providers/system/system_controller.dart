@@ -20,6 +20,7 @@ import 'package:universal_platform/universal_platform.dart';
 import 'package:app/constants/key_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
@@ -141,6 +142,7 @@ class SystemController extends _$SystemController {
     final Logger logger = ref.read(loggerProvider);
     final InterestsController interestsController = ref.read(interestsControllerProvider.notifier);
     final GenderController genderController = ref.read(genderControllerProvider.notifier);
+    final CompanySectorsController companySectorsController = ref.read(companySectorsControllerProvider.notifier);
     final HivStatusController hivStatusController = ref.read(hivStatusControllerProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
@@ -158,6 +160,7 @@ class SystemController extends _$SystemController {
 
     final Map interests = payload.containsKey('interests') && payload['interests'] is Map<dynamic, dynamic> ? payload['interests'] as Map<dynamic, dynamic> : {};
     final List genders = payload.containsKey('genders') && payload['genders'] is List<dynamic> ? payload['genders'] as List<dynamic> : [];
+    final List companySectors = payload.containsKey('companySectors') && payload['companySectors'] is List<dynamic> ? payload['companySectors'] as List<dynamic> : [];
     final List hivStatuses = payload.containsKey('medicalConditions') && payload['medicalConditions'] is List<dynamic> ? payload['medicalConditions'] as List<dynamic> : [];
     final Set<String> supportedProfiles = (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic> ? payload['supportedProfiles'] as List<dynamic> : []).whereType<String>().toSet();
 
@@ -165,12 +168,13 @@ class SystemController extends _$SystemController {
     final List recentTags = payload.containsKey('recentTags') && payload['recentTags'] is List<dynamic> ? payload['recentTags'] as List<dynamic> : [];
     final List topicTags = payload.containsKey('topicTags') && payload['topicTags'] is List<dynamic> ? payload['topicTags'] as List<dynamic> : [];
 
-    if (interests.isEmpty || genders.isEmpty || hivStatuses.isEmpty) {
+    if (interests.isEmpty || genders.isEmpty || hivStatuses.isEmpty || companySectors.isEmpty) {
       throw Exception('Failed to load initial data from backend');
     }
 
     interestsController.onInterestsUpdated(interests);
     genderController.onGendersUpdated(genders);
+    companySectorsController.onCompanySectorsUpdated(companySectors);
     hivStatusController.onHivStatusesUpdated(hivStatuses);
 
     tagsController.updatePopularTags(popularTags);

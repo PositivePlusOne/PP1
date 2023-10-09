@@ -57,7 +57,7 @@ export namespace SystemEndpoints {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managedRelationships] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managedRelationships, companySectors] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -68,6 +68,7 @@ export namespace SystemEndpoints {
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       uid ? RelationshipService.getManagedRelationships(uid) : Promise.resolve([]),
+      LocalizationsService.getDefaultCompanySectors(locale),
     ]);
 
 
@@ -144,6 +145,7 @@ export namespace SystemEndpoints {
         supportedProfiles: supportedProfileIds,
         // userFeedRecords: userFeedRecords,
         // timelineFeeduserFeedRecords: timelineFeedRecords,
+        companySectors: companySectors,
       },
     });
   });

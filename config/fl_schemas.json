@@ -3197,6 +3197,73 @@
                 "key": "interests"
             },
             {
+                "hidden": false,
+                "gridColumns": {
+                    "md": 12,
+                    "sm": 12,
+                    "lg": 12,
+                    "xs": 12
+                },
+                "defaultValue": [],
+                "show": false,
+                "multiple": true,
+                "description": "A list of company sectors the company is a part of",
+                "readOnly": false,
+                "title": "Comany Sectors",
+                "type": "select",
+                "constraints": [],
+                "options": [
+                    {
+                        "uniqueKey": "7q83R_6ar",
+                        "label": "Charity",
+                        "value": "charity"
+                    },
+                    {
+                        "uniqueKey": "73PkNamCc",
+                        "label": "Multinational Organisation",
+                        "value": "multinational"
+                    },
+                    {
+                        "uniqueKey": "CPmlrNishx",
+                        "label": "Government Body",
+                        "value": "government"
+                    },
+                    {
+                        "uniqueKey": "DbEVz8tJX",
+                        "label": "Healthcare (Private)",
+                        "value": "healthcare_private"
+                    },
+                    {
+                        "uniqueKey": "Z5sl1jOSD",
+                        "label": "Healthcare (Public)",
+                        "value": "healthcare_public"
+                    },
+                    {
+                        "uniqueKey": "GCPYwQ3ov",
+                        "label": "Pharmaceutical Company",
+                        "value": "pharmaceutical"
+                    },
+                    {
+                        "uniqueKey": "dRgYWVgzr",
+                        "label": "Diagnostics Company",
+                        "value": "diagnostics"
+                    },
+                    {
+                        "uniqueKey": "KXQaL3XQl",
+                        "label": "Other Company",
+                        "value": "other"
+                    },
+                    {
+                        "uniqueKey": "mMLpIkDib",
+                        "label": "Other not-for-profit",
+                        "value": "not_for_profit"
+                    }
+                ],
+                "id": 1680099990808,
+                "conditions": [],
+                "key": "company_sectors"
+            },
+            {
                 "gridColumns": {
                     "md": 12,
                     "sm": 12,

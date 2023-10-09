@@ -27,6 +27,7 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> interests,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> visibilityFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
+    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> companySectors,
     @Default(false) bool placeSkipped,
     PositivePlace? place,
     @Default('') String biography,

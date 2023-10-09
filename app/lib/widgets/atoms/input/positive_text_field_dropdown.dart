@@ -68,7 +68,7 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
             final T tVal = values[index];
             return ListTile(
               title: Text(
-                valueStringBuilder?.call(tVal) ?? tVal.toString(),
+                valueStringBuilder?.call(tVal) ?? tVal?.toString() ?? 'null',
                 style: typography.styleButtonRegular,
               ),
               onTap: () {

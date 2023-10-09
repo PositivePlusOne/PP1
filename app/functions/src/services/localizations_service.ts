@@ -4,6 +4,7 @@ import { t, changeLanguage, init } from "i18next";
 import { enTranslations } from "../locales/en";
 import { HivStatusDto } from "../dto/hiv_status_dto";
 import { GenderListDto } from "../dto/gender_list_dto";
+import { CompanySectorsListDto } from "../dto/company_sectors_list_dto";
 
 export namespace LocalizationsService {
   let isLocalizationsServiceInitialized = false;
@@ -55,7 +56,7 @@ export namespace LocalizationsService {
    * @return {Map<string, string>} The default genders for the given locale.
    */
   export async function getDefaultGenders(locale: string): Promise<GenderListDto> {
-    functions.logger.info(`Getting default interests for locale: ${locale}`);
+    functions.logger.info(`Getting default genders for locale: ${locale}`);
 
     await verifyInitialized();
 
@@ -75,7 +76,7 @@ export namespace LocalizationsService {
    * @return {HivStatusDto} The default hiv statuses for the given locale.
    */
   export async function getDefaultHivStatuses(locale: string): Promise<HivStatusDto[]> {
-    functions.logger.info(`Getting default interests for locale: ${locale}`);
+    functions.logger.info(`Getting default HIV statuses for locale: ${locale}`);
 
     await verifyInitialized();
 
@@ -90,6 +91,26 @@ export namespace LocalizationsService {
         label: value,
         value: key,
       })),
+    }));
+  }
+
+  /**
+   * Gets the default company sectors for the given locale.
+   * @param {string} locale The locale to get the default company sectors for.
+   * @return {Map<string, string>} The default company sectors for the given locale.
+   */
+  export async function getDefaultCompanySectors(locale: string): Promise<CompanySectorsListDto> {
+    functions.logger.info(`Getting default company sectors for locale: ${locale}`);
+
+    await verifyInitialized();
+
+    const companySectors = t("companySectors", { returnObjects: true });
+
+    functions.logger.info(`Default company sectors for locale: ${locale} are: ${JSON.stringify(companySectors)}`);
+
+    return Object.entries(companySectors).map(([value, label]) => ({
+      value: value,
+      label: label,
     }));
   }
 

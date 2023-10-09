@@ -109,6 +109,16 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
+    // final bool hasSetCompanySectors = currentProfile?.companySectors.isNotEmpty ?? false;
+    // final bool hasCompanySectorsInState = companySectorsControllerState.options.isNotEmpty;
+    // if (!hasSetCompanySector && hasCompanySectorsInState) {
+    //   profileFormController.resetState(FormMode.create);
+    //   router.removeWhere((route) => true);
+    //   router.push(const ProfileCompanySectorsSelectRoute());
+    //   resolver.next(false);
+    //   return;
+    // }
+
     final bool hasProfileReferenceImage = currentProfile?.referenceImage != null;
     if (!hasProfileReferenceImage) {
       profileFormController.resetState(FormMode.create);

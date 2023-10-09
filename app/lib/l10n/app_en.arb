@@ -86,6 +86,11 @@
     "page_onboarding_terms_hiv_three": "Rest assured that Positive Plus One respects your privacy. Your HIV status will never be shared outside of the platform.",
     "page_onboarding_terms_hiv_four": "Should you need to change your HIV status in the future, you can easily do so by accessing your Profile settings. Your control over your information is important to us",
 
+    "page_onboarding_terms_company_sectors_how_we_use": "WHY YOUR COMPANY SECTOR IS IMPORTANT",
+    "page_onboarding_terms_company_sectors_one": "We want people to know who you are! What your company does is important to the people reading about you.",
+    "page_onboarding_terms_company_sectors_two": "Finding the type of company people are interested in better serves the community as they search for the information for them.",
+    "page_onboarding_terms_company_sectors_three": "Some companies are trusted more over others, the type of your company will help tell people who you are and what your biases and interests might be.",
+
     "page_onboarding_terms_interests_how_we_use": "YOUR INTERESTS",
     "page_onboarding_terms_interests_one": "Your interests help us customise the Positive+1 experience just for you.",
     "page_onboarding_terms_interests_two": "We're better at matchmaking when we understand your interests. It lets us connect you with like-minded individuals.",
@@ -187,6 +192,10 @@
     "page_profile_image_welcome_title": "Now for your selfie",
     "page_profile_image_welcome_body": "Let’s get a selfie of you so we know who you are",
 
+    "page_registration_company_sectors_title": "What is your company's sector",
+    "page_registration_company_sectors_subtitle": "Select the sector in which your company operates",
+    "page_registration_company_sectors_no_results": "No Matching sector",
+
     "page_profile_location_title": "Where are you?",
     "page_profile_location_subtitle": "Where in the world are you? Search your location or kick back and let us find you.",
     "page_profile_location_action_find": "Find Me",
@@ -232,6 +241,7 @@
     "page_profile_edit_location": "Location (Town/City)",
     "page_profile_edit_interests": "Your Interests",
     "page_profile_edit_interests_hint": "Attend Events, Meet New People, Join A Community",
+    "page_profile_edit_company_sectors": "Company Sector",
 
     "page_profile_location_remove": "Remove Location",
 
@@ -241,6 +251,7 @@
     "page_profile_thanks_location": "Your location has been changed",
     "page_profile_thanks_display_name": "Your display name has been changed",
     "page_profile_thanks_gender": "Your identity has been changed",
+    "page_profile_thanks_company_sectors": "Your sector has been changed",
 
     "page_profile_biography_continue": "Complete Profile",
     
@@ -315,6 +326,9 @@
 
     "page_account_actions_change_gender_updated_title": "High Five!",
     "page_account_actions_change_gender_updated_body": "Your identity has been updated. Go you!",
+
+    "page_account_actions_change_company_sector_updated_title": "Well Done",
+    "page_account_actions_change_company_sector_updated_body": "Your company sector has been updated.",
 
     "page_account_actions_change_location_updated_title": "Saved!",
     "page_account_actions_change_location_updated_body": "You're all set. Thanks for the update!",

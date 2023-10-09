@@ -47,6 +47,7 @@ class ProfileFormState with _$ProfileFormState {
     required String birthday,
     required Set<String> interests,
     required Set<String> genders,
+    required Set<String> companySectors,
     String? hivStatus,
     String? hivStatusCategory,
     required String biography,
@@ -71,6 +72,7 @@ class ProfileFormState with _$ProfileFormState {
       interests: profile?.interests ?? {},
       genders: profile?.genders ?? {},
       hivStatus: profile?.hivStatus,
+      companySectors: profile?.companySectors ?? {},
       biography: profile?.biography ?? '',
       accentColor: profile?.accentColor ?? '#2BEDE1',
       place: profile?.place,
@@ -142,6 +144,8 @@ class ProfileFormController extends _$ProfileFormController {
 
   bool get isDisplayingLocation => state.visibilityFlags[kVisibilityFlagLocation] ?? kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? true;
 
+  bool get isDisplayingCompanySector => state.visibilityFlags[kVisibilityFlagCompanySectors] ?? kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? true;
+
   @override
   ProfileFormState build() {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -202,6 +206,11 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileGenderSelectRoute:
         appRouter.removeWhere((_) => true);
         appRouter.push(const ProfileBirthdayEntryRoute());
+        break;
+
+      case ProfileCompanySectorSelectRoute:
+        appRouter.removeWhere((_) => true);
+        appRouter.push(const ProfileCompanySectorSelectRoute());
         break;
 
       case ProfileLocationRoute:
@@ -623,7 +632,7 @@ class ProfileFormController extends _$ProfileFormController {
   Future<void> onGenderHelpRequested(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    logger.i('Requesting interests help');
+    logger.i('Requesting genders help');
 
     final HintDialogRoute hint = buildProfileGenderHint(context);
     await appRouter.push(hint);
@@ -666,6 +675,77 @@ class ProfileFormController extends _$ProfileFormController {
             title: localisations.page_account_actions_change_gender_updated_title,
             continueText: localisations.page_account_actions_change_return_profile,
             body: localisations.page_account_actions_change_gender_updated_body,
+          ));
+          break;
+      }
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  void onCompanySectorSelected(String option) {
+    // only update the state if the options have been fetched
+    // at this time, we only allow the one option, so just set that list to the one selected here
+    state = state.copyWith(companySectors: {option});
+    /*
+    // this handles the selection of many options
+    final Set<String> selectedOptions = {...state.companySectors};
+    if (selectedOptions.contains(option)) {
+      selectedOptions.remove(option);
+    } else {
+      selectedOptions.add(option);
+    }
+
+    state = state.copyWith(companySectors: selectedOptions);
+    */
+  }
+
+  Future<void> onCompanySectorHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting company sectors help');
+
+    final HintDialogRoute hint = buildProfileCompanySectorsHint(context);
+    await appRouter.push(hint);
+  }
+
+  void onCompanySectorsVisibilityToggleRequested(BuildContext context) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling company sectors visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        kVisibilityFlagCompanySectors: !(state.visibilityFlags[kVisibilityFlagCompanySectors] ?? true),
+      },
+    );
+  }
+
+  Future<void> onCompanySectorConfirmed(BuildContext context) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving companysectors');
+
+    try {
+      final Set<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateCompanySectors(state.companySectors, visibilityFlags);
+      logger.i('Successfully saved companysectors');
+      state = state.copyWith(isBusy: false);
+
+      switch (state.formMode) {
+        case FormMode.create:
+          appRouter.removeWhere((route) => true);
+          await appRouter.push(const HomeRoute());
+          break;
+        case FormMode.edit:
+          await appRouter.replace(ProfileEditThanksRoute(
+            title: localisations.page_account_actions_change_company_sector_updated_title,
+            continueText: localisations.page_account_actions_change_return_profile,
+            body: localisations.page_account_actions_change_company_sector_updated_body,
           ));
           break;
       }

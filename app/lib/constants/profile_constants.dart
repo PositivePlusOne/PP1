@@ -4,6 +4,7 @@ const String kVisibilityFlagInterests = 'interests';
 const String kVisibilityFlagGenders = 'genders';
 const String kVisibilityFlagLocation = 'location';
 const String kVisibilityFlagHivStatus = 'hiv_status';
+const String kVisibilityFlagCompanySectors = 'company_sectors';
 
 const String kFeatureFlagMarketing = 'marketing';
 const String kFeatureFlagIncognito = 'incognito';
@@ -17,6 +18,7 @@ const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagGenders: true,
   kVisibilityFlagLocation: true,
   kVisibilityFlagHivStatus: true,
+  kVisibilityFlagCompanySectors: true,
 };
 
 const Map<String, bool> kDefaultFeatureFlags = {

@@ -63,6 +63,18 @@ HintDialogRoute buildProfileHivStatusHint(BuildContext context) {
   );
 }
 
+HintDialogRoute buildProfileCompanySectorsHint(BuildContext context) {
+  final AppLocalizations localisations = AppLocalizations.of(context)!;
+  return fromTitleAndBulletPoints(
+    localisations.page_onboarding_terms_company_sectors_how_we_use,
+    [
+      localisations.page_onboarding_terms_company_sectors_one,
+      localisations.page_onboarding_terms_company_sectors_two,
+      localisations.page_onboarding_terms_company_sectors_three,
+    ],
+  );
+}
+
 HintDialogRoute buildProfileBirthdayHint(BuildContext context) {
   final AppLocalizations localisations = AppLocalizations.of(context)!;
   return fromTitleAndBulletPoints(

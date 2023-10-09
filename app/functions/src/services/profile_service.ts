@@ -424,6 +424,23 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the companysector profile of the user.
+   * @param {string} uid The UserId of the user to update
+   * @param {string[]} companySectors
+   */
+  export async function updateCompanySectors(uid: string, companySectors: string[]): Promise<any> {
+    functions.logger.info(`Updating company sectors for user: ${uid}`);
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        companySectors: companySectors,
+      },
+    });
+  }
+
+  /**
    * Updates the accent colour profile of the user.
    * @param {string} uid The UserId of the user to update
    * @param {string} accentColor The accent colour to use.

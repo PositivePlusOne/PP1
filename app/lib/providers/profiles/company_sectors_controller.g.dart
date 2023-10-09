@@ -1,18 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'gender_controller.dart';
+part of 'company_sectors_controller.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$GenderOptionImpl _$$GenderOptionImplFromJson(Map<String, dynamic> json) =>
-    _$GenderOptionImpl(
+_$CompanySectorsOptionImpl _$$CompanySectorsOptionImplFromJson(
+        Map<String, dynamic> json) =>
+    _$CompanySectorsOptionImpl(
       label: json['label'] as String,
       value: json['value'] as String,
     );
 
-Map<String, dynamic> _$$GenderOptionImplToJson(_$GenderOptionImpl instance) =>
+Map<String, dynamic> _$$CompanySectorsOptionImplToJson(
+        _$CompanySectorsOptionImpl instance) =>
     <String, dynamic>{
       'label': instance.label,
       'value': instance.value,
@@ -22,21 +24,22 @@ Map<String, dynamic> _$$GenderOptionImplToJson(_$GenderOptionImpl instance) =>
 // RiverpodGenerator
 // **************************************************************************
 
-String _$genderControllerHash() => r'94209d222dea24a26fdd5c75c78a9680f01c543b';
+String _$companySectorsControllerHash() =>
+    r'ebe5bea9769430b6ab2b80970545ef86e1943035';
 
-/// See also [GenderController].
-@ProviderFor(GenderController)
-final genderControllerProvider =
-    NotifierProvider<GenderController, GenderControllerState>.internal(
-  GenderController.new,
-  name: r'genderControllerProvider',
+/// See also [CompanySectorsController].
+@ProviderFor(CompanySectorsController)
+final companySectorsControllerProvider = NotifierProvider<
+    CompanySectorsController, CompanySectorsControllerState>.internal(
+  CompanySectorsController.new,
+  name: r'companySectorsControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$genderControllerHash,
+      : _$companySectorsControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GenderController = Notifier<GenderControllerState>;
+typedef _$CompanySectorsController = Notifier<CompanySectorsControllerState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

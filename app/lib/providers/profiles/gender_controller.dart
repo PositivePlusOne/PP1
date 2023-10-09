@@ -61,13 +61,13 @@ class GenderController extends _$GenderController {
     final Logger logger = ref.read(loggerProvider);
 
     if (state.options.isNotEmpty) {
-      logger.d('updateInterests() - interests already loaded');
+      logger.d('updateGenders() - genders already loaded');
       return;
     }
 
     String locale = profileController.state.currentProfile?.locale ?? '';
     if (locale.isEmpty) {
-      logger.d('updateInterests() - no locale found, using default locale: \'en\'');
+      logger.d('updateGenders() - no locale found, using default locale: \'en\'');
       locale = 'en';
     }
 

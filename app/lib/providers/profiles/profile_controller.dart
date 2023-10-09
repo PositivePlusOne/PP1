@@ -16,7 +16,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -434,6 +433,26 @@ class ProfileController extends _$ProfileController {
 
     await profileApiService.updateGenders(
       genders: genders.toList(),
+      visibilityFlags: visibilityFlags,
+    );
+  }
+
+  Future<void> updateCompanySectors(Set<String> companySectors, Set<String> visibilityFlags) async {
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final Logger logger = ref.read(loggerProvider);
+
+    if (state.currentProfile == null) {
+      logger.w('[Profile Service] - Cannot update company sectors without profile');
+      return;
+    }
+
+    if (state.currentProfile?.companySectors == companySectors && state.currentProfile?.visibilityFlags == visibilityFlags) {
+      logger.i('[Profile Service] - CompanySectors up to date');
+      return;
+    }
+
+    await profileApiService.updateCompanySectors(
+      companySectors: companySectors.toList(),
       visibilityFlags: visibilityFlags,
     );
   }
