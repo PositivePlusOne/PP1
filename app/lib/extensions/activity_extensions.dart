@@ -370,6 +370,7 @@ extension ActivityExt on Activity {
   }
 
   void incrementReactionCount({
+    required ReactionStatistics cachedState,
     required ReactionType kind,
     required int offset,
   }) {
@@ -384,11 +385,9 @@ extension ActivityExt on Activity {
       activityId: activityId,
     );
 
-    final ReactionStatistics cachedState = reactionsController.getStatisticsForActivity(activityId: activityId);
     final Map<String, int> counts = {...cachedState.counts};
-
     final String kindStr = ReactionType.toJson(kind);
-    counts[kindStr] = counts[kindStr] ?? 0 + offset;
+    counts[kindStr] = (counts[kindStr] ?? 0) + offset;
 
     final ReactionStatistics newState = cachedState.copyWith(counts: counts);
     cacheController.add(key: feedStateKey, value: newState);
@@ -464,10 +463,9 @@ extension ActivityExt on Activity {
     }
 
     final bool isLiked = isActivityLiked(currentProfile: currentProfile);
+
     if (isLiked) {
       await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile);
-      incrementReactionCount(kind: const ReactionType.like(), offset: -1);
-
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
@@ -475,7 +473,6 @@ extension ActivityExt on Activity {
     }
 
     await reactionsController.likeActivity(activityId: activityId);
-    incrementReactionCount(kind: const ReactionType.like(), offset: 1);
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
     );

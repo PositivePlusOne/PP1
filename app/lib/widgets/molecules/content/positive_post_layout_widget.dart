@@ -52,6 +52,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     this.isShared = false,
     this.sidePadding = kPaddingSmall,
     this.isBusy = false,
+    this.likesEnabled = true,
+    this.bookmarkEnabled = true,
     this.onImageTap,
     required this.isLiked,
     required this.onLike,
@@ -73,6 +75,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final double sidePadding;
 
   final bool isBusy;
+  final bool likesEnabled;
+  final bool bookmarkEnabled;
 
   final FutureOr<void> Function(BuildContext context)? onPostPageRequested;
 
@@ -520,7 +524,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         //TODO(S): like enabled and onlike functionality here
         isLiked: isLiked,
         likes: totalLikes,
-        likesEnabled: !isBusy && !isPublisher,
+        likesEnabled: !isBusy && !isPublisher && likesEnabled,
         onLike: onLike,
 
         //TODO(S): share enabled and on share functionality here
@@ -533,7 +537,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         onComment: (_) {},
 
         //TODO(S): bookmark enabled and on bookmark functionality here
-        bookmarkEnabled: !isBusy,
+        bookmarkEnabled: !isBusy && bookmarkEnabled,
         bookmarked: isBookmarked,
         onBookmark: onBookmark,
       ),

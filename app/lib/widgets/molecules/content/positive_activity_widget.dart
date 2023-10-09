@@ -12,6 +12,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/activity_post_heading_widget.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
@@ -69,6 +70,48 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 }
 
 class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> {
+  bool _isLiking = false;
+  bool get isLiking => _isLiking;
+  set isLiking(bool value) {
+    _isLiking = value;
+    setStateIfMounted();
+  }
+
+  bool _isBookmarking = false;
+  bool get isBookmarking => _isBookmarking;
+  set isBookmarking(bool value) {
+    _isBookmarking = value;
+    setStateIfMounted();
+  }
+
+  Future<void> _onInternalLikeRequested(BuildContext context) async {
+    if (isLiking) {
+      return;
+    }
+
+    isLiking = true;
+    await widget.activity?.onPostLiked(
+      context: context,
+      currentProfile: widget.currentProfile,
+      activity: widget.activity,
+    );
+    isLiking = false;
+  }
+
+  Future<void> _onInternalBookmarkRequested(BuildContext context) async {
+    if (isBookmarking) {
+      return;
+    }
+
+    isBookmarking = true;
+    await widget.activity?.onPostBookmarked(
+      context: context,
+      currentProfile: widget.currentProfile,
+      reactionsFeedState: widget.activityReactionFeedState,
+    );
+    isBookmarking = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
@@ -147,21 +190,13 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             isLiked: isLiked,
             likes: totalLikes,
             likesEnabled: !isPublisher,
-            onLike: (context) => widget.activity?.onPostLiked(
-              context: context,
-              currentProfile: widget.currentProfile,
-              activity: widget.activity,
-            ),
+            onLike: (context) => _onInternalLikeRequested(context),
             shareEnabled: canActShare,
             onShare: (_) {},
             comments: totalComments,
             onComment: (_) {},
             bookmarked: isBookmarked,
-            onBookmark: (context) => widget.activity?.onPostBookmarked(
-              context: context,
-              currentProfile: widget.currentProfile,
-              reactionsFeedState: widget.activityReactionFeedState,
-            ),
+            onBookmark: (context) => _onInternalBookmarkRequested(context),
           ),
         ],
       );
@@ -192,20 +227,14 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               promotion: widget.activityPromotion,
               isShortformPost: !widget.isFullscreen,
               sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
-              onLike: (context) => widget.activity?.onPostLiked(
-                context: context,
-                currentProfile: widget.currentProfile,
-                activity: widget.activity,
-              ),
+              onLike: (context) => _onInternalLikeRequested(context),
               isLiked: isLiked,
               totalLikes: totalLikes,
+              likesEnabled: !isLiking,
               totalComments: totalComments,
               isBookmarked: isBookmarked,
-              onBookmark: (context) => widget.activity?.onPostBookmarked(
-                context: context,
-                currentProfile: widget.currentProfile,
-                reactionsFeedState: widget.activityReactionFeedState,
-              ),
+              onBookmark: (context) => _onInternalBookmarkRequested(context),
+              bookmarkEnabled: !isBookmarking,
               isBusy: !widget.isEnabled,
               onPostPageRequested: widget.activity?.requestPostRoute,
               isShared: widget.isShared,

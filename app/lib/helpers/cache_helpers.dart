@@ -14,17 +14,40 @@ Iterable<String> buildExpectedCacheKeysFromObjects(Profile? currentProfile, Iter
 
   //* Dart 3?
   for (final dynamic obj in objs) {
-    () => switch (obj?.runtimeType ?? Object) {
-          Activity => cacheKeys.addAll(buildExpectedCacheKeysForActivity(currentProfile, obj)),
-          Profile => cacheKeys.addAll(buildExpectedCacheKeysForProfile(currentProfile, obj)),
-          Reaction => cacheKeys.addAll(buildExpectedCacheKeysForReaction(currentProfile, obj)),
-          ReactionStatistics => cacheKeys.addAll(buildExpectedCacheKeysForReactionStatistics(currentProfile, obj)),
-          ProfileStatistics => cacheKeys.addAll(buildExpectedCacheKeysForProfileStatistics(currentProfile, obj)),
-          Relationship => cacheKeys.addAll(buildExpectedCacheKeysForRelationship(currentProfile, obj)),
-          TargetFeed => cacheKeys.addAll(buildExpectedCacheKeysForTargetFeed(currentProfile, obj)),
-          String => cacheKeys.add(obj),
-          (_) => {},
-        };
+    if (obj == null) {
+      continue;
+    }
+
+    if (obj is Iterable) {
+      cacheKeys.addAll(buildExpectedCacheKeysFromObjects(currentProfile, obj));
+      continue;
+    }
+
+    if (obj is Activity) {
+      cacheKeys.addAll(buildExpectedCacheKeysForActivity(currentProfile, obj));
+      continue;
+    } else if (obj is Profile) {
+      cacheKeys.addAll(buildExpectedCacheKeysForProfile(currentProfile, obj));
+      continue;
+    } else if (obj is Reaction) {
+      cacheKeys.addAll(buildExpectedCacheKeysForReaction(currentProfile, obj));
+      continue;
+    } else if (obj is ReactionStatistics) {
+      cacheKeys.addAll(buildExpectedCacheKeysForReactionStatistics(currentProfile, obj));
+      continue;
+    } else if (obj is ProfileStatistics) {
+      cacheKeys.addAll(buildExpectedCacheKeysForProfileStatistics(currentProfile, obj));
+      continue;
+    } else if (obj is Relationship) {
+      cacheKeys.addAll(buildExpectedCacheKeysForRelationship(currentProfile, obj));
+      continue;
+    } else if (obj is TargetFeed) {
+      cacheKeys.addAll(buildExpectedCacheKeysForTargetFeed(currentProfile, obj));
+      continue;
+    } else if (obj is String) {
+      cacheKeys.add(obj);
+      continue;
+    }
   }
 
   // Add current profile key
