@@ -4,25 +4,22 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/media.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
-import 'package:app/providers/profiles/company_sectors_controller.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
 import '../providers/profiles/profile_controller.dart';
-import '../providers/system/design_controller.dart';
-import '../widgets/atoms/buttons/positive_button.dart';
 
 extension ProfileExtensions on Profile {
   Media? get profileImage {
@@ -48,33 +45,25 @@ extension ProfileExtensions on Profile {
   List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-
-    final bool isManagedProfile = profileController.isCurrentManagedProfile;
 
     // Add notification information
     int unreadCount = 0;
-    bool showNotificationBadge = false;
     if (profileController.currentProfileId != null) {
       final String expectedCacheKey = 'notifications:${profileController.currentProfileId}';
       final PositiveNotificationsState? notificationsState = cacheController.get(expectedCacheKey);
       if (notificationsState != null) {
         unreadCount = notificationsState.unreadCount;
-        showNotificationBadge = unreadCount > 0;
       }
     }
 
     if (profileController.hasSetupProfile) {
       children.addAll([
         PositiveNotificationsButton(color: color, isDisabled: disableNotifications),
-        PositiveButton.appBarIcon(
-          colors: colors,
-          primaryColor: color,
-          icon: isManagedProfile ? UniconsLine.building : UniconsLine.user,
-          onTapped: onProfileAccountActionSelected,
-          isDisabled: disableAccount,
-          includeBadge: showNotificationBadge,
+        PositiveProfileCircularIndicator(
+          profile: profileController.currentProfile,
+          isEnabled: !disableAccount,
+          onTap: onProfileAccountActionSelected,
         ),
       ]);
     }

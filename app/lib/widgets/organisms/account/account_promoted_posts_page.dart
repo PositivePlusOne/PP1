@@ -1,33 +1,32 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/reactions.dart';
-import 'package:app/services/third_party.dart';
-import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+// Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:auto_route/auto_route.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-// Project imports:
-import 'package:app/constants/design_constants.dart';
-import '../../../providers/system/design_controller.dart';
-import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../../helpers/brand_helpers.dart';
+import '../../../providers/system/design_controller.dart';
 
 /// this is a page to show the organisation's promoted posts - by accessing the feed that is tagged with
 /// 'promotion:{userId}' which is a specially constructed tag for orgs to track all their specially constructed posts

@@ -1,18 +1,6 @@
 // Flutter imports:
 
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
-import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
-import 'package:app/widgets/molecules/input/positive_rich_text.dart';
-import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,9 +10,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import '../../../providers/system/design_controller.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
+import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
+import 'package:app/widgets/molecules/input/positive_rich_text.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/brand_helpers.dart';
+import '../../../providers/system/design_controller.dart';
 
 /// this is a page to show when the organisation does not have the ability to create any promotions - to promote
 /// the use of promotions - basically an advert to get them to sign up and pay for promotions
