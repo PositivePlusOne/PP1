@@ -15,6 +15,7 @@ import { ReactionService } from '../../services/reaction_service';
 import { Promotion, promotionsSchemaKey } from '../../dto/promotions';
 import { ProfileStatisticsService } from '../../services/profile_statistics_service';
 import { ReactionStatistics, reactionStatisticsSchemaKey } from '../../dto/reaction_statistics';
+import { feedStatisticsSchemaKey } from '../../dto/feed_statistics';
 
 export type EndpointRequest = {
     sender: string;
@@ -67,6 +68,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             "reactions": [],
             "reactionStatistics": [],
             "userStatistics": [],
+            "feedStatistics": [],
         },
     } as EndpointResponse;
 
@@ -74,10 +76,11 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     joinedDataRecords.set(profileSchemaKey, new Set<string>());
     joinedDataRecords.set(activitySchemaKey, new Set<string>());
     joinedDataRecords.set(reactionSchemaKey, new Set<string>());
-    joinedDataRecords.set(reactionStatisticsSchemaKey, new Set<string>());
-    joinedDataRecords.set(profileStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(relationshipSchemaKey, new Set<string>());
     joinedDataRecords.set(tagSchemaKey, new Set<string>());
+    joinedDataRecords.set(reactionStatisticsSchemaKey, new Set<string>());
+    joinedDataRecords.set(profileStatisticsSchemaKey, new Set<string>());
+    joinedDataRecords.set(feedStatisticsSchemaKey, new Set<string>());
 
     // Stage 1: Prepare join record keys
     for (const obj of data) {
@@ -340,14 +343,17 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
             case reactionSchemaKey:
                 responseData.data[schema].push(new Reaction(obj));
                 break;
+            case promotionsSchemaKey:
+                responseData.data[schema].push(new Promotion(obj));
+                break;
             case reactionStatisticsSchemaKey:
                 responseData.data[schema].push(new ReactionStatistics(obj));
                 break;
             case profileStatisticsSchemaKey:
                 responseData.data[schema].push(new ProfileStatistics(obj));
                 break;
-            case promotionsSchemaKey:
-                responseData.data[schema].push(new Promotion(obj));
+            case feedStatisticsSchemaKey:
+                responseData.data[schema].push(obj);
                 break;
             default:
                 break;

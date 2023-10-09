@@ -21,6 +21,7 @@ import { RelationshipService } from "../services/relationship_service";
 import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
 import { ProfileStatisticsService } from "../services/profile_statistics_service";
+import { FeedStatisticsService } from "../services/feed_statistics_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -51,11 +52,13 @@ export namespace PostEndpoints {
         // Get promotions from activities where the promotion key is set
         const promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
 
+        const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
+
         functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
     
         return buildEndpointResponse(context, {
           sender: uid,
-          joins: [...promotionIds],
+          joins: [...promotionIds, feedStatisticsKey],
           data: [...activities],
           limit: limit,
           cursor: paginationToken,
