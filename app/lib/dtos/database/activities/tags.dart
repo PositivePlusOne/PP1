@@ -89,6 +89,7 @@ class TagHelpers {
 
   /// helper to create the tag to be in the list of tags to show an activity is promoted
   ///! IMPORTANTLY tags are converted (hyphens to underscores and all to lowercase so we need to conform to that else matching doesn't work)
+  ///! If there is ever 2 orgs who's IDs differ in case only - they will see each other's promoted posts )O:
   static String createPromotedTag({String? userId}) => '$_kPromotedKey${userId == null ? '' : '_${userId.toLowerCase()}'}';
 
   /// helper to determine if a tag (as a string) represents an activity that is promoted
