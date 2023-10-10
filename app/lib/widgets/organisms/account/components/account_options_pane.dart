@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -103,8 +104,8 @@ class AccountOptionsPane extends ConsumerWidget {
         icon: UniconsLine.feedback,
         style: PositiveButtonStyle.primary,
         primaryColor: accentColour,
-        iconColorOverride: colors.black,
-        fontColorOverride: colors.black,
+        iconColorOverride: accentColour.complimentTextColor,
+        fontColorOverride: accentColour.complimentTextColor,
         label: localizations.page_account_actions_feedback,
         onTapped: () => viewModel.onProvideFeedbackButtonPressed(context),
         // isDisabled: state.isBusy,

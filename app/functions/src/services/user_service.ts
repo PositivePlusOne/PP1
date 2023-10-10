@@ -27,13 +27,14 @@ export namespace UserService {
       return uid;
     }
 
-    const relationshipMember = relationship?.members?.find((m: RelationshipMemberJSON) => m.memberId === uid);
+    const relationshipMember = relationship?.members?.find((m: RelationshipMemberJSON) => m.memberId === uid) as RelationshipMemberJSON;
     if (!relationshipMember) {
       functions.logger.info(`Authenticated as: ${uid}`);
       return uid;
     }
 
     if (!relationshipMember?.canManage) {
+      functions.logger.info(`Failed to authenticate as: ${requestId} (via ${uid})`, { relationship, relationshipMember });
       throw new functions.https.HttpsError("permission-denied", "You do not have permission to call this function");
     }
 
