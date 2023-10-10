@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -53,6 +54,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     this.windowSize = 20,
     this.isSliver = true,
     this.onPageLoaded,
+    this.emptyDataWidget,
     super.key,
   });
 
@@ -61,6 +63,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final PositiveFeedState feedState;
   final int windowSize;
   final void Function()? onPageLoaded;
+  final Widget? emptyDataWidget;
 
   final bool isSliver;
 
@@ -172,6 +175,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Widget noPostsSliverWidget = SliverNoPostsPlaceholder(
       typography: typography,
       colors: colors,
+      emptyDataWidget: emptyDataWidget,
     );
 
     final Widget noPostsWidget = NoPostsPlaceholder(
@@ -365,10 +369,12 @@ class SliverNoPostsPlaceholder extends StatelessWidget {
     super.key,
     required this.typography,
     required this.colors,
+    this.emptyDataWidget,
   });
 
   final DesignTypographyModel typography;
   final DesignColorsModel colors;
+  final Widget? emptyDataWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -385,14 +391,15 @@ class SliverNoPostsPlaceholder extends StatelessWidget {
           top: kPaddingSmall,
           child: Align(
             alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 120.0),
-              child: Text(
-                'No Posts to Display',
-                textAlign: TextAlign.center,
-                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-              ),
-            ),
+            child: emptyDataWidget ??
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 120.0),
+                  child: Text(
+                    appLocalizations.post_dialog_no_posts_to_display,
+                    textAlign: TextAlign.center,
+                    style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
+                  ),
+                ),
           ),
         ),
         SliverFillRemaining(

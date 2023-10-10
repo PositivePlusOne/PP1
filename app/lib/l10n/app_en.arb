@@ -457,6 +457,9 @@
     "page_profile_personal_data_followers": "Followers",
     "page_profile_personal_data_following": "Following",
     "page_profile_personal_data_promotioms": "Promotions Permitted",
+    "page_profile_personal_data_no_posts_title": "No Promoted Posts",
+    "page_profile_personal_data_no_hub_posts": "You do not have any promoted Hub posts. To promote a post on the Hub, either create a new post or edit an existing one, and select the relevant promotion options.",
+    "page_profile_personal_data_no_chat_posts": "You do not have any promoted Chats. To promote a post on the Chat feed, either create a new post or edit an existing one, and select the relevant promotion options.",
 
     "post_dialogue_edit_post": "Edit Post",
     "post_dialogue_edit_post_fail": "Unable to update post",
@@ -466,6 +469,7 @@
     "post_dialogue_delete_post_success": "Post Deleted",
     "post_dialogue_update_post": "Confirm Changes",
     "post_dialogue_delete_post_confirm": "The post will be removed from your feed, along with any comments.\n \n Any media associated with this post will also be deleted from your gallery.",
+    "post_dialog_no_posts_to_display": "No Posts to Display",
 
     "profile_disconnect_dialog_remove_confirmation": "'Removing {displayName} as a connection will mean you can no longer message each other.'",
 

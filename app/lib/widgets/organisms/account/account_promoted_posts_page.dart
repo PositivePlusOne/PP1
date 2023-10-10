@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +26,7 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 
@@ -33,6 +35,48 @@ import '../../../providers/system/design_controller.dart';
 @RoutePage()
 class AccountPromotedPostsPage extends HookConsumerWidget {
   const AccountPromotedPostsPage({super.key});
+
+  /// return the widget to show in the currently active tab
+  Widget _activeTab(
+    int selectedTab,
+    ProfileController profileController,
+    DesignTypographyModel typography,
+    TargetFeed feed,
+    PositiveFeedState feedState,
+  ) {
+    switch (selectedTab) {
+      case 0:
+        return PositiveFeedPaginationBehaviour(
+          feed: feed,
+          currentProfile: profileController.currentProfile,
+          feedState: feedState,
+          emptyDataWidget: _emptyDataWidget(typography, selectedTab),
+        );
+      case 1:
+        //TODO the feed for promoted 'chats'
+        return SliverToBoxAdapter(child: _emptyDataWidget(typography, selectedTab));
+      default:
+        // should never get here, not a recognised tab index
+        return const SliverToBoxAdapter(child: Center(child: Text('ERROR')));
+    }
+  }
+
+  /// when there are no hub posts - we want to show a special big text entry explaining why
+  Widget _emptyDataWidget(DesignTypographyModel typography, int selectedTab) => Padding(
+        padding: const EdgeInsets.only(left: kPaddingLarge, right: kPaddingLarge),
+        child: PositiveGlassSheet(children: [
+          const SizedBox(height: kPaddingLarge),
+          Text(
+            appLocalizations.page_profile_personal_data_no_posts_title,
+            style: typography.styleHero,
+          ),
+          const SizedBox(height: kPaddingLarge),
+          Text(
+            selectedTab == 0 ? appLocalizations.page_profile_personal_data_no_hub_posts : appLocalizations.page_profile_personal_data_no_chat_posts,
+            style: typography.styleSubtitle,
+          ),
+        ]),
+      );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,11 +148,7 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
           ],
         ),
-        PositiveFeedPaginationBehaviour(
-          feed: feed,
-          currentProfile: profileController.currentProfile,
-          feedState: feedState,
-        ),
+        _activeTab(selectedTab.value, profileController, typography, feed, feedState),
       ],
     );
   }
