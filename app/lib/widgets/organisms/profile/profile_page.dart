@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -66,7 +67,7 @@ class ProfilePage extends HookConsumerWidget {
 
     final String expectedProfileStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: targetProfile.flMeta?.id ?? '');
     final ProfileStatistics? profileStatistics = cacheController.get(expectedProfileStatisticsKey);
-    final Map<String, String> profileStatisticsData = ProfileStatistics.buildData(profileStatistics);
+    final Map<String, String> profileStatisticsData = ProfileStatistics.getDisplayItems(profileStatistics, appLocalizations);
 
     //* Check for a cover image
     final Media? coverImage = targetProfile.coverImage;

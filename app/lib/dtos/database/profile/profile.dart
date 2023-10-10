@@ -1,5 +1,6 @@
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';
@@ -48,62 +49,47 @@ class ProfileStatistics with _$ProfileStatistics {
   }) = _ProfileStatistics;
 
   /// private keys for the data as expected from the data store
-  static const kInternalPostKey = 'post';
-  static const kInternalShareKey = 'share';
-  static const kInternalFollowersKey = 'follow';
-  static const kInternalFollowingKey = 'following';
-  static const kInternalPromotionsPermittedKey = 'promotionsPermitted';
-
-  /// public facing key into the data as created and returned from [buildData] function on this class
-  static const kPostsKey = 'Posts';
-
-  /// public facing key into the data as created and returned from [buildData] function on this class
-  static const kSharesKey = 'Shares';
-
-  /// public facing key into the data as created and returned from [buildData] function on this class
-  static const kFollowersKey = 'Followers';
-
-  /// public facing key into the data as created and returned from [buildData] function on this class
-  static const kFollowingKey = 'Following';
-
-  /// public facing key into the data as created and returned from [buildData] function on this class, data will be -1 when never permitted
-  static const kPromotionsPermittedKey = 'PromotionsPermitted';
+  static const kPostKey = 'post';
+  static const kShareKey = 'share';
+  static const kFollowersKey = 'follow';
+  static const kFollowingKey = 'following';
+  static const kPromotionsPermittedKey = 'promotionsPermitted';
 
   /// static def for the value to signify that no promotions are ever allowed for this profile
   static const kPromotionsNotPermitted = -1;
 
-  /// helper to build the raw data as expected from the internal map of data to the external map of data with keys with Caps and longer words
-  /// and the data as strings instead of numbers
-  static Map<String, String> buildData(ProfileStatistics? profileStatistics) {
+  /// helper that will return a map of keys which are the internationalised titles of the items of data, the data
+  /// being the value for each to display
+  static Map<String, String> getDisplayItems(ProfileStatistics? profileStatistics, AppLocalizations localizations) {
+    // we will return a map of data (keyed with the internationalised string) and the data being the value for each
     final Map<String, String> data = {
-      kPostsKey: '0',
-      kSharesKey: '0',
-      kFollowersKey: '0',
-      kFollowingKey: '0',
-      // will initialise the promotions permitted to be an error value (they haven't even subscribed rather than have run out)
-      kPromotionsPermittedKey: kPromotionsNotPermitted.toString(),
+      localizations.page_profile_personal_data_posts: '0',
+      localizations.page_profile_personal_data_shares: '0',
+      localizations.page_profile_personal_data_followers: '0',
+      localizations.page_profile_personal_data_following: '0',
+      // localizations.page_profile_personal_data_promotioms ommitted to as not to show when default (-1)
     };
     // map each internal data key to the external data expected
     for (final MapEntry<String, int> entry in profileStatistics?.counts.entries ?? []) {
       switch (entry.key) {
-        case kInternalPostKey:
-          data[kPostsKey] = entry.value.toString();
+        case kPostKey:
+          data[localizations.page_profile_personal_data_posts] = entry.value.toString();
           break;
-        case kInternalShareKey:
-          data[kSharesKey] = entry.value.toString();
+        case kShareKey:
+          data[localizations.page_profile_personal_data_shares] = entry.value.toString();
           break;
-        case kInternalFollowersKey:
-          data[kFollowersKey] = entry.value.toString();
+        case kFollowersKey:
+          data[localizations.page_profile_personal_data_followers] = entry.value.toString();
           break;
-        case kInternalFollowingKey:
-          data[kFollowingKey] = entry.value.toString();
+        case kFollowingKey:
+          data[localizations.page_profile_personal_data_following] = entry.value.toString();
           break;
-        case kInternalPromotionsPermittedKey:
-          data[kPromotionsPermittedKey] = entry.value.toString();
+        case kPromotionsPermittedKey:
+          // we don't really want to show this data anywhere important
           break;
       }
     }
-
+    // returning the map of data
     return data;
   }
 

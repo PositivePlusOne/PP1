@@ -246,17 +246,17 @@ extension ProfileExtensions on Profile {
 
 extension ProfileStatisticsExtensions on ProfileStatistics {
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
-  int get posts => counts[ProfileStatistics.kInternalPostKey] ?? 0;
+  int get posts => counts[ProfileStatistics.kPostKey] ?? 0;
 
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
-  int get shares => counts[ProfileStatistics.kInternalShareKey] ?? 0;
+  int get shares => counts[ProfileStatistics.kShareKey] ?? 0;
 
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
-  int get followers => counts[ProfileStatistics.kInternalFollowersKey] ?? 0;
+  int get followers => counts[ProfileStatistics.kFollowersKey] ?? 0;
 
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
-  int get following => counts[ProfileStatistics.kInternalFollowingKey] ?? 0;
+  int get following => counts[ProfileStatistics.kFollowingKey] ?? 0;
 
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to -1 which is the error (never permitted) case)
-  int get promotionsPermitted => counts[ProfileStatistics.kInternalPromotionsPermittedKey] ?? ProfileStatistics.kPromotionsNotPermitted;
+  int get promotionsPermitted => counts[ProfileStatistics.kPromotionsPermittedKey] ?? ProfileStatistics.kPromotionsNotPermitted;
 }

@@ -64,7 +64,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
     final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: profileId);
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
-    final Map<String, String> profileStatisticsData = ProfileStatistics.buildData(profileStatistics);
+    final Map<String, String> profileStatisticsData = ProfileStatistics.getDisplayItems(profileStatistics, localizations);
 
     final Color currentAccentColor = currentProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);
