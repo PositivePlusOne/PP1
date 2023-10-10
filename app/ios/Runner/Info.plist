@@ -76,6 +76,8 @@
 	<string>Positive+1 asks for location access to peronalise the user's experience so that users can be recommended events and resources near to them. A user's location is not shared with other app users unless they give permission, and their precise location is never shown.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Positive+1 asks for location access to peronalise the user's experience so that users can be recommended events and resources near to them. A user's location is not shared with other app users unless they give permission, and their precise location is never shown.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please allow access to photo library so you can upload and share your photos with your +1s.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID can be used to authenticate access to the app</string>
 	<key>NSRemindersUsageDescription</key>
