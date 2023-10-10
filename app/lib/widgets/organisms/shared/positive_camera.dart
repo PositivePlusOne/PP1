@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -63,6 +64,10 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.enableFlashControls = true,
     this.displayCameraShade = true,
     this.isVideoMode = false,
+    this.maxDelay,
+    this.maxRecordingLength,
+    this.topNavigationSize = kPaddingNone,
+    this.bottomNavigationSize = kPaddingNone,
     super.key,
   });
 
@@ -89,6 +94,15 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool displayCameraShade;
   final bool isVideoMode;
 
+  final double topNavigationSize;
+  final double bottomNavigationSize;
+
+  /// delay before recording a clip in milliseconds
+  final int? maxDelay;
+
+  /// maximum recording length of the clip in milliseconds
+  final int? maxRecordingLength;
+
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
 }
@@ -109,6 +123,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   PermissionStatus? libraryPermissionStatus;
 
   bool isPhysicalDevice = true;
+  bool isCameraButtonCountingDown = false;
+  bool isCameraButtonSmall = false;
+  bool isClipActive = false;
+
+  ///? Current Delay before begining the clip or picture
+  int currentDelay = 0;
+  Timer? delayTimer;
 
   bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
   bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
@@ -171,6 +192,16 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
   @override
   void deactivate() {
+    isCameraButtonCountingDown = false;
+    isCameraButtonSmall = false;
+    isClipActive = false;
+    currentDelay = 0;
+
+    if (delayTimer != null) {
+      delayTimer!.cancel();
+      delayTimer = null;
+    }
+
     faceDetector.close();
     super.deactivate();
   }
@@ -244,7 +275,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       );
 
       widget.onFaceDetected?.call(faceDetectionModel);
-      setState(() {});
+      setStateIfMounted(callback: () {});
     } catch (e) {
       logger.e("Error while processing image: $e");
     }
@@ -301,17 +332,86 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     return currentModel;
   }
 
-  Future<void> onVideoRecordingStart(VideoCameraState cameraState) async {
-    // cameraState.captureState as VideoRecordingCameraState;
-    final CaptureRequest captureRequest = await cameraState.startRecording();
-  }
-
-  Future<void> onVideoRecordingEnd(VideoRecordingCameraState cameraState) async {
-    await cameraState.when(
-      onVideoRecordingMode: (mode) => mode.stopRecording(),
+  Future<void> onVideoRecordingRequestStart(CameraState cameraState) async {
+    late VideoCameraState videoState;
+    cameraState.when(
+      onVideoMode: (p0) {
+        videoState = p0;
+      },
     );
 
-    var currentCapture = cameraState.cameraContext.mediaCaptureController.value;
+    if (isClipActive) {
+      return;
+    }
+
+    //? clear old timer if duplicated
+    if (delayTimer != null) {
+      delayTimer!.cancel();
+    }
+
+    //? Request the smaller camera button center
+    setStateIfMounted(callback: () {
+      isCameraButtonSmall = true;
+      isClipActive = true;
+    });
+
+    //? If a maximum delay has been set then begin the delay timer
+    if (widget.maxDelay != null) {
+      currentDelay = widget.maxDelay!;
+
+      delayTimer = Timer.periodic(
+        const Duration(seconds: 1),
+        (timer) {
+          if (currentDelay <= 0) {
+            timer.cancel();
+            onVideoRecordingStart(cameraState);
+          } else {
+            setStateIfMounted(
+              callback: () {
+                currentDelay = currentDelay - 1;
+              },
+            );
+          }
+        },
+      );
+      return;
+    }
+    //? If no delay has been set then begin recording the clip
+    onVideoRecordingStart(cameraState);
+  }
+
+  Future<void> onVideoRecordingStart(CameraState cameraState) async {
+    late VideoCameraState videoState;
+    cameraState.when(
+      onVideoMode: (p0) {
+        videoState = p0;
+      },
+    );
+
+    //? Begin clip recording
+    await videoState.startRecording();
+    setStateIfMounted(callback: () {
+      isCameraButtonCountingDown = true;
+    });
+
+    await Future.delayed(
+      Duration(milliseconds: widget.maxRecordingLength ?? 1),
+    );
+
+    setStateIfMounted(callback: () async {
+      isCameraButtonCountingDown = false;
+      isClipActive = true;
+      isCameraButtonSmall = false;
+      await onVideoRecordingEnd(cameraState);
+    });
+  }
+
+  Future<void> onVideoRecordingEnd(CameraState cameraState) async {
+    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState.cameraContext);
+    await videoRecordingCameraState.stopRecording();
+
+    MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
+
     if (currentCapture != null) {
       final XFile? file = await currentCapture.captureRequest.when(
         single: (single) => single.file,
@@ -399,7 +499,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               alignment: Alignment.centerRight,
               child: CameraFloatingButton.showCamera(
                 active: true,
-                onTap: (context) => setState(() {
+                onTap: (context) => setStateIfMounted(callback: () {
                   viewMode = hasCameraPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
                 }),
               ),
@@ -538,22 +638,24 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     }
 
     if (widget.displayCameraShade) {
-      children.add(Column(
-        children: <Widget>[
-          Expanded(
-            flex: 4,
-            child: Container(color: colours.black.withOpacity(0.75)),
+      children.add(
+        AnimatedPositioned(
+          duration: kAnimationDurationExtended,
+          bottom: 0,
+          top: 0,
+          right: 0,
+          left: 0,
+          child: PositiveClipExternalShader(
+            paddingLeft: widget.isVideoMode ? kPaddingNone : kPaddingNone,
+            paddingRight: widget.isVideoMode ? kPaddingNone : kPaddingNone,
+            paddingTop: 5,
+            // paddingTop: widget.isVideoMode ? widget.topNavigationSize : previewSize.height * 0.22,
+            paddingBottom: widget.isVideoMode ? widget.bottomNavigationSize : previewSize.height * 0.3,
+            colour: colours.black.withOpacity(kOpacityVignette),
+            radius: widget.isVideoMode ? kBorderRadiusLarge : kBorderRadiusNone,
           ),
-          SizedBox(
-            height: smallestSide,
-            width: smallestSide,
-          ),
-          Expanded(
-            flex: 6,
-            child: Container(color: colours.black.withOpacity(0.75)),
-          ),
-        ],
-      ));
+        ),
+      );
     }
 
     for (final Widget widget in widget.overlayWidgets) {
@@ -616,14 +718,20 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               CameraButton(
-                  active: canTakePictureOrVideo,
-                  onTap: (_) {
-                    state.when(
-                      onPhotoMode: onImageTaken,
-                      onVideoMode: onVideoRecordingStart,
-                      onVideoRecordingMode: onVideoRecordingEnd,
-                    );
-                  }),
+                active: canTakePictureOrVideo,
+                loadingColour: colours.yellow,
+                // loadingProgress: recordingCompletion,
+                isLoading: isCameraButtonCountingDown,
+                maxCLipDuration: widget.maxRecordingLength,
+                isSmallButton: isCameraButtonCountingDown,
+                onTap: (_) {
+                  state.when(
+                    onPhotoMode: onImageTaken,
+                    onVideoMode: (_) => onVideoRecordingRequestStart(state),
+                    // onVideoRecordingMode: () => onVideoRecordingEnd(VideoRecordingCameraState.from(orchestrator)),
+                  );
+                },
+              ),
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -639,6 +747,22 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       ),
     );
   }
+
+  // double? get getProgressClipLength {
+  //   if (recordingLengthTimer == null || widget.maxRecordingLength == null) {
+  //     return null;
+  //   }
+
+  //   return recordingLengthTimer!.elapsed.inMilliseconds / widget.maxRecordingLength!;
+  // }
+
+  // double? get getProgressDelay {
+  //   if (delayTimer == null || widget.maxDelay == null) {
+  //     return null;
+  //   }
+
+  //   return delayTimer!.elapsed.inMilliseconds / widget.maxDelay!;
+  // }
 
   Future<void> onFlashToggleRequest(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
