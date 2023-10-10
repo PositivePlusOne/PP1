@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'dart:math';
+
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,12 +18,17 @@ import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
 
 // Package imports:
 
-class CameraButton extends StatelessWidget {
+class CameraButton extends StatefulWidget {
   const CameraButton({
     required this.active,
     required this.onTap,
     this.width = kCameraButtonSize,
     this.height = kCameraButtonSize,
+    this.buttonColour = Colors.white,
+    this.loadingColour,
+    this.isLoading = false,
+    this.isSmallButton = false,
+    this.maxCLipDuration,
     super.key,
   });
 
@@ -28,17 +36,91 @@ class CameraButton extends StatelessWidget {
   final void Function(BuildContext context) onTap;
   final double width;
   final double height;
+  final Color buttonColour;
+  final Color? loadingColour;
+  final bool isLoading;
+  final bool isSmallButton;
+  final int? maxCLipDuration;
+
+  @override
+  State<CameraButton> createState() => _CameraButtonState();
+}
+
+class _CameraButtonState extends State<CameraButton> with TickerProviderStateMixin {
+  late AnimationController animationController;
+  late AnimationController animationControllerCenter;
+
+  @override
+  void didUpdateWidget(covariant CameraButton oldWidget) {
+    if (widget.isLoading && !oldWidget.isLoading) {
+      animationController.forward();
+    }
+    if (!widget.isLoading && oldWidget.isLoading) {
+      animationController.reset();
+    }
+
+    if (widget.isSmallButton && !oldWidget.isSmallButton) {
+      animationControllerCenter.forward();
+    }
+    if (!widget.isSmallButton && oldWidget.isSmallButton) {
+      animationControllerCenter.reverse();
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: widget.maxCLipDuration ?? 0),
+    );
+    animationController.addListener(
+      () => setStateIfMounted(),
+    );
+    if (widget.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) {
+          animationController.forward();
+        },
+      );
+    }
+
+    animationControllerCenter = AnimationController(
+      vsync: this,
+      duration: kAnimationDurationFast,
+    );
+    animationController.addListener(
+      () => setStateIfMounted(),
+    );
+    if (widget.isSmallButton) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (timeStamp) {
+          animationController.forward();
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return PositiveTapBehaviour(
-      onTap: onTap,
-      isEnabled: active,
+      onTap: widget.onTap,
+      isEnabled: widget.active,
       child: SizedBox(
-        height: height,
-        width: width,
+        height: widget.height,
+        width: widget.width,
         child: CustomPaint(
-          painter: CameraButtonPainter(active: active),
+          painter: CameraButtonPainter(
+            active: widget.active,
+            loadingColour: widget.loadingColour,
+            loadingProgress: animationController.value,
+            buttonColour: widget.buttonColour,
+            isSmallButton: widget.isSmallButton,
+            centerButtonSize: animationControllerCenter.value,
+          ),
         ),
       ),
     );
@@ -48,10 +130,22 @@ class CameraButton extends StatelessWidget {
 class CameraButtonPainter extends CustomPainter {
   CameraButtonPainter({
     required this.active,
+    required this.buttonColour,
+    required this.loadingProgress,
+    required this.isSmallButton,
+    this.centerButtonSize = 1.0,
     this.currentState,
+    this.loadingColour,
   });
 
   final bool active;
+  final Color? loadingColour;
+  final Color buttonColour;
+  final double loadingProgress;
+
+  ///? multiplier for button size 0.0 -> 1.0
+  final double centerButtonSize;
+  final bool isSmallButton;
 
   ProfileReferenceImageViewModelState? currentState;
 
@@ -63,22 +157,50 @@ class CameraButtonPainter extends CustomPainter {
 
     final double thicknessCircleRadius = halfWidth / 10;
     final double outerCircleRadius = halfWidth - thicknessCircleRadius / 2;
-    final double innerCircleRadius = 0.87 * halfWidth;
+    final double innerCircleRadius = (1 - centerButtonSize * 0.35) * 0.87 * halfWidth;
+    final Color centralButtonColour = (isSmallButton && loadingColour != null) ? loadingColour! : buttonColour;
 
     final Offset offset = Offset.zero.translate(halfWidth, halfHeight);
 
     //* -=-=-=-=-=- Paints for Circles -=-=-=-=-=-
     final Paint outlinePaint = Paint()
-      ..color = (active) ? Colors.white : Colors.white.withOpacity(0.75)
+      ..color = (active) ? buttonColour : buttonColour.withOpacity(0.75)
       ..strokeWidth = thicknessCircleRadius
       ..style = PaintingStyle.stroke;
 
     final Paint fillPaint = Paint()
-      ..color = (active) ? Colors.white : Colors.white.withOpacity(0.75)
+      ..color = (active) ? centralButtonColour : centralButtonColour.withOpacity(0.75)
       ..style = PaintingStyle.fill;
 
-    //* -=-=-=-=-=- Paint Button -=-=-=-=-=-
+    //* -=-=-=-=-=- Calculate Progress Indicator / Outer Perimeter Section  -=-=-=-=-=-
+    if (loadingColour != null) {
+      outlinePaint.shader = SweepGradient(
+        colors: [
+          loadingColour!,
+          loadingColour!,
+          buttonColour,
+          buttonColour,
+        ],
+        stops: [
+          0,
+          loadingProgress,
+          loadingProgress,
+          1.0,
+        ],
+        transform: const GradientRotation(-0.5 * pi),
+      ).createShader(
+        Rect.fromCenter(
+          center: offset,
+          width: outerCircleRadius * 2,
+          height: outerCircleRadius * 2,
+        ),
+      );
+    }
+
+    //* -=-=-=-=-=- Paint Progress Indicator / Outer Perimeter Section  -=-=-=-=-=-
     canvas.drawCircle(offset, outerCircleRadius, outlinePaint);
+
+    //* -=-=-=-=-=- Paint Inner Button -=-=-=-=-=-
     canvas.drawCircle(offset, innerCircleRadius, fillPaint);
   }
 
@@ -96,12 +218,14 @@ class CameraButtonPainter extends CustomPainter {
 
 class CameraButtonPosition extends ConsumerWidget {
   const CameraButtonPosition({
-    super.key,
     required this.mediaQuery,
     required this.caption,
     required this.displayHintText,
     required this.active,
     required this.onTap,
+    this.loadingColour,
+    this.loadingProgress,
+    super.key,
   });
 
   final MediaQueryData mediaQuery;
@@ -109,6 +233,8 @@ class CameraButtonPosition extends ConsumerWidget {
   final bool displayHintText;
   final bool active;
   final void Function(BuildContext context) onTap;
+  final Color? loadingColour;
+  final double? loadingProgress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
