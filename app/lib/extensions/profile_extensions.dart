@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,17 +46,17 @@ extension ProfileExtensions on Profile {
   List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
     // Add notification information
-    int unreadCount = 0;
-    if (profileController.currentProfileId != null) {
-      final String expectedCacheKey = 'notifications:${profileController.currentProfileId}';
-      final PositiveNotificationsState? notificationsState = cacheController.get(expectedCacheKey);
-      if (notificationsState != null) {
-        unreadCount = notificationsState.unreadCount;
-      }
-    }
+    // int unreadCount = 0;
+    // if (profileController.currentProfileId != null) {
+    //   final String expectedCacheKey = 'notifications:${profileController.currentProfileId}';
+    //   final PositiveNotificationsState? notificationsState = cacheController.get(expectedCacheKey);
+    //   if (notificationsState != null) {
+    //     unreadCount = notificationsState.unreadCount;
+    //   }
+    // }
 
     if (profileController.hasSetupProfile) {
       children.addAll([
@@ -64,6 +65,7 @@ extension ProfileExtensions on Profile {
           profile: profileController.currentProfile,
           isEnabled: !disableAccount,
           onTap: onProfileAccountActionSelected,
+          ringColorOverride: color,
         ),
       ]);
     }

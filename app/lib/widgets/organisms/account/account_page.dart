@@ -40,16 +40,19 @@ class AccountPage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
 
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
         colors: colors,
         icon: UniconsLine.bell,
+        primaryColor: foregroundColor,
         onTapped: () => onProfileNotificationsActionSelected(shouldReplace: true),
       ),
       PositiveProfileCircularIndicator(
         profile: profileController.currentProfile,
         onTap: onProfileAccountActionSelected,
+        ringColorOverride: colors.white,
       ),
     ];
 
@@ -57,7 +60,7 @@ class AccountPage extends HookConsumerWidget {
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
-          foregroundColor: colors.black,
+          foregroundColor: foregroundColor,
           backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.teal,
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
