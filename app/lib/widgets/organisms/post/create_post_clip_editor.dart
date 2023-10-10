@@ -6,7 +6,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
-import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
+import 'package:app/widgets/organisms/post/component/positive_clip_external_shader.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -149,17 +149,13 @@ class _VideoEditorState extends ConsumerState<VideoEditor> {
                     //* -=-=-=-=-=-            Overlay Shader            -=-=-=-=-=- *\\
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     Positioned.fill(
-                      child: IgnorePointer(
-                        child: CustomPaint(
-                          painter: PositiveClipExternalShader(
-                            paddingLeft: kPaddingNone,
-                            paddingRight: kPaddingNone,
-                            paddingTop: widget.topNavigationSize,
-                            paddingBottom: widget.bottomNavigationSize,
-                            colour: colours.black.withOpacity(kOpacityVignette),
-                            radius: kBorderRadiusLarge,
-                          ),
-                        ),
+                      child: PositiveClipExternalShader(
+                        paddingLeft: kPaddingNone,
+                        paddingRight: kPaddingNone,
+                        paddingTop: widget.topNavigationSize,
+                        paddingBottom: widget.bottomNavigationSize,
+                        colour: colours.black.withOpacity(kOpacityVignette),
+                        radius: kBorderRadiusLarge,
                       ),
                     ),
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
