@@ -5,7 +5,7 @@ gcloud services enable vpcaccess.googleapis.com
 gcloud services enable secretmanager.googleapis.com
 
 # set these to your specific environment
-$env:PROJECT_ID="positiveplusone-staging"
+$env:PROJECT_ID="positiveplusone-production"
 $env:REDIS_INSTANCE="redis-firestore-cache"
 $env:REDIS_VERSION="redis_4_0"
 $env:GCP_REGION="us-central1"

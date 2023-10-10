@@ -174,8 +174,6 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
   final SystemController systemController = ref.read(systemControllerProvider.notifier);
   late final StreamChatClient client;
   switch (systemController.environment) {
-    case SystemEnvironment.production:
-      break;
     case SystemEnvironment.staging:
       client = StreamChatClient(
         'hxhyhpru9ze8',
@@ -187,6 +185,14 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
     case SystemEnvironment.develop:
       client = StreamChatClient(
         'pw32v2pqjetx',
+        connectTimeout: const Duration(seconds: 300),
+        receiveTimeout: const Duration(seconds: 300),
+        retryPolicy: retryPolicy,
+      );
+      break;
+    case SystemEnvironment.production:
+      client = StreamChatClient(
+        'h3mtdn8hajhg',
         connectTimeout: const Duration(seconds: 300),
         receiveTimeout: const Duration(seconds: 300),
         retryPolicy: retryPolicy,
