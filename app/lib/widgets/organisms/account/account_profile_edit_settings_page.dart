@@ -162,24 +162,24 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=- Company Sector -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                PositiveTransparentSheet(
-                  listSpacingSize: kPaddingSmall,
-                  children: <Widget>[
-                    PositiveFakeTextFieldButton.profile(
-                      hintText: localizations.page_profile_edit_company_sectors,
-                      labelText: profile.formattedCompanySectorsIgnoreFlags,
-                      onTap: viewModel.onCompanySectorsUpdate,
-                    ),
-                    // but we don't want to be able to hide the company sector
-                    /*
-                    PositiveVisibilityHint(
-                      toggleState: viewModelState.toggleStateCompanySectors,
-                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagCompanySectors),
-                    ),
-                    */
-                  ],
-                ),
-                const SizedBox(height: kPaddingMedium),
+                if (profile.isOrganisation) ...[
+                  PositiveTransparentSheet(
+                    listSpacingSize: kPaddingSmall,
+                    children: <Widget>[
+                      PositiveFakeTextFieldButton.profile(
+                        hintText: localizations.page_profile_edit_company_sectors,
+                        labelText: profile.formattedCompanySectorsIgnoreFlags,
+                        onTap: viewModel.onCompanySectorsUpdate,
+                      ),
+                      // but we don't want to be able to hide the company sector
+                      // PositiveVisibilityHint(
+                      //   toggleState: viewModelState.toggleStateCompanySectors,
+                      //   onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagCompanySectors),
+                      // ),
+                    ],
+                  ),
+                  const SizedBox(height: kPaddingMedium),
+                ],
 
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 //* -=-=-=-=-=- Date of Birth -=-=-=-=-=- *\\
