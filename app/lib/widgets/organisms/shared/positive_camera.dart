@@ -357,7 +357,11 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
     //? If a maximum delay has been set then begin the delay timer
     if (widget.maxDelay != null) {
-      currentDelay = widget.maxDelay!;
+      setStateIfMounted(
+        callback: () {
+          currentDelay = widget.maxDelay!;
+        },
+      );
 
       delayTimer = Timer.periodic(
         const Duration(seconds: 1),
@@ -398,12 +402,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       Duration(milliseconds: widget.maxRecordingLength ?? 1),
     );
 
-    setStateIfMounted(callback: () async {
+    setStateIfMounted(callback: () {
       isCameraButtonCountingDown = false;
       isClipActive = true;
       isCameraButtonSmall = false;
-      await onVideoRecordingEnd(cameraState);
     });
+
+    await onVideoRecordingEnd(cameraState);
   }
 
   Future<void> onVideoRecordingEnd(CameraState cameraState) async {
@@ -628,6 +633,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
     final List<Widget> children = <Widget>[];
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     // Add a shade to the top and bottom of the screen, leaving a square in the middle
     final Size screenSize = MediaQuery.of(context).size;
@@ -639,12 +645,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
     if (widget.displayCameraShade) {
       children.add(
-        AnimatedPositioned(
-          duration: kAnimationDurationExtended,
-          bottom: 0,
-          top: 0,
-          right: 0,
-          left: 0,
+        Positioned.fill(
+          // duration: kAnimationDurationExtended,
+          // bottom: 0,
+          // top: 0,
+          // right: 0,
+          // left: 0,
           child: PositiveClipExternalShader(
             paddingLeft: widget.isVideoMode ? kPaddingNone : kPaddingNone,
             paddingRight: widget.isVideoMode ? kPaddingNone : kPaddingNone,
@@ -653,6 +659,19 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
             paddingBottom: widget.isVideoMode ? widget.bottomNavigationSize : previewSize.height * 0.3,
             colour: colours.black.withOpacity(kOpacityVignette),
             radius: widget.isVideoMode ? kBorderRadiusLarge : kBorderRadiusNone,
+          ),
+        ),
+      );
+    }
+    if (currentDelay > 0) {
+      children.add(
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              currentDelay.toString(),
+              style: typography.styleHero.copyWith(color: Colors.white),
+            ),
           ),
         ),
       );
