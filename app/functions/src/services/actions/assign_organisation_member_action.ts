@@ -4,6 +4,7 @@ import { AdminQuickActionService } from '../admin_quick_action_service';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { RelationshipService } from '../relationship_service';
+import { FeedService } from '../feed_service';
 
 export namespace AssignOrganisationMemberAction {
     export async function assignOrganisationMember(action: AdminQuickActionJSON): Promise<void> {
@@ -62,6 +63,10 @@ export namespace AssignOrganisationMemberAction {
         } else {
             AdminQuickActionService.appendOutput(action, `The organisation flag already exists on the profile ${targetProfileId}.`);
         }
+
+        AdminQuickActionService.appendOutput(action, `Verifying the orginisation is subscribed to the correct feeds.`);
+        const streamClient = FeedService.getFeedsClient();
+        await FeedService.verifyDefaultFeedSubscriptionsForUser(streamClient, targetProfile);
 
         AdminQuickActionService.updateStatus(action, 'success');
     }

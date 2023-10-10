@@ -321,7 +321,7 @@ class ProfileController extends _$ProfileController {
     final String actualPhoneNumber = phoneNumber ?? state.currentProfile?.phoneNumber ?? '';
     if (actualPhoneNumber.isEmpty) {
       logger.e('[Profile Service] - Cannot update phone number without phone number');
-      throw Exception('Cannot update phone number without phone number');
+      return;
     }
 
     if (state.currentProfile?.phoneNumber == actualPhoneNumber) {
