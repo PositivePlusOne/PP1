@@ -113,7 +113,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
                     isVideoMode: state.currentPostType == PostType.clip,
                     maxDelay: 3,
-                    maxRecordingLength: 2000,
+                    maxRecordingLength: 5000,
                     bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
                     topNavigationSize: kIconLarge + kPaddingSmall * 2,
                     //! Flash controlls in FlutterAwesome do not seem to be working
