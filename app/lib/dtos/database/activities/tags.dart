@@ -88,7 +88,8 @@ class TagHelpers {
   static List<String> createPromotedTags({required String userId}) => [createPromotedTag(), createPromotedTag(userId: userId)];
 
   /// helper to create the tag to be in the list of tags to show an activity is promoted
-  static String createPromotedTag({String? userId}) => '$_kPromotedKey${userId == null ? '' : '-$userId'}';
+  ///! IMPORTANTLY tags are converted (hyphens to underscores and all to lowercase so we need to conform to that else matching doesn't work)
+  static String createPromotedTag({String? userId}) => '$_kPromotedKey${userId == null ? '' : '_${userId.toLowerCase()}'}';
 
   /// helper to determine if a tag (as a string) represents an activity that is promoted
   static bool isPromoted(String tag) => tag.startsWith(_kPromotedKey);

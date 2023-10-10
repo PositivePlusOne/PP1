@@ -184,75 +184,77 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 //* -=-=-=-=-=- Date of Birth -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
-                PositiveTransparentSheet(
-                  listSpacingSize: kPaddingSmall,
-                  children: <Widget>[
-                    PositiveFakeTextFieldButton(
-                      hintText: localizations.page_profile_edit_dob,
-                      labelText: profile.birthday.asDateString,
-                      backgroundColor: colors.transparent,
-                      //? empty onTap, users may not update date of birth in app
-                      onTap: (_) {},
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        text: localizations.page_profile_edit_change_details,
-                        style: typography.styleSubtitle.copyWith(color: colors.colorGray1.complimentTextColor),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: localizations.page_profile_edit_change_details_link,
-                            style: typography.styleBold.copyWith(
-                              color: colors.linkBlue,
-                            ),
-                          )
-                        ],
+                if (!profile.isOrganisation) ...[
+                  PositiveTransparentSheet(
+                    listSpacingSize: kPaddingSmall,
+                    children: <Widget>[
+                      PositiveFakeTextFieldButton(
+                        hintText: localizations.page_profile_edit_dob,
+                        labelText: profile.birthday.asDateString,
+                        backgroundColor: colors.transparent,
+                        //? empty onTap, users may not update date of birth in app
+                        onTap: (_) {},
                       ),
-                    ),
-                    PositiveVisibilityHint(
-                      toggleState: viewModelState.toggleStateDateOfBirth,
-                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagBirthday),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kPaddingMedium),
+                      RichText(
+                        text: TextSpan(
+                          text: localizations.page_profile_edit_change_details,
+                          style: typography.styleSubtitle.copyWith(color: colors.colorGray1.complimentTextColor),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: localizations.page_profile_edit_change_details_link,
+                              style: typography.styleBold.copyWith(
+                                color: colors.linkBlue,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      PositiveVisibilityHint(
+                        toggleState: viewModelState.toggleStateDateOfBirth,
+                        onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagBirthday),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: kPaddingMedium),
 
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=- Gender -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                PositiveTransparentSheet(
-                  listSpacingSize: kPaddingSmall,
-                  children: <Widget>[
-                    PositiveFakeTextFieldButton.profile(
-                      hintText: localizations.page_profile_edit_gender,
-                      labelText: profile.formattedGenderIgnoreFlags,
-                      onTap: viewModel.onGenderUpdate,
-                    ),
-                    PositiveVisibilityHint(
-                      toggleState: viewModelState.toggleStateGender,
-                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagGenders),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kPaddingMedium),
+                  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                  //* -=-=-=-=-=- Gender -=-=-=-=-=- *\\
+                  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                  PositiveTransparentSheet(
+                    listSpacingSize: kPaddingSmall,
+                    children: <Widget>[
+                      PositiveFakeTextFieldButton.profile(
+                        hintText: localizations.page_profile_edit_gender,
+                        labelText: profile.formattedGenderIgnoreFlags,
+                        onTap: viewModel.onGenderUpdate,
+                      ),
+                      PositiveVisibilityHint(
+                        toggleState: viewModelState.toggleStateGender,
+                        onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagGenders),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: kPaddingMedium),
 
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=- HIV Status -=-=-=-=-=- *\\
-                //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                PositiveTransparentSheet(
-                  listSpacingSize: kPaddingSmall,
-                  children: <Widget>[
-                    PositiveFakeTextFieldButton.profile(
-                      hintText: localizations.page_profile_edit_hiv_status,
-                      labelText: profile.formattedHIVStatus,
-                      onTap: viewModel.onHIVStatusUpdate,
-                    ),
-                    PositiveVisibilityHint(
-                      toggleState: viewModelState.toggleStateHIVStatus,
-                      onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagHivStatus),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kPaddingMedium),
+                  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                  //* -=-=-=-=-=- HIV Status -=-=-=-=-=- *\\
+                  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+                  PositiveTransparentSheet(
+                    listSpacingSize: kPaddingSmall,
+                    children: <Widget>[
+                      PositiveFakeTextFieldButton.profile(
+                        hintText: localizations.page_profile_edit_hiv_status,
+                        labelText: profile.formattedHIVStatus,
+                        onTap: viewModel.onHIVStatusUpdate,
+                      ),
+                      PositiveVisibilityHint(
+                        toggleState: viewModelState.toggleStateHIVStatus,
+                        onTap: (_) => viewModel.onVisibilityToggleRequested(kVisibilityFlagHivStatus),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: kPaddingMedium),
+                ],
 
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 //* -=-=-=-=-=- Location -=-=-=-=-=- *\\
