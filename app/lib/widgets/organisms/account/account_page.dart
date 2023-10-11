@@ -68,14 +68,17 @@ class AccountPage extends HookConsumerWidget {
             preferredSize: const Size(double.infinity, AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2),
             child: Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
-                  child: PositiveProfileSegmentedSwitcher(
-                    mixin: viewModel,
-                    isSlim: true,
-                    onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, profileState, viewModel),
+                // if we can switch profiles - show the profile switcher
+                if (viewModel.canSwitchProfile)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
+                    child: PositiveProfileSegmentedSwitcher(
+                      mixin: viewModel,
+                      isSlim: true,
+                      onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, profileState, viewModel),
+                    ),
                   ),
-                ),
+                // always show our account banner
                 const AccountProfileBanner(),
               ],
             ),
