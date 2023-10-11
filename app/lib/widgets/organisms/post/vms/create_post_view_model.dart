@@ -32,7 +32,6 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
-import 'package:video_trimmer/video_trimmer.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
@@ -59,6 +58,9 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
     required ActivityData previousActivity,
+    @Default(-1) int delayTimerCurrentSelection,
+    @Default(0) int delayTimerCurrentValue,
+    @Default(false) bool isDelayTimerEnabled,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
   }) = _CreatePostViewModelState;
@@ -381,6 +383,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
+  final List<int> delayTimerOptions = [3, 10];
+
+  void onDelayTimerChanged(int index) {
+    state = state.copyWith(
+      delayTimerCurrentSelection: index,
+      delayTimerCurrentValue: delayTimerOptions[index],
+    );
+  }
+
+  void onTimerToggleRequest() {
+    state = state.copyWith(isDelayTimerEnabled: !state.isDelayTimerEnabled);
+  }
+
   //? Create video Post here
   Future<void> onVideoTaken(BuildContext context, XFile file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -538,6 +553,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       activeButton: PositivePostNavigationActiveButton.clip,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
       currentPostType: PostType.clip,
+      delayTimerCurrentSelection: 0,
     );
   }
 
