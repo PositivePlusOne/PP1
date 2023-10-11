@@ -48,8 +48,8 @@ class NotificationPreferencesPage extends ConsumerWidget {
           children: <Widget>[
             PositivePageIndicator(
               color: colors.black,
-              pagesNum: 6,
-              currentPage: 4,
+              pagesNum: 4,
+              currentPage: 2,
             ),
             const SizedBox(height: kPaddingLarge),
             Align(

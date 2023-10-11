@@ -68,8 +68,8 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
                 ),
                 PositivePageIndicator(
                   color: colors.black,
-                  pagesNum: 9,
-                  currentPage: 8,
+                  pagesNum: 6,
+                  currentPage: 4,
                 ),
               ],
             ),

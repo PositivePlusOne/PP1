@@ -40,8 +40,8 @@ class ProfileReferenceImageSuccessPage extends ConsumerWidget {
           children: <Widget>[
             PositivePageIndicator(
               color: colors.black,
-              pagesNum: 9,
-              currentPage: 7,
+              pagesNum: 6,
+              currentPage: 3,
             ),
             const SizedBox(height: kPaddingMedium),
             Text(

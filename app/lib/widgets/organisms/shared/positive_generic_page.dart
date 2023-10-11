@@ -106,8 +106,8 @@ class PositiveGenericPage extends ConsumerWidget {
                   if (totalSteps > 0) ...<Widget>[
                     PositivePageIndicator(
                       color: colors.black,
-                      pagesNum: 9,
-                      currentPage: 2,
+                      pagesNum: totalSteps,
+                      currentPage: currentStepIndex.toDouble(),
                     ),
                   ],
                 ].spaceWithHorizontal(kPaddingSmall),

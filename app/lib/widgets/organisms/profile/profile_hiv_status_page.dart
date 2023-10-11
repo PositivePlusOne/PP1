@@ -63,8 +63,8 @@ class ProfileHivStatusPage extends ConsumerWidget {
                 if (state.formMode != FormMode.edit)
                   PositivePageIndicator(
                     color: colors.black,
-                    pagesNum: 9,
-                    currentPage: 4,
+                    pagesNum: 6,
+                    currentPage: 5,
                   ),
               ],
             ),

@@ -77,8 +77,8 @@ class ProfileCompanySectorSelectPage extends ConsumerWidget {
                 if (formControllerState.formMode == FormMode.create)
                   PositivePageIndicator(
                     color: colors.black,
-                    pagesNum: 9,
-                    currentPage: 3,
+                    pagesNum: 6,
+                    currentPage: 5,
                   ),
               ],
             ),

@@ -59,8 +59,8 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
                 ),
                 PositivePageIndicator(
                   color: colors.black,
-                  pagesNum: 9,
-                  currentPage: 7,
+                  pagesNum: 6,
+                  currentPage: 3,
                 ),
               ],
             ),

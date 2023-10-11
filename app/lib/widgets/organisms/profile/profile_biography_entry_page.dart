@@ -118,8 +118,8 @@ class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntr
                         if (state.formMode != FormMode.edit)
                           PositivePageIndicator(
                             color: colors.white,
-                            pagesNum: 9,
-                            currentPage: 8,
+                            pagesNum: 6,
+                            currentPage: 5,
                           ),
                       ],
                     ),

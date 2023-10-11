@@ -62,8 +62,8 @@ class ProfileAboutPage extends ConsumerWidget {
                     if (state.formMode == FormMode.create)
                       PositivePageIndicator(
                         color: colors.black,
-                        pagesNum: 9,
-                        currentPage: 1,
+                        pagesNum: 6,
+                        currentPage: 5,
                       ),
                   ],
                 );

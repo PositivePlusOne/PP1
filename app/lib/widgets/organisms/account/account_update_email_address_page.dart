@@ -107,6 +107,7 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
               labelText: localisations.shared_email_address,
               initialText: state.emailAddress,
               onTextChanged: controller.onEmailAddressChanged,
+              textInputType: TextInputType.emailAddress,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,

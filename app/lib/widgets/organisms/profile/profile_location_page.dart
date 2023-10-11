@@ -111,8 +111,8 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                     if (formMode == FormMode.create) ...<Widget>[
                       PositivePageIndicator(
                         color: colors.black,
-                        pagesNum: 9,
-                        currentPage: 6,
+                        pagesNum: 6,
+                        currentPage: 5,
                       ),
                     ],
                     const Spacer(),

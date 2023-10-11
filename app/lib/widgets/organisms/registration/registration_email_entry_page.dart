@@ -110,7 +110,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                     const SizedBox(width: kPaddingSmall),
                     PositivePageIndicator(
                       color: colors.black,
-                      pagesNum: 6,
+                      pagesNum: 4,
                       currentPage: 0,
                     ),
                   ],
@@ -133,6 +133,7 @@ class RegistrationEmailEntryPage extends ConsumerWidget {
                   tintColor: tintColor,
                   suffixIcon: suffixIcon,
                   isEnabled: !state.isBusy,
+                  textInputType: TextInputType.emailAddress,
                 ),
               ],
             ),
