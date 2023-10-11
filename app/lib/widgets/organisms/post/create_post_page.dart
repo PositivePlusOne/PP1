@@ -1,14 +1,15 @@
 // Flutter imports:
 import 'dart:io' as io;
 
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
-import 'package:app/widgets/organisms/post/post_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -61,6 +62,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
     final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
@@ -112,10 +115,38 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTapClose: (_) => appRouter.pop(),
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
                     isVideoMode: state.currentPostType == PostType.clip,
-                    maxDelay: 3,
                     maxRecordingLength: 5000,
-                    bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
-                    topNavigationSize: kIconLarge + kPaddingSmall * 2,
+                    bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
+                    topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
+
+                    maxDelay: state.delayTimerCurrentValue,
+                    delayTimerOptions: viewModel.delayTimerOptions.map((e) => "$e${localisations.page_create_post_delay_timer_seconds}").toList(),
+                    delayTimerSelection: state.delayTimerCurrentSelection,
+                    onDelayTimerChanged: viewModel.onDelayTimerChanged,
+                    isDelayTimerEnabled: state.isDelayTimerEnabled,
+
+                    topAdditionalActions: [
+                      Row(
+                        children: [
+                          const Spacer(),
+                          Text(
+                            localisations.page_create_post_ui_timer,
+                            style: typography.styleButtonRegular.copyWith(color: colours.white),
+                          ),
+                          const SizedBox(
+                            width: kPaddingSmall,
+                          ),
+                          CameraFloatingButton.timer(
+                            active: true,
+                            iconColour: colours.black,
+                            backgroundColour: colours.white,
+                            isOn: state.isDelayTimerEnabled,
+                            onTap: (_) => viewModel.onTimerToggleRequest(),
+                          ),
+                        ],
+                      ),
+                    ],
+
                     //! Flash controlls in FlutterAwesome do not seem to be working
                     // enableFlashControlls: true,
                   ),

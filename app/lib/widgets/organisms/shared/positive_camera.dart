@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,9 @@ enum PositiveCameraViewMode {
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
+    required this.onDelayTimerChanged,
     this.topChildren,
+    this.topAdditionalActions,
     this.onCameraImageTaken,
     this.onCameraVideoTaken,
     this.onFaceDetected,
@@ -64,10 +67,13 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.enableFlashControls = true,
     this.displayCameraShade = true,
     this.isVideoMode = false,
-    this.maxDelay,
+    this.maxDelay = 0,
     this.maxRecordingLength,
     this.topNavigationSize = kPaddingNone,
     this.bottomNavigationSize = kPaddingNone,
+    this.delayTimerOptions = const [],
+    this.isDelayTimerEnabled = false,
+    this.delayTimerSelection = -1,
     super.key,
   });
 
@@ -82,6 +88,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final Widget Function(CameraState)? cameraNavigation;
   final List<Widget>? topChildren;
+  final List<Widget>? topAdditionalActions;
   final List<Widget> overlayWidgets;
   final Widget? leftActionWidget;
   final String? takePictureCaption;
@@ -93,12 +100,22 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool isBusy;
   final bool displayCameraShade;
   final bool isVideoMode;
+  final bool isDelayTimerEnabled;
 
   final double topNavigationSize;
   final double bottomNavigationSize;
 
   /// delay before recording a clip in milliseconds
-  final int? maxDelay;
+  final int maxDelay;
+
+  /// Strings for delay times offered
+  final List<String> delayTimerOptions;
+
+  /// callback function when different delay is selected
+  final Function(int) onDelayTimerChanged;
+
+  /// current delay timer selection for widget
+  final int delayTimerSelection;
 
   /// maximum recording length of the clip in milliseconds
   final int? maxRecordingLength;
@@ -124,11 +141,12 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
   bool isPhysicalDevice = true;
   bool isCameraButtonCountingDown = false;
+  bool isRecording = false;
   bool isCameraButtonSmall = false;
   bool isClipActive = false;
 
   ///? Current Delay before begining the clip or picture
-  int currentDelay = 0;
+  int currentDelay = -1;
   Timer? delayTimer;
 
   bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
@@ -147,6 +165,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
     return true;
   }
+
+  ///? Shader parameters
+  ///
 
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
@@ -192,7 +213,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
   @override
   void deactivate() {
-    isCameraButtonCountingDown = false;
+    isRecording = false;
     isCameraButtonSmall = false;
     isClipActive = false;
     currentDelay = 0;
@@ -356,10 +377,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     });
 
     //? If a maximum delay has been set then begin the delay timer
-    if (widget.maxDelay != null) {
+    if (widget.maxDelay > 0) {
       setStateIfMounted(
         callback: () {
-          currentDelay = widget.maxDelay!;
+          currentDelay = widget.maxDelay;
         },
       );
 
@@ -395,7 +416,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     //? Begin clip recording
     await videoState.startRecording();
     setStateIfMounted(callback: () {
-      isCameraButtonCountingDown = true;
+      isRecording = true;
     });
 
     await Future.delayed(
@@ -403,7 +424,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     );
 
     setStateIfMounted(callback: () {
-      isCameraButtonCountingDown = false;
+      isRecording = false;
       isClipActive = true;
       isCameraButtonSmall = false;
     });
@@ -596,6 +617,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   }
 
   Widget topOverlay(CameraState state) {
+    //TODO move this to a less awkward area? if possible
     if (widget.isVideoMode) {
       if (state.captureMode != CaptureMode.video) {
         state.setState(CaptureMode.video);
@@ -605,12 +627,33 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
         state.setState(CaptureMode.photo);
       }
     }
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmall),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren,
+      padding: const EdgeInsets.symmetric(
+        horizontal: kPaddingMedium,
+        vertical: kPaddingSmall,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren,
+          ),
+          const SizedBox(height: kPaddingLarge),
+          if (isRecording)
+            Container(
+              width: kPaddingMedium,
+              height: kPaddingMedium,
+              decoration: BoxDecoration(
+                color: colours.red,
+                borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+              ),
+            ),
+          if (widget.topAdditionalActions != null && widget.isVideoMode && !isRecording) ...widget.topAdditionalActions!,
+        ],
       ),
     );
   }
@@ -644,26 +687,42 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     }
 
     if (widget.displayCameraShade) {
+      ///? precalculating here, this could move
+      final double paddingLeft = (currentDelay > 0) ? screenSize.width / 2 : kPaddingNone;
+      final double paddingRight = (currentDelay > 0) ? screenSize.width / 2 : kPaddingNone;
+
+      final double paddingTop = widget.isVideoMode
+          ? (currentDelay > 0)
+              ? screenSize.height / 2
+              : widget.topNavigationSize
+          : previewSize.height * 0.22;
+
+      final double paddingBottom = widget.isVideoMode
+          ? (currentDelay > 0)
+              ? screenSize.height / 2
+              : widget.bottomNavigationSize
+          : previewSize.height * 0.3;
+
+      final double radius = widget.isVideoMode
+          ? (currentDelay > 0)
+              ? kBorderRadiusInfinite
+              : kBorderRadiusLarge
+          : kBorderRadiusNone;
+
       children.add(
         Positioned.fill(
-          // duration: kAnimationDurationExtended,
-          // bottom: 0,
-          // top: 0,
-          // right: 0,
-          // left: 0,
           child: PositiveClipExternalShader(
-            paddingLeft: widget.isVideoMode ? kPaddingNone : kPaddingNone,
-            paddingRight: widget.isVideoMode ? kPaddingNone : kPaddingNone,
-            paddingTop: 5,
-            // paddingTop: widget.isVideoMode ? widget.topNavigationSize : previewSize.height * 0.22,
-            paddingBottom: widget.isVideoMode ? widget.bottomNavigationSize : previewSize.height * 0.3,
+            paddingLeft: paddingLeft,
+            paddingRight: paddingRight,
+            paddingTop: paddingTop,
+            paddingBottom: paddingBottom,
             colour: colours.black.withOpacity(kOpacityVignette),
-            radius: widget.isVideoMode ? kBorderRadiusLarge : kBorderRadiusNone,
+            radius: radius,
           ),
         ),
       );
     }
-    if (currentDelay > 0) {
+    if (currentDelay >= 0) {
       children.add(
         Positioned.fill(
           child: Align(
@@ -723,6 +782,17 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               overflow: TextOverflow.clip,
             ),
           const SizedBox(height: kPaddingMedium),
+          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled)
+            SizedBox(
+              width: 155,
+              child: PositiveSlimTabBar(
+                tabs: widget.delayTimerOptions,
+                onTapped: (index) => widget.onDelayTimerChanged(index),
+                tabColours: [colours.black, colours.black],
+                unselectedColour: colours.white,
+                index: widget.delayTimerSelection,
+              ),
+            ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -740,9 +810,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
                 active: canTakePictureOrVideo,
                 loadingColour: colours.yellow,
                 // loadingProgress: recordingCompletion,
-                isLoading: isCameraButtonCountingDown,
+                isLoading: isRecording,
                 maxCLipDuration: widget.maxRecordingLength,
-                isSmallButton: isCameraButtonCountingDown,
+                isSmallButton: isRecording,
                 onTap: (_) {
                   state.when(
                     onPhotoMode: onImageTaken,
