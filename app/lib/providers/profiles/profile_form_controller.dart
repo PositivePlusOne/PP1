@@ -184,7 +184,7 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.push(const ProfileNameEntryRoute());
         break;
 
-      case ProfileAboutPage:
+      case ProfileAboutRoute:
         // currently this
         break;
 
@@ -194,33 +194,18 @@ class ProfileFormController extends _$ProfileFormController {
         break;
 
       case ProfileHivStatusRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileGenderSelectRoute());
-        break;
-
       case ProfileInterestsEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileHivStatusRoute());
-        break;
-
       case ProfileGenderSelectRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileBirthdayEntryRoute());
-        break;
-
       case ProfileCompanySectorSelectRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileCompanySectorSelectRoute());
-        break;
-
       case ProfileLocationRoute:
+        // not showing this any more so just go back to the start if here by mistake
         appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileInterestsEntryRoute());
+        appRouter.push(const ProfileNameEntryRoute());
         break;
 
       case ProfileReferenceImageWelcomeRoute:
         appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileLocationRoute());
+        appRouter.push(const ProfileBirthdayEntryRoute());
         break;
 
       case ProfilePhotoSelectionRoute:

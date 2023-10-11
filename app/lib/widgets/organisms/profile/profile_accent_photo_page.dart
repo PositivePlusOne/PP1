@@ -79,7 +79,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
       decorationColor: accentColor,
       extendBody: false,
       visibleComponents: const {PositiveScaffoldComponent.headingWidgets},
-      onWillPopScope: () async => controller.onBackSelected(ProfileBiographyEntryRoute),
+      onWillPopScope: () async => controller.onBackSelected(ProfileAccentPhotoRoute),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           foregroundColor: colors.white,
@@ -99,7 +99,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                   PositiveButton(
                     colors: colors,
                     primaryColor: colors.white,
-                    onTapped: () => controller.onBackSelected(ProfileAccentPhotoPage),
+                    onTapped: () => controller.onBackSelected(ProfileAccentPhotoRoute),
                     isDisabled: state.isBusy,
                     label: localizations.shared_actions_back,
                     style: PositiveButtonStyle.text,

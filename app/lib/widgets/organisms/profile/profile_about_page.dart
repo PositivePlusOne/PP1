@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -40,7 +41,7 @@ class ProfileAboutPage extends ConsumerWidget {
     final locale = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
-      onWillPopScope: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
+      onWillPopScope: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutRoute),
       headingWidgets: [
         PositiveBasicSliverList(
           children: [
@@ -52,7 +53,7 @@ class ProfileAboutPage extends ConsumerWidget {
                     PositiveButton(
                       colors: colors,
                       primaryColor: colors.black,
-                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutPage),
+                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onBackSelected(ProfileAboutRoute),
                       label: locale.shared_actions_back,
                       isDisabled: state.isBusy,
                       style: PositiveButtonStyle.text,
