@@ -26,7 +26,7 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
-import 'package:sliver_tools/sliver_tools.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 
@@ -111,6 +111,9 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
     // and the state for that
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(feed);
     final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: feed, currentProfileId: currentProfileId!);
+    // we have the feed state now (from the cache) are there items already inside?
+    itemHubCount.value = feedState.pagingController.itemList?.length.toString() ?? itemHubCount.value;
+    // and listen for any changes to the page so we can update when the page does
     feedState.pagingController.addListener(() {
       log.i('page updated ${feedState.pagingController.itemList?.length ?? 0}');
       // and set this value to update the view
