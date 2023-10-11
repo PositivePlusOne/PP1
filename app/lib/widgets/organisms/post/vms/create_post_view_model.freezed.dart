@@ -25,6 +25,7 @@ mixin _$CreatePostViewModelState {
   List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
   GalleryEntry? get editingGalleryEntry => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
+  String get promotionKey => throw _privateConstructorUsedError;
   bool get allowSharing => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: ActivitySecurityConfigurationMode.fromJson,
@@ -63,6 +64,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
       List<String> tags,
+      String promotionKey,
       bool allowSharing,
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
@@ -104,6 +106,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
     Object? tags = null,
+    Object? promotionKey = null,
     Object? allowSharing = null,
     Object? visibleTo = null,
     Object? allowComments = null,
@@ -146,6 +149,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      promotionKey: null == promotionKey
+          ? _value.promotionKey
+          : promotionKey // ignore: cast_nullable_to_non_nullable
+              as String,
       allowSharing: null == allowSharing
           ? _value.allowSharing
           : allowSharing // ignore: cast_nullable_to_non_nullable
@@ -218,6 +225,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
       List<String> tags,
+      String promotionKey,
       bool allowSharing,
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
@@ -260,6 +268,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
     Object? tags = null,
+    Object? promotionKey = null,
     Object? allowSharing = null,
     Object? visibleTo = null,
     Object? allowComments = null,
@@ -302,6 +311,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      promotionKey: null == promotionKey
+          ? _value.promotionKey
+          : promotionKey // ignore: cast_nullable_to_non_nullable
+              as String,
       allowSharing: null == allowSharing
           ? _value.allowSharing
           : allowSharing // ignore: cast_nullable_to_non_nullable
@@ -352,6 +365,7 @@ class _$CreatePostViewModelStateImpl
       final List<GalleryEntry> galleryEntries = const [],
       this.editingGalleryEntry,
       final List<String> tags = const [],
+      this.promotionKey = '',
       this.allowSharing = false,
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
@@ -406,6 +420,9 @@ class _$CreatePostViewModelStateImpl
 
   @override
   @JsonKey()
+  final String promotionKey;
+  @override
+  @JsonKey()
   final bool allowSharing;
   @override
   @JsonKey(
@@ -433,7 +450,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, activeButton: $activeButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, activeButton: $activeButton)';
   }
 
   @override
@@ -449,6 +466,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('galleryEntries', galleryEntries))
       ..add(DiagnosticsProperty('editingGalleryEntry', editingGalleryEntry))
       ..add(DiagnosticsProperty('tags', tags))
+      ..add(DiagnosticsProperty('promotionKey', promotionKey))
       ..add(DiagnosticsProperty('allowSharing', allowSharing))
       ..add(DiagnosticsProperty('visibleTo', visibleTo))
       ..add(DiagnosticsProperty('allowComments', allowComments))
@@ -478,6 +496,8 @@ class _$CreatePostViewModelStateImpl
             (identical(other.editingGalleryEntry, editingGalleryEntry) ||
                 other.editingGalleryEntry == editingGalleryEntry) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
+            (identical(other.promotionKey, promotionKey) ||
+                other.promotionKey == promotionKey) &&
             (identical(other.allowSharing, allowSharing) ||
                 other.allowSharing == allowSharing) &&
             (identical(other.visibleTo, visibleTo) ||
@@ -507,6 +527,7 @@ class _$CreatePostViewModelStateImpl
       const DeepCollectionEquality().hash(_galleryEntries),
       editingGalleryEntry,
       const DeepCollectionEquality().hash(_tags),
+      promotionKey,
       allowSharing,
       visibleTo,
       allowComments,
@@ -534,6 +555,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final List<GalleryEntry> galleryEntries,
           final GalleryEntry? editingGalleryEntry,
           final List<String> tags,
+          final String promotionKey,
           final bool allowSharing,
           @JsonKey(
               fromJson: ActivitySecurityConfigurationMode.fromJson,
@@ -566,6 +588,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   GalleryEntry? get editingGalleryEntry;
   @override
   List<String> get tags;
+  @override
+  String get promotionKey;
   @override
   bool get allowSharing;
   @override

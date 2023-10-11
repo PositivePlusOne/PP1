@@ -1,5 +1,3 @@
-import { lowerCase, snakeCase } from "lodash";
-
 export const tagSchemaKey = "tags";
 
 export type TagJSON = {
@@ -104,13 +102,4 @@ export class TagTopic {
     this.localizations = json.localizations && Array.isArray(json.localizations) ? json.localizations?.map((e) => new TagLocalization(e)) : [];
     this.isEnabled = json.isEnabled || false;
   }
-}
-
-/**
- * Formats a tag.
- * @param {string} tag the tag.
- * @returns {string} the formatted tag.
- */
-export function formatTag(tag: string): string {
-  return snakeCase(lowerCase(tag));
 }

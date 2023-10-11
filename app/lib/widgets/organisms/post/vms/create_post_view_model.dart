@@ -47,6 +47,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default([]) List<GalleryEntry> galleryEntries,
     GalleryEntry? editingGalleryEntry,
     @Default([]) List<String> tags,
+    @Default('') String promotionKey,
     @Default(false) bool allowSharing,
     @Default(ActivitySecurityConfigurationMode.public()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode visibleTo,
     @Default(ActivitySecurityConfigurationMode.signedIn()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode allowComments,
@@ -67,6 +68,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
 class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
+  final TextEditingController promotionKeyTextController = TextEditingController();
 
   @override
   CreatePostViewModelState build() {
@@ -120,12 +122,14 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       captionController.text = activityData.content ?? "";
       altTextController.text = activityData.altText ?? "";
+      promotionKeyTextController.text = activityData.promotionKey ?? "";
 
       //? State is updated in two steps, otherwise the camera can breifly activate on the edit page due to the asynchronus fucnctions required for gallery
       state = state.copyWith(
         currentActivityID: activityData.activityID ?? "",
         isEditing: true,
         tags: activityData.tags ?? [],
+        promotionKey: activityData.promotionKey ?? '',
         allowSharing: activityData.allowSharing ?? false,
         allowComments: activityData.commentPermissionMode ?? const ActivitySecurityConfigurationMode.signedIn(),
         visibleTo: activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.public(),
@@ -185,6 +189,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           activityData: ActivityData(
             content: captionController.text.trim(),
             altText: altTextController.text.trim(),
+            promotionKey: promotionKeyTextController.text.trim(),
             tags: state.tags,
             postType: state.currentPostType,
             media: media,
@@ -200,6 +205,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             activityID: state.currentActivityID,
             content: captionController.text.trim(),
             altText: altTextController.text.trim(),
+            promotionKey: promotionKeyTextController.text.trim(),
             tags: state.tags,
             postType: state.currentPostType,
             media: media,
@@ -346,6 +352,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   bool get hasPostBeenUpdated {
     if (captionController.text != state.previousActivity.content) return true;
     if (altTextController.text != state.previousActivity.altText) return true;
+    if (promotionKeyTextController.text != state.previousActivity.promotionKey) return true;
     if (state.allowComments != state.previousActivity.commentPermissionMode) return true;
     if (state.visibleTo != state.previousActivity.visibilityMode) return true;
     if (state.allowSharing != state.previousActivity.allowSharing) return true;

@@ -492,6 +492,7 @@ extension ActivityExt on Activity {
           activityID: flMeta?.id,
           content: generalConfiguration?.content ?? '',
           tags: enrichmentConfiguration?.tags ?? const [],
+          promotionKey: enrichmentConfiguration?.promotionKey ?? '',
           postType: PostType.getPostTypeFromActivity(this),
           media: media,
           commentPermissionMode: securityConfiguration?.commentMode,

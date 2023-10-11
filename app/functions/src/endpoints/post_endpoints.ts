@@ -101,6 +101,7 @@ export namespace PostEndpoints {
     const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
     const activityOriginFeed = activity.publisherInformation?.originFeed || "";
     const activityOriginPosterId = activity.publisherInformation?.publisherId || "";
+    const activityPromotionKey = activity.enrichmentConfiguration?.promotionKey;
     if (!activity || !activityOriginFeed || !activityOriginPosterId) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
@@ -134,6 +135,7 @@ export namespace PostEndpoints {
       },
       enrichmentConfiguration: {
         tags: validatedTags,
+        promotionKey: activityPromotionKey,
       },
       securityConfiguration: {
         viewMode: "public",
@@ -205,6 +207,7 @@ export namespace PostEndpoints {
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
+    const promotionKey = request.data.promotionKey || "" as string;
 
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type;
@@ -248,6 +251,7 @@ export namespace PostEndpoints {
       },
       enrichmentConfiguration: {
         tags: validatedTags,
+        promotionKey: promotionKey,
       },
       securityConfiguration: {
         viewMode: visibleTo,
@@ -316,6 +320,7 @@ export namespace PostEndpoints {
 
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
+    const promotionKey = request.data.promotionKey || "" as string;
 
     const allowSharing = request.data.allowSharing ? "public" : "disabled" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
@@ -359,6 +364,10 @@ export namespace PostEndpoints {
     functions.logger.info(`Got validated tags`, { validatedTags });
     if (validatedTags) {
       activity.enrichmentConfiguration!.tags = validatedTags;
+    }
+    if (promotionKey) {
+      // the promotion key goes in the enrichment when there is one
+      activity.enrichmentConfiguration!.promotionKey = promotionKey;
     }
 
     // Update remaining fields

@@ -8,6 +8,7 @@ import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { TagsService } from "./tags_service";
 
 export namespace FeedService {
 
@@ -73,7 +74,8 @@ export namespace FeedService {
     }
 
     const userTimelineFeed = client.feed("timeline", userId);
-    const additionalTags = profile.tags ?? [];
+    // lets add 'promoted' for now so all users get promotions somewhere in their timeline as well
+    const additionalTags = [TagsService.RestrictedTagKey.promoted, ...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
 
     try {
       // Assumption check: The users flat feed should include predefined feeds including their own user feed.

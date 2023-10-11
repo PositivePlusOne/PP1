@@ -193,6 +193,7 @@ class PostApiService {
       parameters: {
         'content': activityData.content ?? "",
         'tags': activityData.tags ?? [],
+        'promotionKey': activityData.promotionKey,
         'media': media.map((e) => e.toJson()).toList(),
         'style': 'text',
         'type': type,
@@ -216,6 +217,7 @@ class PostApiService {
       parameters: {
         'content': activityData.content ?? "",
         'tags': activityData.tags ?? [],
+        'promotionKey': activityData.promotionKey,
         'media': media.map((e) => e.toJson()).toList(),
         'postId': activityData.activityID ?? "",
         'allowSharing': activityData.allowSharing ?? false,

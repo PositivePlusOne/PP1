@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,6 +35,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     this.flMetaData,
     this.publisher,
     this.promotion,
+    this.tags = const [],
     this.isShared = false,
     super.key,
   });
@@ -41,6 +43,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   final FlMeta? flMetaData;
   final Profile? publisher;
   final Promotion? promotion;
+  final List<String> tags;
 
   final FutureOr<void> Function() onOptions;
   final bool isShared;
@@ -56,6 +59,9 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
     String displayName = localisations.shared_placeholders_empty_display_name;
     String postDateTooltip = "";
+
+    // we are promoted when there is a promotion or there is a tag that signals that it is
+    final isPromotion = promotion != null || tags.indexWhere((tag) => TagHelpers.isPromoted(tag)) != -1;
 
     if (publisher?.displayName.isNotEmpty == true) {
       displayName = getSafeDisplayNameFromProfile(publisher);
@@ -103,14 +109,14 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  if (promotion == null) ...<Widget>[
+                  if (isPromotion) ...<Widget>[
                     const SizedBox(height: kPaddingThin),
                     Text(
                       postDateTooltip,
                       style: typeography.styleSubtext.copyWith(color: colours.colorGray3),
                     ),
                   ],
-                  if (promotion != null) ...<Widget>[
+                  if (isPromotion) ...<Widget>[
                     const SizedBox(height: kPaddingSuperSmall),
                     const PositivePromotedIndicator(),
                   ],

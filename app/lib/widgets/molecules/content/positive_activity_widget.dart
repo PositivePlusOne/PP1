@@ -153,6 +153,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             isShared: widget.isShared,
             publisher: widget.reposterProfile,
             promotion: widget.activityPromotion,
+            tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
             onOptions: () {
               widget.activity?.onPostOptionsSelected(
                 context: context,
@@ -211,6 +212,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               flMetaData: widget.activity?.flMeta,
               publisher: widget.targetProfile,
               promotion: widget.activityPromotion,
+              tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
                 targetProfile: widget.targetProfile,
@@ -225,6 +227,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               publisherProfile: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
               promotion: widget.activityPromotion,
+              tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               isShortformPost: !widget.isFullscreen,
               sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
               onLike: (context) => _onInternalLikeRequested(context),

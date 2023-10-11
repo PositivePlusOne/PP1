@@ -42,6 +42,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     required this.isBusy,
     this.captionController,
     this.altTextController,
+    this.promotionKeyTextController,
     this.onUpdateSaveToGallery,
     this.onUpdateAllowSharing,
     this.onUpdatePromotedPost,
@@ -62,6 +63,7 @@ class CreatePostDialogue extends HookConsumerWidget {
   final PostType postType;
   final TextEditingController? captionController;
   final TextEditingController? altTextController;
+  final TextEditingController? promotionKeyTextController;
 
   final bool isBusy;
 
@@ -231,6 +233,19 @@ class CreatePostDialogue extends HookConsumerWidget {
                 text: localisations.page_create_post_promoted_post(remainingPromotions),
               ),
               const SizedBox(height: kPaddingSmall),
+              // and if a promotion, we need the promotion key
+              if (valuePromotedPost)
+                CreatePostTextField(
+                  text: localisations.page_create_post_promotion_key,
+                  controller: promotionKeyTextController,
+                  colours: colours,
+                  textStyle: textStyle,
+                  maxLength: kMaxLengthAltText,
+                  maxLines: 1,
+                  minLines: 1,
+                  isBusy: isBusy,
+                ),
+              const SizedBox(height: kPaddingSmall),
             ],
 
             //* -=-=-=-=- Sharing Visibility -=-=-=-=- *\\
@@ -380,6 +395,19 @@ class CreatePostDialogue extends HookConsumerWidget {
                       textStyle: textStyle,
                       text: localisations.page_create_post_promoted_post(remainingPromotions),
                     ),
+                    const SizedBox(height: kPaddingSmall),
+                    // and if a promotion, we need the promotion key
+                    if (valuePromotedPost)
+                      CreatePostTextField(
+                        text: localisations.page_create_post_promotion_key,
+                        controller: promotionKeyTextController,
+                        colours: colours,
+                        textStyle: textStyle,
+                        maxLength: kMaxLengthAltText,
+                        maxLines: 1,
+                        minLines: 1,
+                        isBusy: isBusy,
+                      ),
                     const SizedBox(height: kPaddingSmall),
                   ],
                   CreatePostBox(
