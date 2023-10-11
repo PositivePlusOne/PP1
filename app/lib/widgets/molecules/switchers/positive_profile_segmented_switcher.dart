@@ -16,6 +16,7 @@ import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
   const PositiveProfileSegmentedSwitcher({
     required this.mixin,
+    this.useProfileBackgroundColours = false,
     this.isSlim = false,
     this.onTapped,
     super.key,
@@ -24,10 +25,11 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
   final ProfileSwitchMixin mixin;
   final bool isSlim;
   final Function(int)? onTapped;
+  final bool useProfileBackgroundColours;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     final List<String> supportedProfileIds = mixin.getSupportedProfileIds();
     final List<Profile> profiles = mixin.getSupportedProfiles();
@@ -52,7 +54,7 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
               onTapped!(index);
             }
           },
-          tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
+          tabColours: useProfileBackgroundColours ? profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colours.teal)).toList() : List<Color>.filled(profiles.length, colours.white),
           tabs: profiles.map((Profile profile) => profile.displayName).toList(),
         );
       default:
@@ -60,7 +62,7 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
           margin: EdgeInsets.zero,
           index: supportedProfileIds.indexOf(currentProfileId),
           onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
-          tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
+          tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colours.teal)).toList(),
           tabs: profiles.map((Profile profile) {
             final String profileId = profile.flMeta?.id ?? '';
             final bool isCurrentProfile = profileId == currentProfileId;

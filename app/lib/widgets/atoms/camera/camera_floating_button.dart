@@ -17,6 +17,8 @@ class CameraFloatingButton extends ConsumerWidget {
     required this.active,
     required this.onTap,
     required this.iconData,
+    this.backgroundColour,
+    this.iconColour,
     this.removeBorder = false,
     super.key,
   });
@@ -25,6 +27,8 @@ class CameraFloatingButton extends ConsumerWidget {
   final void Function(BuildContext context) onTap;
   final IconData iconData;
   final bool removeBorder;
+  final Color? iconColour;
+  final Color? backgroundColour;
 
   factory CameraFloatingButton.close({
     required bool active,
@@ -92,6 +96,34 @@ class CameraFloatingButton extends ConsumerWidget {
     );
   }
 
+  factory CameraFloatingButton.timer({
+    required bool active,
+    required bool isOn,
+    required Color iconColour,
+    required Color backgroundColour,
+    required void Function(BuildContext context) onTap,
+  }) {
+    return CameraFloatingButton(
+      active: active,
+      onTap: onTap,
+      backgroundColour: isOn ? backgroundColour : null,
+      iconColour: isOn ? iconColour : null,
+      iconData: UniconsLine.stopwatch,
+    );
+  }
+
+  factory CameraFloatingButton.filters({
+    required bool active,
+    required bool isOn,
+    required void Function(BuildContext context) onTap,
+  }) {
+    return CameraFloatingButton(
+      active: active,
+      onTap: onTap,
+      iconData: UniconsLine.sliders_v_alt,
+    );
+  }
+
   factory CameraFloatingButton.flash({
     required bool active,
     required void Function(BuildContext context) onTap,
@@ -130,17 +162,17 @@ class CameraFloatingButton extends ConsumerWidget {
         alignment: Alignment.center,
         decoration: !removeBorder
             ? BoxDecoration(
-                color: colors.white.withOpacity(0.2),
+                color: backgroundColour ?? colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(kIconSmall),
                 border: Border.all(
-                  color: colors.white,
+                  color: iconColour ?? colors.white,
                   width: kBorderThicknessSmall,
                 ),
               )
             : null,
         child: Icon(
           iconData,
-          color: colors.white,
+          color: iconColour ?? colors.white,
         ),
       ),
     );
