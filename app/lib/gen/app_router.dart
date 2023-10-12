@@ -174,7 +174,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         //* Home and direct affiliates
-        AutoRoute(page: HomeRoute.page, path: '/home', guards: [...kCommonGuards, profileSetupGuard]),
+        AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, notificationGuard, biometricsGuard]),
         AutoRoute(page: HomeLoginPromptRoute.page, path: '/home/login', guards: [...kCommonGuards]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
