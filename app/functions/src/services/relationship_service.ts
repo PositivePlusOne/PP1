@@ -377,9 +377,9 @@ export namespace RelationshipService {
     };
   }
 
-  export async function getManagedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
+  export async function getManagingRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
-    const cacheKey = MANAGER_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    const cacheKey = FOLLOWERS_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
     let data = await CacheService.get(cacheKey);
 
     if (!data) {
@@ -389,7 +389,6 @@ export namespace RelationshipService {
         .where("_fl_meta_.schema", "==", "relationships")
         .where("searchIndexRelationshipManages", ">=", uid)
         .where("searchIndexRelationshipManages", "<=", uid + "\uf8ff")
-        .where("managed", "==", true)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
         .get();
@@ -411,7 +410,47 @@ export namespace RelationshipService {
 
     const last = data[data.length - 1];
     const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
+    responsePagination.cursor = lastId;
 
+    return {
+      data: data,
+      pagination: responsePagination,
+    };
+  }
+
+  export async function getManagedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
+    const adminFirestore = adminApp.firestore();
+    const cacheKey = FOLLOWERS_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
+    let data = await CacheService.get(cacheKey);
+
+    if (!data) {
+      const relationshipsSnapshot = await adminFirestore
+        .collection("fl_content")
+        .orderBy("searchIndexRelationshipManaged")
+        .where("_fl_meta_.schema", "==", "relationships")
+        .where("searchIndexRelationshipManaged", ">=", uid)
+        .where("searchIndexRelationshipManaged", "<=", uid + "\uf8ff")
+        .limit(pagination.limit ?? 10)
+        .startAfter(pagination.cursor)
+        .get();
+
+      data = relationshipsSnapshot.docs.map((doc) => doc.data());
+    }
+
+    const hasData = data.length !== 0;
+    const responsePagination = {
+      limit: pagination.limit,
+      cursor: '',
+    } as Pagination;
+
+    if (!hasData) {
+      return { data: [], pagination: responsePagination };
+    }
+
+    CacheService.setInCache(cacheKey, data);
+
+    const last = data[data.length - 1];
+    const lastId = FlamelinkHelpers.getFlamelinkIdFromObject(last) ?? '';
     responsePagination.cursor = lastId;
 
     return {

@@ -527,6 +527,8 @@ export namespace RelationshipEndpoints {
     const paginationResult = await RelationshipService.getManagedRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
 
+    functions.logger.info("Managed relationships", { paginationResult });
+
     for (const relationship of paginationResult.data) {
       for (const member of relationship.members || []) {
         if (member.memberId && member.memberId !== uid) {

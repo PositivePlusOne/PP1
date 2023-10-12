@@ -40,7 +40,7 @@ import 'package:app/widgets/state/positive_community_feed_state.dart';
 class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   const PositiveCommunitiesDialog({
     required this.controllerProvider,
-    this.supportedCommunityTypes = CommunityType.userProfileCommunityTypes,
+    this.supportedCommunityTypes,
     this.mode = CommunitiesDialogMode.view,
     this.actionLabel,
     this.canCallToAction = true,
@@ -53,7 +53,7 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
 
   final CommunitiesControllerProvider controllerProvider;
   final CommunitiesDialogMode mode;
-  final List<CommunityType> supportedCommunityTypes;
+  final List<CommunityType>? supportedCommunityTypes;
 
   // Select mode controls
   final String? actionLabel;
@@ -225,6 +225,15 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         ),
     };
 
+    final List<CommunityType> communityTypes = [];
+    if (widget.supportedCommunityTypes != null) {
+      communityTypes.addAll(widget.supportedCommunityTypes!);
+    } else if (isManagedProfile) {
+      communityTypes.addAll(<CommunityType>[CommunityType.managed, CommunityType.following, CommunityType.followers, CommunityType.blocked]);
+    } else {
+      communityTypes.addAll(<CommunityType>[CommunityType.connected, CommunityType.following, CommunityType.followers, CommunityType.blocked]);
+    }
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
@@ -232,9 +241,9 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           children: <Widget>[
             buildAppBar(context, colors),
             const SizedBox(height: kPaddingSmall),
-            if (widget.supportedCommunityTypes.length >= 2) ...<Widget>[
+            if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
-                values: widget.supportedCommunityTypes,
+                values: communityTypes,
                 initialValue: isManagedProfile ? CommunityType.managed : CommunityType.connected,
                 onValueChanged: (value) => onCommunityTypeChanged(value),
                 backgroundColour: colors.white,

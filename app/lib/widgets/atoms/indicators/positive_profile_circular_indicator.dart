@@ -110,17 +110,17 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
       });
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final Color? dominantColor = getMostCommonColor(bytes);
-      if (dominantColor == null) {
-        logger.w('Could not get dominant color for ${widget.imageOverridePath}');
-        return;
-      }
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final Color? dominantColor = getMostCommonColor(bytes);
+    //   if (dominantColor == null) {
+    //     logger.w('Could not get dominant color for ${widget.imageOverridePath}');
+    //     return;
+    //   }
 
-      logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
+    //   logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
 
-      setState(() => ringColor = dominantColor);
-    });
+    //   setState(() => ringColor = dominantColor);
+    // });
   }
 
   @override
