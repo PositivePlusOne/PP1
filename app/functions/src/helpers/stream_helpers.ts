@@ -1,4 +1,4 @@
-import { StreamFeed } from "getstream";
+import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
 
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
@@ -15,6 +15,15 @@ export namespace StreamHelpers {
     }
     
     return `${feed.slug}:${feed.userId}`;
+  }
+
+  export function getStreamFeedFromOrigin(origin: string, client: StreamClient<DefaultGenerics>): StreamFeed {
+    const parts = origin.split(":");
+    if (parts.length !== 2) {
+      throw new Error("Invalid origin");
+    }
+
+    return client.feed(parts[0], parts[1]);
   }
 
   export function getFeedFromOrigin(origin: string): string {

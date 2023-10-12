@@ -21,6 +21,7 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -37,6 +38,7 @@ import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
+import 'package:app/widgets/state/positive_community_feed_state.dart';
 
 @RoutePage()
 class CreateConversationPage extends HookConsumerWidget {
@@ -64,9 +66,12 @@ class CreateConversationPage extends HookConsumerWidget {
       currentProfile: currentProfile,
     );
 
-    final CommunitiesControllerState communitiesControllerState = ref.watch(communitiesControllerProvider);
+    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
+    ref.watch(communitiesControllerProvider);
 
-    final Set<String> connectedProfileIds = communitiesControllerState.connectedProfileIds;
+    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, currentProfile: currentProfile);
+
+    final Set<String> connectedProfileIds = feedState.pagingController.value.itemList?.toSet() ?? {};
     final bool hasConnectedProfiles = connectedProfileIds.isNotEmpty;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -82,6 +87,10 @@ class CreateConversationPage extends HookConsumerWidget {
       final List<String> memberIds = members.map((e) => e.userId ?? '').where((element) => element.isNotEmpty).toList();
       connectedProfiles.removeWhere((Profile profile) => memberIds.contains(profile.flMeta?.id));
     }
+
+    useCacheHook(keys: <String>[
+      feedState.buildCacheKey(),
+    ]);
 
     return PositiveScaffold(
       resizeToAvoidBottomInset: false,

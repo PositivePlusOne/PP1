@@ -15,11 +15,16 @@ export namespace ProfileStatisticsService {
         return `statistics:user:${user_id}`;
     }
 
-    export async function getStatisticsForProfile(userId: string): Promise<ProfileStatisicsJSON> {
-        functions.logger.info("Getting profile statistics", { userId });
-        const expectedKey = getExpectedKeyFromOptions(userId);
+    export async function getStatisticsForProfile(profileId: string): Promise<ProfileStatisicsJSON> {
+        functions.logger.info("Getting profile statistics", { profileId });
+        const expectedKey = getExpectedKeyFromOptions(profileId);
+
+        const baseStats = {
+            counts: {},
+            profileId: profileId,
+        } as ProfileStatisicsJSON;
         
-        return await DataService.getOrCreateDocument(expectedKey, {
+        return await DataService.getOrCreateDocument(baseStats, {
             schemaKey: profileStatisticsSchemaKey,
             entryId: expectedKey,
         }) as ProfileStatisicsJSON;

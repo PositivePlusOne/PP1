@@ -17,7 +17,7 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const client = FeedService.getFeedsUserClient(uid);
+    const client = FeedService.getFeedsClient();
     const notificationResult = await NotificationsService.listNotificationWindow(client, uid, request.limit, request.cursor);
     const profileData = await ProfileService.getMultipleProfiles(notificationResult.payloads.map((notification) => notification.sender).filter((sender) => sender.length > 0));
 
@@ -50,7 +50,7 @@ export namespace NotificationEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const client = FeedService.getFeedsUserClient(uid);
+    const client = FeedService.getFeedsClient();
     await NotificationsService.markAllNotificationsReadAndSeen(client, uid);
 
     return buildEndpointResponse(context, {

@@ -74,6 +74,7 @@ export namespace FeedService {
     }
 
     const userTimelineFeed = client.feed("timeline", userId);
+    
     // lets add 'promoted' for now so all users get promotions somewhere in their timeline as well
     const additionalTags = [TagsService.RestrictedTagKey.promoted, ...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
 
@@ -212,7 +213,7 @@ export namespace FeedService {
       verb: ActivityActionVerb.Share,
       object: activityId,
       foreign_id: activityId,
-      time: createTime,
+      time: createTime ?? new Date().toISOString(),
     };
     
     return senderUserFeed.addActivity(getStreamActivity);

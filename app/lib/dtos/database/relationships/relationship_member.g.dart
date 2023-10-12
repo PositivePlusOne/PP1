@@ -14,6 +14,7 @@ _$RelationshipMemberImpl _$$RelationshipMemberImplFromJson(
       hasFollowed: json['hasFollowed'] as bool? ?? false,
       hasHidden: json['hasHidden'] as bool? ?? false,
       hasMuted: json['hasMuted'] as bool? ?? false,
+      hasManaged: json['hasManaged'] as bool? ?? false,
       memberId: json['memberId'] as String? ?? '',
     );
 
@@ -25,5 +26,6 @@ Map<String, dynamic> _$$RelationshipMemberImplToJson(
       'hasFollowed': instance.hasFollowed,
       'hasHidden': instance.hasHidden,
       'hasMuted': instance.hasMuted,
+      'hasManaged': instance.hasManaged,
       'memberId': instance.memberId,
     };

@@ -34,6 +34,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/state/positive_community_feed_state.dart';
 
 part 'sharing_controller.freezed.dart';
 part 'sharing_controller.g.dart';
@@ -124,7 +125,8 @@ class SharingController extends _$SharingController implements ISharingControlle
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
-    final bool hasConnections = communitiesController.state.connectedProfileIds.isNotEmpty;
+    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, currentProfile: postOptions?.currentProfile);
+    final bool hasConnections = feedState.pagingController.value.itemList?.isNotEmpty == true;
     final bool hasValidProfile = profileController.state.currentProfile != null;
 
     return [

@@ -1,6 +1,6 @@
 // Package imports:
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/fl_meta.dart';

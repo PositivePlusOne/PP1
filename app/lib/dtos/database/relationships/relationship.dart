@@ -21,6 +21,7 @@ class Relationship with _$Relationship {
     @Default(false) bool following,
     @Default(false) bool hidden,
     @Default(false) bool muted,
+    @Default(false) bool managed,
   }) = _Relationship;
 
   factory Relationship.empty(List<String> members) {

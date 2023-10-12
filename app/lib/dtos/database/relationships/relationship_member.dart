@@ -12,6 +12,7 @@ class RelationshipMember with _$RelationshipMember {
     @Default(false) bool hasFollowed,
     @Default(false) bool hasHidden,
     @Default(false) bool hasMuted,
+    @Default(false) bool hasManaged,
     @Default('') String memberId,
   }) = _RelationshipMember;
 
@@ -23,6 +24,7 @@ class RelationshipMember with _$RelationshipMember {
         hasBlocked: false,
         hasHidden: false,
         hasMuted: false,
+        hasManaged: false,
         memberId: id,
       );
 

@@ -106,6 +106,11 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
 
+    const profile = await ProfileService.getProfile(uid) as ProfileJSON;
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "Profile not found");
+    }
+
     const isRepost = activity.generalConfiguration?.type === "repost";
     if (isRepost) {
       throw new functions.https.HttpsError("invalid-argument", "Cannot share a repost");
@@ -123,6 +128,7 @@ export namespace PostEndpoints {
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     const activityRequest = {
+      searchDescription: ActivitiesService.generateFlamelinkDescription(activity, profile),
       publisherInformation: {
         publisherId: uid,
         originFeed: `${FeedName.User}:${uid}`,
@@ -227,6 +233,19 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
+    const publisherProfile = await ProfileService.getProfile(uid) as ProfileJSON;
+    if (!publisherProfile) {
+      throw new functions.https.HttpsError("not-found", "Profile not found");
+    }
+
+    let promotion: any;
+    if (promotionKey) {
+      promotion = await ActivitiesService.getPromotion(promotionKey);
+      if (!promotion) {
+        throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
+      }
+    }
+
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
@@ -261,6 +280,9 @@ export namespace PostEndpoints {
       media: media,
     } as ActivityJSON;
 
+    // Add a search description to the activity so that it can be found in flamelink
+    activityRequest.searchDescription = ActivitiesService.generateFlamelinkDescription(activityRequest, publisherProfile);
+
     const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
 
@@ -269,7 +291,7 @@ export namespace PostEndpoints {
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [userActivity, ...tagObjects],
+      data: [userActivity, ...tagObjects, promotion],
     });
   });
 
@@ -294,8 +316,15 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
     }
 
+    // Remove all tags and the promotion key so that the activity can correctly sync its feeds
+    activity.enrichmentConfiguration ??= {};
+    activity.enrichmentConfiguration.tags = [];
+    activity.enrichmentConfiguration.promotionKey = "";
+
+    const streamClient = FeedService.getFeedsClient();
+    
     await ActivitiesService.updateTagFeedsForActivity(activity);
-    await ActivitiesService.removeActivityFromFeed("user", uid, activityId);
+    await ActivitiesService.removeActivityFromFeed("user", uid, activityId, streamClient);
 
     await DataService.deleteDocument({
       schemaKey: "activities",
@@ -350,6 +379,14 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
     }
 
+    let promotion: any;
+    if (promotionKey) {
+      promotion = await ActivitiesService.getPromotion(promotionKey);
+      if (!promotion) {
+        throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
+      }
+    }
+
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
     const hasContentOrMedia = content || media.length > 0 || userTags.length > 0 || activity?.repostConfiguration?.targetActivityId;
     if (!hasContentOrMedia) {
@@ -365,9 +402,13 @@ export namespace PostEndpoints {
     if (validatedTags) {
       activity.enrichmentConfiguration!.tags = validatedTags;
     }
+
     if (promotionKey) {
       // the promotion key goes in the enrichment when there is one
       activity.enrichmentConfiguration!.promotionKey = promotionKey;
+    } else {
+      // otherwise we remove it
+      activity.enrichmentConfiguration!.promotionKey = "";
     }
 
     // Update remaining fields
@@ -403,7 +444,7 @@ export namespace PostEndpoints {
     functions.logger.info("Updated user activity", { feedActivity: activity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [activity, ...tagObjects],
+      data: [activity, ...tagObjects, promotion],
     });
   });
 }

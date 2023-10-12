@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { v1 as uuidv1 } from "uuid";
 
-import { DefaultGenerics, ForeignIDTimes, NewActivity } from "getstream";
+import { DefaultGenerics, ForeignIDTimes, NewActivity, StreamClient } from "getstream";
 import { Activity, ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
@@ -11,6 +11,8 @@ import { FeedName } from "../constants/default_feeds";
 import { FeedEntry } from "../dto/stream";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
+import { ProfileJSON } from "../dto/profile";
+import { PromotionJSON } from "../dto/promotions";
 
 export namespace ActivitiesService {
   /**
@@ -104,12 +106,11 @@ export namespace ActivitiesService {
     });
 
     const activityObjectForeignId = uuidv1();
-
-    const feedClient = FeedService.getFeedsUserClient(userID);
+    const feedClient = FeedService.getFeedsClient();
     const feed = feedClient.feed(feedName, userID);
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
-      actor: feedClient.currentUser!,
+      actor: userID,
       verb: ActivityActionVerb.Post,
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
@@ -125,6 +126,18 @@ export namespace ActivitiesService {
     }) as ActivityJSON;
     
     return activityResponse;
+  }
+
+  /**
+   * Gets a promotion.
+   * @param {string} promotionKey the key of the promotion.
+   * @return {Promise<boolean>} a promise that resolves to true if the promotion exists.
+   */
+  export async function getPromotion(promotionKey: string): Promise<PromotionJSON> {
+    return await DataService.getDocument({
+      schemaKey: "promotions",
+      entryId: promotionKey,
+    });
   }
 
   export async function getForeignIdTimeForActivity(activity: ActivityJSON): Promise<ForeignIDTimes> {
@@ -146,8 +159,19 @@ export namespace ActivitiesService {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
     }
 
-    // Get a list of all places the activity is currently posted
     const feedsClient = FeedService.getFeedsClient();
+
+    const publisherFeedStr = activity.publisherInformation?.originFeed ?? "";
+    const reposterFeedStr = activity.repostConfiguration?.targetActivityOriginFeed ?? "";
+    
+    // Split each feed into its components
+    let originFeed = StreamHelpers.getFeedFromOrigin(publisherFeedStr);
+    if (reposterFeedStr) {
+      const reposterFeed = StreamHelpers.getFeedFromOrigin(reposterFeedStr);
+      originFeed = reposterFeed;
+    }
+
+    // Get a list of all places the activity is currently posted
     const foreignTimes = await getForeignIdTimeForActivity(activity);
     const activitiesQuery = await feedsClient.getActivities({
       foreignIDTimes: [foreignTimes],
@@ -160,7 +184,9 @@ export namespace ActivitiesService {
 
     // Get a list of all the tags the activity should be posted to
     const isPublic = activity.securityConfiguration?.viewMode === "public";
-    const expectedTags = isPublic ? activity.enrichmentConfiguration?.tags ?? [] : [];
+
+    // Convert to set
+    const expectedTags = new Set<string>(isPublic ? activity.enrichmentConfiguration?.tags ?? [] : []);
 
     // Get a list of all the tags the activity is currently posted to
     const currentTags = [];
@@ -193,13 +219,13 @@ export namespace ActivitiesService {
     // Loop through all the old tags and remove the activity from the feed
     const tagUpdatePromises = [];
     for (const tag of currentTags) {
-      if (!expectedTags.includes(tag)) {
+      if (!expectedTags.has(tag)) {
         functions.logger.info("Removing activity from tag feed", {
           activityId,
           tag,
         });
 
-        tagUpdatePromises.push(removeActivityFromFeed(FeedName.Tags, tag, activityId));
+        tagUpdatePromises.push(removeActivityFromFeed(FeedName.Tags, tag, activityId, feedsClient));
       }
     }
 
@@ -211,7 +237,7 @@ export namespace ActivitiesService {
           tag,
         });
 
-        tagUpdatePromises.push(postActivityToFeed(FeedName.Tags, tag, activity));
+        tagUpdatePromises.push(postActivityToFeed(FeedName.Tags, tag, activity, feedsClient, originFeed));
       }
     }
 
@@ -230,20 +256,22 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is posted.
    */
-  export async function postActivityToFeed(feedName: string, actorId: string, activity: ActivityJSON): Promise<void> {
-    functions.logger.info("Unposting activity", {
+  export async function postActivityToFeed(feedName: string, actorId: string, activity: ActivityJSON, client: StreamClient<DefaultGenerics>, originFeed?: string): Promise<void> {
+    functions.logger.info("Posting activity", {
       feedName,
       actorId,
+      activity,
+      originFeed,
     });
 
     const activityId = activity?._fl_meta_?.fl_id ?? "";
-    if (!activityId) {
-      throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
+    if (!activityId || !actorId || !feedName || !client) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity, actor or feed name is missing");
     }
 
-    const feed = FeedService.getFeedsClient().feed(feedName, actorId);
-
+    const feed = client.feed(feedName, actorId);
     const getStreamActivity: NewActivity<DefaultGenerics> = {
+      origin: originFeed,
       actor: actorId,
       verb: ActivityActionVerb.Post,
       object: activityId,
@@ -252,7 +280,6 @@ export namespace ActivitiesService {
     };
 
     await feed.addActivity(getStreamActivity);
-    
     await FeedStatisticsService.updateCountForFeedStatistics(feedName, actorId, "total_posts", 1);
   }
 
@@ -263,26 +290,40 @@ export namespace ActivitiesService {
    * @param {any} activityData the activity data.
    * @return {Promise<void>} a promise that resolves when the activity is unposted.
    */
-  export async function removeActivityFromFeed(feedName: any, actorId: any, activityId: string): Promise<void> {
+  export async function removeActivityFromFeed(feedName: any, actorId: any, activityId: string, client: StreamClient<DefaultGenerics>): Promise<void> {
     functions.logger.info("Unposting activity", {
       feedName,
       actorId,
       activityId,
     });
 
-    if (!activityId || !actorId || !feedName) {
-      functions.logger.error("Invalid arguments for unposting activity", {
-        feedName,
-        actorId,
-        activityId,
-      });
-
-      return Promise.resolve();
+    if (!activityId || !actorId || !feedName || !client) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity, actor or feed name is missing");
     }
 
-    const feed = FeedService.getFeedsClient().feed(feedName, actorId);
+    const feed = client.feed(feedName, actorId);
     await feed.removeActivity({ foreign_id: activityId });
 
     await FeedStatisticsService.updateCountForFeedStatistics(feedName, actorId, "total_posts", -1);
+  }
+
+  /**
+   * Generates a description for an activity.
+   * This is so that it can be searched for in Flamelink.
+   * @param {ActivityJSON} activity the activity to generate the description for.
+   * @return {string} the description.
+   */
+  export function generateFlamelinkDescription(activity: ActivityJSON, publisher: ProfileJSON): string {
+    const mediaCount = activity.media?.length ?? 0;
+    let trimmedDescription = activity.generalConfiguration?.content?.substring(0, 50) ?? "";
+    const publisherDisplayName = publisher.displayName ?? "";
+
+    if (trimmedDescription.length == 0 && mediaCount > 0) {
+      trimmedDescription = `Uploaded ${mediaCount} media`;
+    } else if (trimmedDescription.length == 0 && mediaCount == 0) {
+      trimmedDescription = "Posted an activity";
+    }
+
+    return `${publisherDisplayName} - ${trimmedDescription}`;
   }
 }
