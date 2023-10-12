@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -228,7 +229,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFeedbackSubmitted');
 
@@ -265,6 +265,31 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       );
     } catch (ex) {
       logger.e('Failed to send feedback. $ex');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onHidePostsRequested({
+    required Profile? targetProfile,
+  }) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onHidePostsRequested');
+
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    if (targetProfileId.isEmpty) {
+      logger.e('onHidePostsRequested: targetProfileId is empty');
+      return;
+    }
+
+    try {
+      state = state.copyWith(isBusy: true);
+      await relationshipController.hideRelationship(targetProfileId);
+      await appRouter.pop();
+      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have hidden ${targetProfile?.displayName.asHandle}\'s posts'));
     } finally {
       state = state.copyWith(isBusy: false);
     }

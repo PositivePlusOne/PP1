@@ -195,16 +195,24 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
   }
 
+  String getCorrectPublisherId(Activity? activity) {
+    final String publisherId = activity?.publisherInformation?.publisherId ?? '';
+    final String reposterId = activity?.repostConfiguration?.targetActivityPublisherId ?? '';
+    return reposterId.isNotEmpty ? reposterId : publisherId;
+  }
+
   Widget buildSeparator(BuildContext context, int index) {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
     final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
+    final String targetProfileId = getCorrectPublisherId(activity);
+
+    if (activityId.isEmpty || currentProfileId.isEmpty || targetProfileId.isEmpty) {
       return const SizedBox(height: kPaddingLarge);
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final String relationshipId = [activityId, currentProfileId].asGUID;
+    final String relationshipId = [targetProfileId, currentProfileId].asGUID;
     final Relationship? relationship = cacheController.get(relationshipId);
 
     // Remove the separator if we can't display the activity
@@ -217,17 +225,19 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   Widget buildItem(BuildContext context, Activity item, int index) {
-    final Activity? tempActivity = feedState.pagingController.itemList?.elementAtOrNull(index);
-    final String activityId = tempActivity?.flMeta?.id ?? '';
+    final String activityId = item.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    if (activityId.isEmpty || currentProfileId.isEmpty) {
+    final String publisherId = item.publisherInformation?.publisherId ?? '';
+    final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
+
+    if (activityId.isEmpty || currentProfileId.isEmpty || publisherId.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    final String relationshipId = [activityId, currentProfileId].asGUID;
-    final String reposterRelationshipId = [tempActivity?.repostConfiguration?.targetActivityPublisherId ?? '', currentProfile?.flMeta?.id ?? ''].asGUID;
+    final String relationshipId = [publisherId, currentProfileId].asGUID;
+    final String reposterRelationshipId = [reposterId, currentProfileId].asGUID;
 
-    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [tempActivity]).toList();
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [item]).toList();
 
     return PositiveCacheWidget(
       currentProfile: currentProfile,
@@ -268,6 +278,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
+    }
+
+    if (reposterRelationship != null) {
+      final bool canDisplayRepost = activity?.canDisplayOnFeed(reposterProfile, reposterRelationship) ?? false;
+      if (!canDisplayRepost) {
+        return const SizedBox.shrink();
+      }
     }
 
     final String activityReactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);

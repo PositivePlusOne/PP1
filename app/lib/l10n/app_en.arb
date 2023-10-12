@@ -605,6 +605,10 @@
     "shared_profile_report_modal_tooltip": "Comment",
     "shared_profile_report_modal_action": "Report {displayName}",
 
+    "shared_profile_hide_modal_title": "Hide Posts From {displayName}",
+    "shared_profile_hide_body": "You can hide posts from {displayName} from your posts feed if you are not interested in their content.",
+    "shared_profile_hide_action": "Hide Posts from {displayName}",
+
     "shared_ui_posts":"Posts",
     "shared_ui_gallery":"Gallery",
     "shared_hashtag": "#",

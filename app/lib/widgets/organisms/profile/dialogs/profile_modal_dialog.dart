@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/dialogs/profile_hide_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -158,9 +159,22 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} $targetDisplayNameHandle'));
           break;
         case ProfileModalDialogOptionType.hidePosts:
-          relationshipStates.contains(RelationshipState.sourceHidden) ? await relationshipController.unhideRelationship(targetProfileId) : await relationshipController.hideRelationship(targetProfileId);
-          await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} $targetDisplayNameHandle\'s posts'));
+          if (!relationshipStates.contains(RelationshipState.sourceHidden)) {
+            await appRouter.pop();
+            await PositiveDialog.show(
+              context: context,
+              useSafeArea: false,
+              title: localizations.shared_profile_hide_modal_title(targetDisplayNameHandle),
+              child: ProfileHideDialog(
+                targetProfileId: targetProfileId,
+                currentProfileId: currentProfileId,
+              ),
+            );
+          } else {
+            await relationshipController.unhideRelationship(targetProfileId);
+            await appRouter.pop();
+            ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceHidden) ? 'You have unhidden' : 'You have hidden'} $targetDisplayNameHandle\'s posts'));
+          }
           break;
         case ProfileModalDialogOptionType.report:
           await appRouter.pop();
