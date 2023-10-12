@@ -108,8 +108,6 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
         ringColor = widget.profile!.accentColor.toSafeColorFromHex(defaultColor: Colors.transparent);
         setStateIfMounted();
       });
-
-      return;
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -136,7 +134,7 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
 
     final Media? media = widget.hasOverrideImage ? Media.fromImageUrl(widget.imageOverridePath) : widget.profile?.profileImage;
     if (media == null) {
-      actualRingColor = colours.colorGray2;
+      actualRingColor = colours.yellow;
     }
 
     final Widget child = Stack(
@@ -157,9 +155,18 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
         if (widget.icon != null) ...<Widget>[
           Positioned.fill(
             child: Icon(
-              size: kIconSmall,
+              size: kIconMedium,
               widget.icon,
               color: colours.white,
+            ),
+          ),
+        ],
+        if (media == null && widget.icon == null) ...<Widget>[
+          Positioned.fill(
+            child: Icon(
+              size: kIconMedium,
+              Icons.person,
+              color: colours.yellow,
             ),
           ),
         ],
@@ -173,6 +180,7 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
         ringColor: actualRingColor,
         borderThickness: widget.borderThickness,
         size: widget.size,
+        backgroundColor: colours.white,
         child: child,
         // child: hasValidImage ? child : errorWidget,
       ),

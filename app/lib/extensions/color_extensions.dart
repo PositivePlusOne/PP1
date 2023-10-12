@@ -24,12 +24,12 @@ extension ColorStringExtensions on String {
   }
 
   Color toSafeColorFromHex({
-    Color defaultColor = Colors.black,
+    Color? defaultColor,
   }) {
     try {
       return toColorFromHex();
     } catch (e) {
-      return defaultColor;
+      return defaultColor ?? providerContainer.read(designControllerProvider.select((value) => value.colors)).yellow;
     }
   }
 }
