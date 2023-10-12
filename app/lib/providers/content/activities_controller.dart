@@ -166,7 +166,10 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> deleteActivity(Activity activity) async {
+  Future<void> deleteActivity({
+    required Activity activity,
+    required Profile? currentProfile,
+  }) async {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final String activityId = activity.flMeta?.id ?? '';
@@ -178,7 +181,7 @@ class ActivitiesController extends _$ActivitiesController {
     //* We can keep the activity in the cache for now, as this will prevent the UI from breaking
     //* cacheController.remove(activityId);
     //* But, lets remove it from the feed state
-    final List<TargetFeed> feeds = buildTargetFeedsForActivity(activity);
+    final List<TargetFeed> feeds = buildTargetFeedsForActivity(activity: activity, currentProfile: currentProfile);
     final List<String> cacheKeys = feeds.map((e) => PositiveFeedState.buildFeedCacheKey(e)).toList();
 
     for (final String cacheKey in cacheKeys) {

@@ -19,7 +19,7 @@ export namespace EnrichmentEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
     }
 
-    const feedsClient = FeedService.getFeedsUserClient(uid);
+    const feedsClient = FeedService.getFeedsClient();
     const requestedTags = request.data.tags as string[];
 
     if (!requestedTags || requestedTags.length === 0) {

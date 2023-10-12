@@ -6,21 +6,29 @@ export const adminQuickActionsSchemaKey = 'adminQuickActions';
 export interface AdminQuickActionDataJSON {
     target?: string;
     profiles?: DocumentReference[];
+    activities?: DocumentReference[];
+    promotions?: DocumentReference[];
 }
 
 export class AdminQuickActionData {
     target: string;
     profiles: DocumentReference[];
+    activities: DocumentReference[];
+    promotions: DocumentReference[];
 
     constructor(data: AdminQuickActionDataJSON) {
         this.target = data.target || '';
         this.profiles = data.profiles || [];
+        this.activities = data.activities || [];
+        this.promotions = data.promotions || [];
     }
 
     toJSON(): AdminQuickActionDataJSON {
         return {
             target: this.target,
             profiles: this.profiles,
+            activities: this.activities,
+            promotions: this.promotions,
         };
     }
 }

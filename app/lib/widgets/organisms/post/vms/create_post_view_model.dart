@@ -314,10 +314,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     if (isPromotedPost) {
       // there is at least one tag that shows this is a promoted activity, remove them all
       newTags.removeWhere((element) => TagHelpers.isPromoted(element));
+      promotionKeyTextController.text = '';
     } else {
       // this is not a promoted activity, add the required tags
       newTags.addAll(TagHelpers.createPromotedTags(userId: userId));
     }
+
     // and put these new tags back into the state
     state = state.copyWith(tags: newTags);
   }

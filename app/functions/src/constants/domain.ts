@@ -19,3 +19,5 @@ export const FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE = {
   maxInstances: 1,
   memory: "128MB",
 } as functions.RuntimeOptions;
+
+export const GENERIC_API_TIMEOUT = 10000;

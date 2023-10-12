@@ -5,6 +5,7 @@ import { Channel, DefaultGenerics, StreamChat } from "stream-chat";
 import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
 import { StringHelpers } from "../helpers/string_helpers";
 import { ConversationRole } from "./types/conversation_role";
+import { GENERIC_API_TIMEOUT } from "../constants/domain";
 
 export namespace ConversationService {
   /**
@@ -21,7 +22,10 @@ export namespace ConversationService {
       throw new Error("Missing Stream API key or secret");
     }
 
-    const streamInstance = StreamChat.getInstance(apiKey, apiSecret);
+    const streamInstance = StreamChat.getInstance(apiKey, apiSecret, {
+      timeout: GENERIC_API_TIMEOUT,
+    });
+
     streamInstance.updateAppSettings({
       enforce_unique_usernames: "no",
     });

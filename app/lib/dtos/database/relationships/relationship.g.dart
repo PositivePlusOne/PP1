@@ -25,6 +25,7 @@ _$RelationshipImpl _$$RelationshipImplFromJson(Map<String, dynamic> json) =>
       following: json['following'] as bool? ?? false,
       hidden: json['hidden'] as bool? ?? false,
       muted: json['muted'] as bool? ?? false,
+      managed: json['managed'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$RelationshipImplToJson(_$RelationshipImpl instance) =>
@@ -38,4 +39,5 @@ Map<String, dynamic> _$$RelationshipImplToJson(_$RelationshipImpl instance) =>
       'following': instance.following,
       'hidden': instance.hidden,
       'muted': instance.muted,
+      'managed': instance.managed,
     };

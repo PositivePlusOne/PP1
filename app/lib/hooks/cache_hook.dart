@@ -18,7 +18,7 @@ void useCacheHook({
   bool matchOnContains = false, // If true, will match on contains instead of equals; for example on a relationship update
 }) {
   return use(CacheHook(
-    cacheKeys: keys,
+    cacheKeys: keys.where((element) => element.isNotEmpty).toList(),
     matchOnContains: matchOnContains,
   ));
 }

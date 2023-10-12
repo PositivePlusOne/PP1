@@ -2,20 +2,23 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -57,23 +60,34 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final User? currentUser = firebaseAuth.currentUser;
+
+    if (currentUser == null) {
+      logger.d('performProfileChecks() - currentUser is null');
+      return;
+    }
+
+    final Profile? currentProfile = cacheController.get(profileController.currentProfileId);
+    if (currentProfile == null) {
+      logger.d('performProfileChecks() - currentProfile is null');
+      return;
+    }
 
     if (state.hasDoneInitialChecks) {
       logger.d('performProfileChecks() - state.hasDoneInitialChecks is true');
       return;
     }
 
-    if (profileController.currentProfileId == null) {
-      logger.d('onRefresh() - profileController.currentProfileId is null');
-      return;
-    }
-
     logger.d('performProfileChecks()');
     try {
-      await profileController.updatePhoneNumber();
-      await profileController.updateEmailAddress();
-      await profileController.updateFirebaseMessagingToken();
-      await notificationsController.setupPushNotificationListeners();
+      await Future.wait([
+        profileController.updateEmailAddress(),
+        profileController.updateFirebaseMessagingToken(),
+        notificationsController.setupPushNotificationListeners(),
+        CommunitiesController.loadFirstWindowForAccountIfNeeded(currentProfile: currentProfile, currentUser: currentUser),
+      ]);
     } finally {
       state = state.copyWith(hasDoneInitialChecks: true);
     }

@@ -67,6 +67,7 @@ export namespace NotificationsService {
       actor: uid,
       object: notification,
       foreign_id: notification.id,
+      time: StreamHelpers.getCurrentTimestamp(),
     });
 
     await FeedStatisticsService.updateCountForFeedStatistics("notification", uid, "total_posts", 1);

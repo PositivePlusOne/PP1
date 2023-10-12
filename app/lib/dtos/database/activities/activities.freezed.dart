@@ -22,6 +22,7 @@ Activity _$ActivityFromJson(Map<String, dynamic> json) {
 mixin _$Activity {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
+  String get searchDescription => throw _privateConstructorUsedError;
   ActivityGeneralConfiguration? get generalConfiguration =>
       throw _privateConstructorUsedError;
   ActivityRepostConfiguration? get repostConfiguration =>
@@ -52,6 +53,7 @@ abstract class $ActivityCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      String searchDescription,
       ActivityGeneralConfiguration? generalConfiguration,
       ActivityRepostConfiguration? repostConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
@@ -85,6 +87,7 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
   @override
   $Res call({
     Object? flMeta = freezed,
+    Object? searchDescription = null,
     Object? generalConfiguration = freezed,
     Object? repostConfiguration = freezed,
     Object? securityConfiguration = freezed,
@@ -99,6 +102,10 @@ class _$ActivityCopyWithImpl<$Res, $Val extends Activity>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
+      searchDescription: null == searchDescription
+          ? _value.searchDescription
+          : searchDescription // ignore: cast_nullable_to_non_nullable
+              as String,
       generalConfiguration: freezed == generalConfiguration
           ? _value.generalConfiguration
           : generalConfiguration // ignore: cast_nullable_to_non_nullable
@@ -248,6 +255,7 @@ abstract class _$$ActivityImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
+      String searchDescription,
       ActivityGeneralConfiguration? generalConfiguration,
       ActivityRepostConfiguration? repostConfiguration,
       ActivitySecurityConfiguration? securityConfiguration,
@@ -287,6 +295,7 @@ class __$$ActivityImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? flMeta = freezed,
+    Object? searchDescription = null,
     Object? generalConfiguration = freezed,
     Object? repostConfiguration = freezed,
     Object? securityConfiguration = freezed,
@@ -301,6 +310,10 @@ class __$$ActivityImplCopyWithImpl<$Res>
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
               as FlMeta?,
+      searchDescription: null == searchDescription
+          ? _value.searchDescription
+          : searchDescription // ignore: cast_nullable_to_non_nullable
+              as String,
       generalConfiguration: freezed == generalConfiguration
           ? _value.generalConfiguration
           : generalConfiguration // ignore: cast_nullable_to_non_nullable
@@ -342,6 +355,7 @@ class __$$ActivityImplCopyWithImpl<$Res>
 class _$ActivityImpl implements _Activity {
   const _$ActivityImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
+      this.searchDescription = '',
       this.generalConfiguration,
       this.repostConfiguration,
       this.securityConfiguration,
@@ -359,6 +373,9 @@ class _$ActivityImpl implements _Activity {
   @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
+  @override
+  @JsonKey()
+  final String searchDescription;
   @override
   final ActivityGeneralConfiguration? generalConfiguration;
   @override
@@ -384,7 +401,7 @@ class _$ActivityImpl implements _Activity {
 
   @override
   String toString() {
-    return 'Activity(flMeta: $flMeta, generalConfiguration: $generalConfiguration, repostConfiguration: $repostConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
+    return 'Activity(flMeta: $flMeta, searchDescription: $searchDescription, generalConfiguration: $generalConfiguration, repostConfiguration: $repostConfiguration, securityConfiguration: $securityConfiguration, eventConfiguration: $eventConfiguration, pricingInformation: $pricingInformation, publisherInformation: $publisherInformation, enrichmentConfiguration: $enrichmentConfiguration, media: $media)';
   }
 
   @override
@@ -393,6 +410,8 @@ class _$ActivityImpl implements _Activity {
         (other.runtimeType == runtimeType &&
             other is _$ActivityImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
+            (identical(other.searchDescription, searchDescription) ||
+                other.searchDescription == searchDescription) &&
             (identical(other.generalConfiguration, generalConfiguration) ||
                 other.generalConfiguration == generalConfiguration) &&
             (identical(other.repostConfiguration, repostConfiguration) ||
@@ -416,6 +435,7 @@ class _$ActivityImpl implements _Activity {
   int get hashCode => Object.hash(
       runtimeType,
       flMeta,
+      searchDescription,
       generalConfiguration,
       repostConfiguration,
       securityConfiguration,
@@ -442,6 +462,7 @@ class _$ActivityImpl implements _Activity {
 abstract class _Activity implements Activity {
   const factory _Activity(
           {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          final String searchDescription,
           final ActivityGeneralConfiguration? generalConfiguration,
           final ActivityRepostConfiguration? repostConfiguration,
           final ActivitySecurityConfiguration? securityConfiguration,
@@ -458,6 +479,8 @@ abstract class _Activity implements Activity {
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
+  @override
+  String get searchDescription;
   @override
   ActivityGeneralConfiguration? get generalConfiguration;
   @override

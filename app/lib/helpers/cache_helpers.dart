@@ -157,21 +157,27 @@ List<String> buildExpectedCacheKeysForProfile(Profile? currentProfile, Profile t
   return cacheKeys;
 }
 
-List<TargetFeed> buildTargetFeedsForActivity(Activity activity) {
+List<TargetFeed> buildTargetFeedsForActivity({
+  required Activity activity,
+  required Profile? currentProfile,
+}) {
   final List<TargetFeed> targetFeeds = [];
 
-  final TargetFeed activityTargetFeed = activity.targetFeed;
-  final TargetFeed repostTargetFeed = activity.targetFeed;
+  final List<TargetFeed> activityTargetFeeds = activity.getTargetFeeds(currentProfile: currentProfile);
+  final List<TargetFeed> repostTargetFeeds = activity.getTargetFeeds(currentProfile: currentProfile);
   final List<TargetFeed> tagTargetFeeds = activity.tagTargetFeeds;
 
   // Add the activity target feed
-  if (activityTargetFeed.targetSlug.isNotEmpty && activityTargetFeed.targetUserId.isNotEmpty) {
-    targetFeeds.add(activityTargetFeed);
+  for (final TargetFeed activityTargetFeed in activityTargetFeeds) {
+    if (activityTargetFeed.targetSlug.isNotEmpty && activityTargetFeed.targetUserId.isNotEmpty) {
+      targetFeeds.add(activityTargetFeed);
+    }
   }
 
-  // Add the repost target feed
-  if (repostTargetFeed.targetSlug.isNotEmpty && repostTargetFeed.targetUserId.isNotEmpty) {
-    targetFeeds.add(repostTargetFeed);
+  for (final TargetFeed repostTargetFeed in repostTargetFeeds) {
+    if (repostTargetFeed.targetSlug.isNotEmpty && repostTargetFeed.targetUserId.isNotEmpty) {
+      targetFeeds.add(repostTargetFeed);
+    }
   }
 
   // Add the tag target feeds
@@ -194,7 +200,7 @@ List<String> buildExpectedCacheKeysForActivity(Profile? currentProfile, Activity
   final String repostedActivityId = activity.repostConfiguration?.targetActivityId ?? '';
   final String repostedPublisherId = activity.repostConfiguration?.targetActivityPublisherId ?? '';
 
-  final List<TargetFeed> targetFeeds = buildTargetFeedsForActivity(activity);
+  final List<TargetFeed> targetFeeds = buildTargetFeedsForActivity(activity: activity, currentProfile: currentProfile);
 
   // Generate the activity key
   if (activityId.isNotEmpty) {

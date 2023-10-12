@@ -47,8 +47,29 @@ extension ActivityExt on Activity {
     return generalConfiguration?.content.isNotEmpty == true ? generalConfiguration!.content : '';
   }
 
-  TargetFeed get targetFeed {
+  TargetFeed get primaryFeed {
+    if (repostConfiguration?.targetActivityOriginFeed.isNotEmpty == true) {
+      return TargetFeed.fromOrigin(repostConfiguration!.targetActivityOriginFeed);
+    }
+
     return TargetFeed.fromOrigin(publisherInformation?.originFeed ?? '');
+  }
+
+  List<TargetFeed> getTargetFeeds({
+    required Profile? currentProfile,
+  }) {
+    final List<TargetFeed> targetFeeds = <TargetFeed>[];
+    final TargetFeed feed = TargetFeed.fromOrigin(publisherInformation?.originFeed ?? '');
+    targetFeeds.add(feed);
+
+    // Check if we should include a timeline
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (currentProfileId.isNotEmpty) {
+      final TargetFeed timelineFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
+      targetFeeds.add(timelineFeed);
+    }
+
+    return targetFeeds;
   }
 
   TargetFeed get repostTargetFeed {
@@ -271,7 +292,7 @@ extension ActivityExt on Activity {
         barrierDismissible: true,
         child: PostOptionsDialog(
           onEditPostSelected: () => onPostEdited(),
-          onDeletePostSelected: () => onPostDeleted(context: context),
+          onDeletePostSelected: () => onPostDeleted(context: context, currentProfile: currentProfile),
         ),
       );
 
@@ -301,6 +322,7 @@ extension ActivityExt on Activity {
 
   Future<void> onPostDeleted({
     required BuildContext context,
+    required Profile? currentProfile,
   }) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = providerContainer.read(appRouterProvider);
@@ -313,6 +335,7 @@ extension ActivityExt on Activity {
       child: PostDeleteConfirmDialog(
         onDeletePostConfirmed: () => onPostDeleteConfirmed(
           context: context,
+          currentProfile: currentProfile,
         ),
       ),
     );
@@ -320,6 +343,7 @@ extension ActivityExt on Activity {
 
   Future<void> onPostDeleteConfirmed({
     required BuildContext context,
+    required Profile? currentProfile,
   }) async {
     final ActivitiesController activityController = providerContainer.read(activitiesControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
@@ -328,7 +352,7 @@ extension ActivityExt on Activity {
     final Logger logger = providerContainer.read(loggerProvider);
 
     try {
-      await activityController.deleteActivity(this);
+      await activityController.deleteActivity(activity: this, currentProfile: currentProfile);
     } catch (e) {
       logger.e("Error deleting activity: $e");
 
@@ -531,7 +555,7 @@ extension ActivityExt on Activity {
     final String activityId = flMeta?.id ?? '';
     final PostRoute postRoute = PostRoute(
       activityId: activityId,
-      feed: targetFeed,
+      feed: primaryFeed,
     );
 
     // Check if we are already on the post page.

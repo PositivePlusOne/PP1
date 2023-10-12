@@ -61,7 +61,7 @@ export namespace ReactionEndpoints {
             }
         }
 
-        const streamClient = FeedService.getFeedsUserClient(uid);
+        const streamClient = FeedService.getFeedsClient();
 
         functions.logger.info("Adding reaction", { reactionJSON });
         const reaction = await ReactionService.addReaction(streamClient, reactionJSON);
@@ -125,7 +125,7 @@ export namespace ReactionEndpoints {
         }
 
         functions.logger.info("Deleting reaction", { reactionId });
-        const streamClient = FeedService.getFeedsUserClient(uid);
+        const streamClient = FeedService.getFeedsClient();
         await ReactionService.deleteReaction(streamClient, reaction);
 
         functions.logger.info("Reaction deleted", { reactionId });

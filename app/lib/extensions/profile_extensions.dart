@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,10 +12,8 @@ import 'package:app/main.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
-import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
