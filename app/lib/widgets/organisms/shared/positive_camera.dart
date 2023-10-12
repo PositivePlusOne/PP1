@@ -103,11 +103,24 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   PermissionStatus? cameraPermissionStatus;
   PermissionStatus? libraryPermissionStatus;
 
+  bool isPhysicalDevice = true;
+
   bool get hasCameraPermission => cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited;
   bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
-  bool get canTakePictureOrVideo => !widget.isBusy && (!widget.useFaceDetection || hasDetectedFace);
+
+  bool get canTakePictureOrVideo {
+    if (widget.isBusy) {
+      return false;
+    }
+
+    if (widget.useFaceDetection && isPhysicalDevice) {
+      return hasDetectedFace;
+    }
+
+    return true;
+  }
 
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
@@ -132,6 +145,13 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
       if (mounted) {
         await checkLibraryPermission(request: true);
+      }
+
+      final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+      if (deviceInfo is AndroidDeviceInfo) {
+        isPhysicalDevice = deviceInfo.isPhysicalDevice;
+      } else if (deviceInfo is IosDeviceInfo) {
+        isPhysicalDevice = deviceInfo.isPhysicalDevice;
       }
 
       if (hasCameraPermission) {

@@ -1,5 +1,7 @@
 // Package imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
@@ -46,7 +48,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       //   }
 
       router.removeWhere((route) => true);
-      router.push(const RegistrationAccountSetupRoute());
+      router.push(const ProfileNameEntryRoute());
       resolver.next(false);
       return;
     }
@@ -99,15 +101,15 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    // final PositivePlace? place = currentProfile?.place;
-    // final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
-    // if (!hasLocation) {
-    //   profileFormController.resetState(FormMode.create);
-    //   router.removeWhere((route) => true);
-    //   router.push(const ProfileLocationRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    final PositivePlace? place = currentProfile?.place;
+    final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
+    if (!hasLocation) {
+      profileFormController.resetState(FormMode.create);
+      router.removeWhere((route) => true);
+      router.push(const ProfileLocationRoute());
+      resolver.next(false);
+      return;
+    }
 
     // final bool hasSetCompanySectors = currentProfile?.companySectors.isNotEmpty ?? false;
     // final bool hasCompanySectorsInState = companySectorsControllerState.options.isNotEmpty;
