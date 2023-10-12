@@ -101,15 +101,15 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    final PositivePlace? place = currentProfile?.place;
-    final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
-    if (!hasLocation) {
-      profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileLocationRoute());
-      resolver.next(false);
-      return;
-    }
+    // final PositivePlace? place = currentProfile?.place;
+    // final bool hasLocation = place != null && (place.optOut || place.placeId.isNotEmpty);
+    // if (!hasLocation) {
+    //   profileFormController.resetState(FormMode.create);
+    //   router.removeWhere((route) => true);
+    //   router.push(const ProfileLocationRoute());
+    //   resolver.next(false);
+    //   return;
+    // }
 
     // final bool hasSetCompanySectors = currentProfile?.companySectors.isNotEmpty ?? false;
     // final bool hasCompanySectorsInState = companySectorsControllerState.options.isNotEmpty;
