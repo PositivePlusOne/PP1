@@ -52,6 +52,9 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
 
   @override
   void didUpdateWidget(covariant CameraButton oldWidget) {
+    if (widget.maxCLipDuration != oldWidget.maxCLipDuration) {
+      animationController.duration = Duration(milliseconds: widget.maxCLipDuration ?? 0);
+    }
     if (widget.isLoading && !oldWidget.isLoading) {
       animationController.forward();
     }
