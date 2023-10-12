@@ -58,6 +58,8 @@ class ProfileController extends _$ProfileController {
   String? get currentUserId => ref.read(firebaseAuthProvider).currentUser?.uid;
   Profile? get currentProfile => state.currentProfile;
 
+  bool get hasMultipleProfiles => state.availableProfileIds.length > 1;
+
   Profile? get currentUserProfile {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);

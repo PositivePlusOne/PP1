@@ -1,4 +1,11 @@
 // Flutter imports:
+import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -67,30 +74,37 @@ class PositiveNotificationSnackBar extends PositiveSnackBar {
             final typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
             final textColor = handler.getForegroundColor(payload);
 
-            return Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(UniconsLine.bell, color: textColor),
-                    kPaddingSmall.asHorizontalBox,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            payload.title,
-                            style: typography.styleBold.copyWith(color: textColor),
-                          ),
-                          Text(
-                            payload.body,
-                            style: typography.styleBody.copyWith(color: textColor),
-                          ),
-                        ],
+            final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+            final bool hasMultipleProfiles = profileController.hasMultipleProfiles;
+
+            final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+            final Profile? receiverProfile = cacheController.get(payload.userId);
+            final Media? receiverProfileImage = receiverProfile?.profileImage;
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                if (hasMultipleProfiles && receiverProfileImage != null) ...<Widget>[
+                  PositiveProfileCircularIndicator(profile: receiverProfile, ringColorOverride: textColor),
+                ] else ...<Widget>[
+                  Icon(UniconsLine.bell, color: textColor),
+                ],
+                kPaddingSmall.asHorizontalBox,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        payload.title,
+                        style: typography.styleBold.copyWith(color: textColor),
                       ),
-                    ),
-                  ],
+                      buildMarkdownWidgetFromBody(
+                        payload.body,
+                        brightness: textColor.computedSystemBrightness,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             );
