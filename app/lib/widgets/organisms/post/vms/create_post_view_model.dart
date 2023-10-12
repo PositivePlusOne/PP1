@@ -58,9 +58,10 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
     required ActivityData previousActivity,
-    @Default(-1) int delayTimerCurrentSelection,
-    @Default(0) int delayTimerCurrentValue,
+    @Default(0) int delayTimerCurrentSelection,
     @Default(false) bool isDelayTimerEnabled,
+    @Default(0) int maximumClipDurationSelection,
+    @Default(false) bool isMaximumClipDurationEnabled,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
   }) = _CreatePostViewModelState;
@@ -388,8 +389,25 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   void onDelayTimerChanged(int index) {
     state = state.copyWith(
       delayTimerCurrentSelection: index,
-      delayTimerCurrentValue: delayTimerOptions[index],
     );
+  }
+
+  final List<int> maximumClipDurationOptions = [180000, 90000, 60000, 30000, 10000];
+
+  void onClipDurationChanged(int index) {
+    state = state.copyWith(
+      maximumClipDurationSelection: index,
+    );
+  }
+
+  String clipDurationString(BuildContext context, int duration) {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    if (duration >= 120000) {
+      return "${duration ~/ 60000}${localisations.page_create_post_minuets}";
+    }
+
+    return "${duration ~/ 1000}${localisations.page_create_post_seconds}";
   }
 
   void onTimerToggleRequest() {
@@ -553,7 +571,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       activeButton: PositivePostNavigationActiveButton.clip,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
       currentPostType: PostType.clip,
-      delayTimerCurrentSelection: 0,
     );
   }
 

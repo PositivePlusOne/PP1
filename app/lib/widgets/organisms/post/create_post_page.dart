@@ -97,12 +97,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onCameraVideoTaken: (video) => viewModel.onVideoTaken(context, video),
                     //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                     cameraNavigation: (_) {
-                      return SizedBox(
-                        //? designs say this should be kPaddingExtraLarge however this looks very wrong on my phone
-                        height: bottomNavigationArea + kPaddingMediumLarge,
+                      return const SizedBox(
+                        //? bottomNavigationArea + extra medium padding - the safe area as this widget includes that already
+                        height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingMedium,
                       );
                     },
-                    //? Widget found near the bottom of the screen next to the take photo button
+                    //? Widget found near the bottom of the screen to the left of the take photo button
                     leftActionWidget: state.currentPostType == PostType.image
                         ? CameraFloatingButton.postWithoutImage(
                             active: true,
@@ -115,19 +115,28 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     onTapClose: (_) => appRouter.pop(),
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
                     isVideoMode: state.currentPostType == PostType.clip,
-                    maxRecordingLength: 5000,
                     bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
                     topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
 
-                    maxDelay: state.delayTimerCurrentValue,
-                    delayTimerOptions: viewModel.delayTimerOptions.map((e) => "$e${localisations.page_create_post_delay_timer_seconds}").toList(),
+                    ///? Options for camera delay before taking picture or clip
+                    maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
+                    delayTimerOptions: viewModel.delayTimerOptions.map((e) => "$e${localisations.page_create_post_seconds}").toList(),
                     delayTimerSelection: state.delayTimerCurrentSelection,
                     onDelayTimerChanged: viewModel.onDelayTimerChanged,
                     isDelayTimerEnabled: state.isDelayTimerEnabled,
 
+                    ///? Options for camera Maximum recording lenght before forcing the clip to end
+                    maxRecordingLength: viewModel.maximumClipDurationOptions[state.maximumClipDurationSelection],
+                    recordingLengthOptions: viewModel.maximumClipDurationOptions.map((e) => viewModel.clipDurationString(context, e)).toList(),
+                    recordingLengthSelection: state.maximumClipDurationSelection,
+                    onRecordingLengthChanged: viewModel.onClipDurationChanged,
+                    isRecordingLengthEnabled: true,
+                    // isRecordingLengthEnabled: state.isMaximumClipDurationEnabled,
+
                     topAdditionalActions: [
                       Row(
                         children: [
+                          //? top right set of icons found on the clips page, move this later to a builder?
                           const Spacer(),
                           Text(
                             localisations.page_create_post_ui_timer,
@@ -146,9 +155,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         ],
                       ),
                     ],
-
-                    //! Flash controlls in FlutterAwesome do not seem to be working
-                    // enableFlashControlls: true,
                   ),
                 ),
               ],

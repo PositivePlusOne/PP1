@@ -43,6 +43,7 @@ const double kPaddingSmallMedium = 15.0;
 const double kPaddingMedium = 20.0;
 const double kPaddingMediumLarge = 25.0;
 const double kPaddingLarge = 30.0;
+const double kPaddingLargeish = 35.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
 const double kPaddingAppBarBreak = 70.0;
