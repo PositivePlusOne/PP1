@@ -51,8 +51,8 @@ class AccountPage extends HookConsumerWidget {
       ),
       PositiveProfileCircularIndicator(
         profile: profileController.currentProfile,
-        onTap: () {},
         ringColorOverride: colors.white,
+        onTap: () {},
       ),
     ];
 

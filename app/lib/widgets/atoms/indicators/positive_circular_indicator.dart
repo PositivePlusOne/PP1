@@ -10,7 +10,8 @@ import 'package:app/constants/design_constants.dart';
 class PositiveCircularIndicator extends ConsumerWidget {
   const PositiveCircularIndicator({
     required this.child,
-    this.ringColor = Colors.black,
+    this.ringColor = Colors.white,
+    this.backgroundColor = Colors.white,
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
     this.gapColor,
@@ -20,6 +21,8 @@ class PositiveCircularIndicator extends ConsumerWidget {
   final Widget child;
 
   final Color ringColor;
+  final Color backgroundColor;
+
   final Color? gapColor;
 
   final double borderThickness;
@@ -48,7 +51,7 @@ class PositiveCircularIndicator extends ConsumerWidget {
         borderRadius: BorderRadius.circular(kBorderRadiusHuge),
         child: AnimatedContainer(
           duration: kAnimationDurationRegular,
-          color: ringColor,
+          color: backgroundColor,
           child: child,
         ),
       ),
