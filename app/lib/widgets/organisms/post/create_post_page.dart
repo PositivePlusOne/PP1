@@ -129,6 +129,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     postType: state.currentPostType,
                     captionController: viewModel.captionController,
                     altTextController: viewModel.altTextController,
+                    promotionKeyTextController: viewModel.promotionKeyTextController,
                     onTagsPressed: (context) => viewModel.onTagsPressed(context),
                     onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
                     onUpdateAllowComments: viewModel.onUpdateAllowComments,

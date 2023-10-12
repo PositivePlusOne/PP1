@@ -33,7 +33,7 @@ export namespace TagsService {
    * @returns {Promise<Tag | null>} the tag.
    */
   export async function getTag(key: string): Promise<any> {
-    const formattedKey = formatTag(key);
+    const formattedKey = isRestricted(key) ? key : formatTag(key);
     functions.logger.info("Getting tag", { formattedKey });
 
     if (!formattedKey || formattedKey.length === 0) {
@@ -52,7 +52,7 @@ export namespace TagsService {
   export async function getOrCreateTags(validatedTags: string[]) : Promise<TagJSON[]> {
     const promises = [] as Promise<TagJSON>[];
     for (const tag of validatedTags) {
-      const formattedTag = formatTag(tag);
+      const formattedTag = isRestricted(tag) ? tag : formatTag(tag);
       promises.push(getOrCreateTag(formattedTag));
     }
 
@@ -61,7 +61,7 @@ export namespace TagsService {
   }
 
   export async function getOrCreateTag(key: string): Promise<TagJSON> {
-    const formattedKey = formatTag(key);
+    const formattedKey = isRestricted(key) ? key : formatTag(key);
     functions.logger.info("Getting or creating tag", { formattedKey });
 
     if (!formattedKey || formattedKey.length === 0) {
@@ -88,7 +88,7 @@ export namespace TagsService {
    * @returns {Promise<TagJSON[]>} the tags.
    */
   export async function getMultipleTags(keys: string[]): Promise<any[]> {
-    const formattedKeys = keys.map((key) => formatTag(key));
+    const formattedKeys = keys.map((key) => isRestricted(key) ? key : formatTag(key));
     functions.logger.info("Getting multiple tags", { formattedKeys });
 
     if (!formattedKeys || formattedKeys.length === 0) {
@@ -214,7 +214,6 @@ export namespace TagsService {
   export function formatTag(input: string): string {
     //* Validation of tags server side, please make sure this matches client side validation
     //* client side validation can be found in string_extensions.dart under the function asTagKey
-
     const stringWithSpaces = input.toLowerCase().replace(/[^a-z0-9]+/gi, " ");
     const singleSpaces = stringWithSpaces.replace(/\s+/g, " ");
     const snakeCased = singleSpaces.replace(/ /g, "_");
@@ -230,7 +229,7 @@ export namespace TagsService {
    * @returns {Promise<boolean>} returns true if tag was created, false if tag already exists.
    */
   export async function createTagIfNonexistant(key: string): Promise<boolean> {
-    const formattedKey = formatTag(key);
+    const formattedKey = isRestricted(key) ? key : formatTag(key);
     functions.logger.info("Getting or creating tag", { formattedKey });
 
     if (!formattedKey) {
@@ -257,14 +256,32 @@ export namespace TagsService {
     * @returns {string[]} the tags without restricted tags.
    */
   export function removeRestrictedTagsFromStringArray(tags: string[]): string[] {
+    // let's see if 'promoted' is in there, these need to stay in place in the return
+    const promotedTags = tags.filter((tag) => isPromotedTag(tag));
+    // now let's filter out all the restricted tags which will also remove all the promoted tags
     let returnTags = tags.filter((tag) => !isRestricted(tag)).map((tag) => {
-      const formattedTag = formatTag(tag);
-      return formattedTag.slice(0, 30);
+      return formatTag(tag);
     });
     
     //? We only want to allow a maximum of 5 tags, for the local validation refer to create_post_tag_dialogue.dart under the function onTagTapped
     returnTags = returnTags.slice(0, 4);
+    //! BUT if we have > 1 promoted tags then they have been properly setup to be a promotion
+    //! as will definately include 'promoted' and 'promoted_{userId}' of the organisation that promoted it.
+    if (promotedTags.length > 1) {
+      // this is good, let's put them back into the list
+      returnTags = [...promotedTags, ...returnTags];
+    }
+    // and return the final list of tags that are all valid and formattted
     return returnTags;
+  }
+
+  /**
+   * Checks if a tag is a restricted 'promoted' tag, which can include the 'promoted_{userId}' tag
+   * @param {string} tag the tag.
+   * @returns {boolean} true if the tag represents a promoted item.
+   */
+  export function isPromotedTag(tag: string): boolean {
+    return tag === RestrictedTagKey.promoted || tag.startsWith(`${RestrictedTagKey.promoted}_`);
   }
 
   /**
@@ -273,8 +290,9 @@ export namespace TagsService {
    * @returns {boolean} true if the tag is restricted.
    */
   export function isRestricted(tag: string): boolean {
+    // this is a restricted tag if a special promoted tag, or in the list of RestrictedTagKey
     const wrappedTag = formatTag(tag);
-    return Object.values(RestrictedTagKey).includes(wrappedTag as RestrictedTagKey);
+    return isPromotedTag(tag) || Object.values(RestrictedTagKey).includes(wrappedTag as RestrictedTagKey);
   }
 
   /**
@@ -283,7 +301,7 @@ export namespace TagsService {
    * @returns {Promise<Tag>} the created tag.
    */
   export async function createTag(key: string): Promise<Tag> {
-    const formattedKey = formatTag(key);
+    const formattedKey = isRestricted(key) ? key : formatTag(key);
     functions.logger.info("Creating tag", { formattedKey });
 
     if (!formattedKey || formattedKey.length === 0) {

@@ -8,8 +8,23 @@ import { AssignOrganisationMemberAction } from "./actions/assign_organisation_me
 import { RemoveOrganisationMemberAction } from "./actions/remove_organisation_member_action";
 import { AssignOrganisationOwnerAction } from "./actions/assign_organisation_owner_action";
 import { RemoveOrganisationOwnerAction } from "./actions/remove_organisation_owner_action";
+import { PromoteActivityAction } from "./actions/promote_activity_action";
+import { DemoteActivityAction } from "./actions/demote_activity_action";
+import { FindPromotionKeyAction } from "./actions/find_promotion_key_action";
 
 export namespace AdminQuickActionService {
+    type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
+
+    const actionMapping: { [key: string]: ActionFunction } = {
+        'removeOrganisationMember': RemoveOrganisationMemberAction.removeOrganisationMember,
+        'assignOrganisationMember': AssignOrganisationMemberAction.assignOrganisationMember,
+        'assignOrganisationOwner': AssignOrganisationOwnerAction.assignOrganisationOwner,
+        'removeOrganisationOwner': RemoveOrganisationOwnerAction.removeOrganisationOwner,
+        'promoteActivity': PromoteActivityAction.promoteActivity,
+        'demoteActivity': DemoteActivityAction.demoteActivity,
+        'findPromotionKey': FindPromotionKeyAction.findPromotionKey,
+    };
+
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
         try {
             functions.logger.debug(`Processing quick action: ${JSON.stringify(action)}`);
@@ -23,24 +38,13 @@ export namespace AdminQuickActionService {
             updateStatus(action, 'processing');
             await saveQuickAction(action);
 
-            // TODO(ryan): Find a nice way to automate this.
-            switch (action.action) {
-                case 'removeOrganisationMember':
-                    await RemoveOrganisationMemberAction.removeOrganisationMember(action);
-                    break;
-                case 'assignOrganisationMember':
-                    await AssignOrganisationMemberAction.assignOrganisationMember(action);
-                    break;
-                case 'assignOrganisationOwner':
-                    await AssignOrganisationOwnerAction.assignOrganisationOwner(action);
-                    break;
-                case 'removeOrganisationOwner':
-                    await RemoveOrganisationOwnerAction.removeOrganisationOwner(action);
-                    break;
-                default:
-                    appendOutput(action, `No action handler defined for action ${action.action}`);
-                    updateStatus(action, 'error');
-                    break;
+            // Using dynamic function calls instead of the switch.
+            const actionFunction = getActionFunction(action.action);
+            if (actionFunction) {
+                await actionFunction(action);
+            } else {
+                appendOutput(action, `No action handler defined for action ${action.action}`);
+                updateStatus(action, 'error');
             }
         } catch (error) {
             functions.logger.error(`Error processing quick action: ${error}`);
@@ -49,6 +53,10 @@ export namespace AdminQuickActionService {
         } finally {
             await saveQuickAction(action);
         }
+    }
+
+    export function getActionFunction(actionName: string): ActionFunction | null {
+        return actionMapping[actionName] || null;
     }
 
     export async function saveQuickAction(action: AdminQuickActionJSON): Promise<void> {

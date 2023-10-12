@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,11 +16,16 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/relationship_search_api_service.dart';
+import 'package:app/widgets/state/positive_community_feed_state.dart';
 import '../../services/third_party.dart';
 
 part 'communities_controller.freezed.dart';
@@ -32,21 +38,6 @@ class CommunitiesControllerState with _$CommunitiesControllerState {
     required Profile? currentProfile,
     required CommunityType selectedCommunityType,
     @Default(false) bool isBusy,
-    @Default({}) Set<String> followerProfileIds,
-    @Default('') String followerPaginationCursor,
-    @Default(true) bool hasMoreFollowers,
-    @Default({}) Set<String> followingProfileIds,
-    @Default('') String followingPaginationCursor,
-    @Default(true) bool hasMoreFollowing,
-    @Default({}) Set<String> blockedProfileIds,
-    @Default('') String blockedPaginationCursor,
-    @Default(true) bool hasMoreBlocked,
-    @Default({}) Set<String> connectedProfileIds,
-    @Default('') String connectedPaginationCursor,
-    @Default(true) bool hasMoreConnected,
-    @Default({}) Set<String> managedProfileIds,
-    @Default('') String managedPaginationCursor,
-    @Default(true) bool hasMoreManaged,
   }) = _CommunitiesControllerState;
 
   factory CommunitiesControllerState.initialState({
@@ -88,7 +79,12 @@ enum CommunityType {
 class CommunitiesController extends _$CommunitiesController with LifecycleMixin {
   StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
-  bool get hasLoadedInitialData => state.followerProfileIds.isNotEmpty || state.followingProfileIds.isNotEmpty || state.blockedProfileIds.isNotEmpty || state.connectedProfileIds.isNotEmpty;
+  PositiveCommunityFeedState get communityFeedState => getCommunityFeedStateForType(
+        communityType: state.selectedCommunityType,
+        currentProfile: state.currentProfile,
+      );
+
+  bool get hasLoadedInitialData => communityFeedState.hasPerformedInitialLoad;
 
   @override
   CommunitiesControllerState build({
@@ -138,6 +134,30 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     updateCommunityRelationship(event.value as Relationship);
   }
 
+  PositiveCommunityFeedState getCommunityFeedStateForType({
+    required CommunityType communityType,
+    required Profile? currentProfile,
+  }) {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    final String feedsCacheKey = PositiveCommunityFeedState.buildFeedCacheKey(currentProfileId, communityType);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    final PositiveCommunityFeedState? cachedState = cacheController.get(feedsCacheKey);
+    if (cachedState != null) {
+      return cachedState;
+    }
+
+    final PositiveCommunityFeedState newState = PositiveCommunityFeedState.buildNewState(
+      communityType: communityType,
+      currentProfileId: currentProfileId,
+    );
+
+    cacheController.add(key: feedsCacheKey, value: newState);
+    return newState;
+  }
+
   void updateCommunityRelationship(Relationship relationship) {
     final UserController userController = ref.read(userControllerProvider.notifier);
     if (userController.currentUser == null) {
@@ -150,107 +170,157 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     }
 
     final String otherMemberId = relationship.members.firstWhere((RelationshipMember member) => member.memberId != userController.currentUser!.uid).memberId;
-    final bool isConnection = state.connectedProfileIds.contains(otherMemberId);
-    final bool isFollower = state.followerProfileIds.contains(otherMemberId);
-    final bool isFollowing = state.followingProfileIds.contains(otherMemberId);
-    final bool isBlocked = state.blockedProfileIds.contains(otherMemberId);
+
+    final PositiveCommunityFeedState connectionFeedState = getCommunityFeedStateForType(
+      communityType: CommunityType.connected,
+      currentProfile: state.currentProfile,
+    );
+
+    final PositiveCommunityFeedState followerFeedState = getCommunityFeedStateForType(
+      communityType: CommunityType.followers,
+      currentProfile: state.currentProfile,
+    );
+
+    final PositiveCommunityFeedState followingFeedState = getCommunityFeedStateForType(
+      communityType: CommunityType.following,
+      currentProfile: state.currentProfile,
+    );
+
+    final PositiveCommunityFeedState blockedFeedState = getCommunityFeedStateForType(
+      communityType: CommunityType.blocked,
+      currentProfile: state.currentProfile,
+    );
+
+    final PositiveCommunityFeedState managedFeedState = getCommunityFeedStateForType(
+      communityType: CommunityType.managed,
+      currentProfile: state.currentProfile,
+    );
+
+    final bool hasConnectionId = (connectionFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
+    final bool hasFollowerId = (followerFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
+    final bool hasFollowingId = (followingFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
+    final bool hasBlockedId = (blockedFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
+    final bool hasManagedId = (managedFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
 
     if (relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected)) {
-      if (!isConnection) {
-        state = state.copyWith(connectedProfileIds: {...state.connectedProfileIds, otherMemberId});
+      if (!hasConnectionId) {
+        connectionFeedState.pagingController.itemList = {...connectionFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
       }
     } else {
-      if (isConnection) {
-        state = state.copyWith(connectedProfileIds: {...state.connectedProfileIds.where((element) => element != otherMemberId)});
+      if (hasConnectionId) {
+        connectionFeedState.pagingController.itemList = {...connectionFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
       }
     }
 
     if (relationshipStates.contains(RelationshipState.sourceFollowed)) {
-      if (!isFollower) {
-        state = state.copyWith(followerProfileIds: {...state.followerProfileIds, otherMemberId});
+      if (!hasFollowerId) {
+        followerFeedState.pagingController.itemList = {...followerFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
       }
     } else {
-      if (isFollower) {
-        state = state.copyWith(followerProfileIds: {...state.followerProfileIds.where((element) => element != otherMemberId)});
+      if (hasFollowerId) {
+        followerFeedState.pagingController.itemList = {...followerFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
       }
     }
 
     if (relationshipStates.contains(RelationshipState.targetFollowing)) {
-      if (!isFollowing) {
-        state = state.copyWith(followingProfileIds: {...state.followingProfileIds, otherMemberId});
+      if (!hasFollowingId) {
+        followingFeedState.pagingController.itemList = {...followingFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
       }
     } else {
-      if (isFollowing) {
-        state = state.copyWith(followingProfileIds: {...state.followingProfileIds.where((element) => element != otherMemberId)});
+      if (hasFollowingId) {
+        followingFeedState.pagingController.itemList = {...followingFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
       }
     }
 
     if (relationshipStates.contains(RelationshipState.sourceBlocked)) {
-      if (!isBlocked) {
-        state = state.copyWith(blockedProfileIds: {...state.blockedProfileIds, otherMemberId});
+      if (!hasBlockedId) {
+        blockedFeedState.pagingController.itemList = {...blockedFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
       }
     } else {
-      if (isBlocked) {
-        state = state.copyWith(blockedProfileIds: {...state.blockedProfileIds.where((element) => element != otherMemberId)});
+      if (hasBlockedId) {
+        blockedFeedState.pagingController.itemList = {...blockedFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
       }
     }
-  }
 
-  void resetCommunityData({User? user}) {
-    final Logger logger = ref.read(loggerProvider);
-    logger.i('CommunitiesController - resetCommunityData - Resetting community data');
-
-    state = state.copyWith(
-      selectedCommunityType: CommunityType.connected,
-      followerProfileIds: {},
-      followerPaginationCursor: '',
-      hasMoreFollowers: true,
-      followingProfileIds: {},
-      followingPaginationCursor: '',
-      hasMoreFollowing: true,
-      blockedProfileIds: {},
-      blockedPaginationCursor: '',
-      hasMoreBlocked: true,
-      connectedProfileIds: {},
-      connectedPaginationCursor: '',
-      hasMoreConnected: true,
-      managedProfileIds: {},
-      managedPaginationCursor: '',
-      hasMoreManaged: true,
-    );
+    if (relationshipStates.contains(RelationshipState.targetManaged)) {
+      if (!hasManagedId) {
+        managedFeedState.pagingController.itemList = {...managedFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
+      }
+    } else {
+      if (hasManagedId) {
+        managedFeedState.pagingController.itemList = {...managedFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
+      }
+    }
   }
 
   void resetCommunityDataForType({required CommunityType type}) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('CommunitiesController - resetCommunityDataForType - Resetting community data for type: $type');
 
-    state = switch (type) {
-      CommunityType.connected => state.copyWith(
-          connectedProfileIds: {},
-          connectedPaginationCursor: '',
-          hasMoreConnected: true,
-        ),
-      CommunityType.followers => state.copyWith(
-          followerProfileIds: {},
-          followerPaginationCursor: '',
-          hasMoreFollowers: true,
-        ),
-      CommunityType.following => state.copyWith(
-          followingProfileIds: {},
-          followingPaginationCursor: '',
-          hasMoreFollowing: true,
-        ),
-      CommunityType.blocked => state.copyWith(
-          blockedProfileIds: {},
-          blockedPaginationCursor: '',
-          hasMoreBlocked: true,
-        ),
-      CommunityType.managed => state.copyWith(
-          managedProfileIds: {},
-          managedPaginationCursor: '',
-          hasMoreManaged: true,
-        ),
-    };
+    final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
+      communityType: type,
+      currentProfile: state.currentProfile,
+    );
+
+    feedState.hasPerformedInitialLoad = false;
+    feedState.currentPaginationKey = '';
+
+    feedState.pagingController.refresh();
+    saveFeedState(feedState);
+  }
+
+  static Future<void> loadFirstWindowForAllAccountsIfNeeded() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
+    final User? currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) {
+      logger.e('CommunitiesController - loadFirstWindowForAllAccountsIfNeeded - Current user is null');
+      return;
+    }
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+    final Set<String> supportedProfileIds = profileControllerState.availableProfileIds;
+
+    final List<Future<void>> futures = [];
+    for (final String profileId in supportedProfileIds) {
+      final Profile? profile = cacheController.get(profileId);
+      if (profile == null) {
+        logger.e('CommunitiesController - loadFirstWindowForAllAccountsIfNeeded - Profile is null for id: $profileId');
+        continue;
+      }
+
+      await loadFirstWindowForAccountIfNeeded(
+        currentProfile: profile,
+        currentUser: currentUser,
+      );
+    }
+
+    await Future.wait(futures);
+  }
+
+  static Future<void> loadFirstWindowForAccountIfNeeded({
+    required Profile currentProfile,
+    required User currentUser,
+  }) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+
+    final CommunitiesControllerProvider provider = communitiesControllerProvider(currentProfile: currentProfile, currentUser: currentUser);
+    final CommunitiesController communitiesController = providerContainer.read(provider.notifier);
+    final Profile? cachedProfile = cacheController.get(currentProfile.flMeta?.id ?? '');
+    if (cachedProfile == null) {
+      logger.e('CommunitiesController - loadFirstWindowForAccountIfNeeded - Cached profile is null');
+      return;
+    }
+
+    final bool hasLoadedInitialData = communitiesController.hasLoadedInitialData;
+    if (hasLoadedInitialData) {
+      logger.i('CommunitiesController - loadFirstWindowForAccountIfNeeded - Initial community data already loaded');
+      return;
+    }
+
+    await communitiesController.loadInitialCommunityData();
   }
 
   Future<void> loadInitialCommunityData() async {
@@ -281,80 +351,106 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     required CommunityType type,
   }) async {
     final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    logger.i('CommunitiesController - loadNextCommunityData - Loading next community data');
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    if (userController.currentUser == null) {
-      logger.d('CommunitiesController - loadNextCommunityData - User is null');
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
+      logger.w('CommunitiesController - loadNextCommunityData - Current profile is null');
       return;
     }
 
-    final bool canGetNext = switch (type) {
-      CommunityType.connected => state.hasMoreConnected,
-      CommunityType.followers => state.hasMoreFollowers,
-      CommunityType.following => state.hasMoreFollowing,
-      CommunityType.blocked => state.hasMoreBlocked,
-      CommunityType.managed => state.hasMoreManaged,
-    };
+    final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
+      communityType: type,
+      currentProfile: state.currentProfile,
+    );
 
+    final bool canGetNext = feedState.pagingController.value.status != PagingStatus.completed;
     if (!canGetNext) {
       logger.w('CommunitiesController - loadNextCommunityData - No more data to load');
       return;
     }
 
-    final RelationshipSearchApiService relationshipSearchApiService = ref.read(relationshipSearchApiServiceProvider);
-    final EndpointResponse response = switch (type) {
-      CommunityType.connected => await relationshipSearchApiService.listConnectedRelationships(cursor: state.connectedPaginationCursor),
-      CommunityType.followers => await relationshipSearchApiService.listFollowedRelationships(cursor: state.followerPaginationCursor),
-      CommunityType.following => await relationshipSearchApiService.listFollowingRelationships(cursor: state.followingPaginationCursor),
-      CommunityType.blocked => await relationshipSearchApiService.listBlockedRelationships(cursor: state.blockedPaginationCursor),
-      CommunityType.managed => await relationshipSearchApiService.listManagedRelationships(cursor: state.managedPaginationCursor),
-    };
+    final bool isManagedProfile = profileController.isCurrentManagedProfile;
+    if (!isManagedProfile && CommunityType.managed == type) {
+      logger.w('CommunitiesController - loadNextCommunityData - Cannot load managed community data for non-managed profile');
+      return;
+    }
 
-    final Map<String, dynamic> data = response.data;
-    final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => json.decodeSafe(relationship)).toList();
+    late final EndpointResponse response;
     final List<String> newRelationshipIds = [];
 
-    for (final dynamic relationship in relationships) {
-      try {
-        final Relationship newRelationship = Relationship.fromJson(relationship);
-        if (newRelationship.members.length != 2) {
-          logger.e('requestNextTimelinePage() - Relationship has ${newRelationship.members.length} members, expected 2');
-          continue;
-        }
+    try {
+      final RelationshipSearchApiService relationshipSearchApiService = ref.read(relationshipSearchApiServiceProvider);
+      response = switch (type) {
+        CommunityType.connected => await relationshipSearchApiService.listConnectedRelationships(cursor: feedState.currentPaginationKey),
+        CommunityType.followers => await relationshipSearchApiService.listFollowedRelationships(cursor: feedState.currentPaginationKey),
+        CommunityType.following => await relationshipSearchApiService.listFollowingRelationships(cursor: feedState.currentPaginationKey),
+        CommunityType.blocked => await relationshipSearchApiService.listBlockedRelationships(cursor: feedState.currentPaginationKey),
+        CommunityType.managed => await relationshipSearchApiService.listManagedRelationships(cursor: feedState.currentPaginationKey),
+      };
 
-        final String memberId = newRelationship.members.firstWhere((RelationshipMember member) => member.memberId != userController.currentUser!.uid).memberId;
-        if (memberId.isEmpty) {
-          logger.e('requestNextTimelinePage() - Failed to get member id from relationship: $relationship');
-          continue;
-        }
+      feedState.hasPerformedInitialLoad = true;
 
-        newRelationshipIds.add(memberId);
-      } catch (ex) {
-        logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
+      final Map<String, dynamic> data = response.data;
+      final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => json.decodeSafe(relationship)).toList();
+      for (final dynamic relationship in relationships) {
+        try {
+          final Relationship newRelationship = Relationship.fromJson(relationship);
+          if (newRelationship.members.length != 2) {
+            logger.e('requestNextTimelinePage() - Relationship has ${newRelationship.members.length} members, expected 2');
+            continue;
+          }
+
+          final String memberId = newRelationship.members.firstWhere((RelationshipMember member) => member.memberId != currentProfileId).memberId;
+          if (memberId.isEmpty) {
+            logger.e('requestNextTimelinePage() - Failed to get member id from relationship: $relationship');
+            continue;
+          }
+
+          newRelationshipIds.add(memberId);
+        } catch (ex) {
+          logger.e('requestNextTimelinePage() - Failed to cache relationship: $relationship - ex: $ex');
+        }
       }
+
+      feedState.currentPaginationKey = response.cursor ?? '';
+      saveFeedState(feedState);
+    } catch (ex) {
+      logger.e('CommunitiesController - loadNextCommunityData - Failed to load community data - ex: $ex');
+      feedState.pagingController.error = ex;
+      saveFeedState(feedState);
+      return;
     }
 
     final String cursor = response.cursor ?? '';
-    final String currentCursor = switch (type) {
-      CommunityType.connected => state.connectedPaginationCursor,
-      CommunityType.followers => state.followerPaginationCursor,
-      CommunityType.following => state.followingPaginationCursor,
-      CommunityType.blocked => state.blockedPaginationCursor,
-      CommunityType.managed => state.managedPaginationCursor,
-    };
+    final String currentCursor = feedState.currentPaginationKey;
+    final bool hasMoreData = cursor.isNotEmpty && newRelationshipIds.isNotEmpty && cursor != currentCursor;
 
-    final bool hasMoreData = cursor.isNotEmpty && relationships.isNotEmpty && cursor != currentCursor;
-    logger.i('CommunitiesController - loadNextCommunityData - hasMoreData: $hasMoreData, cursor: $cursor, newRelationshipIds: $newRelationshipIds');
+    logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data appending to page');
+    final PagingController<String, String> pagingController = feedState.pagingController;
 
-    state = switch (type) {
-      CommunityType.connected => state.copyWith(connectedPaginationCursor: cursor, hasMoreConnected: hasMoreData, connectedProfileIds: {...state.connectedProfileIds, ...newRelationshipIds}),
-      CommunityType.followers => state.copyWith(followerPaginationCursor: cursor, hasMoreFollowers: hasMoreData, followerProfileIds: {...state.followerProfileIds, ...newRelationshipIds}),
-      CommunityType.following => state.copyWith(followingPaginationCursor: cursor, hasMoreFollowing: hasMoreData, followingProfileIds: {...state.followingProfileIds, ...newRelationshipIds}),
-      CommunityType.blocked => state.copyWith(blockedPaginationCursor: cursor, hasMoreBlocked: hasMoreData, blockedProfileIds: {...state.blockedProfileIds, ...newRelationshipIds}),
-      CommunityType.managed => state.copyWith(managedPaginationCursor: cursor, hasMoreManaged: hasMoreData, managedProfileIds: {...state.managedProfileIds, ...newRelationshipIds}),
-    };
+    if (hasMoreData) {
+      pagingController.appendSafePage(newRelationshipIds, cursor);
+    } else {
+      pagingController.appendLastPage(newRelationshipIds);
+    }
 
-    logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data');
+    saveFeedState(feedState);
+    logger.d('CommunitiesController - loadNextCommunityData - Appended next community data to page');
+
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    pagingController.notifyListeners();
+  }
+
+  void saveFeedState(PositiveCommunityFeedState feedState) {
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final String cacheKey = feedState.buildCacheKey();
+    if (cacheKey.isEmpty) {
+      logger.e('CommunitiesController - saveFeedState - Cache key is empty');
+      return;
+    }
+
+    cacheController.add(key: cacheKey, value: feedState);
   }
 }

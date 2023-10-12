@@ -33,6 +33,7 @@ mixin _$Relationship {
   bool get following => throw _privateConstructorUsedError;
   bool get hidden => throw _privateConstructorUsedError;
   bool get muted => throw _privateConstructorUsedError;
+  bool get managed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,7 +59,8 @@ abstract class $RelationshipCopyWith<$Res> {
       bool connected,
       bool following,
       bool hidden,
-      bool muted});
+      bool muted,
+      bool managed});
 
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -85,6 +87,7 @@ class _$RelationshipCopyWithImpl<$Res, $Val extends Relationship>
     Object? following = null,
     Object? hidden = null,
     Object? muted = null,
+    Object? managed = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -123,6 +126,10 @@ class _$RelationshipCopyWithImpl<$Res, $Val extends Relationship>
           ? _value.muted
           : muted // ignore: cast_nullable_to_non_nullable
               as bool,
+      managed: null == managed
+          ? _value.managed
+          : managed // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -159,7 +166,8 @@ abstract class _$$RelationshipImplCopyWith<$Res>
       bool connected,
       bool following,
       bool hidden,
-      bool muted});
+      bool muted,
+      bool managed});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -185,6 +193,7 @@ class __$$RelationshipImplCopyWithImpl<$Res>
     Object? following = null,
     Object? hidden = null,
     Object? muted = null,
+    Object? managed = null,
   }) {
     return _then(_$RelationshipImpl(
       flMeta: freezed == flMeta
@@ -223,6 +232,10 @@ class __$$RelationshipImplCopyWithImpl<$Res>
           ? _value.muted
           : muted // ignore: cast_nullable_to_non_nullable
               as bool,
+      managed: null == managed
+          ? _value.managed
+          : managed // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -242,7 +255,8 @@ class _$RelationshipImpl implements _Relationship {
       this.connected = false,
       this.following = false,
       this.hidden = false,
-      this.muted = false})
+      this.muted = false,
+      this.managed = false})
       : _members = members,
         _flags = flags;
 
@@ -290,10 +304,13 @@ class _$RelationshipImpl implements _Relationship {
   @override
   @JsonKey()
   final bool muted;
+  @override
+  @JsonKey()
+  final bool managed;
 
   @override
   String toString() {
-    return 'Relationship(flMeta: $flMeta, members: $members, flags: $flags, blocked: $blocked, channelId: $channelId, connected: $connected, following: $following, hidden: $hidden, muted: $muted)';
+    return 'Relationship(flMeta: $flMeta, members: $members, flags: $flags, blocked: $blocked, channelId: $channelId, connected: $connected, following: $following, hidden: $hidden, muted: $muted, managed: $managed)';
   }
 
   @override
@@ -312,7 +329,8 @@ class _$RelationshipImpl implements _Relationship {
             (identical(other.following, following) ||
                 other.following == following) &&
             (identical(other.hidden, hidden) || other.hidden == hidden) &&
-            (identical(other.muted, muted) || other.muted == muted));
+            (identical(other.muted, muted) || other.muted == muted) &&
+            (identical(other.managed, managed) || other.managed == managed));
   }
 
   @JsonKey(ignore: true)
@@ -327,7 +345,8 @@ class _$RelationshipImpl implements _Relationship {
       connected,
       following,
       hidden,
-      muted);
+      muted,
+      managed);
 
   @JsonKey(ignore: true)
   @override
@@ -356,7 +375,8 @@ abstract class _Relationship implements Relationship {
       final bool connected,
       final bool following,
       final bool hidden,
-      final bool muted}) = _$RelationshipImpl;
+      final bool muted,
+      final bool managed}) = _$RelationshipImpl;
 
   factory _Relationship.fromJson(Map<String, dynamic> json) =
       _$RelationshipImpl.fromJson;
@@ -383,6 +403,8 @@ abstract class _Relationship implements Relationship {
   bool get hidden;
   @override
   bool get muted;
+  @override
+  bool get managed;
   @override
   @JsonKey(ignore: true)
   _$$RelationshipImplCopyWith<_$RelationshipImpl> get copyWith =>

@@ -27,6 +27,7 @@ export enum ActivityActionVerb {
  * @export
  * @interface ActivityJSON
  * @property {FlMetaJSON} [_fl_meta_]
+ * @property {string} [searchDescription]
  * @property {ActivityGeneralConfigurationJSON} [generalConfiguration]
  * @property {ActivitySecurityConfigurationJSON} [securityConfiguration]
  * @property {ActivityEventConfigurationJSON} [eventConfiguration]
@@ -38,6 +39,7 @@ export enum ActivityActionVerb {
  */
 export interface ActivityJSON {
   _fl_meta_?: FlMetaJSON;
+  searchDescription?: string;
   generalConfiguration?: ActivityGeneralConfigurationJSON;
   securityConfiguration?: ActivitySecurityConfigurationJSON;
   eventConfiguration?: ActivityEventConfigurationJSON;
@@ -53,6 +55,7 @@ export interface ActivityJSON {
  * @export
  * @class Activity
  * @property {FlMeta} [_fl_meta_]
+ * @property {string} [searchDescription]
  * @property {ActivityGeneralConfiguration} [generalConfiguration]
  * @property {ActivitySecurityConfiguration} [securityConfiguration]
  * @property {ActivityEventConfiguration} [eventConfiguration]
@@ -64,6 +67,7 @@ export interface ActivityJSON {
  */
 export class Activity {
   _fl_meta_?: FlMeta;
+  searchDescription?: string;
   generalConfiguration?: ActivityGeneralConfiguration;
   securityConfiguration?: ActivitySecurityConfiguration;
   eventConfiguration?: ActivityEventConfiguration;
@@ -75,6 +79,7 @@ export class Activity {
 
   constructor(json: ActivityJSON) {
     this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
+    this.searchDescription = json.searchDescription || '';
     this.generalConfiguration = json.generalConfiguration && new ActivityGeneralConfiguration(json.generalConfiguration);
     this.securityConfiguration = json.securityConfiguration && new ActivitySecurityConfiguration(json.securityConfiguration);
     this.eventConfiguration = json.eventConfiguration && new ActivityEventConfiguration(json.eventConfiguration);

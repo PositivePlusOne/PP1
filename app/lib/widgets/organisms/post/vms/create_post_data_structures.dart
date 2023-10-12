@@ -8,6 +8,7 @@ class ActivityData {
     this.activityID,
     this.content,
     this.altText,
+    this.promotionKey,
     this.tags,
     this.allowSharing,
     this.visibilityMode,
@@ -21,6 +22,7 @@ class ActivityData {
   String? content;
   List<String>? tags;
   String? altText;
+  String? promotionKey;
 
   bool? allowSharing;
 

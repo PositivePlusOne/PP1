@@ -11,6 +11,7 @@ _$ActivityImpl _$$ActivityImplFromJson(Map<String, dynamic> json) =>
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
+      searchDescription: json['searchDescription'] as String? ?? '',
       generalConfiguration: json['generalConfiguration'] == null
           ? null
           : ActivityGeneralConfiguration.fromJson(
@@ -47,6 +48,7 @@ _$ActivityImpl _$$ActivityImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$ActivityImplToJson(_$ActivityImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
+      'searchDescription': instance.searchDescription,
       'generalConfiguration': instance.generalConfiguration?.toJson(),
       'repostConfiguration': instance.repostConfiguration?.toJson(),
       'securityConfiguration': instance.securityConfiguration?.toJson(),

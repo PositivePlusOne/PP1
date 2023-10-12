@@ -25,6 +25,7 @@ mixin _$RelationshipMember {
   bool get hasFollowed => throw _privateConstructorUsedError;
   bool get hasHidden => throw _privateConstructorUsedError;
   bool get hasMuted => throw _privateConstructorUsedError;
+  bool get hasManaged => throw _privateConstructorUsedError;
   String get memberId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,6 +46,7 @@ abstract class $RelationshipMemberCopyWith<$Res> {
       bool hasFollowed,
       bool hasHidden,
       bool hasMuted,
+      bool hasManaged,
       String memberId});
 }
 
@@ -66,6 +68,7 @@ class _$RelationshipMemberCopyWithImpl<$Res, $Val extends RelationshipMember>
     Object? hasFollowed = null,
     Object? hasHidden = null,
     Object? hasMuted = null,
+    Object? hasManaged = null,
     Object? memberId = null,
   }) {
     return _then(_value.copyWith(
@@ -89,6 +92,10 @@ class _$RelationshipMemberCopyWithImpl<$Res, $Val extends RelationshipMember>
           ? _value.hasMuted
           : hasMuted // ignore: cast_nullable_to_non_nullable
               as bool,
+      hasManaged: null == hasManaged
+          ? _value.hasManaged
+          : hasManaged // ignore: cast_nullable_to_non_nullable
+              as bool,
       memberId: null == memberId
           ? _value.memberId
           : memberId // ignore: cast_nullable_to_non_nullable
@@ -111,6 +118,7 @@ abstract class _$$RelationshipMemberImplCopyWith<$Res>
       bool hasFollowed,
       bool hasHidden,
       bool hasMuted,
+      bool hasManaged,
       String memberId});
 }
 
@@ -130,6 +138,7 @@ class __$$RelationshipMemberImplCopyWithImpl<$Res>
     Object? hasFollowed = null,
     Object? hasHidden = null,
     Object? hasMuted = null,
+    Object? hasManaged = null,
     Object? memberId = null,
   }) {
     return _then(_$RelationshipMemberImpl(
@@ -153,6 +162,10 @@ class __$$RelationshipMemberImplCopyWithImpl<$Res>
           ? _value.hasMuted
           : hasMuted // ignore: cast_nullable_to_non_nullable
               as bool,
+      hasManaged: null == hasManaged
+          ? _value.hasManaged
+          : hasManaged // ignore: cast_nullable_to_non_nullable
+              as bool,
       memberId: null == memberId
           ? _value.memberId
           : memberId // ignore: cast_nullable_to_non_nullable
@@ -170,6 +183,7 @@ class _$RelationshipMemberImpl implements _RelationshipMember {
       this.hasFollowed = false,
       this.hasHidden = false,
       this.hasMuted = false,
+      this.hasManaged = false,
       this.memberId = ''});
 
   factory _$RelationshipMemberImpl.fromJson(Map<String, dynamic> json) =>
@@ -192,11 +206,14 @@ class _$RelationshipMemberImpl implements _RelationshipMember {
   final bool hasMuted;
   @override
   @JsonKey()
+  final bool hasManaged;
+  @override
+  @JsonKey()
   final String memberId;
 
   @override
   String toString() {
-    return 'RelationshipMember(hasBlocked: $hasBlocked, hasConnected: $hasConnected, hasFollowed: $hasFollowed, hasHidden: $hasHidden, hasMuted: $hasMuted, memberId: $memberId)';
+    return 'RelationshipMember(hasBlocked: $hasBlocked, hasConnected: $hasConnected, hasFollowed: $hasFollowed, hasHidden: $hasHidden, hasMuted: $hasMuted, hasManaged: $hasManaged, memberId: $memberId)';
   }
 
   @override
@@ -214,6 +231,8 @@ class _$RelationshipMemberImpl implements _RelationshipMember {
                 other.hasHidden == hasHidden) &&
             (identical(other.hasMuted, hasMuted) ||
                 other.hasMuted == hasMuted) &&
+            (identical(other.hasManaged, hasManaged) ||
+                other.hasManaged == hasManaged) &&
             (identical(other.memberId, memberId) ||
                 other.memberId == memberId));
   }
@@ -221,7 +240,7 @@ class _$RelationshipMemberImpl implements _RelationshipMember {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, hasBlocked, hasConnected,
-      hasFollowed, hasHidden, hasMuted, memberId);
+      hasFollowed, hasHidden, hasMuted, hasManaged, memberId);
 
   @JsonKey(ignore: true)
   @override
@@ -245,6 +264,7 @@ abstract class _RelationshipMember implements RelationshipMember {
       final bool hasFollowed,
       final bool hasHidden,
       final bool hasMuted,
+      final bool hasManaged,
       final String memberId}) = _$RelationshipMemberImpl;
 
   factory _RelationshipMember.fromJson(Map<String, dynamic> json) =
@@ -260,6 +280,8 @@ abstract class _RelationshipMember implements RelationshipMember {
   bool get hasHidden;
   @override
   bool get hasMuted;
+  @override
+  bool get hasManaged;
   @override
   String get memberId;
   @override

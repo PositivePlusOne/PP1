@@ -17,6 +17,8 @@ enum RelationshipState {
   sourceHidden,
   targetMuted,
   sourceMuted,
+  targetManaged,
+  sourceManaged,
   fullyConnected,
 }
 
@@ -48,11 +50,13 @@ extension RelationshipStateExt on Relationship {
       if (member.hasFollowed) RelationshipState.sourceFollowed,
       if (member.hasHidden) RelationshipState.sourceHidden,
       if (member.hasMuted) RelationshipState.sourceMuted,
+      if (member.hasManaged) RelationshipState.sourceManaged,
       if (otherMembers.any((element) => element.hasBlocked)) RelationshipState.targetBlocked,
       if (otherMembers.any((element) => element.hasConnected)) RelationshipState.targetConnected,
       if (otherMembers.any((element) => element.hasFollowed)) RelationshipState.targetFollowing,
       if (otherMembers.any((element) => element.hasHidden)) RelationshipState.targetHidden,
       if (otherMembers.any((element) => element.hasMuted)) RelationshipState.targetMuted,
+      if (otherMembers.any((element) => element.hasManaged)) RelationshipState.targetManaged,
       if (member.hasConnected && otherMembers.any((element) => element.hasConnected)) RelationshipState.fullyConnected,
     };
   }

@@ -19,6 +19,7 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -48,6 +49,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.publisherProfile,
     required this.publisherRelationship,
     this.promotion,
+    this.tags = const [],
     this.isShortformPost = true,
     this.isShared = false,
     this.sidePadding = kPaddingSmall,
@@ -69,6 +71,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final Profile? publisherProfile;
   final Relationship? publisherRelationship;
   final Promotion? promotion;
+  final List<String> tags;
 
   final bool isShortformPost;
   final bool isShared;
@@ -93,6 +96,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+  /// return if this layout is for an activity that is 'promoted'
+  bool get _isPromoted =>
+
+      // we are promoted when there is a promotion or there is a tag that signals that it is
+      promotion != null || tags.indexWhere((tag) => TagHelpers.isPromoted(tag)) != -1;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -180,22 +189,27 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         if (postContent?.media.isNotEmpty ?? false) ...[
           const SizedBox(height: kPaddingSmall),
         ],
-        if (postContent?.media.length == 1 || !isShortformPost) ...<Widget>[
-          ..._postListAttachedImages(),
-        ],
-        //* -=-=-=- Carousel of attached images -=-=-=- *\\
-        if ((postContent?.media.length ?? 0) > 1 && isShortformPost) ...[
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return _postCarouselAttachedImages(context, constraints);
-            },
-          ),
-        ],
-        //* -=-=-=- promotion banner -=-=-=- *\\
-        if (promotion != null) ...[
-          const SizedBox(height: kPaddingSmall),
-          _promotionBanner(),
-        ],
+        // put the image in a stack
+        Stack(
+          alignment: AlignmentDirectional.bottomEnd,
+          children: [
+            if (postContent?.media.length == 1 || !isShortformPost)
+              Column(
+                children: [
+                  ..._postListAttachedImages(),
+                ],
+              ),
+            //* -=-=-=- Carousel of attached images -=-=-=- *\\
+            if ((postContent?.media.length ?? 0) > 1 && isShortformPost)
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return _postCarouselAttachedImages(context, constraints);
+                },
+              ),
+            //* -=-=-=- promotion banner -=-=-=- *\\
+            if (_isPromoted) _promotionBanner(),
+          ],
+        ),
         //* -=-=-=- Post Actions -=-=-=- *\\
         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
@@ -468,29 +482,28 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _promotionBanner() {
-    if (promotion == null) {
-      return const SizedBox();
-    }
-
-    final String link = promotion!.link;
-    final String linkText = promotion!.linkText;
-
-    if (link.isEmpty || linkText.isEmpty) {
-      return const SizedBox();
-    }
+    final String link = promotion?.link ?? '';
+    final String linkText = promotion?.linkText ?? appLocalizations.post_promoted_link_label;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositiveGlassSheet(
-        children: <Widget>[
+        children: [
           PositiveButton(
-            onTapped: () => link.attemptToLaunchURL(),
+            onTapped: () {
+              // we can only nav away to another page if there is one
+              if (link.isNotEmpty) {
+                link.attemptToLaunchURL();
+              }
+            },
             colors: colours,
             primaryColor: colours.black,
             label: linkText,
             size: PositiveButtonSize.small,
             style: PositiveButtonStyle.primary,
-            layout: PositiveButtonLayout.textOnly,
+            layout: PositiveButtonLayout.iconRight,
+            // and if there is a link - hint that we can go to it
+            icon: link.isNotEmpty ? Icons.navigate_next : null,
           ),
         ],
       ),
