@@ -61,7 +61,7 @@ class AccountPage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           foregroundColor: foregroundColor,
-          backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.teal,
+          backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: PreferredSize(

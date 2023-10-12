@@ -1,10 +1,10 @@
 // Package imports:
-import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
+import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/main.dart';

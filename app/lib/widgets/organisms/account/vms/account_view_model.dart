@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +17,7 @@ import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:app/dtos/database/feedback/feedback_wrapper.dart';
 import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
