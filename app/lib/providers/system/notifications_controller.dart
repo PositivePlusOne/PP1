@@ -349,7 +349,8 @@ class NotificationsController extends _$NotificationsController {
     }
 
     logger.d('attemptToAppendNotification: Appended notification');
-    notificationsState.pagingController.appendSafePage([payload], notificationsState.currentPaginationKey);
+    final List<NotificationPayload> newNotifications = <NotificationPayload>[payload];
+    notificationsState.pagingController.appendSafePage(newNotifications, notificationsState.currentPaginationKey);
   }
 
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {
