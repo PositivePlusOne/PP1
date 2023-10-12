@@ -5,6 +5,7 @@ import 'dart:io';
 // Flutter imports:
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
+import 'package:app/widgets/organisms/shared/components/scrolling_selector.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,6 +34,7 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
+import 'package:wheel_chooser/wheel_chooser.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -49,7 +51,6 @@ enum PositiveCameraViewMode {
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
-    required this.onDelayTimerChanged,
     this.topChildren,
     this.topAdditionalActions,
     this.onCameraImageTaken,
@@ -67,13 +68,20 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.enableFlashControls = true,
     this.displayCameraShade = true,
     this.isVideoMode = false,
-    this.maxDelay = 0,
-    this.maxRecordingLength,
     this.topNavigationSize = kPaddingNone,
     this.bottomNavigationSize = kPaddingNone,
-    this.delayTimerOptions = const [],
+    //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
+    required this.onDelayTimerChanged,
     this.isDelayTimerEnabled = false,
+    this.maxDelay = 0,
     this.delayTimerSelection = -1,
+    this.delayTimerOptions = const [],
+    //* -=-=-=-=-  Clip Timer Variables  -=-=-=-=- *\\
+    required this.onRecordingLengthChanged,
+    this.isRecordingLengthEnabled = false,
+    this.maxRecordingLength = 0,
+    this.recordingLengthSelection = -1,
+    this.recordingLengthOptions = const [],
     super.key,
   });
 
@@ -100,10 +108,13 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool isBusy;
   final bool displayCameraShade;
   final bool isVideoMode;
-  final bool isDelayTimerEnabled;
 
   final double topNavigationSize;
   final double bottomNavigationSize;
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
 
   /// delay before recording a clip in milliseconds
   final int maxDelay;
@@ -117,8 +128,27 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   /// current delay timer selection for widget
   final int delayTimerSelection;
 
+  /// should display the delay timer for clips
+  final bool isDelayTimerEnabled;
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-=-=-=-  Clip Timer Variables  -=-=-=-=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+
   /// maximum recording length of the clip in milliseconds
   final int? maxRecordingLength;
+
+  /// Strings for clip durations offered
+  final List<String> recordingLengthOptions;
+
+  /// callback function when different clip timer is selected
+  final Function(int) onRecordingLengthChanged;
+
+  /// current clip timer selection for widget
+  final int recordingLengthSelection;
+
+  /// should display the maximum recording timer for clips
+  final bool isRecordingLengthEnabled;
 
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
@@ -389,6 +419,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
         (timer) {
           if (currentDelay <= 0) {
             timer.cancel();
+            currentDelay = -1;
             onVideoRecordingStart(cameraState);
           } else {
             setStateIfMounted(
@@ -774,6 +805,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+          //* -=-=-=-=- Caption above camera button, used during onboarding  -=-=-=-=- *\\
+          //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           if (widget.takePictureCaption != null)
             Text(
               widget.takePictureCaption!,
@@ -782,7 +816,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
               overflow: TextOverflow.clip,
             ),
           const SizedBox(height: kPaddingMedium),
-          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled)
+          //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+          //* -=-=-=-=-=-             Delay Timer Selection UI             -=-=-=-=-=- *\\
+          //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled && !isRecording)
             SizedBox(
               width: 155,
               child: PositiveSlimTabBar(
@@ -793,6 +830,30 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
                 index: widget.delayTimerSelection,
               ),
             ),
+          //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+          //* -=-=-=-=-=-             Maximum Clip Duration UI             -=-=-=-=-=- *\\
+          //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+          if (widget.recordingLengthSelection >= 0 && widget.isVideoMode && widget.isRecordingLengthEnabled && !isRecording)
+            SizedBox(
+              height: kPaddingMedium,
+              child: WheelChooser.custom(
+                onValueChanged: (i) => widget.onRecordingLengthChanged(i),
+                horizontal: true,
+                perspective: 0.005,
+                startPosition: widget.recordingLengthSelection,
+                //? width of the buttons + spacing on either side
+                itemSize: kPaddingLargeish + kPaddingVerySmall + kPaddingVerySmall,
+                children: [
+                  for (var i = 0; i < widget.recordingLengthOptions.length; i++) ...[
+                    ScrollingSelector(
+                      textValue: widget.recordingLengthOptions[i],
+                      shouldHighlight: widget.recordingLengthSelection == i,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          const SizedBox(height: kPaddingSmallMedium),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -80,6 +80,7 @@ dependencies:
   video_editor: ^3.0.0
   ffmpeg_kit_flutter: ^6.0.3
   video_trimmer: ^3.0.1
+  wheel_chooser: ^1.1.2
 
   # Mapping
   geolocator: ^10.0.0

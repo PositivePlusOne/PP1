@@ -500,7 +500,8 @@
     "page_create_post_edited": "Post Saved",
 
     "page_create_post_clip_length_limit": "Clips can be a maximum of 3 minutes long - trim yours down to post it.",
-    "page_create_post_delay_timer_seconds": "s",
+    "page_create_post_seconds": "s",
+    "page_create_post_minuets": "m",
     "page_create_post_ui_timer": "Timer",
     "page_create_post_ui_filters": "Filters",
     "page_create_post_ui_playback": "Playback",
