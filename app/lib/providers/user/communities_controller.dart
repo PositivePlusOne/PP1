@@ -429,6 +429,9 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data appending to page');
     final PagingController<String, String> pagingController = feedState.pagingController;
 
+    // Remove all records that are already in the list
+    newRelationshipIds.removeWhere((String id) => pagingController.itemList?.contains(id) ?? false);
+
     if (hasMoreData) {
       pagingController.appendSafePage(newRelationshipIds, cursor);
     } else {
