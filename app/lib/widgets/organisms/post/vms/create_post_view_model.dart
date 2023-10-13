@@ -58,10 +58,12 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
     required ActivityData previousActivity,
+    //? Clip delay and clip length options
     @Default(0) int delayTimerCurrentSelection,
     @Default(false) bool isDelayTimerEnabled,
     @Default(0) int maximumClipDurationSelection,
     @Default(false) bool isMaximumClipDurationEnabled,
+    @Default(true) bool isBottomNavigationEnabled,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
   }) = _CreatePostViewModelState;
@@ -410,6 +412,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return "${duration ~/ 1000}${localisations.page_create_post_seconds}";
   }
 
+  void onClipStateChange(bool isClipActive) {
+    state = state.copyWith(
+      isBottomNavigationEnabled: isClipActive,
+    );
+  }
+
   void onTimerToggleRequest() {
     state = state.copyWith(isDelayTimerEnabled: !state.isDelayTimerEnabled);
   }
@@ -440,7 +448,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
     );
-    return;
   }
 
   Future<void> onClipEditFinish(BuildContext context, io.File file) async {
@@ -598,6 +605,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         );
         break;
       case CreatePostCurrentPage.createPostEditClip:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostClip,
+          activeButtonFlexText: localisations.page_create_post_create,
+        );
         break;
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:

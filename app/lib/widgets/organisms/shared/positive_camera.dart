@@ -70,6 +70,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.isVideoMode = false,
     this.topNavigationSize = kPaddingNone,
     this.bottomNavigationSize = kPaddingNone,
+    this.onClipStateChange,
     //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
     required this.onDelayTimerChanged,
     this.isDelayTimerEnabled = false,
@@ -112,6 +113,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final double topNavigationSize;
   final double bottomNavigationSize;
 
+  final Function(bool)? onClipStateChange;
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -406,6 +408,10 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       isClipActive = true;
     });
 
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(false);
+    }
+
     //? If a maximum delay has been set then begin the delay timer
     if (widget.maxDelay > 0) {
       setStateIfMounted(
@@ -460,6 +466,9 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       isCameraButtonSmall = false;
     });
 
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(true);
+    }
     await onVideoRecordingEnd(cameraState);
   }
 
@@ -840,6 +849,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
                 onValueChanged: (i) => widget.onRecordingLengthChanged(i),
                 horizontal: true,
                 perspective: 0.005,
+
                 startPosition: widget.recordingLengthSelection,
                 //? width of the buttons + spacing on either side
                 itemSize: kPaddingLargeish + kPaddingVerySmall + kPaddingVerySmall,
