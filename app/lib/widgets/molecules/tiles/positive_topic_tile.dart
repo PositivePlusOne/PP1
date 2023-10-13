@@ -45,7 +45,7 @@ class PositiveTopicTile extends StatelessWidget {
             ),
             const SizedBox(height: kPaddingSmall),
             Text(
-              tag.topic?.fallback.isEmpty == true ? tag.fallback : tag.topic!.fallback,
+              tag.topic == null || tag.topic?.fallback.isEmpty == true ? tag.fallback : tag.topic!.fallback,
               overflow: TextOverflow.ellipsis,
               maxLines: 4,
               style: typography.styleTopic.copyWith(color: colors.white.complimentTextColor),

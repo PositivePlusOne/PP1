@@ -431,12 +431,9 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
       isEnabled: widget.isEnabled,
       showDisabledState: false,
       onTap: onInternalTap,
-      child: Opacity(
-        opacity: bytes.isEmpty ? 0 : 1,
-        child: Material(
-          color: widget.backgroundColor,
-          child: child,
-        ),
+      child: Material(
+        color: widget.backgroundColor,
+        child: child,
       ),
     );
   }
