@@ -16,7 +16,6 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -110,17 +109,17 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
       });
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final Color? dominantColor = getMostCommonColor(bytes);
-      if (dominantColor == null) {
-        logger.w('Could not get dominant color for ${widget.imageOverridePath}');
-        return;
-      }
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final Color? dominantColor = getMostCommonColor(bytes);
+    //   if (dominantColor == null) {
+    //     logger.w('Could not get dominant color for ${widget.imageOverridePath}');
+    //     return;
+    //   }
 
-      logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
+    //   logger.d('Dominant color for ${widget.imageOverridePath} is $dominantColor');
 
-      setState(() => ringColor = dominantColor);
-    });
+    //   setState(() => ringColor = dominantColor);
+    // });
   }
 
   @override

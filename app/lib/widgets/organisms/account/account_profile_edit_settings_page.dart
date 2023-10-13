@@ -71,7 +71,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: <Widget>[
                     PositiveButton.appBarIcon(
                       colors: colors,
                       icon: UniconsLine.angle_left,

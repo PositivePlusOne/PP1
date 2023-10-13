@@ -1,4 +1,9 @@
 // Flutter imports:
+import 'package:app/providers/user/communities_controller.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,6 +43,10 @@ class NotificationsPage extends HookConsumerWidget {
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? currentUser = auth.currentUser;
+    final String currentUserUid = currentUser?.uid ?? '';
+
     final List<Widget> actions = [];
     final List<String> cacheKeys = [];
     bool hasNotifications = false;
@@ -58,6 +67,12 @@ class NotificationsPage extends HookConsumerWidget {
     useCacheHook(keys: cacheKeys);
     useLifecycleHook(viewModel);
 
+    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final List<Profile> supportedProfiles = profileController.availableProfiles;
+
+    final Size screenSize = MediaQuery.of(context).size;
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       visibleComponents: {
@@ -70,9 +85,84 @@ class NotificationsPage extends HookConsumerWidget {
           appBarTrailing: actions,
           appBarSpacing: kPaddingNone,
           children: <Widget>[
-            if (viewModel.canSwitchProfile) ...<Widget>[
-              PositiveProfileSegmentedSwitcher(mixin: viewModel),
-              const SizedBox(height: kPaddingMedium),
+            // if we can switch profiles - show the profile switcher
+            if (viewModel.canSwitchProfile && viewModel.availableProfileCount <= 2) ...<Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
+                child: PositiveProfileSegmentedSwitcher(
+                  mixin: viewModel,
+                  isSlim: true,
+                  onTapped: (int profileIndex) => viewModel.switchProfile(viewModel.getSupportedProfileIds()[profileIndex]),
+                ),
+              ),
+            ] else if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
+                child: PositiveTapBehaviour(
+                  isEnabled: true,
+                  onTap: (context) => showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) {
+                      return SizedBox(
+                        height: screenSize.height,
+                        width: screenSize.width,
+                        child: PositiveCommunitiesDialog(
+                          controllerProvider: communitiesControllerProvider(currentProfile: viewModel.getCurrentProfile(), currentUser: viewModel.getCurrentUser()),
+                          supportedCommunityTypes: const [CommunityType.supported],
+                          initialCommunityType: CommunityType.supported,
+                          mode: CommunitiesDialogMode.select,
+                          canCallToAction: false,
+                          selectedProfiles: [profileState.currentProfile?.flMeta?.id ?? ''],
+                          onProfileSelected: (String id) {
+                            viewModel.switchProfile(id);
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: PositiveTextFieldDropdown<Profile>(
+                        labelText: 'Account',
+                        values: supportedProfiles,
+                        initialValue: profileController.currentProfile ?? supportedProfiles.first,
+                        valueComparator: (oldValue, newValue) {
+                          if (oldValue is! Profile || newValue is! Profile) {
+                            return false;
+                          }
+
+                          return oldValue.flMeta?.id == newValue.flMeta?.id;
+                        },
+                        valueStringBuilder: (value) {
+                          final String profileId = value.flMeta?.id ?? '';
+                          if (profileId == currentUserUid) {
+                            return 'Personal';
+                          }
+
+                          return value.displayName;
+                        },
+                        placeholderStringBuilder: (value) {
+                          final String profileId = value.flMeta?.id ?? '';
+                          if (profileId == currentUserUid) {
+                            return 'Personal';
+                          }
+
+                          return value.displayName;
+                        },
+                        onValueChanged: (type) => viewModel.switchProfile(type.flMeta?.id ?? ''),
+                        backgroundColour: colours.white,
+                        iconColour: colours.white,
+                        iconBackgroundColour: colours.black,
+                        borderColour: colours.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ],
         ),

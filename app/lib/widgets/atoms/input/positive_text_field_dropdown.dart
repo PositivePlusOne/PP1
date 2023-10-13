@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,12 +24,14 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
     this.isEnabled = true,
     this.valueStringBuilder,
     this.placeholderStringBuilder,
+    this.borderColour,
     this.backgroundColour,
     this.textStyle,
     this.labelTextStyle,
     this.labelText,
     this.iconColour,
     this.iconBackgroundColour,
+    this.valueComparator,
     super.key,
   });
 
@@ -39,9 +42,12 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   final String Function(dynamic value)? placeholderStringBuilder;
   final void Function(dynamic value) onValueChanged;
 
+  final bool Function(dynamic value, dynamic other)? valueComparator;
+
   final String? labelText;
   final TextStyle? labelTextStyle;
 
+  final Color? borderColour;
   final Color? backgroundColour;
   final TextStyle? textStyle;
   final Color? iconColour;
@@ -97,6 +103,19 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
     currentValue = widget.initialValue;
   }
 
+  @override
+  void didUpdateWidget(PositiveTextFieldDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.valueComparator != null && !widget.valueComparator!(oldWidget.initialValue, widget.initialValue)) {
+      currentValue = widget.initialValue;
+      setStateIfMounted();
+    } else if (widget.valueComparator == null && oldWidget.initialValue != widget.initialValue) {
+      currentValue = widget.initialValue;
+      setStateIfMounted();
+    }
+  }
+
   Future<void> onWidgetSelected(BuildContext context) async {
     final T? value = await PositiveTextFieldDropdown.showDropdownDialog<T>(
       context: context,
@@ -133,6 +152,10 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
         padding: PositiveTextFieldDropdown.kDropdownPaddingRegular,
         decoration: BoxDecoration(
           color: widget.backgroundColour ?? colors.white,
+          border: Border.all(
+            color: widget.borderColour ?? colors.transparent,
+            width: PositiveButton.kButtonBorderWidth,
+          ),
           borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
         ),
         child: Row(

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,12 +9,17 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
@@ -42,6 +48,9 @@ class AccountPage extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
 
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final String currentUserUid = auth.currentUser?.uid ?? '';
+
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
         colors: colors,
@@ -56,6 +65,15 @@ class AccountPage extends HookConsumerWidget {
       ),
     ];
 
+    double bannerHeight = AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2;
+    if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) {
+      bannerHeight += kPaddingSmall * 3;
+    }
+
+    final Size screenSize = mediaQueryData.size;
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
@@ -65,11 +83,11 @@ class AccountPage extends HookConsumerWidget {
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: PreferredSize(
-            preferredSize: const Size(double.infinity, AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2),
+            preferredSize: Size(double.infinity, bannerHeight),
             child: Column(
               children: <Widget>[
                 // if we can switch profiles - show the profile switcher
-                if (viewModel.canSwitchProfile)
+                if (viewModel.canSwitchProfile && viewModel.availableProfileCount <= 2) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
                     child: PositiveProfileSegmentedSwitcher(
@@ -78,6 +96,75 @@ class AccountPage extends HookConsumerWidget {
                       onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, profileState, viewModel),
                     ),
                   ),
+                ] else if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
+                    child: PositiveTapBehaviour(
+                      isEnabled: true,
+                      onTap: (context) => showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return SizedBox(
+                            height: screenSize.height,
+                            width: screenSize.width,
+                            child: PositiveCommunitiesDialog(
+                              controllerProvider: communitiesControllerProvider(currentProfile: viewModel.getCurrentProfile(), currentUser: viewModel.getCurrentUser()),
+                              supportedCommunityTypes: const [CommunityType.supported],
+                              initialCommunityType: CommunityType.supported,
+                              mode: CommunitiesDialogMode.select,
+                              canCallToAction: false,
+                              selectedProfiles: [profileState.currentProfile?.flMeta?.id ?? ''],
+                              onProfileSelected: (String id) {
+                                viewModel.switchProfile(id);
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: IgnorePointer(
+                          ignoring: true,
+                          child: PositiveTextFieldDropdown<Profile>(
+                            labelText: 'Account',
+                            values: supportedProfiles,
+                            initialValue: profileController.currentProfile ?? supportedProfiles.first,
+                            valueComparator: (oldValue, newValue) {
+                              if (oldValue is! Profile || newValue is! Profile) {
+                                return false;
+                              }
+
+                              return oldValue.flMeta?.id == newValue.flMeta?.id;
+                            },
+                            valueStringBuilder: (value) {
+                              final String profileId = value.flMeta?.id ?? '';
+                              if (profileId == currentUserUid) {
+                                return 'Personal';
+                              }
+
+                              return value.displayName;
+                            },
+                            placeholderStringBuilder: (value) {
+                              final String profileId = value.flMeta?.id ?? '';
+                              if (profileId == currentUserUid) {
+                                return 'Personal';
+                              }
+
+                              return value.displayName;
+                            },
+                            onValueChanged: (type) => viewModel.switchProfile(type.flMeta?.id ?? ''),
+                            backgroundColour: colours.white,
+                            iconColour: colours.white,
+                            iconBackgroundColour: colours.black,
+                            borderColour: colours.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
                 // always show our account banner
                 const AccountProfileBanner(),
               ],
@@ -98,7 +185,7 @@ class AccountPage extends HookConsumerWidget {
                       AccountOptionsPane(
                         colors: colors,
                         edgePadding: kPaddingSmall,
-                        accentColour: state.profileAccentColour,
+                        accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
                         mixin: viewModel,
                       ),
                       const Spacer(),
@@ -108,7 +195,7 @@ class AccountPage extends HookConsumerWidget {
                     colors: colors,
                     isOrganisation: true,
                     edgePadding: kPaddingSmall,
-                    accentColour: state.organisationAccentColour,
+                    accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
                     mixin: viewModel,
                   ),
                 ],

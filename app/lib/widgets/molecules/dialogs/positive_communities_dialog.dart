@@ -4,6 +4,8 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -14,6 +16,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -32,6 +35,8 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
+import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
+import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
@@ -40,7 +45,7 @@ import 'package:app/widgets/state/positive_community_feed_state.dart';
 class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   const PositiveCommunitiesDialog({
     required this.controllerProvider,
-    this.supportedCommunityTypes = CommunityType.userProfileCommunityTypes,
+    this.supportedCommunityTypes,
     this.mode = CommunitiesDialogMode.view,
     this.actionLabel,
     this.canCallToAction = true,
@@ -48,12 +53,13 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     this.onProfileSelected,
     this.selectedProfiles = const <String>[],
     this.isEnabled = true,
+    this.initialCommunityType,
     super.key,
   });
 
   final CommunitiesControllerProvider controllerProvider;
   final CommunitiesDialogMode mode;
-  final List<CommunityType> supportedCommunityTypes;
+  final List<CommunityType>? supportedCommunityTypes;
 
   // Select mode controls
   final String? actionLabel;
@@ -62,6 +68,8 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final void Function(String)? onProfileSelected;
   final List<String> selectedProfiles;
   final bool isEnabled;
+
+  final CommunityType? initialCommunityType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveCommunitiesDialogState();
@@ -92,12 +100,27 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   void initState() {
     super.initState();
     setupControllers();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialCommunityType != null) {
+        final CommunitiesController controller = providerContainer.read(widget.controllerProvider.notifier);
+        controller.setSelectedCommunityType(widget.initialCommunityType!);
+      }
+    });
   }
 
   @override
   void dispose() {
     disposeControllers();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(PositiveCommunitiesDialog oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedProfiles != widget.selectedProfiles) {
+      setStateIfMounted();
+    }
   }
 
   PositiveCommunityFeedState get currentFeedState {
@@ -108,7 +131,28 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       CommunityType.connected => connectionsPagingFeedState,
       CommunityType.blocked => blockedPagingFeedState,
       CommunityType.managed => managedPagingFeedState,
+      CommunityType.supported => buildPageStateFromSupportedProfiles(),
     };
+  }
+
+  PositiveCommunityFeedState buildPageStateFromSupportedProfiles() {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Set<String> supportedProfilesIds = profileController.state.availableProfileIds;
+
+    final PagingController<String, String> pagingController = PagingController(firstPageKey: '');
+    pagingController.value = PagingState(
+      error: null,
+      nextPageKey: null,
+      itemList: supportedProfilesIds.toList(),
+    );
+
+    final PositiveCommunityFeedState feedState = PositiveCommunityFeedState.buildNewState(
+      currentProfileId: '',
+      communityType: CommunityType.supported,
+      pagingController: pagingController,
+    );
+
+    return feedState;
   }
 
   void setupControllers() {
@@ -177,10 +221,15 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
+    final FirebaseAuth auth = providerContainer.read(firebaseAuthProvider);
+    final String currentAuthUserId = auth.currentUser?.uid ?? '';
+
     final Profile? currentProfile = profileControllerState.currentProfile;
     final bool isManagedProfile = profileController.isCurrentManagedProfile;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
     ref.watch(widget.controllerProvider);
@@ -223,7 +272,29 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           cacheController: cacheController,
           senderProfile: currentProfile,
         ),
+      CommunityType.supported => buildRelationshipList(
+          context: context,
+          controller: currentFeedState.pagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
     };
+
+    final List<CommunityType> communityTypes = [];
+    if (widget.supportedCommunityTypes != null) {
+      communityTypes.addAll(widget.supportedCommunityTypes!);
+    } else if (isManagedProfile) {
+      communityTypes.addAll(<CommunityType>[CommunityType.managed, CommunityType.following, CommunityType.followers, CommunityType.blocked]);
+    } else {
+      communityTypes.addAll(<CommunityType>[CommunityType.connected, CommunityType.following, CommunityType.followers, CommunityType.blocked]);
+    }
+
+    bool isOrganisationManager = false;
+    if (isManagedProfile) {
+      isOrganisationManager = currentAuthUserId.isNotEmpty && currentProfile?.flMeta?.ownedBy == currentAuthUserId;
+    }
+
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     return PositiveScaffold(
       headingWidgets: <Widget>[
@@ -232,15 +303,30 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           children: <Widget>[
             buildAppBar(context, colors),
             const SizedBox(height: kPaddingSmall),
-            if (widget.supportedCommunityTypes.length >= 2) ...<Widget>[
+            if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
-                values: widget.supportedCommunityTypes,
+                values: communityTypes,
                 initialValue: isManagedProfile ? CommunityType.managed : CommunityType.connected,
                 onValueChanged: (value) => onCommunityTypeChanged(value),
                 backgroundColour: colors.white,
                 labelText: 'User Type',
                 valueStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
                 placeholderStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
+              ),
+              const SizedBox(height: kPaddingSmall),
+            ],
+            if (isOrganisationManager) ...<Widget>[
+              PositiveTransparentSheet(
+                children: <Widget>[
+                  PositiveRichText(
+                    body: 'Need to invite new people or remove somebody? Please get in touch with us at {}, or call your representative.',
+                    onActionTapped: (_) => 'mailto:support@positiveplusone.com'.attemptToLaunchURL(),
+                    actions: <String>[
+                      localizations.shared_emails_support,
+                    ],
+                    style: typography.styleSubtext.copyWith(color: colors.black),
+                  ),
+                ],
               ),
               const SizedBox(height: kPaddingSmall),
             ],

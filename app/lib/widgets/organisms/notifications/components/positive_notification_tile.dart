@@ -185,10 +185,10 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       showDisabledState: !widget.isEnabled,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
-        constraints: const BoxConstraints(
-          minHeight: PositiveNotificationTile.kConstrainedHeight,
-          maxHeight: PositiveNotificationTile.kConstrainedHeight,
-        ),
+        // constraints: const BoxConstraints(
+        //   minHeight: PositiveNotificationTile.kConstrainedHeight,
+        //   maxHeight: PositiveNotificationTile.kConstrainedHeight,
+        // ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(kBorderRadiusMassive),

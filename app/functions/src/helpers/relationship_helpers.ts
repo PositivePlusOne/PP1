@@ -19,6 +19,7 @@ export namespace RelationshipHelpers {
     let followersSearchIndex = "";
     let hiddenSearchIndex = "";
     let managersSearchIndex = "";
+    let managedSearchIndex = "";
 
     const allMemberIds = relationship.members.map((member: any) => member.memberId);
 
@@ -61,6 +62,13 @@ export namespace RelationshipHelpers {
 
       if (member.canManage) {
         managersSearchIndex += member.memberId;
+
+        const otherMemberIds = allMemberIds.filter((id: string) => id !== member.memberId);
+        for (const id of otherMemberIds) {
+          if (managedSearchIndex.indexOf(id) === -1) {
+            managedSearchIndex += id;
+          }
+        }
       }
     }
 
@@ -72,6 +80,7 @@ export namespace RelationshipHelpers {
     relationship.searchIndexRelationshipFollowers = followersSearchIndex;
     relationship.searchIndexRelationshipHides = hiddenSearchIndex;
     relationship.searchIndexRelationshipManages = managersSearchIndex;
+    relationship.searchIndexRelationshipManaged = managedSearchIndex;
 
     return relationship;
   }
