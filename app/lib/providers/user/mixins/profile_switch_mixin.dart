@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
@@ -81,6 +82,11 @@ mixin ProfileSwitchMixin {
     return profileControllerState.availableProfileIds.length > 1;
   }
 
+  int get availableProfileCount {
+    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
+    return profileControllerState.availableProfileIds.length;
+  }
+
   Future<void> requestSwitchProfileDialog(BuildContext context, ActivitySecurityConfigurationMode? mode) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - start');
@@ -139,6 +145,11 @@ mixin ProfileSwitchMixin {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String currentProfileId = getCurrentProfileId();
     return cacheController.get(currentProfileId);
+  }
+
+  User? getCurrentUser() {
+    final UserController userController = providerContainer.read(userControllerProvider.notifier);
+    return userController.currentUser;
   }
 
   String getCurrentUserId() {

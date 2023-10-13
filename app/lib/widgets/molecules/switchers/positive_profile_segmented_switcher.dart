@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
@@ -61,7 +62,15 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
           index: supportedProfileIds.indexOf(currentProfileId),
           onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
           tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colors.teal)).toList(),
-          tabs: profiles.map((Profile profile) => profile.displayName).toList(),
+          tabs: profiles.map((Profile profile) {
+            final String profileId = profile.flMeta?.id ?? '';
+            final bool isCurrentProfile = profileId == currentProfileId;
+            if (isCurrentProfile) {
+              return 'Personal';
+            }
+
+            return profile.displayName;
+          }).toList(),
         );
     }
   }

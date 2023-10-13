@@ -53,6 +53,7 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     this.onProfileSelected,
     this.selectedProfiles = const <String>[],
     this.isEnabled = true,
+    this.initialCommunityType,
     super.key,
   });
 
@@ -67,6 +68,8 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final void Function(String)? onProfileSelected;
   final List<String> selectedProfiles;
   final bool isEnabled;
+
+  final CommunityType? initialCommunityType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveCommunitiesDialogState();
@@ -97,12 +100,27 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   void initState() {
     super.initState();
     setupControllers();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialCommunityType != null) {
+        final CommunitiesController controller = providerContainer.read(widget.controllerProvider.notifier);
+        controller.setSelectedCommunityType(widget.initialCommunityType!);
+      }
+    });
   }
 
   @override
   void dispose() {
     disposeControllers();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(PositiveCommunitiesDialog oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedProfiles != widget.selectedProfiles) {
+      setStateIfMounted();
+    }
   }
 
   PositiveCommunityFeedState get currentFeedState {
@@ -113,7 +131,28 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       CommunityType.connected => connectionsPagingFeedState,
       CommunityType.blocked => blockedPagingFeedState,
       CommunityType.managed => managedPagingFeedState,
+      CommunityType.supported => buildPageStateFromSupportedProfiles(),
     };
+  }
+
+  PositiveCommunityFeedState buildPageStateFromSupportedProfiles() {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Set<String> supportedProfilesIds = profileController.state.availableProfileIds;
+
+    final PagingController<String, String> pagingController = PagingController(firstPageKey: '');
+    pagingController.value = PagingState(
+      error: null,
+      nextPageKey: null,
+      itemList: supportedProfilesIds.toList(),
+    );
+
+    final PositiveCommunityFeedState feedState = PositiveCommunityFeedState.buildNewState(
+      currentProfileId: '',
+      communityType: CommunityType.supported,
+      pagingController: pagingController,
+    );
+
+    return feedState;
   }
 
   void setupControllers() {
@@ -230,6 +269,12 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       CommunityType.managed => buildRelationshipList(
           context: context,
           controller: managedPagingFeedState.pagingController,
+          cacheController: cacheController,
+          senderProfile: currentProfile,
+        ),
+      CommunityType.supported => buildRelationshipList(
+          context: context,
+          controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
         ),
