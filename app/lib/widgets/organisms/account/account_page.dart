@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -46,6 +47,9 @@ class AccountPage extends HookConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final String currentUserUid = auth.currentUser?.uid ?? '';
 
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
@@ -127,8 +131,29 @@ class AccountPage extends HookConsumerWidget {
                             labelText: 'Account',
                             values: supportedProfiles,
                             initialValue: profileController.currentProfile ?? supportedProfiles.first,
-                            valueStringBuilder: (value) => value.displayName,
-                            placeholderStringBuilder: (value) => value.displayName,
+                            valueComparator: (oldValue, newValue) {
+                              if (oldValue is! Profile || newValue is! Profile) {
+                                return false;
+                              }
+
+                              return oldValue.flMeta?.id == newValue.flMeta?.id;
+                            },
+                            valueStringBuilder: (value) {
+                              final String profileId = value.flMeta?.id ?? '';
+                              if (profileId == currentUserUid) {
+                                return 'Personal';
+                              }
+
+                              return value.displayName;
+                            },
+                            placeholderStringBuilder: (value) {
+                              final String profileId = value.flMeta?.id ?? '';
+                              if (profileId == currentUserUid) {
+                                return 'Personal';
+                              }
+
+                              return value.displayName;
+                            },
                             onValueChanged: (type) => viewModel.switchProfile(type.flMeta?.id ?? ''),
                             backgroundColour: colours.white,
                             iconColour: colours.white,

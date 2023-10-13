@@ -191,4 +191,21 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     systemController.toggleDebugMessages();
   }
+
+  Future<void> displayAuthClaims() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    logger.d('Displaying auth claims');
+
+    state = state.copyWith(status: 'Displaying auth claims');
+
+    try {
+      final Map<String, dynamic> claims = (await firebaseAuth.currentUser?.getIdTokenResult())?.claims ?? {};
+      logger.d('Auth claims: $claims');
+      state = state.copyWith(status: 'Auth claims: $claims');
+    } catch (ex) {
+      logger.e('Failed to display auth claims. $ex');
+      state = state.copyWith(status: 'Failed to display auth claims');
+    }
+  }
 }

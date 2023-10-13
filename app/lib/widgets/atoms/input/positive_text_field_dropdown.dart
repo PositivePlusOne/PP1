@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,6 +30,7 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
     this.labelText,
     this.iconColour,
     this.iconBackgroundColour,
+    this.valueComparator,
     super.key,
   });
 
@@ -38,6 +40,8 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   final String Function(dynamic value)? valueStringBuilder;
   final String Function(dynamic value)? placeholderStringBuilder;
   final void Function(dynamic value) onValueChanged;
+
+  final bool Function(dynamic value, dynamic other)? valueComparator;
 
   final String? labelText;
   final TextStyle? labelTextStyle;
@@ -95,6 +99,19 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
   void initState() {
     super.initState();
     currentValue = widget.initialValue;
+  }
+
+  @override
+  void didUpdateWidget(PositiveTextFieldDropdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.valueComparator != null && !widget.valueComparator!(oldWidget.initialValue, widget.initialValue)) {
+      currentValue = widget.initialValue;
+      setStateIfMounted();
+    } else if (widget.valueComparator == null && oldWidget.initialValue != widget.initialValue) {
+      currentValue = widget.initialValue;
+      setStateIfMounted();
+    }
   }
 
   Future<void> onWidgetSelected(BuildContext context) async {
