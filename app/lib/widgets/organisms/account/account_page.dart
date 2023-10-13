@@ -158,6 +158,7 @@ class AccountPage extends HookConsumerWidget {
                             backgroundColour: colours.white,
                             iconColour: colours.white,
                             iconBackgroundColour: colours.black,
+                            borderColour: colours.black,
                           ),
                         ),
                       ),

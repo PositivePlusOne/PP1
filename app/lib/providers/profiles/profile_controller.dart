@@ -70,6 +70,11 @@ class ProfileController extends _$ProfileController {
     return cacheController.get(firebaseAuth.currentUser!.uid);
   }
 
+  List<Profile> get availableProfiles {
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    return state.availableProfileIds.map((String id) => cacheController.get(id)).whereType<Profile>().toList();
+  }
+
   bool get isCurrentlyUserProfile {
     if (currentProfileId?.isEmpty ?? true) {
       return false;
