@@ -20,7 +20,8 @@ class ScrollingSelector extends HookConsumerWidget {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    return Container(
+    return AnimatedContainer(
+      duration: kAnimationDurationRegular,
       decoration: BoxDecoration(
         color: shouldHighlight ? colours.black.withOpacity(kOpacityVignette) : colours.transparent,
         borderRadius: BorderRadius.circular(

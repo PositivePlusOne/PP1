@@ -75,11 +75,7 @@ dependencies:
   entry: ^0.0.8+1
   adaptive_dialog: ^1.9.0-0
   auto_size_text: ^3.0.0
-  photo_view: ^0.14.0
   flutter_staggered_grid_view: ^0.7.0
-  video_editor: ^3.0.0
-  ffmpeg_kit_flutter: ^6.0.3
-  video_trimmer: ^3.0.1
   wheel_chooser: ^1.1.2
 
   # Mapping
@@ -91,9 +87,19 @@ dependencies:
   auto_route: ^7.8.3
   app_links: ^3.4.3
   share_plus: ^7.1.0
+  
+  # video and image
+  camerawesome: ^2.0.0-dev.1
+  mime: ^1.0.4
+  flutter_image_compress: ^2.0.4
+  video_player_avfoundation: ^2.5.0
+  video_player: ^2.7.2
+  video_editor: ^3.0.0
+  ffmpeg_kit_flutter: ^6.0.3
+  video_trimmer: ^3.0.1
+  photo_view: ^0.14.0
 
   # Other
-  camerawesome: ^2.0.0-dev.1
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
   open_settings_plus: ^0.1.0
@@ -101,12 +107,9 @@ dependencies:
   profanity_filter: ^2.0.0
   very_good_infinite_list: ^0.7.0
   url_launcher: ^6.1.12
-  mime: ^1.0.4
-  flutter_image_compress: ^2.0.4
   android_intent_plus: ^4.0.3
 
   # Dunno why this is needed
-  video_player_avfoundation: ^2.5.0
 
 dev_dependencies:
   flutter_test:
