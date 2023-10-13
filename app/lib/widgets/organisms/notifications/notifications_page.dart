@@ -1,13 +1,9 @@
 // Flutter imports:
-import 'package:app/providers/user/communities_controller.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -21,7 +17,11 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/communities_controller.dart';
+import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';

@@ -79,8 +79,8 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     final Profile? profile = profileController.currentProfile;
 
     state = state.copyWith(
-      organisationAccentColour: profile?.accentColor.toColorFromHex() ?? Colors.white,
-      profileAccentColour: profile?.accentColor.toColorFromHex() ?? Colors.white,
+      organisationAccentColour: profile?.accentColor.toSafeColorFromHex() ?? Colors.white,
+      profileAccentColour: profile?.accentColor.toSafeColorFromHex() ?? Colors.white,
     );
   }
 }

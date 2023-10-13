@@ -26,6 +26,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
@@ -58,7 +59,7 @@ class GetStreamControllerState with _$GetStreamControllerState {
 
 @Riverpod(keepAlive: true)
 class GetStreamController extends _$GetStreamController {
-  StreamSubscription<fba.User?>? userSubscription;
+  StreamSubscription<ProfileSwitchedEvent>? profileSubscription;
   StreamSubscription<CacheKeyUpdatedEvent>? cacheKeySubscription;
 
   StreamSubscription<String>? firebaseTokenSubscription;
@@ -75,7 +76,7 @@ class GetStreamController extends _$GetStreamController {
     }
   }
 
-  String? get currentUserId {
+  String? get currentStreamUserId {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     return streamChatClient.state.currentUser?.id;
   }
@@ -106,12 +107,11 @@ class GetStreamController extends _$GetStreamController {
   }
 
   Future<void> setupListeners() async {
-    final fba.FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
 
-    await userSubscription?.cancel();
-    userSubscription = firebaseAuth.userChanges().listen(onUserChanged);
+    await profileSubscription?.cancel();
+    profileSubscription = eventBus.on<ProfileSwitchedEvent>().listen(onProfileChanged);
 
     await cacheKeySubscription?.cancel();
     cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
@@ -122,20 +122,27 @@ class GetStreamController extends _$GetStreamController {
     });
   }
 
-  Future<void> onUserChanged(fba.User? event) async {
+  Future<void> onProfileChanged(ProfileSwitchedEvent event) async {
     final log = ref.read(loggerProvider);
-    log.d('[GetStreamController] onUserChanged()');
+    log.d('[GetStreamController] onProfileChanged()');
+
+    // Check if the new profile is the same as the current logged in stream user
+    final String streamUserId = currentStreamUserId ?? '';
+    if (streamUserId == event.profileId) {
+      log.i('[GetStreamController] onProfileChanged() profileId is the same as streamUserId');
+      return;
+    }
 
     await disconnectStreamUser();
     await resetUserListeners();
 
-    if (event == null) {
-      log.i('[GetStreamController] onUserChanged() profileId is empty');
+    if (event.profileId.isEmpty) {
+      log.i('[GetStreamController] onProfileChanged() profileId is empty');
       return;
     }
 
     await connectStreamUser();
-    await setupUserListeners();
+    await setupProfileListeners();
     await attemptToUpdateStreamDevices();
   }
 
@@ -152,15 +159,15 @@ class GetStreamController extends _$GetStreamController {
     await channelsSubscription?.cancel();
   }
 
-  Future<void> setupUserListeners() async {
+  Future<void> setupProfileListeners() async {
     final log = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    log.d('[GetStreamController] setupUserListeners()');
+    log.d('[GetStreamController] setupProfileListeners()');
 
     await channelsSubscription?.cancel();
     if (profileController.currentProfileId?.isEmpty ?? true) {
-      log.i('[GetStreamController] setupUserListeners() profileId is empty');
+      log.i('[GetStreamController] setupProfileListeners() profileId is empty');
       return;
     }
 
@@ -328,12 +335,12 @@ class GetStreamController extends _$GetStreamController {
 
   Future<void> connectStreamUser() async {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
     final log = ref.read(loggerProvider);
 
-    final String currentUserId = userController.currentUser?.uid ?? '';
-    if (currentUserId.isEmpty) {
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
       log.e('[GetStreamController] connectStreamUser() profileId is empty');
       return;
     }
@@ -344,16 +351,16 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    log.i('[GetStreamController] onUserChanged() user is not null');
+    log.i('[GetStreamController] onProfileChanged() user is not null');
     final String token = await systemApiService.getStreamToken();
 
     // Check if user is disconnected, so we don't call connectUser() twice
     if (streamChatClient.wsConnectionStatus != ConnectionStatus.disconnected) {
-      log.w('[GetStreamController] onUserChanged() user is not disconnected');
+      log.w('[GetStreamController] onProfileChanged() user is not disconnected');
       return;
     }
 
-    final User chatUser = buildStreamChatUser(id: currentUserId);
+    final User chatUser = buildStreamChatUser(id: currentProfileId);
     await streamChatClient.connectUser(chatUser, token);
   }
 
@@ -361,14 +368,20 @@ class GetStreamController extends _$GetStreamController {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     final log = ref.read(loggerProvider);
 
-    log.i('[GetStreamController] onUserChanged() updating devices');
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    if (!profileController.isCurrentlyUserProfile) {
+      log.i('[GetStreamController] onProfileChanged() not current auth user');
+      return;
+    }
+
+    log.i('[GetStreamController] onProfileChanged() updating devices');
     if (streamChatClient.wsConnectionStatus != ConnectionStatus.connected) {
-      log.e('[GetStreamController] onUserChanged() not connected');
+      log.e('[GetStreamController] onProfileChanged() not connected');
       return;
     }
 
     if (fcmToken.isEmpty) {
-      log.e('[GetStreamController] onUserChanged() fcmToken is empty');
+      log.e('[GetStreamController] onProfileChanged() fcmToken is empty');
       return;
     }
 
@@ -376,19 +389,19 @@ class GetStreamController extends _$GetStreamController {
       final ListDevicesResponse devicesResponse = await streamChatClient.getDevices();
       for (final Device device in devicesResponse.devices) {
         if (device.id != fcmToken) {
-          log.i('[GetStreamController] onUserChanged() removing device: ${device.id}');
+          log.i('[GetStreamController] onProfileChanged() removing device: ${device.id}');
           await streamChatClient.removeDevice(device.id);
         }
       }
 
       if (!devicesResponse.devices.any((Device device) => device.id == fcmToken)) {
-        log.i('[GetStreamController] onUserChanged() adding device: $fcmToken');
+        log.i('[GetStreamController] onProfileChanged() adding device: $fcmToken');
         await streamChatClient.addDevice(fcmToken, PushProvider.firebase, pushProviderName: pushProviderName);
       } else {
-        log.i('[GetStreamController] onUserChanged() device already exists: $fcmToken');
+        log.i('[GetStreamController] onProfileChanged() device already exists: $fcmToken');
       }
     } catch (e) {
-      log.e('[GetStreamController] onUserChanged() error: $e');
+      log.e('[GetStreamController] onProfileChanged() error: $e');
     }
   }
 

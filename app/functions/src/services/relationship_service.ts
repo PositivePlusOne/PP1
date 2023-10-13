@@ -210,8 +210,7 @@ export namespace RelationshipService {
         .collection("fl_content")
         .orderBy("searchIndexRelationshipBlocks")
         .where("_fl_meta_.schema", "==", "relationships")
-        .where("searchIndexRelationshipBlocks", ">=", uid)
-        .where("searchIndexRelationshipBlocks", "<=", uid + "\uf8ff")
+        .where("searchIndexRelationshipBlocks", "array-contains", uid)
         .where("blocked", "==", true)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
@@ -251,15 +250,15 @@ export namespace RelationshipService {
   export async function getConnectedRelationships(uid: string, pagination: Pagination): Promise<PaginationResult<RelationshipJSON>> {
     const adminFirestore = adminApp.firestore();
     const cacheKey = CONNECTED_CACHE_KEY_PREFIX + uid + ":" + pagination.cursor;
-    let data = await CacheService.get(cacheKey);
+    // let data = await CacheService.get(cacheKey);
+    let data;
 
     if (!data) {
       const relationshipsSnapshot = await adminFirestore
         .collection("fl_content")
         .orderBy("searchIndexRelationshipConnections")
         .where("_fl_meta_.schema", "==", "relationships")
-        .where("searchIndexRelationshipConnections", ">=", uid)
-        .where("searchIndexRelationshipConnections", "<=", uid + "\uf8ff")
+        .where("searchIndexRelationshipConnections", "array-contains", uid)
         .where("connected", "==", true)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
@@ -305,8 +304,7 @@ export namespace RelationshipService {
         .collection("fl_content")
         .orderBy("searchIndexRelationshipFollows")
         .where("_fl_meta_.schema", "==", "relationships")
-        .where("searchIndexRelationshipFollows", ">=", uid)
-        .where("searchIndexRelationshipFollows", "<=", uid + "\uf8ff")
+        .where("searchIndexRelationshipFollows", "array-contains", uid)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
         .get();
@@ -346,8 +344,7 @@ export namespace RelationshipService {
         .collection("fl_content")
         .orderBy("searchIndexRelationshipFollowers")
         .where("_fl_meta_.schema", "==", "relationships")
-        .where("searchIndexRelationshipFollowers", ">=", uid)
-        .where("searchIndexRelationshipFollowers", "<=", uid + "\uf8ff")
+        .where("searchIndexRelationshipFollowers", "array-contains", uid)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
         .get();
@@ -387,8 +384,7 @@ export namespace RelationshipService {
         .collection("fl_content")
         .orderBy("searchIndexRelationshipManages")
         .where("_fl_meta_.schema", "==", "relationships")
-        .where("searchIndexRelationshipManages", ">=", uid)
-        .where("searchIndexRelationshipManages", "<=", uid + "\uf8ff")
+        .where("searchIndexRelationshipManages", "array-contains", uid)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
         .get();
@@ -428,8 +424,7 @@ export namespace RelationshipService {
         .collection("fl_content")
         .orderBy("searchIndexRelationshipManaged")
         .where("_fl_meta_.schema", "==", "relationships")
-        .where("searchIndexRelationshipManaged", ">=", uid)
-        .where("searchIndexRelationshipManaged", "<=", uid + "\uf8ff")
+        .where("searchIndexRelationshipManaged", "array-contains", uid)
         .limit(pagination.limit ?? 10)
         .startAfter(pagination.cursor)
         .get();
@@ -471,8 +466,7 @@ export namespace RelationshipService {
     const relationshipsSnapshot = await adminFirestore
       .collection("fl_content")
       .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipMutes", ">=", uid)
-      .where("searchIndexRelationshipMutes", "<=", uid + "\uf8ff")
+      .where("searchIndexRelationshipMutes", "array-contains", uid)
       .where("muted", "==", true)
       .get();
 
@@ -513,8 +507,7 @@ export namespace RelationshipService {
     const relationshipsSnapshot = await adminFirestore
       .collection("fl_content")
       .where("_fl_meta_.schema", "==", "relationships")
-      .where("searchIndexRelationshipHides", ">=", uid)
-      .where("searchIndexRelationshipHides", "<=", uid + "\uf8ff")
+      .where("searchIndexRelationshipHides", "array-contains", uid)
       .where("hidden", "==", true)
       .get();
 

@@ -53,7 +53,7 @@ class PositiveChatMemberTile extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final String tagline = profile.getTagline(localizations);
 
-    final Color accentColor = profile.accentColor.toColorFromHex();
+    final Color accentColor = profile.accentColor.toSafeColorFromHex();
     final Color complementaryColor = accentColor.complimentTextColor;
 
     bool isSourceBlocked = false;

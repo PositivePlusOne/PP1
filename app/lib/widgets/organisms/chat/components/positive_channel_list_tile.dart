@@ -17,9 +17,9 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/time_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_numeric_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_selectable_indicator.dart';
@@ -50,10 +50,12 @@ class PositiveChannelListTile extends ConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final String? currentUserId = ref.read(firebaseAuthProvider).currentUser?.uid;
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+
+    final String currentProfileId = profileControllerState.currentProfile?.flMeta?.id ?? '';
     final List<Member> members = channel?.state?.members.toList() ?? [];
     final List<Profile> profiles = members.map((e) => cacheController.get<Profile>(e.userId!)).nonNulls.toList();
-    final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentUserId).toList();
+    final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentProfileId).toList();
 
     final Message? latestMessage = channel?.state?.messages.reversed.firstOrNull;
     final bool isOneToOne = channel?.state?.members.length == 2;
@@ -124,7 +126,7 @@ class PositiveChannelListTile extends ConsumerWidget {
     Color complementaryColor = accentColor.complimentTextColor;
     if (otherProfiles.length == 1) {
       isVerified = otherProfiles.first.isVerified;
-      accentColor = otherProfiles.first.accentColor.toColorFromHex();
+      accentColor = otherProfiles.first.accentColor.toSafeColorFromHex();
       complementaryColor = accentColor.complimentTextColor;
     }
 
