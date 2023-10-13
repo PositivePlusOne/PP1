@@ -118,6 +118,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
                     topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
 
+                    ///? Change UI state based on current clip state
+                    onClipStateChange: viewModel.onClipStateChange,
+
                     ///? Options for camera delay before taking picture or clip
                     maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
                     delayTimerOptions: viewModel.delayTimerOptions.map((e) => "$e${localisations.page_create_post_seconds}").toList(),
@@ -228,8 +231,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-              Bottom Navigation               -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              Positioned(
-                bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+              AnimatedPositioned(
+                duration: kAnimationDurationRegular,
+                bottom: state.isBottomNavigationEnabled ? kPaddingMedium + mediaQueryData.padding.bottom : -(kPaddingMedium + kCreatePostNavigationHeight),
                 height: kCreatePostNavigationHeight,
                 left: kPaddingSmall,
                 right: kPaddingSmall,
@@ -240,7 +244,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
                   activeButton: state.activeButton,
                   flexCaption: state.activeButtonFlexText,
-                  isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
+                  isEnabled: viewModel.isNavigationEnabled && !state.isBusy && state.isBottomNavigationEnabled,
                 ),
               ),
             ],

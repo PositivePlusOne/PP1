@@ -1,8 +1,10 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,7 +12,9 @@ import 'package:banner_carousel/banner_carousel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
 import 'package:unicons/unicons.dart';
+import 'package:video_player/video_player.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
@@ -251,35 +255,15 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          //* -=-=-=- Single attached image -=-=-=- *\\
-          if (postContent?.media.length == 1) ...[
-            const SizedBox(height: kPaddingSmall),
-          ],
-          if (postContent?.media.length == 1) ..._postListAttachedImages(),
           //* -=-=-=- attached video -=-=-=- *\\
-          if (postContent?.media.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return _postCarouselAttachedImages(context, constraints);
-              },
-            ),
-          ],
           _postAttachedVideo(),
+          //* -=-=-=- promotion banner -=-=-=- *\\
+          if (promotion != null) ...[
+            const SizedBox(height: kPaddingSmall),
+            _promotionBanner(),
+          ],
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-          //* -=-=-=- Post Title -=-=-=- *\\
-          _postTitle(),
-          //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            _tags(),
-          ],
-          //* -=-=-=- Location -=-=-=- *\\
-          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            _location(),
-          ],
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
           _markdownBody(context: context, ref: ref),
         ],
@@ -473,10 +457,21 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
-    if (postContent?.media.first.type == MediaType.video_link) {
+    final Media? media = postContent?.media.first;
+    if (postContent?.media.first != null && postContent?.media.first.type == MediaType.bucket_path) {
+      // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+      // final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
+      // final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
+      // final String mimeType = lookupMimeType(media!.name, headerBytes: bytes) ?? '';
+
+      VideoPlayerController videoPlayerController = VideoPlayerController.networkUrl(
+        Uri.dataFromString(media!.bucketPath),
+      );
+      videoPlayerController.play();
+
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: const SizedBox(),
+        child: VideoPlayer(videoPlayerController),
       );
     }
     return const SizedBox();
