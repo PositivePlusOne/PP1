@@ -195,6 +195,11 @@ extension ActivityExt on Activity {
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
+    final String publisherId = publisherInformation?.publisherId ?? '';
+    if (currentProfileId == publisherId) {
+      return true;
+    }
+
     // Check if we have hidden the posts, or if the publisher has blocked us
     if (states.contains(RelationshipState.sourceHidden) || states.contains(RelationshipState.targetBlocked)) {
       return false;

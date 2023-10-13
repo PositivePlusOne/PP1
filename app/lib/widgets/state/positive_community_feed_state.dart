@@ -33,13 +33,15 @@ class PositiveCommunityFeedState with PositivePaginationControllerState {
   static PositiveCommunityFeedState buildNewState({
     required CommunityType communityType,
     required String currentProfileId,
+    PagingController<String, String>? pagingController,
   }) {
     return PositiveCommunityFeedState(
       communityType: communityType,
       profileId: currentProfileId,
-      pagingController: PagingController<String, String>(
-        firstPageKey: '',
-      ),
+      pagingController: pagingController ??
+          PagingController<String, String>(
+            firstPageKey: '',
+          ),
     );
   }
 

@@ -58,7 +58,8 @@ enum CommunityType {
   following,
   blocked,
   connected,
-  managed;
+  managed,
+  supported;
 
   static const List<CommunityType> userProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.blocked, CommunityType.connected];
   static const List<CommunityType> managedProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.managed];
@@ -71,6 +72,7 @@ enum CommunityType {
       CommunityType.blocked => 'Blocked',
       CommunityType.connected => 'Connections',
       CommunityType.managed => isManagedProfile ? 'Team Members' : 'Managed',
+      CommunityType.supported => 'Profiles',
     };
   }
 }
@@ -387,6 +389,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
         CommunityType.following => await relationshipSearchApiService.listFollowingRelationships(cursor: feedState.currentPaginationKey),
         CommunityType.blocked => await relationshipSearchApiService.listBlockedRelationships(cursor: feedState.currentPaginationKey),
         CommunityType.managed => await relationshipSearchApiService.listManagedRelationships(cursor: feedState.currentPaginationKey),
+        _ => throw Exception('CommunitiesController - loadNextCommunityData - Unsupported community type: $type'),
       };
 
       feedState.hasPerformedInitialLoad = true;
