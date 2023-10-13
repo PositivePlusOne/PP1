@@ -10,19 +10,15 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
-import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
@@ -67,7 +63,7 @@ class AccountPage extends HookConsumerWidget {
 
     double bannerHeight = AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2;
     if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) {
-      bannerHeight += kPaddingSmall;
+      bannerHeight += kPaddingSmall * 3;
     }
 
     final Size screenSize = mediaQueryData.size;
@@ -163,7 +159,7 @@ class AccountPage extends HookConsumerWidget {
                       AccountOptionsPane(
                         colors: colors,
                         edgePadding: kPaddingSmall,
-                        accentColour: state.profileAccentColour,
+                        accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
                         mixin: viewModel,
                       ),
                       const Spacer(),
@@ -173,7 +169,7 @@ class AccountPage extends HookConsumerWidget {
                     colors: colors,
                     isOrganisation: true,
                     edgePadding: kPaddingSmall,
-                    accentColour: state.organisationAccentColour,
+                    accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
                     mixin: viewModel,
                   ),
                 ],
