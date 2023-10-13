@@ -5,6 +5,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -35,6 +36,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     final FirebaseStorage firebaseStorage = providerContainer.read(firebaseStorageProvider);
     final Reference ref = firebaseStorage.ref(widget.media.bucketPath);
     final String refString = await ref.getDownloadURL();
+    // media.
 
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse(refString),
@@ -44,32 +46,27 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
         setState(() {});
       });
     videoPlayerController.setVolume(1.0);
+    await videoPlayerController.setLooping(true);
     await videoPlayerController.play();
     setState(() {});
   }
 
+  void onClipTap() {
+    setStateIfMounted(
+      callback: () => videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: VideoPlayer(videoPlayerController),
-        ),
-        Positioned(
-          height: 45,
-          top: 0,
-          right: 0,
-          left: 0,
-          child: PositiveButton(
-            colors: colours,
-            label: "tst",
-            primaryColor: colours.white,
-            onTapped: () => videoPlayerController.play(),
-          ),
-        ),
-      ],
+    return PositiveTapBehaviour(
+      onTap: (_) => onClipTap(),
+      child: videoPlayerController.value.isInitialized
+          ? AspectRatio(
+              aspectRatio: videoPlayerController.value.aspectRatio,
+              child: VideoPlayer(videoPlayerController),
+            )
+          : Container(),
     );
   }
 }
