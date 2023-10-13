@@ -24,6 +24,7 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
     this.isEnabled = true,
     this.valueStringBuilder,
     this.placeholderStringBuilder,
+    this.borderColour,
     this.backgroundColour,
     this.textStyle,
     this.labelTextStyle,
@@ -46,6 +47,7 @@ class PositiveTextFieldDropdown<T> extends ConsumerStatefulWidget {
   final String? labelText;
   final TextStyle? labelTextStyle;
 
+  final Color? borderColour;
   final Color? backgroundColour;
   final TextStyle? textStyle;
   final Color? iconColour;
@@ -150,6 +152,10 @@ class PositiveTextFieldDropdownState<T> extends ConsumerState<PositiveTextFieldD
         padding: PositiveTextFieldDropdown.kDropdownPaddingRegular,
         decoration: BoxDecoration(
           color: widget.backgroundColour ?? colors.white,
+          border: Border.all(
+            color: widget.borderColour ?? colors.transparent,
+            width: PositiveButton.kButtonBorderWidth,
+          ),
           borderRadius: BorderRadius.circular(PositiveButton.kButtonBorderRadiusRegular),
         ),
         child: Row(
