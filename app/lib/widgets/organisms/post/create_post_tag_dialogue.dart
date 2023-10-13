@@ -183,7 +183,14 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
     //? add the first 20 filtered tags to the list
     for (var i = 0; i < min(maxTagsPerPage, filteredTags.length); i++) {
-      if (visibleTags.contains(filteredTags[i])) continue;
+      // we don't want to have duplicated tags in here, but the visible tags can come
+      // from a previous search and have somewhat different parameters set. That means
+      // we can't use 'contains' because that tests everything for equality - instead
+      // let's just look for a key of the same tag being in the list of visible tags
+      if (visibleTags.indexWhere((element) => element.key == filteredTags[i].key) != -1) {
+        // and this filtered tag is already visible, don't include
+        continue;
+      }
       tagWidgets.add(
         TagLabel(
           tag: filteredTags[i],
