@@ -505,6 +505,8 @@
     "post_share_message_title": "Psst!",
     "post_share_message_content": "Check out this post from {authorName}.\n{externalLink}",
 
+    "shared_emails_support": "support@positiveplusone.com",
+
     "shared_user_type_generic_everyone": "Everyone",
     "shared_user_type_generic_connections": "Connections",
     "shared_user_type_generic_followers": "Followers",

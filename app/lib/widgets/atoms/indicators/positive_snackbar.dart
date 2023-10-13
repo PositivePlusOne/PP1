@@ -1,11 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/common/media.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/helpers/brand_helpers.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,11 +6,18 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/number_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import '../../../providers/system/design_controller.dart';
 
 class PositiveSnackBar extends SnackBar {

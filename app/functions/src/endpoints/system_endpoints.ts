@@ -63,7 +63,7 @@ export namespace SystemEndpoints {
       cursor: request.data.cursor || "",
     } as Pagination;
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managedRelationships, companySectors] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -73,7 +73,7 @@ export namespace SystemEndpoints {
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("user", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
-      uid ? RelationshipService.getManagedRelationships(uid, pagination) : Promise.resolve({data: [], pagination: {}}),
+      uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({data: [], pagination: {}}),
       LocalizationsService.getDefaultCompanySectors(locale),
     ]);
 
@@ -104,8 +104,8 @@ export namespace SystemEndpoints {
       profile = userProfile as ProfileJSON;
     }
 
-    const managedProfileFetchPromises = [];
-    for (const relationship of managedRelationships?.data || []) {
+    const managingProfileFetchPromises = [];
+    for (const relationship of managingRelationships?.data || []) {
       if (!relationship) {
         continue;
       }
@@ -117,22 +117,22 @@ export namespace SystemEndpoints {
         }
 
         supportedProfileIds.push(member.memberId);
-        managedProfileFetchPromises.push(ProfileService.getProfile(member.memberId));
+        managingProfileFetchPromises.push(ProfileService.getProfile(member.memberId));
       }
     }
 
     functions.logger.info("Prefetching managed IDs", { supportedProfileIds });
 
-    const managedProfiles = await Promise.all(managedProfileFetchPromises);
-    for (const managedProfile of managedProfiles) {
-      if (!managedProfile) {
+    const managingProfiles = await Promise.all(managingProfileFetchPromises);
+    for (const managingProfile of managingProfiles) {
+      if (!managingProfile) {
         continue;
       }
 
-      supportedProfiles.push(managedProfile as ProfileJSON);
+      supportedProfiles.push(managingProfile as ProfileJSON);
     }
 
-    functions.logger.info("Fetched managed profiles", { supportedProfiles });
+    functions.logger.info("Fetched managing profiles", { supportedProfiles });
 
     return buildEndpointResponse(context, {
       sender: uid,
