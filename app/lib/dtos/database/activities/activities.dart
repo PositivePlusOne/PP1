@@ -188,6 +188,7 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
   static List<ActivitySecurityConfigurationMode> get orderedCommentModes {
     return <ActivitySecurityConfigurationMode>[
       const ActivitySecurityConfigurationMode.public(),
+      const ActivitySecurityConfigurationMode.signedIn(),
       const ActivitySecurityConfigurationMode.connections(),
       const ActivitySecurityConfigurationMode.followersAndConnections(),
       // const ActivitySecurityConfigurationMode.private(),
