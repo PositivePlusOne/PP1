@@ -204,6 +204,18 @@ class DevelopmentPage extends ConsumerWidget {
                   style: typography.styleSubtext.copyWith(color: colors.black),
                 ),
               ),
+              ListTile(
+                onTap: developmentViewModel.displayAuthClaims,
+                dense: true,
+                title: Text(
+                  'Request auth claims',
+                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                ),
+                subtitle: Text(
+                  'Displays the logged in users auth claims in the status bar',
+                  style: typography.styleSubtext.copyWith(color: colors.black),
+                ),
+              ),
               const SizedBox(height: kPaddingMedium),
               SelectableText(
                 developmentViewModelState.status,
