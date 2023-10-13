@@ -484,6 +484,7 @@ extension ActivityExt on Activity {
 
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final Logger logger = providerContainer.read(loggerProvider);
 
     final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
@@ -491,21 +492,28 @@ extension ActivityExt on Activity {
     if (profileId.isEmpty || activityId.isEmpty) {
       throw Exception('Invalid activity or user');
     }
-
+    ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
     final bool isLiked = isActivityLiked(currentProfile: currentProfile);
 
     if (isLiked) {
+      logger.d('unliking post');
       await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile);
+      // update the count to be one fewer
+      incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: -1);
+      // and show the snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
-      return;
+    } else {
+      logger.d('liking post');
+      await reactionsController.likeActivity(activityId: activityId);
+      // update the count to be one more
+      incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
+      // and show the snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
+      );
     }
-
-    await reactionsController.likeActivity(activityId: activityId);
-    ScaffoldMessenger.of(context).showSnackBar(
-      PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
-    );
   }
 
   Future<void> onPostEdited() async {

@@ -164,17 +164,12 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       reactionsState.pagingController.notifyListeners();
 
-      // Update the reaction counts
-      final String reactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
-      ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
-
-      final Map<String, int> counts = {...reactionStatistics.counts};
-      counts['comment'] = counts['comment'] ?? 0 + 1;
-      reactionStatistics = reactionStatistics.copyWith(counts: counts);
-
       // Save new state
       cacheController.add(key: reactionsCacheKey, value: reactionsState);
-      cacheController.add(key: reactionStatisticsCacheKey, value: reactionStatistics);
+
+      // Update the reaction counts
+      ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
+      activity.incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.comment(), offset: 1);
 
       commentTextController.clear();
       state = state.copyWith(currentCommentText: '');
