@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 // Flutter imports:
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -458,20 +459,17 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
     final Media? media = postContent?.media.first;
-    if (postContent?.media.first != null && postContent?.media.first.type == MediaType.bucket_path) {
+    if (media != null && media.type == MediaType.bucket_path) {
       // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
       // final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
       // final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
       // final String mimeType = lookupMimeType(media!.name, headerBytes: bytes) ?? '';
 
-      VideoPlayerController videoPlayerController = VideoPlayerController.networkUrl(
-        Uri.dataFromString(media!.bucketPath),
-      );
-      videoPlayerController.play();
-
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: VideoPlayer(videoPlayerController),
+      return Container(
+        width: double.infinity,
+        height: 500,
+        color: colours.red,
+        child: PositiveVideoPlayer(media: media),
       );
     }
     return const SizedBox();
