@@ -214,6 +214,17 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
         _markdownBody(context: context, ref: ref),
+        //* -=-=-=- tags -=-=-=- *\\
+        //! currently not in the design (want a bold #hashtag display of tags in the text apparently) DOUG - don't get how to do that so commenting out
+        // if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false)
+        //   // doing a row in order to center-align the list of tags
+        //   Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       //! pretty sure this doesn't work for a long list though as the scroll view isn't constrained in an expanded )O:
+        //       _tags(),
+        //     ],
+        //   ),
       ],
     );
   }
