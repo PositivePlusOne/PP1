@@ -175,22 +175,16 @@ class AccountPage extends HookConsumerWidget {
           horizontalPadding: kPaddingNone,
           children: <Widget>[
             SizedBox(
-              //? 7 buttons of 54 height + 6 kPaddingMedium between each button + 2 kPaddingSmallMedium for the padding inside glass pane
-              height: 54 * 7 + kPaddingMedium * 6 + kPaddingSmallMedium * 2,
+              height: profileController.isCurrentlyOrganisation ? 454.0 : 380.0,
               child: PageView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: viewModel.pageController,
                 children: <Widget>[
-                  Column(
-                    children: [
-                      AccountOptionsPane(
-                        colors: colors,
-                        edgePadding: kPaddingSmall,
-                        accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
-                        mixin: viewModel,
-                      ),
-                      const Spacer(),
-                    ],
+                  AccountOptionsPane(
+                    colors: colors,
+                    edgePadding: kPaddingSmall,
+                    accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
+                    mixin: viewModel,
                   ),
                   AccountOptionsPane(
                     colors: colors,

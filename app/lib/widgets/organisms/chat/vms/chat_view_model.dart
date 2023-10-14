@@ -2,10 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:auto_route/src/matcher/route_match.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/src/matcher/route_match.dart';
 import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

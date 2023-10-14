@@ -14,6 +14,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -216,6 +217,10 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(profileController.currentProfileId!);
     final String flamelinkId = widget.targetProfile.flMeta?.id ?? '';
 
+    final bool isSourceOrganisation = widget.currentProfile?.isOrganisation ?? false;
+    final bool isTargetOrganisation = widget.targetProfile.isOrganisation;
+    final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
+
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;
     bool hasConnectedToTargetUser = false;
@@ -285,7 +290,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(unfollowAction);
     }
 
-    if (!isCurrentUser && hasPendingConnectionToTargetUser) {
+    if (!isCurrentUser && hasPendingConnectionToTargetUser && !relationshipContainsOrganisation) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
         primaryColor: targetProfileComplimentColor,
@@ -306,7 +311,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if (!isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser) {
+    if (!isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser && !relationshipContainsOrganisation) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -322,7 +327,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(connectAction);
     }
 
-    if (!isCurrentUser && hasConnectedToTargetUser) {
+    if (!isCurrentUser && hasConnectedToTargetUser && !relationshipContainsOrganisation) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
         primaryColor: targetProfileComplimentColor,
@@ -338,6 +343,10 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         isDisabled: isBusy || isRelationshipBlocked,
       );
 
+      children.add(disconnectAction);
+    }
+
+    if ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation) {
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -350,7 +359,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
         isDisabled: isBusy || isRelationshipBlocked,
       );
 
-      children.add(disconnectAction);
       children.add(messageAction);
     }
 
