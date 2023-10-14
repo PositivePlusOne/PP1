@@ -44,23 +44,21 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     return AccountPageViewModelState.initialState();
   }
 
-  void onProfileChange(int profileIndex, ProfileControllerState profileState, ProfileSwitchMixin mixin) {
+  void onProfileChange(int profileIndex, ProfileSwitchMixin mixin) {
     final Profile targetProfile = mixin.getSupportedProfiles()[profileIndex];
     final bool isOrganisation = targetProfile.isOrganisation;
     final Color accentColour = targetProfile.accentColor.toSafeColorFromHex();
 
     final int targetPage = (isOrganisation ? 1 : 0);
 
+    mixin.switchProfile(targetProfile.flMeta?.id ?? '');
+
     switch (isOrganisation) {
       case true:
-        state = state.copyWith(
-          organisationAccentColour: accentColour,
-        );
+        state = state.copyWith(organisationAccentColour: accentColour);
         break;
       default:
-        state = state.copyWith(
-          profileAccentColour: accentColour,
-        );
+        state = state.copyWith(profileAccentColour: accentColour);
     }
 
     pageController.animateToPage(

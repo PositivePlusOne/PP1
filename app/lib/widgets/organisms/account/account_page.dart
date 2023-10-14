@@ -93,7 +93,7 @@ class AccountPage extends HookConsumerWidget {
                     child: PositiveProfileSegmentedSwitcher(
                       mixin: viewModel,
                       isSlim: true,
-                      onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, profileState, viewModel),
+                      onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, viewModel),
                     ),
                   ),
                 ] else if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
@@ -115,9 +115,10 @@ class AccountPage extends HookConsumerWidget {
                               mode: CommunitiesDialogMode.select,
                               canCallToAction: false,
                               selectedProfiles: [profileState.currentProfile?.flMeta?.id ?? ''],
-                              onProfileSelected: (String id) {
-                                viewModel.switchProfile(id);
+                              onProfileSelected: (String id) async {
                                 Navigator.of(context).pop();
+                                await Future.delayed(kAnimationDurationRegular);
+                                viewModel.onProfileChange(supportedProfiles.indexWhere((element) => element.flMeta?.id == id), viewModel);
                               },
                             ),
                           );
@@ -179,7 +180,7 @@ class AccountPage extends HookConsumerWidget {
               child: PageView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: viewModel.pageController,
-                children: [
+                children: <Widget>[
                   Column(
                     children: [
                       AccountOptionsPane(
