@@ -153,7 +153,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "searchIndexRelationshipManages",
+          "fieldPath": "searchIndexRelationshipManaged",
           "arrayConfig": "CONTAINS"
         },
         {
@@ -161,7 +161,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "searchIndexRelationshipManages",
+          "fieldPath": "searchIndexRelationshipManaged",
           "order": "ASCENDING"
         }
       ]
@@ -171,7 +171,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "searchIndexRelationshipManaged",
+          "fieldPath": "searchIndexRelationshipManages",
           "arrayConfig": "CONTAINS"
         },
         {
@@ -179,7 +179,7 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "searchIndexRelationshipManaged",
+          "fieldPath": "searchIndexRelationshipManages",
           "order": "ASCENDING"
         }
       ]
