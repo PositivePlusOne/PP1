@@ -19,7 +19,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import '../../../../gen/app_router.dart';
-import '../../../../helpers/profile_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../services/third_party.dart';
@@ -41,8 +40,8 @@ class ProfileViewModelState with _$ProfileViewModelState {
 @Riverpod(keepAlive: true)
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   StreamSubscription<CacheKeyUpdatedEvent>? relationshipsUpdatedSubscription;
-  Color get appBarColor => getSafeProfileColorFromHex(state.profile?.accentColor);
-  Color get appBarTextColor => getSafeProfileColorFromHex(state.profile?.accentColor).complimentTextColor;
+  Color get appBarColor => state.profile?.accentColor.toSafeColorFromHex() ?? Colors.white;
+  Color get appBarTextColor => appBarColor.complimentTextColor;
 
   @override
   ProfileViewModelState build() {

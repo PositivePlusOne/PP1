@@ -406,7 +406,7 @@ export namespace RelationshipEndpoints {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
-    const limit = request.limit || 10;
+    const limit = request.limit || 30;
 
     const paginationResult = await RelationshipService.getConnectedRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
@@ -435,7 +435,7 @@ export namespace RelationshipEndpoints {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
-    const limit = request.limit || 10;
+    const limit = request.limit || 30;
 
     const paginationResult = await RelationshipService.getFollowRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
@@ -464,7 +464,7 @@ export namespace RelationshipEndpoints {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
-    const limit = request.limit || 10;
+    const limit = request.limit || 30;
 
     const paginationResult = await RelationshipService.getFollowedRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
@@ -493,7 +493,7 @@ export namespace RelationshipEndpoints {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
-    const limit = request.limit || 10;
+    const limit = request.limit || 30;
 
     const paginationResult = await RelationshipService.getBlockedRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
@@ -522,7 +522,7 @@ export namespace RelationshipEndpoints {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
-    const limit = request.limit || 10;
+    const limit = request.limit || 30;
 
     const paginationResult = await RelationshipService.getManagedRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];

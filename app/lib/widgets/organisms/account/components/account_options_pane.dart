@@ -135,6 +135,7 @@ class AccountOptionsPane extends ConsumerWidget {
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_directory_details,
+        isDisabled: true,
         onTapped: viewModel.onAccountDetailsButtonSelected,
       ),
       const SizedBox(height: kPaddingMedium),
@@ -149,20 +150,11 @@ class AccountOptionsPane extends ConsumerWidget {
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
         colors: colors,
-        icon: UniconsLine.user_square,
-        style: PositiveButtonStyle.ghost,
-        primaryColor: colors.colorGray1,
-        label: localizations.page_account_organisation_actions_team,
-        onTapped: viewModel.onMyCommunitiesButtonPressed,
-      ),
-      const SizedBox(height: kPaddingMedium),
-      PositiveButton(
-        colors: colors,
         icon: UniconsLine.users_alt,
         style: PositiveButtonStyle.ghost,
         primaryColor: colors.colorGray1,
-        label: localizations.page_account_organisation_actions_followers,
-        onTapped: viewModel.onAccountDetailsButtonSelected,
+        label: localizations.page_account_actions_following,
+        onTapped: viewModel.onMyCommunitiesButtonPressed,
       ),
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
@@ -172,6 +164,7 @@ class AccountOptionsPane extends ConsumerWidget {
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_chat,
         onTapped: viewModel.onAccountDetailsButtonSelected,
+        isDisabled: true,
       ),
       const SizedBox(height: kPaddingMedium),
       PositiveButton(
@@ -181,6 +174,7 @@ class AccountOptionsPane extends ConsumerWidget {
         primaryColor: colors.colorGray1,
         label: localizations.page_account_organisation_actions_leave(profileName),
         onTapped: viewModel.onAccountDetailsButtonSelected,
+        isDisabled: true,
       ),
     ];
   }

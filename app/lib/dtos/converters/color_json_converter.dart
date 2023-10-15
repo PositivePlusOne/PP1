@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:app/extensions/color_extensions.dart';
 
 Color colorFromJson(String color) {
-  return color.toColorFromHex();
+  return color.toSafeColorFromHex();
 }
 
 String colorToJson(Color object) {

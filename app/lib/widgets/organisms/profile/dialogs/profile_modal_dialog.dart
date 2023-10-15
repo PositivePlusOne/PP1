@@ -15,6 +15,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
@@ -71,15 +72,7 @@ class ProfileModalDialog extends StatefulHookConsumerWidget {
     required this.currentProfileId,
     this.activityId = '',
     this.styleOverrides = const {},
-    this.types = const {
-      ProfileModalDialogOptionType.viewProfile,
-      ProfileModalDialogOptionType.follow,
-      ProfileModalDialogOptionType.connect,
-      ProfileModalDialogOptionType.message,
-      ProfileModalDialogOptionType.block,
-      ProfileModalDialogOptionType.report,
-      ProfileModalDialogOptionType.hidePosts,
-    },
+    this.types,
     super.key,
   });
 
@@ -88,7 +81,7 @@ class ProfileModalDialog extends StatefulHookConsumerWidget {
   final String activityId;
 
   final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
-  final Set<ProfileModalDialogOptionType> types;
+  final Set<ProfileModalDialogOptionType>? types;
   static const String kProfileDialogHeroTag = 'profile_modal_dialog';
 
   @override
@@ -97,6 +90,24 @@ class ProfileModalDialog extends StatefulHookConsumerWidget {
 
 class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
   bool isBusy = false;
+
+  static const kDefaultProfileModalActions = {
+    ProfileModalDialogOptionType.viewProfile,
+    ProfileModalDialogOptionType.follow,
+    ProfileModalDialogOptionType.connect,
+    ProfileModalDialogOptionType.message,
+    ProfileModalDialogOptionType.block,
+    ProfileModalDialogOptionType.report,
+    ProfileModalDialogOptionType.hidePosts,
+  };
+
+  static const kDefaultOrganisationModalActions = {
+    ProfileModalDialogOptionType.viewProfile,
+    ProfileModalDialogOptionType.follow,
+    ProfileModalDialogOptionType.message,
+    ProfileModalDialogOptionType.block,
+    ProfileModalDialogOptionType.reportPost,
+  };
 
   Future<void> onOptionSelected({
     required ProfileModalDialogOptionType type,
@@ -351,7 +362,20 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final Relationship? targetRelationship = cacheController.get(relationshipId);
 
     final List<Widget> children = [];
-    final List<ProfileModalDialogOptionType> optionTypes = widget.types.toList();
+    final List<ProfileModalDialogOptionType> optionTypes = [];
+
+    if (widget.types != null) {
+      optionTypes.addAll(widget.types!);
+    } else if (currentProfile?.isOrganisation == true) {
+      optionTypes.addAll(kDefaultOrganisationModalActions);
+    } else {
+      optionTypes.addAll(kDefaultProfileModalActions);
+    }
+
+    // You can't connect to an organisation
+    if (targetProfile?.isOrganisation == true) {
+      optionTypes.remove(ProfileModalDialogOptionType.connect);
+    }
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysForProfile(currentProfile, targetProfile ?? Profile.empty());
     useCacheHook(keys: expectedCacheKeys);

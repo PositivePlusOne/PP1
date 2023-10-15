@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:auto_route/src/matcher/route_match.dart';
 import 'package:collection/collection.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -69,9 +70,15 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final AppRouter router = ref.read(appRouterProvider);
     final logger = ref.read(loggerProvider);
 
+    final RouteMatch route = router.current.route;
+    if (route.name == ChatRoute.name) {
+      logger.i("Pop chat page, pop Home page");
+      return true;
+    }
+
     logger.i("Pop chat page, push Home page");
-    router.removeWhere((route) => true);
-    router.push(const HomeRoute());
+    await router.replaceAll([const HomeRoute()]);
+
     return false;
   }
 

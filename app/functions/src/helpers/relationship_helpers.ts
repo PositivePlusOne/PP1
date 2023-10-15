@@ -11,15 +11,15 @@ export namespace RelationshipHelpers {
       return relationship;
     }
 
-    let searchIndex = "";
-    let mutedSearchIndex = "";
-    let blockedSearchIndex = "";
-    let connectedSearchIndex = "";
-    let followingSearchIndex = "";
-    let followersSearchIndex = "";
-    let hiddenSearchIndex = "";
-    let managersSearchIndex = "";
-    let managedSearchIndex = "";
+    const searchIndex = [] as string[];
+    const mutedSearchIndex = [] as string[];
+    const blockedSearchIndex = [] as string[];
+    const connectedSearchIndex = [] as string[];
+    const followingSearchIndex = [] as string[];
+    const followersSearchIndex = [] as string[];
+    const hiddenSearchIndex = [] as string[];
+    const managersSearchIndex = [] as string[];
+    const managedSearchIndex = [] as string[];
 
     const allMemberIds = relationship.members.map((member: any) => member.memberId);
 
@@ -28,22 +28,22 @@ export namespace RelationshipHelpers {
         continue;
       }
 
-      searchIndex += member.memberId;
+      searchIndex.push(member.memberId);
 
       if (member.hasMuted) {
-        mutedSearchIndex += member.memberId;
+        mutedSearchIndex.push(member.memberId);
       }
 
       if (member.hasBlocked) {
-        blockedSearchIndex += member.memberId;
+        blockedSearchIndex.push(member.memberId);
       }
 
       if (member.hasConnected) {
-        connectedSearchIndex += member.memberId;
+        connectedSearchIndex.push(member.memberId);
       }
 
       if (member.hasFollowed) {
-        followingSearchIndex += member.memberId;
+        followingSearchIndex.push(member.memberId);
 
         // Add the other members to the followed search index except for the current user.
         // Skip if they are already in the search index.
@@ -51,22 +51,22 @@ export namespace RelationshipHelpers {
         const membersExceptCurrent = allMemberIds.filter((id: string) => id !== member.memberId);
         for (const id of membersExceptCurrent) {
           if (followersSearchIndex.indexOf(id) === -1) {
-            followersSearchIndex += id;
+            followersSearchIndex.push(id);
           }
         }
       }
 
       if (member.isHidden) {
-        hiddenSearchIndex += member.memberId;
+        hiddenSearchIndex.push(member.memberId);
       }
 
       if (member.canManage) {
-        managersSearchIndex += member.memberId;
+        managersSearchIndex.push(member.memberId);
 
         const otherMemberIds = allMemberIds.filter((id: string) => id !== member.memberId);
         for (const id of otherMemberIds) {
           if (managedSearchIndex.indexOf(id) === -1) {
-            managedSearchIndex += id;
+            managedSearchIndex.push(id);
           }
         }
       }
