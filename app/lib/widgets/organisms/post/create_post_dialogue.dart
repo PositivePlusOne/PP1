@@ -185,7 +185,7 @@ class CreatePostDialogue extends HookConsumerWidget {
             ),
 
             //* -=-=-=-=- Alt Text -=-=-=-=- *\\
-            if (postType == PostType.image) ...[
+            if (postType == PostType.image || postType == PostType.clip) ...[
               const SizedBox(height: kPaddingSmall),
               CreatePostTextField(
                 text: localisations.page_create_post_alt_text,
@@ -200,7 +200,7 @@ class CreatePostDialogue extends HookConsumerWidget {
             ],
 
             //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
-            if ((postType == PostType.image || postType == PostType.multiImage) && onUpdateSaveToGallery != null) ...[
+            if ((postType == PostType.image || postType == PostType.multiImage || postType == PostType.clip) && onUpdateSaveToGallery != null) ...[
               const SizedBox(height: kPaddingSmall),
               CreatePostToggleContainer(
                 value: valueSaveToGallery,
