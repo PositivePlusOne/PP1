@@ -412,6 +412,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
                 height: kPaddingExtraLarge,
                 fit: BoxFit.cover,
                 media: media,
+                onTap: () => onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
                   alignment: Alignment.center,
