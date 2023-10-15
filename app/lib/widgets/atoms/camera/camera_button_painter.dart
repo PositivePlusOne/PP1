@@ -218,7 +218,6 @@ class CameraButtonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
     final ProfileReferenceImageViewModelState newState = providerContainer.read(profileReferenceImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;
