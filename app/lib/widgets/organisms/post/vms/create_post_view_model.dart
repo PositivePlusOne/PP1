@@ -413,8 +413,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   void onClipStateChange(bool isClipActive) {
+    /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
     state = state.copyWith(
-      isBottomNavigationEnabled: isClipActive,
+      isBottomNavigationEnabled: !isClipActive,
     );
   }
 

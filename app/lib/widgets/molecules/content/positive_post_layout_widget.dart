@@ -468,7 +468,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return Container(
         width: double.infinity,
         height: 500,
-        color: colours.red,
         child: PositiveVideoPlayer(media: media),
       );
     }
