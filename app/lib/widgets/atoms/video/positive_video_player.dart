@@ -45,9 +45,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
       });
-    videoPlayerController.setVolume(1.0);
     await videoPlayerController.setLooping(true);
-    await videoPlayerController.play();
     setState(() {});
   }
 

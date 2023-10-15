@@ -4,16 +4,10 @@ import 'dart:math';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import '../../../../dtos/system/design_colors_model.dart';
-import '../../../../dtos/system/design_typography_model.dart';
-import '../../../../providers/system/design_controller.dart';
 import '../../organisms/profile/vms/profile_reference_image_view_model.dart';
 
 // Package imports:
@@ -29,6 +23,7 @@ class CameraButton extends StatefulWidget {
     this.isLoading = false,
     this.isSmallButton = false,
     this.maxCLipDuration,
+    this.isPaused = false,
     super.key,
   });
 
@@ -41,6 +36,7 @@ class CameraButton extends StatefulWidget {
   final bool isLoading;
   final bool isSmallButton;
   final int? maxCLipDuration;
+  final bool isPaused;
 
   @override
   State<CameraButton> createState() => _CameraButtonState();
@@ -52,9 +48,12 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
 
   @override
   void didUpdateWidget(covariant CameraButton oldWidget) {
+    //? On animation duration change
     if (widget.maxCLipDuration != oldWidget.maxCLipDuration) {
       animationController.duration = Duration(milliseconds: widget.maxCLipDuration ?? 0);
     }
+
+    //? progress indicator laoding state
     if (widget.isLoading && !oldWidget.isLoading) {
       animationController.forward();
     }
@@ -62,6 +61,16 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
       animationController.reset();
     }
 
+    //? pause progress indicator state
+    if (widget.isPaused != oldWidget.isPaused) {
+      if (widget.isPaused) {
+        animationController.stop();
+      } else {
+        animationController.forward();
+      }
+    }
+
+    //? Increase reduce the current size of the central circle
     if (widget.isSmallButton && !oldWidget.isSmallButton) {
       animationControllerCenter.forward();
     }
@@ -80,9 +89,9 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
       vsync: this,
       duration: Duration(milliseconds: widget.maxCLipDuration ?? 0),
     );
-    animationController.addListener(
-      () => setStateIfMounted(),
-    );
+
+    animationController.addListener(() => setStateIfMounted());
+
     if (widget.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback(
         (timeStamp) {
@@ -95,13 +104,13 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
       vsync: this,
       duration: kAnimationDurationFast,
     );
-    animationController.addListener(
-      () => setStateIfMounted(),
-    );
+
+    animationControllerCenter.addListener(() => setStateIfMounted());
+
     if (widget.isSmallButton) {
       WidgetsBinding.instance.addPostFrameCallback(
         (timeStamp) {
-          animationController.forward();
+          animationControllerCenter.forward();
         },
       );
     }
@@ -209,6 +218,7 @@ class CameraButtonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
     final ProfileReferenceImageViewModelState newState = providerContainer.read(profileReferenceImageViewModelProvider);
     if (currentState != newState) {
       currentState = newState;

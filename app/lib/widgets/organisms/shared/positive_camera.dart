@@ -108,12 +108,12 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
   final bool isBusy;
   final bool displayCameraShade;
-  final bool isVideoMode;
 
   final double topNavigationSize;
   final double bottomNavigationSize;
 
-  final Function(bool)? onClipStateChange;
+  final bool isVideoMode;
+
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -152,6 +152,9 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   /// should display the maximum recording timer for clips
   final bool isRecordingLengthEnabled;
 
+  /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
+  final Function(bool)? onClipStateChange;
+
   @override
   ConsumerState<PositiveCamera> createState() => _PositiveCameraState();
 }
@@ -172,14 +175,27 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
   PermissionStatus? libraryPermissionStatus;
 
   bool isPhysicalDevice = true;
+
+  ///? If the camera button should be animating, that is the circle that fills as the clip is being recorded
   bool isCameraButtonCountingDown = false;
-  bool isRecording = false;
+
+  ///? should the center of the camera button be shrunk down in size
   bool isCameraButtonSmall = false;
+
+  ///? is the camera currently recording video
+  bool isRecording = false;
+
+  ///? is true when the user is in the process of creating a clip, whether or not clip recording is currently paused
   bool isClipActive = false;
 
   ///? Current Delay before begining the clip or picture
   int currentDelay = -1;
   Timer? delayTimer;
+
+  ///? Clip timer to enact the clips maximum duration
+  int clipCurrentTime = 0;
+  Timer? clipTimer;
+  bool isClipPaused = false;
 
   bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
   bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
@@ -245,15 +261,7 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
   @override
   void deactivate() {
-    isRecording = false;
-    isCameraButtonSmall = false;
-    isClipActive = false;
-    currentDelay = 0;
-
-    if (delayTimer != null) {
-      delayTimer!.cancel();
-      delayTimer = null;
-    }
+    stopClipTimers();
 
     faceDetector.close();
     super.deactivate();
@@ -409,11 +417,11 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     });
 
     if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(false);
+      widget.onClipStateChange!(true);
     }
 
     //? If a maximum delay has been set then begin the delay timer
-    if (widget.maxDelay > 0) {
+    if (widget.isDelayTimerEnabled) {
       setStateIfMounted(
         callback: () {
           currentDelay = widget.maxDelay;
@@ -456,26 +464,45 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       isRecording = true;
     });
 
-    await Future.delayed(
-      Duration(milliseconds: widget.maxRecordingLength ?? 1),
-    );
-
-    setStateIfMounted(callback: () {
-      isRecording = false;
-      isClipActive = true;
-      isCameraButtonSmall = false;
-    });
-
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(true);
+    if (widget.isRecordingLengthEnabled) {
+      clipCurrentTime = widget.maxRecordingLength ?? 1;
+      startRecordingTimer(cameraState);
     }
-    await onVideoRecordingEnd(cameraState);
+    //TODO impliment unlimited time here as needed
+  }
+
+  Future<void> startRecordingTimer(CameraState cameraState) async {
+    clipTimer = Timer.periodic(
+      const Duration(milliseconds: 100),
+      (timer) {
+        if (clipCurrentTime <= 0) {
+          timer.cancel();
+          // clipCurrentTime = -1;
+          onVideoTimerEnd(cameraState);
+        } else {
+          clipCurrentTime = clipCurrentTime - 100;
+        }
+      },
+    );
+  }
+
+  void onVideoTimerEnd(CameraState cameraState) {
+    setStateIfMounted(
+      callback: () {
+        if (widget.onClipStateChange != null) {
+          widget.onClipStateChange!(false);
+        }
+        isRecording = false;
+        isClipActive = true;
+        isCameraButtonSmall = false;
+        onVideoRecordingEnd(cameraState);
+      },
+    );
   }
 
   Future<void> onVideoRecordingEnd(CameraState cameraState) async {
     VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState.cameraContext);
     await videoRecordingCameraState.stopRecording();
-
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
 
     if (currentCapture != null) {
@@ -488,6 +515,49 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
       }
 
       await widget.onCameraVideoTaken?.call(file);
+    }
+  }
+
+  void onCloseButtonTapped() {}
+
+  void stopClipTimers() {
+    isRecording = false;
+    isCameraButtonSmall = false;
+    isClipActive = false;
+    currentDelay = 0;
+
+    if (delayTimer != null) {
+      delayTimer!.cancel();
+      delayTimer = null;
+    }
+  }
+
+  void onPauseResumeClip(CameraState cameraState) {
+    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState.cameraContext);
+    MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
+    if (currentCapture == null) {
+      return;
+    }
+
+    if (videoRecordingCameraState.captureState!.videoState == VideoState.paused) {
+      videoRecordingCameraState.resumeRecording(currentCapture);
+      startRecordingTimer(cameraState);
+      setState(() {
+        isClipPaused = false;
+        isCameraButtonSmall = true;
+      });
+      return;
+    }
+
+    if (videoRecordingCameraState.captureState!.isRecordingVideo) {
+      videoRecordingCameraState.pauseRecording(currentCapture);
+      if (clipTimer != null) {
+        clipTimer!.cancel();
+      }
+      setState(() {
+        isClipPaused = true;
+        isCameraButtonSmall = false;
+      });
     }
   }
 
@@ -684,12 +754,19 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
           ),
           const SizedBox(height: kPaddingLarge),
           if (isRecording)
-            Container(
+            SizedBox(
               width: kPaddingMedium,
               height: kPaddingMedium,
-              decoration: BoxDecoration(
-                color: colours.red,
-                borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+              child: Align(
+                child: AnimatedContainer(
+                  duration: kAnimationDurationFast,
+                  width: !isClipPaused ? kPaddingMedium : kPaddingNone,
+                  height: !isClipPaused ? kPaddingMedium : kPaddingNone,
+                  decoration: BoxDecoration(
+                    color: colours.red,
+                    borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+                  ),
+                ),
               ),
             ),
           if (widget.topAdditionalActions != null && widget.isVideoMode && !isRecording) ...widget.topAdditionalActions!,
@@ -702,14 +779,14 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
     return [
       if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
       const Spacer(),
-      if (widget.enableFlashControls && hasCameraPermission)
+      if (widget.enableFlashControls && hasCameraPermission && !widget.isVideoMode)
         CameraFloatingButton.flash(
           active: true,
           flashMode: flashMode,
           onTap: onFlashToggleRequest,
         ),
       const SizedBox(width: kPaddingSmall),
-      if (widget.onTapAddImage != null) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
+      if (widget.onTapAddImage != null && !isClipActive) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
     ];
   }
 
@@ -875,20 +952,20 @@ class _PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleM
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              //* -=-=-=-=-=-                    Take Photo                    -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-            Take Photo or Camera Button           -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               CameraButton(
                 active: canTakePictureOrVideo,
                 loadingColour: colours.yellow,
-                // loadingProgress: recordingCompletion,
                 isLoading: isRecording,
                 maxCLipDuration: widget.maxRecordingLength,
-                isSmallButton: isRecording,
+                isSmallButton: isCameraButtonSmall,
+                isPaused: isClipPaused,
                 onTap: (_) {
                   state.when(
                     onPhotoMode: onImageTaken,
                     onVideoMode: (_) => onVideoRecordingRequestStart(state),
-                    // onVideoRecordingMode: () => onVideoRecordingEnd(VideoRecordingCameraState.from(orchestrator)),
+                    onVideoRecordingMode: (_) => onPauseResumeClip(state),
                   );
                 },
               ),
