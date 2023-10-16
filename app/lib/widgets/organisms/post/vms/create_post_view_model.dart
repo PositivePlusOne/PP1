@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
@@ -64,6 +65,8 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(0) int maximumClipDurationSelection,
     @Default(false) bool isMaximumClipDurationEnabled,
     @Default(true) bool isBottomNavigationEnabled,
+    @Default(false) bool isCreatingClip,
+    required GlobalKey<PositiveCameraState> cameraWidgetKey,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
   }) = _CreatePostViewModelState;
@@ -71,6 +74,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
   factory CreatePostViewModelState.initialState() => CreatePostViewModelState(
         currentFilter: AwesomeFilter.None,
         previousActivity: ActivityData(),
+        cameraWidgetKey: GlobalKey(),
       );
 }
 
@@ -80,17 +84,42 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController altTextController = TextEditingController();
   final TextEditingController promotionKeyTextController = TextEditingController();
 
+  PositiveCameraState get getCurrentCameraState {
+    return state.cameraWidgetKey.currentState as PositiveCameraState;
+  }
+
   @override
   CreatePostViewModelState build() {
     return CreatePostViewModelState.initialState();
   }
 
   Future<bool> onWillPopScope() async {
-    final bool canPop = state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing;
+    final bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
+
+    //? if we are currently creating a clip request that we stop
+    if (state.isCreatingClip) {
+      getCurrentCameraState.onCloseButtonTapped();
+      return false;
+    }
+
     if (!canPop) {
+      late PostType postType;
+      switch (state.lastActiveButton) {
+        case PositivePostNavigationActiveButton.post:
+          postType = PostType.text;
+          break;
+        case PositivePostNavigationActiveButton.clip:
+          postType = PostType.clip;
+          break;
+        case PositivePostNavigationActiveButton.event:
+          break;
+        default:
+          postType = PostType.event;
+      }
+
       state = state.copyWith(
         currentCreatePostPage: CreatePostCurrentPage.camera,
-        currentPostType: PostType.text,
+        currentPostType: postType,
         activeButton: state.lastActiveButton,
       );
     }
@@ -416,6 +445,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
     state = state.copyWith(
       isBottomNavigationEnabled: !isClipActive,
+      isCreatingClip: isClipActive,
     );
   }
 
