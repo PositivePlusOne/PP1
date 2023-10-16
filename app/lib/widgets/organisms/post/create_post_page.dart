@@ -93,6 +93,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
               if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
                 Positioned.fill(
                   child: PositiveCamera(
+                    key: state.cameraWidgetKey,
                     onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
                     onCameraVideoTaken: (video) => viewModel.onVideoTaken(context, video),
                     //? Padding at the bottom of the screen to move the camera button above the bottom navigation
