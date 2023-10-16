@@ -125,7 +125,7 @@ class LoginViewModel extends _$LoginViewModel {
   Future<void> onLoginWithAppleSelected() async {
     state = state.copyWith(isBusy: true);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final Logger logger = ref.read(loggerProvider);
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
@@ -142,15 +142,8 @@ class LoginViewModel extends _$LoginViewModel {
       appRouter.removeWhere((route) => true);
       appRouter.push(const HomeRoute());
     } catch (e) {
-      final SnackBar snackBar = PositiveGenericSnackBar(
-        title: "Login Failed",
-        icon: UniconsLine.envelope_exclamation,
-        backgroundColour: colours.black,
-      );
-
-      if (appRouter.navigatorKey.currentContext != null) {
-        ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(snackBar);
-      }
+      // when the login doesn't work - we are happy it just closing
+      logger.e('login canceled / failed', error: e);
     } finally {
       state = state.copyWith(isBusy: false);
     }

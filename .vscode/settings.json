@@ -26,5 +26,6 @@
     "editor.defaultFormatter": "ms-python.autopep8"
   },
   "java.import.gradle.wrapper.enabled": false,
-  "java.import.gradle.version": "7.4"
+  "java.import.gradle.version": "7.4",
+  "cmake.configureOnOpen": false
 }

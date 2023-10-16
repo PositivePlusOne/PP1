@@ -225,16 +225,8 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
         returnStyle: ProfileEditThanksReturnStyle.popToAccountDetails,
       ));
     } catch (e) {
+      // when the login doesn't work - we are happy it just closing
       logger.e('onConnectAppleUserRequested: $e');
-      final SnackBar snackBar = PositiveGenericSnackBar(
-        title: "Login Failed",
-        icon: UniconsLine.envelope_exclamation,
-        backgroundColour: colours.black,
-      );
-
-      if (appRouter.navigatorKey.currentContext != null) {
-        ScaffoldMessenger.of(appRouter.navigatorKey.currentContext!).showSnackBar(snackBar);
-      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
