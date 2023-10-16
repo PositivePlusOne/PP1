@@ -112,6 +112,12 @@ class _PositiveClipExternalShaderState extends State<PositiveClipExternalShader>
   }
 
   @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: animationController,

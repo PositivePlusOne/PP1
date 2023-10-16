@@ -117,6 +117,13 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
   }
 
   @override
+  void dispose() {
+    animationController.dispose();
+    animationControllerCenter.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PositiveTapBehaviour(
       onTap: widget.onTap,
