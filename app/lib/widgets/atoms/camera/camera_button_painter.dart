@@ -63,7 +63,7 @@ class _CameraButtonState extends State<CameraButton> with TickerProviderStateMix
 
     //? pause progress indicator state
     if (widget.isPaused != oldWidget.isPaused) {
-      if (widget.isPaused) {
+      if (widget.isPaused || !widget.isLoading) {
         animationController.stop();
       } else {
         animationController.forward();
@@ -196,13 +196,11 @@ class CameraButtonPainter extends CustomPainter {
       outlinePaint.shader = SweepGradient(
         colors: [
           loadingColour!,
-          loadingColour!,
           buttonColour,
           buttonColour,
         ],
         stops: [
-          0,
-          loadingProgress,
+          (loadingProgress - 0.02).clamp(0.0, 1.0),
           loadingProgress,
           1.0,
         ],

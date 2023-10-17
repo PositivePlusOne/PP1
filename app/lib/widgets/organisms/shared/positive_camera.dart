@@ -107,12 +107,12 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool enableFlashControls;
 
   final bool isBusy;
-  final bool displayCameraShade;
 
   final double topNavigationSize;
   final double bottomNavigationSize;
 
   final bool isVideoMode;
+  final bool displayCameraShade;
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
@@ -480,7 +480,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       (timer) {
         if (clipCurrentTime <= 0) {
           timer.cancel();
-          onVideoTimerEnd(cameraState);
+          onVideoTimerEnd();
         } else {
           clipCurrentTime = clipCurrentTime - 100;
         }
@@ -488,22 +488,27 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
   }
 
-  void onVideoTimerEnd(CameraState cameraState) {
-    setStateIfMounted(
-      callback: () {
-        if (widget.onClipStateChange != null) {
-          widget.onClipStateChange!(false);
-        }
-        isRecording = false;
-        isClipActive = true;
-        isCameraButtonSmall = false;
-        onVideoRecordingEnd(cameraState);
-      },
-    );
+  void onVideoTimerEnd() {
+    //? SetStateIfMounted fails here, returns mounted == false even when true if the camera is flipped
+    //? Always use a direct mounted check here
+    if (mounted) {
+      if (widget.onClipStateChange != null) {
+        widget.onClipStateChange!(false);
+      }
+      isRecording = false;
+      isClipActive = true;
+      isCameraButtonSmall = false;
+      isClipPaused = false;
+      onVideoRecordingEnd();
+      setState(
+        () {},
+      );
+    }
   }
 
-  Future<void> onVideoRecordingEnd(CameraState cameraState) async {
-    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState.cameraContext);
+  Future<void> onVideoRecordingEnd() async {
+    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
+
     await videoRecordingCameraState.stopRecording();
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
 
@@ -537,6 +542,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     isClipActive = false;
     clipCurrentTime = -1;
     currentDelay = -1;
+    isClipPaused = false;
 
     if (delayTimer != null) {
       delayTimer!.cancel();
@@ -578,10 +584,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       if (clipTimer != null) {
         clipTimer!.cancel();
       }
-      setStateIfMounted(callback: () {
-        isClipPaused = true;
-        isCameraButtonSmall = false;
-      });
+      isClipPaused = true;
+      isCameraButtonSmall = false;
+      setState(() {});
     }
   }
 
@@ -1007,10 +1012,20 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              CameraFloatingButton.changeCamera(
-                active: canTakePictureOrVideo,
-                onTap: (context) => onChangeCameraRequest(context, state),
-              ),
+              if (isRecording)
+                CameraFloatingButton.close(
+                  active: isClipPaused,
+                  onTap: (context) => onChangeCameraRequest(context, state),
+                  isDisplayed: isClipPaused,
+                  iconColour: colours.black,
+                  backgroundColour: colours.yellow,
+                ),
+              // if (isRecording && !isClipPaused) const SizedBox(width: kIconLarge),
+              if (!isRecording)
+                CameraFloatingButton.changeCamera(
+                  active: canTakePictureOrVideo,
+                  onTap: (context) => onChangeCameraRequest(context, state),
+                ),
             ],
           ),
         ],
