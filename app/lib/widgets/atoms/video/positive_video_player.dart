@@ -5,6 +5,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +25,24 @@ class PositiveVideoPlayer extends StatefulHookConsumerWidget {
 }
 
 class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
-  late VideoPlayerController videoPlayerController;
+  VideoPlayerController? videoPlayerController;
+
+  @override
+  void didUpdateWidget(covariant PositiveVideoPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.media != oldWidget.media) {
+      _initPlayer();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+
     _initPlayer();
   }
 
-  void _initPlayer() async {
+  Future<void> _initPlayer() async {
     final FirebaseStorage firebaseStorage = providerContainer.read(firebaseStorageProvider);
     final Reference ref = firebaseStorage.ref(widget.media.bucketPath);
     final String refString = await ref.getDownloadURL();
@@ -41,30 +51,32 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse(refString),
       videoPlayerOptions: VideoPlayerOptions(),
-    )..initialize().then((_) {
+    )..initialize().then((_) async {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        await videoPlayerController?.setLooping(true);
         setState(() {});
       });
-    await videoPlayerController.setLooping(true);
-    setState(() {});
   }
 
   void onClipTap() {
-    setStateIfMounted(
-      callback: () => videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play(),
-    );
+    if (videoPlayerController == null) {
+      return;
+    }
+
+    videoPlayerController!.value.isPlaying ? videoPlayerController!.pause() : videoPlayerController!.play();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (videoPlayerController == null) {
+      return const Align(child: PositiveLoadingIndicator());
+    }
     return PositiveTapBehaviour(
       onTap: (_) => onClipTap(),
-      child: videoPlayerController.value.isInitialized
-          ? AspectRatio(
-              aspectRatio: videoPlayerController.value.aspectRatio,
-              child: VideoPlayer(videoPlayerController),
-            )
-          : Container(),
+      child: AspectRatio(
+        aspectRatio: videoPlayerController!.value.aspectRatio,
+        child: VideoPlayer(videoPlayerController!),
+      ),
     );
   }
 }
