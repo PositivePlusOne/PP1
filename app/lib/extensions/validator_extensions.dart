@@ -10,9 +10,15 @@ import 'package:app/dtos/database/feedback/report_type.dart';
 final ProfanityFilter _profanityFilter = ProfanityFilter();
 
 extension PositiveValidatorExtensions on AbstractRuleBuilder {
-  //* Checks if the object is at least 6 characters long, contains at least one number and one special character
+  //* Checks if the object is at least 8 characters long, contains at least one number and one special character
   AbstractRuleBuilder meetsPasswordComplexity({String? message}) {
-    return must((dynamic dyn) => dyn is String && dyn.length >= 8 && dyn.contains(RegExp(r'[0-9]')) && dyn.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')), message ?? "Password must be at least 6 characters long, contain at least one number and one special character", code: "passwordComplexity");
+    // (?=.*[0-9]) - has to contain a number - 0-9
+    // (?=.*[a-z]) - has to contain a normal letter (lowercase)
+    // (?=.*[A-Z]) - has to contain a normal letter (uppercase)
+    // (?=.*[\W_]) - has to contain a special char, or an underscore (not included in \W) (space being a special character though)
+    // .{8,}$ - has to be at least 8 chars long
+    // .{8,16}$ - has to be between 8 and 16 chars long
+    return must((dynamic dyn) => dyn is String && dyn.contains(RegExp(r'^(?=.*[0-9])(?=.*[\W_]).{8,}$')), message ?? "Password must be at least 8 characters long, contain at least one number and one special character", code: "passwordComplexity");
   }
 
   AbstractRuleBuilder isFormattedEmailAddress({String? message}) {
