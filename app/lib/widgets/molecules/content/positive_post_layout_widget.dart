@@ -468,7 +468,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return Container(
         width: double.infinity,
         height: 500,
-        child: PositiveVideoPlayer(media: media),
+        child: PositiveVideoPlayer(
+          media: media,
+        ),
       );
     }
     return const SizedBox();
