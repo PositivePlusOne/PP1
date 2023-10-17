@@ -230,6 +230,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
               onLike: (context) => _onInternalLikeRequested(context),
               isLiked: isLiked,
+              onComment: (context) => widget.activity?.requestPostRoute(
+                context: context,
+                currentProfile: widget.currentProfile,
+              ),
               totalLikes: totalLikes,
               likesEnabled: !isLiking,
               totalComments: totalComments,

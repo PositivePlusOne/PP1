@@ -59,6 +59,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     this.onImageTap,
     required this.isLiked,
     required this.onLike,
+    required this.onComment,
     required this.totalLikes,
     required this.onBookmark,
     required this.isBookmarked,
@@ -88,6 +89,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final bool isLiked;
   final int totalLikes;
   final FutureOr<void> Function(BuildContext context)? onLike;
+  final FutureOr<void> Function(BuildContext context)? onComment;
 
   final bool isBookmarked;
   final FutureOr<void> Function(BuildContext context)? onBookmark;
@@ -559,7 +561,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         //TODO(S): comment enabled and on comment functionality here
         comments: totalComments,
         commentsEnabled: !isBusy,
-        onComment: (_) {},
+        onComment: onComment,
 
         //TODO(S): bookmark enabled and on bookmark functionality here
         bookmarkEnabled: !isBusy && bookmarkEnabled,
