@@ -154,13 +154,11 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             publisher: widget.reposterProfile,
             promotion: widget.activityPromotion,
             tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
-            onOptions: () {
-              widget.activity?.onPostOptionsSelected(
-                context: context,
-                targetProfile: widget.targetProfile,
-                currentProfile: widget.currentProfile,
-              );
-            },
+            onOptions: () => widget.activity?.onPostOptionsSelected(
+              context: context,
+              targetProfile: widget.targetProfile,
+              currentProfile: widget.currentProfile,
+            ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),

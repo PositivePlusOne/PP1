@@ -22,6 +22,7 @@ import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
 import { ProfileStatisticsService } from "../services/profile_statistics_service";
 import { FeedStatisticsService } from "../services/feed_statistics_service";
+import { PromotionsService } from "../services/promotions_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -50,7 +51,13 @@ export namespace PostEndpoints {
         const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
 
         // Get promotions from activities where the promotion key is set
-        const promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
+        let promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
+        promotionIds = [...new Set(promotionIds)].filter((promotionId) => promotionId.length > 0);
+
+        functions.logger.info(`Got promotion IDs`, { promotionIds });
+
+        // TODO: Move this to joins at some point.
+        const promotions = await PromotionsService.getPromotions(promotionIds);
 
         const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
 
@@ -58,8 +65,8 @@ export namespace PostEndpoints {
     
         return buildEndpointResponse(context, {
           sender: uid,
-          joins: [...promotionIds, feedStatisticsKey],
-          data: [...activities],
+          joins: [feedStatisticsKey],
+          data: [...activities, ...promotions],
           limit: limit,
           cursor: paginationToken,
           seedData: {
