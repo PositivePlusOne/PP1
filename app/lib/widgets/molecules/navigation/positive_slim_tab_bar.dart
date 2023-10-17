@@ -56,10 +56,10 @@ class PositiveSlimTabBar extends ConsumerWidget implements PreferredSizeWidget {
           children: [
             //! Due to unkown rounding issues in the engine, some phones have a single pixel around the edge, this jank hides that
             Positioned(
-              top: 1,
-              bottom: 1,
-              left: 1,
-              right: 1,
+              top: kPaddingThin,
+              bottom: kPaddingThin,
+              left: kPaddingThin,
+              right: kPaddingThin,
               child: Container(
                 decoration: BoxDecoration(
                   color: unselectedColour ?? colors.white.withOpacity(kOpacityVignette),
@@ -119,7 +119,7 @@ class PositiveSlimTabItem extends ConsumerWidget {
             ? colours.colorGray7
             : colours.white
         : primaryColour.exceedsBrightnessUpperRestriction
-            ? colours.colorGray7
+            ? colours.colorGray6
             : colours.white;
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
