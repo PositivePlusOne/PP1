@@ -339,12 +339,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
-      case CreatePostCurrentPage.createPostImage:
         if (captionController.text.isNotEmpty && hasChanged) {
           return true;
         } else {
           return false;
         }
+      case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.camera:
       default:
         return true;
