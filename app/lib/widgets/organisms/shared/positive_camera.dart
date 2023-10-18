@@ -187,8 +187,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///? should the center of the camera button be shrunk down in size
   bool isCameraButtonSmall = false;
 
-  ///? is the camera currently recording video
-  bool isRecording = false;
+  ///? is the camera currently recording video or in the prerecording state (for delay/countdown timer)
+  ClipRecordingState isRecording = ClipRecordingState.notRecording;
 
   ///? is true when the user is in the process of creating a clip, whether or not clip recording is currently paused
   bool isClipActive = false;
@@ -430,6 +430,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       setStateIfMounted(
         callback: () {
           currentDelay = widget.maxDelay;
+          isRecording = ClipRecordingState.prerecording;
         },
       );
 
@@ -466,7 +467,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     //? Begin clip recording
     await videoState.startRecording();
     setStateIfMounted(callback: () {
-      isRecording = true;
+      isRecording = ClipRecordingState.recording;
     });
 
     if (widget.isRecordingLengthEnabled) {
@@ -498,7 +499,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     //? Cleanup ui variables for video recording end
     setStateIfMounted(
       callback: () {
-        isRecording = false;
+        isRecording = ClipRecordingState.notRecording;
         isClipActive = true;
         isCameraButtonSmall = false;
         isClipPaused = false;
@@ -577,7 +578,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///
   ///? Clears the current timers, stopping all further callbacks originating from them
   void stopClipTimers() {
-    isRecording = false;
+    isRecording = ClipRecordingState.notRecording;
     isCameraButtonSmall = false;
     isClipActive = false;
     clipCurrentTime = -1;
@@ -853,7 +854,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
             children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren(state),
           ),
           const SizedBox(height: kPaddingLarge),
-          if (isRecording)
+          if (isRecording == ClipRecordingState.recording)
             SizedBox(
               width: kPaddingMedium,
               height: kPaddingMedium,
@@ -869,7 +870,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                 ),
               ),
             ),
-          if (widget.topAdditionalActions != null && widget.isVideoMode && !isRecording) ...widget.topAdditionalActions!,
+          if (widget.topAdditionalActions != null && widget.isVideoMode && !isRecording.isActive) ...widget.topAdditionalActions!,
         ],
       ),
     );
@@ -1008,7 +1009,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=-=-             Delay Timer Selection UI             -=-=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled && !isRecording)
+          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled && !isRecording.isActive)
             SizedBox(
               width: 155,
               child: PositiveSlimTabBar(
@@ -1022,7 +1023,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=-=-             Maximum Clip Duration UI             -=-=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-          if (widget.recordingLengthSelection >= 0 && widget.isVideoMode && widget.isRecordingLengthEnabled && !isRecording)
+          if (widget.recordingLengthSelection >= 0 && widget.isVideoMode && widget.isRecordingLengthEnabled && !isRecording.isActive)
             SizedBox(
               height: kPaddingMedium,
               child: WheelChooser.custom(
@@ -1060,7 +1061,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               CameraButton(
                 active: canTakePictureOrVideo,
                 loadingColour: colours.yellow,
-                isLoading: isRecording,
+                isLoading: isRecording == ClipRecordingState.recording,
                 maxCLipDuration: widget.maxRecordingLength,
                 isSmallButton: isCameraButtonSmall,
                 isPaused: isClipPaused,
@@ -1077,7 +1078,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              if (isRecording)
+              if (isRecording.isActive)
                 CameraFloatingButton.close(
                   active: isClipPaused,
                   onTap: (context) => onCloseButtonTapped(),
@@ -1085,8 +1086,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                   iconColour: colours.black,
                   backgroundColour: colours.yellow,
                 ),
-              // if (isRecording && !isClipPaused) const SizedBox(width: kIconLarge),
-              if (!isRecording)
+              if (!isRecording.isActive)
                 CameraFloatingButton.changeCamera(
                   active: canTakePictureOrVideo,
                   onTap: (context) => onChangeCameraRequest(context, state),
@@ -1268,4 +1268,12 @@ class CameraPermissionDialog extends StatelessWidget {
       ),
     );
   }
+}
+
+enum ClipRecordingState {
+  notRecording,
+  prerecording,
+  recording;
+
+  bool get isActive => (this == prerecording || this == recording);
 }
