@@ -522,6 +522,10 @@
     "page_create_post_ui_timer": "Timer",
     "page_create_post_ui_filters": "Filters",
     "page_create_post_ui_playback": "Playback",
+    
+    "page_create_post_cancel_clip": "Cancel Clip",
+    "page_create_post_cancel_clip_caption": "Heads up! Your clip won't be saved if you leave now.",
+    "page_create_post_discard_clip": "Discard Clip",
 
     "post_comments_public_header": "Be the first to leave a comment",
     "post_comments_followers_connections_header": "You must be following to comment",

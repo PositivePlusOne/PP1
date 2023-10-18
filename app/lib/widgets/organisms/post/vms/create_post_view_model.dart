@@ -441,6 +441,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return "${duration ~/ 1000}${localisations.page_create_post_seconds}";
   }
 
+  /// Call to update main create post page UI
   void onClipStateChange(bool isClipActive) {
     /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
     state = state.copyWith(
