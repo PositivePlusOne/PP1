@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:app/widgets/organisms/shared/components/scrolling_selector.dart';
@@ -480,7 +482,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       (timer) {
         if (clipCurrentTime <= 0) {
           timer.cancel();
-          onVideoTimerEnd();
+          onVideoRecordingEnd();
         } else {
           clipCurrentTime = clipCurrentTime - 100;
         }
@@ -488,25 +490,21 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
   }
 
-  void onVideoTimerEnd() {
-    //? SetStateIfMounted fails here, returns mounted == false even when true if the camera is flipped
-    //? Always use a direct mounted check here
-    if (mounted) {
-      if (widget.onClipStateChange != null) {
-        widget.onClipStateChange!(false);
-      }
-      isRecording = false;
-      isClipActive = true;
-      isCameraButtonSmall = false;
-      isClipPaused = false;
-      onVideoRecordingEnd();
-      setState(
-        () {},
-      );
-    }
-  }
-
   Future<void> onVideoRecordingEnd() async {
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(false);
+    }
+
+    //? Cleanup ui variables for video recording end
+    setStateIfMounted(
+      callback: () {
+        isRecording = false;
+        isClipActive = true;
+        isCameraButtonSmall = false;
+        isClipPaused = false;
+      },
+    );
+
     VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
 
     await videoRecordingCameraState.stopRecording();
@@ -525,17 +523,59 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
-  void onCloseButtonTapped() {
-    stopClipTimers();
-    stopClipRecording();
+  Future<void> onCloseButtonTapped() async {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    if (widget.onClipStateChange != null) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => widget.onClipStateChange!(false),
-      );
+    onPauseResumeClip(forcePause: true);
+
+    final bool deactivate = await PositiveDialog.show(
+          title: localizations.page_create_post_cancel_clip,
+          context: context,
+          child: Column(
+            children: <Widget>[
+              Text(
+                localizations.page_create_post_cancel_clip_caption,
+                style: typography.styleSubtitle.copyWith(color: colors.white),
+              ),
+              const SizedBox(height: kPaddingMedium),
+              PositiveButton(
+                colors: colors,
+                onTapped: () => Navigator.pop(context, true),
+                label: localizations.page_create_post_discard_clip,
+                primaryColor: colors.black.withOpacity(kOpacityQuarter),
+                style: PositiveButtonStyle.primary,
+                icon: UniconsLine.trash_alt,
+              ),
+            ],
+          ),
+        ) ??
+        false;
+
+    if (deactivate) {
+      cancelClipRecording();
     }
   }
 
+  ///? End the current clip recording, discard currently recorded video
+  void cancelClipRecording() {
+    stopClipTimers();
+    stopClipRecording();
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(false);
+    }
+  }
+
+  ///? End the video recording and process the currently recorded video as normal
+  void finishClipRecordingImmediately() {
+    stopClipTimers();
+    onVideoRecordingEnd();
+  }
+
+  ///? Deactivate all variables to do with delay timer and clip timer
+  ///
+  ///? Clears the current timers, stopping all further callbacks originating from them
   void stopClipTimers() {
     isRecording = false;
     isCameraButtonSmall = false;
@@ -555,6 +595,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
+  ///? Attempt to stop the clip recording, does not capture the resulting video
   void stopClipRecording() {
     if (cameraState != null) {
       VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
@@ -562,16 +603,40 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
-  void onPauseResumeClip(CameraState cameraState) {
-    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState.cameraContext);
+  ///? if forcePause is given as true always try to pause the clip.
+  ///
+  ///? if forcePause is given as false always try to resume the clip.
+  ///
+  ///? if forcePause is not given function will attempt to toggle the clip to its other state.
+  void onPauseResumeClip({bool? forcePause}) {
+    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
     if (currentCapture == null) {
       return;
     }
 
-    if (videoRecordingCameraState.captureState!.videoState == VideoState.paused) {
+    // final bool requirePause = forcePause == true;
+    // final bool requireResume = forcePause == false;
+
+    bool pause = true;
+
+    if (forcePause == null) {
+      if (videoRecordingCameraState.captureState!.videoState == VideoState.paused) {
+        pause = false;
+      } else {
+        pause = true;
+      }
+    } else {
+      if (videoRecordingCameraState.captureState!.isRecordingVideo) {
+        pause = true;
+      } else {
+        pause = false;
+      }
+    }
+
+    if (!pause) {
       videoRecordingCameraState.resumeRecording(currentCapture);
-      startRecordingTimer(cameraState);
+      startRecordingTimer(cameraState!);
       setStateIfMounted(callback: () {
         isClipPaused = false;
         isCameraButtonSmall = true;
@@ -579,7 +644,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       return;
     }
 
-    if (videoRecordingCameraState.captureState!.isRecordingVideo) {
+    if (pause) {
       videoRecordingCameraState.pauseRecording(currentCapture);
       if (clipTimer != null) {
         clipTimer!.cancel();
@@ -1003,7 +1068,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                   state.when(
                     onPhotoMode: onImageTaken,
                     onVideoMode: (_) => onVideoRecordingRequestStart(state),
-                    onVideoRecordingMode: (_) => onPauseResumeClip(state),
+                    onVideoRecordingMode: (_) => onPauseResumeClip(),
                   );
                 },
               ),
@@ -1015,7 +1080,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               if (isRecording)
                 CameraFloatingButton.close(
                   active: isClipPaused,
-                  onTap: (context) => onChangeCameraRequest(context, state),
+                  onTap: (context) => onCloseButtonTapped(),
                   isDisplayed: isClipPaused,
                   iconColour: colours.black,
                   backgroundColour: colours.yellow,
