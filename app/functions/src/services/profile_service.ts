@@ -491,7 +491,7 @@ export namespace ProfileService {
     const newMedia = [...media ?? []] as MediaJSON[];
     for (const mediaItem of profile.media ?? []) {
       // we don't want to add the old one that this is replacing - either the name is identical
-      // or they both start with 'profile_' or 'reference_' as they are new
+      // or they both start with 'profile' or 'reference' as they are new
       const existingMediaItem = media.find((m) => 
         m.name === mediaItem.name ||
         (mediaItem.name?.startsWith('profile') && m.name?.startsWith('profile')) ||

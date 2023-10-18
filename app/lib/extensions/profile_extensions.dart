@@ -21,11 +21,11 @@ import '../providers/profiles/profile_controller.dart';
 
 extension ProfileExtensions on Profile {
   Media? get profileImage {
-    return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/profile'));
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('/profile'));
   }
 
   Media? get coverImage {
-    return media.firstWhereOrNull((element) => element.bucketPath.contains('gallery/cover'));
+    return media.firstWhereOrNull((element) => element.bucketPath.contains('/cover'));
   }
 
   Media? get referenceImage {
