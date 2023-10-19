@@ -217,7 +217,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   );
 
   late final StreamSubscription faceDetectionSubscription;
-  late final AnalysisConfig faceAnalysisConfig;
+  AnalysisConfig? faceAnalysisConfig;
 
   @override
   void initState() {
