@@ -222,11 +222,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   @override
   void initState() {
     super.initState();
-    faceAnalysisConfig = AnalysisConfig(
-      androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
-      maxFramesPerSecond: 5.0,
-      autoStart: widget.useFaceDetection,
-    );
+    if (widget.useFaceDetection) {
+      faceAnalysisConfig = AnalysisConfig(
+        androidOptions: const AndroidAnalysisOptions.nv21(width: 500),
+        maxFramesPerSecond: 5.0,
+        autoStart: widget.useFaceDetection,
+      );
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) {
@@ -308,7 +310,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   Future<void> onAnalyzeImage(AnalysisImage image) async {
-    if (!mounted) {
+    if (!mounted || !widget.useFaceDetection) {
       return;
     }
 
@@ -451,7 +453,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
 
     //? Begin clip recording
-    await videoState.startRecording();
+    final CaptureRequest test = await videoState.startRecording();
+
     setStateIfMounted(callback: () {
       clipRecordingState = ClipRecordingState.recording;
     });
