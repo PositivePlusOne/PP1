@@ -11,6 +11,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { TagsService } from "./tags_service";
 
 export namespace FeedService {
+  let streamClient : StreamClient<DefaultGenerics> | undefined;
 
   /**
    * Returns a StreamClient instance with the API key and secret.
@@ -18,6 +19,10 @@ export namespace FeedService {
    * @see https://getstream.io/chat/docs/node/tokens_and_authentication/?language=javascript
    */
   export function getFeedsClient(): StreamClient<DefaultGenerics> {
+    if (streamClient) {
+      return streamClient;
+    }
+
     functions.logger.info("Connecting to feeds", { structuredData: true });
     const apiKey = process.env.STREAM_API_KEY;
     const apiSecret = process.env.STREAM_API_SECRET;
@@ -26,9 +31,14 @@ export namespace FeedService {
       throw new Error("Missing Stream Feeds API key or secret");
     }
 
-    return connect(apiKey, apiSecret, undefined, {
+    streamClient = connect(apiKey, apiSecret, undefined, {
       browser: false,
+      expireTokens: false,
+      keepAlive: true,
+      timeout: 30000,
     });
+
+    return streamClient;
   }
 
   export function getFeedsUserClient(userId: string): StreamClient<DefaultGenerics> {

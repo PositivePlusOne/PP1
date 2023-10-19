@@ -18,6 +18,8 @@ import { PostEndpoints } from "./endpoints/post_endpoints";
 import { ReactionEndpoints } from "./endpoints/reaction_endpoints";
 import { QuickActionHandler } from "./handlers/quick_action_handler";
 import { EnrichmentEndpoints } from "./endpoints/enrichment_endpoints";
+import { SystemService } from "./services/system_service";
+import { CacheService } from "./services/cache_service";
 
 export const adminApp = admin.initializeApp();
 export const applicationConfig = config().config;
@@ -46,3 +48,9 @@ exports.conversation = ConversationEndpoints;
 exports.post = PostEndpoints;
 exports.reaction = ReactionEndpoints;
 exports.enrichment = EnrichmentEndpoints;
+
+functions.logger.info("Application started, prewarming connections");
+SystemService.getFlamelinkApp();
+CacheService.getRedisClient();
+
+functions.logger.info("Redis and Flamelink connections prewarmed");
