@@ -181,17 +181,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///? Location to access the current camera state outside of the builder
   CameraState? cameraState;
 
-  ///? If the camera button should be animating, that is the circle that fills as the clip is being recorded
-  bool isCameraButtonCountingDown = false;
-
-  ///? should the center of the camera button be shrunk down in size
-  bool isCameraButtonSmall = false;
-
   ///? is the camera currently recording video or in the prerecording state (for delay/countdown timer)
-  ClipRecordingState isRecording = ClipRecordingState.notRecording;
-
-  ///? is true when the user is in the process of creating a clip, whether or not clip recording is currently paused
-  bool isClipActive = false;
+  ClipRecordingState clipRecordingState = ClipRecordingState.notRecording;
 
   ///? Current Delay before begining the clip or picture
   int currentDelay = -1;
@@ -200,7 +191,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///? Clip timer to enact the clips maximum duration
   int clipCurrentTime = 0;
   Timer? clipTimer;
-  bool isClipPaused = false;
 
   bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
   bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
@@ -267,6 +257,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   @override
   void deactivate() {
     stopClipTimers();
+    clipRecordingState = ClipRecordingState.notRecording;
 
     faceDetector.close();
     super.deactivate();
@@ -406,7 +397,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       },
     );
 
-    if (isClipActive) {
+    //? do not allow the user to begin recording when recording has already begun
+    if (clipRecordingState.isActive) {
       return;
     }
 
@@ -414,12 +406,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     if (delayTimer != null) {
       delayTimer!.cancel();
     }
-
-    //? Request the smaller camera button center
-    setStateIfMounted(callback: () {
-      isCameraButtonSmall = true;
-      isClipActive = true;
-    });
 
     if (widget.onClipStateChange != null) {
       widget.onClipStateChange!(true);
@@ -430,7 +416,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       setStateIfMounted(
         callback: () {
           currentDelay = widget.maxDelay;
-          isRecording = ClipRecordingState.prerecording;
+          clipRecordingState = ClipRecordingState.preRecording;
         },
       );
 
@@ -467,7 +453,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     //? Begin clip recording
     await videoState.startRecording();
     setStateIfMounted(callback: () {
-      isRecording = ClipRecordingState.recording;
+      clipRecordingState = ClipRecordingState.recording;
     });
 
     if (widget.isRecordingLengthEnabled) {
@@ -499,10 +485,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     //? Cleanup ui variables for video recording end
     setStateIfMounted(
       callback: () {
-        isRecording = ClipRecordingState.notRecording;
-        isClipActive = true;
-        isCameraButtonSmall = false;
-        isClipPaused = false;
+        clipRecordingState = ClipRecordingState.notRecording;
       },
     );
 
@@ -555,12 +538,12 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         false;
 
     if (deactivate) {
-      cancelClipRecording();
+      resetClipStateToDefault();
     }
   }
 
   ///? End the current clip recording, discard currently recorded video
-  void cancelClipRecording() {
+  void resetClipStateToDefault() {
     stopClipTimers();
     stopClipRecording();
     if (widget.onClipStateChange != null) {
@@ -578,12 +561,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///
   ///? Clears the current timers, stopping all further callbacks originating from them
   void stopClipTimers() {
-    isRecording = ClipRecordingState.notRecording;
-    isCameraButtonSmall = false;
-    isClipActive = false;
     clipCurrentTime = -1;
     currentDelay = -1;
-    isClipPaused = false;
 
     if (delayTimer != null) {
       delayTimer!.cancel();
@@ -602,6 +581,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
       videoRecordingCameraState.stopRecording();
     }
+    clipRecordingState = ClipRecordingState.notRecording;
   }
 
   ///? if forcePause is given as true always try to pause the clip.
@@ -615,9 +595,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     if (currentCapture == null) {
       return;
     }
-
-    // final bool requirePause = forcePause == true;
-    // final bool requireResume = forcePause == false;
 
     bool pause = true;
 
@@ -639,8 +616,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       videoRecordingCameraState.resumeRecording(currentCapture);
       startRecordingTimer(cameraState!);
       setStateIfMounted(callback: () {
-        isClipPaused = false;
-        isCameraButtonSmall = true;
+        clipRecordingState = ClipRecordingState.recording;
       });
       return;
     }
@@ -650,8 +626,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       if (clipTimer != null) {
         clipTimer!.cancel();
       }
-      isClipPaused = true;
-      isCameraButtonSmall = false;
+      clipRecordingState = ClipRecordingState.paused;
       setState(() {});
     }
   }
@@ -697,6 +672,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       imageAnalysisConfig: faceAnalysisConfig,
     );
 
+    //? Application bar that can be displayed before the camera widget has loaded, or if the camera widget cannot display
     final Widget tempAppBar = Positioned(
       top: kPaddingNone,
       left: kPaddingNone,
@@ -854,15 +830,15 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
             children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren(state),
           ),
           const SizedBox(height: kPaddingLarge),
-          if (isRecording == ClipRecordingState.recording)
+          if (clipRecordingState.isRecordingOrPaused)
             SizedBox(
               width: kPaddingMedium,
               height: kPaddingMedium,
               child: Align(
                 child: AnimatedContainer(
                   duration: kAnimationDurationFast,
-                  width: !isClipPaused ? kPaddingMedium : kPaddingNone,
-                  height: !isClipPaused ? kPaddingMedium : kPaddingNone,
+                  width: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
+                  height: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
                   decoration: BoxDecoration(
                     color: colours.red,
                     borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
@@ -870,7 +846,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                 ),
               ),
             ),
-          if (widget.topAdditionalActions != null && widget.isVideoMode && !isRecording.isActive) ...widget.topAdditionalActions!,
+          if (widget.topAdditionalActions != null && widget.isVideoMode && clipRecordingState.isInactive) ...widget.topAdditionalActions!,
         ],
       ),
     );
@@ -887,7 +863,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           onTap: onFlashToggleRequest,
         ),
       const SizedBox(width: kPaddingSmall),
-      if (widget.onTapAddImage != null && !isClipActive) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
+      if (widget.onTapAddImage != null && clipRecordingState.isInactive) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
     ];
   }
 
@@ -898,7 +874,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
     // Add a shade to the top and bottom of the screen, leaving a square in the middle
     final Size screenSize = MediaQuery.of(context).size;
-    final double smallestSide = screenSize.width < screenSize.height ? screenSize.width : screenSize.height;
 
     if (widget.previewFile != null) {
       children.add(Positioned.fill(child: Image.file(File(widget.previewFile!.path), fit: BoxFit.cover)));
@@ -1009,7 +984,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=-=-             Delay Timer Selection UI             -=-=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled && !isRecording.isActive)
+          if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled && clipRecordingState.isInactive)
             SizedBox(
               width: 155,
               child: PositiveSlimTabBar(
@@ -1023,7 +998,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=-=-             Maximum Clip Duration UI             -=-=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-          if (widget.recordingLengthSelection >= 0 && widget.isVideoMode && widget.isRecordingLengthEnabled && !isRecording.isActive)
+          if (widget.recordingLengthSelection >= 0 && widget.isVideoMode && widget.isRecordingLengthEnabled && clipRecordingState.isInactive)
             SizedBox(
               height: kPaddingMedium,
               child: WheelChooser.custom(
@@ -1061,10 +1036,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               CameraButton(
                 active: canTakePictureOrVideo,
                 loadingColour: colours.yellow,
-                isLoading: isRecording == ClipRecordingState.recording,
+                isLoading: clipRecordingState.isRecordingOrPaused,
                 maxCLipDuration: widget.maxRecordingLength,
-                isSmallButton: isCameraButtonSmall,
-                isPaused: isClipPaused,
+                isSmallButton: clipRecordingState.isActiveUnpaused,
+                isPaused: clipRecordingState.isPaused,
                 onTap: (_) {
                   state.when(
                     onPhotoMode: onImageTaken,
@@ -1078,15 +1053,15 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              if (isRecording.isActive)
+              if (clipRecordingState.isActive)
                 CameraFloatingButton.close(
-                  active: isClipPaused,
+                  active: clipRecordingState.isPaused,
                   onTap: (context) => onCloseButtonTapped(),
-                  isDisplayed: isClipPaused,
+                  isDisplayed: clipRecordingState.isPaused,
                   iconColour: colours.black,
                   backgroundColour: colours.yellow,
                 ),
-              if (!isRecording.isActive)
+              if (clipRecordingState.isInactive)
                 CameraFloatingButton.changeCamera(
                   active: canTakePictureOrVideo,
                   onTap: (context) => onChangeCameraRequest(context, state),
@@ -1272,8 +1247,28 @@ class CameraPermissionDialog extends StatelessWidget {
 
 enum ClipRecordingState {
   notRecording,
-  prerecording,
+  preRecording,
+  paused,
   recording;
 
-  bool get isActive => (this == prerecording || this == recording);
+  ///Has the user begun the recording process. That is: prerecording, recording or paused the recording
+  bool get isActive => (this == preRecording || this == recording || this == paused);
+
+  ///Has the recording begun but is paused
+  bool get isRecordingOrPaused => (this == recording || this == paused);
+
+  ///Has the user begun the recording process but is not currently paused
+  bool get isActiveUnpaused => (this == recording || this == paused);
+
+  ///Returns true if the user is currently not in the process of recording a clip
+  bool get isInactive => (this == notRecording);
+
+  ///Is the clip in the pre-recording countdown stage.
+  bool get isPreRecording => (this == preRecording);
+
+  ///Has the clip begun recording but is currently paused
+  bool get isPaused => (this == paused);
+
+  ///Is the clip recording now.
+  bool get isRecording => (this == recording);
 }
