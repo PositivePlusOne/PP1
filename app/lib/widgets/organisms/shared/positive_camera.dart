@@ -155,7 +155,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final bool isRecordingLengthEnabled;
 
   /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
-  final Function(bool)? onClipStateChange;
+  final Function(ClipRecordingState clipRecordingState)? onClipStateChange;
 
   @override
   ConsumerState<PositiveCamera> createState() => PositiveCameraState();
@@ -410,7 +410,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
 
     if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(true);
+      widget.onClipStateChange!(clipRecordingState);
     }
 
     //? If a maximum delay has been set then begin the delay timer
@@ -453,7 +453,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
 
     //? Begin clip recording
-    final CaptureRequest test = await videoState.startRecording();
+    await videoState.startRecording();
 
     setStateIfMounted(callback: () {
       clipRecordingState = ClipRecordingState.recording;
@@ -482,7 +482,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   Future<void> onVideoRecordingEnd() async {
     if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(false);
+      widget.onClipStateChange!(clipRecordingState);
     }
 
     //? Cleanup ui variables for video recording end
@@ -550,7 +550,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     stopClipTimers();
     stopClipRecording();
     if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(false);
+      widget.onClipStateChange!(clipRecordingState);
     }
   }
 
@@ -558,6 +558,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   void finishClipRecordingImmediately() {
     stopClipTimers();
     onVideoRecordingEnd();
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(clipRecordingState);
+    }
   }
 
   ///? Deactivate all variables to do with delay timer and clip timer
@@ -620,6 +623,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       startRecordingTimer(cameraState!);
       setStateIfMounted(callback: () {
         clipRecordingState = ClipRecordingState.recording;
+        widget.onClipStateChange!(clipRecordingState);
       });
       return;
     }
@@ -630,6 +634,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         clipTimer!.cancel();
       }
       clipRecordingState = ClipRecordingState.paused;
+      widget.onClipStateChange!(clipRecordingState);
       setState(() {});
     }
   }
@@ -1262,6 +1267,9 @@ enum ClipRecordingState {
 
   ///Has the user begun the recording process but is not currently paused
   bool get isActiveUnpaused => (this == recording || this == paused);
+
+  ///Has the user paused the current recording process or is not currently recording
+  bool get isNotRecordingOrPaused => (this == notRecording || this == paused);
 
   ///Returns true if the user is currently not in the process of recording a clip
   bool get isInactive => (this == notRecording);
