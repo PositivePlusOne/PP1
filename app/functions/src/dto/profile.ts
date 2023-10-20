@@ -64,7 +64,9 @@ export interface ProfileJSON {
     profileImage?: string;
     biography?: string;
     media?: MediaJSON[];
-    statistics?: ProfileStatisicsJSON;
+    isBanned?: boolean;
+    bannedUntil?: string;
+    bannedReason?: string;
 }
 
 export class Profile {

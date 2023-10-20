@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -50,6 +51,7 @@ Future<void> setupApplication() async {
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -98,6 +100,7 @@ Future<void> setupApplication() async {
   await profileController.setupListeners();
   await galleryController.setupListeners();
   await tagsController.setupListeners();
+  await cacheController.setupListeners();
 
   await systemController.preloadPackageInformation();
 

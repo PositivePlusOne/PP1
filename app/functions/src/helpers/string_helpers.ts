@@ -1,3 +1,5 @@
+import * as crypto from "crypto";
+
 export namespace StringHelpers {
   /**
    * Generates a private channel name for the given profiles.
@@ -16,5 +18,18 @@ export namespace StringHelpers {
     // Join guids with a dash.
     const documentName = guids.join("-");
     return documentName;
+  }
+
+  // Appends a @ to the beginning of a string if it doesn't already have one.
+  export function asHandle(handle: string): string {
+    if (handle.startsWith("@")) {
+      return handle;
+    }
+
+    return `@${handle}`;
+  }
+
+  export function generateHmac(key: string): crypto.Hmac {
+    return crypto.createHmac("sha256", key);
   }
 }

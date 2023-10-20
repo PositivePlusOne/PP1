@@ -29,8 +29,6 @@ export namespace ReactionService {
 
     export function getExpectedKeyFromOptions(reaction: ReactionJSON): string {
         const isUnique = isUniqueReactionKind(reaction.kind ?? "");
-        functions.logger.debug("Generating reaction key", { reaction, isUnique });
-
         if (!isUnique) {
             functions.logger.debug("Reaction is not unique, generating random key");
             return FlamelinkHelpers.generateIdentifier();
@@ -252,8 +250,6 @@ export namespace ReactionService {
 
         const response = await client.reactions.filter(params);
         const results = response.results;
-        functions.logger.info("Reactions for activity", { activity_id, kind, limit, cursor, response, results });
-        
         const reactionIds = results.map((reaction: any) => reaction?.data?.source_reaction_id ?? "").filter((id: string) => id !== "");
 
         const reactions = await DataService.getBatchDocuments({

@@ -34,6 +34,9 @@ class Profile with _$Profile {
     PositivePlace? place,
     @Default('') String biography,
     @Default([]) List<Media> media,
+    @Default(false) bool isBanned,
+    @Default('') String bannedUntil,
+    @Default('') String bannedReason,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();

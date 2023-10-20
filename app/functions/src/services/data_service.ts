@@ -48,15 +48,12 @@ export namespace DataService {
     if (!skipCacheLookup) {
       data = await CacheService.get(cacheKey);
       if (data) {
-        functions.logger.debug(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
         return data;
       }
     }
 
-    const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
-
     // Remove all undefined values from the initial data.
+    const flamelinkApp = SystemService.getFlamelinkApp();
     initialData = FlamelinkHelpers.removeUndefinedValues(initialData);
 
     data = await flamelinkApp.content.get(options);
@@ -89,13 +86,11 @@ export namespace DataService {
     if (!skipCacheLookup) {
       data = await CacheService.get(cacheKey);
       if (data) {
-        functions.logger.debug(`Found document in cache for ${options.schemaKey}: ${options.entryId}`);
         return data;
       }
     }
 
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Getting document for ${options.schemaKey}: ${options.entryId} from flamelink`);
 
     data = await flamelinkApp.content.get(options);
     if (data) {
@@ -243,11 +238,9 @@ export namespace DataService {
       data = await CacheService.get(cacheKey);
 
       if (data) {
-        functions.logger.info(`Found document in cache for ${options.schemaKey}: ${entryId}`);
         return data;
       }
 
-      functions.logger.info(`Getting document for ${options.schemaKey}: ${entryId}`);
       data = await flamelinkApp.content.get({
         schemaKey: options.schemaKey,
         entryId: entryId,
@@ -262,8 +255,6 @@ export namespace DataService {
 
   export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    functions.logger.info(`Getting document for ${options.schemaKey}: ${options.field} = ${options.value}`);
-
     return await flamelinkApp.content.getByField(options);
   };
 

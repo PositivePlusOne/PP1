@@ -161,8 +161,10 @@ export namespace SystemEndpoints {
     const reportType = request.data.reportType || "unknown";
     const content = request.data.content || "";
 
+    const profile = await ProfileService.getProfile(uid);
     functions.logger.info("Submitting feedback", { uid, feedbackType, reportType, content });
-    await SystemService.submitFeedback(uid, feedbackType, reportType, content);
+    
+    await SystemService.submitFeedback(profile, feedbackType, reportType, content);
 
     return JSON.stringify({ success: true });
   });

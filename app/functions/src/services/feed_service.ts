@@ -123,8 +123,6 @@ export namespace FeedService {
       enrich: true,
     });
 
-    functions.logger.info("Got feed window", { feed, windowSize, next, response });
-
     const entries = [] as FeedEntry[];
     response.results.forEach((activity: any) => {
       entries.push({

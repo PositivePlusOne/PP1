@@ -45,6 +45,9 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      isBanned: json['isBanned'] as bool? ?? false,
+      bannedUntil: json['bannedUntil'] as String? ?? '',
+      bannedReason: json['bannedReason'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
@@ -69,6 +72,9 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'place': instance.place?.toJson(),
       'biography': instance.biography,
       'media': instance.media.map((e) => e.toJson()).toList(),
+      'isBanned': instance.isBanned,
+      'bannedUntil': instance.bannedUntil,
+      'bannedReason': instance.bannedReason,
     };
 
 _$ProfileStatisticsImpl _$$ProfileStatisticsImplFromJson(

@@ -47,6 +47,9 @@ mixin _$Profile {
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
   List<Media> get media => throw _privateConstructorUsedError;
+  bool get isBanned => throw _privateConstructorUsedError;
+  String get bannedUntil => throw _privateConstructorUsedError;
+  String get bannedReason => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -78,7 +81,10 @@ abstract class $ProfileCopyWith<$Res> {
       bool placeSkipped,
       PositivePlace? place,
       String biography,
-      List<Media> media});
+      List<Media> media,
+      bool isBanned,
+      String bannedUntil,
+      String bannedReason});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $PositivePlaceCopyWith<$Res>? get place;
@@ -117,6 +123,9 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
+    Object? isBanned = null,
+    Object? bannedUntil = null,
+    Object? bannedReason = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -199,6 +208,18 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.media
           : media // ignore: cast_nullable_to_non_nullable
               as List<Media>,
+      isBanned: null == isBanned
+          ? _value.isBanned
+          : isBanned // ignore: cast_nullable_to_non_nullable
+              as bool,
+      bannedUntil: null == bannedUntil
+          ? _value.bannedUntil
+          : bannedUntil // ignore: cast_nullable_to_non_nullable
+              as String,
+      bannedReason: null == bannedReason
+          ? _value.bannedReason
+          : bannedReason // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -254,7 +275,10 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       bool placeSkipped,
       PositivePlace? place,
       String biography,
-      List<Media> media});
+      List<Media> media,
+      bool isBanned,
+      String bannedUntil,
+      String bannedReason});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -293,6 +317,9 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
+    Object? isBanned = null,
+    Object? bannedUntil = null,
+    Object? bannedReason = null,
   }) {
     return _then(_$ProfileImpl(
       flMeta: freezed == flMeta
@@ -375,6 +402,18 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value._media
           : media // ignore: cast_nullable_to_non_nullable
               as List<Media>,
+      isBanned: null == isBanned
+          ? _value.isBanned
+          : isBanned // ignore: cast_nullable_to_non_nullable
+              as bool,
+      bannedUntil: null == bannedUntil
+          ? _value.bannedUntil
+          : bannedUntil // ignore: cast_nullable_to_non_nullable
+              as String,
+      bannedReason: null == bannedReason
+          ? _value.bannedReason
+          : bannedReason // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -407,7 +446,10 @@ class _$ProfileImpl implements _Profile {
       this.placeSkipped = false,
       this.place,
       this.biography = '',
-      final List<Media> media = const []})
+      final List<Media> media = const [],
+      this.isBanned = false,
+      this.bannedUntil = '',
+      this.bannedReason = ''})
       : _genders = genders,
         _interests = interests,
         _visibilityFlags = visibilityFlags,
@@ -521,8 +563,18 @@ class _$ProfileImpl implements _Profile {
   }
 
   @override
+  @JsonKey()
+  final bool isBanned;
+  @override
+  @JsonKey()
+  final String bannedUntil;
+  @override
+  @JsonKey()
+  final String bannedReason;
+
+  @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, tags: $tags, featureFlags: $featureFlags, companySectors: $companySectors, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, tags: $tags, featureFlags: $featureFlags, companySectors: $companySectors, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, isBanned: $isBanned, bannedUntil: $bannedUntil, bannedReason: $bannedReason)';
   }
 
   @override
@@ -561,7 +613,13 @@ class _$ProfileImpl implements _Profile {
             (identical(other.place, place) || other.place == place) &&
             (identical(other.biography, biography) ||
                 other.biography == biography) &&
-            const DeepCollectionEquality().equals(other._media, _media));
+            const DeepCollectionEquality().equals(other._media, _media) &&
+            (identical(other.isBanned, isBanned) ||
+                other.isBanned == isBanned) &&
+            (identical(other.bannedUntil, bannedUntil) ||
+                other.bannedUntil == bannedUntil) &&
+            (identical(other.bannedReason, bannedReason) ||
+                other.bannedReason == bannedReason));
   }
 
   @JsonKey(ignore: true)
@@ -587,7 +645,10 @@ class _$ProfileImpl implements _Profile {
         placeSkipped,
         place,
         biography,
-        const DeepCollectionEquality().hash(_media)
+        const DeepCollectionEquality().hash(_media),
+        isBanned,
+        bannedUntil,
+        bannedReason
       ]);
 
   @JsonKey(ignore: true)
@@ -625,7 +686,10 @@ abstract class _Profile implements Profile {
       final bool placeSkipped,
       final PositivePlace? place,
       final String biography,
-      final List<Media> media}) = _$ProfileImpl;
+      final List<Media> media,
+      final bool isBanned,
+      final String bannedUntil,
+      final String bannedReason}) = _$ProfileImpl;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
@@ -676,6 +740,12 @@ abstract class _Profile implements Profile {
   String get biography;
   @override
   List<Media> get media;
+  @override
+  bool get isBanned;
+  @override
+  String get bannedUntil;
+  @override
+  String get bannedReason;
   @override
   @JsonKey(ignore: true)
   _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>

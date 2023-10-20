@@ -4,6 +4,10 @@ import 'dart:collection';
 import 'dart:io';
 
 // Package imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/services/health_api_service.dart';
+import 'package:cron/cron.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -28,6 +32,17 @@ class CacheRecord with _$CacheRecord {
     required FlMeta metadata,
   }) = _CacheRecord;
 
+  static const String kCacheRefreshInterval = '*/1 * * * *';
+  static const Duration kCacheExpiryInterval = Duration(minutes: 2);
+
+  static const int kCacheRefreshMaximumEntryCount = 100;
+
+  static final List<String> kCacheUpdateTargetSchemas = List<String>.unmodifiable([
+    'users',
+    'relationships',
+    'activities',
+  ]);
+
   factory CacheRecord.fromJson(Map<String, Object?> json) => _$CacheRecordFromJson(json);
 }
 
@@ -38,6 +53,63 @@ CacheController cacheController(CacheControllerRef ref) {
 
 class CacheController {
   final HashMap<String, CacheRecord> cacheData = HashMap<String, CacheRecord>();
+  ScheduledTask? cacheUpdateTask;
+
+  Future<void> setupListeners() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final Cron cron = providerContainer.read(cronProvider);
+
+    logger.i('Setting up cache controller listeners');
+    await cacheUpdateTask?.cancel();
+    cacheUpdateTask = cron.schedule(Schedule.parse(CacheRecord.kCacheRefreshInterval.toString()), onCacheUpdateRequest);
+  }
+
+  Future<void> onCacheUpdateRequest() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.i('Cache update request received');
+
+    final List<String> requestIds = [];
+
+    final int currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    for (final CacheRecord record in cacheData.values) {
+      final int lastFetchTime = record.metadata.lastFetchMillis;
+
+      final String schema = record.metadata.schema ?? '';
+      if (schema.isEmpty || !CacheRecord.kCacheUpdateTargetSchemas.contains(schema)) {
+        logger.d('Skipping cache record ${record.key} due to schema mismatch');
+        continue;
+      }
+
+      if (lastFetchTime == -1) {
+        logger.d('Skipping cache record ${record.key} due to missing last fetch time');
+        continue;
+      }
+
+      final String id = record.metadata.id ?? '';
+      final bool isCacheExpired = currentTime - lastFetchTime > CacheRecord.kCacheExpiryInterval.inMilliseconds;
+
+      if (id.isNotEmpty && isCacheExpired) {
+        final String cacheKey = '${schema}_$id';
+        requestIds.add(cacheKey);
+      }
+
+      logger.d('Cache record ${record.key} is expired: $isCacheExpired');
+      if (requestIds.length >= CacheRecord.kCacheRefreshMaximumEntryCount) {
+        logger.i('Cache update request limit reached');
+        break;
+      }
+    }
+
+    if (requestIds.isEmpty) {
+      logger.i('No cache update requests to process');
+      return;
+    }
+
+    final HealthApiService healthApiService = await providerContainer.read(healthApiServiceProvider.future);
+    await healthApiService.updateLocalCache(requestIds: requestIds);
+    logger.i('Cache update request completed');
+  }
 
   Future<File?> getSharedPrefsFile(String uid) async {
     final Logger logger = providerContainer.read(loggerProvider);

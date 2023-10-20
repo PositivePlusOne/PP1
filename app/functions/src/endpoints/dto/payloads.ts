@@ -81,6 +81,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     joinedDataRecords.set(reactionStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(profileStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(feedStatisticsSchemaKey, new Set<string>());
+    joinedDataRecords.set(promotionsSchemaKey, new Set<string>());
 
     // Stage 1: Prepare join record keys
     for (const obj of data) {
@@ -97,7 +98,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const activityId = activity._fl_meta_?.fl_id || "";
                 const isActivityPublisher = sender && sender === publisherId;
 
-                if (publisherId && !isActivityPublisher) {
+                if (sender && publisherId && !isActivityPublisher) {
                     joinedDataRecords.get(profileSchemaKey)?.add(activity.publisherInformation!.publisherId!);
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, publisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
@@ -111,7 +112,6 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     // Unique reactions
                     if (sender) {
                         const expectedReactionKeys = ReactionService.buildUniqueReactionKeysForOptions(activityId, sender);
-                        functions.logger.info("Unique reaction keys", { expectedReactionKeys });
                         for (const expectedReactionKey of expectedReactionKeys) {
                             if (expectedReactionKey) {
                                 joinedDataRecords.get(reactionSchemaKey)?.add(expectedReactionKey);
@@ -126,7 +126,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const isRepost = repostTargetActivityId && repostTargetActivityPublisherId && repostTargetActivityOriginFeed;
                 const isReposter = sender && sender === repostTargetActivityPublisherId;
 
-                if (isRepost && !isReposter) {
+                if (sender && isRepost && !isReposter) {
                     joinedDataRecords.get(activitySchemaKey)?.add(repostTargetActivityId);
                     joinedDataRecords.get(profileSchemaKey)?.add(repostTargetActivityPublisherId);
 
@@ -161,9 +161,9 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
                 break;
             case profileSchemaKey:
-                const isCurrentProfile = sender === obj._fl_meta_?.fl_id;
+                const isCurrentProfile = sender && sender === obj._fl_meta_?.fl_id;
                 const hasId = obj._fl_meta_?.fl_id;
-                if (hasId && !isCurrentProfile) {
+                if (sender && hasId && !isCurrentProfile) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, obj._fl_meta_!.fl_id!]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
@@ -180,7 +180,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     });
 
                     const dataId = FlamelinkHelpers.getFlamelinkIdFromObject(data);
-                    if (dataId) {
+                    if (sender && dataId) {
                         obj.profile = data._fl_meta_!.fl_id!;
                         joinedDataRecords.get(profileSchemaKey)?.add(data._fl_meta_!.fl_id!);
 
@@ -191,7 +191,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case reactionSchemaKey:
                 const userId = obj?.user_id || "";
-                if (userId && userId !== sender) {
+                if (sender && userId && userId !== sender) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, userId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     joinedDataRecords.get(profileSchemaKey)?.add(userId);
@@ -272,6 +272,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     }
 
     // Stage 6: Wait for all joins to complete
+    functions.logger.info(`Waiting for ${joinPromises.length} joins to complete`, { joins });
     await Promise.all(joinPromises);
 
     // Stage 7: Build response
@@ -317,7 +318,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     break;
                 }
 
-                if (!isCurrentDocument) {
+                if (sender && !isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
 
