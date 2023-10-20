@@ -257,6 +257,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   @override
+  void onPause() {
+    stopClipRecording();
+  }
+
+  @override
   void deactivate() {
     stopClipTimers();
     clipRecordingState = ClipRecordingState.notRecording;
