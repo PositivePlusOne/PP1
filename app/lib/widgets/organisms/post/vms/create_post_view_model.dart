@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'dart:io' as io;
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,6 +33,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
+import 'package:video_editor/video_editor.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
@@ -83,6 +84,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
   final TextEditingController promotionKeyTextController = TextEditingController();
+
+  VideoEditorController? videoEditorController;
 
   PositiveCameraState get getCurrentCameraState {
     return state.cameraWidgetKey.currentState as PositiveCameraState;
@@ -458,40 +461,44 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   //? Create video Post here
-  Future<void> onVideoTaken(BuildContext context, XFile file) async {
+  Future<void> onVideoTaken(BuildContext context, XFile xFile) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
-    final List<GalleryEntry> entries = [];
-    if (file.path.isNotEmpty) {
-      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(
-        file,
-        uploadImmediately: false,
-      );
-      entries.add(entry);
-    }
+    final io.File file = io.File(xFile.path);
 
-    if (entries.isEmpty) {
-      return;
-    }
+    videoEditorController = VideoEditorController.file(
+      file,
+      minDuration: const Duration(seconds: 1),
+      maxDuration: const Duration(seconds: 180),
+    );
 
     state = state.copyWith(
-      galleryEntries: entries,
       currentCreatePostPage: CreatePostCurrentPage.createPostEditClip,
-      editingGalleryEntry: entries.firstOrNull,
       currentPostType: PostType.clip,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
     );
   }
 
-  Future<void> onClipEditFinish(BuildContext context, io.File file) async {
+  Future<void> onClipEditFinish(BuildContext context) async {
+    CreateClipExportService exportService = CreateClipExportService();
+
+    if (videoEditorController == null) {
+      //TODO crash with grace here
+      return;
+    }
+
+    exportService.exportVideoFromController(videoEditorController!, (file) => onClipEditProcessConcluded(context, file));
+  }
+
+  Future<void> onClipEditProcessConcluded(BuildContext context, io.File file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     final List<GalleryEntry> entries = [];
     if (file.path.isNotEmpty) {
-      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(XFile.fromData(await file.readAsBytes()), uploadImmediately: true);
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(XFile.fromData(await file.readAsBytes()), uploadImmediately: false);
       entries.add(entry);
     }
 
@@ -507,6 +514,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
     );
+
     return;
   }
 
@@ -645,11 +653,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           currentCreatePostPage: CreatePostCurrentPage.createPostClip,
           activeButtonFlexText: localisations.page_create_post_create,
         );
+        await onClipEditFinish(context);
         break;
+      case CreatePostCurrentPage.createPostClip:
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-      case CreatePostCurrentPage.createPostClip:
         await onPostFinished(context, profileController.currentProfile);
         break;
     }

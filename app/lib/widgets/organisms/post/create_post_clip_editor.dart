@@ -7,103 +7,73 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_external_shader.dart';
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter/ffmpeg_kit_config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:ffmpeg_kit_flutter/ffmpeg_session.dart';
-import 'package:ffmpeg_kit_flutter/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 import 'package:video_editor/video_editor.dart';
-import 'dart:developer';
 
 //*-------------------*//
 //*VIDEO EDITOR SCREEN*//
 //*-------------------*//
-class VideoEditor extends StatefulHookConsumerWidget {
-  const VideoEditor({
-    required this.file,
-    required this.function,
+class PositiveClipEditor extends StatefulHookConsumerWidget {
+  const PositiveClipEditor({
     required this.topNavigationSize,
     required this.bottomNavigationSize,
     required this.targetVideoAspectRatio,
+    required this.controller,
     this.onTapClose,
     this.onInternalAddImageTap,
     super.key,
   });
 
-  final File file;
-  final Function(File) function;
   final double topNavigationSize;
   final double bottomNavigationSize;
   final double targetVideoAspectRatio;
+
+  final VideoEditorController? controller;
 
   final Function(BuildContext context)? onTapClose;
   final Function(BuildContext context)? onInternalAddImageTap;
 
   @override
-  ConsumerState<VideoEditor> createState() => _VideoEditorState();
+  ConsumerState<PositiveClipEditor> createState() => _PositiveClipEditorState();
 }
 
-class _VideoEditorState extends ConsumerState<VideoEditor> {
-  final _progress = ValueNotifier<double>(0.0);
-  final _isExporting = ValueNotifier<bool>(false);
+class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
+  // final ValueNotifier<double> _progress = ValueNotifier<double>(0.0);
+  // final ValueNotifier<bool> _isExporting = ValueNotifier<bool>(false);
   final double height = 60;
 
-  late final VideoEditorController _controller = VideoEditorController.file(
-    widget.file,
-    minDuration: const Duration(seconds: 1),
-    maxDuration: const Duration(seconds: 180),
-  );
+  // late final VideoEditorController _controller = VideoEditorController.file(
+  //   widget.file,
+  //   minDuration: const Duration(seconds: 1),
+  //   maxDuration: const Duration(seconds: 180),
+  // );
 
   @override
   void initState() {
     super.initState();
-    _controller.initialize(aspectRatio: widget.targetVideoAspectRatio).then((_) => setState(() {})).catchError((error) {
-      Navigator.pop(context);
-    }, test: (e) => e is VideoMinDurationError);
+    if (widget.controller != null) {
+      widget.controller!.initialize(aspectRatio: widget.targetVideoAspectRatio).then((_) => setState(() {})).catchError((error) {
+        Navigator.pop(context);
+      }, test: (e) => e is VideoMinDurationError);
+    }
   }
 
   @override
   void dispose() async {
-    _progress.dispose();
-    _isExporting.dispose();
-    _controller.dispose();
+    // _progress.dispose();
+    // _isExporting.dispose();
+    if (widget.controller != null) {
+      widget.controller!.dispose();
+    }
     super.dispose();
-  }
-
-  void _exportVideo() async {
-    _progress.value = 0;
-    _isExporting.value = true;
-
-    final config = VideoFFmpegVideoEditorConfig(
-      _controller,
-      format: VideoExportFormat.mp4,
-      commandBuilder: (config, videoPath, outputPath) {
-        final List<String> filters = config.getExportFilters();
-        // filters.add('hflip'); // add horizontal flip
-
-        return '-i $videoPath ${config.filtersCmd(filters)} $outputPath';
-      },
-    );
-    await ExportService.runFFmpegCommand(
-      await config.getExecuteConfig(),
-      // onProgress: (stats) {
-      //   _progress.value = config.getFFmpegProgress(stats.getTime().toInt());
-      // },
-      onError: (e, s) {},
-      onCompleted: (file) {
-        _isExporting.value = false;
-        if (!mounted) return;
-        widget.function(file);
-      },
-    );
   }
 
   bool get checkVideoLength {
     //TODO(S): This requires a callback on the controller, when controller is remade update this
-    if (_controller.trimmedDuration.inSeconds <= kMaxClipDurationSeconds) {
+    if (widget.controller != null && widget.controller!.trimmedDuration.inSeconds <= kMaxClipDurationSeconds) {
       return true;
     }
     return false;
@@ -119,7 +89,7 @@ class _VideoEditorState extends ConsumerState<VideoEditor> {
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: _controller.initialized
+        body: (widget.controller != null && widget.controller!.initialized)
             ? SafeArea(
                 child: Stack(
                   alignment: Alignment.center,
@@ -129,7 +99,7 @@ class _VideoEditorState extends ConsumerState<VideoEditor> {
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     Positioned.fill(
                       child: CropGridViewer.preview(
-                        controller: _controller,
+                        controller: widget.controller!,
                       ),
                     ),
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -240,46 +210,12 @@ class _VideoEditorState extends ConsumerState<VideoEditor> {
   }
 
   Widget _trimSlider() {
-    return TrimSlider(
-      controller: _controller,
-      height: 50,
-    );
-  }
-}
-
-class ExportService {
-  static Future<void> dispose() async {
-    final executions = await FFmpegKit.listSessions();
-    if (executions.isNotEmpty) await FFmpegKit.cancel();
-  }
-
-  static Future<FFmpegSession> runFFmpegCommand(
-    FFmpegVideoEditorExecute execute, {
-    required void Function(File file) onCompleted,
-    void Function(Object, StackTrace)? onError,
-    void Function(Statistics)? onProgress,
-  }) {
-    log('FFmpeg start process with command = ${execute.command}');
-    return FFmpegKit.executeAsync(
-      execute.command,
-      (session) async {
-        final state = FFmpegKitConfig.sessionStateToString(await session.getState());
-        final code = await session.getReturnCode();
-
-        if (code!.isValueSuccess()) {
-          onCompleted(File(execute.outputPath));
-        } else {
-          if (onError != null) {
-            onError(
-              Exception('FFmpeg process exited with state $state and return code $code.\n${await session.getOutput()}'),
-              StackTrace.current,
-            );
-          }
-          return;
-        }
-      },
-      null,
-      onProgress,
-    );
+    if (widget.controller != null) {
+      return TrimSlider(
+        controller: widget.controller!,
+        height: 50,
+      );
+    }
+    return SizedBox();
   }
 }
