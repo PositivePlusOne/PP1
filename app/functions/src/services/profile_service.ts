@@ -229,6 +229,18 @@ export namespace ProfileService {
     });
   }
 
+  export async function updateAccountFlags(uid: string, accountFlags: string[]): Promise<any> {
+    functions.logger.info(`Updating account flags for user: ${uid}`);
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        accountFlags,
+      },
+    });
+  }
+
   /**
    * Updates the feature flags of the user.
    * @param {string} uid The user ID of the user to update the visibility flags for.
@@ -293,6 +305,19 @@ export namespace ProfileService {
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
+
+    // If the display name is being removed, we can skip the check.
+    // This is needed for moderation purposes.
+    if (displayName.length == 0) {
+      return await DataService.updateDocument({
+        schemaKey: "users",
+        entryId: uid,
+        data: {
+          displayName,
+        },
+      });
+    }
+
     const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {
       throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);

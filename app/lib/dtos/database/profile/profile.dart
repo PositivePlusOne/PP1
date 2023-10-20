@@ -26,17 +26,15 @@ class Profile with _$Profile {
     @Default('') String hivStatus,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> genders,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> interests,
-    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> visibilityFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> tags,
-    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> companySectors,
     @Default(false) bool placeSkipped,
     PositivePlace? place,
     @Default('') String biography,
     @Default([]) List<Media> media,
-    @Default(false) bool isBanned,
-    @Default('') String bannedUntil,
-    @Default('') String bannedReason,
+    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> accountFlags,
+    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> visibilityFlags,
+    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();

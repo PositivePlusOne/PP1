@@ -36,20 +36,19 @@ mixin _$Profile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get interests => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get visibilityFlags => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: stringSetFromJson)
   Set<String> get tags => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get featureFlags => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get companySectors => throw _privateConstructorUsedError;
   bool get placeSkipped => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
   List<Media> get media => throw _privateConstructorUsedError;
-  bool get isBanned => throw _privateConstructorUsedError;
-  String get bannedUntil => throw _privateConstructorUsedError;
-  String get bannedReason => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get accountFlags => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get visibilityFlags => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get featureFlags => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -74,17 +73,15 @@ abstract class $ProfileCopyWith<$Res> {
       String hivStatus,
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> tags,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
       bool placeSkipped,
       PositivePlace? place,
       String biography,
       List<Media> media,
-      bool isBanned,
-      String bannedUntil,
-      String bannedReason});
+      @JsonKey(fromJson: stringSetFromJson) Set<String> accountFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $PositivePlaceCopyWith<$Res>? get place;
@@ -115,17 +112,15 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? hivStatus = null,
     Object? genders = null,
     Object? interests = null,
-    Object? visibilityFlags = null,
     Object? tags = null,
-    Object? featureFlags = null,
     Object? companySectors = null,
     Object? placeSkipped = null,
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
-    Object? isBanned = null,
-    Object? bannedUntil = null,
-    Object? bannedReason = null,
+    Object? accountFlags = null,
+    Object? visibilityFlags = null,
+    Object? featureFlags = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -176,17 +171,9 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.interests
           : interests // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      visibilityFlags: null == visibilityFlags
-          ? _value.visibilityFlags
-          : visibilityFlags // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
       tags: null == tags
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      featureFlags: null == featureFlags
-          ? _value.featureFlags
-          : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
       companySectors: null == companySectors
           ? _value.companySectors
@@ -208,18 +195,18 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.media
           : media // ignore: cast_nullable_to_non_nullable
               as List<Media>,
-      isBanned: null == isBanned
-          ? _value.isBanned
-          : isBanned // ignore: cast_nullable_to_non_nullable
-              as bool,
-      bannedUntil: null == bannedUntil
-          ? _value.bannedUntil
-          : bannedUntil // ignore: cast_nullable_to_non_nullable
-              as String,
-      bannedReason: null == bannedReason
-          ? _value.bannedReason
-          : bannedReason // ignore: cast_nullable_to_non_nullable
-              as String,
+      accountFlags: null == accountFlags
+          ? _value.accountFlags
+          : accountFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      visibilityFlags: null == visibilityFlags
+          ? _value.visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      featureFlags: null == featureFlags
+          ? _value.featureFlags
+          : featureFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ) as $Val);
   }
 
@@ -268,17 +255,15 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       String hivStatus,
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> tags,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
       bool placeSkipped,
       PositivePlace? place,
       String biography,
       List<Media> media,
-      bool isBanned,
-      String bannedUntil,
-      String bannedReason});
+      @JsonKey(fromJson: stringSetFromJson) Set<String> accountFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -309,17 +294,15 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? hivStatus = null,
     Object? genders = null,
     Object? interests = null,
-    Object? visibilityFlags = null,
     Object? tags = null,
-    Object? featureFlags = null,
     Object? companySectors = null,
     Object? placeSkipped = null,
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
-    Object? isBanned = null,
-    Object? bannedUntil = null,
-    Object? bannedReason = null,
+    Object? accountFlags = null,
+    Object? visibilityFlags = null,
+    Object? featureFlags = null,
   }) {
     return _then(_$ProfileImpl(
       flMeta: freezed == flMeta
@@ -370,17 +353,9 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value._interests
           : interests // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      visibilityFlags: null == visibilityFlags
-          ? _value._visibilityFlags
-          : visibilityFlags // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
       tags: null == tags
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
-      featureFlags: null == featureFlags
-          ? _value._featureFlags
-          : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
       companySectors: null == companySectors
           ? _value._companySectors
@@ -402,18 +377,18 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value._media
           : media // ignore: cast_nullable_to_non_nullable
               as List<Media>,
-      isBanned: null == isBanned
-          ? _value.isBanned
-          : isBanned // ignore: cast_nullable_to_non_nullable
-              as bool,
-      bannedUntil: null == bannedUntil
-          ? _value.bannedUntil
-          : bannedUntil // ignore: cast_nullable_to_non_nullable
-              as String,
-      bannedReason: null == bannedReason
-          ? _value.bannedReason
-          : bannedReason // ignore: cast_nullable_to_non_nullable
-              as String,
+      accountFlags: null == accountFlags
+          ? _value._accountFlags
+          : accountFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      visibilityFlags: null == visibilityFlags
+          ? _value._visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      featureFlags: null == featureFlags
+          ? _value._featureFlags
+          : featureFlags // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
     ));
   }
 }
@@ -436,27 +411,27 @@ class _$ProfileImpl implements _Profile {
       final Set<String> genders = const {},
       @JsonKey(fromJson: stringSetFromJson)
       final Set<String> interests = const {},
-      @JsonKey(fromJson: stringSetFromJson)
-      final Set<String> visibilityFlags = const {},
       @JsonKey(fromJson: stringSetFromJson) final Set<String> tags = const {},
-      @JsonKey(fromJson: stringSetFromJson)
-      final Set<String> featureFlags = const {},
       @JsonKey(fromJson: stringSetFromJson)
       final Set<String> companySectors = const {},
       this.placeSkipped = false,
       this.place,
       this.biography = '',
       final List<Media> media = const [],
-      this.isBanned = false,
-      this.bannedUntil = '',
-      this.bannedReason = ''})
+      @JsonKey(fromJson: stringSetFromJson)
+      final Set<String> accountFlags = const {},
+      @JsonKey(fromJson: stringSetFromJson)
+      final Set<String> visibilityFlags = const {},
+      @JsonKey(fromJson: stringSetFromJson)
+      final Set<String> featureFlags = const {}})
       : _genders = genders,
         _interests = interests,
-        _visibilityFlags = visibilityFlags,
         _tags = tags,
-        _featureFlags = featureFlags,
         _companySectors = companySectors,
-        _media = media;
+        _media = media,
+        _accountFlags = accountFlags,
+        _visibilityFlags = visibilityFlags,
+        _featureFlags = featureFlags;
 
   factory _$ProfileImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProfileImplFromJson(json);
@@ -509,15 +484,6 @@ class _$ProfileImpl implements _Profile {
     return EqualUnmodifiableSetView(_interests);
   }
 
-  final Set<String> _visibilityFlags;
-  @override
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get visibilityFlags {
-    if (_visibilityFlags is EqualUnmodifiableSetView) return _visibilityFlags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_visibilityFlags);
-  }
-
   final Set<String> _tags;
   @override
   @JsonKey(fromJson: stringSetFromJson)
@@ -525,15 +491,6 @@ class _$ProfileImpl implements _Profile {
     if (_tags is EqualUnmodifiableSetView) return _tags;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableSetView(_tags);
-  }
-
-  final Set<String> _featureFlags;
-  @override
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get featureFlags {
-    if (_featureFlags is EqualUnmodifiableSetView) return _featureFlags;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_featureFlags);
   }
 
   final Set<String> _companySectors;
@@ -562,19 +519,36 @@ class _$ProfileImpl implements _Profile {
     return EqualUnmodifiableListView(_media);
   }
 
+  final Set<String> _accountFlags;
   @override
-  @JsonKey()
-  final bool isBanned;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get accountFlags {
+    if (_accountFlags is EqualUnmodifiableSetView) return _accountFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_accountFlags);
+  }
+
+  final Set<String> _visibilityFlags;
   @override
-  @JsonKey()
-  final String bannedUntil;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get visibilityFlags {
+    if (_visibilityFlags is EqualUnmodifiableSetView) return _visibilityFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_visibilityFlags);
+  }
+
+  final Set<String> _featureFlags;
   @override
-  @JsonKey()
-  final String bannedReason;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get featureFlags {
+    if (_featureFlags is EqualUnmodifiableSetView) return _featureFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_featureFlags);
+  }
 
   @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, visibilityFlags: $visibilityFlags, tags: $tags, featureFlags: $featureFlags, companySectors: $companySectors, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, isBanned: $isBanned, bannedUntil: $bannedUntil, bannedReason: $bannedReason)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, companySectors: $companySectors, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags)';
   }
 
   @override
@@ -601,11 +575,7 @@ class _$ProfileImpl implements _Profile {
             const DeepCollectionEquality().equals(other._genders, _genders) &&
             const DeepCollectionEquality()
                 .equals(other._interests, _interests) &&
-            const DeepCollectionEquality()
-                .equals(other._visibilityFlags, _visibilityFlags) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
-            const DeepCollectionEquality()
-                .equals(other._featureFlags, _featureFlags) &&
             const DeepCollectionEquality()
                 .equals(other._companySectors, _companySectors) &&
             (identical(other.placeSkipped, placeSkipped) ||
@@ -614,12 +584,12 @@ class _$ProfileImpl implements _Profile {
             (identical(other.biography, biography) ||
                 other.biography == biography) &&
             const DeepCollectionEquality().equals(other._media, _media) &&
-            (identical(other.isBanned, isBanned) ||
-                other.isBanned == isBanned) &&
-            (identical(other.bannedUntil, bannedUntil) ||
-                other.bannedUntil == bannedUntil) &&
-            (identical(other.bannedReason, bannedReason) ||
-                other.bannedReason == bannedReason));
+            const DeepCollectionEquality()
+                .equals(other._accountFlags, _accountFlags) &&
+            const DeepCollectionEquality()
+                .equals(other._visibilityFlags, _visibilityFlags) &&
+            const DeepCollectionEquality()
+                .equals(other._featureFlags, _featureFlags));
   }
 
   @JsonKey(ignore: true)
@@ -638,17 +608,15 @@ class _$ProfileImpl implements _Profile {
         hivStatus,
         const DeepCollectionEquality().hash(_genders),
         const DeepCollectionEquality().hash(_interests),
-        const DeepCollectionEquality().hash(_visibilityFlags),
         const DeepCollectionEquality().hash(_tags),
-        const DeepCollectionEquality().hash(_featureFlags),
         const DeepCollectionEquality().hash(_companySectors),
         placeSkipped,
         place,
         biography,
         const DeepCollectionEquality().hash(_media),
-        isBanned,
-        bannedUntil,
-        bannedReason
+        const DeepCollectionEquality().hash(_accountFlags),
+        const DeepCollectionEquality().hash(_visibilityFlags),
+        const DeepCollectionEquality().hash(_featureFlags)
       ]);
 
   @JsonKey(ignore: true)
@@ -679,17 +647,16 @@ abstract class _Profile implements Profile {
       final String hivStatus,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
-      @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> tags,
-      @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> companySectors,
       final bool placeSkipped,
       final PositivePlace? place,
       final String biography,
       final List<Media> media,
-      final bool isBanned,
-      final String bannedUntil,
-      final String bannedReason}) = _$ProfileImpl;
+      @JsonKey(fromJson: stringSetFromJson) final Set<String> accountFlags,
+      @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
+      @JsonKey(fromJson: stringSetFromJson)
+      final Set<String> featureFlags}) = _$ProfileImpl;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
@@ -722,13 +689,7 @@ abstract class _Profile implements Profile {
   Set<String> get interests;
   @override
   @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get visibilityFlags;
-  @override
-  @JsonKey(fromJson: stringSetFromJson)
   Set<String> get tags;
-  @override
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get featureFlags;
   @override
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get companySectors;
@@ -741,11 +702,14 @@ abstract class _Profile implements Profile {
   @override
   List<Media> get media;
   @override
-  bool get isBanned;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get accountFlags;
   @override
-  String get bannedUntil;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get visibilityFlags;
   @override
-  String get bannedReason;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get featureFlags;
   @override
   @JsonKey(ignore: true)
   _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>

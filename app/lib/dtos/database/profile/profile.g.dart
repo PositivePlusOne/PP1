@@ -26,13 +26,7 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
       interests: json['interests'] == null
           ? const {}
           : stringSetFromJson(json['interests']),
-      visibilityFlags: json['visibilityFlags'] == null
-          ? const {}
-          : stringSetFromJson(json['visibilityFlags']),
       tags: json['tags'] == null ? const {} : stringSetFromJson(json['tags']),
-      featureFlags: json['featureFlags'] == null
-          ? const {}
-          : stringSetFromJson(json['featureFlags']),
       companySectors: json['companySectors'] == null
           ? const {}
           : stringSetFromJson(json['companySectors']),
@@ -45,9 +39,15 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      isBanned: json['isBanned'] as bool? ?? false,
-      bannedUntil: json['bannedUntil'] as String? ?? '',
-      bannedReason: json['bannedReason'] as String? ?? '',
+      accountFlags: json['accountFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['accountFlags']),
+      visibilityFlags: json['visibilityFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['visibilityFlags']),
+      featureFlags: json['featureFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['featureFlags']),
     );
 
 Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
@@ -64,17 +64,15 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'hivStatus': instance.hivStatus,
       'genders': instance.genders.toList(),
       'interests': instance.interests.toList(),
-      'visibilityFlags': instance.visibilityFlags.toList(),
       'tags': instance.tags.toList(),
-      'featureFlags': instance.featureFlags.toList(),
       'companySectors': instance.companySectors.toList(),
       'placeSkipped': instance.placeSkipped,
       'place': instance.place?.toJson(),
       'biography': instance.biography,
       'media': instance.media.map((e) => e.toJson()).toList(),
-      'isBanned': instance.isBanned,
-      'bannedUntil': instance.bannedUntil,
-      'bannedReason': instance.bannedReason,
+      'accountFlags': instance.accountFlags.toList(),
+      'visibilityFlags': instance.visibilityFlags.toList(),
+      'featureFlags': instance.featureFlags.toList(),
     };
 
 _$ProfileStatisticsImpl _$$ProfileStatisticsImplFromJson(

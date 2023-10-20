@@ -55,18 +55,16 @@ export interface ProfileJSON {
     genders?: StringSetFromJson;
     interests?: StringSetFromJson;
     companySectors?: StringSetFromJson;
-    visibilityFlags?: StringSetFromJson;
     tags?: StringSetFromJson;
-    featureFlags?: StringSetFromJson;
     placeSkipped?: boolean;
     place?: PlaceJSON;
     referenceImage?: string;
     profileImage?: string;
     biography?: string;
     media?: MediaJSON[];
-    isBanned?: boolean;
-    bannedUntil?: string;
-    bannedReason?: string;
+    accountFlags?: StringSetFromJson;
+    visibilityFlags?: StringSetFromJson;
+    featureFlags?: StringSetFromJson;
 }
 
 export class Profile {
@@ -84,13 +82,14 @@ export class Profile {
     genders: StringSetFromJson;
     interests: StringSetFromJson;
     companySectors: StringSetFromJson;
-    visibilityFlags: StringSetFromJson;
-    featureFlags: StringSetFromJson;
     tags: StringSetFromJson;
     placeSkipped: boolean;
     place?: Place;
     biography: string;
     media: Media[];
+    accountFlags: StringSetFromJson;
+    visibilityFlags: StringSetFromJson;
+    featureFlags: StringSetFromJson;
 
     constructor(json: ProfileJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -107,13 +106,14 @@ export class Profile {
         this.genders = json.genders || new Set();
         this.interests = json.interests || new Set();
         this.companySectors = json.companySectors || new Set();
-        this.visibilityFlags = json.visibilityFlags || new Set();
-        this.featureFlags = json.featureFlags || new Set();
         this.tags = json.tags || new Set();
         this.placeSkipped = json.placeSkipped || false;
         this.place = json.place && new Place(json.place);
         this.biography = json.biography || '';
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
+        this.accountFlags = json.accountFlags || new Set();
+        this.visibilityFlags = json.visibilityFlags || new Set();
+        this.featureFlags = json.featureFlags || new Set();
     }
 
     isIncognito(): boolean {
