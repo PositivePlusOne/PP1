@@ -494,7 +494,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> onClipEditProcessConcluded(BuildContext context, io.File file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     final List<GalleryEntry> entries = [];
     if (file.path.isNotEmpty) {
