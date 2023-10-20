@@ -258,7 +258,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   @override
   void onPause() {
-    stopClipRecording();
+    resetClipStateToDefault();
   }
 
   @override
@@ -414,10 +414,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       delayTimer!.cancel();
     }
 
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(clipRecordingState);
-    }
-
     //? If a maximum delay has been set then begin the delay timer
     if (widget.isDelayTimerEnabled) {
       setStateIfMounted(
@@ -426,6 +422,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           clipRecordingState = ClipRecordingState.preRecording;
         },
       );
+
+      if (widget.onClipStateChange != null) {
+        widget.onClipStateChange!(clipRecordingState);
+      }
 
       delayTimer = Timer.periodic(
         const Duration(seconds: 1),
@@ -463,6 +463,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     setStateIfMounted(callback: () {
       clipRecordingState = ClipRecordingState.recording;
     });
+
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(clipRecordingState);
+    }
 
     if (widget.isRecordingLengthEnabled) {
       clipCurrentTime = widget.maxRecordingLength ?? 1;
