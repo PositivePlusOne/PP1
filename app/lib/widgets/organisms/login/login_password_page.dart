@@ -104,7 +104,7 @@ class LoginPasswordPage extends ConsumerWidget {
                   colors: colors,
                   primaryColor: colors.black,
                   isDisabled: false,
-                  onTapped: () => viewModel.onPasswordResetSelected(context),
+                  onTapped: () => viewModel.onPasswordResetOptionSelected(),
                   label: localizations.page_login_password_forgotten,
                   style: PositiveButtonStyle.text,
                   layout: PositiveButtonLayout.textOnly,

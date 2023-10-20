@@ -164,6 +164,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ForgottenPasswordRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ForgottenPasswordPage(),
+      );
+    },
+    ForgottenPasswordRecoveryRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ForgottenPasswordRecoveryPage(),
+      );
+    },
     GuidanceDirectoryEntryRoute.name: (routeData) {
       final args = routeData.argsAs<GuidanceDirectoryEntryRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -940,6 +952,34 @@ class ErrorRouteArgs {
   String toString() {
     return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
   }
+}
+
+/// generated route for
+/// [ForgottenPasswordPage]
+class ForgottenPasswordRoute extends PageRouteInfo<void> {
+  const ForgottenPasswordRoute({List<PageRouteInfo>? children})
+      : super(
+          ForgottenPasswordRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ForgottenPasswordRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ForgottenPasswordRecoveryPage]
+class ForgottenPasswordRecoveryRoute extends PageRouteInfo<void> {
+  const ForgottenPasswordRecoveryRoute({List<PageRouteInfo>? children})
+      : super(
+          ForgottenPasswordRecoveryRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ForgottenPasswordRecoveryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

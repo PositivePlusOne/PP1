@@ -1,7 +1,12 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:io';
 
 // Flutter imports:
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
+import 'package:app/extensions/localization_extensions.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,15 +16,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/validator_extensions.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';
@@ -97,6 +100,45 @@ class LoginViewModel extends _$LoginViewModel {
 
     logger.d('onAccountRecoverySelected');
     await appRouter.push(const LoginAccountRecoveryRoute());
+  }
+
+  Future<void> onAccountRecoveryShowEmailClientSelected(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onAccountRecoveryShowEmailClientSelected');
+    if (Platform.isAndroid) {
+      // use the android intent to open email
+      AndroidIntent intent = const AndroidIntent(
+        action: 'android.intent.action.MAIN',
+        category: 'android.intent.category.APP_EMAIL',
+        // opening as a new task (app) so we can go back to the email password login on their return
+        flags: [Flag.FLAG_ACTIVITY_NEW_TASK],
+      );
+      // show the android email client
+      await intent.launch().then((value) {
+        // back from showing the email client, go back to entering your password
+        logger.d('and we are back from visiting the email client in android');
+        // pop until the name of the page is as expected (checking if data is null because then that's an unknown page - stop!)
+        appRouter.popUntil((route) => route.data == null || route.data?.name == LoginPasswordRoute.name);
+      }).catchError((e) {
+        logger.e('failed to launch the android email client', error: e);
+      });
+    } else if (Platform.isIOS) {
+      // try to compose a message in iOS and it should show the default email client
+      await launchUrl(Uri.parse("message://")).then((value) {
+        // back from showing the email client, go back to entering your password
+        logger.d('and we are back from visiting the email client in iOS');
+        // pop until the name of the page is as expected (checking if data is null because then that's an unknown page - stop!)
+        appRouter.popUntil((route) => route.data == null || route.data?.name == LoginPasswordRoute.name);
+      }).catchError((e) {
+        logger.e('failed to launch the iOS email client', error: e);
+      });
+    } else {
+      logger.e('no email client on this platform supported');
+      final PositiveErrorSnackBar snackbar = PositiveErrorSnackBar(text: appLocalizations.page_registration_forgotten_password_recovery_noemailclient);
+      ScaffoldMessenger.of(context).showSnackBar(snackbar);
+    }
   }
 
   Future<void> onLoginWithGoogleSelected() async {
@@ -224,16 +266,24 @@ class LoginViewModel extends _$LoginViewModel {
     await appRouter.push(const RegistrationAccountRoute());
   }
 
+  Future<void> onPasswordResetOptionSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('onPasswordResetSelected');
+    await appRouter.push(const ForgottenPasswordRoute());
+  }
+
   Future<void> onPasswordResetSelected(BuildContext context) async {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    final String snackbarBody = appLocalizations.page_login_password_forgotten_body;
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     state = state.copyWith(isBusy: true);
 
     try {
-      await userController.sendPasswordResetEmail(state.email);
-      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: Text(snackbarBody)));
+      // send the email
+      //await userController.sendPasswordResetEmail(state.email);
+      // and show the page to inform the user this has worked
+      await appRouter.push(const ForgottenPasswordRecoveryRoute());
     } finally {
       state = state.copyWith(isBusy: false);
     }

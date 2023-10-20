@@ -74,6 +74,8 @@ import '../widgets/organisms/home/chat_conversations_page.dart';
 import '../widgets/organisms/login/login_page.dart';
 import '../widgets/organisms/login/login_password_page.dart';
 import '../widgets/organisms/login/login_welcome_back_page.dart';
+import '../widgets/organisms/login/forgotten_password_page.dart';
+import '../widgets/organisms/login/forgotten_password_recovery_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/notifications/notifications_page.dart';
 import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
@@ -150,6 +152,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),
         AutoRoute(page: LoginWelcomeBackRoute.page, path: '/login/success'),
         AutoRoute(page: LoginAccountRecoveryRoute.page, path: '/login/recovery'),
+        AutoRoute(page: ForgottenPasswordRoute.page, path: '/login/password-forgotten', guards: [signedOutGuard]),
+        AutoRoute(page: ForgottenPasswordRecoveryRoute.page, path: '/login/password-forgotten-recovery', guards: [signedOutGuard]),
         //* User Preferences Configuration
         AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),

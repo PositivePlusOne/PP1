@@ -99,6 +99,7 @@ dependencies:
   url_launcher: ^6.1.12
   mime: ^1.0.4
   flutter_image_compress: ^2.0.4
+  android_intent_plus: ^4.0.3
 
   # Dunno why this is needed
   video_player_avfoundation: ^2.5.0

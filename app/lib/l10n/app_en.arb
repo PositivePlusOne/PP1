@@ -186,6 +186,15 @@
     "page_registration_welcome_back": "Welcome Back",
     "page_registration_welcome_back_body": "Ready to keep going? Tap 'Continue' below and let's complete your profile!",
 
+    "page_registration_forgotten_password": "Account Recovery",
+    "page_registration_forgotten_password_body": "We can send a recovery link to the email address that we have linked to your account.",
+    "page_registration_forgotten_password_button": "Send Recovery Link",
+
+    "page_registration_forgotten_password_recovery": "Recovery Started",
+    "page_registration_forgotten_password_recovery_body": "We have sent a recovery link to your email address",
+    "page_registration_forgotten_password_recovery_button": "Open Email Account",
+    "page_registration_forgotten_password_recovery_noemailclient": "Open your email client to reset your password",
+
     "page_profile_interest_title": "Your interests",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
 
