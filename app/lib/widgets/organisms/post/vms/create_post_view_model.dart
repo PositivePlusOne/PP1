@@ -442,11 +442,14 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   /// Call to update main create post page UI
-  void onClipStateChange(bool isClipActive) {
+  void onClipStateChange(ClipRecordingState clipRecordingState) {
     /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
+
     state = state.copyWith(
-      isBottomNavigationEnabled: !isClipActive,
-      isCreatingClip: isClipActive,
+      isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
+      isCreatingClip: clipRecordingState.isActive,
+      activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
+      lastActiveButton: PositivePostNavigationActiveButton.clip,
     );
   }
 
@@ -629,7 +632,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.entry:
         break;
       case CreatePostCurrentPage.camera:
-        throw Exception("Cannot press flex button on camera page");
+        getCurrentCameraState.finishClipRecordingImmediately();
+        break;
       case CreatePostCurrentPage.editPhoto:
         state = state.copyWith(
           currentCreatePostPage: CreatePostCurrentPage.createPostImage,
