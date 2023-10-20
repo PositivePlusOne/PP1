@@ -90,8 +90,6 @@ dependencies:
   
   # video and image
   camerawesome: ^2.0.0-dev.1
-  mime: ^1.0.4
-  flutter_image_compress: ^2.0.4
   video_player_avfoundation: ^2.5.0
   video_player: ^2.7.2
   video_editor: ^3.0.0

@@ -1,5 +1,4 @@
 import 'package:app/constants/design_constants.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 class PositiveClipExternalShader extends StatefulWidget {
