@@ -458,7 +458,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
-    final Media? media = postContent?.media.first;
+    final Media? media = postContent?.media.firstOrNull;
     if (media != null && media.type == MediaType.bucket_path) {
       // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
       // final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
