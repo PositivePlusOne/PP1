@@ -1,10 +1,6 @@
 import 'package:app/dtos/database/common/media.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -50,7 +46,9 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
 
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse(refString),
-      videoPlayerOptions: VideoPlayerOptions(),
+      videoPlayerOptions: VideoPlayerOptions(
+        allowBackgroundPlayback: false,
+      ),
     )..initialize().then((_) async {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         await videoPlayerController?.setLooping(true);
