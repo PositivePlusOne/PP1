@@ -481,16 +481,16 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   Future<void> onVideoRecordingEnd() async {
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(clipRecordingState);
-    }
-
     //? Cleanup ui variables for video recording end
     setStateIfMounted(
       callback: () {
         clipRecordingState = ClipRecordingState.notRecording;
       },
     );
+
+    if (widget.onClipStateChange != null) {
+      widget.onClipStateChange!(clipRecordingState);
+    }
 
     VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
 
@@ -558,9 +558,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   void finishClipRecordingImmediately() {
     stopClipTimers();
     onVideoRecordingEnd();
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(clipRecordingState);
-    }
   }
 
   ///? Deactivate all variables to do with delay timer and clip timer
