@@ -680,7 +680,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
       previewDecoratorBuilder: buildPreviewDecoratorWidgets,
       filter: AwesomeFilter.None,
-      previewFit: CameraPreviewFit.cover,
+      previewFit: CameraPreviewFit.contain,
       theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
       onImageForAnalysis: onAnalyzeImage,
       imageAnalysisConfig: faceAnalysisConfig,
