@@ -219,10 +219,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) ...<Widget>[
                 Positioned.fill(
-                  child: VideoEditor(
+                  child: PositiveClipEditor(
                     onTapClose: (_) => appRouter.pop(),
-                    file: io.File(state.editingGalleryEntry!.file!.path),
-                    function: (io.File file) => viewModel.onClipEditFinish(context, file),
+                    controller: viewModel.videoEditorController,
                     targetVideoAspectRatio: aspectRatio,
                     bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
                     topNavigationSize: kIconLarge + kPaddingSmall * 2,
