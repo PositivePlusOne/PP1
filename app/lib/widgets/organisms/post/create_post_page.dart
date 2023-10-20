@@ -222,7 +222,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   child: PositiveClipEditor(
                     onTapClose: (_) => appRouter.pop(),
                     controller: viewModel.videoEditorController,
-                    targetVideoAspectRatio: aspectRatio,
+                    // targetVideoAspectRatio: aspectRatio,
                     bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
                     topNavigationSize: kIconLarge + kPaddingSmall * 2,
                   ),

@@ -20,8 +20,8 @@ class PositiveClipEditor extends StatefulHookConsumerWidget {
   const PositiveClipEditor({
     required this.topNavigationSize,
     required this.bottomNavigationSize,
-    required this.targetVideoAspectRatio,
     required this.controller,
+    this.targetVideoAspectRatio,
     this.onTapClose,
     this.onInternalAddImageTap,
     super.key,
@@ -29,7 +29,7 @@ class PositiveClipEditor extends StatefulHookConsumerWidget {
 
   final double topNavigationSize;
   final double bottomNavigationSize;
-  final double targetVideoAspectRatio;
+  final double? targetVideoAspectRatio;
 
   final VideoEditorController? controller;
 
