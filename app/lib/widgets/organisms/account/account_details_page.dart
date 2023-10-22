@@ -151,7 +151,8 @@ class AccountDetailsPage extends HookConsumerWidget {
   }) {
     return [
       PositiveGlassSheet(
-        padding: const EdgeInsets.all(kPaddingMedium),
+        horizontalPadding: kPaddingMedium,
+        verticalPadding: kPaddingMedium,
         children: <Widget>[
           PositiveRichText(
             body: 'Need to change these details? Please get in touch with us at {} or call your representative.',

@@ -430,6 +430,22 @@ final cameraPermissionsProvider = FutureProvider<PermissionStatus>.internal(
 );
 
 typedef CameraPermissionsRef = FutureProviderRef<PermissionStatus>;
+String _$microphonePermissionsHash() =>
+    r'59792d2f476f156e72c2d78bd5daaa79df73fa90';
+
+/// See also [microphonePermissions].
+@ProviderFor(microphonePermissions)
+final microphonePermissionsProvider = FutureProvider<PermissionStatus>.internal(
+  microphonePermissions,
+  name: r'microphonePermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$microphonePermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef MicrophonePermissionsRef = FutureProviderRef<PermissionStatus>;
 String _$localAuthenticationHash() =>
     r'407bbc399b8f11d6942621606cc10a8ed80f06b7';
 

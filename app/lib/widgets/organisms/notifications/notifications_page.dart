@@ -92,6 +92,7 @@ class NotificationsPage extends HookConsumerWidget {
                 child: PositiveProfileSegmentedSwitcher(
                   mixin: viewModel,
                   isSlim: true,
+                  useProfileBackgroundColours: true,
                   onTapped: (int profileIndex) => viewModel.switchProfile(viewModel.getSupportedProfileIds()[profileIndex]),
                 ),
               ),

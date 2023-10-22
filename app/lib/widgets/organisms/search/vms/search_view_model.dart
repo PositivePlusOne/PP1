@@ -4,6 +4,10 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -163,7 +167,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Profile? currentProfile = profileController.currentProfile;
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     updateHasSearched(true);
 
@@ -208,7 +212,26 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
       switch (state.currentTab) {
         case SearchTab.users:
           final List<Profile> results = response.results.cast<Profile>();
-          state = state.copyWith(searchUsersCursor: response.cursor, searchUsersResults: state.searchUsersResults + results);
+
+          // Remove all the profiles which we cannot display on the feed
+          final String currentProfileId = profileController.currentProfile?.flMeta?.id ?? '';
+          final List<Profile> filteredResults = results.where((profile) {
+            final bool isCurrentUser = currentProfileId.isNotEmpty && profile.flMeta?.id == currentProfileId;
+            if (isCurrentUser) {
+              return false;
+            }
+
+            if (currentProfileId.isNotEmpty) {
+              final String relationshipId = [currentProfileId, profile.flMeta?.id ?? ''].asGUID;
+              final Relationship? relationship = cacheController.get(relationshipId);
+              final bool canDisplayOnFeed = profile.canDisplayOnFeed(relationship: relationship);
+              return canDisplayOnFeed;
+            }
+
+            return true;
+          }).toList();
+
+          state = state.copyWith(searchUsersCursor: response.cursor, searchUsersResults: state.searchUsersResults + filteredResults);
           break;
         case SearchTab.tags:
           final List<Tag> results = response.results.cast<Tag>();

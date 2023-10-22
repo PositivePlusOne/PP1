@@ -20,6 +20,7 @@ const double kBrightnessLowerThreshold = 0.015;
 
 // Animations
 const Duration kAnimationDurationInstant = Duration(milliseconds: 0);
+const Duration kAnimationDurationVeryFast = Duration(milliseconds: 75);
 const Duration kAnimationDurationFast = Duration(milliseconds: 150);
 const Duration kAnimationDurationRegular = Duration(milliseconds: 250);
 const Duration kAnimationDurationExtended = Duration(milliseconds: 450);
@@ -27,6 +28,8 @@ const Duration kAnimationDurationDebounce = Duration(milliseconds: 350);
 const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
 const Duration kAnimationDurationHintPreview = Duration(milliseconds: 3000);
+
+const double kMaxClipDurationSeconds = 180;
 
 const Curve kAnimationCurveDefault = Curves.easeInOut;
 
@@ -41,6 +44,7 @@ const double kPaddingSmallMedium = 15.0;
 const double kPaddingMedium = 20.0;
 const double kPaddingMediumLarge = 25.0;
 const double kPaddingLarge = 30.0;
+const double kPaddingLargeish = 35.0;
 const double kPaddingExtraLarge = 40.0;
 const double kPaddingMassive = 50.0;
 const double kPaddingAppBarBreak = 70.0;

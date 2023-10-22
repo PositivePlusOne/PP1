@@ -43,7 +43,16 @@ class AccountPage extends HookConsumerWidget {
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
     useLifecycleHook(viewModel);
+
+    final bool hasMultipleProfiles = viewModel.getSupportedProfiles().length > 1;
+    final Size preferedAppBarSize = Size(
+      double.infinity,
+      //? Banner Height, size of slim account selection bar + small padding around account selection bar
+      //? Account selection bar is only shown if multiple accounts are linked, and therefore only requires space for it if this is the case
+      AccountProfileBanner.kBannerHeight + (hasMultipleProfiles ? (kPaddingMedium + kPaddingSmall * 2) : kPaddingNone),
+    );
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
@@ -85,11 +94,10 @@ class AccountPage extends HookConsumerWidget {
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: PreferredSize(
-            preferredSize: Size(double.infinity, bannerHeight),
+            preferredSize: preferedAppBarSize,
             child: Column(
               children: <Widget>[
-                // if we can switch profiles - show the profile switcher
-                if (viewModel.canSwitchProfile && viewModel.availableProfileCount <= 2) ...<Widget>[
+                if (hasMultipleProfiles && viewModel.availableProfileCount <= 2)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
                     child: PositiveProfileSegmentedSwitcher(
@@ -98,7 +106,7 @@ class AccountPage extends HookConsumerWidget {
                       onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, viewModel),
                     ),
                   ),
-                ] else if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
+                if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
                     child: PositiveTapBehaviour(

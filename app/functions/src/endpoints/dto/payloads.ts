@@ -188,10 +188,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const entry = obj as DirectoryEntry;
                 const entryOwnerId = entry._fl_meta_?.ownedBy || "";
                 if (entryOwnerId) {
-                    joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
+                    joinedDataRecords.get(profileSchemaKey)?.add(entryOwnerId);
 
-                    if (sender && ownerId !== sender) {
-                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, ownerId]);
+                    if (sender && entryOwnerId !== sender) {
+                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, entryOwnerId]);
                         joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     }
                 }
@@ -328,18 +328,15 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (sender && !isCurrentDocument) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
-
-                    const targetRelationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
                     const currentRelationshipMember = relationship?.members?.find((member) => member?.memberId === sender);
 
-                    const isTargetConnected = targetRelationshipMember?.hasConnected || false;
                     const isManager = currentRelationshipMember?.canManage || false;
 
                     // If the account is not connected and not managed by the current user
                     // And the account has flagged data (e.g. email, phone number, etc.)
                     // Then we remove the flagged data from the response.
                     if (!isManager) {
-                        profile.removeFlaggedData(isTargetConnected);
+                        profile.removeFlaggedData();
                         profile.removePrivateData();
                         profile.notifyPartial();
                     }

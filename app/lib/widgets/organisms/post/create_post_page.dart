@@ -1,18 +1,23 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
+import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';
@@ -57,6 +62,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final CreatePostViewModel viewModel = ref.read(createPostViewModelProvider.notifier);
     final CreatePostViewModelState state = ref.watch(createPostViewModelProvider);
@@ -64,6 +71,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final currentProfileId = currentProfile?.flMeta?.id;
+
+    //? phone reserved bottom padding + navigation bar height + padding between navigation and bottom of the screen
+    final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
       onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
@@ -80,23 +90,78 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
               if (state.currentCreatePostPage == CreatePostCurrentPage.camera) ...[
                 Positioned.fill(
                   child: PositiveCamera(
+                    key: state.cameraWidgetKey,
                     onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
+                    onCameraVideoTaken: (video) => viewModel.onVideoTaken(context, video),
+                    //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                     cameraNavigation: (_) {
                       return const SizedBox(
-                        height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingExtraLarge,
+                        //? bottomNavigationArea + extra medium padding - the safe area as this widget includes that already
+                        height: kCreatePostNavigationHeight + kPaddingMedium + kPaddingMedium,
                       );
                     },
-                    leftActionWidget: CameraFloatingButton.postWithoutImage(
-                      active: true,
-                      onTap: (context) => viewModel.showCreateTextPost(context),
-                    ),
+                    //? Widget found near the bottom of the screen to the left of the take photo button
+                    leftActionWidget: state.currentPostType == PostType.image
+                        ? CameraFloatingButton.postWithoutImage(
+                            active: true,
+                            onTap: (context) => viewModel.showCreateTextPost(context),
+                          )
+                        : const SizedBox(
+                            width: kIconLarge,
+                            height: kIconLarge,
+                          ),
                     onTapClose: (_) => appRouter.pop(),
                     onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
-                    //! Flash controlls in FlutterAwesome do not seem to be working
-                    // enableFlashControlls: true,
+                    isVideoMode: state.currentPostType == PostType.clip,
+                    bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
+                    topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
+
+                    ///? Change UI state based on current clip state
+                    onClipStateChange: viewModel.onClipStateChange,
+
+                    ///? Options for camera delay before taking picture or clip
+                    maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
+                    delayTimerOptions: viewModel.delayTimerOptions.map((e) => "$e${localisations.page_create_post_seconds}").toList(),
+                    delayTimerSelection: state.delayTimerCurrentSelection,
+                    onDelayTimerChanged: viewModel.onDelayTimerChanged,
+                    isDelayTimerEnabled: state.isDelayTimerEnabled,
+
+                    ///? Options for camera Maximum recording lenght before forcing the clip to end
+                    maxRecordingLength: viewModel.maximumClipDurationOptions[state.maximumClipDurationSelection],
+                    recordingLengthOptions: viewModel.maximumClipDurationOptions.map((e) => viewModel.clipDurationString(context, e)).toList(),
+                    recordingLengthSelection: state.maximumClipDurationSelection,
+                    onRecordingLengthChanged: viewModel.onClipDurationChanged,
+                    isRecordingLengthEnabled: true,
+                    // isRecordingLengthEnabled: state.isMaximumClipDurationEnabled,
+
+                    topAdditionalActions: [
+                      Row(
+                        children: [
+                          //? top right set of icons found on the clips page, move this later to a builder?
+                          const Spacer(),
+                          Text(
+                            localisations.page_create_post_ui_timer,
+                            style: typography.styleButtonRegular.copyWith(color: colours.white),
+                          ),
+                          const SizedBox(
+                            width: kPaddingSmall,
+                          ),
+                          CameraFloatingButton.timer(
+                            active: true,
+                            iconColour: colours.black,
+                            backgroundColour: colours.white,
+                            isOn: state.isDelayTimerEnabled,
+                            onTap: (_) => viewModel.onTimerToggleRequest(),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-                  Edit Photo                  -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               if (state.currentCreatePostPage == CreatePostCurrentPage.editPhoto) ...[
                 PositiveImageEditor(
                   galleryEntry: state.editingGalleryEntry,
@@ -147,36 +212,37 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 ),
               ],
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              //* -=-=-=-=-=-                Navigation Bar                -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-                 Clip Editor                  -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              Positioned(
-                bottom: kPaddingMedium + mediaQueryData.padding.bottom,
+              if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) ...<Widget>[
+                Positioned.fill(
+                  child: PositiveClipEditor(
+                    onTapClose: (_) => appRouter.pop(),
+                    controller: viewModel.videoEditorController,
+                    // targetVideoAspectRatio: aspectRatio,
+                    bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
+                    topNavigationSize: kIconLarge + kPaddingSmall * 2,
+                  ),
+                ),
+              ],
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-              Bottom Navigation               -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              AnimatedPositioned(
+                duration: kAnimationDurationRegular,
+                bottom: state.isBottomNavigationEnabled ? kPaddingMedium + mediaQueryData.padding.bottom : -(kPaddingMedium + kCreatePostNavigationHeight),
                 height: kCreatePostNavigationHeight,
                 left: kPaddingSmall,
                 right: kPaddingSmall,
-                //! PP1-984
-                child: AnimatedOpacity(
-                  opacity: state.activeButton == PositivePostNavigationActiveButton.flex ? 1.0 : 0.01,
-                  duration: kAnimationDurationRegular,
-                  child: PositivePostNavigationBar(
-                    onTapPost: (_) {},
-                    onTapClip: (_) {},
-                    onTapEvent: (_) {},
-                    onTapFlex: (context) => viewModel.onFlexButtonPressed(context, currentProfile),
-                    activeButton: PositivePostNavigationActiveButton.flex,
-                    flexCaption: state.activeButtonFlexText,
-                    isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
-                  ),
+                child: PositivePostNavigationBar(
+                  onTapPost: (context) => viewModel.onPostPressed(context),
+                  onTapClip: (context) => viewModel.onClipPressed(context),
+                  onTapEvent: (context) => viewModel.onEventPressed(context),
+                  onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
+                  activeButton: state.activeButton,
+                  flexCaption: state.activeButtonFlexText,
+                  isEnabled: viewModel.isNavigationEnabled && !state.isBusy && state.isBottomNavigationEnabled,
                 ),
-                // child: PositivePostNavigationBar(
-                //   onTapPost: (_) {},
-                //   onTapClip: (_) {},
-                //   onTapEvent: (_) {},
-                //   onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
-                //   activeButton: state.activeButton,
-                //   flexCaption: state.activeButtonFlexText,
-                //   isEnabled: viewModel.isNavigationEnabled && !state.isBusy,
-                // ),
               ),
             ],
           ),

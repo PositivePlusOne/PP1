@@ -96,20 +96,23 @@ export namespace SearchService {
   /**
    * Deletes the document in the index.
    * @param {SearchIndex} index the Algolia index.
-   * @param {any} data the data containing the Flamelink ID and schema.
+   * @param {string} id the document ID.
    * @return {Promise<void>} a promise that resolves when the document has been deleted.
    */
-  export async function deleteDocumentInIndex(index: SearchIndex, data: any): Promise<void> {
+  export async function deleteDocumentInIndex(index: SearchIndex, id: string): Promise<void> {
     functions.logger.info("Deleting document in Algolia index", {
       structuredData: true,
     });
 
-    const flamelinkId = data?.fl_meta?.fl_id;
-    if (!flamelinkId) {
-      throw new Error("Missing Flamelink ID");
+    if (!id) {
+      functions.logger.error("No document ID provided", {
+        structuredData: true,
+      });
+
+      return;
     }
 
-    await index.deleteObject(flamelinkId);
+    await index.deleteObject(id);
     functions.logger.info("Document deleted in Algolia index", {
       structuredData: true,
     });

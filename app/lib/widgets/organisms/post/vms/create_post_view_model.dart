@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:io' as io;
+
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
+import 'package:video_editor/video_editor.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -24,11 +28,14 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/content/gallery_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
+import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
@@ -55,12 +62,22 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
     required ActivityData previousActivity,
+    //? Clip delay and clip length options
+    @Default(0) int delayTimerCurrentSelection,
+    @Default(false) bool isDelayTimerEnabled,
+    @Default(0) int maximumClipDurationSelection,
+    @Default(false) bool isMaximumClipDurationEnabled,
+    @Default(true) bool isBottomNavigationEnabled,
+    @Default(false) bool isCreatingClip,
+    required GlobalKey<PositiveCameraState> cameraWidgetKey,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
+    @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
   }) = _CreatePostViewModelState;
 
   factory CreatePostViewModelState.initialState() => CreatePostViewModelState(
         currentFilter: AwesomeFilter.None,
         previousActivity: ActivityData(),
+        cameraWidgetKey: GlobalKey(),
       );
 }
 
@@ -70,18 +87,45 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController altTextController = TextEditingController();
   final TextEditingController promotionKeyTextController = TextEditingController();
 
+  VideoEditorController? videoEditorController;
+
+  PositiveCameraState get getCurrentCameraState {
+    return state.cameraWidgetKey.currentState as PositiveCameraState;
+  }
+
   @override
   CreatePostViewModelState build() {
     return CreatePostViewModelState.initialState();
   }
 
   Future<bool> onWillPopScope() async {
-    final bool canPop = state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing;
+    final bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
+
+    //? if we are currently creating a clip request that we stop
+    if (state.isCreatingClip) {
+      getCurrentCameraState.onCloseButtonTapped();
+      return false;
+    }
+
     if (!canPop) {
+      late PostType postType;
+      switch (state.lastActiveButton) {
+        case PositivePostNavigationActiveButton.post:
+          postType = PostType.text;
+          break;
+        case PositivePostNavigationActiveButton.clip:
+          postType = PostType.clip;
+          break;
+        case PositivePostNavigationActiveButton.event:
+          break;
+        default:
+          postType = PostType.event;
+      }
+
       state = state.copyWith(
         currentCreatePostPage: CreatePostCurrentPage.camera,
-        currentPostType: PostType.text,
-        activeButton: PositivePostNavigationActiveButton.post,
+        currentPostType: postType,
+        activeButton: state.lastActiveButton,
       );
     }
 
@@ -91,6 +135,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> initCamera(BuildContext context) async {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
+      currentPostType: PostType.image,
+      activeButton: PositivePostNavigationActiveButton.post,
     );
   }
 
@@ -374,6 +420,105 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
+  final List<int> delayTimerOptions = [3, 10];
+
+  void onDelayTimerChanged(int index) {
+    state = state.copyWith(
+      delayTimerCurrentSelection: index,
+    );
+  }
+
+  final List<int> maximumClipDurationOptions = [180000, 90000, 60000, 30000, 10000];
+
+  void onClipDurationChanged(int index) {
+    state = state.copyWith(
+      maximumClipDurationSelection: index,
+    );
+  }
+
+  String clipDurationString(BuildContext context, int duration) {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    if (duration >= 120000) {
+      return "${duration ~/ 60000}${localisations.page_create_post_minuets}";
+    }
+
+    return "${duration ~/ 1000}${localisations.page_create_post_seconds}";
+  }
+
+  /// Call to update main create post page UI
+  void onClipStateChange(ClipRecordingState clipRecordingState) {
+    /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
+
+    state = state.copyWith(
+      isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
+      isCreatingClip: clipRecordingState.isActive,
+      activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
+      lastActiveButton: PositivePostNavigationActiveButton.clip,
+    );
+  }
+
+  void onTimerToggleRequest() {
+    state = state.copyWith(isDelayTimerEnabled: !state.isDelayTimerEnabled);
+  }
+
+  //? Create video Post here
+  Future<void> onVideoTaken(BuildContext context, XFile xFile) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    final io.File file = io.File(xFile.path);
+
+    videoEditorController = VideoEditorController.file(
+      file,
+      minDuration: const Duration(seconds: 1),
+      maxDuration: const Duration(seconds: 180),
+    );
+
+    state = state.copyWith(
+      currentCreatePostPage: CreatePostCurrentPage.createPostEditClip,
+      currentPostType: PostType.clip,
+      activeButton: PositivePostNavigationActiveButton.flex,
+      activeButtonFlexText: localisations.shared_actions_next,
+    );
+  }
+
+  Future<void> onClipEditFinish(BuildContext context) async {
+    CreateClipExportService exportService = CreateClipExportService();
+
+    if (videoEditorController == null) {
+      //TODO crash with grace here
+      return;
+    }
+
+    exportService.exportVideoFromController(videoEditorController!, (file) => onClipEditProcessConcluded(context, file));
+  }
+
+  Future<void> onClipEditProcessConcluded(BuildContext context, io.File file) async {
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
+
+    final List<GalleryEntry> entries = [];
+    if (file.path.isNotEmpty) {
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(XFile.fromData(await file.readAsBytes()), uploadImmediately: false);
+      entries.add(entry);
+    }
+
+    if (entries.isEmpty) {
+      return;
+    }
+
+    state = state.copyWith(
+      galleryEntries: entries,
+      currentCreatePostPage: CreatePostCurrentPage.createPostClip,
+      editingGalleryEntry: entries.firstOrNull,
+      currentPostType: PostType.clip,
+      activeButton: PositivePostNavigationActiveButton.flex,
+      activeButtonFlexText: localisations.shared_actions_next,
+    );
+
+    return;
+  }
+
   //? Create image Post here!
   Future<void> onImageTaken(BuildContext context, XFile file) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -464,24 +609,58 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(currentFilter: filter);
   }
 
-  Future<void> onFlexButtonPressed(BuildContext context, Profile? currentProfile) async {
+  Future<void> onPostPressed(BuildContext context) async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.post,
+      lastActiveButton: PositivePostNavigationActiveButton.post,
+      currentPostType: PostType.image,
+    );
+  }
+
+  Future<void> onClipPressed(BuildContext context) async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.clip,
+      lastActiveButton: PositivePostNavigationActiveButton.clip,
+      currentPostType: PostType.clip,
+    );
+  }
+
+  Future<void> onEventPressed(BuildContext context) async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.event,
+      lastActiveButton: PositivePostNavigationActiveButton.event,
+      currentPostType: PostType.event,
+    );
+  }
+
+  Future<void> onFlexButtonPressed(BuildContext context) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
         break;
       case CreatePostCurrentPage.camera:
-        throw Exception("Cannot press flex button on camera page");
+        getCurrentCameraState.finishClipRecordingImmediately();
+        break;
       case CreatePostCurrentPage.editPhoto:
         state = state.copyWith(
           currentCreatePostPage: CreatePostCurrentPage.createPostImage,
           activeButtonFlexText: localisations.page_create_post_create,
         );
         break;
+      case CreatePostCurrentPage.createPostEditClip:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostClip,
+          activeButtonFlexText: localisations.page_create_post_create,
+        );
+        await onClipEditFinish(context);
+        break;
+      case CreatePostCurrentPage.createPostClip:
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        await onPostFinished(context, currentProfile);
+        await onPostFinished(context, profileController.currentProfile);
         break;
     }
   }

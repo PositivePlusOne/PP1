@@ -251,35 +251,15 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          //* -=-=-=- Single attached image -=-=-=- *\\
-          if (postContent?.media.length == 1) ...[
-            const SizedBox(height: kPaddingSmall),
-          ],
-          if (postContent?.media.length == 1) ..._postListAttachedImages(),
           //* -=-=-=- attached video -=-=-=- *\\
-          if (postContent?.media.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                return _postCarouselAttachedImages(context, constraints);
-              },
-            ),
-          ],
           _postAttachedVideo(),
+          //* -=-=-=- promotion banner -=-=-=- *\\
+          if (promotion != null) ...[
+            const SizedBox(height: kPaddingSmall),
+            _promotionBanner(),
+          ],
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-          //* -=-=-=- Post Title -=-=-=- *\\
-          _postTitle(),
-          //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            _tags(),
-          ],
-          //* -=-=-=- Location -=-=-=- *\\
-          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            _location(),
-          ],
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
           _markdownBody(context: context, ref: ref),
         ],
@@ -473,10 +453,19 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     //TODO(S): embed clips
-    if (postContent?.media.first.type == MediaType.video_link) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: sidePadding),
-        child: const SizedBox(),
+    final Media? media = postContent?.media.firstOrNull;
+    if (media != null && media.type == MediaType.bucket_path) {
+      // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+      // final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
+      // final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
+      // final String mimeType = lookupMimeType(media!.name, headerBytes: bytes) ?? '';
+
+      return const SizedBox(
+        width: double.infinity,
+        height: 500,
+        // child: PositiveVideoPlayer(
+        //   media: media,
+        // ),
       );
     }
     return const SizedBox();
