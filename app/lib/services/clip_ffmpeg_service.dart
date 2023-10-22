@@ -44,28 +44,15 @@ class CreateClipExportService {
   }
 
   Future<void> exportVideoFromController(VideoEditorController controller, Function(File) onEndFunction) async {
-    // _progress.value = 0;
-    // isExporting(true);
 
     final config = VideoFFmpegVideoEditorConfig(
       controller,
       format: VideoExportFormat.mp4,
-      // commandBuilder: (config, videoPath, outputPath) {
-      //   final List<String> filters = config.getExportFilters();
-      //   // filters.add('hflip'); // add horizontal flip
-
-      //   return '-i $videoPath ${config.filtersCmd(filters)} $outputPath';
-      // },
     );
     await runFFmpegCommand(
       await config.getExecuteConfig(),
-      // onProgress: (stats) {
-      //   _progress.value = config.getFFmpegProgress(stats.getTime().toInt());
-      // },
       onError: (e, s) {},
       onCompleted: (file) {
-        // isExporting(false);
-        // if (!mounted) return;
         onEndFunction(file);
       },
     );
