@@ -1,11 +1,8 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,9 +10,7 @@ import 'package:banner_carousel/banner_carousel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
-import 'package:mime/mime.dart';
 import 'package:unicons/unicons.dart';
-import 'package:video_player/video_player.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
@@ -465,7 +460,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       // final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
       // final String mimeType = lookupMimeType(media!.name, headerBytes: bytes) ?? '';
 
-      return Container(
+      return const SizedBox(
         width: double.infinity,
         height: 500,
         // child: PositiveVideoPlayer(

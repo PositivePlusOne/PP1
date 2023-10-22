@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -216,6 +215,6 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
         height: 50,
       );
     }
-    return SizedBox();
+    return const SizedBox();
   }
 }
