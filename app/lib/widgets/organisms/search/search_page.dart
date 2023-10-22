@@ -185,6 +185,10 @@ class SearchPage extends ConsumerWidget {
       }
     }
 
+    // Add padding to searchResultWidgets
+    final double navBarHeight = PositiveNavigationBar.calculateHeight(mediaQuery);
+    searchResultWidgets.add(SizedBox(height: navBarHeight));
+
     return PositiveScaffold(
       isBusy: isBusy,
       onWillPopScope: viewModel.onWillPopScope,

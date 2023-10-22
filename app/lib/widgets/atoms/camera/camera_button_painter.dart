@@ -1,11 +1,12 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
 
-import 'package:app/extensions/widget_extensions.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../organisms/profile/vms/profile_reference_image_view_model.dart';

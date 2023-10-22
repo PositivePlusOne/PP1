@@ -1,5 +1,8 @@
-import 'package:app/constants/design_constants.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
+import 'package:app/constants/design_constants.dart';
 
 class PositiveClipExternalShader extends StatefulWidget {
   const PositiveClipExternalShader({

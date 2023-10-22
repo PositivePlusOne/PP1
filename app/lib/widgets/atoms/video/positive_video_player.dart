@@ -1,12 +1,17 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:video_player/video_player.dart';
+
+// Project imports:
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:video_player/video_player.dart';
 
 class PositiveVideoPlayer extends StatefulHookConsumerWidget {
   const PositiveVideoPlayer({

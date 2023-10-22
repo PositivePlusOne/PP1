@@ -1,7 +1,6 @@
 // Flutter imports:
 
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,9 +13,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
+import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_view_model.dart';

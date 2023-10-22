@@ -1,10 +1,9 @@
+// Dart imports:
+import 'dart:io' as io;
+
 // Flutter imports:
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/clip_ffmpeg_service.dart';
-import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:io' as io;
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
@@ -15,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
+import 'package:video_editor/video_editor.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -28,12 +28,14 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/content/gallery_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
-import 'package:video_editor/video_editor.dart';
+import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
