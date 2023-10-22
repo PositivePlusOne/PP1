@@ -135,42 +135,42 @@ export class Profile {
         return featureFlags?.includes(featureFlagOrganisationControls);
     }
 
-    removeFlaggedData(isConnected: boolean): void {
+    removeFlaggedData(): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
-        const hideInfo = this.isIncognito() || (!isConnected && !this.isOrganisation());
+        const isIncognito = this.isIncognito();
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagName)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagName)) {
             this.name = '';
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagBirthday)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagBirthday)) {
             this.birthday = '';
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagInterests)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagInterests)) {
             this.interests = new Set();
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagGenders)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagGenders)) {
             this.genders = new Set();
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagLocation)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagLocation)) {
             this.place = undefined;
             this.placeSkipped = false;
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagHivStatus)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagHivStatus)) {
             this.hivStatus = '';
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
             this.companySectors = new Set();
         }
 
         this.visibilityFlags = new Set();
 
-        if (hideInfo) {
+        if (isIncognito) {
             this.locale = '';
             this.displayName = ''; // ? Should this be replaced with a localised anonymous name?
             this.placeSkipped = false;

@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -57,6 +59,29 @@ extension ProfileExtensions on Profile {
     final String lowerCaseSearchString = str.toLowerCase();
 
     return lowerCaseName.contains(lowerCaseSearchString) || lowerCaseDisplayName.contains(lowerCaseSearchString);
+  }
+
+  bool canDisplayOnFeed({
+    required Relationship? relationship,
+  }) {
+    final String targetProfileId = flMeta?.id ?? '';
+    if (targetProfileId.isEmpty) {
+      return false;
+    }
+
+    final RelationshipMember? targetRelationshipMember = relationship?.members.firstWhereOrNull((element) => element.memberId == targetProfileId);
+    if (targetRelationshipMember == null) {
+      return true;
+    }
+
+    final bool isBlockedByTarget = targetRelationshipMember.hasBlocked;
+    final bool isTargetIncognito = featureFlags.contains(kFeatureFlagIncognito);
+
+    if (isBlockedByTarget || isTargetIncognito) {
+      return false;
+    }
+
+    return true;
   }
 
   List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {

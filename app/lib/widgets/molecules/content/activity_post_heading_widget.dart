@@ -109,7 +109,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       ],
                     ],
                   ),
-                  if (isPromotion) ...<Widget>[
+                  if (!isPromotion) ...<Widget>[
                     const SizedBox(height: kPaddingThin),
                     Text(
                       postDateTooltip,

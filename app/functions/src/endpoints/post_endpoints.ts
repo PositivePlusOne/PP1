@@ -297,6 +297,7 @@ export namespace PostEndpoints {
     });
   });
 
+  // TODO(ryan): Remove from Algolia
   export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
