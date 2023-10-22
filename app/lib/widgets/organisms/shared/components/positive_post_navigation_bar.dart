@@ -199,6 +199,7 @@ class PositivePostNavigationBarButton extends HookConsumerWidget {
     return PositiveTapBehaviour(
       onTap: onTap,
       isEnabled: isEnabled,
+      showDisabledState: !isEnabled,
       child: AnimatedContainer(
         duration: kAnimationDurationRegular,
         height: kPaddingLarge,

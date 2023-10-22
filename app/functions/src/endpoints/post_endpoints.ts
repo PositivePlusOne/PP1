@@ -22,6 +22,7 @@ import { RelationshipJSON } from "../dto/relationships";
 import { SecurityHelpers } from "../helpers/security_helpers";
 import { ProfileStatisticsService } from "../services/profile_statistics_service";
 import { FeedStatisticsService } from "../services/feed_statistics_service";
+import { SearchService } from "../services/search_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -297,7 +298,6 @@ export namespace PostEndpoints {
     });
   });
 
-  // TODO(ryan): Remove from Algolia
   export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
@@ -336,6 +336,11 @@ export namespace PostEndpoints {
 
     functions.logger.info("Deleted user activity", { feedActivity: activity });
     await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", -1);
+
+    const searchClient = SearchService.getAlgoliaClient();
+    const index = SearchService.getIndex(searchClient, "activities");
+    await SearchService.deleteDocumentInIndex(index, activityId);
+    functions.logger.info("Deleted activity from search index", { activityId });
 
     return buildEndpointResponse(context, {
       sender: uid,

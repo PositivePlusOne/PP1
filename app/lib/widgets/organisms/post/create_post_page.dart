@@ -72,9 +72,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final currentProfileId = currentProfile?.flMeta?.id;
 
-    //? Aspect ratio of the available screen space
-    final double aspectRatio = (mediaQueryData.size.width - mediaQueryData.padding.right - mediaQueryData.padding.left) / (mediaQueryData.size.height - mediaQueryData.padding.bottom - mediaQueryData.padding.top);
-
     //? phone reserved bottom padding + navigation bar height + padding between navigation and bottom of the screen
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 

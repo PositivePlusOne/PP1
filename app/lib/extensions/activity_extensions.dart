@@ -599,6 +599,11 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
+    if (currentProfileId == publisherProfileId) {
+      logger.d('canActOnSecurityMode() - currentProfileId is the publisherProfileId');
+      return true;
+    }
+
     if (publisherProfileId.isEmpty) {
       logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');
       return false;
