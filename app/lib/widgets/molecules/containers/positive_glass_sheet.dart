@@ -46,8 +46,6 @@ class PositiveGlassSheet extends ConsumerWidget {
 
   final bool isBusy;
 
-  final EdgeInsets padding;
-
   static const double kGlassContainerOpacity = 0.25;
   static const double kGlassContainerSigmaBlur = 5.0;
 
