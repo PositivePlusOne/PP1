@@ -14,6 +14,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
@@ -87,6 +88,8 @@ class ProfilePage extends HookConsumerWidget {
 
     useCacheHook(keys: expectedCacheKeys);
 
+    final bool isOrganisation = targetProfile.isOrganisation;
+
     PreferredSizeWidget? appBarBottomWidget;
     if (state.profile != null) {
       appBarBottomWidget = ProfileAppBarHeader(
@@ -97,6 +100,7 @@ class ProfilePage extends HookConsumerWidget {
             brightness: viewModel.appBarColor.impliedBrightness,
             enableProfileImageFullscreen: true,
             metadata: profileStatisticsData,
+            useName: isOrganisation,
           ),
           PositiveProfileActionsList(
             currentProfile: currentProfile,
@@ -118,7 +122,10 @@ class ProfilePage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
           child: PositiveAppBar(
+            title: isOrganisation ? targetProfile.displayName.asHandle : '',
+            centerTitle: true,
             includeLogoWherePossible: false,
+            foregroundColor: viewModel.appBarTextColor,
             backgroundColor: viewModel.appBarColor,
             backgroundImage: coverImage,
             trailType: PositiveAppBarTrailType.concave,

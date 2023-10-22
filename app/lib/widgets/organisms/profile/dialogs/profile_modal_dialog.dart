@@ -106,7 +106,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     ProfileModalDialogOptionType.follow,
     ProfileModalDialogOptionType.message,
     ProfileModalDialogOptionType.block,
-    ProfileModalDialogOptionType.reportPost,
+    ProfileModalDialogOptionType.report,
   };
 
   Future<void> onOptionSelected({

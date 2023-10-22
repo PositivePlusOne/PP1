@@ -8,6 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';
@@ -15,17 +16,24 @@ import '../../../providers/system/design_controller.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
 import '../../behaviours/positive_tap_behaviour.dart';
 
+enum PositiveVisibilityHintStyle {
+  defaultStyle,
+  directoryStyle,
+}
+
 class PositiveVisibilityHint extends ConsumerWidget {
   const PositiveVisibilityHint({
     required this.toggleState,
     this.isEnabled = true,
     this.onTap,
+    this.style = PositiveVisibilityHintStyle.defaultStyle,
     super.key,
   });
 
   final PositiveTogglableState toggleState;
   final bool isEnabled;
   final void Function(BuildContext context)? onTap;
+  final PositiveVisibilityHintStyle style;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,6 +43,8 @@ class PositiveVisibilityHint extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     late final Widget toggleIconWidget;
     final String text;
+
+    assert(PositiveTogglableState.activeForcefully != toggleState || style == PositiveVisibilityHintStyle.defaultStyle, 'PositiveVisibilityHintStyle must be defaultStyle when PositiveTogglableState is activeForcefully');
 
     switch (toggleState) {
       case PositiveTogglableState.loading:
@@ -50,6 +60,10 @@ class PositiveVisibilityHint extends ConsumerWidget {
           decoration: BoxDecoration(
             color: colors.green,
             borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+            border: Border.all(
+              color: colors.black,
+              width: PositiveButton.kButtonBorderWidth,
+            ),
           ),
           child: Icon(
             UniconsLine.check,
@@ -57,7 +71,10 @@ class PositiveVisibilityHint extends ConsumerWidget {
             size: kIconSmall,
           ),
         );
-        text = localizations.molecule_display_in_app_display;
+        text = switch (style) {
+          PositiveVisibilityHintStyle.directoryStyle => localizations.molecule_display_in_app_directory_display,
+          (_) => localizations.molecule_display_in_app_display,
+        };
         break;
 
       case PositiveTogglableState.activeForcefully:
@@ -75,16 +92,28 @@ class PositiveVisibilityHint extends ConsumerWidget {
 
       case PositiveTogglableState.inactive:
       default:
-        toggleIconWidget = SizedBox(
+        toggleIconWidget = Container(
           width: kIconMedium,
           height: kIconMedium,
+          decoration: BoxDecoration(
+            color: colors.colorGray3.withOpacity(kOpacityQuarter),
+            borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+            border: Border.all(
+              color: colors.black,
+              width: PositiveButton.kButtonBorderWidth,
+            ),
+          ),
           child: Icon(
             UniconsLine.eye_slash,
             color: colors.black,
             size: kIconSmall,
           ),
         );
-        text = localizations.molecule_display_in_app_no_display;
+
+        text = switch (style) {
+          PositiveVisibilityHintStyle.directoryStyle => localizations.molecule_display_in_app_directory_no_display,
+          (_) => localizations.molecule_display_in_app_no_display,
+        };
     }
 
     return PositiveTapBehaviour(
@@ -92,7 +121,7 @@ class PositiveVisibilityHint extends ConsumerWidget {
       onTap: onTap ?? (context) {},
       child: Container(
         decoration: BoxDecoration(
-          color: colors.colorGray3.withOpacity(kOpacityQuarter),
+          color: colors.colorGray2.withOpacity(kOpacityQuarter),
           borderRadius: BorderRadius.circular(kBorderRadiusMedium),
         ),
         padding: const EdgeInsets.all(kPaddingExtraSmall),

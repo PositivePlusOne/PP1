@@ -29,8 +29,6 @@ mixin _$GuidanceDirectoryEntry {
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get websiteUrl => throw _privateConstructorUsedError;
   String get logoUrl => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-  DocumentReference<Object?>? get profile => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: GuidanceDirectoryEntryService.listFromJson,
       toJson: GuidanceDirectoryEntryService.listToJson)
@@ -57,8 +55,6 @@ abstract class $GuidanceDirectoryEntryCopyWith<$Res> {
       PositivePlace? place,
       String websiteUrl,
       String logoUrl,
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      DocumentReference<Object?>? profile,
       @JsonKey(
           fromJson: GuidanceDirectoryEntryService.listFromJson,
           toJson: GuidanceDirectoryEntryService.listToJson)
@@ -89,7 +85,6 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
     Object? place = freezed,
     Object? websiteUrl = null,
     Object? logoUrl = null,
-    Object? profile = freezed,
     Object? services = null,
   }) {
     return _then(_value.copyWith(
@@ -121,10 +116,6 @@ class _$GuidanceDirectoryEntryCopyWithImpl<$Res,
           ? _value.logoUrl
           : logoUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      profile: freezed == profile
-          ? _value.profile
-          : profile // ignore: cast_nullable_to_non_nullable
-              as DocumentReference<Object?>?,
       services: null == services
           ? _value.services
           : services // ignore: cast_nullable_to_non_nullable
@@ -174,8 +165,6 @@ abstract class _$$GuidanceDirectoryEntryImplCopyWith<$Res>
       PositivePlace? place,
       String websiteUrl,
       String logoUrl,
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      DocumentReference<Object?>? profile,
       @JsonKey(
           fromJson: GuidanceDirectoryEntryService.listFromJson,
           toJson: GuidanceDirectoryEntryService.listToJson)
@@ -207,7 +196,6 @@ class __$$GuidanceDirectoryEntryImplCopyWithImpl<$Res>
     Object? place = freezed,
     Object? websiteUrl = null,
     Object? logoUrl = null,
-    Object? profile = freezed,
     Object? services = null,
   }) {
     return _then(_$GuidanceDirectoryEntryImpl(
@@ -239,10 +227,6 @@ class __$$GuidanceDirectoryEntryImplCopyWithImpl<$Res>
           ? _value.logoUrl
           : logoUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      profile: freezed == profile
-          ? _value.profile
-          : profile // ignore: cast_nullable_to_non_nullable
-              as DocumentReference<Object?>?,
       services: null == services
           ? _value._services
           : services // ignore: cast_nullable_to_non_nullable
@@ -262,8 +246,6 @@ class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
       this.place,
       this.websiteUrl = '',
       this.logoUrl = '',
-      @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-      this.profile,
       @JsonKey(
           fromJson: GuidanceDirectoryEntryService.listFromJson,
           toJson: GuidanceDirectoryEntryService.listToJson)
@@ -293,9 +275,6 @@ class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
   @override
   @JsonKey()
   final String logoUrl;
-  @override
-  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-  final DocumentReference<Object?>? profile;
   final List<GuidanceDirectoryEntryService> _services;
   @override
   @JsonKey(
@@ -309,7 +288,7 @@ class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
 
   @override
   String toString() {
-    return 'GuidanceDirectoryEntry(flMeta: $flMeta, title: $title, description: $description, markdown: $markdown, place: $place, websiteUrl: $websiteUrl, logoUrl: $logoUrl, profile: $profile, services: $services)';
+    return 'GuidanceDirectoryEntry(flMeta: $flMeta, title: $title, description: $description, markdown: $markdown, place: $place, websiteUrl: $websiteUrl, logoUrl: $logoUrl, services: $services)';
   }
 
   @override
@@ -327,7 +306,6 @@ class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
             (identical(other.websiteUrl, websiteUrl) ||
                 other.websiteUrl == websiteUrl) &&
             (identical(other.logoUrl, logoUrl) || other.logoUrl == logoUrl) &&
-            (identical(other.profile, profile) || other.profile == profile) &&
             const DeepCollectionEquality().equals(other._services, _services));
   }
 
@@ -342,7 +320,6 @@ class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
       place,
       websiteUrl,
       logoUrl,
-      profile,
       const DeepCollectionEquality().hash(_services));
 
   @JsonKey(ignore: true)
@@ -370,9 +347,6 @@ abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
           final String websiteUrl,
           final String logoUrl,
           @JsonKey(
-              fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-          final DocumentReference<Object?>? profile,
-          @JsonKey(
               fromJson: GuidanceDirectoryEntryService.listFromJson,
               toJson: GuidanceDirectoryEntryService.listToJson)
           final List<GuidanceDirectoryEntryService> services}) =
@@ -396,9 +370,6 @@ abstract class _GuidanceDirectoryEntry implements GuidanceDirectoryEntry {
   String get websiteUrl;
   @override
   String get logoUrl;
-  @override
-  @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson)
-  DocumentReference<Object?>? get profile;
   @override
   @JsonKey(
       fromJson: GuidanceDirectoryEntryService.listFromJson,

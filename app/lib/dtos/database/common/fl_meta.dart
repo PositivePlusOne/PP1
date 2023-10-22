@@ -14,6 +14,7 @@ class FlMeta with _$FlMeta {
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdDate,
     String? ownedBy,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? ownedAsOfDate,
+    @Default('') String directoryEntryId,
     String? lastModifiedBy,
     @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? lastModifiedDate,
     @Default(-1) int lastFetchMillis,

@@ -16,7 +16,6 @@ import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
-import 'package:app/constants/cache_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -310,13 +309,12 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   void didUpdateWidget(PositiveMediaImage oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (Media.getKey(widget.media, widget.thumbnailTargetSize) != Media.getKey(oldWidget.media, widget.thumbnailTargetSize)) {
+    final String key = Media.getKey(widget.media, widget.thumbnailTargetSize);
+    final String oldKey = Media.getKey(oldWidget.media, widget.thumbnailTargetSize);
+
+    if (key != oldKey) {
       onForceMediaFetchCalled(ForceMediaFetchEvent(media: widget.media));
     }
-  }
-
-  static String buildCacheKey(Media media, PositiveThumbnailTargetSize? thumbnailTargetSize) {
-    return 'image_provider:${Media.getKey(media, thumbnailTargetSize)}';
   }
 
   static void clearCacheProvidersForMedia(Media media) {
@@ -333,11 +331,11 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   }
 
   Future<void> onForceMediaFetchCalled(ForceMediaFetchEvent event) async {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
+    bytes = Uint8List(0);
+    isSvg = false;
+    setStateIfMounted();
 
-    _imageProvider = cacheController.get(expectedCacheKey);
-    _imageProvider ??= PositiveMediaImageProvider(
+    _imageProvider = PositiveMediaImageProvider(
       media: widget.media,
       useThumbnailIfAvailable: widget.useThumbnailIfAvailable,
       thumbnailTargetSize: widget.thumbnailTargetSize,
@@ -347,18 +345,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     await _forceMediaFetchSubscription?.cancel();
     _forceMediaFetchSubscription = providerContainer.read(eventBusProvider).on<ForceMediaFetchEvent>().listen(onForceMediaFetchCalled);
 
-    final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
-    final String mimeType = lookupMimeType(widget.media.name, headerBytes: bytes) ?? '';
-
-    if (cachedBytes != null && cachedBytes.isNotEmpty) {
-      bytes = cachedBytes;
-      widget.onBytesLoaded?.call(mimeType, bytes);
-
-      isSvg = mimeType == 'image/svg+xml';
-      setStateIfMounted();
-    } else {
-      _imageProvider!.loadBytes();
-    }
+    await _imageProvider!.loadBytes();
   }
 
   void onBytesLoaded(String mimeType, Uint8List bytes) {
@@ -366,15 +353,11 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
       return;
     }
 
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
-
     this.bytes = bytes;
     isSvg = mimeType == 'image/svg+xml';
     widget.onBytesLoaded?.call(mimeType, bytes);
 
     setStateIfMounted();
-    cacheController.add(key: expectedCacheKey, value: bytes, ttl: kCacheTTLShort);
   }
 
   @override

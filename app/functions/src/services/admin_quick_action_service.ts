@@ -11,6 +11,11 @@ import { RemoveOrganisationOwnerAction } from "./actions/remove_organisation_own
 import { PromoteActivityAction } from "./actions/promote_activity_action";
 import { DemoteActivityAction } from "./actions/demote_activity_action";
 import { FindPromotionKeyAction } from "./actions/find_promotion_key_action";
+import { FlagAccountAction } from "./actions/flag_account_action";
+import { RemoveAccountFlagAction } from "./actions/remove_account_flag_action";
+import { UpdateCoverImageAction } from "./actions/update_cover_image_action";
+import { LinkDirectoryEntryAction } from "./actions/link_directory_entry_action";
+import { UnlinkDirectoryEntryAction } from "./actions/unlink_directory_entry_action";
 
 export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
@@ -23,6 +28,11 @@ export namespace AdminQuickActionService {
         'promoteActivity': PromoteActivityAction.promoteActivity,
         'demoteActivity': DemoteActivityAction.demoteActivity,
         'findPromotionKey': FindPromotionKeyAction.findPromotionKey,
+        'flagAccount': FlagAccountAction.flagAccount,
+        'removeAccountFlag': RemoveAccountFlagAction.removeAccountFlag,
+        'updateCoverImage': UpdateCoverImageAction.updateCoverImage,
+        'linkDirectoryEntry': LinkDirectoryEntryAction.linkDirectoryEntry,
+        'unlinkDirectoryEntry': UnlinkDirectoryEntryAction.unlinkDirectoryEntry,
     };
 
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {

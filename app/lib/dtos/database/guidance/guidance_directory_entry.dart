@@ -3,11 +3,9 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:algolia/algolia.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/converters/firestore_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 
@@ -24,7 +22,6 @@ class GuidanceDirectoryEntry with _$GuidanceDirectoryEntry {
     PositivePlace? place,
     @Default('') String websiteUrl,
     @Default('') String logoUrl,
-    @JsonKey(fromJson: firestoreDocRefFromJson, toJson: firestoreDocRefToJson) DocumentReference? profile,
     @Default([]) @JsonKey(fromJson: GuidanceDirectoryEntryService.listFromJson, toJson: GuidanceDirectoryEntryService.listToJson) List<GuidanceDirectoryEntryService> services,
   }) = _GuidanceDirectoryEntry;
 

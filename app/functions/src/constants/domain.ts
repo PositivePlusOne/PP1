@@ -11,6 +11,13 @@ export const FIREBASE_FUNCTION_INSTANCE_DATA = {
   memory: "128MB",
 } as functions.RuntimeOptions;
 
+export const FIREBASE_FUNCTION_INSTANCE_DATA_256 = {
+  secrets: Keys.AllKeys,
+  vpcConnector: "redis-vpc-conn",
+  minInstances: 1,
+  memory: "256MB",
+} as functions.RuntimeOptions;
+
 export const FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE = {
   secrets: Keys.AllKeys,
   timeoutSeconds: 60,

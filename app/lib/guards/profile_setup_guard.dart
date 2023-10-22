@@ -45,6 +45,7 @@ class ProfileSetupGuard extends AutoRouteGuard {
       //     profileFormController.onNameChanged(user.providerName!);
       //   }
 
+      profileFormController.resetState(FormMode.create);
       router.removeWhere((route) => true);
       router.push(const ProfileNameEntryRoute());
       resolver.next(false);

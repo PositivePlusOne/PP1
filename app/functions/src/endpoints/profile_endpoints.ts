@@ -163,10 +163,17 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
-    // TODO - Check if it is a rude name!
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
 
     await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     const newProfile = await ProfileService.updateName(uid, name);
+
+    // Remove the name_offensive flag if it exists
+    await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
+    
     functions.logger.info("Profile name updated", {
       uid,
       name,
@@ -191,6 +198,10 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.updateDisplayName(uid, displayName);
+    
+    // Remove the display_name_offensive flag if it exists
+    await ProfileService.removeAccountFlags(newProfile, ["display_name_offensive"]);
+
     functions.logger.info("User profile display name updated", {
       uid,
       displayName,

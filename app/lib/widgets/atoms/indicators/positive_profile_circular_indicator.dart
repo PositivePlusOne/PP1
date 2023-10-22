@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -16,9 +15,7 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -88,8 +85,6 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
   }
 
   Future<void> onBytesLoaded(String mimeType, Uint8List bytes) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-
     if (!mounted) {
       return;
     }

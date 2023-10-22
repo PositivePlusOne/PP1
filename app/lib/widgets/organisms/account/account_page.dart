@@ -74,6 +74,8 @@ class AccountPage extends HookConsumerWidget {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
 
+    final Profile? currentProfile = profileController.currentProfile;
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
@@ -166,8 +168,10 @@ class AccountPage extends HookConsumerWidget {
                     ),
                   ),
                 ],
-                // always show our account banner
-                const AccountProfileBanner(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                  child: AccountProfileBanner(profile: currentProfile),
+                ),
               ],
             ),
           ),

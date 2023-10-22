@@ -11,6 +11,9 @@ const String kFeatureFlagIncognito = 'incognito';
 const String kFeatureFlagOrganisation = 'organisation';
 const String kFeatureFlagVerified = 'verified';
 
+const String kAccountFlagNameOffensive = 'name_offensive';
+const String kAccountFlagDisplayNameOffensive = 'display_name_offensive';
+
 const Map<String, bool> kDefaultVisibilityFlags = {
   kVisibilityFlagName: true,
   kVisibilityFlagBirthday: true,
