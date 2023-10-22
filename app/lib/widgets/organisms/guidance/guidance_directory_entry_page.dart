@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,7 +33,7 @@ import '../../../providers/system/design_controller.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
 
 @RoutePage()
-class GuidanceDirectoryEntryPage extends ConsumerWidget {
+class GuidanceDirectoryEntryPage extends HookConsumerWidget {
   const GuidanceDirectoryEntryPage({
     required this.guidanceEntryId,
     super.key,
@@ -61,6 +63,8 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
     final CacheController cacheController = ref.watch(cacheControllerProvider);
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
+    final List<String> cacheKeys = [];
+
     final GuidanceDirectoryEntry guidanceEntry = cacheController.get(guidanceEntryId) ?? GuidanceDirectoryEntry.empty();
     final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
     final List<Widget> actions = [];
@@ -70,6 +74,18 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
     }
 
     final String parsedMarkdown = html2md.convert(guidanceEntry.markdown);
+
+    final Profile? ownerProfile;
+    final String ownerId = guidanceEntry.flMeta?.ownedBy ?? '';
+
+    if (ownerId.isNotEmpty) {
+      ownerProfile = cacheController.get(ownerId);
+      cacheKeys.add(ownerId);
+    } else {
+      ownerProfile = null;
+    }
+
+    useCacheHook(keys: cacheKeys);
 
     return PositiveScaffold(
       isBusy: state.isBusy,
@@ -115,17 +131,19 @@ class GuidanceDirectoryEntryPage extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    PositiveButton(
-                      colors: colors,
-                      onTapped: () {},
-                      isDisabled: true,
-                      label: 'View Profile',
-                      icon: UniconsLine.user_circle,
-                      forceIconPadding: true,
-                      style: PositiveButtonStyle.primary,
-                      size: PositiveButtonSize.medium,
-                      layout: PositiveButtonLayout.iconRight,
-                    ),
+                    if (ownerProfile != null) ...<Widget>[
+                      PositiveButton(
+                        colors: colors,
+                        onTapped: () => ownerProfile?.navigateToProfile(),
+                        label: 'View Profile',
+                        icon: UniconsLine.user_circle,
+                        forceIconPadding: true,
+                        style: PositiveButtonStyle.primary,
+                        size: PositiveButtonSize.medium,
+                        layout: PositiveButtonLayout.iconRight,
+                      ),
+                      const SizedBox(width: kPaddingMedium),
+                    ],
                     PositiveButton(
                       colors: colors,
                       onTapped: guidanceEntry.websiteUrl.attemptToLaunchURL,

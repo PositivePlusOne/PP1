@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +16,7 @@ import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:logger/logger.dart';
 import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
@@ -256,6 +259,22 @@ extension ProfileExtensions on Profile {
 
   bool get isIncognito {
     return visibilityFlags.contains(kFeatureFlagIncognito);
+  }
+
+  Future<void> navigateToProfile() async {
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
+    final String currentProfileId = flMeta?.id ?? '';
+    if (currentProfileId.isEmpty) {
+      logger.e('onViewProfileButtonSelected: currentProfileId is empty');
+      return;
+    }
+
+    await profileViewModel.preloadUserProfile(currentProfileId);
+
+    appRouter.push(const ProfileRoute());
   }
 }
 

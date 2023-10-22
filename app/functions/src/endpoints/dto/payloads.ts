@@ -188,10 +188,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const entry = obj as DirectoryEntry;
                 const entryOwnerId = entry._fl_meta_?.ownedBy || "";
                 if (entryOwnerId) {
-                    joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
+                    joinedDataRecords.get(profileSchemaKey)?.add(entryOwnerId);
 
-                    if (sender && ownerId !== sender) {
-                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, ownerId]);
+                    if (sender && entryOwnerId !== sender) {
+                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, entryOwnerId]);
                         joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     }
                 }

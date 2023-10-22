@@ -137,7 +137,7 @@ export class Profile {
 
     removeFlaggedData(isConnected: boolean): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
-        const hideInfo = this.isIncognito() || !isConnected;
+        const hideInfo = this.isIncognito() || (!isConnected && !this.isOrganisation());
 
         if (hideInfo || !visibilityFlags.includes(visibilityFlagName)) {
             this.name = '';
