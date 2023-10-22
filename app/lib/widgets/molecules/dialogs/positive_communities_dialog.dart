@@ -197,6 +197,10 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   }
 
   Future<void> requestNextPage(String cursor, CommunityType communityType) async {
+    if (!mounted) {
+      return;
+    }
+
     final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 

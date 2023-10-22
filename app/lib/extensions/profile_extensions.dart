@@ -32,6 +32,22 @@ extension ProfileExtensions on Profile {
     return media.firstWhereOrNull((element) => element.bucketPath.contains('private/reference'));
   }
 
+  bool get hasPromotionsEnabled {
+    return availablePromotionsCount > 0 || activePromotionsCount > 0;
+  }
+
+  bool get isOwned {
+    return flMeta?.ownedBy?.isNotEmpty == true;
+  }
+
+  bool get hasDirectoryEntry {
+    return flMeta?.directoryEntryId.isNotEmpty ?? false;
+  }
+
+  String? get directoryEntryId {
+    return flMeta?.directoryEntryId;
+  }
+
   bool matchesStringSearch(String str) {
     final String lowerCaseName = name.toLowerCase();
     final String lowerCaseDisplayName = displayName.toLowerCase();

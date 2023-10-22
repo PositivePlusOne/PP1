@@ -4,6 +4,8 @@ import { AdminQuickActionService } from '../admin_quick_action_service';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
+import { DataService } from '../data_service';
+import { ProfileService } from '../profile_service';
 
 export namespace PromoteActivityAction {
     export async function promoteActivity(action: AdminQuickActionJSON): Promise<void> {
@@ -42,6 +44,34 @@ export namespace PromoteActivityAction {
             return Promise.resolve();
         }
 
+        targetActivityData.generalConfiguration ??= {};
+        const publisherId = targetActivityData.generalConfiguration.publisherId ?? '';
+        const publisherProfile = await ProfileService.getProfile(publisherId);
+
+        if (!publisherProfile || !publisherId) {
+            AdminQuickActionService.appendOutput(action, `Invalid publisher profile.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
+        const publisherAvailablePromotionCount = publisherProfile.availablePromotionsCount ?? 0;
+        const publisherActivePromotionCount = publisherProfile.activePromotionsCount ?? 0;
+
+        if (publisherAvailablePromotionCount <= 0) {
+            AdminQuickActionService.appendOutput(action, `Publisher ${publisherId} has no available promotions.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
+        // TODO -> Decide what this number is
+        if (publisherActivePromotionCount >= 3) {
+            AdminQuickActionService.appendOutput(action, `Publisher ${publisherId} has reached the maximum number of active promotions.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
+        AdminQuickActionService.appendOutput(action, `Updating activity ${targetActivityId} with promotion ${targetPromotionId}`);
+
         targetActivityData.enrichmentConfiguration ??= {};
         targetActivityData.enrichmentConfiguration.promotionKey = targetPromotionId;
         await targetActivityReference?.update(targetActivityData);
@@ -50,6 +80,16 @@ export namespace PromoteActivityAction {
 
         AdminQuickActionService.appendOutput(action, `Updating feeds for activity ${targetActivityId}`);
         await ActivitiesService.updateTagFeedsForActivity(targetActivityData);
+        
+        AdminQuickActionService.appendOutput(action, `Updating publisher ${publisherId} with new promotion counts.`);
+        await DataService.updateDocument({
+            entryId: publisherId,
+            schemaKey: 'users',
+            data: {
+                availablePromotionsCount: publisherProfile.availablePromotionsCount - 1,
+                activePromotionsCount: publisherProfile.activePromotionsCount + 1,
+            },
+        });
 
         AdminQuickActionService.updateStatus(action, 'success');
     }

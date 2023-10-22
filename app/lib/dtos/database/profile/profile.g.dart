@@ -27,9 +27,6 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
           ? const {}
           : stringSetFromJson(json['interests']),
       tags: json['tags'] == null ? const {} : stringSetFromJson(json['tags']),
-      companySectors: json['companySectors'] == null
-          ? const {}
-          : stringSetFromJson(json['companySectors']),
       placeSkipped: json['placeSkipped'] as bool? ?? false,
       place: json['place'] == null
           ? null
@@ -48,6 +45,14 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
       featureFlags: json['featureFlags'] == null
           ? const {}
           : stringSetFromJson(json['featureFlags']),
+      companySectors: json['companySectors'] == null
+          ? const {}
+          : stringSetFromJson(json['companySectors']),
+      companySize: json['companySize'] == null
+          ? const ProfileCompanySize.unknown()
+          : ProfileCompanySize.fromJson(json['companySize'] as String),
+      availablePromotionsCount: json['availablePromotionsCount'] as int? ?? 0,
+      activePromotionsCount: json['activePromotionsCount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
@@ -65,7 +70,6 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'genders': instance.genders.toList(),
       'interests': instance.interests.toList(),
       'tags': instance.tags.toList(),
-      'companySectors': instance.companySectors.toList(),
       'placeSkipped': instance.placeSkipped,
       'place': instance.place?.toJson(),
       'biography': instance.biography,
@@ -73,6 +77,10 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'accountFlags': instance.accountFlags.toList(),
       'visibilityFlags': instance.visibilityFlags.toList(),
       'featureFlags': instance.featureFlags.toList(),
+      'companySectors': instance.companySectors.toList(),
+      'companySize': ProfileCompanySize.toJson(instance.companySize),
+      'availablePromotionsCount': instance.availablePromotionsCount,
+      'activePromotionsCount': instance.activePromotionsCount,
     };
 
 _$ProfileStatisticsImpl _$$ProfileStatisticsImplFromJson(

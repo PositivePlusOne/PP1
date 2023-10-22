@@ -54,7 +54,6 @@ export interface ProfileJSON {
     hivStatus?: string;
     genders?: StringSetFromJson;
     interests?: StringSetFromJson;
-    companySectors?: StringSetFromJson;
     tags?: StringSetFromJson;
     placeSkipped?: boolean;
     place?: PlaceJSON;
@@ -65,6 +64,10 @@ export interface ProfileJSON {
     accountFlags?: StringSetFromJson;
     visibilityFlags?: StringSetFromJson;
     featureFlags?: StringSetFromJson;
+    companySectors?: StringSetFromJson;
+    companySize?: string;
+    availablePromotionsCount?: number;
+    activePromotionCount?: number;
 }
 
 export class Profile {
@@ -81,7 +84,6 @@ export class Profile {
     hivStatus: string;
     genders: StringSetFromJson;
     interests: StringSetFromJson;
-    companySectors: StringSetFromJson;
     tags: StringSetFromJson;
     placeSkipped: boolean;
     place?: Place;
@@ -90,6 +92,10 @@ export class Profile {
     accountFlags: StringSetFromJson;
     visibilityFlags: StringSetFromJson;
     featureFlags: StringSetFromJson;
+    companySectors: StringSetFromJson;
+    companySize?: string;
+    availablePromotionsCount: number;
+    activePromotionsCount: number;
 
     constructor(json: ProfileJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -105,7 +111,6 @@ export class Profile {
         this.hivStatus = json.hivStatus || '';
         this.genders = json.genders || new Set();
         this.interests = json.interests || new Set();
-        this.companySectors = json.companySectors || new Set();
         this.tags = json.tags || new Set();
         this.placeSkipped = json.placeSkipped || false;
         this.place = json.place && new Place(json.place);
@@ -114,6 +119,10 @@ export class Profile {
         this.accountFlags = json.accountFlags || new Set();
         this.visibilityFlags = json.visibilityFlags || new Set();
         this.featureFlags = json.featureFlags || new Set();
+        this.companySectors = json.companySectors || new Set();
+        this.companySize = json.companySize;
+        this.availablePromotionsCount = json.availablePromotionsCount || 0;
+        this.activePromotionsCount = json.activePromotionCount || 0;
     }
 
     isIncognito(): boolean {
@@ -121,9 +130,14 @@ export class Profile {
         return featureFlags?.includes(featureFlagIncognito);
     }
 
+    isOrganisation(): boolean {
+        const featureFlags = Array.from(this.featureFlags);
+        return featureFlags?.includes(featureFlagOrganisationControls);
+    }
+
     removeFlaggedData(isConnected: boolean): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
-        const hideInfo = this.isIncognito() && !isConnected;
+        const hideInfo = this.isIncognito() || !isConnected;
 
         if (hideInfo || !visibilityFlags.includes(visibilityFlagName)) {
             this.name = '';

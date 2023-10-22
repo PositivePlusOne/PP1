@@ -229,6 +229,36 @@ export namespace ProfileService {
     });
   }
 
+  export async function removeAccountFlags(profile: ProfileJSON, accountFlags: string[]): Promise<any> {
+    const entryId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!entryId) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    const currentAccountFlags = [...profile.accountFlags ?? []] as string[];
+    const missingAccountFlags = accountFlags.filter((accountFlag) => !currentAccountFlags.includes(accountFlag));
+    if (missingAccountFlags.length > 0) {
+      return profile;
+    }
+
+    functions.logger.info(`Removing account flags for user: ${entryId}`);
+    const newAccountFlags = [...profile.accountFlags ?? []] as string[];
+    for (const accountFlag of accountFlags) {
+      const index = newAccountFlags.indexOf(accountFlag);
+      if (index > -1) {
+        newAccountFlags.splice(index, 1);
+      }
+    }
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: entryId,
+      data: {
+        accountFlags: newAccountFlags,
+      },
+    });
+  }
+
   export async function updateAccountFlags(uid: string, accountFlags: string[]): Promise<any> {
     functions.logger.info(`Updating account flags for user: ${uid}`);
 
@@ -305,18 +335,6 @@ export namespace ProfileService {
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
-
-    // If the display name is being removed, we can skip the check.
-    // This is needed for moderation purposes.
-    if (displayName.length == 0) {
-      return await DataService.updateDocument({
-        schemaKey: "users",
-        entryId: uid,
-        data: {
-          displayName,
-        },
-      });
-    }
 
     const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {
@@ -499,7 +517,7 @@ export namespace ProfileService {
     const bucket = adminApp.storage().bucket();
     const mediaPromises = [] as Promise<any>[];
     for (const mediaItem of media) {
-      if (mediaItem.type !== "bucket_path" || !mediaItem.bucketPath || mediaItem.url) {
+      if (mediaItem?.type !== "bucket_path" || !mediaItem?.bucketPath || mediaItem?.url) {
         continue;
       }
 
@@ -517,10 +535,12 @@ export namespace ProfileService {
     for (const mediaItem of profile.media ?? []) {
       // we don't want to add the old one that this is replacing - either the name is identical
       // or they both start with 'profile' or 'reference' as they are new
-      const existingMediaItem = media.find((m) => 
+      const existingMediaItem = media.find((m) =>
         m.name === mediaItem.name ||
         (mediaItem.name?.startsWith('profile') && m.name?.startsWith('profile')) ||
-        (mediaItem.name?.startsWith('reference') && m.name?.startsWith('reference')) );
+        (mediaItem.name?.startsWith('reference') && m.name?.startsWith('reference')) ||
+        (mediaItem.name?.startsWith('cover') && m.name?.startsWith('cover')));
+
       if (existingMediaItem) {
         continue;
       }
@@ -537,6 +557,40 @@ export namespace ProfileService {
         media: newMedia,
       },
     });
+  }
+
+  export async function createMediaFromBytes(profile: ProfileJSON, bytes: ArrayBuffer, folder: string, name: string, contentType: string): Promise<MediaJSON> {
+    const bucket = adminApp.storage().bucket();
+    const profileID = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!profileID) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    if (!folder || !name) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid folder or name");
+    }
+
+    const mediaPath = `users/${profileID}/${folder}/${name}`;
+    const file = bucket.file(mediaPath);
+
+    const bufferFromArr = Buffer.from(bytes);
+    await file.save(bufferFromArr, {
+      contentType: contentType,
+      public: true,
+      metadata: {
+        cacheControl: "public, max-age=31536000",
+      },
+    });
+
+    const media = {
+      name: name,
+      bucketPath: mediaPath,
+      isPrivate: false,
+      priority: 0,
+      type: "bucket_path",
+    } as MediaJSON;
+
+    return media;
   }
 
   /**

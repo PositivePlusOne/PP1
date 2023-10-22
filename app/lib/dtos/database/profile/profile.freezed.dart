@@ -37,8 +37,6 @@ mixin _$Profile {
   Set<String> get interests => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get tags => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get companySectors => throw _privateConstructorUsedError;
   bool get placeSkipped => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
@@ -49,6 +47,15 @@ mixin _$Profile {
   Set<String> get visibilityFlags => throw _privateConstructorUsedError;
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get companySectors => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: ProfileCompanySize.fromJson,
+      toJson: ProfileCompanySize.toJson,
+      name: 'companySize')
+  ProfileCompanySize get companySize => throw _privateConstructorUsedError;
+  int get availablePromotionsCount => throw _privateConstructorUsedError;
+  int get activePromotionsCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -74,17 +81,25 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> tags,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
       bool placeSkipped,
       PositivePlace? place,
       String biography,
       List<Media> media,
       @JsonKey(fromJson: stringSetFromJson) Set<String> accountFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags});
+      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
+      @JsonKey(
+          fromJson: ProfileCompanySize.fromJson,
+          toJson: ProfileCompanySize.toJson,
+          name: 'companySize')
+      ProfileCompanySize companySize,
+      int availablePromotionsCount,
+      int activePromotionsCount});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $PositivePlaceCopyWith<$Res>? get place;
+  $ProfileCompanySizeCopyWith<$Res> get companySize;
 }
 
 /// @nodoc
@@ -113,7 +128,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? genders = null,
     Object? interests = null,
     Object? tags = null,
-    Object? companySectors = null,
     Object? placeSkipped = null,
     Object? place = freezed,
     Object? biography = null,
@@ -121,6 +135,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? accountFlags = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
+    Object? companySectors = null,
+    Object? companySize = null,
+    Object? availablePromotionsCount = null,
+    Object? activePromotionsCount = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -175,10 +193,6 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      companySectors: null == companySectors
-          ? _value.companySectors
-          : companySectors // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
       placeSkipped: null == placeSkipped
           ? _value.placeSkipped
           : placeSkipped // ignore: cast_nullable_to_non_nullable
@@ -207,6 +221,22 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
+      companySectors: null == companySectors
+          ? _value.companySectors
+          : companySectors // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      companySize: null == companySize
+          ? _value.companySize
+          : companySize // ignore: cast_nullable_to_non_nullable
+              as ProfileCompanySize,
+      availablePromotionsCount: null == availablePromotionsCount
+          ? _value.availablePromotionsCount
+          : availablePromotionsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      activePromotionsCount: null == activePromotionsCount
+          ? _value.activePromotionsCount
+          : activePromotionsCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -233,6 +263,14 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
       return _then(_value.copyWith(place: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ProfileCompanySizeCopyWith<$Res> get companySize {
+    return $ProfileCompanySizeCopyWith<$Res>(_value.companySize, (value) {
+      return _then(_value.copyWith(companySize: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -256,19 +294,28 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> tags,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
       bool placeSkipped,
       PositivePlace? place,
       String biography,
       List<Media> media,
       @JsonKey(fromJson: stringSetFromJson) Set<String> accountFlags,
       @JsonKey(fromJson: stringSetFromJson) Set<String> visibilityFlags,
-      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags});
+      @JsonKey(fromJson: stringSetFromJson) Set<String> featureFlags,
+      @JsonKey(fromJson: stringSetFromJson) Set<String> companySectors,
+      @JsonKey(
+          fromJson: ProfileCompanySize.fromJson,
+          toJson: ProfileCompanySize.toJson,
+          name: 'companySize')
+      ProfileCompanySize companySize,
+      int availablePromotionsCount,
+      int activePromotionsCount});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
   @override
   $PositivePlaceCopyWith<$Res>? get place;
+  @override
+  $ProfileCompanySizeCopyWith<$Res> get companySize;
 }
 
 /// @nodoc
@@ -295,7 +342,6 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? genders = null,
     Object? interests = null,
     Object? tags = null,
-    Object? companySectors = null,
     Object? placeSkipped = null,
     Object? place = freezed,
     Object? biography = null,
@@ -303,6 +349,10 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? accountFlags = null,
     Object? visibilityFlags = null,
     Object? featureFlags = null,
+    Object? companySectors = null,
+    Object? companySize = null,
+    Object? availablePromotionsCount = null,
+    Object? activePromotionsCount = null,
   }) {
     return _then(_$ProfileImpl(
       flMeta: freezed == flMeta
@@ -357,10 +407,6 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      companySectors: null == companySectors
-          ? _value._companySectors
-          : companySectors // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
       placeSkipped: null == placeSkipped
           ? _value.placeSkipped
           : placeSkipped // ignore: cast_nullable_to_non_nullable
@@ -389,6 +435,22 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value._featureFlags
           : featureFlags // ignore: cast_nullable_to_non_nullable
               as Set<String>,
+      companySectors: null == companySectors
+          ? _value._companySectors
+          : companySectors // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      companySize: null == companySize
+          ? _value.companySize
+          : companySize // ignore: cast_nullable_to_non_nullable
+              as ProfileCompanySize,
+      availablePromotionsCount: null == availablePromotionsCount
+          ? _value.availablePromotionsCount
+          : availablePromotionsCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      activePromotionsCount: null == activePromotionsCount
+          ? _value.activePromotionsCount
+          : activePromotionsCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -412,8 +474,6 @@ class _$ProfileImpl implements _Profile {
       @JsonKey(fromJson: stringSetFromJson)
       final Set<String> interests = const {},
       @JsonKey(fromJson: stringSetFromJson) final Set<String> tags = const {},
-      @JsonKey(fromJson: stringSetFromJson)
-      final Set<String> companySectors = const {},
       this.placeSkipped = false,
       this.place,
       this.biography = '',
@@ -423,15 +483,24 @@ class _$ProfileImpl implements _Profile {
       @JsonKey(fromJson: stringSetFromJson)
       final Set<String> visibilityFlags = const {},
       @JsonKey(fromJson: stringSetFromJson)
-      final Set<String> featureFlags = const {}})
+      final Set<String> featureFlags = const {},
+      @JsonKey(fromJson: stringSetFromJson)
+      final Set<String> companySectors = const {},
+      @JsonKey(
+          fromJson: ProfileCompanySize.fromJson,
+          toJson: ProfileCompanySize.toJson,
+          name: 'companySize')
+      this.companySize = const ProfileCompanySize.unknown(),
+      this.availablePromotionsCount = 0,
+      this.activePromotionsCount = 0})
       : _genders = genders,
         _interests = interests,
         _tags = tags,
-        _companySectors = companySectors,
         _media = media,
         _accountFlags = accountFlags,
         _visibilityFlags = visibilityFlags,
-        _featureFlags = featureFlags;
+        _featureFlags = featureFlags,
+        _companySectors = companySectors;
 
   factory _$ProfileImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProfileImplFromJson(json);
@@ -493,15 +562,6 @@ class _$ProfileImpl implements _Profile {
     return EqualUnmodifiableSetView(_tags);
   }
 
-  final Set<String> _companySectors;
-  @override
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get companySectors {
-    if (_companySectors is EqualUnmodifiableSetView) return _companySectors;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_companySectors);
-  }
-
   @override
   @JsonKey()
   final bool placeSkipped;
@@ -546,9 +606,31 @@ class _$ProfileImpl implements _Profile {
     return EqualUnmodifiableSetView(_featureFlags);
   }
 
+  final Set<String> _companySectors;
+  @override
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get companySectors {
+    if (_companySectors is EqualUnmodifiableSetView) return _companySectors;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_companySectors);
+  }
+
+  @override
+  @JsonKey(
+      fromJson: ProfileCompanySize.fromJson,
+      toJson: ProfileCompanySize.toJson,
+      name: 'companySize')
+  final ProfileCompanySize companySize;
+  @override
+  @JsonKey()
+  final int availablePromotionsCount;
+  @override
+  @JsonKey()
+  final int activePromotionsCount;
+
   @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, companySectors: $companySectors, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, companySectors: $companySectors, companySize: $companySize, availablePromotionsCount: $availablePromotionsCount, activePromotionsCount: $activePromotionsCount)';
   }
 
   @override
@@ -576,8 +658,6 @@ class _$ProfileImpl implements _Profile {
             const DeepCollectionEquality()
                 .equals(other._interests, _interests) &&
             const DeepCollectionEquality().equals(other._tags, _tags) &&
-            const DeepCollectionEquality()
-                .equals(other._companySectors, _companySectors) &&
             (identical(other.placeSkipped, placeSkipped) ||
                 other.placeSkipped == placeSkipped) &&
             (identical(other.place, place) || other.place == place) &&
@@ -589,7 +669,16 @@ class _$ProfileImpl implements _Profile {
             const DeepCollectionEquality()
                 .equals(other._visibilityFlags, _visibilityFlags) &&
             const DeepCollectionEquality()
-                .equals(other._featureFlags, _featureFlags));
+                .equals(other._featureFlags, _featureFlags) &&
+            const DeepCollectionEquality()
+                .equals(other._companySectors, _companySectors) &&
+            (identical(other.companySize, companySize) ||
+                other.companySize == companySize) &&
+            (identical(
+                    other.availablePromotionsCount, availablePromotionsCount) ||
+                other.availablePromotionsCount == availablePromotionsCount) &&
+            (identical(other.activePromotionsCount, activePromotionsCount) ||
+                other.activePromotionsCount == activePromotionsCount));
   }
 
   @JsonKey(ignore: true)
@@ -609,14 +698,17 @@ class _$ProfileImpl implements _Profile {
         const DeepCollectionEquality().hash(_genders),
         const DeepCollectionEquality().hash(_interests),
         const DeepCollectionEquality().hash(_tags),
-        const DeepCollectionEquality().hash(_companySectors),
         placeSkipped,
         place,
         biography,
         const DeepCollectionEquality().hash(_media),
         const DeepCollectionEquality().hash(_accountFlags),
         const DeepCollectionEquality().hash(_visibilityFlags),
-        const DeepCollectionEquality().hash(_featureFlags)
+        const DeepCollectionEquality().hash(_featureFlags),
+        const DeepCollectionEquality().hash(_companySectors),
+        companySize,
+        availablePromotionsCount,
+        activePromotionsCount
       ]);
 
   @JsonKey(ignore: true)
@@ -648,15 +740,21 @@ abstract class _Profile implements Profile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> genders,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> tags,
-      @JsonKey(fromJson: stringSetFromJson) final Set<String> companySectors,
       final bool placeSkipped,
       final PositivePlace? place,
       final String biography,
       final List<Media> media,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> accountFlags,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> visibilityFlags,
-      @JsonKey(fromJson: stringSetFromJson)
-      final Set<String> featureFlags}) = _$ProfileImpl;
+      @JsonKey(fromJson: stringSetFromJson) final Set<String> featureFlags,
+      @JsonKey(fromJson: stringSetFromJson) final Set<String> companySectors,
+      @JsonKey(
+          fromJson: ProfileCompanySize.fromJson,
+          toJson: ProfileCompanySize.toJson,
+          name: 'companySize')
+      final ProfileCompanySize companySize,
+      final int availablePromotionsCount,
+      final int activePromotionsCount}) = _$ProfileImpl;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
@@ -691,9 +789,6 @@ abstract class _Profile implements Profile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get tags;
   @override
-  @JsonKey(fromJson: stringSetFromJson)
-  Set<String> get companySectors;
-  @override
   bool get placeSkipped;
   @override
   PositivePlace? get place;
@@ -711,9 +806,791 @@ abstract class _Profile implements Profile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get featureFlags;
   @override
+  @JsonKey(fromJson: stringSetFromJson)
+  Set<String> get companySectors;
+  @override
+  @JsonKey(
+      fromJson: ProfileCompanySize.fromJson,
+      toJson: ProfileCompanySize.toJson,
+      name: 'companySize')
+  ProfileCompanySize get companySize;
+  @override
+  int get availablePromotionsCount;
+  @override
+  int get activePromotionsCount;
+  @override
   @JsonKey(ignore: true)
   _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$ProfileCompanySize {
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() lessThanFive,
+    required TResult Function() lessThanTwentyFive,
+    required TResult Function() lessThanOneHundred,
+    required TResult Function() moreThanOneHundred,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? lessThanFive,
+    TResult? Function()? lessThanTwentyFive,
+    TResult? Function()? lessThanOneHundred,
+    TResult? Function()? moreThanOneHundred,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? lessThanFive,
+    TResult Function()? lessThanTwentyFive,
+    TResult Function()? lessThanOneHundred,
+    TResult Function()? moreThanOneHundred,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ProfileCompanySizeUnknown value) unknown,
+    required TResult Function(_ProfileCompanySizeLessThanFive value)
+        lessThanFive,
+    required TResult Function(_ProfileCompanySizeLessThanTwentyFive value)
+        lessThanTwentyFive,
+    required TResult Function(_ProfileCompanySizeLessThanOneHundred value)
+        lessThanOneHundred,
+    required TResult Function(_ProfileCompanySizeMoreThanOneHundred value)
+        moreThanOneHundred,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult? Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult? Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult? Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult? Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ProfileCompanySizeCopyWith<$Res> {
+  factory $ProfileCompanySizeCopyWith(
+          ProfileCompanySize value, $Res Function(ProfileCompanySize) then) =
+      _$ProfileCompanySizeCopyWithImpl<$Res, ProfileCompanySize>;
+}
+
+/// @nodoc
+class _$ProfileCompanySizeCopyWithImpl<$Res, $Val extends ProfileCompanySize>
+    implements $ProfileCompanySizeCopyWith<$Res> {
+  _$ProfileCompanySizeCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+}
+
+/// @nodoc
+abstract class _$$ProfileCompanySizeUnknownImplCopyWith<$Res> {
+  factory _$$ProfileCompanySizeUnknownImplCopyWith(
+          _$ProfileCompanySizeUnknownImpl value,
+          $Res Function(_$ProfileCompanySizeUnknownImpl) then) =
+      __$$ProfileCompanySizeUnknownImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ProfileCompanySizeUnknownImplCopyWithImpl<$Res>
+    extends _$ProfileCompanySizeCopyWithImpl<$Res,
+        _$ProfileCompanySizeUnknownImpl>
+    implements _$$ProfileCompanySizeUnknownImplCopyWith<$Res> {
+  __$$ProfileCompanySizeUnknownImplCopyWithImpl(
+      _$ProfileCompanySizeUnknownImpl _value,
+      $Res Function(_$ProfileCompanySizeUnknownImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ProfileCompanySizeUnknownImpl implements _ProfileCompanySizeUnknown {
+  const _$ProfileCompanySizeUnknownImpl();
+
+  @override
+  String toString() {
+    return 'ProfileCompanySize.unknown()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProfileCompanySizeUnknownImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() lessThanFive,
+    required TResult Function() lessThanTwentyFive,
+    required TResult Function() lessThanOneHundred,
+    required TResult Function() moreThanOneHundred,
+  }) {
+    return unknown();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? lessThanFive,
+    TResult? Function()? lessThanTwentyFive,
+    TResult? Function()? lessThanOneHundred,
+    TResult? Function()? moreThanOneHundred,
+  }) {
+    return unknown?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? lessThanFive,
+    TResult Function()? lessThanTwentyFive,
+    TResult Function()? lessThanOneHundred,
+    TResult Function()? moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (unknown != null) {
+      return unknown();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ProfileCompanySizeUnknown value) unknown,
+    required TResult Function(_ProfileCompanySizeLessThanFive value)
+        lessThanFive,
+    required TResult Function(_ProfileCompanySizeLessThanTwentyFive value)
+        lessThanTwentyFive,
+    required TResult Function(_ProfileCompanySizeLessThanOneHundred value)
+        lessThanOneHundred,
+    required TResult Function(_ProfileCompanySizeMoreThanOneHundred value)
+        moreThanOneHundred,
+  }) {
+    return unknown(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult? Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult? Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult? Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult? Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+  }) {
+    return unknown?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (unknown != null) {
+      return unknown(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ProfileCompanySizeUnknown implements ProfileCompanySize {
+  const factory _ProfileCompanySizeUnknown() = _$ProfileCompanySizeUnknownImpl;
+}
+
+/// @nodoc
+abstract class _$$ProfileCompanySizeLessThanFiveImplCopyWith<$Res> {
+  factory _$$ProfileCompanySizeLessThanFiveImplCopyWith(
+          _$ProfileCompanySizeLessThanFiveImpl value,
+          $Res Function(_$ProfileCompanySizeLessThanFiveImpl) then) =
+      __$$ProfileCompanySizeLessThanFiveImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ProfileCompanySizeLessThanFiveImplCopyWithImpl<$Res>
+    extends _$ProfileCompanySizeCopyWithImpl<$Res,
+        _$ProfileCompanySizeLessThanFiveImpl>
+    implements _$$ProfileCompanySizeLessThanFiveImplCopyWith<$Res> {
+  __$$ProfileCompanySizeLessThanFiveImplCopyWithImpl(
+      _$ProfileCompanySizeLessThanFiveImpl _value,
+      $Res Function(_$ProfileCompanySizeLessThanFiveImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ProfileCompanySizeLessThanFiveImpl
+    implements _ProfileCompanySizeLessThanFive {
+  const _$ProfileCompanySizeLessThanFiveImpl();
+
+  @override
+  String toString() {
+    return 'ProfileCompanySize.lessThanFive()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProfileCompanySizeLessThanFiveImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() lessThanFive,
+    required TResult Function() lessThanTwentyFive,
+    required TResult Function() lessThanOneHundred,
+    required TResult Function() moreThanOneHundred,
+  }) {
+    return lessThanFive();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? lessThanFive,
+    TResult? Function()? lessThanTwentyFive,
+    TResult? Function()? lessThanOneHundred,
+    TResult? Function()? moreThanOneHundred,
+  }) {
+    return lessThanFive?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? lessThanFive,
+    TResult Function()? lessThanTwentyFive,
+    TResult Function()? lessThanOneHundred,
+    TResult Function()? moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (lessThanFive != null) {
+      return lessThanFive();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ProfileCompanySizeUnknown value) unknown,
+    required TResult Function(_ProfileCompanySizeLessThanFive value)
+        lessThanFive,
+    required TResult Function(_ProfileCompanySizeLessThanTwentyFive value)
+        lessThanTwentyFive,
+    required TResult Function(_ProfileCompanySizeLessThanOneHundred value)
+        lessThanOneHundred,
+    required TResult Function(_ProfileCompanySizeMoreThanOneHundred value)
+        moreThanOneHundred,
+  }) {
+    return lessThanFive(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult? Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult? Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult? Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult? Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+  }) {
+    return lessThanFive?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (lessThanFive != null) {
+      return lessThanFive(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ProfileCompanySizeLessThanFive implements ProfileCompanySize {
+  const factory _ProfileCompanySizeLessThanFive() =
+      _$ProfileCompanySizeLessThanFiveImpl;
+}
+
+/// @nodoc
+abstract class _$$ProfileCompanySizeLessThanTwentyFiveImplCopyWith<$Res> {
+  factory _$$ProfileCompanySizeLessThanTwentyFiveImplCopyWith(
+          _$ProfileCompanySizeLessThanTwentyFiveImpl value,
+          $Res Function(_$ProfileCompanySizeLessThanTwentyFiveImpl) then) =
+      __$$ProfileCompanySizeLessThanTwentyFiveImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ProfileCompanySizeLessThanTwentyFiveImplCopyWithImpl<$Res>
+    extends _$ProfileCompanySizeCopyWithImpl<$Res,
+        _$ProfileCompanySizeLessThanTwentyFiveImpl>
+    implements _$$ProfileCompanySizeLessThanTwentyFiveImplCopyWith<$Res> {
+  __$$ProfileCompanySizeLessThanTwentyFiveImplCopyWithImpl(
+      _$ProfileCompanySizeLessThanTwentyFiveImpl _value,
+      $Res Function(_$ProfileCompanySizeLessThanTwentyFiveImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ProfileCompanySizeLessThanTwentyFiveImpl
+    implements _ProfileCompanySizeLessThanTwentyFive {
+  const _$ProfileCompanySizeLessThanTwentyFiveImpl();
+
+  @override
+  String toString() {
+    return 'ProfileCompanySize.lessThanTwentyFive()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProfileCompanySizeLessThanTwentyFiveImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() lessThanFive,
+    required TResult Function() lessThanTwentyFive,
+    required TResult Function() lessThanOneHundred,
+    required TResult Function() moreThanOneHundred,
+  }) {
+    return lessThanTwentyFive();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? lessThanFive,
+    TResult? Function()? lessThanTwentyFive,
+    TResult? Function()? lessThanOneHundred,
+    TResult? Function()? moreThanOneHundred,
+  }) {
+    return lessThanTwentyFive?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? lessThanFive,
+    TResult Function()? lessThanTwentyFive,
+    TResult Function()? lessThanOneHundred,
+    TResult Function()? moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (lessThanTwentyFive != null) {
+      return lessThanTwentyFive();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ProfileCompanySizeUnknown value) unknown,
+    required TResult Function(_ProfileCompanySizeLessThanFive value)
+        lessThanFive,
+    required TResult Function(_ProfileCompanySizeLessThanTwentyFive value)
+        lessThanTwentyFive,
+    required TResult Function(_ProfileCompanySizeLessThanOneHundred value)
+        lessThanOneHundred,
+    required TResult Function(_ProfileCompanySizeMoreThanOneHundred value)
+        moreThanOneHundred,
+  }) {
+    return lessThanTwentyFive(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult? Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult? Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult? Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult? Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+  }) {
+    return lessThanTwentyFive?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (lessThanTwentyFive != null) {
+      return lessThanTwentyFive(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ProfileCompanySizeLessThanTwentyFive
+    implements ProfileCompanySize {
+  const factory _ProfileCompanySizeLessThanTwentyFive() =
+      _$ProfileCompanySizeLessThanTwentyFiveImpl;
+}
+
+/// @nodoc
+abstract class _$$ProfileCompanySizeLessThanOneHundredImplCopyWith<$Res> {
+  factory _$$ProfileCompanySizeLessThanOneHundredImplCopyWith(
+          _$ProfileCompanySizeLessThanOneHundredImpl value,
+          $Res Function(_$ProfileCompanySizeLessThanOneHundredImpl) then) =
+      __$$ProfileCompanySizeLessThanOneHundredImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ProfileCompanySizeLessThanOneHundredImplCopyWithImpl<$Res>
+    extends _$ProfileCompanySizeCopyWithImpl<$Res,
+        _$ProfileCompanySizeLessThanOneHundredImpl>
+    implements _$$ProfileCompanySizeLessThanOneHundredImplCopyWith<$Res> {
+  __$$ProfileCompanySizeLessThanOneHundredImplCopyWithImpl(
+      _$ProfileCompanySizeLessThanOneHundredImpl _value,
+      $Res Function(_$ProfileCompanySizeLessThanOneHundredImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ProfileCompanySizeLessThanOneHundredImpl
+    implements _ProfileCompanySizeLessThanOneHundred {
+  const _$ProfileCompanySizeLessThanOneHundredImpl();
+
+  @override
+  String toString() {
+    return 'ProfileCompanySize.lessThanOneHundred()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProfileCompanySizeLessThanOneHundredImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() lessThanFive,
+    required TResult Function() lessThanTwentyFive,
+    required TResult Function() lessThanOneHundred,
+    required TResult Function() moreThanOneHundred,
+  }) {
+    return lessThanOneHundred();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? lessThanFive,
+    TResult? Function()? lessThanTwentyFive,
+    TResult? Function()? lessThanOneHundred,
+    TResult? Function()? moreThanOneHundred,
+  }) {
+    return lessThanOneHundred?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? lessThanFive,
+    TResult Function()? lessThanTwentyFive,
+    TResult Function()? lessThanOneHundred,
+    TResult Function()? moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (lessThanOneHundred != null) {
+      return lessThanOneHundred();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ProfileCompanySizeUnknown value) unknown,
+    required TResult Function(_ProfileCompanySizeLessThanFive value)
+        lessThanFive,
+    required TResult Function(_ProfileCompanySizeLessThanTwentyFive value)
+        lessThanTwentyFive,
+    required TResult Function(_ProfileCompanySizeLessThanOneHundred value)
+        lessThanOneHundred,
+    required TResult Function(_ProfileCompanySizeMoreThanOneHundred value)
+        moreThanOneHundred,
+  }) {
+    return lessThanOneHundred(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult? Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult? Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult? Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult? Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+  }) {
+    return lessThanOneHundred?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (lessThanOneHundred != null) {
+      return lessThanOneHundred(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ProfileCompanySizeLessThanOneHundred
+    implements ProfileCompanySize {
+  const factory _ProfileCompanySizeLessThanOneHundred() =
+      _$ProfileCompanySizeLessThanOneHundredImpl;
+}
+
+/// @nodoc
+abstract class _$$ProfileCompanySizeMoreThanOneHundredImplCopyWith<$Res> {
+  factory _$$ProfileCompanySizeMoreThanOneHundredImplCopyWith(
+          _$ProfileCompanySizeMoreThanOneHundredImpl value,
+          $Res Function(_$ProfileCompanySizeMoreThanOneHundredImpl) then) =
+      __$$ProfileCompanySizeMoreThanOneHundredImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ProfileCompanySizeMoreThanOneHundredImplCopyWithImpl<$Res>
+    extends _$ProfileCompanySizeCopyWithImpl<$Res,
+        _$ProfileCompanySizeMoreThanOneHundredImpl>
+    implements _$$ProfileCompanySizeMoreThanOneHundredImplCopyWith<$Res> {
+  __$$ProfileCompanySizeMoreThanOneHundredImplCopyWithImpl(
+      _$ProfileCompanySizeMoreThanOneHundredImpl _value,
+      $Res Function(_$ProfileCompanySizeMoreThanOneHundredImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$ProfileCompanySizeMoreThanOneHundredImpl
+    implements _ProfileCompanySizeMoreThanOneHundred {
+  const _$ProfileCompanySizeMoreThanOneHundredImpl();
+
+  @override
+  String toString() {
+    return 'ProfileCompanySize.moreThanOneHundred()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ProfileCompanySizeMoreThanOneHundredImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() unknown,
+    required TResult Function() lessThanFive,
+    required TResult Function() lessThanTwentyFive,
+    required TResult Function() lessThanOneHundred,
+    required TResult Function() moreThanOneHundred,
+  }) {
+    return moreThanOneHundred();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? unknown,
+    TResult? Function()? lessThanFive,
+    TResult? Function()? lessThanTwentyFive,
+    TResult? Function()? lessThanOneHundred,
+    TResult? Function()? moreThanOneHundred,
+  }) {
+    return moreThanOneHundred?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? unknown,
+    TResult Function()? lessThanFive,
+    TResult Function()? lessThanTwentyFive,
+    TResult Function()? lessThanOneHundred,
+    TResult Function()? moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (moreThanOneHundred != null) {
+      return moreThanOneHundred();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_ProfileCompanySizeUnknown value) unknown,
+    required TResult Function(_ProfileCompanySizeLessThanFive value)
+        lessThanFive,
+    required TResult Function(_ProfileCompanySizeLessThanTwentyFive value)
+        lessThanTwentyFive,
+    required TResult Function(_ProfileCompanySizeLessThanOneHundred value)
+        lessThanOneHundred,
+    required TResult Function(_ProfileCompanySizeMoreThanOneHundred value)
+        moreThanOneHundred,
+  }) {
+    return moreThanOneHundred(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult? Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult? Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult? Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult? Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+  }) {
+    return moreThanOneHundred?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_ProfileCompanySizeUnknown value)? unknown,
+    TResult Function(_ProfileCompanySizeLessThanFive value)? lessThanFive,
+    TResult Function(_ProfileCompanySizeLessThanTwentyFive value)?
+        lessThanTwentyFive,
+    TResult Function(_ProfileCompanySizeLessThanOneHundred value)?
+        lessThanOneHundred,
+    TResult Function(_ProfileCompanySizeMoreThanOneHundred value)?
+        moreThanOneHundred,
+    required TResult orElse(),
+  }) {
+    if (moreThanOneHundred != null) {
+      return moreThanOneHundred(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _ProfileCompanySizeMoreThanOneHundred
+    implements ProfileCompanySize {
+  const factory _ProfileCompanySizeMoreThanOneHundred() =
+      _$ProfileCompanySizeMoreThanOneHundredImpl;
 }
 
 ProfileStatistics _$ProfileStatisticsFromJson(Map<String, dynamic> json) {

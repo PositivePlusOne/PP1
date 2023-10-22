@@ -116,7 +116,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
                   Text(
                     labelText,
                     style: typography.styleButtonRegular.copyWith(color: colors.black),
-                    maxLines: 2,
+                    maxLines: 5,
                   ),
                 ],
               ),

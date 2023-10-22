@@ -8,7 +8,9 @@ export interface AdminQuickActionDataJSON {
     profiles?: DocumentReference[];
     activities?: DocumentReference[];
     promotions?: DocumentReference[];
-    accountFlags?: string[];
+    directoryEntries?: DocumentReference[];
+    accountFlag?: string;
+    url?: string;
 }
 
 export class AdminQuickActionData {
@@ -16,14 +18,18 @@ export class AdminQuickActionData {
     profiles: DocumentReference[];
     activities: DocumentReference[];
     promotions: DocumentReference[];
-    accountFlags: string[];
+    directoryEntries: DocumentReference[];
+    accountFlag: string;
+    url: string;
 
     constructor(data: AdminQuickActionDataJSON) {
         this.target = data.target || '';
         this.profiles = data.profiles || [];
         this.activities = data.activities || [];
         this.promotions = data.promotions || [];
-        this.accountFlags = data.accountFlags || [];
+        this.directoryEntries = data.directoryEntries || [];
+        this.accountFlag = data.accountFlag || '';
+        this.url = data.url || '';
     }
 
     toJSON(): AdminQuickActionDataJSON {
@@ -32,7 +38,9 @@ export class AdminQuickActionData {
             profiles: this.profiles,
             activities: this.activities,
             promotions: this.promotions,
-            accountFlags: this.accountFlags,
+            directoryEntries: this.directoryEntries,
+            accountFlag: this.accountFlag,
+            url: this.url,
         };
     }
 }

@@ -3,6 +3,7 @@ export interface FlMetaJSON {
     createdDate?: string;
     ownedBy?: string;
     ownedAsOfDate?: string;
+    directoryEntryId?: string;
     docId?: string;
     fl_id?: string;
     env?: string;
@@ -20,6 +21,7 @@ export class FlMeta {
     createdDate?: string;
     ownedBy?: string;
     ownedAsOfDate?: string;
+    directoryEntryId?: string;
     docId?: string;
     fl_id?: string;
     env = '';
@@ -36,6 +38,7 @@ export class FlMeta {
         this.createdDate = json.createdDate;
         this.ownedBy = json.ownedBy;
         this.ownedAsOfDate = json.ownedAsOfDate;
+        this.directoryEntryId = json.directoryEntryId;
         this.docId = json.docId;
         this.fl_id = json.fl_id;
         this.env = json.env || '';
@@ -58,6 +61,7 @@ export class FlMeta {
             createdDate: this.createdDate,
             ownedBy: this.ownedBy,
             ownedAsOfDate: this.ownedAsOfDate,
+            directoryEntryId: this.directoryEntryId,
             docId: this.docId,
             fl_id: this.fl_id,
             env: this.env,

@@ -82,6 +82,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     joinedDataRecords.set(profileStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(feedStatisticsSchemaKey, new Set<string>());
     joinedDataRecords.set(promotionsSchemaKey, new Set<string>());
+    joinedDataRecords.set(directorySchemaKey, new Set<string>());
 
     // Stage 1: Prepare join record keys
     for (const obj of data) {
@@ -168,24 +169,30 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
+                const ownerId = obj._fl_meta_?.ownedBy || "";
+                if (sender && ownerId && !isCurrentProfile) {
+                    const flid = StringHelpers.generateDocumentNameFromGuids([sender, ownerId]);
+                    joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
+                    joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
+                }
+
+                const directoryEntry = obj._fl_meta_?.directoryEntryId || "";
+                if (directoryEntry) {
+                    joinedDataRecords.get(directorySchemaKey)?.add(directoryEntry);
+                }
+
                 const expectedStatsKey = ProfileStatisticsService.getExpectedKeyFromOptions(obj._fl_meta_?.fl_id || "");
                 joinedDataRecords.get(profileStatisticsSchemaKey)?.add(expectedStatsKey);
                 break;
             case directorySchemaKey:
-                const profile = obj.profile;
-                if (profile && profile._path && profile._path.segments.length > 1) {
-                    const data = await DataService.getDocument({
-                        schemaKey: profileSchemaKey,
-                        entryId: profile._path.segments[1],
-                    });
+                const entry = obj as DirectoryEntry;
+                const entryOwnerId = entry._fl_meta_?.ownedBy || "";
+                if (entryOwnerId) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
 
-                    const dataId = FlamelinkHelpers.getFlamelinkIdFromObject(data);
-                    if (sender && dataId) {
-                        obj.profile = data._fl_meta_!.fl_id!;
-                        joinedDataRecords.get(profileSchemaKey)?.add(data._fl_meta_!.fl_id!);
-
-                        const relationshipSchemaKey = StringHelpers.generateDocumentNameFromGuids([sender, obj.profile]);
-                        joinedDataRecords.get(relationshipSchemaKey)?.add(relationshipSchemaKey);
+                    if (sender && ownerId !== sender) {
+                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, ownerId]);
+                        joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     }
                 }
                 break;
@@ -322,12 +329,20 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, profile._fl_meta_?.fl_id || ""]);
                     const relationship = data.find((obj) => obj && obj._fl_meta_?.fl_id === flid) as RelationshipJSON;
 
-                    const relationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
-                    const isConnected = relationshipMember?.hasConnected || false;
+                    const targetRelationshipMember = relationship?.members?.find((member) => member?.memberId === profile._fl_meta_?.fl_id);
+                    const currentRelationshipMember = relationship?.members?.find((member) => member?.memberId === sender);
 
-                    profile.removeFlaggedData(isConnected);
-                    profile.removePrivateData();
-                    profile.notifyPartial();
+                    const isTargetConnected = targetRelationshipMember?.hasConnected || false;
+                    const isManager = currentRelationshipMember?.canManage || false;
+
+                    // If the account is not connected and not managed by the current user
+                    // And the account has flagged data (e.g. email, phone number, etc.)
+                    // Then we remove the flagged data from the response.
+                    if (!isManager) {
+                        profile.removeFlaggedData(isTargetConnected);
+                        profile.removePrivateData();
+                        profile.notifyPartial();
+                    }
                 }
 
                 responseData.data[profileSchemaKey].push(profile);

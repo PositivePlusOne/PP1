@@ -4,9 +4,6 @@ import 'dart:collection';
 import 'dart:io';
 
 // Package imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/services/health_api_service.dart';
 import 'package:cron/cron.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,6 +16,7 @@ import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/constants/cache_constants.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
+import 'package:app/services/health_api_service.dart';
 import '../../services/third_party.dart';
 
 part 'cache_controller.freezed.dart';
@@ -138,13 +136,13 @@ class CacheController {
 
     final bool hasRecord = record != null;
     final FlMeta newMetadata = metadata ?? FlMeta.empty(key, '');
-    final bool isDataComplete = newMetadata.isPartial;
+    final bool isDataPartial = newMetadata.isPartial;
     final int newFetchMillis = newMetadata.lastFetchMillis;
 
-    final bool isOldDataComplete = record?.metadata.isPartial ?? false;
+    final bool isOldDataPartial = record?.metadata.isPartial ?? true;
     final int oldFetchMillis = record?.metadata.lastFetchMillis ?? -1;
 
-    final bool shouldSkipOnDataIntegrity = !isDataComplete && isOldDataComplete;
+    final bool shouldSkipOnDataIntegrity = isDataPartial && !isOldDataPartial;
     if (hasRecord && shouldSkipOnDataIntegrity) {
       logger.w('Skipping cache update on $key due to new data being incomplete');
       return;

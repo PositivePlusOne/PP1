@@ -87,6 +87,7 @@ void cacheProfileData(Map<String, dynamic> data) {
       logger.d('requestNextTimelinePage() - parsing profile: $profile');
       final Profile newProfile = Profile.fromJson(profile);
       final String profileId = newProfile.flMeta?.id ?? '';
+
       if (profileId.isEmpty) {
         logger.e('requestNextTimelinePage() - Failed to cache profile: $profile');
         continue;

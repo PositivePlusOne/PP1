@@ -23,6 +23,7 @@ class PositiveGlassSheet extends ConsumerWidget {
     this.excludeBlur = false,
     this.heroTag = '',
     this.isBusy = false,
+    this.padding = const EdgeInsets.all(kPaddingSmallMedium),
     super.key,
   });
 
@@ -38,6 +39,8 @@ class PositiveGlassSheet extends ConsumerWidget {
   final String heroTag;
 
   final bool isBusy;
+
+  final EdgeInsets padding;
 
   static const double kGlassContainerOpacity = 0.25;
   static const double kGlassContainerSigmaBlur = 5.0;
@@ -55,7 +58,7 @@ class PositiveGlassSheet extends ConsumerWidget {
           child: AnimatedContainer(
             duration: kAnimationDurationRegular,
             width: double.infinity,
-            padding: const EdgeInsets.all(kPaddingSmallMedium),
+            padding: padding,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(kBorderRadiusMassive),
               color: isBusy ? colors.white : colors.colorGray3.withOpacity(PositiveGlassSheet.kGlassContainerOpacity),

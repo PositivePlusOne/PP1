@@ -20,7 +20,6 @@ _$GuidanceDirectoryEntryImpl _$$GuidanceDirectoryEntryImplFromJson(
           : PositivePlace.fromJson(json['place'] as Map<String, dynamic>),
       websiteUrl: json['websiteUrl'] as String? ?? '',
       logoUrl: json['logoUrl'] as String? ?? '',
-      profile: firestoreDocRefFromJson(json['profile']),
       services: json['services'] == null
           ? const []
           : GuidanceDirectoryEntryService.listFromJson(
@@ -37,6 +36,5 @@ Map<String, dynamic> _$$GuidanceDirectoryEntryImplToJson(
       'place': instance.place?.toJson(),
       'websiteUrl': instance.websiteUrl,
       'logoUrl': instance.logoUrl,
-      'profile': firestoreDocRefToJson(instance.profile),
       'services': GuidanceDirectoryEntryService.listToJson(instance.services),
     };

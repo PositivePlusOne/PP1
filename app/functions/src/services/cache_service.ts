@@ -97,6 +97,9 @@ export namespace CacheService {
     export async function deleteFromCache(key: string): Promise<void> {
         const redisClient = await getRedisClient();
         await (redisClient).del(key);
+
+        // TODO: Also remove from algolia (quick fix for now, should be done in a better way).
+
         functions.logger.info(`Deleted ${key} from cache.`);
     }
 

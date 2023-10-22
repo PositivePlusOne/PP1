@@ -160,6 +160,12 @@ class PositiveProfileListTile extends ConsumerWidget {
 
   Widget buildViewAction(BuildContext context) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    // If the two profiles match, we don't want to show the options button
+    if (senderProfile?.flMeta?.id == targetProfile?.flMeta?.id) {
+      return const SizedBox.shrink();
+    }
+
     return PositiveButton(
       colors: colors,
       primaryColor: colors.colorGray7,

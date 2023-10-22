@@ -27,7 +27,6 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> genders,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> interests,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> tags,
-    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> companySectors,
     @Default(false) bool placeSkipped,
     PositivePlace? place,
     @Default('') String biography,
@@ -35,10 +34,58 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> accountFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> visibilityFlags,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> featureFlags,
+    @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> companySectors,
+    @Default(ProfileCompanySize.unknown()) @JsonKey(fromJson: ProfileCompanySize.fromJson, toJson: ProfileCompanySize.toJson, name: 'companySize') ProfileCompanySize companySize,
+    @Default(0) int availablePromotionsCount,
+    @Default(0) int activePromotionsCount,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();
   factory Profile.fromJson(Map<String, Object?> json) => _$ProfileFromJson(json);
+}
+
+@freezed
+class ProfileCompanySize with _$ProfileCompanySize {
+  const factory ProfileCompanySize.unknown() = _ProfileCompanySizeUnknown;
+  const factory ProfileCompanySize.lessThanFive() = _ProfileCompanySizeLessThanFive;
+  const factory ProfileCompanySize.lessThanTwentyFive() = _ProfileCompanySizeLessThanTwentyFive;
+  const factory ProfileCompanySize.lessThanOneHundred() = _ProfileCompanySizeLessThanOneHundred;
+  const factory ProfileCompanySize.moreThanOneHundred() = _ProfileCompanySizeMoreThanOneHundred;
+
+  static String toLocale(ProfileCompanySize type) {
+    return type.when(
+      unknown: () => '',
+      lessThanFive: () => '0 - 4',
+      lessThanTwentyFive: () => '5 - 24',
+      lessThanOneHundred: () => '25 - 99',
+      moreThanOneHundred: () => '100+',
+    );
+  }
+
+  static String toJson(ProfileCompanySize type) {
+    return type.when(
+      unknown: () => '',
+      lessThanFive: () => 'lessThanFive',
+      lessThanTwentyFive: () => 'lessThanTwentyFive',
+      lessThanOneHundred: () => 'lessThanOneHundred',
+      moreThanOneHundred: () => 'moreThanOneHundred',
+    );
+  }
+
+  factory ProfileCompanySize.fromJson(String value) {
+    switch (value) {
+      case 'lessThanFive':
+        return const ProfileCompanySize.lessThanFive();
+      case 'lessThanTwentyFive':
+        return const ProfileCompanySize.lessThanTwentyFive();
+      case 'lessThanOneHundred':
+        return const ProfileCompanySize.lessThanOneHundred();
+      case 'moreThanOneHundred':
+        return const ProfileCompanySize.moreThanOneHundred();
+      default:
+        return const ProfileCompanySize.unknown();
+    }
+  }
 }
 
 @freezed

@@ -4,6 +4,9 @@
     "molecule_display_in_app_no_display": "Don’t Display In App",
     "molecule_display_in_app_always_display": "Always displayed in app",
 
+    "molecule_display_in_app_directory_display": "Display In Directory",
+    "molecule_display_in_app_directory_no_display": "Don’t Display In Directory",
+
     "page_splash_section_embrace_positivity_first_line": "Embrace",
     "page_splash_section_embrace_positivity_second_line": "Positivity",
 
@@ -159,6 +162,7 @@
     "page_profile_name_entry_description_updated_title": "All Set",
     "page_profile_name_entry_description_updated_body": "We love your new name. It's now been changed.",
     "page_profile_name_entry_input_label": "Your Name",
+    "page_profile_name_error_moderation_flagged": "This name violates our community guidelines, and cannot be used. Please enter a name that does not contain profanity or at-risk terms.",
 
     "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
 
@@ -263,6 +267,19 @@
     "page_profile_thanks_company_sectors": "Your sector has been changed",
 
     "page_profile_biography_continue": "Complete Profile",
+
+    "page_account_details_managed_name": "Company Name",
+    "page_account_details_managed_display_name": "Company Display Name",
+    "page_account_details_managed_sector": "Company Sector",
+    "page_company_details_managed_address": "Company Address",
+    "page_company_details_managed_bio": "Team Bio",
+    "page_company_details_managed_size": "Company Size",
+    "page_company_details_managed_about": "Company Explainer",
+    "page_company_details_managed_primary_user": "Primary User",
+
+    "page_company_details_managed_action_promoted": "Payment authorised for promoted content",
+    "page_company_details_managed_action_owner": "Primary User",
+    "page_company_details_managed_action_directory": "Don't Display In Directory",
     
     "page_account_actions_view_profile": "View Profile",
     "page_account_actions_edit_profile": "Edit Profile",

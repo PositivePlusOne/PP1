@@ -25,6 +25,7 @@ enum PositiveAppBarTrailType {
 class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveAppBar({
     this.title = '',
+    this.centerTitle = false,
     this.includeLogoWherePossible = true,
     this.leading,
     this.trailing = const <Widget>[],
@@ -40,6 +41,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   });
 
   final String title;
+  final bool centerTitle;
   final bool includeLogoWherePossible;
 
   final Color foregroundColor;
@@ -123,6 +125,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 child: _PositiveAppBarContent(
                   title: title,
                   titleStyle: typography.styleTitleTwo.copyWith(color: foregroundColor),
+                  centerTitle: centerTitle,
                   backgroundColor: Colors.transparent,
                   applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
                   safeAreaQueryData: safeAreaQueryData,
@@ -164,24 +167,27 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
 class _PositiveAppBarContent extends ConsumerWidget {
   const _PositiveAppBarContent({
     required this.title,
+    required this.titleStyle,
+    required this.centerTitle,
     required this.backgroundColor,
     required this.applyLeadingandTrailingPadding,
     required this.safeAreaQueryData,
     required this.foregroundColor,
     required this.leading,
     required this.trailing,
-    required this.titleStyle,
     required this.includeLogoWherePossible,
   });
 
   final String title;
+  final TextStyle titleStyle;
+  final bool centerTitle;
+
   final Color backgroundColor;
   final bool applyLeadingandTrailingPadding;
   final MediaQueryData? safeAreaQueryData;
   final Color foregroundColor;
   final Widget? leading;
   final List<Widget> trailing;
-  final TextStyle titleStyle;
   final bool includeLogoWherePossible;
 
   @override
@@ -228,7 +234,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
                   title.asHandle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
+                  textAlign: centerTitle ? TextAlign.center : TextAlign.start,
                   style: titleStyle,
                 ),
               ),

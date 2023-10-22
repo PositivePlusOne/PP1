@@ -44,6 +44,24 @@ export namespace SystemService {
   }
 
   /**
+   * Gets the bytes from a URL.
+   * @param {string} url The URL to get the bytes from.
+   * @returns {Promise<ArrayBuffer>} A promise that resolves with the bytes from the URL.
+   */
+  export async function getBytesFromUrl(url: string): Promise<ArrayBuffer> {
+    functions.logger.info(`Getting bytes from URL: ${url}`);
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new functions.https.HttpsError("not-found", `Failed to get bytes from URL: ${url}`);
+    }
+
+    const buffer = await response.arrayBuffer();
+    functions.logger.info(`Got ${buffer.byteLength} bytes from URL: ${url}`);
+
+    return buffer;
+  }
+
+  /**
    * Updates user access claims in Firebase Authentication.
    * @param {string} accessId The user access ID
    * @param {CustomUserClaims} customClaims The new claims for the user

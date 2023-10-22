@@ -4,6 +4,8 @@ import { AdminQuickActionService } from '../admin_quick_action_service';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
+import { ProfileService } from '../profile_service';
+import { DataService } from '../data_service';
 
 export namespace DemoteActivityAction {
     export async function demoteActivity(action: AdminQuickActionJSON): Promise<void> {
@@ -36,6 +38,26 @@ export namespace DemoteActivityAction {
             return Promise.resolve();
         }
 
+        const publisherId = targetActivityData.generalConfiguration.publisherId ?? '';
+        const publisherProfile = await ProfileService.getProfile(publisherId);
+
+        if (!publisherProfile || !publisherId) {
+            AdminQuickActionService.appendOutput(action, `Invalid publisher profile.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
+        const publisherAvailablePromotionCount = publisherProfile.availablePromotionsCount ?? 0;
+        const publisherActivePromotionCount = publisherProfile.activePromotionsCount ?? 0;
+
+        if (publisherActivePromotionCount == 0) {
+            AdminQuickActionService.appendOutput(action, `Publisher ${publisherId} has no active promotions.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
+        AdminQuickActionService.appendOutput(action, `Updating activity ${targetActivityId}`);
+
         targetActivityData.enrichmentConfiguration ??= {};
         targetActivityData.enrichmentConfiguration.promotionKey = "";
         await targetActivityReference?.update(targetActivityData);
@@ -43,6 +65,16 @@ export namespace DemoteActivityAction {
 
         AdminQuickActionService.appendOutput(action, `Updating feeds for activity ${targetActivityId}`);
         await ActivitiesService.updateTagFeedsForActivity(targetActivityData);
+
+        AdminQuickActionService.appendOutput(action, `Updating publisher ${publisherId} profile with ${publisherActivePromotionCount - 1} active promotions and ${publisherAvailablePromotionCount + 1} available promotions.`);
+        await DataService.updateDocument({
+            entryId: publisherId,
+            schemaKey: 'users',
+            data: {
+                activePromotionsCount: publisherActivePromotionCount - 1,
+                availablePromotionsCount: publisherAvailablePromotionCount + 1,
+            },
+        });
 
         AdminQuickActionService.updateStatus(action, 'success');
     }

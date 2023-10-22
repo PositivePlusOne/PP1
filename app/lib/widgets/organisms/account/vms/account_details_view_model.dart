@@ -11,17 +11,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import '../../../../services/third_party.dart';
 
@@ -80,6 +79,16 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       facebookUserInfo: userController.facebookProvider,
       appleUserInfo: userController.appleProvider,
     );
+  }
+
+  Future<void> onUpdateNameButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ProfileFormController profileFormController = ref.read(profileFormControllerProvider.notifier);
+
+    logger.d('onUpdateNameButtonPressed');
+    profileFormController.resetState(FormMode.edit);
+    await appRouter.push(const ProfileNameEntryRoute());
   }
 
   Future<void> onUpdateEmailAddressButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
