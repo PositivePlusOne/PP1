@@ -141,6 +141,20 @@
     "page_account_recovery_new_password_title": "Create A New Password",
     "page_account_recovery_new_password_body": "New password, new you",
 
+    "page_community_connections_empty_title": "You Have No Connections",
+    "page_community_connections_empty_body": "Get out there and connect with people across Positive+1!",
+    "page_community_followers_empty_title": "You Have No Followers",
+    "page_community_followers_empty_body": "Start sharing cntent and engaging with others to build your following on Positive+1!",
+    "page_community_following_empty_title": "You aren't Following Anyone",
+    "page_community_following_empty_body": "You haven’t followed anyone yet. Start exploring to discover great content!",
+    "page_community_blocked_empty_title": "You Haven't Blocked Anyone",
+    "page_community_blocked_empty_body": "Keep Positive+1 a save and welcoming space by blocking accounts that don't meet your standards.",
+    "page_community_managed_empty_title": "You Aren't Managed by Anyone",
+    "page_community_managed_empty_body": "Add some managers to help you run your organisation.",
+    "page_community_supported_empty_title": "You Aren't Supported by Anyone",
+    "page_community_supported_empty_body": "Get some more support in the community to help your organisation grow and thrive.",
+
+
     "page_login_password_enter": "Enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",
     "page_login_password_forgotten_body": "We have sent reset instructions to your email address!",
