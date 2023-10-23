@@ -249,6 +249,12 @@ export namespace PostEndpoints {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
     }
+    
+    const isPromotion = promotionKey && promotionKey.length > 0;
+    const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
+    if (isPromotion && availablePromotionsCount <= 0) {
+      throw new functions.https.HttpsError("invalid-argument", "No promotions available");
+    }
 
     const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
@@ -286,12 +292,6 @@ export namespace PostEndpoints {
 
     // Add a search description to the activity so that it can be found in flamelink
     activityRequest.searchDescription = ActivitiesService.generateFlamelinkDescription(activityRequest, publisherProfile);
-
-    const isPromotion = promotionKey && promotionKey.length > 0;
-    const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
-    if (isPromotion && availablePromotionsCount <= 0) {
-      throw new functions.https.HttpsError("invalid-argument", "No promotions available");
-    }
 
     const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
