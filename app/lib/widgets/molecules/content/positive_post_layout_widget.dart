@@ -101,7 +101,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   /// return if this layout is for an activity that is 'promoted'
   bool get _isPromoted =>
-
       // we are promoted when there is a promotion or there is a tag that signals that it is
       promotion != null || tags.indexWhere((tag) => TagHelpers.isPromoted(tag)) != -1;
 
@@ -182,6 +181,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required Profile? currentProfile,
     required Relationship? publisherRelationship,
   }) {
+    bool isCarousel = (postContent?.media.length ?? 0) > 1 && isShortformPost;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,21 +195,22 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         Stack(
           alignment: AlignmentDirectional.bottomEnd,
           children: [
-            if (postContent?.media.length == 1 || !isShortformPost)
+            //* -=-=-=- Single attached image -=-=-=- *\\
+            if (!isCarousel)
               Column(
                 children: [
                   ..._postListAttachedImages(),
                 ],
               ),
             //* -=-=-=- Carousel of attached images -=-=-=- *\\
-            if ((postContent?.media.length ?? 0) > 1 && isShortformPost)
+            if (isCarousel)
               LayoutBuilder(
                 builder: (context, constraints) {
                   return _postCarouselAttachedImages(context, constraints);
                 },
               ),
             //* -=-=-=- promotion banner -=-=-=- *\\
-            if (_isPromoted) _promotionBanner(),
+            if (_isPromoted) _promotionBanner(isOnCarousel: isCarousel),
           ],
         ),
         //* -=-=-=- Post Actions -=-=-=- *\\
@@ -484,13 +485,19 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _promotionBanner() {
+  Widget _promotionBanner({bool isOnCarousel = false}) {
     final String link = promotion?.link ?? '';
     final String linkText = promotion?.linkText ?? appLocalizations.post_promoted_link_label;
-
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      padding: EdgeInsets.only(
+        left: sidePadding,
+        right: sidePadding,
+        // if we are showing the carousel then there are indicators to show which image is showing
+        // so the banner has to be a little higher so the user can see these indicators
+        bottom: isOnCarousel ? kPaddingLarge : 0,
+      ),
       child: PositiveGlassSheet(
+        borderRadius: isOnCarousel ? 0 : kBorderRadiusLarge,
         children: [
           PositiveButton(
             onTapped: () {
