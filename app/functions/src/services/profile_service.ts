@@ -30,6 +30,30 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the promoted post counts for the profile.
+   * @param {ProfileJSON} profile The profile to update the promoted counts for.
+   * @param {number} offset The offset to add to the promoted counts.
+   */
+  export async function increaseAvailablePromotedCountsForProfile(profile: ProfileJSON, offset: number): Promise<void> {
+    const profileId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!profileId) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    const newAvailablePromotionsCount = (profile.availablePromotionsCount ?? 0) + offset;
+    const newActivePromotionsCount = (profile.activePromotionsCount ?? 0) - offset;
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: profileId,
+      data: {
+        availablePromotionsCount: newAvailablePromotionsCount,
+        activePromotionsCount: newActivePromotionsCount,
+      },
+    });
+  }
+
+
+  /**
    * Gets the user profile.
    * @param {string} uid The FL ID of the user.
    * @return {Promise<any>} The user profile.

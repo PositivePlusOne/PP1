@@ -67,7 +67,7 @@ export interface ProfileJSON {
     companySectors?: StringSetFromJson;
     companySize?: string;
     availablePromotionsCount?: number;
-    activePromotionCount?: number;
+    activePromotionsCount?: number;
 }
 
 export class Profile {
@@ -122,7 +122,7 @@ export class Profile {
         this.companySectors = json.companySectors || new Set();
         this.companySize = json.companySize;
         this.availablePromotionsCount = json.availablePromotionsCount || 0;
-        this.activePromotionsCount = json.activePromotionCount || 0;
+        this.activePromotionsCount = json.activePromotionsCount || 0;
     }
 
     isIncognito(): boolean {

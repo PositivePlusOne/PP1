@@ -57,7 +57,16 @@ export namespace DemoteActivityAction {
         }
 
         const tags = targetActivityData.enrichmentConfiguration?.tags ?? [];
-        const newTags = tags.filter((t: string) => t.startsWith('feed_promotion') || t.startsWith('chat_promotion') || t.startsWith('promotion'));
+        const newTags = tags.filter((t: string) => {
+            const isPromotionTag = t === 'promotion';
+            const isPublisherPromotionTag = t === `promotion_${publisherId}`;
+            const isFeedPromotionTag = t === `promotion_feed`;
+            const isPublisherFeedPromotionTag = t === `promotion_feed_${publisherId}`;
+            const isChatPromotionTag = t === `promotion_chat`;
+            const isPublisherChatPromotionTag = t === `promotion_chat_${publisherId}`;
+            
+            return !(isPromotionTag || isPublisherPromotionTag || isFeedPromotionTag || isPublisherFeedPromotionTag || isChatPromotionTag || isPublisherChatPromotionTag);
+        });
         
         targetActivityData.enrichmentConfiguration ??= {};
         targetActivityData.enrichmentConfiguration.tags = newTags;

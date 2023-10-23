@@ -127,7 +127,8 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User cannot share activity");
     }
 
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(activity.enrichmentConfiguration?.tags || []);
+    const isPromotion = (activityPromotionKey && activityPromotionKey.length > 0) || false;
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(activity.enrichmentConfiguration?.tags || [], isPromotion);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     const activityRequest = {
@@ -249,7 +250,7 @@ export namespace PostEndpoints {
       }
     }
 
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });
@@ -286,10 +287,21 @@ export namespace PostEndpoints {
     // Add a search description to the activity so that it can be found in flamelink
     activityRequest.searchDescription = ActivitiesService.generateFlamelinkDescription(activityRequest, publisherProfile);
 
+    const isPromotion = promotionKey && promotionKey.length > 0;
+    const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
+    if (isPromotion && availablePromotionsCount <= 0) {
+      throw new functions.https.HttpsError("invalid-argument", "No promotions available");
+    }
+
     const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
 
     await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", 1);
+
+    // Deduct a promotion from the profile if the activity was promoted
+    if (isPromotion) {
+      await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
+    }
     
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
@@ -317,6 +329,18 @@ export namespace PostEndpoints {
 
     if (activity.publisherInformation?.publisherId !== uid) {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
+    }
+
+    const publisherId = activity.publisherInformation?.publisherId || "";
+    const publisherProfile = await ProfileService.getProfile(publisherId) as ProfileJSON;
+    if (!publisherProfile) {
+      throw new functions.https.HttpsError("not-found", "Profile not found");
+    }
+
+    // Give the profile back a promotion if the activity was promoted
+    const isPromotion = activity.enrichmentConfiguration?.promotionKey && activity.enrichmentConfiguration?.promotionKey.length > 0;
+    if (isPromotion) {
+      await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, 1);
     }
 
     // Remove all tags and the promotion key so that the activity can correctly sync its feeds
@@ -403,7 +427,7 @@ export namespace PostEndpoints {
 
     // validate updated set of tags and replace activity tags
     // Validated tags are the new tags provided by the user, minus any restricted tags
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });

@@ -6,7 +6,6 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
 import { DataService } from '../data_service';
 import { ProfileService } from '../profile_service';
-import { ActivityJSON } from '../../dto/activities';
 
 export namespace PromoteActivityAction {
     export async function promoteActivity(action: AdminQuickActionJSON): Promise<void> {
@@ -26,8 +25,8 @@ export namespace PromoteActivityAction {
         const targetPromotionActualId = targetPromotionReference?.id ?? '';
         const promotionTypes = promotionTypesData?.promotionTypes ?? [];
 
-        let isFeedPromotion = promotionTypes.includes('feed_promotion');
-        const isChatPromotion = promotionTypes.includes('chat_promotion');
+        let isFeedPromotion = promotionTypes.includes('promotion_feed');
+        const isChatPromotion = promotionTypes.includes('promotion_chat');
 
         if (!isFeedPromotion && !isChatPromotion) {
             isFeedPromotion = true;
@@ -83,22 +82,28 @@ export namespace PromoteActivityAction {
         }
 
         AdminQuickActionService.appendOutput(action, `Updating tags for promotion types`);
-        const currentTags = [...(targetActivityData.enrichmentConfiguration?.tags ?? [])];
+        let currentTags = [...(targetActivityData.enrichmentConfiguration?.tags ?? [])];
 
-        if (isFeedPromotion && !currentTags.includes('feed_promotion')) {
-            AdminQuickActionService.appendOutput(action, `Adding feed_promotion tag`);
-            currentTags.push('feed_promotion');
+        if (isFeedPromotion) {
+            AdminQuickActionService.appendOutput(action, `Adding promotion_feed tag`);
+            currentTags.push('promotion_feed');
+            currentTags.push(`promotion_feed_${publisherId}`);
         }
 
-        if (isChatPromotion && !currentTags.includes('chat_promotion')) {
-            AdminQuickActionService.appendOutput(action, `Adding chat_promotion tag`);
-            currentTags.push('chat_promotion');
+        if (isChatPromotion) {
+            AdminQuickActionService.appendOutput(action, `Adding promotion_chat tag`);
+            currentTags.push('promotion_chat');
+            currentTags.push(`promotion_chat_${publisherId}`);
         }
 
         if (!currentTags.includes('promotion')) {
             AdminQuickActionService.appendOutput(action, `Adding promotion tag`);
             currentTags.push('promotion');
+            currentTags.push(`promotion_${publisherId}`);
         }
+
+        // Ensure tags are unique
+        currentTags = [...new Set(currentTags)];
 
         targetActivityData.enrichmentConfiguration ??= {};
         targetActivityData.enrichmentConfiguration.tags = currentTags;
