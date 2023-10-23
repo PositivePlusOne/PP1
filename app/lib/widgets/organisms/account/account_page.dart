@@ -47,13 +47,6 @@ class AccountPage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     final bool hasMultipleProfiles = viewModel.getSupportedProfiles().length > 1;
-    final Size preferedAppBarSize = Size(
-      double.infinity,
-      //? Banner Height, size of slim account selection bar + small padding around account selection bar
-      //? Account selection bar is only shown if multiple accounts are linked, and therefore only requires space for it if this is the case
-      AccountProfileBanner.kBannerHeight + (hasMultipleProfiles ? (kPaddingMedium + kPaddingSmall * 2) : kPaddingNone),
-    );
-
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
 
@@ -79,7 +72,9 @@ class AccountPage extends HookConsumerWidget {
       bannerHeight += kPaddingSmall * 3;
     }
 
+    final Size preferedAppBarSize = Size(double.infinity, bannerHeight);
     final Size screenSize = mediaQueryData.size;
+
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
 
