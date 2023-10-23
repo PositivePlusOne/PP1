@@ -159,12 +159,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
 
-          //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            _tags(typeography),
-          ],
-
           //* -=-=-=- Location -=-=-=- *\\
           if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
@@ -217,8 +211,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
         _markdownBody(context: context, ref: ref),
-        //* -=-=-=- tags -=-=-=- *\\
-        if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) _tags(typeography),
       ],
     );
   }
@@ -299,11 +291,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
   //         //* -=-=-=- Post Title -=-=-=- *\\
   //         _postTitle(),
-  //         //* -=-=-=- Tags -=-=-=- *\\
-  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
-  //           const SizedBox(height: kPaddingSmall),
-  //           _tags(),
-  //         ],
   //         //* -=-=-=- Location -=-=-=- *\\
   //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
@@ -571,29 +558,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         style: typeography.styleTitle,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  //* -=-=-=-=-=-         Tags and location information        -=-=-=-=-=- *\\
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _tags(DesignTypographyModel typography) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
-      child: Expanded(
-        child: Wrap(
-          // alignment: WrapAlignment.center,
-          spacing: kPaddingSmall,
-          children: postContent?.enrichmentConfiguration?.tags
-                  .map((e) => Text(
-                        // prefixing the tags with the # symbol
-                        '#$e',
-                        style: typography.styleSubtitleBold,
-                      ))
-                  .toList() ??
-              [],
-        ),
       ),
     );
   }

@@ -208,20 +208,26 @@ class TagsController extends _$TagsController {
   List<Tag> resolveTags(List<String> tagStrings) {
     final Logger logger = ref.read(loggerProvider);
     final List<Tag> tags = [];
-
+    // for each string (the tag key) we want to find the actual tag to show people
+    int resolvedTags = 0;
     for (final String tag in tagStrings) {
       final Tag? existingTag = state.allTags[tag];
       if (existingTag != null) {
+        // we have a tag in our state to show this, so show the full tag we have
         tags.add(existingTag);
+        ++resolvedTags;
+      } else {
+        // there isn't a tag for this, but we want to show something
+        tags.add(Tag(key: tag, fallback: tag, popularity: 1, promoted: false, localizations: []));
       }
     }
-
+    // debug that there are none in the state that match those we want to display
     if (tags.isEmpty) {
       logger.d('No tags to resolve');
       return tags;
     }
-
-    logger.d('Resolved tags: $tags');
+    // else we can debug that we did indeed resolve the tags
+    logger.d('Resolved $resolvedTags of ${tags.length} tags');
     return tags;
   }
 }
