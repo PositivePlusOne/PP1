@@ -162,7 +162,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Tags -=-=-=- *\\
           if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
-            _tags(),
+            _tags(typeography),
           ],
 
           //* -=-=-=- Location -=-=-=- *\\
@@ -218,16 +218,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
         _markdownBody(context: context, ref: ref),
         //* -=-=-=- tags -=-=-=- *\\
-        //! currently not in the design (want a bold #hashtag display of tags in the text apparently) DOUG - don't get how to do that so commenting out
-        // if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false)
-        //   // doing a row in order to center-align the list of tags
-        //   Row(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       //! pretty sure this doesn't work for a long list though as the scroll view isn't constrained in an expanded )O:
-        //       _tags(),
-        //     ],
-        //   ),
+        if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) _tags(typeography),
       ],
     );
   }
@@ -587,13 +578,22 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-         Tags and location information        -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _tags() {
+  Widget _tags(DesignTypographyModel typography) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
-      child: PositivePostHorizontalTags(
-        tags: postContent?.enrichmentConfiguration?.tags ?? [],
-        typeography: typeography,
-        colours: colours,
+      padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
+      child: Expanded(
+        child: Wrap(
+          // alignment: WrapAlignment.center,
+          spacing: kPaddingSmall,
+          children: postContent?.enrichmentConfiguration?.tags
+                  .map((e) => Text(
+                        // prefixing the tags with the # symbol
+                        '#$e',
+                        style: typography.styleSubtitleBold,
+                      ))
+                  .toList() ??
+              [],
+        ),
       ),
     );
   }
