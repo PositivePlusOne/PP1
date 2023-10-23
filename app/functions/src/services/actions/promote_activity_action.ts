@@ -6,6 +6,7 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
 import { DataService } from '../data_service';
 import { ProfileService } from '../profile_service';
+import { ActivityJSON } from '../../dto/activities';
 
 export namespace PromoteActivityAction {
     export async function promoteActivity(action: AdminQuickActionJSON): Promise<void> {
@@ -17,10 +18,21 @@ export namespace PromoteActivityAction {
 
         const targetActivity = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'targetActivity') || {};
         const targetPromotion = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'targetPromotion') || {};
+        const promotionTypesData = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'promotionTypes') || {};
+
         const targetActivityReference = (targetActivity?.activities?.length ?? 0) > 0 ? targetActivity.activities![0] : null as DocumentReference | null;
         const targetPromotionReference = (targetPromotion?.promotions?.length ?? 0) > 0 ? targetPromotion.promotions![0] : null as DocumentReference | null;
         const targetActivityActualId = targetActivityReference?.id ?? '';
         const targetPromotionActualId = targetPromotionReference?.id ?? '';
+        const promotionTypes = promotionTypesData?.promotionTypes ?? [];
+
+        let isFeedPromotion = promotionTypes.includes('feed_promotion');
+        const isChatPromotion = promotionTypes.includes('chat_promotion');
+
+        if (!isFeedPromotion && !isChatPromotion) {
+            isFeedPromotion = true;
+            AdminQuickActionService.appendOutput(action, `No promotion types specified, defaulting to feed promotion.`);
+        }
 
         if (!targetActivityActualId || !targetPromotionActualId) {
             AdminQuickActionService.appendOutput(action, `Invalid data.`);
@@ -70,12 +82,28 @@ export namespace PromoteActivityAction {
             return Promise.resolve();
         }
 
-        AdminQuickActionService.appendOutput(action, `Updating activity ${targetActivityId} with promotion ${targetPromotionId}`);
+        AdminQuickActionService.appendOutput(action, `Updating tags for promotion types`);
+        const currentTags = [...(targetActivityData.enrichmentConfiguration?.tags ?? [])];
+
+        if (isFeedPromotion && !currentTags.includes('feed_promotion')) {
+            AdminQuickActionService.appendOutput(action, `Adding feed_promotion tag`);
+            currentTags.push('feed_promotion');
+        }
+
+        if (isChatPromotion && !currentTags.includes('chat_promotion')) {
+            AdminQuickActionService.appendOutput(action, `Adding chat_promotion tag`);
+            currentTags.push('chat_promotion');
+        }
+
+        if (!currentTags.includes('promotion')) {
+            AdminQuickActionService.appendOutput(action, `Adding promotion tag`);
+            currentTags.push('promotion');
+        }
 
         targetActivityData.enrichmentConfiguration ??= {};
+        targetActivityData.enrichmentConfiguration.tags = currentTags;
         targetActivityData.enrichmentConfiguration.promotionKey = targetPromotionId;
         await targetActivityReference?.update(targetActivityData);
-        
         AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} promoted with promotion ${targetPromotionId}`);
 
         AdminQuickActionService.appendOutput(action, `Updating feeds for activity ${targetActivityId}`);

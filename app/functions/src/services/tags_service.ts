@@ -19,6 +19,8 @@ export namespace TagsService {
     new = "new",
     verified = "verified",
     promoted = "promoted",
+    chatPromotion = "chat_promotion",
+    feedPromotion = "feed_promotion",
   }
 
   /**

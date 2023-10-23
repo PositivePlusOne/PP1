@@ -56,9 +56,11 @@ export namespace DemoteActivityAction {
             return Promise.resolve();
         }
 
-        AdminQuickActionService.appendOutput(action, `Updating activity ${targetActivityId}`);
-
+        const tags = targetActivityData.enrichmentConfiguration?.tags ?? [];
+        const newTags = tags.filter((t: string) => t.startsWith('feed_promotion') || t.startsWith('chat_promotion') || t.startsWith('promotion'));
+        
         targetActivityData.enrichmentConfiguration ??= {};
+        targetActivityData.enrichmentConfiguration.tags = newTags;
         targetActivityData.enrichmentConfiguration.promotionKey = "";
         await targetActivityReference?.update(targetActivityData);
         AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} demoted.`);
