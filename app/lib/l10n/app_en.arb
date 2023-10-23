@@ -642,6 +642,7 @@
     "shared_profile_modal_action_disconnect": "Disconnect",
     "shared_profile_modal_action_message": "Message {displayName}",
     "shared_profile_modal_action_block": "Block {displayName}",
+    "shared_profile_modal_action_block_report": "Block and Report {displayName}",
     "shared_profile_modal_action_unblock": "{displayName} Blocked",
     "shared_profile_modal_action_report": "Report {displayName}",
     "shared_profile_modal_action_report_post": "Report Post",
@@ -657,6 +658,8 @@
     "shared_profile_report_modal_subtitle": "If you have seen any suspicious activity, or the person is being a negative actor, please complete a report and we will investigate.",
     "shared_profile_report_modal_tooltip": "Comment",
     "shared_profile_report_modal_action": "Report {displayName}",
+
+    "shared_profile_block_modal_body": "Blocking this user will mean they are unable to view your posts, follow, connect with, or message you. If you need to report this user you can also do this below.",
 
     "shared_profile_hide_modal_title": "Hide Posts From {displayName}",
     "shared_profile_hide_body": "You can hide posts from {displayName} from your posts feed if you are not interested in their content.",
