@@ -150,6 +150,18 @@ class TagsController extends _$TagsController {
     state = state.copyWith(recentTags: recentTags);
   }
 
+  /// create a tag as a placeholder for when we don't have the real one
+  Tag _createPlaceholderTag(String tag) => Tag(
+        key: tag,
+        fallback: tag,
+        localizations: <TagLocalization>[
+          TagLocalization(
+            locale: 'en',
+            value: tag,
+          ),
+        ],
+      );
+
 //? get Tags From Tags Controller, else return a new tag
   List<Tag> getTagsFromString(List<String> strings) {
     final List<Tag> tags = <Tag>[];
@@ -159,18 +171,7 @@ class TagsController extends _$TagsController {
       if (tag != null) {
         tags.add(tag);
       } else {
-        tags.add(
-          Tag(
-            key: string,
-            fallback: string,
-            localizations: <TagLocalization>[
-              TagLocalization(
-                locale: 'en',
-                value: string,
-              ),
-            ],
-          ),
-        );
+        tags.add(_createPlaceholderTag(string));
       }
     }
 
@@ -218,7 +219,7 @@ class TagsController extends _$TagsController {
         ++resolvedTags;
       } else {
         // there isn't a tag for this, but we want to show something
-        tags.add(Tag(key: tag, fallback: tag, popularity: 1, promoted: false, localizations: []));
+        tags.add(_createPlaceholderTag(tag));
       }
     }
     // debug that there are none in the state that match those we want to display
