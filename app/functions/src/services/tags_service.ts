@@ -264,7 +264,7 @@ export namespace TagsService {
     });
     
     returnTags = returnTags.slice(0, 4);
-    if (promotedTags.length > 1) {
+    if (isPromotion && promotedTags.length > 1) {
       returnTags = [...promotedTags, ...returnTags];
     }
     
