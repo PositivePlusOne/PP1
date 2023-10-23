@@ -131,6 +131,10 @@ class CacheController {
     FlMeta? metadata,
   }) {
     final Logger logger = providerContainer.read(loggerProvider);
+    if (value == null) {
+      logger.w('Skipping cache update on $key due to null value');
+      return;
+    }
 
     CacheRecord? record = cacheData[key];
 

@@ -64,12 +64,11 @@ class TagsController extends _$TagsController {
   }
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
-    if (event.value.runtimeType is Tag) {
+    if (event.value is Tag) {
       switch (event.eventType) {
         case CacheKeyUpdatedEventType.created:
-          state = state.copyWith(allTags: state.allTags..[event.value.key] = event.value);
-          break;
         case CacheKeyUpdatedEventType.updated:
+          state = state.copyWith(allTags: state.allTags..[event.value.key] = event.value);
           break;
         case CacheKeyUpdatedEventType.deleted:
           state = state.copyWith(allTags: state.allTags..remove(event.value.key));
@@ -77,7 +76,7 @@ class TagsController extends _$TagsController {
       }
     }
 
-    if (event.value.runtimeType is Activity) {
+    if (event.value is Activity) {
       switch (event.eventType) {
         case CacheKeyUpdatedEventType.created:
           addActivityToTagFeeds(event.value);
@@ -100,10 +99,22 @@ class TagsController extends _$TagsController {
     for (final String tag in tags) {
       final String expectedCacheKey = 'feeds:tags-$tag';
       final PositiveFeedState? feedState = cacheController.get<PositiveFeedState>(expectedCacheKey);
+
       if (feedState != null) {
         logger.d('Adding activity to tag feed $tag');
+        if (feedState.pagingController.itemList == null) {
+          continue;
+        }
+
+        final bool exists = feedState.pagingController.itemList?.any((Activity a) => a.flMeta?.id == activity.flMeta?.id) ?? false;
+        if (exists) {
+          feedState.pagingController.itemList?.removeWhere((Activity a) => a.flMeta?.id == activity.flMeta?.id);
+        }
+
         feedState.pagingController.itemList?.insert(0, activity);
       }
+
+      cacheController.add(key: expectedCacheKey, value: feedState);
     }
   }
 
@@ -116,10 +127,13 @@ class TagsController extends _$TagsController {
     for (final String tag in tags) {
       final String expectedCacheKey = 'feeds:tags-$tag';
       final PositiveFeedState? feedState = cacheController.get<PositiveFeedState>(expectedCacheKey);
+
       if (feedState != null) {
         logger.d('Removing activity from tag feed $tag');
         feedState.pagingController.itemList?.removeWhere((Activity a) => a.flMeta?.id == activity.flMeta?.id);
       }
+
+      cacheController.add(key: expectedCacheKey, value: feedState);
     }
   }
 
