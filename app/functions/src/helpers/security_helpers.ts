@@ -10,6 +10,10 @@ export namespace SecurityHelpers {
         mode: ActivitySecurityConfigurationMode,
     ): boolean {
         const publisherProfileId = activity?.publisherInformation?.publisherId || '';
+        if (userId && userId === publisherProfileId) {
+            return true;
+        }
+        
         if (!activity || !mode || !userId || !publisherProfileId) {
             return false;
         }

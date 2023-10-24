@@ -85,7 +85,7 @@ export namespace FeedService {
     const userTimelineFeed = client.feed("timeline", userId);
     
     // We add the feed promotion tag to the user's tags to ensure that the user's timeline feed is subscribed to the feed promotion feed.
-    const additionalTags = [TagsService.RestrictedTagKey.feedPromotion, ...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
+    const additionalTags = [...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
 
     try {
       // Assumption check: The users flat feed should include predefined feeds including their own user feed.

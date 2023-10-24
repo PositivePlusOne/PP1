@@ -223,6 +223,7 @@ class TagsController extends _$TagsController {
   List<Tag> resolveTags(List<String> tagStrings, {bool includePromotionTags = true}) {
     final Logger logger = ref.read(loggerProvider);
     final List<Tag> tags = [];
+
     // for each string (the tag key) we want to find the actual tag to show people
     int resolvedTags = 0;
     for (final String tag in tagStrings) {
@@ -230,6 +231,7 @@ class TagsController extends _$TagsController {
         // we don't want to show reserved (promoted) tags and this is one
         continue;
       }
+
       final Tag? existingTag = state.allTags[tag];
       if (existingTag != null) {
         // we have a tag in our state to show this, so show the full tag we have
@@ -240,11 +242,13 @@ class TagsController extends _$TagsController {
         tags.add(_createPlaceholderTag(tag));
       }
     }
+
     // debug that there are none in the state that match those we want to display
     if (tags.isEmpty) {
       logger.d('No tags to resolve');
       return tags;
     }
+
     // else we can debug that we did indeed resolve the tags
     logger.d('Resolved $resolvedTags of ${tags.length} tags');
     return tags;
