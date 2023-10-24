@@ -15,7 +15,6 @@ import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/activity_post_heading_widget.dart';
-import 'package:app/widgets/molecules/content/positive_post_actions.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../../constants/design_constants.dart';
@@ -135,18 +134,6 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       publisherRelationship: actualRelationship,
     );
 
-    final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
-    final String publisherId = widget.activity?.publisherInformation?.publisherId ?? '';
-    final bool isPublisher = currentProfileId == publisherId;
-
-    final ActivitySecurityConfigurationMode shareMode = widget.activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
-
-    final bool canActShare = shareMode.canActOnActivity(
-      activity: widget.activity,
-      currentProfile: widget.currentProfile,
-      publisherRelationship: actualRelationship,
-    );
-
     if (isRepost) {
       return Column(
         children: <Widget>[
@@ -162,24 +149,31 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               currentProfile: widget.currentProfile,
             ),
           ),
-          const SizedBox(height: kPaddingMedium),
-          PositiveActivityWidget(
-            targetFeed: widget.targetFeed,
-            activity: widget.reposterActivity,
-            activityReactionStatistics: widget.activityReactionStatistics,
-            activityPromotion: widget.activityPromotion,
-            activityReactionFeedState: widget.activityReactionFeedState,
-            targetProfile: widget.reposterProfile,
-            targetRelationship: widget.reposterRelationship,
-            currentProfile: widget.currentProfile,
-            currentProfileReactions: widget.currentProfileReactions,
-            reposterProfile: widget.reposterProfile,
-            reposterRelationship: widget.reposterRelationship,
-            reposterActivity: widget.reposterActivity,
-            index: widget.index,
-            isEnabled: widget.isEnabled,
-            isFullscreen: widget.isFullscreen,
-            isShared: false,
+          Container(
+            decoration: BoxDecoration(
+              color: colors.white,
+              borderRadius: BorderRadius.circular(kBorderRadiusMedium),
+            ),
+            margin: const EdgeInsets.all(kPaddingSmall),
+            padding: const EdgeInsets.all(kPaddingSmall),
+            child: PositiveActivityWidget(
+              targetFeed: widget.targetFeed,
+              activity: widget.reposterActivity,
+              activityReactionStatistics: widget.activityReactionStatistics,
+              activityPromotion: widget.activityPromotion,
+              activityReactionFeedState: widget.activityReactionFeedState,
+              targetProfile: widget.reposterProfile,
+              targetRelationship: widget.reposterRelationship,
+              currentProfile: widget.currentProfile,
+              currentProfileReactions: widget.currentProfileReactions,
+              reposterProfile: widget.reposterProfile,
+              reposterRelationship: widget.reposterRelationship,
+              reposterActivity: widget.reposterActivity,
+              index: widget.index,
+              isEnabled: widget.isEnabled,
+              isFullscreen: widget.isFullscreen,
+              isShared: false,
+            ),
           ),
         ],
       );
@@ -240,9 +234,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
           ] else ...<Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: kPaddingMedium,
-                vertical: kPaddingSmall,
+              padding: const EdgeInsets.only(
+                left: kPaddingMedium,
+                right: kPaddingMedium,
+                top: kPaddingSmall,
               ),
               child: Text(
                 'The author of this post has limited it\'s visibility. Why not explore some of their other content?',
