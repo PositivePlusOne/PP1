@@ -604,32 +604,26 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
     if (currentProfileId == publisherProfileId) {
-      logger.d('canActOnSecurityMode() - currentProfileId is the publisherProfileId');
       return true;
     }
 
     if (publisherProfileId.isEmpty) {
-      logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');
       return false;
     }
 
     if (this == const ActivitySecurityConfigurationMode.disabled()) {
-      logger.d('canActOnSecurityMode() - mode is disabled');
       return false;
     }
 
     if (this == const ActivitySecurityConfigurationMode.private() && currentProfileId == publisherProfileId) {
-      logger.d('canActOnSecurityMode() - mode is private and currentProfileId is not the publisherProfileId');
       return true;
     }
 
     if (this == const ActivitySecurityConfigurationMode.private()) {
-      logger.d('canActOnSecurityMode() - mode is private and currentProfileId is not the publisherProfileId');
       return false;
     }
 
     if (this == const ActivitySecurityConfigurationMode.public() || (this == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
-      logger.d('canActOnSecurityMode() - mode is public or signedIn and currentProfileId is not empty');
       return true;
     }
 
