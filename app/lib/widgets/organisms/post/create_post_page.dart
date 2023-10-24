@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'dart:io' as io;
-
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:flutter/material.dart';

@@ -93,7 +93,7 @@ extension StringExtensions on String? {
       if (differenceDuration.inDays >= 7 && differenceDuration.inDays < 14) {
         recentDate = localizations.shared_time_one_week_ago;
       }
-      if (differenceDuration.inDays > 7 && differenceDuration.inDays <= 30) {
+      if (differenceDuration.inDays > 14 && differenceDuration.inDays <= 30) {
         recentDate = localizations.shared_time_weeks_ago(differenceDuration.inDays ~/ 7);
       }
       if (differenceDuration.inDays > 30 && differenceDuration.inDays <= 60) {

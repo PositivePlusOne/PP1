@@ -112,7 +112,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ActivityGeneralConfigurationType? postType = postContent?.generalConfiguration?.type;
-    if (postType == null) {
+    if (postContent == null || postType == null) {
       return const SizedBox.shrink();
     }
 
@@ -436,20 +436,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-                Attached Video                -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
-    //TODO(S): embed clips
     final Media? media = postContent?.media.firstOrNull;
     if (media != null && media.type == MediaType.bucket_path) {
-      // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-      // final String expectedCacheKey = buildCacheKey(widget.media, widget.thumbnailTargetSize);
-      // final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
-      // final String mimeType = lookupMimeType(media!.name, headerBytes: bytes) ?? '';
-
-      return const SizedBox(
-        width: double.infinity,
-        height: 500,
-        // child: PositiveVideoPlayer(
-        //   media: media,
-        // ),
+      final Key postIdKey = Key(postContent?.flMeta?.id ?? "test");
+      return PositiveVideoPlayer(
+        media: media,
+        visibilityDetectorKey: postIdKey,
       );
     }
     return const SizedBox();
