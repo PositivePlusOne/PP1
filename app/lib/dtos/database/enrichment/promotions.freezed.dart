@@ -28,9 +28,9 @@ mixin _$Promotion {
   String get linkText => throw _privateConstructorUsedError;
   List<PromotionOwner> get owners => throw _privateConstructorUsedError;
   List<PromotedActivity> get activities => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get startTime => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get endTime => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -52,10 +52,8 @@ abstract class $PromotionCopyWith<$Res> {
       String linkText,
       List<PromotionOwner> owners,
       List<PromotedActivity> activities,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? startTime,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? endTime});
+      @JsonKey(fromJson: dateFromUnknown) String? startTime,
+      @JsonKey(fromJson: dateFromUnknown) String? endTime});
 
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -152,10 +150,8 @@ abstract class _$$PromotionImplCopyWith<$Res>
       String linkText,
       List<PromotionOwner> owners,
       List<PromotedActivity> activities,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? startTime,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? endTime});
+      @JsonKey(fromJson: dateFromUnknown) String? startTime,
+      @JsonKey(fromJson: dateFromUnknown) String? endTime});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -234,8 +230,8 @@ class _$PromotionImpl implements _Promotion {
       this.linkText = '',
       final List<PromotionOwner> owners = const [],
       final List<PromotedActivity> activities = const [],
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.startTime,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) this.endTime})
+      @JsonKey(fromJson: dateFromUnknown) this.startTime,
+      @JsonKey(fromJson: dateFromUnknown) this.endTime})
       : _owners = owners,
         _activities = activities;
 
@@ -276,10 +272,10 @@ class _$PromotionImpl implements _Promotion {
   }
 
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   final String? startTime;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   final String? endTime;
 
   @override
@@ -337,17 +333,16 @@ class _$PromotionImpl implements _Promotion {
 
 abstract class _Promotion implements Promotion {
   const factory _Promotion(
-      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      final String title,
-      final String descriptionMarkdown,
-      final String link,
-      final String linkText,
-      final List<PromotionOwner> owners,
-      final List<PromotedActivity> activities,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      final String? startTime,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      final String? endTime}) = _$PromotionImpl;
+          {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          final String title,
+          final String descriptionMarkdown,
+          final String link,
+          final String linkText,
+          final List<PromotionOwner> owners,
+          final List<PromotedActivity> activities,
+          @JsonKey(fromJson: dateFromUnknown) final String? startTime,
+          @JsonKey(fromJson: dateFromUnknown) final String? endTime}) =
+      _$PromotionImpl;
 
   factory _Promotion.fromJson(Map<String, dynamic> json) =
       _$PromotionImpl.fromJson;
@@ -368,10 +363,10 @@ abstract class _Promotion implements Promotion {
   @override
   List<PromotedActivity> get activities;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get startTime;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get endTime;
   @override
   @JsonKey(ignore: true)

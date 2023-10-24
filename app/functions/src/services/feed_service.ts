@@ -220,7 +220,7 @@ export namespace FeedService {
       verb: ActivityActionVerb.Share,
       object: activityId,
       foreign_id: activityId,
-      time: createTime ?? new Date().toISOString(),
+      time: createTime ?? StreamHelpers.getCurrentTimestamp(),
     };
     
     return senderUserFeed.addActivity(getStreamActivity);
