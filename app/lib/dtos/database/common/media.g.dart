@@ -11,6 +11,8 @@ _$MediaImpl _$$MediaImplFromJson(Map<String, dynamic> json) => _$MediaImpl(
       bucketPath: json['bucketPath'] as String? ?? '',
       url: json['url'] as String? ?? '',
       altText: json['altText'] as String? ?? '',
+      width: json['width'] as int? ?? -1,
+      height: json['height'] as int? ?? -1,
       thumbnails: (json['thumbnails'] as List<dynamic>?)
               ?.map((e) => MediaThumbnail.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -28,6 +30,8 @@ Map<String, dynamic> _$$MediaImplToJson(_$MediaImpl instance) =>
       'bucketPath': instance.bucketPath,
       'url': instance.url,
       'altText': instance.altText,
+      'width': instance.width,
+      'height': instance.height,
       'thumbnails': instance.thumbnails.map((e) => e.toJson()).toList(),
       'type': _$MediaTypeEnumMap[instance.type]!,
       'priority': instance.priority,

@@ -6,6 +6,7 @@ import 'dart:typed_data';
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
@@ -21,6 +22,7 @@ import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:video_player/video_player.dart';
 
 part 'gallery_controller.freezed.dart';
 part 'gallery_controller.g.dart';
@@ -201,7 +203,11 @@ class GalleryController extends _$GalleryController {
     return galleryEntriesMap.values.toList();
   }
 
-  Future<GalleryEntry> createGalleryEntryFromXFile(XFile file, {bool uploadImmediately = true, bool store = true}) async {
+  Future<GalleryEntry> createGalleryEntryFromXFile(
+    XFile file, {
+    bool uploadImmediately = true,
+    bool store = true,
+  }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
@@ -211,8 +217,8 @@ class GalleryController extends _$GalleryController {
       throw Exception('No profile selected');
     }
 
-    final Uint8List imageBytes = await file.readAsBytes();
-    final String mimeType = lookupMimeType(file.path, headerBytes: imageBytes) ?? 'application/octet-stream';
+    final Uint8List bytes = await file.readAsBytes();
+    final String mimeType = lookupMimeType(file.path, headerBytes: bytes) ?? 'application/octet-stream';
     final String mimeExtension = extensionFromMime(mimeType);
 
     // Filename is the date with a random amount of time added to it
@@ -224,18 +230,21 @@ class GalleryController extends _$GalleryController {
 
     UploadTask? uploadTask;
     if (uploadImmediately) {
-      uploadTask = child.putData(imageBytes, SettableMetadata(contentType: file.mimeType));
+      uploadTask = child.putData(bytes, SettableMetadata(contentType: file.mimeType));
     }
 
     final Directory userStorageDirectory = await getUserStorageDirectory();
     final File localFile = File('${userStorageDirectory.path}/$fileName');
-    await localFile.writeAsBytes(imageBytes);
+    await localFile.writeAsBytes(bytes);
 
+    final Size size = getMediaSizeFromFile(localFile, mimeType);
     final GalleryEntry galleryEntry = GalleryEntry(
       reference: uploadImmediately ? child : null,
       mimeType: mimeType,
       file: XFile(localFile.path),
-      data: imageBytes,
+      data: bytes,
+      height: size.height.floor(),
+      width: size.width.floor(),
       storageUploadTask: uploadTask,
     );
 
@@ -247,6 +256,22 @@ class GalleryController extends _$GalleryController {
     state = state.copyWith(galleryEntries: [...state.galleryEntries, galleryEntry]);
 
     return galleryEntry;
+  }
+
+  Size getMediaSizeFromFile(File file, String mimeType) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.i('[Gallery Controller] - Getting media size from file');
+
+    if (mimeType.startsWith('image')) {
+      final Image image = Image.file(file);
+      return Size(image.width ?? -1, image.height ?? -1);
+    } else if (mimeType.startsWith('video')) {
+      final VideoPlayerController video = VideoPlayerController.file(file);
+      // This will break, ty stu
+      return Size(video.value.size.width, video.value.size.height);
+    }
+
+    return Size.zero;
   }
 
   void registerEventListenersForUpload(GalleryEntry entry) {

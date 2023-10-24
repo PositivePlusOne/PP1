@@ -501,9 +501,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
+    // final XFile xFile = XFile.fromData(await file.readAsBytes());
+    final XFile xFile = XFile(file.path);
     final List<GalleryEntry> entries = [];
+
     if (file.path.isNotEmpty) {
-      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(XFile.fromData(await file.readAsBytes()), uploadImmediately: false);
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(xFile, uploadImmediately: false);
+
       entries.add(entry);
     }
 
@@ -531,6 +535,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final List<GalleryEntry> entries = [];
     if (file.path.isNotEmpty) {
       final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(file, uploadImmediately: false);
+
       entries.add(entry);
     }
 
@@ -568,11 +573,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       final List<GalleryEntry> entries = await Future.wait(
         images.map(
-          (XFile image) => galleryController.createGalleryEntryFromXFile(
-            image,
-            uploadImmediately: false,
-            store: state.allowSharing,
-          ),
+          (XFile image) => galleryController.createGalleryEntryFromXFile(image, uploadImmediately: false, store: state.allowSharing),
         ),
       );
 

@@ -21,6 +21,8 @@ class GalleryEntry {
     this.reference,
     this.file,
     this.mimeType,
+    this.width,
+    this.height,
     this.data,
     this.saveToGallery = false,
     this.storageDownloadTask,
@@ -29,9 +31,15 @@ class GalleryEntry {
 
   Reference? reference;
   XFile? file;
+
   String? mimeType;
+  int? width;
+  int? height;
+
   Uint8List? data;
+
   bool saveToGallery;
+
   DownloadTask? storageDownloadTask;
   UploadTask? storageUploadTask;
 
@@ -59,6 +67,8 @@ class GalleryEntry {
     return Media(
       name: fileName,
       altText: altText,
+      height: height ?? -1,
+      width: width ?? -1,
       priority: kMediaPriorityDefault,
       bucketPath: reference!.fullPath,
       type: MediaType.fromMimeType('', storedInBucket: true),
