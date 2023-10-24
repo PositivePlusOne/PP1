@@ -37,9 +37,9 @@ export namespace AdminQuickActionService {
 
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
         try {
-            functions.logger.debug(`Processing quick action: ${JSON.stringify(action)}`);
+            functions.logger.debug(`Processing quick action`, action);
             if (!action.action) {
-                appendOutput(action, `No action specified.`);
+                appendOutput(action, 'No action specified.');
                 updateStatus(action, 'error');
                 return;
             }
@@ -47,6 +47,8 @@ export namespace AdminQuickActionService {
             appendOutput(action, `Processing action: ${action.action}`);
             updateStatus(action, 'processing');
             await saveQuickAction(action);
+
+            AdminQuickActionService.appendOutput(action, `Processing action ${action.action}`);
 
             // Using dynamic function calls instead of the switch.
             const actionFunction = getActionFunction(action.action);

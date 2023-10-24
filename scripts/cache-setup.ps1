@@ -5,14 +5,14 @@ gcloud services enable vpcaccess.googleapis.com
 gcloud services enable secretmanager.googleapis.com
 
 # set these to your specific environment
-$env:PROJECT_ID="positiveplusone-production"
+$env:PROJECT_ID="positiveplusone-develop"
 $env:REDIS_INSTANCE="redis-firestore-cache"
-$env:REDIS_VERSION="redis_4_0"
-$env:GCP_REGION="us-central1"
+$env:REDIS_VERSION="redis_6_0"
+$env:GCP_REGION="europe-west3"
 $env:GCP_NETWORK="default"
 $env:VPC_CONNECTOR="redis-vpc-conn"
 $env:VPC_RANGE="10.8.0.0/28"
-$env:STORAGE_ROLE="storageRoleStaging"
+$env:STORAGE_ROLE="storageRole"
 
 # fetch the project number to use in IAM bindings
 $env:PROJECT_NUM=$(gcloud projects describe $env:PROJECT_ID --format="value(projectNumber)")

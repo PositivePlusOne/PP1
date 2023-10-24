@@ -6,6 +6,9 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
 import { DataService } from '../data_service';
 import { ProfileService } from '../profile_service';
+import { ActivityJSON } from '../../dto/activities';
+import { PromotionJSON } from '../../dto/promotions';
+import { ProfileJSON } from '../../dto/profile';
 
 export namespace PromoteActivityAction {
     export async function promoteActivity(action: AdminQuickActionJSON): Promise<void> {
@@ -17,10 +20,21 @@ export namespace PromoteActivityAction {
 
         const targetActivity = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'targetActivity') || {};
         const targetPromotion = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'targetPromotion') || {};
+        const promotionTypesData = action.data?.find((d: AdminQuickActionDataJSON) => d.target === 'promotionTypes') || {};
+
         const targetActivityReference = (targetActivity?.activities?.length ?? 0) > 0 ? targetActivity.activities![0] : null as DocumentReference | null;
         const targetPromotionReference = (targetPromotion?.promotions?.length ?? 0) > 0 ? targetPromotion.promotions![0] : null as DocumentReference | null;
         const targetActivityActualId = targetActivityReference?.id ?? '';
         const targetPromotionActualId = targetPromotionReference?.id ?? '';
+        const promotionTypes = promotionTypesData?.promotionTypes ?? [];
+
+        let isFeedPromotion = promotionTypes.includes('promotion_feed');
+        const isChatPromotion = promotionTypes.includes('promotion_chat');
+
+        if (!isFeedPromotion && !isChatPromotion) {
+            isFeedPromotion = true;
+            AdminQuickActionService.appendOutput(action, `No promotion types specified, defaulting to feed promotion.`);
+        }
 
         if (!targetActivityActualId || !targetPromotionActualId) {
             AdminQuickActionService.appendOutput(action, `Invalid data.`);
@@ -33,8 +47,10 @@ export namespace PromoteActivityAction {
             targetPromotion.promotions![0].get(),
         ]);
 
-        const targetActivityData = targetActivitySnapshot.data();
-        const targetPromotionData = targetPromotionSnapshot.data();
+        AdminQuickActionService.appendOutput(action, `Promoting activity ${targetActivityActualId} with promotion ${targetPromotionActualId}`);
+
+        const targetActivityData = targetActivitySnapshot.data() as ActivityJSON;
+        const targetPromotionData = targetPromotionSnapshot.data() as PromotionJSON;
         const targetActivityId = FlamelinkHelpers.getFlamelinkIdFromObject(targetActivityData);
         const targetPromotionId = FlamelinkHelpers.getFlamelinkIdFromObject(targetPromotionData);
 
@@ -44,9 +60,16 @@ export namespace PromoteActivityAction {
             return Promise.resolve();
         }
 
+        const currentPromotionKey = targetActivityData.enrichmentConfiguration?.promotionKey ?? '';
+        if (currentPromotionKey) {
+            AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} already has a promotion key.`);
+            AdminQuickActionService.updateStatus(action, 'error');
+            return Promise.resolve();
+        }
+
         targetActivityData.generalConfiguration ??= {};
-        const publisherId = targetActivityData.generalConfiguration.publisherId ?? '';
-        const publisherProfile = await ProfileService.getProfile(publisherId);
+        const publisherId = targetActivityData.publisherInformation?.publisherId ?? '';
+        const publisherProfile = await ProfileService.getProfile(publisherId) as ProfileJSON;
 
         if (!publisherProfile || !publisherId) {
             AdminQuickActionService.appendOutput(action, `Invalid publisher profile.`);
@@ -70,27 +93,64 @@ export namespace PromoteActivityAction {
             return Promise.resolve();
         }
 
-        AdminQuickActionService.appendOutput(action, `Updating activity ${targetActivityId} with promotion ${targetPromotionId}`);
+        AdminQuickActionService.appendOutput(action, `Updating tags for promotion types`);
+        let currentTags = [...(targetActivityData.enrichmentConfiguration?.tags ?? [])];
+
+        if (isFeedPromotion) {
+            AdminQuickActionService.appendOutput(action, `Adding promotion_feed tag`);
+            currentTags.push('promotion_feed');
+            currentTags.push(`promotion_feed_${publisherId}`);
+        }
+
+        if (isChatPromotion) {
+            AdminQuickActionService.appendOutput(action, `Adding promotion_chat tag`);
+            currentTags.push('promotion_chat');
+            currentTags.push(`promotion_chat_${publisherId}`);
+        }
+
+        if (!currentTags.includes('promotion')) {
+            AdminQuickActionService.appendOutput(action, `Adding promotion tag`);
+            currentTags.push('promotion');
+            currentTags.push(`promotion_${publisherId}`);
+        }
+
+        // Ensure tags are unique
+        currentTags = [...new Set(currentTags)];
 
         targetActivityData.enrichmentConfiguration ??= {};
+        targetActivityData.enrichmentConfiguration.tags = currentTags;
         targetActivityData.enrichmentConfiguration.promotionKey = targetPromotionId;
-        await targetActivityReference?.update(targetActivityData);
-        
+
+        await targetActivityReference?.update({
+            enrichmentConfiguration: targetActivityData.enrichmentConfiguration,
+        });
         AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} promoted with promotion ${targetPromotionId}`);
 
-        AdminQuickActionService.appendOutput(action, `Updating feeds for activity ${targetActivityId}`);
         await ActivitiesService.updateTagFeedsForActivity(targetActivityData);
+        AdminQuickActionService.appendOutput(action, `Updated feeds for activity ${targetActivityId}`);
+
+        let newAvailablePromotionsCount = publisherAvailablePromotionCount - 1;
+        let newActivePromotionsCount = publisherActivePromotionCount + 1;
+
+        // Clamp values
+        if (newAvailablePromotionsCount < 0) {
+            newAvailablePromotionsCount = 0;
+        }
+
+        if (newActivePromotionsCount < 0) {
+            newActivePromotionsCount = 0;
+        }
         
-        AdminQuickActionService.appendOutput(action, `Updating publisher ${publisherId} with new promotion counts.`);
         await DataService.updateDocument({
             entryId: publisherId,
             schemaKey: 'users',
             data: {
-                availablePromotionsCount: publisherProfile.availablePromotionsCount - 1,
-                activePromotionsCount: publisherProfile.activePromotionsCount + 1,
+                availablePromotionsCount: newAvailablePromotionsCount,
+                activePromotionsCount: newActivePromotionsCount,
             },
         });
-
+        
+        AdminQuickActionService.appendOutput(action, `Updated publisher ${publisherId} with new promotion counts.`);
         AdminQuickActionService.updateStatus(action, 'success');
     }
 }

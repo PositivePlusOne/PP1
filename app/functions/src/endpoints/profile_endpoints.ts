@@ -10,7 +10,7 @@ import { ProfileJSON } from "../dto/profile";
 import { DataService } from "../services/data_service";
 
 export namespace ProfileEndpoints {
-  export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getProfiles = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profiles", { structuredData: true });
     const uid = request.sender || context.auth?.uid || "";
 
@@ -44,7 +44,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getProfile = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profile", { structuredData: true });
 
     const uid = request.sender || context.auth?.uid || "";
@@ -64,7 +64,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const deleteProfile = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Deleting user profile", { structuredData: true });
 
@@ -74,7 +74,7 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const updateFcmToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateFcmToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const fcmToken = request.data.fcmToken || "";
 
@@ -99,7 +99,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateEmailAddress = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const emailAddress = request.data.emailAddress || "";
 
@@ -124,7 +124,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updatePhoneNumber = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const phoneNumber = request.data.phoneNumber || "";
@@ -149,7 +149,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const name = request.data.name || "";
@@ -185,7 +185,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateDisplayName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const displayName = request.data.displayName || "";
     functions.logger.info("Updating profile display name", {
@@ -213,7 +213,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateBirthday = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateBirthday = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const birthday = request.data.birthday || "";
@@ -241,7 +241,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateInterests = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const interests = request.data.interests || [];
@@ -268,7 +268,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateGenders = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const genders = request.data.genders || [];
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -295,7 +295,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateCompanySectors = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     //TODO! @Ryan - need to check your new auth for users who are allowed to edit company data
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const companySectors = request.data.companySectors || [];
@@ -323,7 +323,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updatePlace = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const description = request.data?.description || "";
@@ -352,7 +352,7 @@ export namespace ProfileEndpoints {
     });
   });
   
-  export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateHivStatus = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const status = request.data.status;
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -379,7 +379,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateBiography = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateBiography = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const biography = request.data.biography || "";
 
@@ -397,7 +397,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateAccentColor = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateAccentColor = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const accentColor = request.data.accentColor || "";
 
@@ -422,7 +422,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateFeatureFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateFeatureFlags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const featureFlags = request.data.featureFlags || [];
     functions.logger.info("Updating profile feature flags", {
@@ -446,7 +446,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const updateVisibilityFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateVisibilityFlags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const visibilityFlags = request.data.visibilityFlags || [];
     functions.logger.info("Updating profile visibility flags", {
@@ -470,7 +470,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const addMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const addMedia = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const media = (request.data.media || []) as MediaJSON[];
 
@@ -490,7 +490,7 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const removeMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const removeMedia = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const mediaId = request.data.mediaId || "";

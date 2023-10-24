@@ -12,7 +12,7 @@ gcloud services enable secretmanager.googleapis.com
 export PROJECT_ID=positiveplusone-develop
 export REDIS_INSTANCE=redis-firestore-cache
 export REDIS_VERSION="redis_4_0"
-export GCP_REGION=us-central1
+export GCP_REGION=europe-west3
 export GCP_NETWORK=default
 export VPC_CONNECTOR=redis-vpc-conn
 export VPC_RANGE="10.8.0.0/28"

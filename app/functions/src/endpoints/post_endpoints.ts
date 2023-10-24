@@ -25,7 +25,7 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 
 export namespace PostEndpoints {
-    export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
 
         const targetUserId = request.data.targetUserId || "";
@@ -74,7 +74,7 @@ export namespace PostEndpoints {
         });
       });
       
-  export const getActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const entry = request.data.entry || "";
     if (!entry) {
       throw new functions.https.HttpsError("invalid-argument", "Missing entry");
@@ -93,7 +93,7 @@ export namespace PostEndpoints {
   });
 
 
-  export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const shareActivityToFeed = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
 
@@ -127,7 +127,8 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("permission-denied", "User cannot share activity");
     }
 
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(activity.enrichmentConfiguration?.tags || []);
+    const isPromotion = (activityPromotionKey && activityPromotionKey.length > 0) || false;
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(activity.enrichmentConfiguration?.tags || [], isPromotion);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     const activityRequest = {
@@ -165,7 +166,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const shareActivityToConversations = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const shareActivityToConversations = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Sharing activity`, { request });
     
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -209,7 +210,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const postActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Posting activity`, { request });
 
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -248,8 +249,14 @@ export namespace PostEndpoints {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
     }
+    
+    const isPromotion = promotionKey && promotionKey.length > 0;
+    const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
+    if (isPromotion && availablePromotionsCount <= 0) {
+      throw new functions.https.HttpsError("invalid-argument", "No promotions available");
+    }
 
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });
@@ -290,6 +297,11 @@ export namespace PostEndpoints {
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
 
     await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", 1);
+
+    // Deduct a promotion from the profile if the activity was promoted
+    if (isPromotion) {
+      await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
+    }
     
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
@@ -298,7 +310,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const deleteActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
 
@@ -317,6 +329,18 @@ export namespace PostEndpoints {
 
     if (activity.publisherInformation?.publisherId !== uid) {
       throw new functions.https.HttpsError("permission-denied", "User does not own activity");
+    }
+
+    const publisherId = activity.publisherInformation?.publisherId || "";
+    const publisherProfile = await ProfileService.getProfile(publisherId) as ProfileJSON;
+    if (!publisherProfile) {
+      throw new functions.https.HttpsError("not-found", "Profile not found");
+    }
+
+    // Give the profile back a promotion if the activity was promoted
+    const isPromotion = activity.enrichmentConfiguration?.promotionKey && activity.enrichmentConfiguration?.promotionKey.length > 0;
+    if (isPromotion) {
+      await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, 1);
     }
 
     // Remove all tags and the promotion key so that the activity can correctly sync its feeds
@@ -348,7 +372,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const updateActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Updating activity`, { request });
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
@@ -403,7 +427,7 @@ export namespace PostEndpoints {
 
     // validate updated set of tags and replace activity tags
     // Validated tags are the new tags provided by the user, minus any restricted tags
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags);
+    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });

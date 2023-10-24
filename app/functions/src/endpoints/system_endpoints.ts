@@ -22,6 +22,7 @@ import { Pagination } from "../helpers/pagination";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
+    .region('europe-west3')
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256)
     .firestore.document("fl_content/{documentId}")
     .onWrite(async (change, context) => {
@@ -54,7 +55,7 @@ export namespace SystemEndpoints {
       await DataHandlerRegistry.executeChangeHandlers(changeType, schema, context.params.documentId, beforeData, afterData);
     });
 
-  export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getSystemConfiguration = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
 
@@ -153,7 +154,7 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const submitFeedback = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const submitFeedback = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await UserService.verifyAuthenticated(context, request.sender);
 
     const uid = context.auth?.uid || "";
@@ -169,7 +170,7 @@ export namespace SystemEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const getStreamToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getStreamToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Getting chat token", { uid });
 
@@ -191,7 +192,7 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  export const clearEntireCache = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
     functions.logger.info("Clearing entire cache");
@@ -201,7 +202,7 @@ export namespace SystemEndpoints {
   });
 
   // This is a dangerous endpoint and should only be used in development.
-  // export const clearGetStreamContentFromSystem = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
+  // export const clearGetStreamContentFromSystem = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
   //   const firestore = adminApp.firestore();
   //   const storage = adminApp.storage();
 

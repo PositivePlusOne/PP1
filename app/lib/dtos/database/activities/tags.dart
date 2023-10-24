@@ -81,7 +81,7 @@ class TagTopic with _$TagTopic {
 }
 
 class TagHelpers {
-  static const String _kPromotedKey = 'promoted';
+  static const String _kPromotedKey = 'promotion';
   static const String _kFallbackKey = 'fallback';
   static const String _kKeyKey = 'key';
   // helper to create the tags that should be appended when an activity is promoted

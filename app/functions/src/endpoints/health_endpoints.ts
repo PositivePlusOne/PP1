@@ -12,7 +12,7 @@ import { CacheService } from "../services/cache_service";
 export namespace HealthEndpoints {
     export const MAXIMUM_UPDATE_REQUESTS = 100;
 
-    export const sendTestNotification = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+    export const sendTestNotification = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
         await UserService.verifyAuthenticated(context);
 
         // Get the users profile
@@ -39,7 +39,7 @@ export namespace HealthEndpoints {
         await NotificationsService.postNotificationPayloadToUserFeed(uid, preparedNotification);
     });
 
-    export const updateLocalCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const updateLocalCache = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         functions.logger.info("Updating local cache", { request, context });
 
         const data = request.data = request.data || {};

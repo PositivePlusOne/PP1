@@ -43,6 +43,10 @@ extension ActivityExt on Activity {
     return hasPublisher && (hasBodyContent || hasImageMedia);
   }
 
+  bool get isPromotion => enrichmentConfiguration?.promotionKey.isNotEmpty == true && enrichmentConfiguration?.tags.contains('promotion') == true;
+  bool get isChatPromotion => isPromotion && enrichmentConfiguration?.tags.contains('promotion_chat') == true;
+  bool get isFeedPromotion => isPromotion && enrichmentConfiguration?.tags.contains('promotion_feed') == true;
+
   String get shortDescription {
     return generalConfiguration?.content.isNotEmpty == true ? generalConfiguration!.content : '';
   }

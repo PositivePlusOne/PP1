@@ -11,7 +11,7 @@ import { CommentHelpers } from "../helpers/comment_helpers";
 import { RelationshipService } from "../services/relationship_service";
 
 export namespace ReactionEndpoints {
-    export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const postReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
@@ -74,7 +74,7 @@ export namespace ReactionEndpoints {
         });
     });
 
-    export const updateReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const updateReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const reactionId = request.data.reactionId;
         const text = request.data.text || "";
@@ -106,7 +106,7 @@ export namespace ReactionEndpoints {
     });
 
     // Delete Reaction
-    export const deleteReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const deleteReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const reactionId = request.data.reactionId;
 
@@ -135,7 +135,7 @@ export namespace ReactionEndpoints {
         });
     });
 
-    export const listReactionsForActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const listReactionsForActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;

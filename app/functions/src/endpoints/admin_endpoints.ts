@@ -4,7 +4,7 @@ import { SlackService } from '../services/slack_service';
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from '../constants/domain';
 
 export namespace AdminEndpoints {
-    export const performAdminAction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onRequest(async (request, response) => {
+    export const performAdminAction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onRequest(async (request, response) => {
         functions.logger.info("Performing admin action", { request });
         await SlackService.verifySigningSecret(request);
 

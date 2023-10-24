@@ -7,7 +7,7 @@ import { MediaThumbnailJSON } from '../dto/media';
 import { DataService } from '../services/data_service';
 
 export namespace StorageEndpoints {
-    export const buildThumbnailEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE).storage.object().onFinalize(async (event) => {
+    export const buildThumbnailEntries = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_ONE_INSTANCE).storage.object().onFinalize(async (event) => {
         functions.logger.info('Checking if thumbnails need to be created');
         const absolutePathParts = event.name?.split('/') || [];
 
