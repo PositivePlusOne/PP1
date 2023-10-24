@@ -274,6 +274,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
     final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
+    final Activity? repostedActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId ?? '');
 
     final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
@@ -311,6 +312,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       targetRelationship: relationship,
       reposterProfile: reposterProfile,
       reposterRelationship: reposterRelationship,
+      reposterActivity: repostedActivity,
       targetFeed: feed,
       index: index,
     );

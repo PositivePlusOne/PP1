@@ -35,6 +35,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
     required this.currentProfileReactions,
     required this.reposterProfile,
     required this.reposterRelationship,
+    required this.reposterActivity,
     this.index = -1,
     this.isEnabled = true,
     this.isFullscreen = false,
@@ -57,6 +58,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 
   final Profile? reposterProfile;
   final Relationship? reposterRelationship;
+  final Activity? reposterActivity;
 
   final int index;
 
@@ -160,42 +162,24 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               currentProfile: widget.currentProfile,
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
-            margin: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall, vertical: kPaddingSmall),
-            decoration: BoxDecoration(
-              color: colors.white,
-              borderRadius: BorderRadius.circular(kBorderRadiusSmall),
-            ),
-            child: PositiveActivityWidget(
-              activity: widget.activity,
-              activityReactionStatistics: widget.activityReactionStatistics,
-              activityPromotion: widget.activityPromotion,
-              activityReactionFeedState: widget.activityReactionFeedState,
-              targetProfile: widget.targetProfile,
-              targetRelationship: widget.targetRelationship,
-              currentProfile: widget.currentProfile,
-              currentProfileReactions: widget.currentProfileReactions,
-              reposterProfile: null,
-              reposterRelationship: null,
-              index: widget.index,
-              isEnabled: widget.isEnabled,
-              isFullscreen: widget.isFullscreen,
-              targetFeed: widget.targetFeed,
-              isShared: true,
-            ),
-          ),
-          PositivePostActions(
-            isLiked: isLiked,
-            likes: totalLikes,
-            likesEnabled: !isPublisher,
-            onLike: (context) => _onInternalLikeRequested(context),
-            shareEnabled: canActShare,
-            onShare: (_) {},
-            comments: totalComments,
-            onComment: (_) {},
-            bookmarked: isBookmarked,
-            onBookmark: (context) => _onInternalBookmarkRequested(context),
+          const SizedBox(height: kPaddingMedium),
+          PositiveActivityWidget(
+            targetFeed: widget.targetFeed,
+            activity: widget.reposterActivity,
+            activityReactionStatistics: widget.activityReactionStatistics,
+            activityPromotion: widget.activityPromotion,
+            activityReactionFeedState: widget.activityReactionFeedState,
+            targetProfile: widget.reposterProfile,
+            targetRelationship: widget.reposterRelationship,
+            currentProfile: widget.currentProfile,
+            currentProfileReactions: widget.currentProfileReactions,
+            reposterProfile: widget.reposterProfile,
+            reposterRelationship: widget.reposterRelationship,
+            reposterActivity: widget.reposterActivity,
+            index: widget.index,
+            isEnabled: widget.isEnabled,
+            isFullscreen: widget.isFullscreen,
+            isShared: false,
           ),
         ],
       );
@@ -206,6 +190,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       child: Column(
         children: <Widget>[
           PositiveTapBehaviour(
+            onTap: (_) => widget.activity?.requestPostRoute(
+              context: context,
+              currentProfile: widget.currentProfile,
+            ),
             child: ActivityPostHeadingWidget(
               flMetaData: widget.activity?.flMeta,
               publisher: widget.targetProfile,
