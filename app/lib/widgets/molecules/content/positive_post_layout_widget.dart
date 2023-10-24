@@ -596,7 +596,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     }
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? []);
+    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
 
     return PositiveTapBehaviour(
       onTap: onPostPageRequested,

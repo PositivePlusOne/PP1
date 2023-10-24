@@ -220,12 +220,16 @@ class TagsController extends _$TagsController {
     }
   }
 
-  List<Tag> resolveTags(List<String> tagStrings) {
+  List<Tag> resolveTags(List<String> tagStrings, {bool includePromotionTags = true}) {
     final Logger logger = ref.read(loggerProvider);
     final List<Tag> tags = [];
     // for each string (the tag key) we want to find the actual tag to show people
     int resolvedTags = 0;
     for (final String tag in tagStrings) {
+      if (!includePromotionTags && TagHelpers.isPromoted(tag)) {
+        // we don't want to show reserved (promoted) tags and this is one
+        continue;
+      }
       final Tag? existingTag = state.allTags[tag];
       if (existingTag != null) {
         // we have a tag in our state to show this, so show the full tag we have
