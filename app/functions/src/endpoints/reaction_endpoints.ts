@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
+import * as functions_v2 from "firebase-functions/v2";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { UserService } from "../services/user_service";
 import { ActivitiesService } from "../services/activities_service";
@@ -11,8 +11,9 @@ import { CommentHelpers } from "../helpers/comment_helpers";
 import { RelationshipService } from "../services/relationship_service";
 
 export namespace ReactionEndpoints {
-    export const postReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+    export const postReaction = functions_v2.https.onCall(async (payload) => {
+        const request = payload.data as EndpointRequest;
+        const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const text = request.data.text || "";
@@ -68,14 +69,15 @@ export namespace ReactionEndpoints {
 
         await ReactionService.processNotifications(kind, uid, activity, reaction);
 
-        return buildEndpointResponse(context, {
+        return buildEndpointResponse({
             sender: uid,
             data: [activity, reaction],
         });
     });
 
-    export const updateReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+    export const updateReaction = functions_v2.https.onCall(async (payload) => {
+        const request = payload.data as EndpointRequest;
+        const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
         const reactionId = request.data.reactionId;
         const text = request.data.text || "";
 
@@ -99,15 +101,16 @@ export namespace ReactionEndpoints {
         }
 
         reaction = await ReactionService.updateReaction(reactionId, text);
-        return buildEndpointResponse(context, {
+        return buildEndpointResponse({
             sender: uid,
             data: [reaction, activity],
         });
     });
 
     // Delete Reaction
-    export const deleteReaction = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+    export const deleteReaction = functions_v2.https.onCall(async (payload) => {
+        const request = payload.data as EndpointRequest;
+        const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
         const reactionId = request.data.reactionId;
 
         const reaction = await ReactionService.getReaction(reactionId);
@@ -129,14 +132,15 @@ export namespace ReactionEndpoints {
         await ReactionService.deleteReaction(streamClient, reaction);
 
         functions.logger.info("Reaction deleted", { reactionId });
-        return buildEndpointResponse(context, {
+        return buildEndpointResponse({
             sender: uid,
             data: [activity],
         });
     });
 
-    export const listReactionsForActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+    export const listReactionsForActivity = functions_v2.https.onCall(async (payload) => {
+        const request = payload.data as EndpointRequest;
+        const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const limit = request.limit || 25;
@@ -154,7 +158,7 @@ export namespace ReactionEndpoints {
             }
         }
 
-        return buildEndpointResponse(context, {
+        return buildEndpointResponse({
             sender: uid,
             data: [...reactions],
             cursor,

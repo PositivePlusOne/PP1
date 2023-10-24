@@ -21,7 +21,7 @@ class RelationshipSearchApiService {
     int limit = kDefaultLimit,
   }) async {
     return await getHttpsCallableResult<EndpointResponse>(
-      name: 'relationship-listConnectedRelationships',
+      name: 'relationship-listconnectedrelationships',
       pagination: Pagination(
         cursor: cursor,
         limit: limit,

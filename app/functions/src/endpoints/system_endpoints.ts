@@ -1,8 +1,9 @@
 import * as functions from "firebase-functions";
+import * as functions_v2 from "firebase-functions/v2";
 
 import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
-import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_256 } from "../constants/domain";
+import { FIREBASE_FUNCTION_INSTANCE_DATA_256 } from "../constants/domain";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { getDataChangeSchema, getDataChangeType } from "../handlers/data_change_type";
 
@@ -10,7 +11,6 @@ import { DataHandlerRegistry } from "../handlers/data_change_handler";
 import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
 
-import { CacheService } from "../services/cache_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
@@ -54,9 +54,10 @@ export namespace SystemEndpoints {
       await DataHandlerRegistry.executeChangeHandlers(changeType, schema, context.params.documentId, beforeData, afterData);
     });
 
-  export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getSystemConfiguration = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
     const locale = request.data.locale || "en";
-    const uid = context.auth?.uid || "";
+    const uid = payload.auth?.uid || "";
 
     const pagination = {
       windowSize: request.data.windowSize || 10,
@@ -95,8 +96,8 @@ export namespace SystemEndpoints {
       if (!userProfile) {
         functions.logger.info("Profile not found, creating...", { uid });
 
-        const email = context.auth?.token.email || "";
-        const phone = context.auth?.token.phone_number || "";
+        const email = payload.auth?.token.email || "";
+        const phone = payload.auth?.token.phone_number || "";
 
         userProfile = await ProfileService.createProfile(uid, email, phone, locale);
       }
@@ -134,7 +135,7 @@ export namespace SystemEndpoints {
 
     functions.logger.info("Fetched managing profiles", { supportedProfiles });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [profile, ...supportedProfiles],
       joins: joinRecords,
@@ -153,10 +154,10 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const submitFeedback = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await UserService.verifyAuthenticated(context, request.sender);
+  export const submitFeedback = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
-    const uid = context.auth?.uid || "";
     const feedbackType = request.data.feedbackType || "unknown";
     const reportType = request.data.reportType || "unknown";
     const content = request.data.content || "";
@@ -169,8 +170,9 @@ export namespace SystemEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const getStreamToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const getStreamToken = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     functions.logger.info("Getting chat token", { uid });
 
     const chatClient = ConversationService.getStreamChatInstance();
@@ -183,7 +185,7 @@ export namespace SystemEndpoints {
     const profile = await ProfileService.getProfile(uid);
     await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, profile);
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       seedData: {
         token: chatToken,
@@ -191,14 +193,14 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
+  // export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  //   await UserService.verifyAuthenticated(context);
 
-    functions.logger.info("Clearing entire cache");
-    await CacheService.deleteAllFromCache();
+  //   functions.logger.info("Clearing entire cache");
+  //   await CacheService.deleteAllFromCache();
 
-    return JSON.stringify({ success: true });
-  });
+  //   return JSON.stringify({ success: true });
+  // });
 
   // This is a dangerous endpoint and should only be used in development.
   // export const clearGetStreamContentFromSystem = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {

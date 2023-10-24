@@ -1,7 +1,7 @@
-import * as functions from "firebase-functions";
+import * as functions_v2 from "firebase-functions/v2";
+
 import { adminApp } from "..";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { CacheService } from "../services/cache_service";
 import safeJsonStringify from "safe-json-stringify";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
@@ -9,11 +9,13 @@ import { DataService } from "../services/data_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace GuidanceEndpoints {
-  export const getGuidanceCategories = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-    functions.logger.info("Getting guidance categories", { structuredData: true });
-    const locale = data.locale ?? "en";
-    const parent = data.parent ?? null;
-    const guidanceType = data.guidanceType;
+  export const getGuidanceCategories = functions_v2.https.onCall(async (payload) => {
+    functions_v2.logger.info("Getting guidance categories", { structuredData: true });
+    const request = payload.data as EndpointRequest;
+
+    const locale = request.data.locale ?? "en";
+    const parent = request.data.parent ?? null;
+    const guidanceType = request.data.guidanceType;
 
     const firestore = adminApp.firestore();
     let query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", "guidanceCategories");
@@ -29,7 +31,7 @@ export namespace GuidanceEndpoints {
 
     const snapshot = await query.get();
     const entries = snapshot.docs.map((doc: any) => doc.data());
-    functions.logger.info(`Found ${entries.length} guidance categories`, { entries, structuredData: true });
+    functions_v2.logger.info(`Found ${entries.length} guidance categories`, { entries, structuredData: true });
 
     const filteredEntries = entries.filter((entry: any) => {
       // entry.parent could be an empty array or null
@@ -44,14 +46,12 @@ export namespace GuidanceEndpoints {
     return safeJsonStringify(filteredEntries);
   });
 
-  export const getGuidanceArticles = functions
-    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .https.onCall(async (data: any) => {
-      functions.logger.info("Getting guidance articles", { structuredData: true });
-      const locale = data.locale || "en";
+  export const getGuidanceArticles = functions_v2.https.onCall(async (payload) => {
+    functions_v2.logger.info("Getting guidance articles", { structuredData: true });
       const firestore = adminApp.firestore();
-      const parent = data.parent ?? null;
-      const guidanceType = data.guidanceType ?? "";
+      const locale = payload.data.locale || "en";
+      const parent = payload.data.parent ?? null;
+      const guidanceType = payload.data.guidanceType ?? "";
 
       let query = firestore
         .collection("fl_content")
@@ -88,11 +88,11 @@ export namespace GuidanceEndpoints {
     });
 
   // TODO: Update this to paginate later
-  export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: EndpointRequest, context) => {
-    functions.logger.info("Getting directory entires", { structuredData: true });
+  export const getGuidanceDirectoryEntries = functions_v2.https.onCall(async (payload) => {
+    functions_v2.logger.info("Getting directory entires", { structuredData: true });
 
-    const cursor = data.cursor || "";
-    const limit = data.limit || 10;
+    const cursor = payload.data.cursor || "";
+    const limit = payload.data.limit || 10;
     const cacheKey = `guidanceDirectoryEntries_${cursor}_${limit}`;
     const cachedValue = await CacheService.get(cacheKey);
 
@@ -100,7 +100,7 @@ export namespace GuidanceEndpoints {
 
     if (cachedValue && cachedValue.length > 0) {
       returnCursor = FlamelinkHelpers.getFlamelinkDocIdFromObject(cachedValue[cachedValue.length - 1]) || "";
-      return buildEndpointResponse(context, {
+      return buildEndpointResponse({
         sender: "",
         cursor: returnCursor,
         limit: limit,
@@ -115,7 +115,7 @@ export namespace GuidanceEndpoints {
     });
 
     if (windowData.length === 0) {
-      return buildEndpointResponse(context, {
+      return buildEndpointResponse({
         sender: "",
         cursor: returnCursor,
         limit: limit,
@@ -126,7 +126,7 @@ export namespace GuidanceEndpoints {
     await CacheService.setInCache(cacheKey, windowData);
     
     returnCursor = FlamelinkHelpers.getFlamelinkDocIdFromObject(windowData[windowData.length - 1]) || "";
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: "",
       cursor: returnCursor,
       limit: limit,

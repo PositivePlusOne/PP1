@@ -36,5 +36,6 @@ targets:
         options:
           enable_cached_builds: true
         generate_for:
+          include:
             - lib/widgets/**_page.dart
             - lib/gen/**.dart

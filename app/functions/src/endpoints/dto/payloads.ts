@@ -30,7 +30,7 @@ export type EndpointResponse = {
     limit: number;
 };
 
-export async function buildEndpointResponse(context: functions.https.CallableContext, {
+export async function buildEndpointResponse({
     sender,
     data = [],
     seedData = {},
@@ -46,7 +46,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
     sender: string;
 }): Promise<string> {
     // Stage 0: Prepare
-    functions.logger.info(`Building endpoint response for ${context.rawRequest.url}.`, {
+    functions.logger.info(`Building endpoint response`, {
         sender,
         data,
         seedData,

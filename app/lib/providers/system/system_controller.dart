@@ -41,6 +41,7 @@ class SystemControllerState with _$SystemControllerState {
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
     @Default(bool) hasPerformedInitialSetup,
+    required String functionsEndpoint,
     String? appName,
     String? packageName,
     String? version,
@@ -54,6 +55,11 @@ class SystemControllerState with _$SystemControllerState {
         environment: environment,
         showingSemanticsDebugger: false,
         showingDebugMessages: false,
+        functionsEndpoint: switch (environment) {
+          SystemEnvironment.develop => 'https://us-central1-positiveplusone-develop.cloudfunctions.net/',
+          SystemEnvironment.staging => 'https://us-central1-positiveplusone-staging.cloudfunctions.net/',
+          SystemEnvironment.production => 'https://us-central1-positiveplusone.cloudfunctions.net/',
+        },
       );
 }
 

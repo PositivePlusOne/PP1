@@ -1,16 +1,17 @@
 import * as functions from "firebase-functions";
+import * as functions_v2 from "firebase-functions/v2";
 
 import { UserService } from "../services/user_service";
 import { ProfileService } from "../services/profile_service";
 import { NotificationsService } from "../services/notifications_service";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { FeedService } from "../services/feed_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace NotificationEndpoints {
-  export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const listNotifications = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 
     if (uid.length === 0) {
@@ -29,7 +30,7 @@ export namespace NotificationEndpoints {
       }
     }
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [...profileData],
       cursor: cursor,
@@ -42,8 +43,9 @@ export namespace NotificationEndpoints {
     });
   });
 
-  export const markNotificationsAsReadAndSeen = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const markNotificationsAsReadAndSeen = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     functions.logger.info(`Marking notifications as read and seen for current user: ${uid}`);
     if (uid.length === 0) {
@@ -53,7 +55,7 @@ export namespace NotificationEndpoints {
     const client = FeedService.getFeedsClient();
     await NotificationsService.markAllNotificationsReadAndSeen(client, uid);
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [],
     });

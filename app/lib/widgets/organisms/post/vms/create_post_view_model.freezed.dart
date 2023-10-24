@@ -131,7 +131,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
-    Object? currentFilter = null,
+    Object? currentFilter = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
     Object? isDelayTimerEnabled = null,
@@ -200,7 +200,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentFilter: null == currentFilter
+      currentFilter: freezed == currentFilter
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
@@ -341,7 +341,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
-    Object? currentFilter = null,
+    Object? currentFilter = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
     Object? isDelayTimerEnabled = null,
@@ -410,7 +410,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentFilter: null == currentFilter
+      currentFilter: freezed == currentFilter
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
@@ -659,8 +659,8 @@ class _$CreatePostViewModelStateImpl
                 other.activeButtonFlexText == activeButtonFlexText) &&
             (identical(other.saveToGallery, saveToGallery) ||
                 other.saveToGallery == saveToGallery) &&
-            (identical(other.currentFilter, currentFilter) ||
-                other.currentFilter == currentFilter) &&
+            const DeepCollectionEquality()
+                .equals(other.currentFilter, currentFilter) &&
             (identical(other.previousActivity, previousActivity) ||
                 other.previousActivity == previousActivity) &&
             (identical(other.delayTimerCurrentSelection,

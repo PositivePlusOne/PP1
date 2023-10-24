@@ -1,5 +1,4 @@
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
 
 import { AdminEndpoints } from "./endpoints/admin_endpoints";
 import { ProfileEndpoints } from "./endpoints/profile_endpoints";
@@ -8,22 +7,21 @@ import { SystemEndpoints } from "./endpoints/system_endpoints";
 import { RelationshipEndpoints } from "./endpoints/relationship_endpoints";
 import { NotificationEndpoints } from "./endpoints/notification_endpoints";
 import { GuidanceEndpoints } from "./endpoints/guidance_endpoints";
-import { SearchIndexHandler } from "./handlers/search_index_handler";
-import { CacheHandler } from "./handlers/cache_handler";
-import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
-import { HealthEndpoints } from "./endpoints/health_endpoints";
-
-import { config } from "firebase-functions/v1";
 import { StorageEndpoints } from "./endpoints/storage_endpoints";
 import { PostEndpoints } from "./endpoints/post_endpoints";
 import { ReactionEndpoints } from "./endpoints/reaction_endpoints";
+import { HealthEndpoints } from "./endpoints/health_endpoints";
+
+import { SearchIndexHandler } from "./handlers/search_index_handler";
+import { CacheHandler } from "./handlers/cache_handler";
+import { ConversationEndpoints } from "./endpoints/conversation_endpoints";
+
+import { config } from "firebase-functions/v1";
 import { QuickActionHandler } from "./handlers/quick_action_handler";
 import { EnrichmentEndpoints } from "./endpoints/enrichment_endpoints";
 
 export const adminApp = admin.initializeApp();
-export const applicationConfig = config().config;
-
-functions.logger.info("Application config", { applicationConfig });
+export const applicationConfig = process.env.K_CONFIGURATION ? {} : config().config;
 
 //* Register handlers for data changes
 SearchIndexHandler.register();

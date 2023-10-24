@@ -1,18 +1,19 @@
 import * as functions from "firebase-functions";
+import * as functions_v2 from "firebase-functions/v2";
+
 import safeJsonStringify from "safe-json-stringify";
 
 import { LocalizationsService } from "../services/localizations_service";
 import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { SearchService } from "../services/search_service";
 import { PositiveSearchIndex } from "../constants/search_indexes";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-    const locale = data.locale || "en";
+  export const getInterests = functions_v2.https.onCall(async (payload) => {
+    const locale = payload.data.locale || "en";
     const interests = await LocalizationsService.getDefaultInterests(locale);
 
     const response = {} as any;
@@ -24,25 +25,25 @@ export namespace SearchEndpoints {
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getHivStatuses = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-    const locale = data.locale || "en";
+  export const getHivStatuses = functions_v2.https.onCall(async (payload) => {
+    const locale = payload.data.locale || "en";
     const hivStatuses = await LocalizationsService.getDefaultHivStatuses(locale);
 
     return safeJsonStringify(hivStatuses);
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-    const locale = data.locale || "en";
+  export const getGenders = functions_v2.https.onCall(async (payload) => {
+    const locale = payload.data.locale || "en";
     const genders = await LocalizationsService.getDefaultGenders(locale);
 
     return safeJsonStringify(genders);
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getTopics = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
+  export const getTopics = functions_v2.https.onCall(async (payload) => {
     functions.logger.info("Getting topics");
-    await UserService.verifyAuthenticated(context);
+    await UserService.verifyAuthenticatedV2(payload);
 
     const app = SystemService.getFlamelinkApp();
     const data = await app.content.get({
@@ -53,16 +54,18 @@ export namespace SearchEndpoints {
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
-    const locale = data.locale || "en";
+  export const getCompanySectors = functions_v2.https.onCall(async (data) => {
+    const locale = data?.data?.locale || "en";
     const companySectors = await LocalizationsService.getDefaultCompanySectors(locale);
 
     return safeJsonStringify(companySectors);
   });
 
-  export const search = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const search = functions_v2.https.onCall(async (payload) => {
     functions.logger.info("Searching data from algolia");
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
+
     const page = parseInt(request.data.page) || 0;
     const index = request.data.index || PositiveSearchIndex.USERS;
     const query = request.data.query || "";
@@ -82,7 +85,7 @@ export namespace SearchEndpoints {
 
     functions.logger.info(`Got search results`, searchResults);
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: searchResults,
     });

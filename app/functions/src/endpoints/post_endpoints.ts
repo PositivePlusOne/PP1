@@ -1,6 +1,5 @@
 import * as functions from "firebase-functions";
-
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import * as functions_v2 from "firebase-functions/v2";
 
 import { DataService } from "../services/data_service";
 
@@ -25,76 +24,59 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 
 export namespace PostEndpoints {
-    export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const listActivities = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.data.sender);
 
-        const targetUserId = request.data.targetUserId || "";
-        const targetSlug = request.data.targetSlug || "";
-        const limit = request.limit || 25;
-        const cursor = request.cursor || "";
+    const targetUserId = request.data.targetUserId || "";
+    const targetSlug = request.data.targetSlug || "";
+    const limit = request.limit || 10;
+    const cursor = request.cursor || "";
 
-        functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
+    functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
 
-        if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
-          throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
-        }
-    
-        const feedsClient = FeedService.getFeedsClient();
-        const feed = feedsClient.feed(targetSlug, targetUserId);
-        const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
-    
-        // Convert window results to a list of IDs
-        const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
-        const paginationToken = StreamHelpers.extractPaginationToken(window.next);
-
-        // We supply this so we can support reposts and the client can filter out the nested activity
-        const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
-
-        // Get promotions from activities where the promotion key is set
-        let promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
-        promotionIds = [...new Set(promotionIds)].filter((promotionId) => promotionId.length > 0);
-        const promotionKeys = promotionIds.map((promotionId) => `promotions_${promotionId}`);
-
-        const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
-
-        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
-    
-        return buildEndpointResponse(context, {
-          sender: uid,
-          joins: [feedStatisticsKey, ...promotionKeys],
-          data: [...activities],
-          limit: limit,
-          cursor: paginationToken,
-          seedData: {
-            next: paginationToken,
-            unread: window.unread,
-            unseen: window.unseen,
-            windowIds,
-          },
-        });
-      });
-      
-  export const getActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const entry = request.data.entry || "";
-    if (!entry) {
-      throw new functions.https.HttpsError("invalid-argument", "Missing entry");
+    if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
     }
 
-    functions.logger.info(`Getting activity: ${entry}`);
-    const activity = await DataService.getDocument({
-      schemaKey: "activities",
-      entryId: entry as string,
-    });
+    const feedsClient = FeedService.getFeedsClient();
+    const feed = feedsClient.feed(targetSlug, targetUserId);
+    const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
 
-    return buildEndpointResponse(context, {
-      sender: request.sender,
-      data: [activity],
+    // Convert window results to a list of IDs
+    const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
+    const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+
+    // We supply this so we can support reposts and the client can filter out the nested activity
+    const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
+
+    // Get promotions from activities where the promotion key is set
+    let promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
+    promotionIds = [...new Set(promotionIds)].filter((promotionId) => promotionId.length > 0);
+    const promotionKeys = promotionIds.map((promotionId) => `promotions_${promotionId}`);
+
+    const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
+
+    functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
+
+    return buildEndpointResponse({
+      sender: uid,
+      joins: [feedStatisticsKey, ...promotionKeys],
+      data: [...activities],
+      limit: limit,
+      cursor: paginationToken,
+      seedData: {
+        next: paginationToken,
+        unread: window.unread,
+        unseen: window.unseen,
+        windowIds,
+      },
     });
   });
 
-
-  export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const shareActivityToFeed = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const activityId = request.data.activityId || "";
 
     if (!activityId) {
@@ -158,18 +140,19 @@ export namespace PostEndpoints {
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
 
     await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
-    
+
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [userActivity, ...tagObjects],
     });
   });
 
-  export const shareActivityToConversations = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const shareActivityToConversations = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
     functions.logger.info(`Sharing activity`, { request });
-    
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const activityId = request.data.activityId || "";
     const targets = request.data.targets || [] as string[];
 
@@ -204,16 +187,17 @@ export namespace PostEndpoints {
 
     await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [],
     });
   });
 
-  export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const postActivity = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
     functions.logger.info(`Posting activity`, { request });
 
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const content = request.data.content || "";
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
@@ -249,7 +233,7 @@ export namespace PostEndpoints {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
     }
-    
+
     const isPromotion = promotionKey && promotionKey.length > 0;
     const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
     if (isPromotion && availablePromotionsCount <= 0) {
@@ -302,16 +286,17 @@ export namespace PostEndpoints {
     if (isPromotion) {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
-    
+
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [userActivity, ...tagObjects, promotion],
     });
   });
 
-  export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const deleteActivity = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const activityId = request.data.activityId || "";
 
     if (!activityId) {
@@ -349,7 +334,7 @@ export namespace PostEndpoints {
     activity.enrichmentConfiguration.promotionKey = "";
 
     const streamClient = FeedService.getFeedsClient();
-    
+
     await ActivitiesService.updateTagFeedsForActivity(activity);
     await ActivitiesService.removeActivityFromFeed("user", uid, activityId, streamClient);
 
@@ -366,15 +351,16 @@ export namespace PostEndpoints {
     await SearchService.deleteDocumentInIndex(index, activityId);
     functions.logger.info("Deleted activity from search index", { activityId });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [activity],
     });
   });
 
-  export const updateActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateActivity = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
     functions.logger.info(`Updating activity`, { request });
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     const activityId = request.data.postId || "" as string;
     const content = request.data.content || "";
@@ -386,7 +372,7 @@ export namespace PostEndpoints {
     const allowSharing = request.data.allowSharing ? "public" : "disabled" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
     const allowComments = request.data.allowComments || "disabled" as ActivitySecurityConfigurationMode;
-    
+
     const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
     const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
 
@@ -474,7 +460,7 @@ export namespace PostEndpoints {
     await ActivitiesService.updateTagFeedsForActivity(activity);
 
     functions.logger.info("Updated user activity", { feedActivity: activity });
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [activity, ...tagObjects, promotion],
     });

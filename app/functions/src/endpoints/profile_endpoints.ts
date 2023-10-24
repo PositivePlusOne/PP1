@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
+import * as functions_v2 from "firebase-functions/v2";
 
 import { ProfileService } from "../services/profile_service";
 import { UserService } from "../services/user_service";
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { CacheService } from "../services/cache_service";
 import { MediaJSON } from "../dto/media";
@@ -10,9 +10,10 @@ import { ProfileJSON } from "../dto/profile";
 import { DataService } from "../services/data_service";
 
 export namespace ProfileEndpoints {
-  export const getProfiles = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getProfiles = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
     functions.logger.info("Getting user profiles", { structuredData: true });
-    const uid = request.sender || context.auth?.uid || "";
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     let targets = request.data.targets || [] as string[];
     targets = [...new Set(targets.filter((target: string) => target.length > 0))];
@@ -38,16 +39,17 @@ export namespace ProfileEndpoints {
       profiles.push(...uncachedProfiles);
     }
     
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: profiles,
     });
   });
 
-  export const getProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getProfile = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
     functions.logger.info("Getting user profile", { structuredData: true });
 
-    const uid = request.sender || context.auth?.uid || "";
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const targetUid = request.data.uid || "";
     if (targetUid.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
@@ -58,14 +60,15 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [userProfile],
     });
   });
 
-  export const deleteProfile = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const deleteProfile = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     functions.logger.info("Deleting user profile", { structuredData: true });
 
     await ProfileService.deleteProfile(uid);
@@ -74,8 +77,9 @@ export namespace ProfileEndpoints {
     return JSON.stringify({ success: true });
   });
 
-  export const updateFcmToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateFcmToken = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const fcmToken = request.data.fcmToken || "";
 
     functions.logger.info("Updating user profile fcm token", {
@@ -93,14 +97,15 @@ export namespace ProfileEndpoints {
       fcmToken,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateEmailAddress = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateEmailAddress = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const emailAddress = request.data.emailAddress || "";
 
     functions.logger.info("Updating email address", {
@@ -118,14 +123,15 @@ export namespace ProfileEndpoints {
       emailAddress,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updatePhoneNumber = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updatePhoneNumber = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     const phoneNumber = request.data.phoneNumber || "";
     functions.logger.info("Updating profile phone number", {
@@ -143,14 +149,15 @@ export namespace ProfileEndpoints {
       phoneNumber,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateName = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     const name = request.data.name || "";
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -179,14 +186,15 @@ export namespace ProfileEndpoints {
       name,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateDisplayName = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateDisplayName = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const displayName = request.data.displayName || "";
     functions.logger.info("Updating profile display name", {
       uid,
@@ -207,14 +215,15 @@ export namespace ProfileEndpoints {
       displayName,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateBirthday = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateBirthday = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     const birthday = request.data.birthday || "";
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -235,14 +244,15 @@ export namespace ProfileEndpoints {
       birthday,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateInterests = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     const interests = request.data.interests || [];
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -262,14 +272,15 @@ export namespace ProfileEndpoints {
       interests,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateGenders = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const genders = request.data.genders || [];
     const visibilityFlags = request.data.visibilityFlags || [];
     functions.logger.info("Updating profile genders", {
@@ -289,13 +300,13 @@ export namespace ProfileEndpoints {
       genders,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateCompanySectors = functions_v2.https.onCall(async (context) => {
     //TODO! @Ryan - need to check your new auth for users who are allowed to edit company data
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const companySectors = request.data.companySectors || [];
@@ -317,14 +328,15 @@ export namespace ProfileEndpoints {
       companySectors,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updatePlace = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updatePlace = functions_v2.https.onCall(async (context) => {
+    const request = context.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(context, request.sender);
 
     const description = request.data?.description || "";
     const placeId = request.data?.placeId || "";
@@ -346,14 +358,15 @@ export namespace ProfileEndpoints {
       placeId,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
   
-  export const updateHivStatus = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateHivStatus = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const status = request.data.status;
     const visibilityFlags = request.data.visibilityFlags || [];
     functions.logger.info("Updating profile hiv status", {
@@ -373,14 +386,15 @@ export namespace ProfileEndpoints {
       status,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateBiography = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateBiography = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const biography = request.data.biography || "";
 
     functions.logger.info("Updating profile biography", {
@@ -391,14 +405,15 @@ export namespace ProfileEndpoints {
     const newProfile = await ProfileService.updateBiography(uid, biography);
     functions.logger.info("Profile biography updated");
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateAccentColor = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateAccentColor = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const accentColor = request.data.accentColor || "";
 
     functions.logger.info("Updating profile accent colour", {
@@ -416,14 +431,15 @@ export namespace ProfileEndpoints {
       accentColor,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateFeatureFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateFeatureFlags = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const featureFlags = request.data.featureFlags || [];
     functions.logger.info("Updating profile feature flags", {
       uid,
@@ -440,14 +456,15 @@ export namespace ProfileEndpoints {
       featureFlags,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const updateVisibilityFlags = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const updateVisibilityFlags = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const visibilityFlags = request.data.visibilityFlags || [];
     functions.logger.info("Updating profile visibility flags", {
       uid,
@@ -464,14 +481,15 @@ export namespace ProfileEndpoints {
       visibilityFlags,
     });
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const addMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const addMedia = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
     const media = (request.data.media || []) as MediaJSON[];
 
     if (!(media instanceof Array)) {
@@ -484,14 +502,15 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.addMedia(profile, media);
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });
   });
 
-  export const removeMedia = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const removeMedia = functions_v2.https.onCall(async (payload) => {
+    const request = payload.data as EndpointRequest;
+    const uid = await UserService.verifyAuthenticatedV2(payload, request.sender);
 
     const mediaId = request.data.mediaId || "";
     if (mediaId.length === 0) {
@@ -504,7 +523,7 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.removeMedia(profile, mediaId);
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
       data: [newProfile],
     });

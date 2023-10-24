@@ -1,18 +1,21 @@
 import * as functions from "firebase-functions";
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import * as functions_v2 from "firebase-functions/v2";
+
 import { ConversationService } from "../services/conversation_service";
 import { CreateConversationRequest, FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "../dto/conversations";
 import { UserService } from "../services/user_service";
 import safeJsonStringify from "safe-json-stringify";
 import { ProfileService } from "../services/profile_service";
-import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
+import { buildEndpointResponse } from "./dto/payloads";
 
 export namespace ConversationEndpoints {
-  export const createConversation = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: CreateConversationRequest, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const createConversation = functions_v2.https.onCall(async (payload) => {
+    await UserService.verifyAuthenticatedV2(payload, payload.data.sender);
     const streamChatClient = ConversationService.getStreamChatInstance();
-    const uid = context.auth!.uid;
+    const uid = payload.auth?.uid || "";
 
+    const data = payload.data as CreateConversationRequest;
+    
     const members = data.members || [];
     if (!members.includes(uid)) {
       data.members.push(uid);
@@ -21,25 +24,28 @@ export namespace ConversationEndpoints {
     const conversationId = await ConversationService.createConversation(streamChatClient, uid, members);
     return safeJsonStringify({ conversationId });
   });
+
   /**
    * Sends an event message to a channel such as "_ has left the conversation"
    */
-  export const sendEventMessage = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: SendEventMessage, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const sendEventMessage = functions_v2.https.onCall(async (payload) => {
+    await UserService.verifyAuthenticatedV2(payload, payload.data.sender);
     const client = ConversationService.getStreamChatInstance();
 
-    return ConversationService.sendEventMessage(data, client, context.auth?.uid || "");
+    const data = payload.data as SendEventMessage;
+
+    return ConversationService.sendEventMessage(data, client, payload.auth?.uid || "");
   });
 
   /**
    * Archives members from a channel
    */
-  export const archiveMembers = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context);
+  export const archiveMembers = functions_v2.https.onCall(async (payload) => {
+    const uid = await UserService.verifyAuthenticatedV2(payload, payload.data.sender);
     const client = ConversationService.getStreamChatInstance();
 
-    const members = (request.data.members as string[]) || [];
-    const channelId = request.data.channelId;
+    const members = (payload.data.members as string[]) || [];
+    const channelId = payload.data.channelId;
     if (!members || members.length === 0 || !channelId) {
       throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
@@ -81,16 +87,16 @@ export namespace ConversationEndpoints {
           mentionedUsers: [member],
         },
         client,
-        context.auth?.uid || ""
+        uid,
       );
     });
 
     await Promise.all(memberPromises);
 
     functions.logger.info(`Archiving members ${members} from ${channelId}`);
-    await ConversationService.archiveMembers(client, request.data.channelId, request.data.members);
+    await ConversationService.archiveMembers(client, payload.data.channelId, payload.data.members);
 
-    return buildEndpointResponse(context, {
+    return buildEndpointResponse({
       sender: uid,
     });
   });
@@ -98,20 +104,22 @@ export namespace ConversationEndpoints {
   /**
    * Freezes a channel
    */
-  export const freezeChannel = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: FreezeChannelRequest, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const freezeChannel = functions_v2.https.onCall(async (payload) => {
+    await UserService.verifyAuthenticatedV2(payload, payload.data.sender);
     const client = ConversationService.getStreamChatInstance();
 
-    return ConversationService.freezeChannel(data, client, context.auth?.uid || "");
+    const data = payload.data as FreezeChannelRequest;
+    return ConversationService.freezeChannel(data, client, payload.auth?.uid || "");
   });
 
   /**
    * Unfreezes a channel
    */
-  export const unfreezeChannel = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: UnfreezeChannelRequest, context) => {
-    await UserService.verifyAuthenticated(context);
+  export const unfreezeChannel = functions_v2.https.onCall(async (payload) => {
+    await UserService.verifyAuthenticatedV2(payload, payload.data.sender);
     const client = ConversationService.getStreamChatInstance();
 
+    const data = payload.data as UnfreezeChannelRequest;
     return ConversationService.unfreezeChannel(data, client);
   });
 }

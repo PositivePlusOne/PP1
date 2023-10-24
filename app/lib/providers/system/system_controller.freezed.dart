@@ -20,6 +20,7 @@ mixin _$SystemControllerState {
   bool get showingSemanticsDebugger => throw _privateConstructorUsedError;
   bool get showingDebugMessages => throw _privateConstructorUsedError;
   dynamic get hasPerformedInitialSetup => throw _privateConstructorUsedError;
+  String get functionsEndpoint => throw _privateConstructorUsedError;
   String? get appName => throw _privateConstructorUsedError;
   String? get packageName => throw _privateConstructorUsedError;
   String? get version => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $SystemControllerStateCopyWith<$Res> {
       bool showingSemanticsDebugger,
       bool showingDebugMessages,
       dynamic hasPerformedInitialSetup,
+      String functionsEndpoint,
       String? appName,
       String? packageName,
       String? version,
@@ -65,6 +67,7 @@ class _$SystemControllerStateCopyWithImpl<$Res,
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
     Object? hasPerformedInitialSetup = freezed,
+    Object? functionsEndpoint = null,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -87,6 +90,10 @@ class _$SystemControllerStateCopyWithImpl<$Res,
           ? _value.hasPerformedInitialSetup
           : hasPerformedInitialSetup // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      functionsEndpoint: null == functionsEndpoint
+          ? _value.functionsEndpoint
+          : functionsEndpoint // ignore: cast_nullable_to_non_nullable
+              as String,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -121,6 +128,7 @@ abstract class _$$SystemControllerStateImplCopyWith<$Res>
       bool showingSemanticsDebugger,
       bool showingDebugMessages,
       dynamic hasPerformedInitialSetup,
+      String functionsEndpoint,
       String? appName,
       String? packageName,
       String? version,
@@ -143,6 +151,7 @@ class __$$SystemControllerStateImplCopyWithImpl<$Res>
     Object? showingSemanticsDebugger = null,
     Object? showingDebugMessages = null,
     Object? hasPerformedInitialSetup = freezed,
+    Object? functionsEndpoint = null,
     Object? appName = freezed,
     Object? packageName = freezed,
     Object? version = freezed,
@@ -164,6 +173,10 @@ class __$$SystemControllerStateImplCopyWithImpl<$Res>
       hasPerformedInitialSetup: freezed == hasPerformedInitialSetup
           ? _value.hasPerformedInitialSetup!
           : hasPerformedInitialSetup,
+      functionsEndpoint: null == functionsEndpoint
+          ? _value.functionsEndpoint
+          : functionsEndpoint // ignore: cast_nullable_to_non_nullable
+              as String,
       appName: freezed == appName
           ? _value.appName
           : appName // ignore: cast_nullable_to_non_nullable
@@ -194,6 +207,7 @@ class _$SystemControllerStateImpl
       required this.showingSemanticsDebugger,
       required this.showingDebugMessages,
       this.hasPerformedInitialSetup = bool,
+      required this.functionsEndpoint,
       this.appName,
       this.packageName,
       this.version,
@@ -209,6 +223,8 @@ class _$SystemControllerStateImpl
   @JsonKey()
   final dynamic hasPerformedInitialSetup;
   @override
+  final String functionsEndpoint;
+  @override
   final String? appName;
   @override
   final String? packageName;
@@ -219,7 +235,7 @@ class _$SystemControllerStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
+    return 'SystemControllerState(environment: $environment, showingSemanticsDebugger: $showingSemanticsDebugger, showingDebugMessages: $showingDebugMessages, hasPerformedInitialSetup: $hasPerformedInitialSetup, functionsEndpoint: $functionsEndpoint, appName: $appName, packageName: $packageName, version: $version, buildNumber: $buildNumber)';
   }
 
   @override
@@ -233,6 +249,7 @@ class _$SystemControllerStateImpl
       ..add(DiagnosticsProperty('showingDebugMessages', showingDebugMessages))
       ..add(DiagnosticsProperty(
           'hasPerformedInitialSetup', hasPerformedInitialSetup))
+      ..add(DiagnosticsProperty('functionsEndpoint', functionsEndpoint))
       ..add(DiagnosticsProperty('appName', appName))
       ..add(DiagnosticsProperty('packageName', packageName))
       ..add(DiagnosticsProperty('version', version))
@@ -253,6 +270,8 @@ class _$SystemControllerStateImpl
                 other.showingDebugMessages == showingDebugMessages) &&
             const DeepCollectionEquality().equals(
                 other.hasPerformedInitialSetup, hasPerformedInitialSetup) &&
+            (identical(other.functionsEndpoint, functionsEndpoint) ||
+                other.functionsEndpoint == functionsEndpoint) &&
             (identical(other.appName, appName) || other.appName == appName) &&
             (identical(other.packageName, packageName) ||
                 other.packageName == packageName) &&
@@ -268,6 +287,7 @@ class _$SystemControllerStateImpl
       showingSemanticsDebugger,
       showingDebugMessages,
       const DeepCollectionEquality().hash(hasPerformedInitialSetup),
+      functionsEndpoint,
       appName,
       packageName,
       version,
@@ -287,6 +307,7 @@ abstract class _SystemControllerState implements SystemControllerState {
       required final bool showingSemanticsDebugger,
       required final bool showingDebugMessages,
       final dynamic hasPerformedInitialSetup,
+      required final String functionsEndpoint,
       final String? appName,
       final String? packageName,
       final String? version,
@@ -300,6 +321,8 @@ abstract class _SystemControllerState implements SystemControllerState {
   bool get showingDebugMessages;
   @override
   dynamic get hasPerformedInitialSetup;
+  @override
+  String get functionsEndpoint;
   @override
   String? get appName;
   @override

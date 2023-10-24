@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as redis from 'ioredis';
-import { applicationConfig } from '..';
 import { FlamelinkHelpers } from '../helpers/flamelink_helpers';
 
 export namespace CacheService {
@@ -18,8 +17,21 @@ export namespace CacheService {
             return redisClient;
         }
 
-        const redisHost = applicationConfig.redis_host;
-        const redisPort = parseInt(applicationConfig.redis_port);
+        const projectId = process.env.GCLOUD_PROJECT;
+        let redisHost = '';
+        let redisPort = 0;
+
+        if (projectId === 'positiveplusone-develop') {
+            functions.logger.info(`Connecting to Redis at ${redisHost}:${redisPort} (develop).`);
+            redisHost = '10.152.250.243';
+            redisPort = 6379;
+        } else if (projectId === 'positiveplusone-staging') {
+            functions.logger.info(`Connecting to Redis at ${redisHost}:${redisPort} (staging).`);
+            redisHost = '10.109.87.163';
+            redisPort = 6379;
+        } else {
+            functions.logger.info(`Connecting to Redis at ${redisHost}:${redisPort} (production).`);
+        }
 
         if (!redisHost || !redisPort) {
             throw new Error('Cache not currently available, missing configuration.');

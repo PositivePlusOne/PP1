@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -53,6 +54,7 @@ bool canChangeTargetId(String name) {
 
 FutureOr<T> getHttpsCallableResult<T>({
   required String name,
+  bool useV2 = true,
   Pagination? pagination,
   Map<String, dynamic> parameters = const {},
   T Function(EndpointResponse response)? selector,
@@ -87,8 +89,20 @@ FutureOr<T> getHttpsCallableResult<T>({
     trace.start();
     stopwatch.start();
 
-    final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
-    Map<String, dynamic> responseData = json.decodeSafe(response.data);
+    late final Map<String, dynamic> responseData;
+
+    final String environment = providerContainer.read(systemControllerProvider.select((value) => value.functionsEndpoint));
+
+    if (useV2) {
+      final Uri endpointUri = Uri.parse('$environment$name');
+      logger.i('getHttpsCallableResult: $endpointUri using v2');
+
+      final HttpsCallableResult response = await firebaseFunctions.httpsCallableFromUri(endpointUri).call(requestPayload);
+      responseData = json.decodeSafe(response.data);
+    } else {
+      final HttpsCallableResult response = await firebaseFunctions.httpsCallable(name).call(requestPayload);
+      responseData = json.decodeSafe(response.data);
+    }
 
     final EndpointResponse responsePayload = EndpointResponse.fromJson(responseData);
     if (responsePayload.data.isNotEmpty) {
@@ -118,7 +132,7 @@ FutureOr<SystemApiService> systemApiService(SystemApiServiceRef ref) async {
 class SystemApiService {
   FutureOr<EndpointResponse> getSystemConfiguration() async {
     return await getHttpsCallableResult(
-      name: 'system-getSystemConfiguration',
+      name: 'system-getsystemconfiguration',
     );
   }
 
@@ -248,6 +262,7 @@ class PostApiService {
     return await getHttpsCallableResult<EndpointResponse>(
       name: 'post-listActivities',
       pagination: pagination,
+      useV2: true,
       parameters: {
         'targetSlug': targetSlug,
         'targetUserId': targetUserId,
