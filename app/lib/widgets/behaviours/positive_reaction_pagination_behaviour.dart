@@ -120,6 +120,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final UserController userController = providerContainer.read(userControllerProvider.notifier);
 
     final bool loggedIn = userController.isUserLoggedIn;
+    final bool isOwn = activity?.publisherInformation?.publisherId == userController.currentUser?.uid;
     final bool isFollowing = publisherRelationship?.following ?? false;
     final bool isConnected = publisherRelationship?.isValidConnectedRelationship ?? false;
     final bool isBlocked = publisherRelationship?.blocked ?? false;
@@ -135,14 +136,14 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
       signedIn: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
       followersAndConnections: () {
         if (loggedIn) {
-          return commentHeaderText = (isFollowing || isConnected) ? localizations.post_comments_public_header : localizations.post_comments_followers_connections_header;
+          return commentHeaderText = (isFollowing || isConnected || isOwn) ? localizations.post_comments_public_header : localizations.post_comments_followers_connections_header;
         } else {
           return commentHeaderText = localizations.post_comments_signed_in_followers_header;
         }
       },
       connections: () {
         if (loggedIn) {
-          return commentHeaderText = (isFollowing || isConnected) ? localizations.post_comments_public_header : localizations.post_comments_connections_header;
+          return commentHeaderText = (isFollowing || isConnected || isOwn) ? localizations.post_comments_public_header : localizations.post_comments_connections_header;
         } else {
           return commentHeaderText = localizations.post_comments_signed_in_connections_header;
         }
