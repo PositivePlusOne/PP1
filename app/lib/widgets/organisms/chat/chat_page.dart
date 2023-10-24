@@ -2,6 +2,8 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,8 +29,10 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/event/get_stream_system_message_type.dart';
@@ -391,6 +395,7 @@ class ChatMemberUsernameRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     bool hasSourceBlocked = false;
     if (relationship != null && currentProfileId.isNotEmpty) {
       final Set<RelationshipState> states = relationship!.relationshipStatesForEntity(currentProfileId);
@@ -516,8 +521,57 @@ class MessageInput extends ConsumerWidget {
     super.key,
   });
 
+  Widget buildUserMentionsTile(
+    BuildContext context,
+    User user,
+    CacheController cacheController,
+    DesignTypographyModel typography,
+    DesignColorsModel colors,
+  ) {
+    // we want to display the details about the actual target user rather than just letting the class
+    // show user IDs. So we need to get the profile data instead of the user ID
+    final Profile? targetProfile = cacheController.get(user.id);
+    // then return the nice display of this user
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.white,
+        borderRadius: BorderRadius.circular(PositiveProfileListTile.kProfileTileBorderRadius),
+      ),
+      padding: const EdgeInsets.all(kPaddingSmall),
+      child: Row(
+        children: <Widget>[
+          PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
+          const SizedBox(width: kPaddingSmall),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  getSafeDisplayNameFromProfile(targetProfile),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                ),
+                const SizedBox(width: kPaddingSmall),
+                Text(
+                  targetProfile?.getTagline(appLocalizations) ?? appLocalizations.shared_profile_tagline,
+                  maxLines: 1,
+                  style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     return StreamBuilder<ChannelState>(
       stream: StreamChannel.of(context).channelStateStream,
       builder: (context, snapshot) {
@@ -536,6 +590,7 @@ class MessageInput extends ConsumerWidget {
             sendButtonLocation: SendButtonLocation.inside,
             activeSendButton: buildSendButton(),
             idleSendButton: buildSendButton(isActive: false),
+            userMentionsTileBuilder: (ctx, user) => buildUserMentionsTile(ctx, user, cacheController, typography, colors),
           ),
         );
       },
