@@ -43,6 +43,10 @@ extension ActivityExt on Activity {
     return hasPublisher && (hasBodyContent || hasImageMedia);
   }
 
+  bool get isPromotion => enrichmentConfiguration?.promotionKey.isNotEmpty == true && enrichmentConfiguration?.tags.contains('promotion') == true;
+  bool get isChatPromotion => isPromotion && enrichmentConfiguration?.tags.contains('promotion_chat') == true;
+  bool get isFeedPromotion => isPromotion && enrichmentConfiguration?.tags.contains('promotion_feed') == true;
+
   String get shortDescription {
     return generalConfiguration?.content.isNotEmpty == true ? generalConfiguration!.content : '';
   }
@@ -598,6 +602,11 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final Logger logger = providerContainer.read(loggerProvider);
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
+
+    if (currentProfileId == publisherProfileId) {
+      logger.d('canActOnSecurityMode() - currentProfileId is the publisherProfileId');
+      return true;
+    }
 
     if (publisherProfileId.isEmpty) {
       logger.e('canActOnSecurityMode() - currentProfileId or publisherProfileId is empty');

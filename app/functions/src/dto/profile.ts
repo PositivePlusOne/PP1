@@ -54,17 +54,20 @@ export interface ProfileJSON {
     hivStatus?: string;
     genders?: StringSetFromJson;
     interests?: StringSetFromJson;
-    companySectors?: StringSetFromJson;
-    visibilityFlags?: StringSetFromJson;
     tags?: StringSetFromJson;
-    featureFlags?: StringSetFromJson;
     placeSkipped?: boolean;
     place?: PlaceJSON;
     referenceImage?: string;
     profileImage?: string;
     biography?: string;
     media?: MediaJSON[];
-    statistics?: ProfileStatisicsJSON;
+    accountFlags?: StringSetFromJson;
+    visibilityFlags?: StringSetFromJson;
+    featureFlags?: StringSetFromJson;
+    companySectors?: StringSetFromJson;
+    companySize?: string;
+    availablePromotionsCount?: number;
+    activePromotionsCount?: number;
 }
 
 export class Profile {
@@ -81,14 +84,18 @@ export class Profile {
     hivStatus: string;
     genders: StringSetFromJson;
     interests: StringSetFromJson;
-    companySectors: StringSetFromJson;
-    visibilityFlags: StringSetFromJson;
-    featureFlags: StringSetFromJson;
     tags: StringSetFromJson;
     placeSkipped: boolean;
     place?: Place;
     biography: string;
     media: Media[];
+    accountFlags: StringSetFromJson;
+    visibilityFlags: StringSetFromJson;
+    featureFlags: StringSetFromJson;
+    companySectors: StringSetFromJson;
+    companySize?: string;
+    availablePromotionsCount: number;
+    activePromotionsCount: number;
 
     constructor(json: ProfileJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -104,14 +111,18 @@ export class Profile {
         this.hivStatus = json.hivStatus || '';
         this.genders = json.genders || new Set();
         this.interests = json.interests || new Set();
-        this.companySectors = json.companySectors || new Set();
-        this.visibilityFlags = json.visibilityFlags || new Set();
-        this.featureFlags = json.featureFlags || new Set();
         this.tags = json.tags || new Set();
         this.placeSkipped = json.placeSkipped || false;
         this.place = json.place && new Place(json.place);
         this.biography = json.biography || '';
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
+        this.accountFlags = json.accountFlags || new Set();
+        this.visibilityFlags = json.visibilityFlags || new Set();
+        this.featureFlags = json.featureFlags || new Set();
+        this.companySectors = json.companySectors || new Set();
+        this.companySize = json.companySize;
+        this.availablePromotionsCount = json.availablePromotionsCount || 0;
+        this.activePromotionsCount = json.activePromotionsCount || 0;
     }
 
     isIncognito(): boolean {
@@ -119,42 +130,47 @@ export class Profile {
         return featureFlags?.includes(featureFlagIncognito);
     }
 
-    removeFlaggedData(isConnected: boolean): void {
-        const visibilityFlags = Array.from(this.visibilityFlags);
-        const hideInfo = this.isIncognito() && !isConnected;
+    isOrganisation(): boolean {
+        const featureFlags = Array.from(this.featureFlags);
+        return featureFlags?.includes(featureFlagOrganisationControls);
+    }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagName)) {
+    removeFlaggedData(): void {
+        const visibilityFlags = Array.from(this.visibilityFlags);
+        const isIncognito = this.isIncognito();
+
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagName)) {
             this.name = '';
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagBirthday)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagBirthday)) {
             this.birthday = '';
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagInterests)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagInterests)) {
             this.interests = new Set();
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagGenders)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagGenders)) {
             this.genders = new Set();
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagLocation)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagLocation)) {
             this.place = undefined;
             this.placeSkipped = false;
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagHivStatus)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagHivStatus)) {
             this.hivStatus = '';
         }
 
-        if (hideInfo || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
+        if (isIncognito || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
             this.companySectors = new Set();
         }
 
         this.visibilityFlags = new Set();
 
-        if (hideInfo) {
+        if (isIncognito) {
             this.locale = '';
             this.displayName = ''; // ? Should this be replaced with a localised anonymous name?
             this.placeSkipped = false;

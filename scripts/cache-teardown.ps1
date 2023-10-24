@@ -1,7 +1,7 @@
 # set these to your specific environment
 $env:PROJECT_ID="positiveplusone-develop"
 $env:REDIS_INSTANCE="redis-firestore-cache"
-$env:GCP_REGION="us-central1"
+$env:GCP_REGION="europe-west3"
 $env:VPC_CONNECTOR="redis-vpc-conn"
 $env:STORAGE_ROLE="simpleStorageRole"
 

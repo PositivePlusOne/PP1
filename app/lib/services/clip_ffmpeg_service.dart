@@ -44,7 +44,6 @@ class CreateClipExportService {
   }
 
   Future<void> exportVideoFromController(VideoEditorController controller, Function(File) onEndFunction) async {
-
     final config = VideoFFmpegVideoEditorConfig(
       controller,
       format: VideoExportFormat.mp4,

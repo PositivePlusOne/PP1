@@ -20,7 +20,12 @@ import '../../../atoms/indicators/positive_profile_circular_indicator.dart';
 import '../vms/account_view_model.dart';
 
 class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget {
-  const AccountProfileBanner({super.key});
+  const AccountProfileBanner({
+    super.key,
+    required this.profile,
+  });
+
+  final Profile? profile;
 
   static const double kBannerHeight = 80.0;
   static const double kBannerRadius = 20.0;
@@ -38,17 +43,19 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
     final AccountViewModelProvider viewModelProvider = accountViewModelProvider.call(const FeedbackType.genericFeedback());
     final AccountViewModel viewModel = ref.watch(viewModelProvider.notifier);
 
-    final ProfileControllerState profileState = ref.watch(profileControllerProvider);
-    final Profile? currentProfile = profileState.currentProfile;
-
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    String displayName = currentProfile?.displayName ?? '';
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final Profile? currentProfile = profileControllerState.currentProfile;
+
+    final bool isViewingOwnProfile = profile != null && profile?.flMeta?.id == currentProfile?.flMeta?.id;
+
+    String displayName = profile?.displayName ?? '';
     if (displayName.isEmpty) {
       displayName = localizations.shared_placeholders_empty_display_name;
     }
 
-    String name = currentProfile?.name ?? '';
+    String name = profile?.name ?? '';
     if (name.isEmpty) {
       name = localizations.shared_placeholders_empty_name;
     }
@@ -57,7 +64,6 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
       height: kBannerHeight,
       width: double.infinity,
       padding: const EdgeInsets.all(kPaddingMedium),
-      margin: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
       decoration: BoxDecoration(
         color: colors.colorGray1,
         borderRadius: BorderRadius.circular(kBannerRadius),
@@ -66,7 +72,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           PositiveProfileCircularIndicator(
-            profile: currentProfile ?? Profile.empty(),
+            profile: profile ?? Profile.empty(),
             onTap: () {},
           ),
           const SizedBox(width: kPaddingSmall),
@@ -95,16 +101,18 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
           PositiveButton.appBarIcon(
             colors: colors,
             icon: UniconsLine.eye,
-            onTapped: () => viewModel.onViewProfileButtonSelected(currentProfile),
+            onTapped: () => viewModel.onViewProfileButtonSelected(profile),
             tooltip: localizations.page_account_actions_view_profile,
           ),
-          const SizedBox(width: kPaddingSmall),
-          PositiveButton.appBarIcon(
-            colors: colors,
-            icon: UniconsLine.pen,
-            onTapped: viewModel.onEditAccountButtonPressed,
-            tooltip: localizations.page_account_actions_edit_profile,
-          ),
+          if (isViewingOwnProfile) ...<Widget>[
+            const SizedBox(width: kPaddingSmall),
+            PositiveButton.appBarIcon(
+              colors: colors,
+              icon: UniconsLine.pen,
+              onTapped: viewModel.onEditAccountButtonPressed,
+              tooltip: localizations.page_account_actions_edit_profile,
+            ),
+          ],
         ],
       ),
     );

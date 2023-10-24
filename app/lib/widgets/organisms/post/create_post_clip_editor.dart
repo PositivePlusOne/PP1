@@ -216,6 +216,6 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
         height: 50,
       );
     }
-    return SizedBox();
+    return const SizedBox();
   }
 }

@@ -30,6 +30,30 @@ export namespace ProfileService {
   }
 
   /**
+   * Updates the promoted post counts for the profile.
+   * @param {ProfileJSON} profile The profile to update the promoted counts for.
+   * @param {number} offset The offset to add to the promoted counts.
+   */
+  export async function increaseAvailablePromotedCountsForProfile(profile: ProfileJSON, offset: number): Promise<void> {
+    const profileId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!profileId) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    const newAvailablePromotionsCount = (profile.availablePromotionsCount ?? 0) + offset;
+    const newActivePromotionsCount = (profile.activePromotionsCount ?? 0) - offset;
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: profileId,
+      data: {
+        availablePromotionsCount: newAvailablePromotionsCount,
+        activePromotionsCount: newActivePromotionsCount,
+      },
+    });
+  }
+
+
+  /**
    * Gets the user profile.
    * @param {string} uid The FL ID of the user.
    * @return {Promise<any>} The user profile.
@@ -163,7 +187,7 @@ export namespace ProfileService {
    * Deletes the user profile.
    * @param {string} uid The user ID of the user to delete the profile for.
    * @return {Promise<void>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the user profile does not exist.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the user profile does not exist.
    */
   export async function deleteProfile(uid: string): Promise<void> {
     functions.logger.info(`Deleting user profile for user: ${uid}`);
@@ -179,7 +203,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the name for.
    * @param {string} email The email to update.
    * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
   export async function updateEmail(uid: string, email: string): Promise<any> {
     functions.logger.info(`Updating email for profile: ${email}`);
@@ -229,6 +253,48 @@ export namespace ProfileService {
     });
   }
 
+  export async function removeAccountFlags(profile: ProfileJSON, accountFlags: string[]): Promise<any> {
+    const entryId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!entryId) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    const currentAccountFlags = [...profile.accountFlags ?? []] as string[];
+    const missingAccountFlags = accountFlags.filter((accountFlag) => !currentAccountFlags.includes(accountFlag));
+    if (missingAccountFlags.length > 0) {
+      return profile;
+    }
+
+    functions.logger.info(`Removing account flags for user: ${entryId}`);
+    const newAccountFlags = [...profile.accountFlags ?? []] as string[];
+    for (const accountFlag of accountFlags) {
+      const index = newAccountFlags.indexOf(accountFlag);
+      if (index > -1) {
+        newAccountFlags.splice(index, 1);
+      }
+    }
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: entryId,
+      data: {
+        accountFlags: newAccountFlags,
+      },
+    });
+  }
+
+  export async function updateAccountFlags(uid: string, accountFlags: string[]): Promise<any> {
+    functions.logger.info(`Updating account flags for user: ${uid}`);
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: uid,
+      data: {
+        accountFlags,
+      },
+    });
+  }
+
   /**
    * Updates the feature flags of the user.
    * @param {string} uid The user ID of the user to update the visibility flags for.
@@ -252,7 +318,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the name for.
    * @param {string} name The name to update.
    * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
   export async function updateName(uid: string, name: string): Promise<any> {
     functions.logger.info(`Updating name for user: ${name}`);
@@ -289,10 +355,11 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the display name for.
    * @param {string} displayName The display name to update.
    * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
+
     const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {
       throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
@@ -474,7 +541,7 @@ export namespace ProfileService {
     const bucket = adminApp.storage().bucket();
     const mediaPromises = [] as Promise<any>[];
     for (const mediaItem of media) {
-      if (mediaItem.type !== "bucket_path" || !mediaItem.bucketPath || mediaItem.url) {
+      if (mediaItem?.type !== "bucket_path" || !mediaItem?.bucketPath || mediaItem?.url) {
         continue;
       }
 
@@ -492,10 +559,12 @@ export namespace ProfileService {
     for (const mediaItem of profile.media ?? []) {
       // we don't want to add the old one that this is replacing - either the name is identical
       // or they both start with 'profile' or 'reference' as they are new
-      const existingMediaItem = media.find((m) => 
+      const existingMediaItem = media.find((m) =>
         m.name === mediaItem.name ||
         (mediaItem.name?.startsWith('profile') && m.name?.startsWith('profile')) ||
-        (mediaItem.name?.startsWith('reference') && m.name?.startsWith('reference')) );
+        (mediaItem.name?.startsWith('reference') && m.name?.startsWith('reference')) ||
+        (mediaItem.name?.startsWith('cover') && m.name?.startsWith('cover')));
+
       if (existingMediaItem) {
         continue;
       }
@@ -512,6 +581,40 @@ export namespace ProfileService {
         media: newMedia,
       },
     });
+  }
+
+  export async function createMediaFromBytes(profile: ProfileJSON, bytes: ArrayBuffer, folder: string, name: string, contentType: string): Promise<MediaJSON> {
+    const bucket = adminApp.storage().bucket();
+    const profileID = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!profileID) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
+    }
+
+    if (!folder || !name) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid folder or name");
+    }
+
+    const mediaPath = `users/${profileID}/${folder}/${name}`;
+    const file = bucket.file(mediaPath);
+
+    const bufferFromArr = Buffer.from(bytes);
+    await file.save(bufferFromArr, {
+      contentType: contentType,
+      public: true,
+      metadata: {
+        cacheControl: "public, max-age=31536000",
+      },
+    });
+
+    const media = {
+      name: name,
+      bucketPath: mediaPath,
+      isPrivate: false,
+      priority: 0,
+      type: "bucket_path",
+    } as MediaJSON;
+
+    return media;
   }
 
   /**

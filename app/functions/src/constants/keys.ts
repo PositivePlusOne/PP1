@@ -7,6 +7,7 @@ export namespace Keys {
   export const StreamFeedsAppId = "STREAM_FEEDS_APP_ID";
   export const AlgoliaApiKey = "ALGOLIA_API_KEY";
   export const AlgoliaAppId = "ALGOLIA_APP_ID";
+  export const SlackSigningSecret = "SLACK_SIGNING_SECRET";
 
   //* Feature flags
   export const FeatureFlagManagedOrganisation = "MANAGED_ORGANISATION";
@@ -20,5 +21,6 @@ export namespace Keys {
     StreamFeedsAppId,
     AlgoliaApiKey,
     AlgoliaAppId,
+    SlackSigningSecret,
   ];
 }

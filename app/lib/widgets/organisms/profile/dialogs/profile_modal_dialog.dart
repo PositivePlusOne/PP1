@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/profile/dialogs/profile_block_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -106,7 +107,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     ProfileModalDialogOptionType.follow,
     ProfileModalDialogOptionType.message,
     ProfileModalDialogOptionType.block,
-    ProfileModalDialogOptionType.reportPost,
+    ProfileModalDialogOptionType.report,
   };
 
   Future<void> onOptionSelected({
@@ -159,10 +160,24 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           await getStreamController.createConversation([targetProfileId], shouldPopDialog: true);
           break;
         case ProfileModalDialogOptionType.block:
-          relationshipStates.contains(RelationshipState.sourceBlocked) ? await relationshipController.unblockRelationship(targetProfileId) : await relationshipController.blockRelationship(targetProfileId);
-          await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} $targetDisplayNameHandle'));
-          await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+          final bool hasSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
+          if (!hasSourceBlocked) {
+            await appRouter.pop();
+            await PositiveDialog.show(
+              context: context,
+              useSafeArea: false,
+              title: localizations.shared_profile_modal_action_block(targetDisplayNameHandle),
+              child: ProfileBlockDialog(
+                targetProfileId: targetProfileId,
+                currentProfileId: currentProfileId,
+              ),
+            );
+          } else {
+            await relationshipController.unblockRelationship(targetProfileId);
+            await appRouter.pop();
+            ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} $targetDisplayNameHandle'));
+            await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+          }
           break;
         case ProfileModalDialogOptionType.mute:
           relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(targetProfileId) : await relationshipController.muteRelationship(targetProfileId);

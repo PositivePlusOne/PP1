@@ -18,7 +18,9 @@ export namespace TagsService {
     popular = "popular",
     new = "new",
     verified = "verified",
-    promoted = "promoted",
+    promotion = "promotion",
+    chatPromotion = "promotion_chat",
+    feedPromotion = "promotion_feed",
   }
 
   /**
@@ -255,22 +257,17 @@ export namespace TagsService {
    * @param {string[]} tags the tags.
     * @returns {string[]} the tags without restricted tags.
    */
-  export function removeRestrictedTagsFromStringArray(tags: string[]): string[] {
-    // let's see if 'promoted' is in there, these need to stay in place in the return
+  export function removeRestrictedTagsFromStringArray(tags: string[], isPromotion: boolean): string[] {
     const promotedTags = tags.filter((tag) => isPromotedTag(tag));
-    // now let's filter out all the restricted tags which will also remove all the promoted tags
     let returnTags = tags.filter((tag) => !isRestricted(tag)).map((tag) => {
       return formatTag(tag);
     });
     
-    //? We only want to allow a maximum of 5 tags, for the local validation refer to create_post_tag_dialogue.dart under the function onTagTapped
     returnTags = returnTags.slice(0, 4);
-    //! BUT if we have > 1 promoted tags then they have been properly setup to be a promotion
-    //! as will definately include 'promoted' and 'promoted_{userId}' of the organisation that promoted it.
-    if (promotedTags.length > 1) {
-      // this is good, let's put them back into the list
+    if (isPromotion && promotedTags.length > 1) {
       returnTags = [...promotedTags, ...returnTags];
     }
+    
     // and return the final list of tags that are all valid and formattted
     return returnTags;
   }
@@ -281,7 +278,7 @@ export namespace TagsService {
    * @returns {boolean} true if the tag represents a promoted item.
    */
   export function isPromotedTag(tag: string): boolean {
-    return tag === RestrictedTagKey.promoted || tag.startsWith(`${RestrictedTagKey.promoted}_`);
+    return tag === RestrictedTagKey.promotion || tag.startsWith(`${RestrictedTagKey.promotion}_`);
   }
 
   /**

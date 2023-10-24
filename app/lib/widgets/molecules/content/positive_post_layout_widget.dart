@@ -106,7 +106,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   /// return if this layout is for an activity that is 'promoted'
   bool get _isPromoted =>
-
       // we are promoted when there is a promotion or there is a tag that signals that it is
       promotion != null || tags.indexWhere((tag) => TagHelpers.isPromoted(tag)) != -1;
 
@@ -165,12 +164,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
 
-          //* -=-=-=- Tags -=-=-=- *\\
-          if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
-            const SizedBox(height: kPaddingSmall),
-            _tags(),
-          ],
-
           //* -=-=-=- Location -=-=-=- *\\
           if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false) ...[
             const SizedBox(height: kPaddingSmall),
@@ -187,6 +180,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required Profile? currentProfile,
     required Relationship? publisherRelationship,
   }) {
+    bool isCarousel = (postContent?.media.length ?? 0) > 1 && isShortformPost;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,38 +194,28 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         Stack(
           alignment: AlignmentDirectional.bottomEnd,
           children: [
-            if (postContent?.media.length == 1 || !isShortformPost)
+            //* -=-=-=- Single attached image -=-=-=- *\\
+            if (!isCarousel)
               Column(
                 children: [
                   ..._postListAttachedImages(),
                 ],
               ),
             //* -=-=-=- Carousel of attached images -=-=-=- *\\
-            if ((postContent?.media.length ?? 0) > 1 && isShortformPost)
+            if (isCarousel)
               LayoutBuilder(
                 builder: (context, constraints) {
                   return _postCarouselAttachedImages(context, constraints);
                 },
               ),
             //* -=-=-=- promotion banner -=-=-=- *\\
-            if (_isPromoted) _promotionBanner(),
+            if (_isPromoted) _promotionBanner(isOnCarousel: isCarousel),
           ],
         ),
         //* -=-=-=- Post Actions -=-=-=- *\\
         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
         _markdownBody(context: context, ref: ref),
-        //* -=-=-=- tags -=-=-=- *\\
-        //! currently not in the design (want a bold #hashtag display of tags in the text apparently) DOUG - don't get how to do that so commenting out
-        // if (postContent?.enrichmentConfiguration!.tags.isNotEmpty ?? false)
-        //   // doing a row in order to center-align the list of tags
-        //   Row(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       //! pretty sure this doesn't work for a long list though as the scroll view isn't constrained in an expanded )O:
-        //       _tags(),
-        //     ],
-        //   ),
       ],
     );
   }
@@ -312,11 +296,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
   //         //* -=-=-=- Post Title -=-=-=- *\\
   //         _postTitle(),
-  //         //* -=-=-=- Tags -=-=-=- *\\
-  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
-  //           const SizedBox(height: kPaddingSmall),
-  //           _tags(),
-  //         ],
   //         //* -=-=-=- Location -=-=-=- *\\
   //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
   //           const SizedBox(height: kPaddingSmall),
@@ -465,7 +444,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       // final Uint8List? cachedBytes = cacheController.get(expectedCacheKey);
       // final String mimeType = lookupMimeType(media!.name, headerBytes: bytes) ?? '';
 
-      return Container(
+      return const SizedBox(
         width: double.infinity,
         height: 500,
         // child: PositiveVideoPlayer(
@@ -489,13 +468,19 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _promotionBanner() {
+  Widget _promotionBanner({bool isOnCarousel = false}) {
     final String link = promotion?.link ?? '';
     final String linkText = promotion?.linkText ?? appLocalizations.post_promoted_link_label;
-
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      padding: EdgeInsets.only(
+        left: sidePadding,
+        right: sidePadding,
+        // if we are showing the carousel then there are indicators to show which image is showing
+        // so the banner has to be a little higher so the user can see these indicators
+        bottom: isOnCarousel ? kPaddingLarge : 0,
+      ),
       child: PositiveGlassSheet(
+        borderRadius: isOnCarousel ? 0 : kBorderRadiusLarge,
         children: [
           PositiveButton(
             onTapped: () {
@@ -582,20 +567,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     );
   }
 
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  //* -=-=-=-=-=-         Tags and location information        -=-=-=-=-=- *\\
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _tags() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
-      child: PositivePostHorizontalTags(
-        tags: postContent?.enrichmentConfiguration?.tags ?? [],
-        typeography: typeography,
-        colours: colours,
-      ),
-    );
-  }
-
   Widget _location() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: kPaddingSmall + sidePadding),
@@ -630,7 +601,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     }
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? []);
+    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
 
     return PositiveTapBehaviour(
       onTap: onPostPageRequested,

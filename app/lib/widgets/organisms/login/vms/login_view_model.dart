@@ -3,26 +3,26 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:android_intent_plus/android_intent.dart';
-import 'package:android_intent_plus/flag.dart';
-import 'package:app/extensions/localization_extensions.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/fluent_validation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/user/user_controller.dart';
 import '../../../../services/third_party.dart';

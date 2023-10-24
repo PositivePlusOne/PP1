@@ -26,16 +26,7 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
       interests: json['interests'] == null
           ? const {}
           : stringSetFromJson(json['interests']),
-      visibilityFlags: json['visibilityFlags'] == null
-          ? const {}
-          : stringSetFromJson(json['visibilityFlags']),
       tags: json['tags'] == null ? const {} : stringSetFromJson(json['tags']),
-      featureFlags: json['featureFlags'] == null
-          ? const {}
-          : stringSetFromJson(json['featureFlags']),
-      companySectors: json['companySectors'] == null
-          ? const {}
-          : stringSetFromJson(json['companySectors']),
       placeSkipped: json['placeSkipped'] as bool? ?? false,
       place: json['place'] == null
           ? null
@@ -45,6 +36,23 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      accountFlags: json['accountFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['accountFlags']),
+      visibilityFlags: json['visibilityFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['visibilityFlags']),
+      featureFlags: json['featureFlags'] == null
+          ? const {}
+          : stringSetFromJson(json['featureFlags']),
+      companySectors: json['companySectors'] == null
+          ? const {}
+          : stringSetFromJson(json['companySectors']),
+      companySize: json['companySize'] == null
+          ? const ProfileCompanySize.unknown()
+          : ProfileCompanySize.fromJson(json['companySize'] as String),
+      availablePromotionsCount: json['availablePromotionsCount'] as int? ?? 0,
+      activePromotionsCount: json['activePromotionsCount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
@@ -61,14 +69,18 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'hivStatus': instance.hivStatus,
       'genders': instance.genders.toList(),
       'interests': instance.interests.toList(),
-      'visibilityFlags': instance.visibilityFlags.toList(),
       'tags': instance.tags.toList(),
-      'featureFlags': instance.featureFlags.toList(),
-      'companySectors': instance.companySectors.toList(),
       'placeSkipped': instance.placeSkipped,
       'place': instance.place?.toJson(),
       'biography': instance.biography,
       'media': instance.media.map((e) => e.toJson()).toList(),
+      'accountFlags': instance.accountFlags.toList(),
+      'visibilityFlags': instance.visibilityFlags.toList(),
+      'featureFlags': instance.featureFlags.toList(),
+      'companySectors': instance.companySectors.toList(),
+      'companySize': ProfileCompanySize.toJson(instance.companySize),
+      'availablePromotionsCount': instance.availablePromotionsCount,
+      'activePromotionsCount': instance.activePromotionsCount,
     };
 
 _$ProfileStatisticsImpl _$$ProfileStatisticsImplFromJson(

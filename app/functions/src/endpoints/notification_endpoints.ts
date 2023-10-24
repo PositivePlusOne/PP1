@@ -9,7 +9,7 @@ import { FeedService } from "../services/feed_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace NotificationEndpoints {
-  export const listNotifications = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const listNotifications = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 
@@ -42,7 +42,7 @@ export namespace NotificationEndpoints {
     });
   });
 
-  export const markNotificationsAsReadAndSeen = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const markNotificationsAsReadAndSeen = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     functions.logger.info(`Marking notifications as read and seen for current user: ${uid}`);

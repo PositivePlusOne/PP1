@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 
 import { SystemService } from "../services/system_service";
 import { UserService } from "../services/user_service";
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_256 } from "../constants/domain";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { getDataChangeSchema, getDataChangeType } from "../handlers/data_change_type";
 
@@ -22,7 +22,8 @@ import { Pagination } from "../helpers/pagination";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
-    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .region('europe-west3')
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256)
     .firestore.document("fl_content/{documentId}")
     .onWrite(async (change, context) => {
       functions.logger.info("Data change detected", { change, context });
@@ -54,7 +55,7 @@ export namespace SystemEndpoints {
       await DataHandlerRegistry.executeChangeHandlers(changeType, schema, context.params.documentId, beforeData, afterData);
     });
 
-  export const getSystemConfiguration = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getSystemConfiguration = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
 
@@ -73,7 +74,7 @@ export namespace SystemEndpoints {
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("user", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? FeedService.getFeedWindow(uid, streamClient.feed("timeline", uid), DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
-      uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({data: [], pagination: {}}),
+      uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({ data: [], pagination: {} }),
       LocalizationsService.getDefaultCompanySectors(locale),
     ]);
 
@@ -153,7 +154,7 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const submitFeedback = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const submitFeedback = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await UserService.verifyAuthenticated(context, request.sender);
 
     const uid = context.auth?.uid || "";
@@ -161,23 +162,25 @@ export namespace SystemEndpoints {
     const reportType = request.data.reportType || "unknown";
     const content = request.data.content || "";
 
+    const profile = await ProfileService.getProfile(uid);
     functions.logger.info("Submitting feedback", { uid, feedbackType, reportType, content });
-    await SystemService.submitFeedback(uid, feedbackType, reportType, content);
+
+    await SystemService.submitFeedback(profile, feedbackType, reportType, content);
 
     return JSON.stringify({ success: true });
   });
 
-  export const getStreamToken = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getStreamToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Getting chat token", { uid });
 
     const chatClient = ConversationService.getStreamChatInstance();
     const chatToken = ConversationService.getUserToken(chatClient, uid);
-    
+
     // We should check here the integrity of the user's feeds.
     // Note: Subscribed follower feeds integrity will be checked on the relationship endpoints.
     const feedsClient = FeedService.getFeedsClient();
-    
+
     const profile = await ProfileService.getProfile(uid);
     await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, profile);
 
@@ -189,7 +192,7 @@ export namespace SystemEndpoints {
     });
   });
 
-  export const clearEntireCache = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+  export const clearEntireCache = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
     await UserService.verifyAuthenticated(context);
 
     functions.logger.info("Clearing entire cache");
@@ -199,7 +202,7 @@ export namespace SystemEndpoints {
   });
 
   // This is a dangerous endpoint and should only be used in development.
-  // export const clearGetStreamContentFromSystem = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
+  // export const clearGetStreamContentFromSystem = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
   //   const firestore = adminApp.firestore();
   //   const storage = adminApp.storage();
 

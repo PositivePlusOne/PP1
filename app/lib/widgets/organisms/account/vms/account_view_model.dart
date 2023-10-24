@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/content/activities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -223,6 +224,35 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       );
     } catch (ex) {
       logger.e('Failed to send feedback. $ex');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onBlockUserRequested({
+    required Profile? currentProfile,
+    required Profile? targetProfile,
+  }) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onBlockUserRequested');
+
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (targetProfileId.isEmpty || currentProfileId.isEmpty) {
+      logger.e('onBlockUserRequested: targetProfileId or currentProfileId empty.');
+      return;
+    }
+
+    try {
+      state = state.copyWith(isBusy: true);
+      await relationshipController.blockRelationship(targetProfileId);
+      await appRouter.pop();
+      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have blocked ${targetProfile?.displayName.asHandle}'));
     } finally {
       state = state.copyWith(isBusy: false);
     }

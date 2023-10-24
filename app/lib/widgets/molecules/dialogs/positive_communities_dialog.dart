@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -197,6 +198,10 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   }
 
   Future<void> requestNextPage(String cursor, CommunityType communityType) async {
+    if (!mounted) {
+      return;
+    }
+
     final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
 
@@ -218,6 +223,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
 
@@ -244,39 +250,63 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final Widget child = switch (controller.state.selectedCommunityType) {
       CommunityType.following => buildRelationshipList(
           context: context,
+          typography: typography,
+          colors: colors,
           controller: followingPagingFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
+          noDataTitle: localizations.page_community_following_empty_title,
+          noDataBody: localizations.page_community_following_empty_body,
         ),
       CommunityType.followers => buildRelationshipList(
           context: context,
+          typography: typography,
+          colors: colors,
           controller: followersPagingFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
+          noDataTitle: localizations.page_community_followers_empty_title,
+          noDataBody: localizations.page_community_followers_empty_body,
         ),
       CommunityType.connected => buildRelationshipList(
           context: context,
+          typography: typography,
+          colors: colors,
           controller: connectionsPagingFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
+          noDataTitle: localizations.page_community_connections_empty_title,
+          noDataBody: localizations.page_community_connections_empty_body,
         ),
       CommunityType.blocked => buildRelationshipList(
           context: context,
+          typography: typography,
+          colors: colors,
           controller: blockedPagingFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
+          noDataTitle: localizations.page_community_blocked_empty_title,
+          noDataBody: localizations.page_community_blocked_empty_body,
         ),
       CommunityType.managed => buildRelationshipList(
           context: context,
+          typography: typography,
+          colors: colors,
           controller: managedPagingFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
+          noDataTitle: localizations.page_community_managed_empty_title,
+          noDataBody: localizations.page_community_managed_empty_body,
         ),
       CommunityType.supported => buildRelationshipList(
           context: context,
+          typography: typography,
+          colors: colors,
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
+          noDataTitle: localizations.page_community_supported_empty_title,
+          noDataBody: localizations.page_community_supported_empty_body,
         ),
     };
 
@@ -294,9 +324,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       isOrganisationManager = currentAuthUserId.isNotEmpty && currentProfile?.flMeta?.ownedBy == currentAuthUserId;
     }
 
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-
     return PositiveScaffold(
+      decorations: buildType3ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,
@@ -349,9 +378,13 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
   Widget buildRelationshipList({
     required BuildContext context,
+    required DesignTypographyModel typography,
+    required DesignColorsModel colors,
     required Profile? senderProfile,
     required CacheController cacheController,
     required PagingController<String, String> controller,
+    required String noDataTitle,
+    required String noDataBody,
   }) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     return PagedListView.separated(
@@ -365,6 +398,20 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
+        // create a nice display to show when there is no content in the list
+        noItemsFoundIndicatorBuilder: (context) => Column(
+          children: [
+            Text(
+              noDataTitle,
+              style: typography.styleHeroMedium,
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              noDataBody,
+              style: typography.styleSubtitle,
+            ),
+          ],
+        ),
         itemBuilder: (context, item, index) {
           final Profile? targetProfile = cacheController.get(item);
           final String targetProfileId = targetProfile?.flMeta?.id ?? '';

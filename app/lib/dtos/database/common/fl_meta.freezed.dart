@@ -26,6 +26,7 @@ mixin _$FlMeta {
   String? get ownedBy => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get ownedAsOfDate => throw _privateConstructorUsedError;
+  String get directoryEntryId => throw _privateConstructorUsedError;
   String? get lastModifiedBy => throw _privateConstructorUsedError;
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get lastModifiedDate => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $FlMetaCopyWith<$Res> {
       String? ownedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? ownedAsOfDate,
+      String directoryEntryId,
       String? lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? lastModifiedDate,
@@ -86,6 +88,7 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
     Object? createdDate = freezed,
     Object? ownedBy = freezed,
     Object? ownedAsOfDate = freezed,
+    Object? directoryEntryId = null,
     Object? lastModifiedBy = freezed,
     Object? lastModifiedDate = freezed,
     Object? lastFetchMillis = null,
@@ -114,6 +117,10 @@ class _$FlMetaCopyWithImpl<$Res, $Val extends FlMeta>
           ? _value.ownedAsOfDate
           : ownedAsOfDate // ignore: cast_nullable_to_non_nullable
               as String?,
+      directoryEntryId: null == directoryEntryId
+          ? _value.directoryEntryId
+          : directoryEntryId // ignore: cast_nullable_to_non_nullable
+              as String,
       lastModifiedBy: freezed == lastModifiedBy
           ? _value.lastModifiedBy
           : lastModifiedBy // ignore: cast_nullable_to_non_nullable
@@ -172,6 +179,7 @@ abstract class _$$FlMetaImplCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
       String? ownedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? ownedAsOfDate,
+      String directoryEntryId,
       String? lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       String? lastModifiedDate,
@@ -200,6 +208,7 @@ class __$$FlMetaImplCopyWithImpl<$Res>
     Object? createdDate = freezed,
     Object? ownedBy = freezed,
     Object? ownedAsOfDate = freezed,
+    Object? directoryEntryId = null,
     Object? lastModifiedBy = freezed,
     Object? lastModifiedDate = freezed,
     Object? lastFetchMillis = null,
@@ -228,6 +237,10 @@ class __$$FlMetaImplCopyWithImpl<$Res>
           ? _value.ownedAsOfDate
           : ownedAsOfDate // ignore: cast_nullable_to_non_nullable
               as String?,
+      directoryEntryId: null == directoryEntryId
+          ? _value.directoryEntryId
+          : directoryEntryId // ignore: cast_nullable_to_non_nullable
+              as String,
       lastModifiedBy: freezed == lastModifiedBy
           ? _value.lastModifiedBy
           : lastModifiedBy // ignore: cast_nullable_to_non_nullable
@@ -282,6 +295,7 @@ class _$FlMetaImpl implements _FlMeta {
       this.ownedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       this.ownedAsOfDate,
+      this.directoryEntryId = '',
       this.lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       this.lastModifiedDate,
@@ -307,6 +321,9 @@ class _$FlMetaImpl implements _FlMeta {
   @override
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   final String? ownedAsOfDate;
+  @override
+  @JsonKey()
+  final String directoryEntryId;
   @override
   final String? lastModifiedBy;
   @override
@@ -337,7 +354,7 @@ class _$FlMetaImpl implements _FlMeta {
 
   @override
   String toString() {
-    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, ownedBy: $ownedBy, ownedAsOfDate: $ownedAsOfDate, lastModifiedBy: $lastModifiedBy, lastModifiedDate: $lastModifiedDate, lastFetchMillis: $lastFetchMillis, isPartial: $isPartial, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId)';
+    return 'FlMeta(createdBy: $createdBy, createdDate: $createdDate, ownedBy: $ownedBy, ownedAsOfDate: $ownedAsOfDate, directoryEntryId: $directoryEntryId, lastModifiedBy: $lastModifiedBy, lastModifiedDate: $lastModifiedDate, lastFetchMillis: $lastFetchMillis, isPartial: $isPartial, docId: $docId, id: $id, env: $env, locale: $locale, schema: $schema, schemaRefId: $schemaRefId)';
   }
 
   @override
@@ -352,6 +369,8 @@ class _$FlMetaImpl implements _FlMeta {
             (identical(other.ownedBy, ownedBy) || other.ownedBy == ownedBy) &&
             (identical(other.ownedAsOfDate, ownedAsOfDate) ||
                 other.ownedAsOfDate == ownedAsOfDate) &&
+            (identical(other.directoryEntryId, directoryEntryId) ||
+                other.directoryEntryId == directoryEntryId) &&
             (identical(other.lastModifiedBy, lastModifiedBy) ||
                 other.lastModifiedBy == lastModifiedBy) &&
             (identical(other.lastModifiedDate, lastModifiedDate) ||
@@ -377,6 +396,7 @@ class _$FlMetaImpl implements _FlMeta {
       createdDate,
       ownedBy,
       ownedAsOfDate,
+      directoryEntryId,
       lastModifiedBy,
       lastModifiedDate,
       lastFetchMillis,
@@ -410,6 +430,7 @@ abstract class _FlMeta implements FlMeta {
       final String? ownedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       final String? ownedAsOfDate,
+      final String directoryEntryId,
       final String? lastModifiedBy,
       @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
       final String? lastModifiedDate,
@@ -434,6 +455,8 @@ abstract class _FlMeta implements FlMeta {
   @override
   @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
   String? get ownedAsOfDate;
+  @override
+  String get directoryEntryId;
   @override
   String? get lastModifiedBy;
   @override

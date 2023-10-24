@@ -47,12 +47,6 @@ class AccountPage extends HookConsumerWidget {
     useLifecycleHook(viewModel);
 
     final bool hasMultipleProfiles = viewModel.getSupportedProfiles().length > 1;
-    final Size preferedAppBarSize = Size(
-      double.infinity,
-      //? Banner Height, size of slim account selection bar + small padding around account selection bar
-      //? Account selection bar is only shown if multiple accounts are linked, and therefore only requires space for it if this is the case
-      AccountProfileBanner.kBannerHeight + (hasMultipleProfiles ? (kPaddingMedium + kPaddingSmall * 2) : kPaddingNone),
-    );
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
@@ -74,14 +68,26 @@ class AccountPage extends HookConsumerWidget {
       ),
     ];
 
-    double bannerHeight = AccountProfileBanner.kBannerHeight + kPaddingMedium + kPaddingSmall * 2;
+    //? Banner Height
+    double bannerHeight = AccountProfileBanner.kBannerHeight;
+    if (hasMultipleProfiles) {
+      //? size of slim account selection bar (kPaddingMedium) + small padding around account selection bar (kPaddingSmall * 2)
+      //? Account selection bar is only shown if a second account is linked, and therefore only requires space for it if this is the case
+      bannerHeight += kPaddingMedium + kPaddingSmall * 2;
+    }
     if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) {
-      bannerHeight += kPaddingSmall * 3;
+      //? additional size of dropdown account selection bar (kPaddingLarge)
+      //? Account selection bar is only shown if three or more accounts are linked, and therefore only requires space for it if this is the case
+      bannerHeight += kPaddingLarge;
     }
 
+    final Size preferedAppBarSize = Size(double.infinity, bannerHeight);
     final Size screenSize = mediaQueryData.size;
+
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
+
+    final Profile? currentProfile = profileController.currentProfile;
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
@@ -174,8 +180,10 @@ class AccountPage extends HookConsumerWidget {
                     ),
                   ),
                 ],
-                // always show our account banner
-                const AccountProfileBanner(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                  child: AccountProfileBanner(profile: currentProfile),
+                ),
               ],
             ),
           ),

@@ -27,6 +27,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.onFocusedChanged,
     this.textInputAction,
     this.textInputType = TextInputType.text,
+    this.textCapitalization = TextCapitalization.none,
     this.prefixIcon,
     this.label,
     this.suffixIcon,
@@ -77,6 +78,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final TextInputAction? textInputAction;
   final TextInputType textInputType;
+  final TextCapitalization textCapitalization;
   final TextEditingController? textEditingController;
 
   final List<TextInputFormatter>? inputformatters;
@@ -284,6 +286,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
               padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : labelPadding),
               duration: kAnimationDurationFast,
               child: TextFormField(
+                textCapitalization: widget.textCapitalization,
                 autocorrect: widget.autocorrect,
                 autofocus: widget.autofocus,
                 focusNode: textFocusNode,

@@ -4,6 +4,7 @@ import 'dart:collection';
 import 'dart:io';
 
 // Package imports:
+import 'package:cron/cron.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -15,6 +16,7 @@ import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/constants/cache_constants.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
+import 'package:app/services/health_api_service.dart';
 import '../../services/third_party.dart';
 
 part 'cache_controller.freezed.dart';
@@ -28,6 +30,17 @@ class CacheRecord with _$CacheRecord {
     required FlMeta metadata,
   }) = _CacheRecord;
 
+  static const String kCacheRefreshInterval = '*/1 * * * *';
+  static const Duration kCacheExpiryInterval = Duration(minutes: 2);
+
+  static const int kCacheRefreshMaximumEntryCount = 100;
+
+  static final List<String> kCacheUpdateTargetSchemas = List<String>.unmodifiable([
+    'users',
+    'relationships',
+    'activities',
+  ]);
+
   factory CacheRecord.fromJson(Map<String, Object?> json) => _$CacheRecordFromJson(json);
 }
 
@@ -38,6 +51,63 @@ CacheController cacheController(CacheControllerRef ref) {
 
 class CacheController {
   final HashMap<String, CacheRecord> cacheData = HashMap<String, CacheRecord>();
+  ScheduledTask? cacheUpdateTask;
+
+  Future<void> setupListeners() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final Cron cron = providerContainer.read(cronProvider);
+
+    logger.i('Setting up cache controller listeners');
+    await cacheUpdateTask?.cancel();
+    cacheUpdateTask = cron.schedule(Schedule.parse(CacheRecord.kCacheRefreshInterval.toString()), onCacheUpdateRequest);
+  }
+
+  Future<void> onCacheUpdateRequest() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.i('Cache update request received');
+
+    final List<String> requestIds = [];
+
+    final int currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    for (final CacheRecord record in cacheData.values) {
+      final int lastFetchTime = record.metadata.lastFetchMillis;
+
+      final String schema = record.metadata.schema ?? '';
+      if (schema.isEmpty || !CacheRecord.kCacheUpdateTargetSchemas.contains(schema)) {
+        logger.d('Skipping cache record ${record.key} due to schema mismatch');
+        continue;
+      }
+
+      if (lastFetchTime == -1) {
+        logger.d('Skipping cache record ${record.key} due to missing last fetch time');
+        continue;
+      }
+
+      final String id = record.metadata.id ?? '';
+      final bool isCacheExpired = currentTime - lastFetchTime > CacheRecord.kCacheExpiryInterval.inMilliseconds;
+
+      if (id.isNotEmpty && isCacheExpired) {
+        final String cacheKey = '${schema}_$id';
+        requestIds.add(cacheKey);
+      }
+
+      logger.d('Cache record ${record.key} is expired: $isCacheExpired');
+      if (requestIds.length >= CacheRecord.kCacheRefreshMaximumEntryCount) {
+        logger.i('Cache update request limit reached');
+        break;
+      }
+    }
+
+    if (requestIds.isEmpty) {
+      logger.i('No cache update requests to process');
+      return;
+    }
+
+    final HealthApiService healthApiService = await providerContainer.read(healthApiServiceProvider.future);
+    await healthApiService.updateLocalCache(requestIds: requestIds);
+    logger.i('Cache update request completed');
+  }
 
   Future<File?> getSharedPrefsFile(String uid) async {
     final Logger logger = providerContainer.read(loggerProvider);
@@ -61,18 +131,22 @@ class CacheController {
     FlMeta? metadata,
   }) {
     final Logger logger = providerContainer.read(loggerProvider);
+    if (value == null) {
+      logger.w('Skipping cache update on $key due to null value');
+      return;
+    }
 
     CacheRecord? record = cacheData[key];
 
     final bool hasRecord = record != null;
     final FlMeta newMetadata = metadata ?? FlMeta.empty(key, '');
-    final bool isDataComplete = newMetadata.isPartial;
+    final bool isDataPartial = newMetadata.isPartial;
     final int newFetchMillis = newMetadata.lastFetchMillis;
 
-    final bool isOldDataComplete = record?.metadata.isPartial ?? false;
+    final bool isOldDataPartial = record?.metadata.isPartial ?? true;
     final int oldFetchMillis = record?.metadata.lastFetchMillis ?? -1;
 
-    final bool shouldSkipOnDataIntegrity = !isDataComplete && isOldDataComplete;
+    final bool shouldSkipOnDataIntegrity = isDataPartial && !isOldDataPartial;
     if (hasRecord && shouldSkipOnDataIntegrity) {
       logger.w('Skipping cache update on $key due to new data being incomplete');
       return;

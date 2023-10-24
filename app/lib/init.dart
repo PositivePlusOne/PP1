@@ -17,6 +17,7 @@ import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
@@ -50,6 +51,7 @@ Future<void> setupApplication() async {
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -98,6 +100,7 @@ Future<void> setupApplication() async {
   await profileController.setupListeners();
   await galleryController.setupListeners();
   await tagsController.setupListeners();
+  await cacheController.setupListeners();
 
   await systemController.preloadPackageInformation();
 

@@ -169,6 +169,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               minLines: 8,
               isBusy: isBusy,
               textInputType: TextInputType.multiline,
+              textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: kPaddingSmall),
 
@@ -193,6 +194,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                 colours: colours,
                 textStyle: textStyle,
                 maxLength: kMaxLengthAltText,
+                textCapitalization: TextCapitalization.sentences,
                 maxLines: 3,
                 minLines: 1,
                 isBusy: isBusy,
@@ -343,6 +345,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     maxLines: 15,
                     minLines: 8,
                     textInputType: TextInputType.multiline,
+                    textCapitalization: TextCapitalization.sentences,
                   ),
                   const SizedBox(height: kPaddingSmall),
                   CreatePostTagsContainer(
@@ -358,6 +361,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     const SizedBox(height: kPaddingSmall),
                     CreatePostTextField(
                       text: localisations.page_create_post_alt_text,
+                      textCapitalization: TextCapitalization.sentences,
                       controller: altTextController,
                       colours: colours,
                       textStyle: textStyle,
@@ -511,6 +515,7 @@ class CreatePostTextField extends StatefulWidget {
     this.controller,
     this.maxLength,
     this.textInputType = TextInputType.text,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   final DesignColorsModel colours;
@@ -522,6 +527,7 @@ class CreatePostTextField extends StatefulWidget {
   final int? maxLength;
   final bool isBusy;
   final TextInputType textInputType;
+  final TextCapitalization textCapitalization;
 
   @override
   State<CreatePostTextField> createState() => _CreatePostTextFieldState();
@@ -549,6 +555,7 @@ class _CreatePostTextFieldState extends State<CreatePostTextField> {
         minLines: widget.minLines,
         maxLines: widget.maxLines,
         textInputType: widget.textInputType,
+        textCapitalization: widget.textCapitalization,
       ),
     );
   }

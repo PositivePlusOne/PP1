@@ -1,18 +1,16 @@
 // Flutter imports:
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/system/design_controller.dart';
