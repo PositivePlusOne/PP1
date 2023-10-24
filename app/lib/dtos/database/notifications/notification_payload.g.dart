@@ -37,7 +37,7 @@ Map<String, dynamic> _$$NotificationPayloadImplToJson(
       'title': instance.title,
       'body': instance.body,
       'icon': instance.icon,
-      'created_at': dateToUnknown(instance.createdAt),
+      'created_at': instance.createdAt,
       'extra_data': instance.extraData,
       'topic': NotificationTopic.toJson(instance.topic),
       'action': NotificationAction.toJson(instance.action),

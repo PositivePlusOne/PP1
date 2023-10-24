@@ -11,6 +11,7 @@ import { RelationshipJSON, RelationshipMemberJSON } from "../dto/relationships";
 import { CacheService } from "./cache_service";
 import { RelationshipState } from "./types/relationship_state";
 import { ProfileJSON } from "../dto/profile";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 // Used for interrogating information between two users.
 // For example: checking if a user is blocked from sending messages to another user.
@@ -639,7 +640,7 @@ export namespace RelationshipService {
     }
 
     target._fl_meta_.ownedBy = senderId;
-    target._fl_meta_.ownedAsOfDate = new Date().toISOString();
+    target._fl_meta_.ownedAsOfDate = StreamHelpers.getCurrentTimestamp();
 
     return await DataService.updateDocument({
       schemaKey: "users",

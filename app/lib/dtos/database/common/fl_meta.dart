@@ -11,12 +11,12 @@ part 'fl_meta.g.dart';
 class FlMeta with _$FlMeta {
   const factory FlMeta({
     String? createdBy,
-    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdDate,
+    @JsonKey(fromJson: dateFromUnknown) String? createdDate,
     String? ownedBy,
-    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? ownedAsOfDate,
+    @JsonKey(fromJson: dateFromUnknown) String? ownedAsOfDate,
     @Default('') String directoryEntryId,
     String? lastModifiedBy,
-    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? lastModifiedDate,
+    @JsonKey(fromJson: dateFromUnknown) String? lastModifiedDate,
     @Default(-1) int lastFetchMillis,
     @Default(false) bool isPartial,
     String? docId,

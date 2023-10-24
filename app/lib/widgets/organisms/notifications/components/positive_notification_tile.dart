@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -170,9 +171,8 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
         if (body.endsWith('.')) {
           body = body.substring(0, body.length - 1);
         }
-
-        final Jiffy createdAt = Jiffy.parse(payload.createdAt!);
-        final String timeAgo = createdAt.fromNow();
+        // let's parse the time as a standard ISO string
+        final timeAgo = payload.createdAt!.asDateDifference(context);
         body = '$body $timeAgo.';
       } catch (ex) {
         logger.e('Failed to parse createdAt: ${payload.createdAt} - ex: $ex');

@@ -3,6 +3,7 @@ import { AdminQuickActionDataJSON, AdminQuickActionJSON } from "../../dto/admin"
 import { AdminQuickActionService } from '../admin_quick_action_service';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { FlMetaJSON } from '../../dto/meta';
+import { StreamHelpers } from '../../helpers/stream_helpers';
 
 export namespace LinkDirectoryEntryAction {
     export async function linkDirectoryEntry(action: AdminQuickActionJSON): Promise<void> {
@@ -45,7 +46,7 @@ export namespace LinkDirectoryEntryAction {
 
         profileMeta.directoryEntryId = directoryEntryId;
         directoryEntryMeta.ownedBy = sourceProfileId;
-        directoryEntryMeta.ownedAsOfDate = new Date().toISOString();
+        directoryEntryMeta.ownedAsOfDate = StreamHelpers.getCurrentTimestamp();
 
         await Promise.all([
             sourceReference.update({ _fl_meta_: profileMeta }),

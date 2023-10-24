@@ -6,6 +6,7 @@ import { FreezeChannelRequest, SendEventMessage, UnfreezeChannelRequest } from "
 import { StringHelpers } from "../helpers/string_helpers";
 import { ConversationRole } from "./types/conversation_role";
 import { GENERIC_API_TIMEOUT } from "../constants/domain";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace ConversationService {
   /**
@@ -283,7 +284,7 @@ export namespace ConversationService {
     const channel = client.channel("messaging", channelId);
     const archivedMembers = members.map((memberId) => ({
       member_id: memberId,
-      date_archived: new Date().toISOString(),
+      date_archived: StreamHelpers.getCurrentTimestamp(),
       last_message_id: channel.lastMessage().id,
     }));
 

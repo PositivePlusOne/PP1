@@ -18,7 +18,7 @@ abstract class NotificationPayload with _$NotificationPayload {
     @Default('') String title,
     @Default('') String body,
     @Default('') String icon,
-    @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown) String? createdAt,
+    @JsonKey(name: 'created_at', fromJson: dateFromUnknown) String? createdAt,
     @Default({}) @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
     @Default(NotificationTopic.other()) @JsonKey(fromJson: NotificationTopic.fromJson, toJson: NotificationTopic.toJson) NotificationTopic topic,
     @Default(NotificationAction.none()) @JsonKey(fromJson: NotificationAction.fromJson, toJson: NotificationAction.toJson) NotificationAction action,

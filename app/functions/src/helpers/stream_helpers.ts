@@ -45,13 +45,8 @@ export namespace StreamHelpers {
   }
 
   export function getTimestampForDate(date: Date) {
-    return `${date.getFullYear()}-` +
-      `${String(date.getMonth() + 1).padStart(2, '0')}-` +
-      `${String(date.getDate()).padStart(2, '0')}T` +
-      `${String(date.getHours()).padStart(2, '0')}:` +
-      `${String(date.getMinutes()).padStart(2, '0')}:` +
-      `${String(date.getSeconds()).padStart(2, '0')}.` +
-      `${String(date.getMilliseconds()).padStart(3, '0')}`;
+    // return the nice ISO string to represent dates in our data
+    return date.toISOString();
   }
 
   export function extractPaginationToken(url: string): string {

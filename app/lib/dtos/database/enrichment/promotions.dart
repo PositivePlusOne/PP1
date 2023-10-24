@@ -22,8 +22,8 @@ class Promotion with _$Promotion {
     @Default('') String linkText,
     @Default([]) List<PromotionOwner> owners,
     @Default([]) List<PromotedActivity> activities,
-    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? startTime,
-    @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown) String? endTime,
+    @JsonKey(fromJson: dateFromUnknown) String? startTime,
+    @JsonKey(fromJson: dateFromUnknown) String? endTime,
   }) = _Promotion;
 
   factory Promotion.fromJson(Map<String, dynamic> json) => _$PromotionFromJson(json);

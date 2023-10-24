@@ -27,12 +27,12 @@ _$FlMetaImpl _$$FlMetaImplFromJson(Map<String, dynamic> json) => _$FlMetaImpl(
 Map<String, dynamic> _$$FlMetaImplToJson(_$FlMetaImpl instance) =>
     <String, dynamic>{
       'createdBy': instance.createdBy,
-      'createdDate': dateToUnknown(instance.createdDate),
+      'createdDate': instance.createdDate,
       'ownedBy': instance.ownedBy,
-      'ownedAsOfDate': dateToUnknown(instance.ownedAsOfDate),
+      'ownedAsOfDate': instance.ownedAsOfDate,
       'directoryEntryId': instance.directoryEntryId,
       'lastModifiedBy': instance.lastModifiedBy,
-      'lastModifiedDate': dateToUnknown(instance.lastModifiedDate),
+      'lastModifiedDate': instance.lastModifiedDate,
       'lastFetchMillis': instance.lastFetchMillis,
       'isPartial': instance.isPartial,
       'docId': instance.docId,

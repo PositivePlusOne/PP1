@@ -1,5 +1,6 @@
 import { NotificationAction } from "../../constants/notification_actions";
 import { NotificationTopic } from "../../constants/notification_topics";
+import { StreamHelpers } from "../../helpers/stream_helpers";
 
 
 export class NotificationPayloadResponse {
@@ -29,7 +30,7 @@ export class NotificationPayload {
     public title = '';
     public body = '';
     public icon = '';
-    public created_at = '';
+    public created_at = StreamHelpers.getCurrentTimestamp();
     public extra_data: Record<string, any> = {};
     public topic: NotificationTopic = NotificationTopic.OTHER;
     public action: NotificationAction = NotificationAction.NONE;
@@ -48,7 +49,7 @@ export class NotificationPayload {
             this.title = payload.title || '';
             this.body = payload.body || '';
             this.icon = payload.icon || '';
-            this.created_at = payload.created_at || '';
+            this.created_at = payload.created_at || StreamHelpers.getCurrentTimestamp();
             this.extra_data = payload.extra_data || {};
             this.topic = payload.topic || NotificationTopic.OTHER;
             this.action = payload.action || NotificationAction.NONE;
