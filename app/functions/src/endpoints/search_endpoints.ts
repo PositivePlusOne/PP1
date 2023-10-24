@@ -11,7 +11,7 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 
 export namespace SearchEndpoints {
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getInterests = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getInterests = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
     const locale = data.locale || "en";
     const interests = await LocalizationsService.getDefaultInterests(locale);
 
@@ -24,7 +24,7 @@ export namespace SearchEndpoints {
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getHivStatuses = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getHivStatuses = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
     const locale = data.locale || "en";
     const hivStatuses = await LocalizationsService.getDefaultHivStatuses(locale);
 
@@ -32,7 +32,7 @@ export namespace SearchEndpoints {
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getGenders = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getGenders = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
     const locale = data.locale || "en";
     const genders = await LocalizationsService.getDefaultGenders(locale);
 
@@ -40,7 +40,7 @@ export namespace SearchEndpoints {
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getTopics = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
+  export const getTopics = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (_, context) => {
     functions.logger.info("Getting topics");
     await UserService.verifyAuthenticated(context);
 
@@ -53,14 +53,14 @@ export namespace SearchEndpoints {
   });
 
   //* Deprecated: Moving to SystemEndpoints.getBuildInformation
-  export const getCompanySectors = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getCompanySectors = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
     const locale = data.locale || "en";
     const companySectors = await LocalizationsService.getDefaultCompanySectors(locale);
 
     return safeJsonStringify(companySectors);
   });
 
-  export const search = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const search = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Searching data from algolia");
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const page = parseInt(request.data.page) || 0;

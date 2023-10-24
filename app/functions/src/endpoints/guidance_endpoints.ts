@@ -9,7 +9,7 @@ import { DataService } from "../services/data_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 
 export namespace GuidanceEndpoints {
-  export const getGuidanceCategories = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getGuidanceCategories = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
     functions.logger.info("Getting guidance categories", { structuredData: true });
     const locale = data.locale ?? "en";
     const parent = data.parent ?? null;
@@ -45,6 +45,7 @@ export namespace GuidanceEndpoints {
   });
 
   export const getGuidanceArticles = functions
+    .region('europe-west3')
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
     .https.onCall(async (data: any) => {
       functions.logger.info("Getting guidance articles", { structuredData: true });
@@ -88,7 +89,7 @@ export namespace GuidanceEndpoints {
     });
 
   // TODO: Update this to paginate later
-  export const getGuidanceDirectoryEntries = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: EndpointRequest, context) => {
+  export const getGuidanceDirectoryEntries = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: EndpointRequest, context) => {
     functions.logger.info("Getting directory entires", { structuredData: true });
 
     const cursor = data.cursor || "";
@@ -124,7 +125,7 @@ export namespace GuidanceEndpoints {
     }
 
     await CacheService.setInCache(cacheKey, windowData);
-    
+
     returnCursor = FlamelinkHelpers.getFlamelinkDocIdFromObject(windowData[windowData.length - 1]) || "";
     return buildEndpointResponse(context, {
       sender: "",

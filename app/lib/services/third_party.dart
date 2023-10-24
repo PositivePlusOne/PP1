@@ -132,7 +132,7 @@ FirebaseFirestore firebaseFirestore(FirebaseFirestoreRef ref) {
 
 @Riverpod(keepAlive: true)
 FirebaseFunctions firebaseFunctions(FirebaseFunctionsRef ref) {
-  return FirebaseFunctions.instance;
+  return FirebaseFunctions.instanceFor(region: 'europe-west3');
 }
 
 @Riverpod(keepAlive: true)

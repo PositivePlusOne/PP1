@@ -3,7 +3,7 @@
 # set these to your specific environment
 export PROJECT_ID=positiveplusone-develop
 export REDIS_INSTANCE=redis-firestore-cache
-export GCP_REGION=us-central1
+export GCP_REGION=europe-west3
 export VPC_CONNECTOR=redis-vpc-conn
 export STORAGE_ROLE=simpleStorageRole
 

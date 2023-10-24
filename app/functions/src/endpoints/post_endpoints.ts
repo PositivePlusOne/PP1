@@ -25,7 +25,7 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 
 export namespace PostEndpoints {
-    export const listActivities = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
 
         const targetUserId = request.data.targetUserId || "";
@@ -74,7 +74,7 @@ export namespace PostEndpoints {
         });
       });
       
-  export const getActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const getActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const entry = request.data.entry || "";
     if (!entry) {
       throw new functions.https.HttpsError("invalid-argument", "Missing entry");
@@ -93,7 +93,7 @@ export namespace PostEndpoints {
   });
 
 
-  export const shareActivityToFeed = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const shareActivityToFeed = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
 
@@ -166,7 +166,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const shareActivityToConversations = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const shareActivityToConversations = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Sharing activity`, { request });
     
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -210,7 +210,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const postActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const postActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Posting activity`, { request });
 
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -310,7 +310,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const deleteActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const deleteActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
 
@@ -372,7 +372,7 @@ export namespace PostEndpoints {
     });
   });
 
-  export const updateActivity = functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Updating activity`, { request });
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 

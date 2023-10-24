@@ -187,7 +187,7 @@ export namespace ProfileService {
    * Deletes the user profile.
    * @param {string} uid The user ID of the user to delete the profile for.
    * @return {Promise<void>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the user profile does not exist.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the user profile does not exist.
    */
   export async function deleteProfile(uid: string): Promise<void> {
     functions.logger.info(`Deleting user profile for user: ${uid}`);
@@ -203,7 +203,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the name for.
    * @param {string} email The email to update.
    * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
   export async function updateEmail(uid: string, email: string): Promise<any> {
     functions.logger.info(`Updating email for profile: ${email}`);
@@ -318,7 +318,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the name for.
    * @param {string} name The name to update.
    * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the name is already up to date.
    */
   export async function updateName(uid: string, name: string): Promise<any> {
     functions.logger.info(`Updating name for user: ${name}`);
@@ -355,7 +355,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the display name for.
    * @param {string} displayName The display name to update.
    * @return {Promise<any>} The user profile.
-   * @throws {functions.runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
+   * @throws {functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.HttpsError} If the display name is already up to date.
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
