@@ -235,6 +235,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           break;
         case SearchTab.tags:
           final List<Tag> results = response.results.cast<Tag>();
+          results.removeWhere((element) => TagHelpers.isPromoted(element.key));
           state = state.copyWith(searchTagsCursor: response.cursor, searchTagResults: state.searchTagResults + results);
           break;
         case SearchTab.posts:
