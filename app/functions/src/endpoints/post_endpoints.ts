@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_1G } from "../constants/domain";
 
 import { DataService } from "../services/data_service";
 
@@ -25,7 +25,7 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 
 export namespace PostEndpoints {
-    export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
 
         const targetUserId = request.data.targetUserId || "";
