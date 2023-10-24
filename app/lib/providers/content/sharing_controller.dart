@@ -129,6 +129,16 @@ class SharingController extends _$SharingController implements ISharingControlle
     final bool hasConnections = feedState.pagingController.value.itemList?.isNotEmpty == true;
     final bool hasValidProfile = profileController.state.currentProfile != null;
 
+    // sharing is complicated, so can we share this activity as this user?
+    final shareMode = postOptions?.activity.securityConfiguration?.shareMode;
+    final bool canActShare = shareMode != null &&
+        hasValidProfile &&
+        shareMode.canActOnActivity(
+          activity: postOptions?.activity,
+          currentProfile: profileController.state.currentProfile,
+          publisherRelationship: postOptions?.activity.getPublisherRelationship(profileController.state.currentProfile!),
+        );
+
     return [
       if (hasValidProfile) ...<Widget>[
         PositiveButton.standardPrimaryWithIcon(
@@ -136,6 +146,7 @@ class SharingController extends _$SharingController implements ISharingControlle
           label: 'Repost on Your Feed',
           icon: UniconsLine.file_share_alt,
           onTapped: () => shareToFeed(context, postOptions: postOptions),
+          isDisabled: !canActShare,
         ),
       ],
       if (hasConnections) ...<Widget>[
@@ -144,6 +155,7 @@ class SharingController extends _$SharingController implements ISharingControlle
           label: 'Share with a Connection',
           icon: UniconsLine.chat_bubble_user,
           onTapped: () => shareViaConnections(context, postOptions: postOptions),
+          isDisabled: !canActShare,
         ),
       ],
       PositiveButton.standardPrimaryWithIcon(
@@ -151,6 +163,7 @@ class SharingController extends _$SharingController implements ISharingControlle
         label: 'Share Via...',
         icon: UniconsLine.share_alt,
         onTapped: () => shareExternally(context, ShareTarget.post, origin, postOptions: postOptions),
+        isDisabled: !canActShare,
       ),
     ];
   }
@@ -236,8 +249,8 @@ class SharingController extends _$SharingController implements ISharingControlle
       throw Exception('Post options must be provided');
     }
 
-    logger.d('Sharing to feed');
     final String activityId = postOptions.activity.flMeta?.id ?? '';
+    logger.d('Sharing activity $activityId to feed');
     if (activityId.isEmpty) {
       throw Exception('Activity is missing an ID');
     }
