@@ -139,13 +139,15 @@ export namespace PostEndpoints {
       },
       generalConfiguration: {
         type: "repost",
-        repostActivityId: activityId,
-        repostActivityPublisherId: activityOriginPosterId,
-        repostActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,
         promotionKey: activityPromotionKey,
+      },
+      repostConfiguration: {
+        targetActivityId: activityId,
+        targetActivityOriginFeed: activityOriginFeed,
+        targetActivityPublisherId: activityOriginPosterId,
       },
       securityConfiguration: {
         viewMode: "public",
