@@ -110,18 +110,17 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     //? if we are currently creating a clip request that we stop
     if (state.isCreatingClip) {
-      if (state.currentCreatePostPage == CreatePostCurrentPage.camera) {
-        getCurrentCameraState.onCloseButtonTapped();
-        return false;
-      } else {
-        final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-        final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-        canPop = !await positiveDiscardClipDialogue(
-          context: context,
-          colors: colors,
-          typography: typography,
-        );
-      }
+      getCurrentCameraState.onCloseButtonTapped();
+      return false;
+    }
+    if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
+      final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+      final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+      canPop = !await positiveDiscardClipDialogue(
+        context: context,
+        colors: colors,
+        typography: typography,
+      );
     }
 
     if (!canPop) {
@@ -496,7 +495,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.createPostEditClip,
       currentPostType: PostType.clip,
-      isCreatingClip: true,
+      isCreatingClip: false,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
       isBottomNavigationEnabled: true,
