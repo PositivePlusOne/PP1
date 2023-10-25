@@ -124,13 +124,13 @@ SystemUiOverlayStyle buildSystemUiOverlayStyle({
   Color statusColor = Colors.transparent;
   Color navigationColor = backgroundColor;
   Color dividerColor = backgroundColor.complimentDividerColor;
-  Brightness statusBarBrightness = backgroundColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
-  Brightness statusBarIconBrightness = backgroundColor.computedSystemBrightness;
-  Brightness navigationBarBrightness = backgroundColor.computedSystemBrightness;
+  Brightness statusBarBrightness = backgroundColor.getComputedStatusBrightness() == Brightness.light ? Brightness.dark : Brightness.light;
+  Brightness statusBarIconBrightness = backgroundColor.getComputedStatusBrightness();
+  Brightness navigationBarBrightness = backgroundColor.getComputedStatusBrightness();
 
   if (appBarColor != null) {
-    statusBarBrightness = appBarColor.computedSystemBrightness == Brightness.light ? Brightness.dark : Brightness.light;
-    statusBarIconBrightness = appBarColor.computedSystemBrightness;
+    statusBarBrightness = appBarColor.getComputedStatusBrightness() == Brightness.light ? Brightness.dark : Brightness.light;
+    statusBarIconBrightness = appBarColor.getComputedStatusBrightness();
   }
 
   // If iOS, reverse the brightnesses (Dunno why, but it works)
