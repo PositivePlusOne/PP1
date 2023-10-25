@@ -101,7 +101,7 @@ class PositiveNotificationSnackBar extends PositiveSnackBar {
                       ),
                       buildMarkdownWidgetFromBody(
                         payload.body,
-                        brightness: textColor.computedSystemBrightness,
+                        brightness: textColor.getComputedSystemBrightness(),
                       ),
                     ],
                   ),
