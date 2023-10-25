@@ -232,7 +232,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                 memberProfiles: memberProfiles,
                 viewModel: viewModel,
                 channel: channel,
-                blockedMemberCount: blockedRelationships.length,
+                blockedMemberRelationships: blockedRelationships,
               ),
             ),
             SliverStack(
@@ -345,7 +345,13 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
       horizontal: isOnlyEmoji ? 0 : 16.0,
     ),
     showUserAvatar: isMyMessage ? DisplayWidget.gone : DisplayWidget.show,
-    userAvatarBuilder: isMyMessage ? null : (context, user) => _buildUserAvatar(user, colors),
+    userAvatarBuilder: isMyMessage
+        ? null
+        : (context, user) => _buildUserAvatar(
+              user,
+              colors,
+              viewModel.getRelationshipForMessage(details.message),
+            ),
   );
 }
 
@@ -395,7 +401,6 @@ class ChatMemberUsernameRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     bool hasSourceBlocked = false;
     if (relationship != null && currentProfileId.isNotEmpty) {
       final Set<RelationshipState> states = relationship!.relationshipStatesForEntity(currentProfileId);
@@ -432,10 +437,20 @@ class ChatMemberUsernameRow extends StatelessWidget {
   }
 }
 
-PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors) {
+PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors, Relationship? relationship) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
   final Profile? profile = cacheController.get<Profile>(user.id);
-  return PositiveProfileCircularIndicator(profile: profile);
+  // we have the ID of the user we are showing the icon for (has this target user been blocked)
+  bool isTargetBlocked = false;
+  if (relationship != null && user.id.isNotEmpty) {
+    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(user.id);
+    isTargetBlocked = states.contains(RelationshipState.targetBlocked);
+  }
+  // returning the icon (with a black border if they have been blocked)
+  return PositiveProfileCircularIndicator(
+    profile: profile,
+    ringColorOverride: isTargetBlocked ? Colors.black : null,
+  );
 }
 
 class MessageInputContainer extends StatelessWidget {
@@ -605,7 +620,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.memberProfiles,
     required this.viewModel,
     required this.channel,
-    this.blockedMemberCount = 0,
+    this.blockedMemberRelationships = const [],
   });
 
   final DesignColorsModel colors;
@@ -614,7 +629,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   final ChatViewModel viewModel;
   final Channel channel;
 
-  final int blockedMemberCount;
+  final List<Relationship> blockedMemberRelationships;
 
   @override
   Widget build(BuildContext context) {
@@ -638,13 +653,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const SizedBox(width: kPaddingSmall),
-          Expanded(flex: 3, child: _AvatarList(members: memberProfiles)),
+          Expanded(
+            flex: 3,
+            child: _AvatarList(
+              members: memberProfiles,
+              blockedMemberRelationships: blockedMemberRelationships,
+            ),
+          ),
           const SizedBox(width: kPaddingSmall),
-          if (blockedMemberCount > 0) ...<Widget>[
+          if (blockedMemberRelationships.isNotEmpty) ...<Widget>[
             Expanded(
               flex: 3,
               child: PositiveHint(
-                label: '$blockedMemberCount blocked',
+                label: '${blockedMemberRelationships.length} blocked',
                 icon: UniconsLine.ban,
                 iconColor: colors.black,
               ),
@@ -674,9 +695,11 @@ class _AvatarList extends ConsumerWidget {
   const _AvatarList({
     Key? key,
     required this.members,
+    this.blockedMemberRelationships = const [],
   }) : super(key: key);
 
   final List<Profile> members;
+  final List<Relationship> blockedMemberRelationships;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -734,6 +757,9 @@ class _AvatarList extends ConsumerWidget {
                       : PositiveProfileCircularIndicator(
                           profile: filteredMembers[i],
                           size: avatarOffset,
+                          // if the profile has a relationship in the list of blocked relationships (are blocked)
+                          // so show a black ring around their profile image
+                          ringColorOverride: ChatViewModel.getRelationshipForProfile(blockedMemberRelationships, filteredMembers[i]) != null ? Colors.black : null,
                         ),
                 ),
               ),

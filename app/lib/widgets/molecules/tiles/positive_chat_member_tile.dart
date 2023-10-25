@@ -75,7 +75,10 @@ class PositiveChatMemberTile extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            PositiveProfileCircularIndicator(profile: profile),
+            PositiveProfileCircularIndicator(
+              profile: profile,
+              ringColorOverride: isSourceBlocked ? Colors.black : null,
+            ),
             const SizedBox(width: kPaddingSmall),
             Expanded(
               child: Column(
