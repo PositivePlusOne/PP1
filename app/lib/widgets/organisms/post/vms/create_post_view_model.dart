@@ -2,8 +2,11 @@
 import 'dart:io' as io;
 
 // Flutter imports:
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/clip_ffmpeg_service.dart';
+import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
+import 'package:app/widgets/organisms/post/create_post_page.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -102,13 +105,23 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
-  Future<bool> onWillPopScope() async {
-    final bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
+  Future<bool> onWillPopScope(BuildContext context) async {
+    bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
 
     //? if we are currently creating a clip request that we stop
     if (state.isCreatingClip) {
-      getCurrentCameraState.onCloseButtonTapped();
-      return false;
+      if (state.currentCreatePostPage == CreatePostCurrentPage.camera) {
+        getCurrentCameraState.onCloseButtonTapped();
+        return false;
+      } else {
+        final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+        final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+        canPop = !await positiveDiscardClipDialogue(
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+      }
     }
 
     if (!canPop) {
@@ -451,13 +464,15 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   /// Call to update main create post page UI
-  void onClipStateChange(ClipRecordingState clipRecordingState) {
+  void onClipStateChange(BuildContext context, ClipRecordingState clipRecordingState) {
     /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     state = state.copyWith(
       isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
       isCreatingClip: clipRecordingState.isActive,
       activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
+      activeButtonFlexText: localisations.shared_actions_next,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
     );
   }
@@ -481,8 +496,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.createPostEditClip,
       currentPostType: PostType.clip,
+      isCreatingClip: true,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
+      isBottomNavigationEnabled: true,
+      lastActiveButton: PositivePostNavigationActiveButton.clip,
     );
   }
 
@@ -494,10 +512,20 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    exportService.exportVideoFromController(videoEditorController!, (file) => onClipEditProcessConcluded(context, file));
+    exportService.exportVideoFromController(
+      videoEditorController!,
+      (file) => onClipEditProcessConcluded(
+        context,
+        file,
+        Size(
+          videoEditorController?.videoWidth ?? 640,
+          videoEditorController?.videoHeight ?? 640,
+        ),
+      ),
+    );
   }
 
-  Future<void> onClipEditProcessConcluded(BuildContext context, io.File file) async {
+  Future<void> onClipEditProcessConcluded(BuildContext context, io.File file, Size size) async {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
@@ -506,8 +534,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final List<GalleryEntry> entries = [];
 
     if (file.path.isNotEmpty) {
-      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(xFile, uploadImmediately: false);
-
+      final GalleryEntry entry = await galleryController.createGalleryEntryFromXFile(xFile, uploadImmediately: false, size: size);
       entries.add(entry);
     }
 

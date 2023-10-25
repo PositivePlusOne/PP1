@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
@@ -184,7 +185,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   bool isPhysicalDevice = true;
 
   ///? Location to access the current camera state outside of the builder
-  CameraState? cameraState;
+  CameraState? cachedCameraState;
 
   ///? is the camera currently recording video or in the prerecording state (for delay/countdown timer)
   ClipRecordingState clipRecordingState = ClipRecordingState.notRecording;
@@ -402,13 +403,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   Future<void> onVideoRecordingRequestStart(CameraState cameraState) async {
-    late VideoCameraState videoState;
-    cameraState.when(
-      onVideoMode: (p0) {
-        videoState = p0;
-      },
-    );
-
     //? do not allow the user to begin recording when recording has already begun
     if (clipRecordingState.isActive) {
       return;
@@ -475,12 +469,12 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
     if (widget.isRecordingLengthEnabled) {
       clipCurrentTime = widget.maxRecordingLength ?? 1;
-      startRecordingTimer(cameraState);
+      startRecordingTimer();
     }
     //TODO impliment unlimited time here if needed
   }
 
-  Future<void> startRecordingTimer(CameraState cameraState) async {
+  Future<void> startRecordingTimer() async {
     clipTimer = Timer.periodic(
       const Duration(milliseconds: 100),
       (timer) {
@@ -502,13 +496,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       },
     );
 
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(clipRecordingState);
+    final VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
+
+    try {
+      await videoRecordingCameraState.stopRecording();
+    } catch (e) {
+      print("object");
     }
-
-    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
-
-    await videoRecordingCameraState.stopRecording();
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
 
     if (currentCapture != null) {
@@ -520,39 +514,24 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         return;
       }
 
+      //? we do not need to call the stateChange callback here as it is implicitly called by the callback below
       await widget.onCameraVideoTaken?.call(file);
     }
   }
 
   Future<void> onCloseButtonTapped() async {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    onPauseResumeClip(forcePause: true);
+    if (clipRecordingState == ClipRecordingState.recording) {
+      onPauseResumeClip(forcePause: true);
+    }
 
-    final bool deactivate = await PositiveDialog.show(
-          title: localizations.page_create_post_cancel_clip,
-          context: context,
-          child: Column(
-            children: <Widget>[
-              Text(
-                localizations.page_create_post_cancel_clip_caption,
-                style: typography.styleSubtitle.copyWith(color: colors.white),
-              ),
-              const SizedBox(height: kPaddingMedium),
-              PositiveButton(
-                colors: colors,
-                onTapped: () => Navigator.pop(context, true),
-                label: localizations.page_create_post_discard_clip,
-                primaryColor: colors.black.withOpacity(kOpacityQuarter),
-                style: PositiveButtonStyle.primary,
-                icon: UniconsLine.trash_alt,
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    final bool deactivate = await positiveDiscardClipDialogue(
+      context: context,
+      colors: colors,
+      typography: typography,
+    );
 
     if (deactivate) {
       resetClipStateToDefault();
@@ -594,8 +573,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   ///? Attempt to stop the clip recording, does not capture the resulting video
   void stopClipRecording() {
-    if (cameraState != null) {
-      VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
+    if (cachedCameraState != null) {
+      VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
       videoRecordingCameraState.stopRecording();
     }
     clipRecordingState = ClipRecordingState.notRecording;
@@ -606,9 +585,22 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///? if forcePause is given as false always try to resume the clip.
   ///
   ///? if forcePause is not given function will attempt to toggle the clip to its other state.
-  void onPauseResumeClip({bool? forcePause}) {
-    VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cameraState!.cameraContext);
-    MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
+  void onPauseResumeClip({bool? forcePause, VideoRecordingCameraState? freshCameraState}) {
+    //? Only use cached version if needed
+    late final VideoRecordingCameraState videoRecordingCameraState;
+    if (freshCameraState != null) {
+      videoRecordingCameraState = freshCameraState;
+    } else {
+      videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
+    }
+
+    MediaCapture? currentCapture;
+    try {
+      currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
+    } catch (e) {
+      print("object");
+    }
+
     if (currentCapture == null) {
       return;
     }
@@ -631,7 +623,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
     if (!pause) {
       videoRecordingCameraState.resumeRecording(currentCapture);
-      startRecordingTimer(cameraState!);
+      startRecordingTimer();
       setStateIfMounted(callback: () {
         clipRecordingState = ClipRecordingState.recording;
         widget.onClipStateChange!(clipRecordingState);
@@ -818,7 +810,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   Widget topOverlay(CameraState state) {
     //? capture the camera state for future use
-    cameraState ??= state;
+    cachedCameraState ??= state;
 
     //TODO move this to a less awkward area? if possible
     //? Since for some reason the only way to access state is through the widget overlay builders in flutter awesome
@@ -977,9 +969,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   Widget cameraOverlay(CameraState state) {
-    //? capture the camera state for future use
-    cameraState ??= state;
-
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
@@ -1062,8 +1051,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                 onTap: (_) {
                   state.when(
                     onPhotoMode: onImageTaken,
-                    onVideoMode: (_) => onVideoRecordingRequestStart(state),
-                    onVideoRecordingMode: (_) => onPauseResumeClip(),
+                    onVideoMode: (recordingState) => onVideoRecordingRequestStart(recordingState),
+                    onVideoRecordingMode: (recordingState) => onPauseResumeClip(freshCameraState: recordingState),
                   );
                 },
               ),

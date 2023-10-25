@@ -41,15 +41,7 @@ class PositiveClipEditor extends StatefulHookConsumerWidget {
 }
 
 class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
-  // final ValueNotifier<double> _progress = ValueNotifier<double>(0.0);
-  // final ValueNotifier<bool> _isExporting = ValueNotifier<bool>(false);
   final double height = 60;
-
-  // late final VideoEditorController _controller = VideoEditorController.file(
-  //   widget.file,
-  //   minDuration: const Duration(seconds: 1),
-  //   maxDuration: const Duration(seconds: 180),
-  // );
 
   @override
   void initState() {
@@ -63,8 +55,6 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
 
   @override
   void dispose() async {
-    // _progress.dispose();
-    // _isExporting.dispose();
     if (widget.controller != null) {
       widget.controller!.dispose();
     }
@@ -108,8 +98,8 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                     Positioned(
                       bottom: widget.bottomNavigationSize + kPaddingMediumLarge,
                       height: kIconHuge,
-                      left: kPaddingMedium,
-                      right: kPaddingMedium,
+                      left: kPaddingMediumLarge,
+                      right: kPaddingMediumLarge,
                       child: SizedBox(
                         height: kIconHuge,
                         child: _trimSlider(),
@@ -181,29 +171,9 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                         ),
                       ),
                     ),
-                    //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                    //* -=-=-=-=-=-   Possible Video Export Loading Bar  -=-=-=-=-=- *\\
-                    //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                    // ValueListenableBuilder(
-                    //   valueListenable: _isExporting,
-                    //   builder: (_, bool export, Widget? child) => AnimatedSize(
-                    //     duration: kThemeAnimationDuration,
-                    //     child: export ? child : null,
-                    //   ),
-                    //   child: AlertDialog(
-                    //     title: ValueListenableBuilder(
-                    //       valueListenable: _progress,
-                    //       builder: (_, double value, __) => Text(
-                    //         "Exporting video ${(value * 100).ceil()}%",
-                    //         style: const TextStyle(fontSize: 12),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               )
-            //TODO
             : const Center(child: CircularProgressIndicator()),
       ),
     );

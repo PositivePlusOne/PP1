@@ -205,6 +205,7 @@ class GalleryController extends _$GalleryController {
 
   Future<GalleryEntry> createGalleryEntryFromXFile(
     XFile file, {
+    Size? size,
     bool uploadImmediately = true,
     bool store = true,
   }) async {
@@ -237,14 +238,13 @@ class GalleryController extends _$GalleryController {
     final File localFile = File('${userStorageDirectory.path}/$fileName');
     await localFile.writeAsBytes(bytes);
 
-    final Size size = getMediaSizeFromFile(localFile, mimeType);
     final GalleryEntry galleryEntry = GalleryEntry(
       reference: uploadImmediately ? child : null,
       mimeType: mimeType,
       file: XFile(localFile.path),
       data: bytes,
-      height: size.height.floor(),
-      width: size.width.floor(),
+      height: size?.height.floor(),
+      width: size?.width.floor(),
       storageUploadTask: uploadTask,
     );
 
@@ -258,21 +258,21 @@ class GalleryController extends _$GalleryController {
     return galleryEntry;
   }
 
-  Size getMediaSizeFromFile(File file, String mimeType) {
-    final Logger logger = providerContainer.read(loggerProvider);
-    logger.i('[Gallery Controller] - Getting media size from file');
+  // Size getMediaSizeFromFile(File file, String mimeType) {
+  //   final Logger logger = providerContainer.read(loggerProvider);
+  //   logger.i('[Gallery Controller] - Getting media size from file');
 
-    if (mimeType.startsWith('image')) {
-      final Image image = Image.file(file);
-      return Size(image.width ?? -1, image.height ?? -1);
-    } else if (mimeType.startsWith('video')) {
-      final VideoPlayerController video = VideoPlayerController.file(file);
-      // This will break, ty stu
-      return Size(video.value.size.width, video.value.size.height);
-    }
+  //   if (mimeType.startsWith('image')) {
+  //     final Image image = Image.file(file);
+  //     return Size(image.width ?? -1, image.height ?? -1);
+  //   } else if (mimeType.startsWith('video')) {
+  //     final VideoPlayerController video = VideoPlayerController.file(file);
+  //     // This will break, ty stu
+  //     return Size(video.value.size.width, video.value.size.height);
+  //   }
 
-    return Size.zero;
-  }
+  //   return Size.zero;
+  // }
 
   void registerEventListenersForUpload(GalleryEntry entry) {
     final Logger logger = providerContainer.read(loggerProvider);

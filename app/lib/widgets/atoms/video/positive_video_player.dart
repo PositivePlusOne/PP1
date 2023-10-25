@@ -27,7 +27,8 @@ class PositiveVideoPlayer extends StatefulHookConsumerWidget {
 class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
   VideoController? videoController;
   Player? player;
-  int heightIsh = 200;
+  double videoHeight = 200;
+  double videoWidth = 200;
 
   @override
   void dispose() {
@@ -57,6 +58,9 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     final Reference ref = firebaseStorage.ref(widget.media.bucketPath);
     final String refString = await ref.getDownloadURL();
 
+    videoHeight = widget.media.height.toDouble().clamp(250, 1500);
+    videoWidth = widget.media.width.toDouble().clamp(250, 1500);
+
     player = Player();
     videoController = VideoController(player!);
     await player!.open(Media(refString));
@@ -80,7 +84,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
   Widget build(BuildContext context) {
     if (videoController == null) {
       return SizedBox(
-        height: heightIsh.toDouble(),
+        height: videoHeight,
         width: double.infinity,
         child: const Align(
           child: PositiveLoadingIndicator(),
@@ -88,12 +92,19 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       );
     }
 
+    final double aspect = videoWidth / videoHeight;
+
     return VisibilityDetector(
       key: widget.visibilityDetectorKey,
       onVisibilityChanged: (info) => onVisabilityChange(info),
       child: PositiveTapBehaviour(
         onTap: (_) => onClipTap(),
-        child: Video(controller: videoController!, height: heightIsh.toDouble()),
+        child: AspectRatio(
+          aspectRatio: aspect,
+          child: Video(
+            controller: videoController!,
+          ),
+        ),
       ),
     );
   }

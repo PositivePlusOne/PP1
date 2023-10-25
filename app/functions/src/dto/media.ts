@@ -6,6 +6,8 @@ export interface MediaJSON {
     altText?: string;
     thumbnails?: MediaThumbnailJSON[];
     priority?: number;
+    width?: number;
+    height?: number;
     isSensitive?: boolean;
     isPrivate?: boolean;
 }
@@ -18,6 +20,8 @@ export class Media {
     altText: string;
     thumbnails: MediaThumbnail[];
     priority: number;
+    width: number;
+    height: number;
     isSensitive: boolean;
     isPrivate: boolean;
 
@@ -29,6 +33,8 @@ export class Media {
         this.altText = json.altText || '';
         this.thumbnails = MediaThumbnail.fromJsonArray(json.thumbnails || []);
         this.priority = json.priority || kMediaPriorityDefault;
+        this.width = json.width || 0;
+        this.height = json.height || 0;
         this.isSensitive = json.isSensitive || false;
         this.isPrivate = json.isPrivate || false;
     }

@@ -79,7 +79,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
-      onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
+      onWillPop: state.isBusy ? (() async => false) : () => viewModel.onWillPopScope(context),
       child: Scaffold(
         backgroundColor: colours.black,
         resizeToAvoidBottomInset: false,
@@ -120,7 +120,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
 
                     ///? Change UI state based on current clip state
-                    onClipStateChange: viewModel.onClipStateChange,
+                    onClipStateChange: (state) => viewModel.onClipStateChange(context, state),
 
                     ///? Options for camera delay before taking picture or clip
                     maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
@@ -170,7 +170,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   galleryEntry: state.editingGalleryEntry,
                   currentFilter: state.currentFilter,
                   onFilterSelected: viewModel.onFilterSelected,
-                  onBackButtonPressed: viewModel.onWillPopScope,
+                  onBackButtonPressed: () => viewModel.onWillPopScope(context),
                 ),
               ],
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
