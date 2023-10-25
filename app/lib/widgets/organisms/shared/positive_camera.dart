@@ -457,7 +457,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
 
     //? Begin clip recording
-    await videoState.startRecording();
+    try {
+      await videoState.startRecording();
+    } catch (e) {
+      print("test");
+    }
 
     setStateIfMounted(callback: () {
       clipRecordingState = ClipRecordingState.recording;
