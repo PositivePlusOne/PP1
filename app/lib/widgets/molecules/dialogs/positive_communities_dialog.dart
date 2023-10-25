@@ -401,6 +401,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         // create a nice display to show when there is no content in the list
         noItemsFoundIndicatorBuilder: (context) => Column(
           children: [
+            const SizedBox(height: kPaddingMedium),
             Text(
               noDataTitle,
               style: typography.styleHeroMedium,
