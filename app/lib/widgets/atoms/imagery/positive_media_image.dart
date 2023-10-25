@@ -263,6 +263,7 @@ class PositiveMediaImage extends ConsumerStatefulWidget {
     this.onTap,
     this.isEnabled = true,
     this.onBytesLoaded,
+    this.colorBlendMode,
     Key? key,
   }) : super(key: key);
 
@@ -281,6 +282,8 @@ class PositiveMediaImage extends ConsumerStatefulWidget {
 
   final bool useThumbnailIfAvailable;
   final PositiveThumbnailTargetSize? thumbnailTargetSize;
+
+  final BlendMode? colorBlendMode;
 
   @override
   ConsumerState<PositiveMediaImage> createState() => PositiveMediaImageState();
@@ -372,6 +375,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
           height: widget.height,
           width: widget.width,
           fit: widget.fit,
+          colorBlendMode: widget.colorBlendMode ?? BlendMode.srcIn,
           // any other properties you need
         );
       } else {
@@ -381,6 +385,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
           width: widget.width,
           fit: widget.fit,
           gaplessPlayback: true,
+          colorBlendMode: widget.colorBlendMode,
         );
       }
     }
