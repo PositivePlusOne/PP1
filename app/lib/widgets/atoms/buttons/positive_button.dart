@@ -721,8 +721,8 @@ class PositiveButtonState extends State<PositiveButton> {
           ],
           Padding(
             padding: EdgeInsets.only(
-              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingExtraSmall : 0.0,
-              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingExtraSmall : 0.0,
+              left: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconLeft ? iconRadius + kPaddingSmall : 0.0,
+              right: widget.forceIconPadding && widget.layout == PositiveButtonLayout.iconRight ? iconRadius + kPaddingSmall : 0.0,
             ),
             child: SizedBox(
               height: iconRadius,
