@@ -3,9 +3,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:universal_platform/universal_platform.dart';
-
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import '../constants/design_constants.dart';
@@ -55,12 +52,7 @@ extension ColorExtensions on Color {
   bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
   bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
 
-  Brightness get computedSystemBrightness {
-    // iOS is backwards
-    if (UniversalPlatform.isIOS) {
-      return exceedsBrightnessUpperRestriction ? Brightness.light : Brightness.dark;
-    }
-
+  Brightness getComputedSystemBrightness() {
     return exceedsBrightnessUpperRestriction ? Brightness.dark : Brightness.light;
   }
 
