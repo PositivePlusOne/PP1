@@ -88,19 +88,25 @@ class SearchPage extends ConsumerWidget {
         if (viewModel.hasSearched) {
           searchResultWidgets.addAll(
             <Widget>[
-              const SizedBox(height: kPaddingExtraLarge),
-              PositiaveTitleBodyWidget(
-                title: viewModel.searchNotFoundTitle(localisations),
-                body: viewModel.searchNotFoundBody(localisations),
+              const SizedBox(height: kPaddingLarge),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                child: PositiveTitleBodyWidget(
+                  title: viewModel.searchNotFoundTitle(localisations),
+                  body: viewModel.searchNotFoundBody(localisations),
+                ),
               ),
             ],
           );
         } else {
           searchResultWidgets.addAll(
             <Widget>[
-              Text(
-                localisations.page_search_subtitle_pending,
-                style: typography.styleSubtext.copyWith(color: colours.colorGray7),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                child: Text(
+                  localisations.page_search_subtitle_pending,
+                  style: typography.styleSubtext.copyWith(color: colours.colorGray7),
+                ),
               ),
             ],
           );
@@ -119,11 +125,14 @@ class SearchPage extends ConsumerWidget {
                 onBuild: (context) {
                   final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfile.flMeta?.id ?? ''].asGUID;
                   final Relationship? relationship = cacheController.get(relationshipId);
-                  return PositiveProfileListTile(
-                    isEnabled: !isBusy,
-                    targetProfile: targetProfile,
-                    senderProfile: currentProfile,
-                    relationship: relationship,
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                    child: PositiveProfileListTile(
+                      isEnabled: !isBusy,
+                      targetProfile: targetProfile,
+                      senderProfile: currentProfile,
+                      relationship: relationship,
+                    ),
                   );
                 },
               ),
@@ -161,21 +170,24 @@ class SearchPage extends ConsumerWidget {
         case SearchTab.tags:
           searchResultWidgets.addAll(
             <Widget>[
-              StaggeredGrid.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: kPaddingSmall,
-                mainAxisSpacing: kPaddingSmall,
-                axisDirection: AxisDirection.down,
-                children: <Widget>[
-                  for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
-                    PositiveTopicTile(
-                      colors: colours,
-                      typography: typography,
-                      tag: tag,
-                      onTap: (context) => viewModel.onTopicSelected(context, tag),
-                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                child: StaggeredGrid.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: kPaddingSmall,
+                  mainAxisSpacing: kPaddingSmall,
+                  axisDirection: AxisDirection.down,
+                  children: <Widget>[
+                    for (final Tag tag in searchTagResults.isEmpty ? tags : searchTagResults) ...<Widget>[
+                      PositiveTopicTile(
+                        colors: colours,
+                        typography: typography,
+                        tag: tag,
+                        onTap: (context) => viewModel.onTopicSelected(context, tag),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               )
             ],
           );
@@ -204,7 +216,7 @@ class SearchPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         SliverPadding(
           padding: EdgeInsets.only(
-            top: mediaQuery.padding.top + kPaddingSmall,
+            top: mediaQuery.padding.top + kPaddingMedium,
             bottom: kPaddingSmall,
             left: kPaddingMedium,
             right: kPaddingMedium,
@@ -220,29 +232,32 @@ class SearchPage extends ConsumerWidget {
         ),
         SliverPadding(
           padding: EdgeInsets.only(
-            left: kPaddingMedium,
-            right: kPaddingMedium,
+            left: kPaddingSmall,
+            right: kPaddingSmall,
             bottom: kPaddingMedium + mediaQuery.padding.bottom,
           ),
           sliver: SliverToBoxAdapter(
             child: Column(
               children: <Widget>[
-                PositiveTabBar(
-                  index: currentTab.index,
-                  onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
-                  margin: EdgeInsets.zero,
-                  tabColours: <Color>[
-                    colours.green,
-                    colours.yellow,
-                    // colours.teal,
-                    colours.purple,
-                  ],
-                  tabs: <String>[
-                    localisations.page_search_tab_posts,
-                    localisations.page_search_tab_profiles,
-                    // localisations.page_search_tab_events,
-                    localisations.page_search_tab_tags,
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                  child: PositiveTabBar(
+                    index: currentTab.index,
+                    onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
+                    margin: EdgeInsets.zero,
+                    tabColours: <Color>[
+                      colours.green,
+                      colours.yellow,
+                      // colours.teal,
+                      colours.purple,
+                    ],
+                    tabs: <String>[
+                      localisations.page_search_tab_posts,
+                      localisations.page_search_tab_profiles,
+                      // localisations.page_search_tab_events,
+                      localisations.page_search_tab_tags,
+                    ],
+                  ),
                 ),
                 const SizedBox(height: kPaddingSmall),
                 ...searchResultWidgets,
