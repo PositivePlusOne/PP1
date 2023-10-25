@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';

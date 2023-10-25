@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/tag_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,7 +53,19 @@ class TagFeedPage extends HookConsumerWidget {
 
     useCacheHook(keys: [feedStateKey]);
 
+    onWillPopScope() async {
+      // If the route is the only one, we want to replace to home
+      if (appRouter.stack.length == 1) {
+        appRouter.replace(const HomeRoute());
+        return false;
+      }
+
+      appRouter.removeLast();
+      return false;
+    }
+
     return PositiveScaffold(
+      onWillPopScope: onWillPopScope,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -65,7 +78,7 @@ class TagFeedPage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverPinnedHeader(
           child: PositiveTapBehaviour(
-            onTap: (_) => appRouter.removeLast(),
+            onTap: (_) => onWillPopScope(),
             child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, tag: tag, typography: typography),
           ),
         ),
@@ -116,7 +129,7 @@ class TagPagePinnedHeader extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                tag.topic?.fallback ?? tag.fallback,
+                tag.toLocale,
                 style: typography.styleHeroExtraSmall.copyWith(color: colors.black),
               ),
             ),

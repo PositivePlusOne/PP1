@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/tag_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -28,8 +29,16 @@ MarkdownWidget buildMarkdownWidgetFromBody(
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
-  if (tags.isNotEmpty) {
-    markdown = '${tags.map((Tag tag) => '#${tag.key}').join(' ')}\n\n$markdown';
+
+  // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
+  final StringBuffer tagBuffer = StringBuffer();
+  for (final Tag tag in tags) {
+    tagBuffer.write('[#${tag.key}](${tag.feedLink}) ');
+  }
+
+  // Add the tags to the start of the markdown as bolded text
+  if (tagBuffer.isNotEmpty) {
+    markdown = '${tagBuffer.toString()}\n\n$markdown';
   }
 
   return MarkdownWidget(
@@ -37,14 +46,14 @@ MarkdownWidget buildMarkdownWidgetFromBody(
     padding: EdgeInsets.zero,
     shrinkWrap: true,
     selectable: false,
-    config: MarkdownConfig(configs: buildMmarkdownWidgetConfig(onTapLink: onTapLink, brightness: brightness)),
+    config: MarkdownConfig(configs: buildMarkdownWidgetConfig(onTapLink: onTapLink, brightness: brightness)),
     markdownGeneratorConfig: MarkdownGeneratorConfig(
       linesMargin: lineMargin,
     ),
   );
 }
 
-List<WidgetConfig> buildMmarkdownWidgetConfig({void Function(String link)? onTapLink, Brightness brightness = Brightness.light}) {
+List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapLink, Brightness brightness = Brightness.light}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
@@ -60,10 +69,7 @@ List<WidgetConfig> buildMmarkdownWidgetConfig({void Function(String link)? onTap
     H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      style: typography.styleBody.copyWith(
-        color: colors.linkBlue,
-        decoration: TextDecoration.underline,
-      ),
+      style: typography.styleBold.copyWith(color: colors.black),
       onTap: (link) {
         if (onTapLink != null) {
           onTapLink(link);
