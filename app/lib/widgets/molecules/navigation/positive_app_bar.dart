@@ -104,10 +104,25 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           if (backgroundImage != null) ...<Widget>[
             Positioned.fill(
-              child: PositiveMediaImage(
-                media: backgroundImage!,
-                fit: BoxFit.cover,
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+              child: ShaderMask(
+                blendMode: BlendMode.srcATop,
+                shaderCallback: (bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    tileMode: TileMode.clamp,
+                    stops: const <double>[0.0, 0.8, 1.0],
+                    colors: <Color>[
+                      Colors.transparent,
+                      backgroundColor,
+                      backgroundColor,
+                    ],
+                  ).createShader(bounds);
+                },
+                child: PositiveMediaImage(
+                  media: backgroundImage!,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             //* Use the background color as a darkening overlay
