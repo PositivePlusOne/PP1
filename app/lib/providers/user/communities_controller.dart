@@ -67,8 +67,8 @@ enum CommunityType {
   // The community locales are inverted as the backend uses the opposite terminology
   String toLocale(bool isManagedProfile) {
     return switch (this) {
-      CommunityType.followers => 'Following',
-      CommunityType.following => 'Followers',
+      CommunityType.followers => 'Followers',
+      CommunityType.following => 'Following',
       CommunityType.blocked => 'Blocked',
       CommunityType.connected => 'Connections',
       CommunityType.managed => isManagedProfile ? 'Team Members' : 'Managed',
