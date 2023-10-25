@@ -145,7 +145,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ],
               if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
                 _PositiveAppBarTrailConcave(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: backgroundColor,
                   decorationColor: decorationColor,
                   trailType: trailType,
                 ),

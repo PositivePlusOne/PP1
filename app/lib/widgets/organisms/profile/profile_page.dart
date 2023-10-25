@@ -100,7 +100,6 @@ class ProfilePage extends HookConsumerWidget {
             brightness: viewModel.appBarColor.impliedBrightness,
             enableProfileImageFullscreen: true,
             metadata: profileStatisticsData,
-            useName: isOrganisation,
           ),
           PositiveProfileActionsList(
             currentProfile: currentProfile,
@@ -122,14 +121,14 @@ class ProfilePage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
           child: PositiveAppBar(
-            title: isOrganisation ? targetProfile.displayName.asHandle : '',
+            title: targetProfile.name.isNotEmpty ? targetProfile.displayName.asHandle : '',
             centerTitle: true,
             includeLogoWherePossible: false,
             foregroundColor: viewModel.appBarTextColor,
             backgroundColor: viewModel.appBarColor,
+            decorationColor: colors.colorGray1,
             backgroundImage: coverImage,
             trailType: PositiveAppBarTrailType.concave,
-            decorationColor: colors.colorGray1,
             applyLeadingandTrailingPadding: true,
             safeAreaQueryData: mediaQueryData,
             bottom: appBarBottomWidget,
