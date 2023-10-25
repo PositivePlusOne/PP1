@@ -106,6 +106,40 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
   }
 
+  Future<void> onUnblockTapped() async {
+    if (!mounted) {
+      return;
+    }
+
+    final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
+    final Logger logger = ref.read(loggerProvider);
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
+    logger.d('Unblock tapped');
+
+    if (targetUserId.isEmpty || currentProfileId.isEmpty) {
+      logger.e('Failed to unblock user: targetUserId is empty');
+      return;
+    }
+
+    setState(() {
+      isBusy = true;
+    });
+
+    try {
+      await relationshipController.unblockRelationship(targetUserId);
+      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have unblocked ${widget.targetProfile.displayName.asHandle}'));
+    } catch (e) {
+      logger.e('Failed to unblock user. Error: $e');
+    } finally {
+      setState(() {
+        isBusy = false;
+      });
+    }
+  }
+
   Future<void> onUnfollowTapped() async {
     if (!mounted) {
       return;
@@ -257,8 +291,25 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(editProfileAction);
     }
 
+    // Add the optional unblock action
+    if (isRelationshipBlocked) {
+      final Widget unblockAction = PositiveButton(
+        colors: colors,
+        primaryColor: colors.black,
+        onTapped: onUnblockTapped,
+        label: localizations.shared_actions_unblock,
+        icon: UniconsLine.ban,
+        layout: PositiveButtonLayout.iconLeft,
+        size: PositiveButtonSize.medium,
+        forceIconPadding: true,
+        isDisabled: isBusy,
+      );
+
+      children.add(unblockAction);
+    }
+
     // Add the optional follow action
-    if (!isCurrentUser && !hasFollowedTargetUser) {
+    if (!isRelationshipBlocked && !isCurrentUser && !hasFollowedTargetUser) {
       final Widget followAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
@@ -311,7 +362,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if (!isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser && !relationshipContainsOrganisation) {
+    if (!isRelationshipBlocked && !isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser && !relationshipContainsOrganisation) {
       final Widget connectAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
