@@ -683,7 +683,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       filter: AwesomeFilter.None,
       previewFit: CameraPreviewFit.contain,
       theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
-      onImageForAnalysis: onAnalyzeImage,
+      onImageForAnalysis: widget.useFaceDetection ? onAnalyzeImage : null,
       imageAnalysisConfig: faceAnalysisConfig,
     );
 
