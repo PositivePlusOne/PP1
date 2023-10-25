@@ -460,7 +460,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     try {
       await videoState.startRecording();
     } catch (e) {
-      print("test");
+      final Logger logger = ref.read(loggerProvider);
+      logger.e("Error starting video recording: $e");
     }
 
     setStateIfMounted(callback: () {
@@ -505,7 +506,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     try {
       await videoRecordingCameraState.stopRecording();
     } catch (e) {
-      print("object");
+      final Logger logger = ref.read(loggerProvider);
+      logger.e("Error stopping video recording: $e");
     }
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
 
@@ -602,7 +604,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     try {
       currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
     } catch (e) {
-      print("object");
+      final Logger logger = ref.read(loggerProvider);
+      logger.e("Error pausing or resuming video recording: $e");
     }
 
     if (currentCapture == null) {
