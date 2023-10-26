@@ -204,6 +204,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
           if (canView) ...<Widget>[
             PositivePostLayoutWidget(
               postContent: widget.activity,
+              currentProfile: widget.currentProfile,
               publisherProfile: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
               promotion: widget.activityPromotion,

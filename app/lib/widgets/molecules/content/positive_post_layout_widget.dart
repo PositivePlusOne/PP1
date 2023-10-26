@@ -51,6 +51,7 @@ import '../../atoms/indicators/positive_loading_indicator.dart';
 class PositivePostLayoutWidget extends HookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
+    required this.currentProfile,
     required this.publisherProfile,
     required this.publisherRelationship,
     this.promotion,
@@ -74,6 +75,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   });
 
   final Activity? postContent;
+  final Profile? currentProfile;
   final Profile? publisherProfile;
   final Relationship? publisherRelationship;
   final Promotion? promotion;
@@ -119,9 +121,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Material(
       type: MaterialType.transparency,
       child: postType.when<Widget>(
-        post: () => _postBuilder(context: context, ref: ref, currentProfile: publisherProfile, publisherRelationship: publisherRelationship),
-        event: () => _eventBuilder(context: context, ref: ref, currentProfile: publisherProfile, publisherRelationship: publisherRelationship),
-        clip: () => _clipBuilder(context: context, ref: ref, currentProfile: publisherProfile, publisherRelationship: publisherRelationship),
+        post: () => _postBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+        event: () => _eventBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+        clip: () => _clipBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         repost: () => const SizedBox.shrink(),
       ),
     );
