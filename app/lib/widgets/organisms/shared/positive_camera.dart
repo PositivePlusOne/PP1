@@ -530,15 +530,20 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    if (clipRecordingState == ClipRecordingState.recording) {
+    if (clipRecordingState.isRecording) {
       onPauseResumeClip(forcePause: true);
     }
 
-    final bool deactivate = await positiveDiscardClipDialogue(
-      context: context,
-      colors: colors,
-      typography: typography,
-    );
+    late final bool deactivate;
+    if (clipRecordingState.isPreRecording) {
+      deactivate = true;
+    } else {
+      deactivate = await positiveDiscardClipDialogue(
+        context: context,
+        colors: colors,
+        typography: typography,
+      );
+    }
 
     if (deactivate) {
       resetClipStateToDefault();

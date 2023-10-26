@@ -470,7 +470,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     state = state.copyWith(
       isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
-      isCreatingClip: clipRecordingState.isRecordingOrPaused,
+      isCreatingClip: clipRecordingState.isActive,
       activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
