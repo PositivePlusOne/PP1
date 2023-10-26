@@ -116,6 +116,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
       final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
       final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+      //? this is required here as the version within the camera will not be mounted on this page
       canPop = !await positiveDiscardClipDialogue(
         context: context,
         colors: colors,
@@ -469,7 +470,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     state = state.copyWith(
       isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
-      isCreatingClip: clipRecordingState.isActive,
+      isCreatingClip: clipRecordingState.isRecordingOrPaused,
       activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
