@@ -1,0 +1,83 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Positive Plus One Application (Emulators)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=develop",
+        "--dart-define=FB_AUTH_ENDPOINT=192.168.50.70:9099",
+        "--dart-define=FB_FIRESTORE_ENDPOINT=192.168.50.70:8080",
+        "--dart-define=FB_FUNCTIONS_ENDPOINT=192.168.50.70:5001",
+        "--dart-define=FB_STORAGE_ENDPOINT=192.168.50.70:9199",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=develop"
+      ]
+    },
+    {
+      "name": "Positive Plus One Application (Develop)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=develop",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=develop"
+      ]
+    },
+    {
+      "name": "Positive Plus One Application (Develop - Release)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--release",
+        "--dart-define=ENVIRONMENT=develop",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=develop"
+      ]
+    },
+    {
+      "name": "Positive Plus One Application (Develop - Profile)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--profile",
+        "--dart-define=ENVIRONMENT=develop",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=develop"
+      ]
+    },
+    {
+      "name": "Positive Plus One Application (Staging)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=staging",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=staging"
+      ]
+    },
+    {
+      "name": "Positive Plus One Application (Production)",
+      "type": "dart",
+      "request": "launch",
+      "program": "app/lib/main.dart",
+      "args": [
+        "--dart-define=ENVIRONMENT=production",
+        "--dart-define=MAPS_KEY=AIzaSyCj0TxoLMy1N5IaPWdCalfIjEOUnwygUk0",
+        "--flavor=production"
+      ]
+    },
+    {
+      "name": "Positive Plus One Functions",
+      "type": "node",
+      "request": "attach",
+      "port": 9229
+    }
+  ]
+}
