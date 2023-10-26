@@ -27,6 +27,7 @@ import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:media_kit/media_kit.dart';
 import 'main.dart';
 
 Future<void> setupApplication() async {
@@ -61,6 +62,9 @@ Future<void> setupApplication() async {
   final FirebaseEndpoint? firebaseFunctionsEndpoint = systemController.firebaseFunctionsEndpoint;
   final FirebaseEndpoint? firebaseFirestoreEndpoint = systemController.firebaseFirestoreEndpoint;
   final FirebaseEndpoint? firebaseStorageEndpoint = systemController.firebaseStorageEndpoint;
+
+  //* Initial third party services, media kit for video playback
+  MediaKit.ensureInitialized();
 
   if (firebaseFunctionsEndpoint != null) {
     logger.w('[setupApplication] Using Firebase Functions Emulator: ${firebaseFunctionsEndpoint.toString()}');

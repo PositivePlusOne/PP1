@@ -1,6 +1,6 @@
 // Flutter imports:
-
-// Flutter imports:
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -72,11 +72,14 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final currentProfileId = currentProfile?.flMeta?.id;
 
+    //? Aspect ratio of the available screen space used to measure the clip preview when taking video
+    // final double aspectRatio = (mediaQueryData.size.width - mediaQueryData.padding.right - mediaQueryData.padding.left) / (mediaQueryData.size.height - mediaQueryData.padding.bottom - mediaQueryData.padding.top);
+
     //? phone reserved bottom padding + navigation bar height + padding between navigation and bottom of the screen
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
-      onWillPop: state.isBusy ? (() async => false) : viewModel.onWillPopScope,
+      onWillPop: state.isBusy ? (() async => false) : () => viewModel.onWillPopScope(context),
       child: Scaffold(
         backgroundColor: colours.black,
         resizeToAvoidBottomInset: false,
@@ -117,7 +120,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
 
                     ///? Change UI state based on current clip state
-                    onClipStateChange: viewModel.onClipStateChange,
+                    onClipStateChange: (state) => viewModel.onClipStateChange(context, state),
 
                     ///? Options for camera delay before taking picture or clip
                     maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
@@ -167,7 +170,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   galleryEntry: state.editingGalleryEntry,
                   currentFilter: state.currentFilter,
                   onFilterSelected: viewModel.onFilterSelected,
-                  onBackButtonPressed: viewModel.onWillPopScope,
+                  onBackButtonPressed: () => viewModel.onWillPopScope(context),
                 ),
               ],
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

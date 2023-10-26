@@ -24,6 +24,8 @@ mixin _$Media {
   String get bucketPath => throw _privateConstructorUsedError;
   String get url => throw _privateConstructorUsedError;
   String get altText => throw _privateConstructorUsedError;
+  int get width => throw _privateConstructorUsedError;
+  int get height => throw _privateConstructorUsedError;
   List<MediaThumbnail> get thumbnails => throw _privateConstructorUsedError;
   MediaType get type => throw _privateConstructorUsedError;
   int get priority => throw _privateConstructorUsedError;
@@ -45,6 +47,8 @@ abstract class $MediaCopyWith<$Res> {
       String bucketPath,
       String url,
       String altText,
+      int width,
+      int height,
       List<MediaThumbnail> thumbnails,
       MediaType type,
       int priority,
@@ -69,6 +73,8 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
     Object? bucketPath = null,
     Object? url = null,
     Object? altText = null,
+    Object? width = null,
+    Object? height = null,
     Object? thumbnails = null,
     Object? type = null,
     Object? priority = null,
@@ -92,6 +98,14 @@ class _$MediaCopyWithImpl<$Res, $Val extends Media>
           ? _value.altText
           : altText // ignore: cast_nullable_to_non_nullable
               as String,
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
       thumbnails: null == thumbnails
           ? _value.thumbnails
           : thumbnails // ignore: cast_nullable_to_non_nullable
@@ -128,6 +142,8 @@ abstract class _$$MediaImplCopyWith<$Res> implements $MediaCopyWith<$Res> {
       String bucketPath,
       String url,
       String altText,
+      int width,
+      int height,
       List<MediaThumbnail> thumbnails,
       MediaType type,
       int priority,
@@ -150,6 +166,8 @@ class __$$MediaImplCopyWithImpl<$Res>
     Object? bucketPath = null,
     Object? url = null,
     Object? altText = null,
+    Object? width = null,
+    Object? height = null,
     Object? thumbnails = null,
     Object? type = null,
     Object? priority = null,
@@ -173,6 +191,14 @@ class __$$MediaImplCopyWithImpl<$Res>
           ? _value.altText
           : altText // ignore: cast_nullable_to_non_nullable
               as String,
+      width: null == width
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: null == height
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
       thumbnails: null == thumbnails
           ? _value._thumbnails
           : thumbnails // ignore: cast_nullable_to_non_nullable
@@ -199,6 +225,8 @@ class _$MediaImpl implements _Media {
       this.bucketPath = '',
       this.url = '',
       this.altText = '',
+      this.width = -1,
+      this.height = -1,
       final List<MediaThumbnail> thumbnails = const [],
       this.type = MediaType.unknown,
       this.priority = kMediaPriorityDefault,
@@ -221,6 +249,12 @@ class _$MediaImpl implements _Media {
   @override
   @JsonKey()
   final String altText;
+  @override
+  @JsonKey()
+  final int width;
+  @override
+  @JsonKey()
+  final int height;
   final List<MediaThumbnail> _thumbnails;
   @override
   @JsonKey()
@@ -245,7 +279,7 @@ class _$MediaImpl implements _Media {
 
   @override
   String toString() {
-    return 'Media(name: $name, bucketPath: $bucketPath, url: $url, altText: $altText, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
+    return 'Media(name: $name, bucketPath: $bucketPath, url: $url, altText: $altText, width: $width, height: $height, thumbnails: $thumbnails, type: $type, priority: $priority, isSensitive: $isSensitive, isPrivate: $isPrivate)';
   }
 
   @override
@@ -258,6 +292,8 @@ class _$MediaImpl implements _Media {
                 other.bucketPath == bucketPath) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.altText, altText) || other.altText == altText) &&
+            (identical(other.width, width) || other.width == width) &&
+            (identical(other.height, height) || other.height == height) &&
             const DeepCollectionEquality()
                 .equals(other._thumbnails, _thumbnails) &&
             (identical(other.type, type) || other.type == type) &&
@@ -276,6 +312,8 @@ class _$MediaImpl implements _Media {
       bucketPath,
       url,
       altText,
+      width,
+      height,
       const DeepCollectionEquality().hash(_thumbnails),
       type,
       priority,
@@ -302,6 +340,8 @@ abstract class _Media implements Media {
       final String bucketPath,
       final String url,
       final String altText,
+      final int width,
+      final int height,
       final List<MediaThumbnail> thumbnails,
       final MediaType type,
       final int priority,
@@ -318,6 +358,10 @@ abstract class _Media implements Media {
   String get url;
   @override
   String get altText;
+  @override
+  int get width;
+  @override
+  int get height;
   @override
   List<MediaThumbnail> get thumbnails;
   @override
