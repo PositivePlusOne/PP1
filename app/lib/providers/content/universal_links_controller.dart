@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -11,6 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/system/system_controller.dart';

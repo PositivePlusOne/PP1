@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
-import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,8 +18,8 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/main.dart';
@@ -45,7 +44,6 @@ import 'package:app/widgets/state/positive_community_feed_state.dart';
 
 class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   const PositiveCommunitiesDialog({
-    required this.controllerProvider,
     this.supportedCommunityTypes,
     this.mode = CommunitiesDialogMode.view,
     this.actionLabel,
@@ -58,7 +56,6 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     super.key,
   });
 
-  final CommunitiesControllerProvider controllerProvider;
   final CommunitiesDialogMode mode;
   final List<CommunityType>? supportedCommunityTypes;
 
@@ -67,6 +64,7 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final bool canCallToAction;
   final Future<void> Function()? onActionPressed;
   final void Function(String)? onProfileSelected;
+
   final List<String> selectedProfiles;
   final bool isEnabled;
 
@@ -91,49 +89,50 @@ enum CommunitiesDialogMode {
 }
 
 class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDialog> {
-  late PositiveCommunityFeedState followingPagingFeedState;
-  late PositiveCommunityFeedState followersPagingFeedState;
-  late PositiveCommunityFeedState connectionsPagingFeedState;
-  late PositiveCommunityFeedState blockedPagingFeedState;
-  late PositiveCommunityFeedState managedPagingFeedState;
+  CommunitiesControllerProvider getCommunitiesControllerProvider() {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
+    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+
+    final String currentUserId = firebaseAuth.currentUser?.uid ?? '';
+    final String currentProfileId = profileControllerState.currentProfile?.flMeta?.id ?? '';
+    final bool isManaged = profileController.isCurrentlyManagedProfile;
+
+    return communitiesControllerProvider(
+      currentUserId: currentUserId,
+      currentProfileId: currentProfileId,
+      isManagedProfile: isManaged,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    setupControllers();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.initialCommunityType != null) {
-        final CommunitiesController controller = providerContainer.read(widget.controllerProvider.notifier);
-        controller.setSelectedCommunityType(widget.initialCommunityType!);
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => onFirstRender());
   }
 
-  @override
-  void dispose() {
-    disposeControllers();
-    super.dispose();
-  }
+  Future<void> onFirstRender() async {
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
 
-  @override
-  void didUpdateWidget(PositiveCommunitiesDialog oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.selectedProfiles != widget.selectedProfiles) {
-      setStateIfMounted();
+    if (widget.initialCommunityType != null) {
+      controller.setSelectedCommunityType(widget.initialCommunityType!);
+    }
+
+    if (widget.initialCommunityType == null || widget.supportedCommunityTypes?.contains(widget.initialCommunityType) != true) {
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final bool isManaged = profileController.isCurrentlyManagedProfile;
+      controller.setSelectedCommunityType(isManaged ? CommunityType.managed : CommunityType.connected);
     }
   }
 
-  PositiveCommunityFeedState get currentFeedState {
-    final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
-    return switch (controller.state.selectedCommunityType) {
-      CommunityType.following => followingPagingFeedState,
-      CommunityType.followers => followersPagingFeedState,
-      CommunityType.connected => connectionsPagingFeedState,
-      CommunityType.blocked => blockedPagingFeedState,
-      CommunityType.managed => managedPagingFeedState,
-      CommunityType.supported => buildPageStateFromSupportedProfiles(),
-    };
+  PositiveCommunityFeedState getCurrentFeedState({
+    required Profile? profile,
+    required CommunityType communityType,
+  }) {
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
+    return controller.getCommunityFeedStateForType(profile: profile, communityType: communityType);
   }
 
   PositiveCommunityFeedState buildPageStateFromSupportedProfiles() {
@@ -156,68 +155,14 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     return feedState;
   }
 
-  void setupControllers() {
-    final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
+  Future<void> requestRefresh({required Profile? profile}) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Profile? currentProfile = profileController.state.currentProfile;
-    if (currentProfile == null) {
-      logger.d('PositiveCommunitiesDialog - setupControllers - currentProfile is null');
-      return;
-    }
-
-    followingPagingFeedState = controller.getCommunityFeedStateForType(currentProfile: currentProfile, communityType: CommunityType.following);
-    followersPagingFeedState = controller.getCommunityFeedStateForType(currentProfile: currentProfile, communityType: CommunityType.followers);
-    connectionsPagingFeedState = controller.getCommunityFeedStateForType(currentProfile: currentProfile, communityType: CommunityType.connected);
-    blockedPagingFeedState = controller.getCommunityFeedStateForType(currentProfile: currentProfile, communityType: CommunityType.blocked);
-    managedPagingFeedState = controller.getCommunityFeedStateForType(currentProfile: currentProfile, communityType: CommunityType.managed);
-
-    // Add listeners
-    followingPagingFeedState.pagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.following));
-    followersPagingFeedState.pagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.followers));
-    connectionsPagingFeedState.pagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.connected));
-    blockedPagingFeedState.pagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.blocked));
-    managedPagingFeedState.pagingController.addPageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.managed));
-  }
-
-  void disposeControllers() {
-    followingPagingFeedState.pagingController.removePageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.following));
-    followersPagingFeedState.pagingController.removePageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.followers));
-    connectionsPagingFeedState.pagingController.removePageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.connected));
-    blockedPagingFeedState.pagingController.removePageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.blocked));
-    managedPagingFeedState.pagingController.removePageRequestListener((cursor) async => await requestNextPage(cursor, CommunityType.managed));
-  }
-
-  Future<void> requestRefresh() async {
-    final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
-    final Logger logger = ref.read(loggerProvider);
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
     final CommunityType communityType = controller.state.selectedCommunityType;
 
     logger.d('PositiveCommunitiesDialog - requestRefresh - Loading next community data: $communityType');
-    controller.resetCommunityDataForType(type: communityType);
-  }
-
-  Future<void> requestNextPage(String cursor, CommunityType communityType) async {
-    if (!mounted) {
-      return;
-    }
-
-    final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
-    final Logger logger = ref.read(loggerProvider);
-
-    final bool canLoadNext = currentFeedState.pagingController.value.status != PagingStatus.completed;
-    if (!canLoadNext) {
-      logger.d('No more pages to load: $communityType');
-      return;
-    }
-
-    await controller.loadNextCommunityData(type: communityType);
-    setStateIfMounted();
-  }
-
-  void onCommunityTypeChanged(CommunityType value) {
-    final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
-    controller.setSelectedCommunityType(value);
+    controller.resetCommunityDataForType(type: communityType, currentProfile: profile);
   }
 
   @override
@@ -231,28 +176,31 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final String currentAuthUserId = auth.currentUser?.uid ?? '';
 
     final Profile? currentProfile = profileControllerState.currentProfile;
-    final bool isManagedProfile = profileController.isCurrentManagedProfile;
+    final bool isManagedProfile = profileController.isCurrentlyManagedProfile;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final CommunitiesController controller = ref.read(widget.controllerProvider.notifier);
-    ref.watch(widget.controllerProvider);
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = ref.read(provider.notifier);
+    final CommunityType selectedCommunityType = ref.watch(provider.select((value) => value.selectedCommunityType));
 
     useLifecycleHook(controller);
+
+    final PositiveCommunityFeedState currentFeedState = getCurrentFeedState(profile: currentProfile, communityType: selectedCommunityType);
 
     useCacheHook(keys: <String>[
       currentProfile?.flMeta?.id ?? '',
       currentFeedState.buildCacheKey(),
     ]);
 
-    final Widget child = switch (controller.state.selectedCommunityType) {
+    final Widget child = switch (selectedCommunityType) {
       CommunityType.following => buildRelationshipList(
           context: context,
           typography: typography,
           colors: colors,
-          controller: followingPagingFeedState.pagingController,
+          controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
           noDataTitle: localizations.page_community_following_empty_title,
@@ -262,7 +210,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           context: context,
           typography: typography,
           colors: colors,
-          controller: followersPagingFeedState.pagingController,
+          controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
           noDataTitle: localizations.page_community_followers_empty_title,
@@ -272,7 +220,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           context: context,
           typography: typography,
           colors: colors,
-          controller: connectionsPagingFeedState.pagingController,
+          controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
           noDataTitle: localizations.page_community_connections_empty_title,
@@ -282,7 +230,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           context: context,
           typography: typography,
           colors: colors,
-          controller: blockedPagingFeedState.pagingController,
+          controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
           noDataTitle: localizations.page_community_blocked_empty_title,
@@ -292,7 +240,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           context: context,
           typography: typography,
           colors: colors,
-          controller: managedPagingFeedState.pagingController,
+          controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
           noDataTitle: localizations.page_community_managed_empty_title,
@@ -302,7 +250,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           context: context,
           typography: typography,
           colors: colors,
-          controller: currentFeedState.pagingController,
+          controller: buildPageStateFromSupportedProfiles().pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
           noDataTitle: localizations.page_community_supported_empty_title,
@@ -331,13 +279,14 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           includeAppBar: false,
           children: <Widget>[
             buildAppBar(context, colors),
-            const SizedBox(height: kPaddingSmall),
+            const SizedBox(height: kPaddingMedium),
             if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
                 values: communityTypes,
                 initialValue: isManagedProfile ? CommunityType.managed : CommunityType.connected,
-                onValueChanged: (value) => onCommunityTypeChanged(value),
+                onValueChanged: (value) => controller.setSelectedCommunityType(value),
                 backgroundColour: colors.white,
+                borderColour: colors.black,
                 labelText: 'User Type',
                 valueStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
                 placeholderStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
@@ -400,15 +349,18 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         // create a nice display to show when there is no content in the list
         noItemsFoundIndicatorBuilder: (context) => Column(
-          children: [
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
             const SizedBox(height: kPaddingMedium),
             Text(
               noDataTitle,
+              textAlign: TextAlign.left,
               style: typography.styleHeroMedium,
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
               noDataBody,
+              textAlign: TextAlign.left,
               style: typography.styleSubtitle,
             ),
           ],

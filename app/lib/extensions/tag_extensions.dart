@@ -1,7 +1,10 @@
+// Package imports:
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+
+// Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 extension TagExtensions on Tag {
   Uri get feedLink => providerContainer.read(universalLinksControllerProvider.notifier).buildTagRouteLink(key);

@@ -114,7 +114,6 @@ class AccountPage extends HookConsumerWidget {
                             height: screenSize.height,
                             width: screenSize.width,
                             child: PositiveCommunitiesDialog(
-                              controllerProvider: communitiesControllerProvider(currentProfile: viewModel.getCurrentProfile(), currentUser: viewModel.getCurrentUser()),
                               supportedCommunityTypes: const [CommunityType.supported],
                               initialCommunityType: CommunityType.supported,
                               mode: CommunitiesDialogMode.select,

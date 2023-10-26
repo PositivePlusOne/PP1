@@ -230,7 +230,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
                 child: GestureDetector(
                   onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
                   child: Hero(
-                    tag: PositiveAppBar.kPositiveLogoTag,
+                    tag: '${PositiveAppBar.kPositiveLogoTag}_$foregroundColor',
                     child: SvgPicture.asset(
                       SvgImages.logosFooter,
                       width: kLogoMaximumWidth,

@@ -88,8 +88,6 @@ class ProfilePage extends HookConsumerWidget {
 
     useCacheHook(keys: expectedCacheKeys);
 
-    final bool isOrganisation = targetProfile.isOrganisation;
-
     PreferredSizeWidget? appBarBottomWidget;
     if (state.profile != null) {
       appBarBottomWidget = ProfileAppBarHeader(

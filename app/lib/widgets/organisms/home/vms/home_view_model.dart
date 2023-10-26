@@ -18,7 +18,6 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
-import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -80,14 +79,10 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
       return;
     }
 
-    logger.d('performProfileChecks()');
     try {
-      await Future.wait([
-        profileController.updateEmailAddress(),
-        profileController.updateFirebaseMessagingToken(),
-        notificationsController.setupPushNotificationListeners(),
-        CommunitiesController.loadFirstWindowForAccountIfNeeded(currentProfile: currentProfile, currentUser: currentUser),
-      ]);
+      logger.d('performProfileChecks()');
+      profileController.updateEmailAddress().ignore();
+      profileController.updateFirebaseMessagingToken().then((value) => notificationsController.setupPushNotificationListeners()).ignore();
     } finally {
       state = state.copyWith(hasDoneInitialChecks: true);
     }

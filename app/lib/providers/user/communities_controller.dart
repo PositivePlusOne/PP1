@@ -4,7 +4,6 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -17,10 +16,10 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -34,20 +33,20 @@ part 'communities_controller.g.dart';
 @freezed
 class CommunitiesControllerState with _$CommunitiesControllerState {
   const factory CommunitiesControllerState({
-    required User? currentUser,
-    required Profile? currentProfile,
+    required String currentUserId,
+    required String currentProfileId,
     required CommunityType selectedCommunityType,
     @Default(false) bool isBusy,
   }) = _CommunitiesControllerState;
 
   factory CommunitiesControllerState.initialState({
-    required Profile? currentProfile,
-    required User? currentUser,
+    required String? currentProfileId,
+    required String? currentUserId,
+    bool isManagedProfile = false,
   }) {
-    final bool isManagedProfile = currentProfile != null && currentUser != null && currentProfile.flMeta?.id != currentUser.uid;
     return CommunitiesControllerState(
-      currentUser: currentUser,
-      currentProfile: currentProfile,
+      currentUserId: currentUserId ?? '',
+      currentProfileId: currentProfileId ?? '',
       selectedCommunityType: isManagedProfile ? CommunityType.managed : CommunityType.connected,
     );
   }
@@ -81,21 +80,18 @@ enum CommunityType {
 class CommunitiesController extends _$CommunitiesController with LifecycleMixin {
   StreamSubscription<CacheKeyUpdatedEvent>? _cacheKeyUpdatedSubscription;
 
-  PositiveCommunityFeedState get communityFeedState => getCommunityFeedStateForType(
-        communityType: state.selectedCommunityType,
-        currentProfile: state.currentProfile,
-      );
-
-  bool get hasLoadedInitialData => communityFeedState.hasPerformedInitialLoad;
+  Profile? getCurrentProfile() => ref.read(cacheControllerProvider).get(state.currentProfileId);
 
   @override
   CommunitiesControllerState build({
-    required Profile? currentProfile,
-    required User? currentUser,
+    required String? currentProfileId,
+    required String? currentUserId,
+    bool isManagedProfile = false,
   }) {
     return CommunitiesControllerState.initialState(
-      currentProfile: currentProfile,
-      currentUser: currentUser,
+      currentProfileId: currentProfileId,
+      currentUserId: currentUserId,
+      isManagedProfile: isManagedProfile,
     );
   }
 
@@ -105,7 +101,18 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     logger.i('CommunitiesController - onFirstRender - First render');
     setupListeners();
 
-    if (!hasLoadedInitialData) {
+    final Profile? currentProfile = getCurrentProfile();
+    if (currentProfile == null) {
+      logger.w('CommunitiesController - onFirstRender - Current profile is null');
+      return;
+    }
+
+    final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
+      communityType: state.selectedCommunityType,
+      profile: currentProfile,
+    );
+
+    if (!feedState.hasPerformedInitialLoad) {
       logger.i('CommunitiesController - setupListeners - Loading initial community data');
       loadInitialCommunityData();
     }
@@ -118,11 +125,48 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     await _cacheKeyUpdatedSubscription?.cancel();
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheRecordUpdated);
     logger.i('CommunitiesController - setupListeners - User changes subscription setup');
+
+    final PositiveCommunityFeedState currentFeedState = getCurrentCommunityFeedState();
+    currentFeedState.pagingController.addPageRequestListener((pageKey) => requestNextPage(pageKey, state.selectedCommunityType));
+  }
+
+  void teardownListeners() async {
+    final PositiveCommunityFeedState currentFeedState = getCurrentCommunityFeedState();
+    currentFeedState.pagingController.removePageRequestListener((pageKey) => requestNextPage(pageKey, state.selectedCommunityType));
   }
 
   void setSelectedCommunityType(dynamic value) {
-    if (value is CommunityType) {
-      state = state.copyWith(selectedCommunityType: value);
+    if (value is! CommunityType) {
+      return;
+    }
+
+    if (value == state.selectedCommunityType) {
+      return;
+    }
+
+    state = state.copyWith(selectedCommunityType: value);
+  }
+
+  Future<void> requestNextPage(String cursor, CommunityType communityType) async {
+    final Logger logger = ref.read(loggerProvider);
+    final PositiveCommunityFeedState currentFeedState = getCurrentCommunityFeedState();
+    final bool canLoadNext = currentFeedState.pagingController.value.status != PagingStatus.completed;
+    if (!canLoadNext) {
+      logger.d('No more pages to load: $communityType');
+      return;
+    }
+
+    // Supported profiles are not paginated
+    if (communityType == CommunityType.supported) {
+      logger.e('Cannot load next page for supported profiles');
+      return;
+    }
+
+    try {
+      await loadNextCommunityData(type: communityType);
+    } catch (ex) {
+      logger.e('Failed to load next page: $communityType - ex: $ex');
+      currentFeedState.pagingController.error = ex;
     }
   }
 
@@ -136,12 +180,32 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     updateCommunityRelationship(event.value as Relationship);
   }
 
+  PositiveCommunityFeedState getCurrentCommunityFeedState() {
+    final Profile? currentProfile = getCurrentProfile();
+    if (currentProfile == null) {
+      return PositiveCommunityFeedState.buildNewState(
+        communityType: state.selectedCommunityType,
+        currentProfileId: '',
+      );
+    }
+
+    return getCommunityFeedStateForType(
+      communityType: state.selectedCommunityType,
+      profile: currentProfile,
+    );
+  }
+
   PositiveCommunityFeedState getCommunityFeedStateForType({
     required CommunityType communityType,
-    required Profile? currentProfile,
+    required Profile? profile,
   }) {
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final String currentProfileId = profileController.currentProfileId ?? '';
+    final String currentProfileId = profile?.flMeta?.id ?? '';
+    if (currentProfileId.isEmpty) {
+      return PositiveCommunityFeedState.buildNewState(
+        communityType: communityType,
+        currentProfileId: currentProfileId,
+      );
+    }
 
     final String feedsCacheKey = PositiveCommunityFeedState.buildFeedCacheKey(currentProfileId, communityType);
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -161,41 +225,38 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
   }
 
   void updateCommunityRelationship(Relationship relationship) {
-    final UserController userController = ref.read(userControllerProvider.notifier);
-    if (userController.currentUser == null) {
-      return;
-    }
-
-    final List<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(userController.currentUser!.uid).toList();
+    final String currentProfileId = getCurrentProfile()?.flMeta?.id ?? '';
+    final List<RelationshipState> relationshipStates = relationship.relationshipStatesForEntity(currentProfileId).toList();
     if (relationshipStates.isEmpty) {
       return;
     }
 
-    final String otherMemberId = relationship.members.firstWhere((RelationshipMember member) => member.memberId != userController.currentUser!.uid).memberId;
+    final String otherMemberId = relationship.members.firstWhere((RelationshipMember member) => member.memberId != currentProfileId).memberId;
+    final Profile? currentProfile = getCurrentProfile();
 
     final PositiveCommunityFeedState connectionFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.connected,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     final PositiveCommunityFeedState followerFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.followers,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     final PositiveCommunityFeedState followingFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.following,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     final PositiveCommunityFeedState blockedFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.blocked,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     final PositiveCommunityFeedState managedFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.managed,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     final bool hasConnectionId = (connectionFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
@@ -255,13 +316,16 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     }
   }
 
-  void resetCommunityDataForType({required CommunityType type}) {
+  void resetCommunityDataForType({
+    required Profile? currentProfile,
+    required CommunityType type,
+  }) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('CommunitiesController - resetCommunityDataForType - Resetting community data for type: $type');
 
     final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
       communityType: type,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     feedState.hasPerformedInitialLoad = false;
@@ -271,58 +335,23 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     saveFeedState(feedState);
   }
 
-  static Future<void> loadFirstWindowForAllAccountsIfNeeded() async {
+  Future<void> loadFirstWindowForAccountIfNeeded() async {
     final Logger logger = providerContainer.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
-    final User? currentUser = firebaseAuth.currentUser;
-    if (currentUser == null) {
-      logger.e('CommunitiesController - loadFirstWindowForAllAccountsIfNeeded - Current user is null');
-      return;
-    }
-
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
-    final Set<String> supportedProfileIds = profileControllerState.availableProfileIds;
-
-    final List<Future<void>> futures = [];
-    for (final String profileId in supportedProfileIds) {
-      final Profile? profile = cacheController.get(profileId);
-      if (profile == null) {
-        logger.e('CommunitiesController - loadFirstWindowForAllAccountsIfNeeded - Profile is null for id: $profileId');
-        continue;
-      }
-
-      await loadFirstWindowForAccountIfNeeded(
-        currentProfile: profile,
-        currentUser: currentUser,
-      );
-    }
-
-    await Future.wait(futures);
-  }
-
-  static Future<void> loadFirstWindowForAccountIfNeeded({
-    required Profile currentProfile,
-    required User currentUser,
-  }) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-
-    final CommunitiesControllerProvider provider = communitiesControllerProvider(currentProfile: currentProfile, currentUser: currentUser);
-    final CommunitiesController communitiesController = providerContainer.read(provider.notifier);
-    final Profile? cachedProfile = cacheController.get(currentProfile.flMeta?.id ?? '');
+    final Profile? cachedProfile = getCurrentProfile();
     if (cachedProfile == null) {
       logger.e('CommunitiesController - loadFirstWindowForAccountIfNeeded - Cached profile is null');
       return;
     }
 
-    final bool hasLoadedInitialData = communitiesController.hasLoadedInitialData;
+    final PositiveCommunityFeedState feedState = getCurrentCommunityFeedState();
+
+    final bool hasLoadedInitialData = feedState.hasPerformedInitialLoad;
     if (hasLoadedInitialData) {
       logger.i('CommunitiesController - loadFirstWindowForAccountIfNeeded - Initial community data already loaded');
       return;
     }
 
-    await communitiesController.loadInitialCommunityData();
+    await loadInitialCommunityData();
   }
 
   Future<void> loadInitialCommunityData() async {
@@ -335,7 +364,13 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
       return;
     }
 
-    if (hasLoadedInitialData) {
+    final Profile? currentProfile = getCurrentProfile();
+    final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
+      communityType: CommunityType.following,
+      profile: currentProfile,
+    );
+
+    if (feedState.hasPerformedInitialLoad) {
       logger.i('CommunitiesController - loadInitialCommunityData - Initial community data already loaded');
       return;
     }
@@ -353,17 +388,15 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     required CommunityType type,
   }) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    final String currentProfileId = profileController.currentProfileId ?? '';
-    if (currentProfileId.isEmpty) {
+    final Profile? currentProfile = getCurrentProfile();
+    if (currentProfile == null) {
       logger.w('CommunitiesController - loadNextCommunityData - Current profile is null');
       return;
     }
 
     final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
       communityType: type,
-      currentProfile: state.currentProfile,
+      profile: currentProfile,
     );
 
     final bool canGetNext = feedState.pagingController.value.status != PagingStatus.completed;
@@ -372,7 +405,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
       return;
     }
 
-    final bool isManagedProfile = profileController.isCurrentManagedProfile;
+    final bool isManagedProfile = currentProfile.isOrganisation;
     if (!isManagedProfile && CommunityType.managed == type) {
       logger.w('CommunitiesController - loadNextCommunityData - Cannot load managed community data for non-managed profile');
       return;
@@ -380,6 +413,8 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
 
     late final EndpointResponse response;
     final List<String> newRelationshipIds = [];
+
+    final PagingController<String, String> pagingController = feedState.pagingController;
 
     try {
       final RelationshipSearchApiService relationshipSearchApiService = ref.read(relationshipSearchApiServiceProvider);
@@ -396,6 +431,8 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
 
       final Map<String, dynamic> data = response.data;
       final List<dynamic> relationships = (data.containsKey('relationships') ? data['relationships'] : []).map((dynamic relationship) => json.decodeSafe(relationship)).toList();
+      final String currentProfileId = currentProfile.flMeta?.id ?? '';
+
       for (final dynamic relationship in relationships) {
         try {
           final Relationship newRelationship = Relationship.fromJson(relationship);
@@ -416,36 +453,28 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
         }
       }
 
+      final String cursor = response.cursor ?? '';
+      final String currentCursor = feedState.currentPaginationKey;
+      final bool hasMoreData = cursor.isNotEmpty && newRelationshipIds.isNotEmpty && cursor != currentCursor;
+
+      logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data appending to page');
+      newRelationshipIds.removeWhere((String id) => pagingController.itemList?.contains(id) ?? false);
+
+      if (hasMoreData) {
+        pagingController.appendSafePage(newRelationshipIds, cursor);
+      } else {
+        pagingController.appendLastPage(newRelationshipIds);
+      }
+
+      logger.d('CommunitiesController - loadNextCommunityData - Appended next community data to page');
       feedState.currentPaginationKey = response.cursor ?? '';
-      saveFeedState(feedState);
     } catch (ex) {
       logger.e('CommunitiesController - loadNextCommunityData - Failed to load community data - ex: $ex');
       feedState.pagingController.error = ex;
-      saveFeedState(feedState);
       return;
+    } finally {
+      saveFeedState(feedState);
     }
-
-    final String cursor = response.cursor ?? '';
-    final String currentCursor = feedState.currentPaginationKey;
-    final bool hasMoreData = cursor.isNotEmpty && newRelationshipIds.isNotEmpty && cursor != currentCursor;
-
-    logger.d('CommunitiesController - loadNextCommunityData - Loaded next community data appending to page');
-    final PagingController<String, String> pagingController = feedState.pagingController;
-
-    // Remove all records that are already in the list
-    newRelationshipIds.removeWhere((String id) => pagingController.itemList?.contains(id) ?? false);
-
-    if (hasMoreData) {
-      pagingController.appendSafePage(newRelationshipIds, cursor);
-    } else {
-      pagingController.appendLastPage(newRelationshipIds);
-    }
-
-    saveFeedState(feedState);
-    logger.d('CommunitiesController - loadNextCommunityData - Appended next community data to page');
-
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-    pagingController.notifyListeners();
   }
 
   void saveFeedState(PositiveCommunityFeedState feedState) {
@@ -457,6 +486,8 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
       return;
     }
 
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    feedState.pagingController.notifyListeners();
     cacheController.add(key: cacheKey, value: feedState);
   }
 }

@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/tag_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';

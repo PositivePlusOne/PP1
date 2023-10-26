@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/tag_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';

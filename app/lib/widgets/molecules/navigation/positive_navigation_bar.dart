@@ -58,27 +58,24 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Hero(
-      tag: kHeroTag,
-      child: SizedBox(
-        height: preferredSize.height,
-        child: Stack(
-          children: <Widget>[
-            const Positioned.fill(
-              child: PositiveNavigationBarShade(),
+    return SizedBox(
+      height: preferredSize.height,
+      child: Stack(
+        children: <Widget>[
+          const Positioned.fill(
+            child: PositiveNavigationBarShade(),
+          ),
+          Positioned(
+            top: kBottomNavigationBarVerticalMargin,
+            left: kBottomNavigationBarHorizontalMargin,
+            right: kBottomNavigationBarHorizontalMargin,
+            bottom: PositiveNavigationBar.kBottomNavigationBarVerticalMargin + mediaQuery.padding.bottom,
+            child: PositiveNavigationBarContent(
+              index: index,
+              isDisabled: isDisabled,
             ),
-            Positioned(
-              top: kBottomNavigationBarVerticalMargin,
-              left: kBottomNavigationBarHorizontalMargin,
-              right: kBottomNavigationBarHorizontalMargin,
-              bottom: PositiveNavigationBar.kBottomNavigationBarVerticalMargin + mediaQuery.padding.bottom,
-              child: PositiveNavigationBarContent(
-                index: index,
-                isDisabled: isDisabled,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
