@@ -1001,7 +1001,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           if (widget.delayTimerSelection >= 0 && widget.isVideoMode && widget.isDelayTimerEnabled && clipRecordingState.isInactive)
             SizedBox(
-              width: 155,
+              width: kClipsDelayTimerWidth,
               child: PositiveSlimTabBar(
                 tabs: widget.delayTimerOptions,
                 onTapped: (index) => widget.onDelayTimerChanged(index),
