@@ -508,6 +508,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     } catch (e) {
       final Logger logger = ref.read(loggerProvider);
       logger.e("Error stopping video recording: $e");
+      resetClipStateToDefault();
     }
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
 
@@ -581,7 +582,14 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   void stopClipRecording() {
     if (cachedCameraState != null) {
       VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
-      videoRecordingCameraState.stopRecording();
+      try {
+        videoRecordingCameraState.stopRecording();
+      } catch (e) {
+        stopClipTimers();
+        if (widget.onClipStateChange != null) {
+          widget.onClipStateChange!(clipRecordingState);
+        }
+      }
     }
     clipRecordingState = ClipRecordingState.notRecording;
   }
