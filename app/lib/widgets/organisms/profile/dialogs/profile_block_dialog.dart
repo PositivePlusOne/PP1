@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/gen/app_router.dart';
-import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
-import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,12 +14,15 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/account/vms/account_view_model.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
 import '../../../../providers/system/design_controller.dart';
 
 class ProfileBlockDialog extends HookConsumerWidget {

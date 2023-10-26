@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -18,7 +17,6 @@ import 'package:app/hooks/cache_hook.dart';
 import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
@@ -91,7 +89,6 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
   @override
   Widget build(BuildContext context) {
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
-    final User? currentUser = ref.watch(firebaseAuthProvider.select((value) => value.currentUser));
     final Profile? currentProfile = profileControllerState.currentProfile;
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -100,15 +97,7 @@ class _PostSharePageState extends ConsumerState<PostSharePage> {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
-    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
-      currentProfile: currentProfile,
-      currentUser: currentUser,
-    );
-
-    ref.watch(communitiesControllerProvider.notifier);
-
     return PositiveCommunitiesDialog(
-      controllerProvider: communitiesControllerProvider,
       actionLabel: 'Share',
       onActionPressed: () => onShareSelected(context, activity, currentProfile),
       isEnabled: !isBusy,

@@ -30,7 +30,7 @@ class AccountPageViewModelState with _$AccountPageViewModelState {
       );
 }
 
-@Riverpod()
+@riverpod
 class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, ProfileSwitchMixin {
   late final PageController pageController;
 
@@ -39,8 +39,9 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final Profile? profile = profileController.currentProfile;
     pageController = PageController(
-      initialPage: (profile?.isOrganisation ?? true) ? 1 : 0,
+      initialPage: (profile?.isOrganisation ?? false) ? 1 : 0,
     );
+
     return AccountPageViewModelState.initialState();
   }
 

@@ -25,6 +25,7 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -116,21 +117,22 @@ class SharingController extends _$SharingController implements ISharingControlle
 
   @override
   List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions? postOptions) {
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
-      currentUser: postOptions?.currentUser,
-      currentProfile: postOptions?.currentProfile,
+      currentUserId: postOptions?.currentUser?.uid ?? '',
+      currentProfileId: postOptions?.currentProfile?.flMeta?.id ?? '',
+      isManagedProfile: profileController.isCurrentlyManagedProfile,
     );
 
-    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, currentProfile: postOptions?.currentProfile);
+    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, profile: postOptions?.currentProfile);
     final bool hasConnections = feedState.pagingController.value.itemList?.isNotEmpty == true;
     final bool hasValidProfile = profileController.state.currentProfile != null;
 
     // sharing is complicated, so can we share this activity as this user?
-    final shareMode = postOptions?.activity.securityConfiguration?.shareMode;
+    final ActivitySecurityConfigurationMode? shareMode = postOptions?.activity.securityConfiguration?.shareMode;
     final bool canActShare = shareMode != null &&
         hasValidProfile &&
         shareMode.canActOnActivity(

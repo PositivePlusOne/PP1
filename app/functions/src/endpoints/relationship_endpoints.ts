@@ -437,7 +437,7 @@ export namespace RelationshipEndpoints {
     const cursor = request.cursor || "";
     const limit = request.limit || 30;
 
-    const paginationResult = await RelationshipService.getFollowRelationships(uid, { cursor, limit });
+    const paginationResult = await RelationshipService.getFollowedRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
 
     for (const relationship of paginationResult.data) {
@@ -466,7 +466,7 @@ export namespace RelationshipEndpoints {
     const cursor = request.cursor || "";
     const limit = request.limit || 30;
 
-    const paginationResult = await RelationshipService.getFollowedRelationships(uid, { cursor, limit });
+    const paginationResult = await RelationshipService.getFollowRelationships(uid, { cursor, limit });
     const profileIds = [] as string[];
 
     for (const relationship of paginationResult.data) {

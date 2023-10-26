@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -10,6 +8,8 @@ import 'package:logger/logger.dart';
 
 // Project imports:
 import 'package:app/dtos/database/common/media.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';

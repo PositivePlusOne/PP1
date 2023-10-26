@@ -7,7 +7,7 @@ part of 'communities_controller.dart';
 // **************************************************************************
 
 String _$communitiesControllerHash() =>
-    r'35f429e666e39cc702d587f9088efccf1b5fd792';
+    r'5d7aba6a5c0ad842c0ec4aa409a2e9b5f5f73d53';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,12 +32,14 @@ class _SystemHash {
 
 abstract class _$CommunitiesController
     extends BuildlessNotifier<CommunitiesControllerState> {
-  late final Profile? currentProfile;
-  late final User? currentUser;
+  late final String? currentProfileId;
+  late final String? currentUserId;
+  late final bool isManagedProfile;
 
   CommunitiesControllerState build({
-    required Profile? currentProfile,
-    required User? currentUser,
+    required String? currentProfileId,
+    required String? currentUserId,
+    bool isManagedProfile = false,
   });
 }
 
@@ -52,12 +54,14 @@ class CommunitiesControllerFamily extends Family<CommunitiesControllerState> {
 
   /// See also [CommunitiesController].
   CommunitiesControllerProvider call({
-    required Profile? currentProfile,
-    required User? currentUser,
+    required String? currentProfileId,
+    required String? currentUserId,
+    bool isManagedProfile = false,
   }) {
     return CommunitiesControllerProvider(
-      currentProfile: currentProfile,
-      currentUser: currentUser,
+      currentProfileId: currentProfileId,
+      currentUserId: currentUserId,
+      isManagedProfile: isManagedProfile,
     );
   }
 
@@ -66,8 +70,9 @@ class CommunitiesControllerFamily extends Family<CommunitiesControllerState> {
     covariant CommunitiesControllerProvider provider,
   ) {
     return call(
-      currentProfile: provider.currentProfile,
-      currentUser: provider.currentUser,
+      currentProfileId: provider.currentProfileId,
+      currentUserId: provider.currentUserId,
+      isManagedProfile: provider.isManagedProfile,
     );
   }
 
@@ -91,12 +96,14 @@ class CommunitiesControllerProvider extends NotifierProviderImpl<
     CommunitiesController, CommunitiesControllerState> {
   /// See also [CommunitiesController].
   CommunitiesControllerProvider({
-    required Profile? currentProfile,
-    required User? currentUser,
+    required String? currentProfileId,
+    required String? currentUserId,
+    bool isManagedProfile = false,
   }) : this._internal(
           () => CommunitiesController()
-            ..currentProfile = currentProfile
-            ..currentUser = currentUser,
+            ..currentProfileId = currentProfileId
+            ..currentUserId = currentUserId
+            ..isManagedProfile = isManagedProfile,
           from: communitiesControllerProvider,
           name: r'communitiesControllerProvider',
           debugGetCreateSourceHash:
@@ -106,8 +113,9 @@ class CommunitiesControllerProvider extends NotifierProviderImpl<
           dependencies: CommunitiesControllerFamily._dependencies,
           allTransitiveDependencies:
               CommunitiesControllerFamily._allTransitiveDependencies,
-          currentProfile: currentProfile,
-          currentUser: currentUser,
+          currentProfileId: currentProfileId,
+          currentUserId: currentUserId,
+          isManagedProfile: isManagedProfile,
         );
 
   CommunitiesControllerProvider._internal(
@@ -117,20 +125,23 @@ class CommunitiesControllerProvider extends NotifierProviderImpl<
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.currentProfile,
-    required this.currentUser,
+    required this.currentProfileId,
+    required this.currentUserId,
+    required this.isManagedProfile,
   }) : super.internal();
 
-  final Profile? currentProfile;
-  final User? currentUser;
+  final String? currentProfileId;
+  final String? currentUserId;
+  final bool isManagedProfile;
 
   @override
   CommunitiesControllerState runNotifierBuild(
     covariant CommunitiesController notifier,
   ) {
     return notifier.build(
-      currentProfile: currentProfile,
-      currentUser: currentUser,
+      currentProfileId: currentProfileId,
+      currentUserId: currentUserId,
+      isManagedProfile: isManagedProfile,
     );
   }
 
@@ -140,15 +151,17 @@ class CommunitiesControllerProvider extends NotifierProviderImpl<
       origin: this,
       override: CommunitiesControllerProvider._internal(
         () => create()
-          ..currentProfile = currentProfile
-          ..currentUser = currentUser,
+          ..currentProfileId = currentProfileId
+          ..currentUserId = currentUserId
+          ..isManagedProfile = isManagedProfile,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        currentProfile: currentProfile,
-        currentUser: currentUser,
+        currentProfileId: currentProfileId,
+        currentUserId: currentUserId,
+        isManagedProfile: isManagedProfile,
       ),
     );
   }
@@ -162,15 +175,17 @@ class CommunitiesControllerProvider extends NotifierProviderImpl<
   @override
   bool operator ==(Object other) {
     return other is CommunitiesControllerProvider &&
-        other.currentProfile == currentProfile &&
-        other.currentUser == currentUser;
+        other.currentProfileId == currentProfileId &&
+        other.currentUserId == currentUserId &&
+        other.isManagedProfile == isManagedProfile;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, currentProfile.hashCode);
-    hash = _SystemHash.combine(hash, currentUser.hashCode);
+    hash = _SystemHash.combine(hash, currentProfileId.hashCode);
+    hash = _SystemHash.combine(hash, currentUserId.hashCode);
+    hash = _SystemHash.combine(hash, isManagedProfile.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -178,11 +193,14 @@ class CommunitiesControllerProvider extends NotifierProviderImpl<
 
 mixin CommunitiesControllerRef
     on NotifierProviderRef<CommunitiesControllerState> {
-  /// The parameter `currentProfile` of this provider.
-  Profile? get currentProfile;
+  /// The parameter `currentProfileId` of this provider.
+  String? get currentProfileId;
 
-  /// The parameter `currentUser` of this provider.
-  User? get currentUser;
+  /// The parameter `currentUserId` of this provider.
+  String? get currentUserId;
+
+  /// The parameter `isManagedProfile` of this provider.
+  bool get isManagedProfile;
 }
 
 class _CommunitiesControllerProviderElement extends NotifierProviderElement<
@@ -191,11 +209,14 @@ class _CommunitiesControllerProviderElement extends NotifierProviderElement<
   _CommunitiesControllerProviderElement(super.provider);
 
   @override
-  Profile? get currentProfile =>
-      (origin as CommunitiesControllerProvider).currentProfile;
+  String? get currentProfileId =>
+      (origin as CommunitiesControllerProvider).currentProfileId;
   @override
-  User? get currentUser =>
-      (origin as CommunitiesControllerProvider).currentUser;
+  String? get currentUserId =>
+      (origin as CommunitiesControllerProvider).currentUserId;
+  @override
+  bool get isManagedProfile =>
+      (origin as CommunitiesControllerProvider).isManagedProfile;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

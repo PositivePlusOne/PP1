@@ -249,7 +249,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
           firstPageErrorIndicatorBuilder: (context) => const SizedBox(),
           newPageErrorIndicatorBuilder: (context) => const SizedBox(),
           noMoreItemsIndicatorBuilder: (context) => const SizedBox(),
-          noItemsFoundIndicatorBuilder: (context) => PositiaveTitleBodyWidget(
+          noItemsFoundIndicatorBuilder: (context) => PositiveTitleBodyWidget(
             title: localisations.page_notifications_empty_title,
             body: localisations.page_notifications_empty_body,
           ),
