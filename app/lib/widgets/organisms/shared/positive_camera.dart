@@ -215,9 +215,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     return true;
   }
 
-  ///? Shader parameters
-  ///
-
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
   );
@@ -675,6 +672,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         mirrorFrontCamera: true,
         photoPathBuilder: (sens) => buildCaptureRequest(sens, false),
         videoOptions: VideoOptions(enableAudio: true),
+        exifPreferences: ExifPreferences(saveGPSLocation: false),
         videoPathBuilder: (sens) => buildCaptureRequest(sens, true),
       ),
       sensorConfig: config,
