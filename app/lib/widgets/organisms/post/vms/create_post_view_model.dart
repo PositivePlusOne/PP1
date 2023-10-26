@@ -444,7 +444,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  final List<int> maximumClipDurationOptions = [180000, 90000, 60000, 30000, 10000];
+  final List<int> maximumClipDurationOptions = [180000, 90000, 60000, 30000];
 
   void onClipDurationChanged(int index) {
     state = state.copyWith(

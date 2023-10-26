@@ -142,10 +142,11 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         children: [
                           //? top right set of icons found on the clips page, move this later to a builder?
                           const Spacer(),
-                          Text(
-                            localisations.page_create_post_ui_timer,
-                            style: typography.styleButtonRegular.copyWith(color: colours.white),
-                          ),
+                          if (state.isDelayTimerEnabled)
+                            Text(
+                              localisations.page_create_post_ui_timer,
+                              style: typography.styleButtonRegular.copyWith(color: colours.white),
+                            ),
                           const SizedBox(
                             width: kPaddingSmall,
                           ),
