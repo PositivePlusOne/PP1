@@ -142,19 +142,55 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         children: [
                           //? top right set of icons found on the clips page, move this later to a builder?
                           const Spacer(),
-                          Text(
-                            localisations.page_create_post_ui_timer,
-                            style: typography.styleButtonRegular.copyWith(color: colours.white),
-                          ),
+                          if (state.isDelayTimerEnabled)
+                            Text(
+                              localisations.page_create_post_ui_timer,
+                              style: typography.styleButtonRegular.copyWith(color: colours.white),
+                            ),
                           const SizedBox(
                             width: kPaddingSmall,
                           ),
-                          CameraFloatingButton.timer(
-                            active: true,
-                            iconColour: colours.black,
-                            backgroundColour: colours.white,
-                            isOn: state.isDelayTimerEnabled,
-                            onTap: (_) => viewModel.onTimerToggleRequest(),
+                          SizedBox(
+                            height: kIconLarge + kPaddingExtraSmall,
+                            width: kIconLarge + kPaddingVerySmall,
+                            child: Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Positioned(
+                                  bottom: kPaddingNone,
+                                  left: kPaddingNone,
+                                  width: kIconLarge,
+                                  height: kIconLarge,
+                                  child: CameraFloatingButton.timer(
+                                    active: true,
+                                    iconColour: colours.black,
+                                    backgroundColour: colours.white,
+                                    isOn: state.isDelayTimerEnabled,
+                                    onTap: (_) => viewModel.onTimerToggleRequest(),
+                                  ),
+                                ),
+                                Positioned(
+                                  child: IgnorePointer(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: state.isDelayTimerEnabled ? colours.black : colours.white,
+                                        borderRadius: BorderRadius.circular(
+                                          kBorderRadiusHuge,
+                                        ),
+                                      ),
+                                      width: kIconSmall,
+                                      height: kIconSmall,
+                                      child: Align(
+                                        child: Text(
+                                          "${viewModel.delayTimerOptions[state.delayTimerCurrentSelection]}${localisations.page_create_post_seconds}",
+                                          style: typography.styleSubtextBold.copyWith(color: state.isDelayTimerEnabled ? colours.white : colours.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
