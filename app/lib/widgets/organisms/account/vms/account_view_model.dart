@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/content/activities_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -21,8 +20,11 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
@@ -151,6 +153,23 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   Future<void> onMyCommunitiesButtonPressed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+
+    // Grab the current profile and update the communities controller to the default action type
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final FirebaseAuth auth = ref.read(firebaseAuthProvider);
+
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    final String currentUserId = auth.currentUser?.uid ?? '';
+    final bool isManaged = profileController.isCurrentlyManagedProfile;
+
+    final CommunitiesControllerProvider provider = CommunitiesControllerProvider(
+      currentProfileId: currentProfileId,
+      currentUserId: currentUserId,
+      isManagedProfile: isManaged,
+    );
+
+    final CommunitiesController communitiesController = providerContainer.read(provider.notifier);
+    communitiesController.setSelectedCommunityType(isManaged ? CommunityType.managed : CommunityType.connected);
 
     logger.d('onMyCommunitiesButtonPressed');
     appRouter.push(const AccountCommunitiesRoute());

@@ -20,7 +20,6 @@ Before all merges back into develop or a feature branch, please can we ensure th
 2. Run the following commands to clean up any outstanding lint problems:
 2a. fvm dart run build_runner build --delete-conflicting-outputs
 2b. fvm dart fix --dry-run / --apply
-2c. fvm dart run build_runner build --delete-conflicting-outputs
 3. The branch is then rebased on top of the target so that it is ahead of origin.
 4. Any unit tests written pass
 5. Either test evidence or a review is performed on the merge request before removing "Draft:" from the title.

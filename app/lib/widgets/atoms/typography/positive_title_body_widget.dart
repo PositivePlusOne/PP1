@@ -10,8 +10,8 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 
-class PositiaveTitleBodyWidget extends ConsumerWidget {
-  const PositiaveTitleBodyWidget({
+class PositiveTitleBodyWidget extends ConsumerWidget {
+  const PositiveTitleBodyWidget({
     super.key,
     required this.title,
     required this.body,

@@ -25,7 +25,6 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
     this.imageOverridePath = '',
     this.enableProfileImageFullscreen = false,
-    this.useName = true,
     super.key,
   });
 
@@ -39,8 +38,6 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
   //* This is used to override the image path for the profile image, for example when the user is uploading a new image
   final String imageOverridePath;
   final bool enableProfileImageFullscreen;
-
-  final bool useName;
 
   static const double kTaglineAreaHeight = 60.0;
 
@@ -77,8 +74,6 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
       children.add(child);
     }
 
-    final String title = useName ? profile.name : profile.displayName.asHandle;
-
     return Container(
       height: preferredSize.height,
       width: double.infinity,
@@ -107,22 +102,14 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      if (title.isNotEmpty) ...<Widget>[
-                        Flexible(
-                          child: Text(
-                            useName ? profile.name : profile.displayName.asHandle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: typography.styleHeroMedium.copyWith(color: textColor),
-                          ),
+                      Flexible(
+                        child: Text(
+                          profile.name.isNotEmpty ? profile.name : profile.displayName.asHandle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: typography.styleHeroMedium.copyWith(color: textColor),
                         ),
-                        if (!useName && profile.name.isNotEmpty) ...<Widget>[
-                          Text(
-                            profile.name,
-                            style: typography.styleSubtitle.copyWith(color: textColor),
-                          ),
-                        ],
-                      ],
+                      ),
                     ],
                   ),
                 ),

@@ -106,7 +106,7 @@ class PositiveScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, screenSize.width);
+    final double decorationBoxSize = min(400.0, screenSize.width);
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 

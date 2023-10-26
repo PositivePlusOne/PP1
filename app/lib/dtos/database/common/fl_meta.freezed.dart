@@ -21,14 +21,14 @@ FlMeta _$FlMetaFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$FlMeta {
   String? get createdBy => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get createdDate => throw _privateConstructorUsedError;
   String? get ownedBy => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get ownedAsOfDate => throw _privateConstructorUsedError;
   String get directoryEntryId => throw _privateConstructorUsedError;
   String? get lastModifiedBy => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get lastModifiedDate => throw _privateConstructorUsedError;
   int get lastFetchMillis => throw _privateConstructorUsedError;
   bool get isPartial => throw _privateConstructorUsedError;
@@ -52,15 +52,12 @@ abstract class $FlMetaCopyWith<$Res> {
   @useResult
   $Res call(
       {String? createdBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown) String? createdDate,
       String? ownedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? ownedAsOfDate,
+      @JsonKey(fromJson: dateFromUnknown) String? ownedAsOfDate,
       String directoryEntryId,
       String? lastModifiedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? lastModifiedDate,
+      @JsonKey(fromJson: dateFromUnknown) String? lastModifiedDate,
       int lastFetchMillis,
       bool isPartial,
       String? docId,
@@ -174,15 +171,12 @@ abstract class _$$FlMetaImplCopyWith<$Res> implements $FlMetaCopyWith<$Res> {
   @useResult
   $Res call(
       {String? createdBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown) String? createdDate,
       String? ownedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? ownedAsOfDate,
+      @JsonKey(fromJson: dateFromUnknown) String? ownedAsOfDate,
       String directoryEntryId,
       String? lastModifiedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? lastModifiedDate,
+      @JsonKey(fromJson: dateFromUnknown) String? lastModifiedDate,
       int lastFetchMillis,
       bool isPartial,
       String? docId,
@@ -290,15 +284,12 @@ class __$$FlMetaImplCopyWithImpl<$Res>
 class _$FlMetaImpl implements _FlMeta {
   const _$FlMetaImpl(
       {this.createdBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      this.createdDate,
+      @JsonKey(fromJson: dateFromUnknown) this.createdDate,
       this.ownedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      this.ownedAsOfDate,
+      @JsonKey(fromJson: dateFromUnknown) this.ownedAsOfDate,
       this.directoryEntryId = '',
       this.lastModifiedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      this.lastModifiedDate,
+      @JsonKey(fromJson: dateFromUnknown) this.lastModifiedDate,
       this.lastFetchMillis = -1,
       this.isPartial = false,
       this.docId,
@@ -314,12 +305,12 @@ class _$FlMetaImpl implements _FlMeta {
   @override
   final String? createdBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   final String? createdDate;
   @override
   final String? ownedBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   final String? ownedAsOfDate;
   @override
   @JsonKey()
@@ -327,7 +318,7 @@ class _$FlMetaImpl implements _FlMeta {
   @override
   final String? lastModifiedBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   final String? lastModifiedDate;
   @override
   @JsonKey()
@@ -425,15 +416,12 @@ class _$FlMetaImpl implements _FlMeta {
 abstract class _FlMeta implements FlMeta {
   const factory _FlMeta(
       {final String? createdBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      final String? createdDate,
+      @JsonKey(fromJson: dateFromUnknown) final String? createdDate,
       final String? ownedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      final String? ownedAsOfDate,
+      @JsonKey(fromJson: dateFromUnknown) final String? ownedAsOfDate,
       final String directoryEntryId,
       final String? lastModifiedBy,
-      @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
-      final String? lastModifiedDate,
+      @JsonKey(fromJson: dateFromUnknown) final String? lastModifiedDate,
       final int lastFetchMillis,
       final bool isPartial,
       final String? docId,
@@ -448,19 +436,19 @@ abstract class _FlMeta implements FlMeta {
   @override
   String? get createdBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get createdDate;
   @override
   String? get ownedBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get ownedAsOfDate;
   @override
   String get directoryEntryId;
   @override
   String? get lastModifiedBy;
   @override
-  @JsonKey(fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(fromJson: dateFromUnknown)
   String? get lastModifiedDate;
   @override
   int get lastFetchMillis;

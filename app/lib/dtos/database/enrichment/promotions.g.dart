@@ -36,8 +36,8 @@ Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
       'linkText': instance.linkText,
       'owners': instance.owners.map((e) => e.toJson()).toList(),
       'activities': instance.activities.map((e) => e.toJson()).toList(),
-      'startTime': dateToUnknown(instance.startTime),
-      'endTime': dateToUnknown(instance.endTime),
+      'startTime': instance.startTime,
+      'endTime': instance.endTime,
     };
 
 _$PromotionOwnerImpl _$$PromotionOwnerImplFromJson(Map<String, dynamic> json) =>

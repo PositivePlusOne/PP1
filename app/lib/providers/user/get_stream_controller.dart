@@ -339,8 +339,9 @@ class GetStreamController extends _$GetStreamController {
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
     final log = ref.read(loggerProvider);
 
+    final Profile? currentProfile = profileController.currentProfile;
     final String currentProfileId = profileController.currentProfileId ?? '';
-    if (currentProfileId.isEmpty) {
+    if (currentProfile == null || currentProfileId.isEmpty) {
       log.e('[GetStreamController] connectStreamUser() profileId is empty');
       return;
     }
@@ -359,8 +360,8 @@ class GetStreamController extends _$GetStreamController {
       log.w('[GetStreamController] onProfileChanged() user is not disconnected');
       return;
     }
-
-    final User chatUser = buildStreamChatUser(id: currentProfileId);
+    // all's okay to create the user then
+    final User chatUser = buildStreamChatUser(profile: currentProfile);
     await streamChatClient.connectUser(chatUser, token);
   }
 
@@ -431,10 +432,21 @@ class GetStreamController extends _$GetStreamController {
   }
 
   User buildStreamChatUser({
-    required String id,
-    Map<String, dynamic> extraData = const {},
+    required Profile profile,
   }) {
-    return User(id: id, extraData: extraData);
+    // from the profile we can get all the data we need to create a getstream user
+    final String uid = profile.flMeta?.id ?? '';
+    final String imageUrl = profile.profileImage?.bucketPath ?? '';
+    final String displayName = profile.displayName;
+    final String accentColor = profile.accentColor;
+    // which we can build our map of extra data
+    final Map<String, dynamic> extraData = buildUserExtraData(
+      imageUrl: imageUrl,
+      displayName: displayName,
+      accentColor: accentColor,
+    );
+    // to create a richly described user
+    return User(id: uid, name: displayName, image: imageUrl, extraData: extraData);
   }
 
   Future<void> sendSystemMessage({
@@ -601,20 +613,8 @@ class GetStreamController extends _$GetStreamController {
       log.i('[GetStreamController] onProfileUpdated() user is null');
       return;
     }
-
-    final String uid = profileController.state.currentProfile?.flMeta?.id ?? '';
-    final String imageUrl = profileController.state.currentProfile?.profileImage?.bucketPath ?? '';
-    final String displayName = profileController.state.currentProfile?.displayName ?? '';
-    final String accentColor = profileController.state.currentProfile?.accentColor ?? '#2BEDE1';
-
-    final Map<String, dynamic> userData = buildUserExtraData(
-      imageUrl: imageUrl,
-      displayName: displayName,
-      accentColor: accentColor,
-    );
-
     log.i('[GetStreamController] onProfileUpdated() updating user');
-    final User chatUser = buildStreamChatUser(id: uid, extraData: userData);
+    final User chatUser = buildStreamChatUser(profile: profileController.state.currentProfile ?? profile);
     streamChatClient.state.updateUser(chatUser);
   }
 

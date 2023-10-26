@@ -51,18 +51,16 @@ export namespace PromoteActivityAction {
 
         const targetActivityData = targetActivitySnapshot.data() as ActivityJSON;
         const targetPromotionData = targetPromotionSnapshot.data() as PromotionJSON;
-        const targetActivityId = FlamelinkHelpers.getFlamelinkIdFromObject(targetActivityData);
-        const targetPromotionId = FlamelinkHelpers.getFlamelinkIdFromObject(targetPromotionData);
 
-        if (!targetActivityId || !targetPromotionId || !targetActivityData || !targetPromotionData) {
-            AdminQuickActionService.appendOutput(action, `Invalid data.`);
+        if (!targetActivityData || !targetPromotionData) {
+            AdminQuickActionService.appendOutput(action, `Unable to load activity or promotion.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
 
         const currentPromotionKey = targetActivityData.enrichmentConfiguration?.promotionKey ?? '';
         if (currentPromotionKey) {
-            AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} already has a promotion key.`);
+            AdminQuickActionService.appendOutput(action, `Activity ${targetActivityActualId} already has a promotion key.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
@@ -119,15 +117,15 @@ export namespace PromoteActivityAction {
 
         targetActivityData.enrichmentConfiguration ??= {};
         targetActivityData.enrichmentConfiguration.tags = currentTags;
-        targetActivityData.enrichmentConfiguration.promotionKey = targetPromotionId;
+        targetActivityData.enrichmentConfiguration.promotionKey = targetPromotionActualId;
 
         await targetActivityReference?.update({
             enrichmentConfiguration: targetActivityData.enrichmentConfiguration,
         });
-        AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} promoted with promotion ${targetPromotionId}`);
-
+        
+        AdminQuickActionService.appendOutput(action, `Activity ${targetActivityActualId} promoted with promotion ${targetPromotionActualId}`);
         await ActivitiesService.updateTagFeedsForActivity(targetActivityData);
-        AdminQuickActionService.appendOutput(action, `Updated feeds for activity ${targetActivityId}`);
+        AdminQuickActionService.appendOutput(action, `Updated feeds for activity ${targetActivityActualId}`);
 
         let newAvailablePromotionsCount = publisherAvailablePromotionCount - 1;
         let newActivePromotionsCount = publisherActivePromotionCount + 1;

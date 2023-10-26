@@ -27,7 +27,7 @@ mixin _$NotificationPayload {
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
-  @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(name: 'created_at', fromJson: dateFromUnknown)
   String? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'extra_data')
   Map<String, dynamic> get extraData => throw _privateConstructorUsedError;
@@ -61,9 +61,7 @@ abstract class $NotificationPayloadCopyWith<$Res> {
       String title,
       String body,
       String icon,
-      @JsonKey(
-          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? createdAt,
+      @JsonKey(name: 'created_at', fromJson: dateFromUnknown) String? createdAt,
       @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationTopic.fromJson,
@@ -196,9 +194,7 @@ abstract class _$$NotificationPayloadImplCopyWith<$Res>
       String title,
       String body,
       String icon,
-      @JsonKey(
-          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
-      String? createdAt,
+      @JsonKey(name: 'created_at', fromJson: dateFromUnknown) String? createdAt,
       @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
       @JsonKey(
           fromJson: NotificationTopic.fromJson,
@@ -303,9 +299,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
       this.title = '',
       this.body = '',
       this.icon = '',
-      @JsonKey(
-          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
-      this.createdAt,
+      @JsonKey(name: 'created_at', fromJson: dateFromUnknown) this.createdAt,
       @JsonKey(name: 'extra_data')
       final Map<String, dynamic> extraData = const {},
       @JsonKey(
@@ -344,7 +338,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   @JsonKey()
   final String icon;
   @override
-  @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(name: 'created_at', fromJson: dateFromUnknown)
   final String? createdAt;
   final Map<String, dynamic> _extraData;
   @override
@@ -434,8 +428,7 @@ abstract class _NotificationPayload implements NotificationPayload {
       final String title,
       final String body,
       final String icon,
-      @JsonKey(
-          name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+      @JsonKey(name: 'created_at', fromJson: dateFromUnknown)
       final String? createdAt,
       @JsonKey(name: 'extra_data') final Map<String, dynamic> extraData,
       @JsonKey(
@@ -468,7 +461,7 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get icon;
   @override
-  @JsonKey(name: 'created_at', fromJson: dateFromUnknown, toJson: dateToUnknown)
+  @JsonKey(name: 'created_at', fromJson: dateFromUnknown)
   String? get createdAt;
   @override
   @JsonKey(name: 'extra_data')

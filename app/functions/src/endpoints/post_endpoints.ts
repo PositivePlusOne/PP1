@@ -104,7 +104,7 @@ export namespace PostEndpoints {
     const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
     const activityOriginFeed = activity.publisherInformation?.originFeed || "";
     const activityOriginPosterId = activity.publisherInformation?.publisherId || "";
-    const activityPromotionKey = activity.enrichmentConfiguration?.promotionKey;
+    const activityPromotionKey = activity.enrichmentConfiguration?.promotionKey || "";
     if (!activity || !activityOriginFeed || !activityOriginPosterId) {
       throw new functions.https.HttpsError("not-found", "Activity not found");
     }
@@ -139,13 +139,15 @@ export namespace PostEndpoints {
       },
       generalConfiguration: {
         type: "repost",
-        repostActivityId: activityId,
-        repostActivityPublisherId: activityOriginPosterId,
-        repostActivityOriginFeed: activityOriginFeed,
       },
       enrichmentConfiguration: {
         tags: validatedTags,
         promotionKey: activityPromotionKey,
+      },
+      repostConfiguration: {
+        targetActivityId: activityId,
+        targetActivityOriginFeed: activityOriginFeed,
+        targetActivityPublisherId: activityOriginPosterId,
       },
       securityConfiguration: {
         viewMode: "public",

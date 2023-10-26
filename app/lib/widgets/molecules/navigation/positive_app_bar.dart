@@ -104,10 +104,25 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           if (backgroundImage != null) ...<Widget>[
             Positioned.fill(
-              child: PositiveMediaImage(
-                media: backgroundImage!,
-                fit: BoxFit.cover,
-                thumbnailTargetSize: PositiveThumbnailTargetSize.large,
+              child: ShaderMask(
+                blendMode: BlendMode.srcATop,
+                shaderCallback: (bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    tileMode: TileMode.clamp,
+                    stops: const <double>[0.0, 0.8, 1.0],
+                    colors: <Color>[
+                      Colors.transparent,
+                      backgroundColor,
+                      backgroundColor,
+                    ],
+                  ).createShader(bounds);
+                },
+                child: PositiveMediaImage(
+                  media: backgroundImage!,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             //* Use the background color as a darkening overlay
@@ -145,7 +160,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ],
               if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
                 _PositiveAppBarTrailConcave(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: backgroundColor,
                   decorationColor: decorationColor,
                   trailType: trailType,
                 ),
@@ -215,7 +230,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
                 child: GestureDetector(
                   onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
                   child: Hero(
-                    tag: PositiveAppBar.kPositiveLogoTag,
+                    tag: '${PositiveAppBar.kPositiveLogoTag}_$foregroundColor',
                     child: SvgPicture.asset(
                       SvgImages.logosFooter,
                       width: kLogoMaximumWidth,

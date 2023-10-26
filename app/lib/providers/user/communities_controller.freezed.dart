@@ -16,8 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CommunitiesControllerState {
-  User? get currentUser => throw _privateConstructorUsedError;
-  Profile? get currentProfile => throw _privateConstructorUsedError;
+  String get currentUserId => throw _privateConstructorUsedError;
+  String get currentProfileId => throw _privateConstructorUsedError;
   CommunityType get selectedCommunityType => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
 
@@ -34,12 +34,10 @@ abstract class $CommunitiesControllerStateCopyWith<$Res> {
           CommunitiesControllerState>;
   @useResult
   $Res call(
-      {User? currentUser,
-      Profile? currentProfile,
+      {String currentUserId,
+      String currentProfileId,
       CommunityType selectedCommunityType,
       bool isBusy});
-
-  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -56,20 +54,20 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentUser = freezed,
-    Object? currentProfile = freezed,
+    Object? currentUserId = null,
+    Object? currentProfileId = null,
     Object? selectedCommunityType = null,
     Object? isBusy = null,
   }) {
     return _then(_value.copyWith(
-      currentUser: freezed == currentUser
-          ? _value.currentUser
-          : currentUser // ignore: cast_nullable_to_non_nullable
-              as User?,
-      currentProfile: freezed == currentProfile
-          ? _value.currentProfile
-          : currentProfile // ignore: cast_nullable_to_non_nullable
-              as Profile?,
+      currentUserId: null == currentUserId
+          ? _value.currentUserId
+          : currentUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+      currentProfileId: null == currentProfileId
+          ? _value.currentProfileId
+          : currentProfileId // ignore: cast_nullable_to_non_nullable
+              as String,
       selectedCommunityType: null == selectedCommunityType
           ? _value.selectedCommunityType
           : selectedCommunityType // ignore: cast_nullable_to_non_nullable
@@ -79,18 +77,6 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ProfileCopyWith<$Res>? get currentProfile {
-    if (_value.currentProfile == null) {
-      return null;
-    }
-
-    return $ProfileCopyWith<$Res>(_value.currentProfile!, (value) {
-      return _then(_value.copyWith(currentProfile: value) as $Val);
-    });
   }
 }
 
@@ -104,13 +90,10 @@ abstract class _$$CommunitiesControllerStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {User? currentUser,
-      Profile? currentProfile,
+      {String currentUserId,
+      String currentProfileId,
       CommunityType selectedCommunityType,
       bool isBusy});
-
-  @override
-  $ProfileCopyWith<$Res>? get currentProfile;
 }
 
 /// @nodoc
@@ -126,20 +109,20 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentUser = freezed,
-    Object? currentProfile = freezed,
+    Object? currentUserId = null,
+    Object? currentProfileId = null,
     Object? selectedCommunityType = null,
     Object? isBusy = null,
   }) {
     return _then(_$CommunitiesControllerStateImpl(
-      currentUser: freezed == currentUser
-          ? _value.currentUser
-          : currentUser // ignore: cast_nullable_to_non_nullable
-              as User?,
-      currentProfile: freezed == currentProfile
-          ? _value.currentProfile
-          : currentProfile // ignore: cast_nullable_to_non_nullable
-              as Profile?,
+      currentUserId: null == currentUserId
+          ? _value.currentUserId
+          : currentUserId // ignore: cast_nullable_to_non_nullable
+              as String,
+      currentProfileId: null == currentProfileId
+          ? _value.currentProfileId
+          : currentProfileId // ignore: cast_nullable_to_non_nullable
+              as String,
       selectedCommunityType: null == selectedCommunityType
           ? _value.selectedCommunityType
           : selectedCommunityType // ignore: cast_nullable_to_non_nullable
@@ -156,15 +139,15 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
 
 class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
   const _$CommunitiesControllerStateImpl(
-      {required this.currentUser,
-      required this.currentProfile,
+      {required this.currentUserId,
+      required this.currentProfileId,
       required this.selectedCommunityType,
       this.isBusy = false});
 
   @override
-  final User? currentUser;
+  final String currentUserId;
   @override
-  final Profile? currentProfile;
+  final String currentProfileId;
   @override
   final CommunityType selectedCommunityType;
   @override
@@ -173,7 +156,7 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
 
   @override
   String toString() {
-    return 'CommunitiesControllerState(currentUser: $currentUser, currentProfile: $currentProfile, selectedCommunityType: $selectedCommunityType, isBusy: $isBusy)';
+    return 'CommunitiesControllerState(currentUserId: $currentUserId, currentProfileId: $currentProfileId, selectedCommunityType: $selectedCommunityType, isBusy: $isBusy)';
   }
 
   @override
@@ -181,18 +164,18 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CommunitiesControllerStateImpl &&
-            (identical(other.currentUser, currentUser) ||
-                other.currentUser == currentUser) &&
-            (identical(other.currentProfile, currentProfile) ||
-                other.currentProfile == currentProfile) &&
+            (identical(other.currentUserId, currentUserId) ||
+                other.currentUserId == currentUserId) &&
+            (identical(other.currentProfileId, currentProfileId) ||
+                other.currentProfileId == currentProfileId) &&
             (identical(other.selectedCommunityType, selectedCommunityType) ||
                 other.selectedCommunityType == selectedCommunityType) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, currentUser, currentProfile, selectedCommunityType, isBusy);
+  int get hashCode => Object.hash(runtimeType, currentUserId, currentProfileId,
+      selectedCommunityType, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -205,15 +188,15 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
 abstract class _CommunitiesControllerState
     implements CommunitiesControllerState {
   const factory _CommunitiesControllerState(
-      {required final User? currentUser,
-      required final Profile? currentProfile,
+      {required final String currentUserId,
+      required final String currentProfileId,
       required final CommunityType selectedCommunityType,
       final bool isBusy}) = _$CommunitiesControllerStateImpl;
 
   @override
-  User? get currentUser;
+  String get currentUserId;
   @override
-  Profile? get currentProfile;
+  String get currentProfileId;
   @override
   CommunityType get selectedCommunityType;
   @override

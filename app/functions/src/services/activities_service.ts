@@ -114,7 +114,7 @@ export namespace ActivitiesService {
       verb: ActivityActionVerb.Post,
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
-      time: activity?._fl_meta_?.createdDate ?? new Date().toISOString(),
+      time: activity?._fl_meta_?.createdDate ?? StreamHelpers.getCurrentTimestamp(),
     };
     
     await feed.addActivity(getStreamActivity);
@@ -142,7 +142,7 @@ export namespace ActivitiesService {
 
   export async function getForeignIdTimeForActivity(activity: ActivityJSON): Promise<ForeignIDTimes> {
     const activityId = activity?._fl_meta_?.fl_id ?? "";
-    const createTime = activity?._fl_meta_?.createdDate ?? new Date().toISOString();
+    const createTime = activity?._fl_meta_?.createdDate ?? StreamHelpers.getCurrentTimestamp();
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
     }
@@ -276,7 +276,7 @@ export namespace ActivitiesService {
       verb: ActivityActionVerb.Post,
       object: activityId,
       foreign_id: activityId,
-      time: activity?._fl_meta_?.createdDate ?? new Date().toISOString(),
+      time: activity?._fl_meta_?.createdDate ?? StreamHelpers.getCurrentTimestamp(),
     };
 
     await feed.addActivity(getStreamActivity);

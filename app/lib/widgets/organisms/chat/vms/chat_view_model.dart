@@ -384,7 +384,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     await appRouter.push(const CreateConversationRoute());
   }
 
-  Relationship? getRelationshipForProfile(List<Relationship> relationships, Profile value) {
+  static Relationship? getRelationshipForProfile(List<Relationship> relationships, Profile value) {
     final String? profileId = value.flMeta?.id;
     if (profileId == null) {
       return null;

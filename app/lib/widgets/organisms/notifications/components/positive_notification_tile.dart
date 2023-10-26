@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -15,6 +14,7 @@ import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
@@ -170,9 +170,8 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
         if (body.endsWith('.')) {
           body = body.substring(0, body.length - 1);
         }
-
-        final Jiffy createdAt = Jiffy.parse(payload.createdAt!);
-        final String timeAgo = createdAt.fromNow();
+        // let's parse the time as a standard ISO string
+        final timeAgo = payload.createdAt!.asDateDifference(context);
         body = '$body $timeAgo.';
       } catch (ex) {
         logger.e('Failed to parse createdAt: ${payload.createdAt} - ex: $ex');
@@ -185,10 +184,6 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       showDisabledState: !widget.isEnabled,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
-        // constraints: const BoxConstraints(
-        //   minHeight: PositiveNotificationTile.kConstrainedHeight,
-        //   maxHeight: PositiveNotificationTile.kConstrainedHeight,
-        // ),
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(kBorderRadiusMassive),
@@ -203,7 +198,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                 ignoring: true,
                 child: buildMarkdownWidgetFromBody(
                   body,
-                  brightness: foregroundColor.computedSystemBrightness,
+                  brightness: foregroundColor.getComputedSystemBrightness(),
                   lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
                   onTapLink: (_) {},
                 ),

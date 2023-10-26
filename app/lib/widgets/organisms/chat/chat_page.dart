@@ -23,9 +23,12 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/chat_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -42,6 +45,7 @@ import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import '../../../dtos/system/design_typography_model.dart';
@@ -228,7 +232,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                 memberProfiles: memberProfiles,
                 viewModel: viewModel,
                 channel: channel,
-                blockedMemberCount: blockedRelationships.length,
+                blockedMemberRelationships: blockedRelationships,
               ),
             ),
             SliverStack(
@@ -341,7 +345,13 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
       horizontal: isOnlyEmoji ? 0 : 16.0,
     ),
     showUserAvatar: isMyMessage ? DisplayWidget.gone : DisplayWidget.show,
-    userAvatarBuilder: isMyMessage ? null : (context, user) => _buildUserAvatar(user, colors),
+    userAvatarBuilder: isMyMessage
+        ? null
+        : (context, user) => _buildUserAvatar(
+              user,
+              colors,
+              viewModel.getRelationshipForMessage(details.message),
+            ),
   );
 }
 
@@ -427,10 +437,20 @@ class ChatMemberUsernameRow extends StatelessWidget {
   }
 }
 
-PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors) {
+PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors, Relationship? relationship) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
   final Profile? profile = cacheController.get<Profile>(user.id);
-  return PositiveProfileCircularIndicator(profile: profile);
+  // we have the ID of the user we are showing the icon for (has this target user been blocked)
+  bool isTargetBlocked = false;
+  if (relationship != null && user.id.isNotEmpty) {
+    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(user.id);
+    isTargetBlocked = states.contains(RelationshipState.targetBlocked);
+  }
+  // returning the icon (with a black border if they have been blocked)
+  return PositiveProfileCircularIndicator(
+    profile: profile,
+    ringColorOverride: isTargetBlocked ? Colors.black : null,
+  );
 }
 
 class MessageInputContainer extends StatelessWidget {
@@ -516,8 +536,57 @@ class MessageInput extends ConsumerWidget {
     super.key,
   });
 
+  Widget buildUserMentionsTile(
+    BuildContext context,
+    User user,
+    CacheController cacheController,
+    DesignTypographyModel typography,
+    DesignColorsModel colors,
+  ) {
+    // we want to display the details about the actual target user rather than just letting the class
+    // show user IDs. So we need to get the profile data instead of the user ID
+    final Profile? targetProfile = cacheController.get(user.id);
+    // then return the nice display of this user
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.white,
+        borderRadius: BorderRadius.circular(PositiveProfileListTile.kProfileTileBorderRadius),
+      ),
+      padding: const EdgeInsets.all(kPaddingSmall),
+      child: Row(
+        children: <Widget>[
+          PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
+          const SizedBox(width: kPaddingSmall),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  getSafeDisplayNameFromProfile(targetProfile),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                ),
+                const SizedBox(width: kPaddingSmall),
+                Text(
+                  targetProfile?.getTagline(appLocalizations) ?? appLocalizations.shared_profile_tagline,
+                  maxLines: 1,
+                  style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     return StreamBuilder<ChannelState>(
       stream: StreamChannel.of(context).channelStateStream,
       builder: (context, snapshot) {
@@ -536,6 +605,7 @@ class MessageInput extends ConsumerWidget {
             sendButtonLocation: SendButtonLocation.inside,
             activeSendButton: buildSendButton(),
             idleSendButton: buildSendButton(isActive: false),
+            userMentionsTileBuilder: (ctx, user) => buildUserMentionsTile(ctx, user, cacheController, typography, colors),
           ),
         );
       },
@@ -550,7 +620,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.memberProfiles,
     required this.viewModel,
     required this.channel,
-    this.blockedMemberCount = 0,
+    this.blockedMemberRelationships = const [],
   });
 
   final DesignColorsModel colors;
@@ -559,7 +629,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   final ChatViewModel viewModel;
   final Channel channel;
 
-  final int blockedMemberCount;
+  final List<Relationship> blockedMemberRelationships;
 
   @override
   Widget build(BuildContext context) {
@@ -583,13 +653,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const SizedBox(width: kPaddingSmall),
-          Expanded(flex: 3, child: _AvatarList(members: memberProfiles)),
+          Expanded(
+            flex: 3,
+            child: _AvatarList(
+              members: memberProfiles,
+              blockedMemberRelationships: blockedMemberRelationships,
+            ),
+          ),
           const SizedBox(width: kPaddingSmall),
-          if (blockedMemberCount > 0) ...<Widget>[
+          if (blockedMemberRelationships.isNotEmpty) ...<Widget>[
             Expanded(
               flex: 3,
               child: PositiveHint(
-                label: '$blockedMemberCount blocked',
+                label: '${blockedMemberRelationships.length} blocked',
                 icon: UniconsLine.ban,
                 iconColor: colors.black,
               ),
@@ -619,9 +695,11 @@ class _AvatarList extends ConsumerWidget {
   const _AvatarList({
     Key? key,
     required this.members,
+    this.blockedMemberRelationships = const [],
   }) : super(key: key);
 
   final List<Profile> members;
+  final List<Relationship> blockedMemberRelationships;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -679,6 +757,9 @@ class _AvatarList extends ConsumerWidget {
                       : PositiveProfileCircularIndicator(
                           profile: filteredMembers[i],
                           size: avatarOffset,
+                          // if the profile has a relationship in the list of blocked relationships (are blocked)
+                          // so show a black ring around their profile image
+                          ringColorOverride: ChatViewModel.getRelationshipForProfile(blockedMemberRelationships, filteredMembers[i]) != null ? Colors.black : null,
                         ),
                 ),
               ),

@@ -53,6 +53,7 @@ class CreateConversationPage extends HookConsumerWidget {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final String currentUserProfileId = currentProfile?.flMeta?.id ?? '';
 
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final firebaseUser = firebaseAuth.currentUser;
 
@@ -61,15 +62,17 @@ class CreateConversationPage extends HookConsumerWidget {
 
     useLifecycleHook(chatViewModel);
 
-    final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
-      currentUser: firebaseUser,
-      currentProfile: currentProfile,
+    final CommunitiesControllerProvider provider = communitiesControllerProvider(
+      currentUserId: firebaseUser?.uid ?? '',
+      currentProfileId: currentUserProfileId,
+      isManagedProfile: profileController.isCurrentlyManagedProfile,
     );
 
-    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
-    ref.watch(communitiesControllerProvider);
-
-    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, currentProfile: currentProfile);
+    final CommunitiesController controller = ref.read(provider.notifier);
+    final PositiveCommunityFeedState feedState = controller.getCommunityFeedStateForType(
+      communityType: CommunityType.connected,
+      profile: currentProfile,
+    );
 
     final Set<String> connectedProfileIds = feedState.pagingController.value.itemList?.toSet() ?? {};
     final bool hasConnectedProfiles = connectedProfileIds.isNotEmpty;

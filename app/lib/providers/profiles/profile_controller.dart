@@ -83,7 +83,7 @@ class ProfileController extends _$ProfileController {
     return currentProfileId == ref.read(firebaseAuthProvider).currentUser?.uid;
   }
 
-  bool get isCurrentManagedProfile {
+  bool get isCurrentlyManagedProfile {
     if (currentProfileId?.isEmpty ?? true) {
       return false;
     }

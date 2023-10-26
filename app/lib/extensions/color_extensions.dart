@@ -55,8 +55,11 @@ extension ColorExtensions on Color {
   bool get exceedsBrightnessUpperRestriction => brightness > kBrightnessUpperThreshold;
   bool get exceedsBrightnessLowerRestriction => brightness < kBrightnessLowerThreshold;
 
-  Brightness get computedSystemBrightness {
-    // iOS is backwards
+  Brightness getComputedSystemBrightness() {
+    return exceedsBrightnessUpperRestriction ? Brightness.dark : Brightness.light;
+  }
+
+  Brightness getComputedStatusBrightness() {
     if (UniversalPlatform.isIOS) {
       return exceedsBrightnessUpperRestriction ? Brightness.light : Brightness.dark;
     }

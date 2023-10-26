@@ -25,6 +25,7 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -116,18 +117,29 @@ class SharingController extends _$SharingController implements ISharingControlle
 
   @override
   List<Widget> buildSharePostActions(BuildContext context, Rect origin, SharePostOptions? postOptions) {
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final CommunitiesControllerProvider communitiesControllerProvider = CommunitiesControllerProvider(
-      currentUser: postOptions?.currentUser,
-      currentProfile: postOptions?.currentProfile,
+      currentUserId: postOptions?.currentUser?.uid ?? '',
+      currentProfileId: postOptions?.currentProfile?.flMeta?.id ?? '',
+      isManagedProfile: profileController.isCurrentlyManagedProfile,
     );
 
-    final CommunitiesController communitiesController = ref.read(communitiesControllerProvider.notifier);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, currentProfile: postOptions?.currentProfile);
+    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, profile: postOptions?.currentProfile);
     final bool hasConnections = feedState.pagingController.value.itemList?.isNotEmpty == true;
     final bool hasValidProfile = profileController.state.currentProfile != null;
+
+    // sharing is complicated, so can we share this activity as this user?
+    final ActivitySecurityConfigurationMode? shareMode = postOptions?.activity.securityConfiguration?.shareMode;
+    final bool canActShare = shareMode != null &&
+        hasValidProfile &&
+        shareMode.canActOnActivity(
+          activity: postOptions?.activity,
+          currentProfile: profileController.state.currentProfile,
+          publisherRelationship: postOptions?.activity.getPublisherRelationship(profileController.state.currentProfile!),
+        );
 
     return [
       if (hasValidProfile) ...<Widget>[
@@ -136,6 +148,7 @@ class SharingController extends _$SharingController implements ISharingControlle
           label: 'Repost on Your Feed',
           icon: UniconsLine.file_share_alt,
           onTapped: () => shareToFeed(context, postOptions: postOptions),
+          isDisabled: !canActShare,
         ),
       ],
       if (hasConnections) ...<Widget>[
@@ -144,6 +157,7 @@ class SharingController extends _$SharingController implements ISharingControlle
           label: 'Share with a Connection',
           icon: UniconsLine.chat_bubble_user,
           onTapped: () => shareViaConnections(context, postOptions: postOptions),
+          isDisabled: !canActShare,
         ),
       ],
       PositiveButton.standardPrimaryWithIcon(
@@ -151,6 +165,7 @@ class SharingController extends _$SharingController implements ISharingControlle
         label: 'Share Via...',
         icon: UniconsLine.share_alt,
         onTapped: () => shareExternally(context, ShareTarget.post, origin, postOptions: postOptions),
+        isDisabled: !canActShare,
       ),
     ];
   }
@@ -236,8 +251,8 @@ class SharingController extends _$SharingController implements ISharingControlle
       throw Exception('Post options must be provided');
     }
 
-    logger.d('Sharing to feed');
     final String activityId = postOptions.activity.flMeta?.id ?? '';
+    logger.d('Sharing activity $activityId to feed');
     if (activityId.isEmpty) {
       throw Exception('Activity is missing an ID');
     }

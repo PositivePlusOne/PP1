@@ -32,10 +32,9 @@ export namespace DemoteActivityAction {
         ]);
 
         const targetActivityData = targetActivitySnapshot.data() as ActivityJSON;
-        const targetActivityId = FlamelinkHelpers.getFlamelinkIdFromObject(targetActivityData);
 
-        if (!targetActivityId || !targetActivityData) {
-            AdminQuickActionService.appendOutput(action, `Invalid data.`);
+        if (!targetActivityData) {
+            AdminQuickActionService.appendOutput(action, `Failed to load activity data.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
@@ -51,19 +50,13 @@ export namespace DemoteActivityAction {
 
         const promotionKey = targetActivityData.enrichmentConfiguration?.promotionKey ?? '';
         if (!promotionKey) {
-            AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} has no promotion key.`);
+            AdminQuickActionService.appendOutput(action, `Activity ${targetActivityActualId} has no promotion key.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
 
         const publisherAvailablePromotionCount = publisherProfile.availablePromotionsCount as number ?? 0;
         const publisherActivePromotionCount = publisherProfile.activePromotionsCount as number ?? 0;
-
-        if (publisherActivePromotionCount == 0) {
-            AdminQuickActionService.appendOutput(action, `Publisher ${publisherId} has no active promotions.`);
-            AdminQuickActionService.updateStatus(action, 'error');
-            return Promise.resolve();
-        }
 
         const tags = targetActivityData.enrichmentConfiguration?.tags ?? [];
         const newTags = tags.filter((t: string) => {
@@ -83,10 +76,10 @@ export namespace DemoteActivityAction {
         await targetActivityReference?.update({
             enrichmentConfiguration: targetActivityData.enrichmentConfiguration,
         });
-        AdminQuickActionService.appendOutput(action, `Activity ${targetActivityId} demoted.`);
+        AdminQuickActionService.appendOutput(action, `Activity ${targetActivityActualId} demoted.`);
         
         await ActivitiesService.updateTagFeedsForActivity(targetActivityData);
-        AdminQuickActionService.appendOutput(action, `Updated feeds for activity ${targetActivityId}`);
+        AdminQuickActionService.appendOutput(action, `Updated feeds for activity ${targetActivityActualId}`);
 
         let newActivePromotionCount = publisherActivePromotionCount - 1;
         if (newActivePromotionCount < 0) {

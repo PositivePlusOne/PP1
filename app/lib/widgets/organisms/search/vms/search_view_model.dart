@@ -4,10 +4,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/widgets.dart';
 
 // Package imports:
@@ -20,8 +16,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/search_api_service.dart';
 import '../../../../dtos/database/activities/activities.dart';
 import '../../../../dtos/database/profile/profile.dart';
@@ -235,6 +235,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           break;
         case SearchTab.tags:
           final List<Tag> results = response.results.cast<Tag>();
+          results.removeWhere((element) => TagHelpers.isPromoted(element.key));
           state = state.copyWith(searchTagsCursor: response.cursor, searchTagResults: state.searchTagResults + results);
           break;
         case SearchTab.posts:
