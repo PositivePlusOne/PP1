@@ -584,11 +584,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   ///? Attempt to stop the clip recording, does not capture the resulting video
-  void stopClipRecording() {
+  Future<void> stopClipRecording() async {
     if (cachedCameraState != null) {
       VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
       try {
-        videoRecordingCameraState.stopRecording();
+        await videoRecordingCameraState.stopRecording();
       } catch (e) {
         stopClipTimers();
         if (widget.onClipStateChange != null) {
