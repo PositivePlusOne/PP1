@@ -290,8 +290,36 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   child: IgnorePointer(
                     child: Container(
                       color: colours.black.withOpacity(kOpacityBarrier),
-                      child: Center(
-                        child: PositiveLoadingIndicator(color: colours.white),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          PositiveLoadingIndicator(color: colours.white),
+                          const SizedBox(height: kPaddingSmall),
+                          Text(
+                            localisations.page_create_post_processing,
+                            style: typography.styleSubtextBold.copyWith(color: colours.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              if (state.isUploadingMedia) ...<Widget>[
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      color: colours.black.withOpacity(kOpacityBarrier),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          PositiveLoadingIndicator(color: colours.white),
+                          const SizedBox(height: kPaddingSmall),
+                          Text(
+                            localisations.page_create_post_uploading,
+                            style: typography.styleSubtextBold.copyWith(color: colours.white),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -420,4 +420,35 @@ class GalleryController extends _$GalleryController {
     final String relativePath = entry.reference!.fullPath.replaceFirst(rootProfileGalleryReference.fullPath, '');
     return Media(url: relativePath, priority: kMediaPriorityDefault, type: MediaType.bucket_path, isPrivate: isPrivate, isSensitive: isSensitive);
   }
+
+  String getMimeTypeFromBytes(Uint8List arrayBuffer) {
+    const len = 4;
+    if (arrayBuffer.length >= len) {
+      final signatureArr = List<String>.filled(len, '');
+      for (var i = 0; i < len; i++) {
+        signatureArr[i] = arrayBuffer[i].toRadixString(16).padLeft(2, '0');
+      }
+
+      final signature = signatureArr.join('').toUpperCase();
+      switch (signature) {
+        case '89504E47':
+          return 'image/png';
+        case '47494638':
+          return 'image/gif';
+        case '25504446':
+          return 'application/pdf';
+        case 'FFD8FFDB':
+        case 'FFD8FFE0':
+          return 'image/jpeg';
+        case '504B0304':
+          return 'application/zip';
+        case '66747970':
+          return 'video/mp4';
+        default:
+          break;
+      }
+    }
+
+    return 'application/octet-stream';
+  }
 }

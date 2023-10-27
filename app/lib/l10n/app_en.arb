@@ -529,6 +529,8 @@
     "page_create_post_created": "Post Created",
     "page_create_post_additional_tags": "+{tags}",
     "page_create_post_edited": "Post Saved",
+    "page_create_post_processing": "Processing your clip...",
+    "page_create_post_uploading": "Uploading your clip...",
 
     "page_create_post_clip_length_limit": "Clips can be a maximum of 3 minutes long - trim yours down to post it.",
     "page_create_post_seconds": "s",

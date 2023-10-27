@@ -7,9 +7,13 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffprobe_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/log.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/media_information.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/media_information_session.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/session_state.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/stream_information.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:video_editor/video_editor.dart';
@@ -34,43 +38,36 @@ class CreateClipExportService {
 
   Future<Size> getVideoSize(File file) async {
     final Logger logger = providerContainer.read(loggerProvider);
+    final MediaInformationSession response = await FFprobeKit.getMediaInformation(file.path);
+    final MediaInformation? info = response.getMediaInformation();
 
-    logger.d('Getting video size');
-    final List<String> args = <String>[
-      '-i',
-      file.path,
-    ];
-
-    final FFmpegSession session = await FFmpegKit.executeWithArgumentsAsync(args);
-    final SessionState state = await session.getState();
-
-    if (state == SessionState.failed) {
-      final ReturnCode? returnCode = await session.getReturnCode();
-      final String? output = await session.getOutput();
-      final List<Log> logs = await session.getLogs();
-
-      logger.e('getVideoSize() ffmpeg failed: $returnCode\n$output\n$logs');
-      throw Exception('getVideoSize() ffmpeg failed: $returnCode\n$output\n$logs');
+    if (info == null) {
+      logger.e('getVideoSize() failed to get video metadata');
+      throw Exception('getVideoSize() failed to get video metadata');
     }
 
-    final String? output = await session.getOutput();
-    final List<Log> logs = await session.getLogs();
+    final List<StreamInformation> streams = info.getStreams();
 
-    logger.d('getVideoSize() ffmpeg succeeded: $output\n$logs');
+    // One of the streams will be video, check each one until we find it (height + width)
+    int height = 0;
+    int width = 0;
+    for (final StreamInformation stream in streams) {
+      final streamHeight = stream.getHeight();
+      final streamWidth = stream.getWidth();
 
-    // Updated regular expression
-    final RegExp regExp = RegExp(r'Video: h264.*?,.*?(\d+)x(\d+)[,\s]');
-    final Match? match = regExp.firstMatch(output!);
-    if (match == null || match.groupCount < 2) {
+      if (streamHeight != null && streamWidth != null) {
+        height = streamHeight;
+        width = streamWidth;
+        break;
+      }
+    }
+
+    if (height == 0 || width == 0) {
       logger.e('getVideoSize() failed to get video size');
       throw Exception('getVideoSize() failed to get video size');
     }
 
-    // Using group(1) for width and group(2) for height
-    final double width = double.parse(match.group(1)!);
-    final double height = double.parse(match.group(2)!);
-
-    return Size(width, height);
+    return Size(width.toDouble(), height.toDouble());
   }
 
   Future<File> exportVideoFromController(VideoEditorController controller) async {
@@ -114,7 +111,7 @@ class CreateClipExportService {
     while (!isComplete) {
       await Future.delayed(const Duration(milliseconds: 100));
       i++;
-      if (i > 100) {
+      if (i > 10 * 60 * 10) {
         logger.e('exportVideoFromController() ffmpeg failed to complete');
         throw Exception('exportVideoFromController() ffmpeg failed to complete');
       }

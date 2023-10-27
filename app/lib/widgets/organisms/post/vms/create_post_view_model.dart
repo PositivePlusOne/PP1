@@ -51,6 +51,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
   const factory CreatePostViewModelState({
     @Default(false) bool isBusy,
     @Default(false) bool isProcessingMedia,
+    @Default(false) bool isUploadingMedia,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default(false) bool isEditing,
@@ -229,7 +230,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-      state = state.copyWith(isBusy: true);
+      state = state.copyWith(isBusy: true, isUploadingMedia: true);
 
       final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
       for (final GalleryEntry entry in galleryEntries) {
@@ -265,7 +266,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       await onPostActivityFailure(e);
       return;
     } finally {
-      state = state.copyWith(isBusy: false);
+      state = state.copyWith(isBusy: false, isUploadingMedia: false);
     }
   }
 
