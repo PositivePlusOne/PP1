@@ -262,6 +262,15 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     switch (option) {
       case ProfileModalDialogOptionType.connect:
+        if (currentProfile?.isOrganisation ?? false) {
+          // we are an organisation, organisations cannot connect to users
+          // we would return false, but if they are connected already, I think
+          // we should let them disconnect...
+          if (!isConnected) {
+            // so, they are not connected, don't let them connect
+            return false;
+          }
+        }
       case ProfileModalDialogOptionType.follow:
       case ProfileModalDialogOptionType.mute:
       case ProfileModalDialogOptionType.viewProfile:
