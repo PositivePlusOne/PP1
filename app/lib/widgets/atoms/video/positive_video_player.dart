@@ -159,10 +159,10 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       padding: const EdgeInsets.all(kPaddingSmallMedium),
       backdropColor: colors.black.withOpacity(kOpacityBarrier),
       seekBarThumbColor: colors.purple,
+      seekBarPositionColor: colors.purple,
       seekBarBufferColor: colors.colorGray1,
       seekBarColor: colors.white,
       buttonBarButtonColor: colors.white,
-      seekBarPositionColor: colors.white,
       seekBarThumbSize: kVideoThumbSize,
       visibleOnMount: true,
     );
