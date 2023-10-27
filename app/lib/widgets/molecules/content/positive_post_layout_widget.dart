@@ -1,11 +1,8 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,9 +10,7 @@ import 'package:banner_carousel/banner_carousel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
-import 'package:mime/mime.dart';
 import 'package:unicons/unicons.dart';
-import 'package:video_player/video_player.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
@@ -34,6 +29,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
@@ -439,14 +435,23 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     final Media? media = postContent?.media.firstOrNull;
-    if (media != null && media.type == MediaType.bucket_path) {
-      final Key postIdKey = Key(postContent?.flMeta?.id ?? "test");
-      return PositiveVideoPlayer(
-        media: media,
-        visibilityDetectorKey: postIdKey,
-      );
+    if (media == null || media.type != MediaType.bucket_path) {
+      return const SizedBox.shrink();
     }
-    return const SizedBox();
+
+    final Key postIdKey = Key(postContent?.flMeta?.id ?? '');
+    return Padding(
+      padding: EdgeInsets.only(
+        left: sidePadding,
+        right: sidePadding,
+        top: kPaddingSmall,
+      ),
+      child: PositiveVideoPlayer(
+        media: media,
+        borderRadius: sidePadding > 0 ? BorderRadius.circular(kBorderRadiusLarge) : BorderRadius.zero,
+        visibilityDetectorKey: postIdKey,
+      ),
+    );
   }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

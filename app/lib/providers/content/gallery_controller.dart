@@ -3,10 +3,12 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
@@ -22,7 +24,6 @@ import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
-import 'package:video_player/video_player.dart';
 
 part 'gallery_controller.freezed.dart';
 part 'gallery_controller.g.dart';
@@ -258,22 +259,6 @@ class GalleryController extends _$GalleryController {
     return galleryEntry;
   }
 
-  // Size getMediaSizeFromFile(File file, String mimeType) {
-  //   final Logger logger = providerContainer.read(loggerProvider);
-  //   logger.i('[Gallery Controller] - Getting media size from file');
-
-  //   if (mimeType.startsWith('image')) {
-  //     final Image image = Image.file(file);
-  //     return Size(image.width ?? -1, image.height ?? -1);
-  //   } else if (mimeType.startsWith('video')) {
-  //     final VideoPlayerController video = VideoPlayerController.file(file);
-  //     // This will break, ty stu
-  //     return Size(video.value.size.width, video.value.size.height);
-  //   }
-
-  //   return Size.zero;
-  // }
-
   void registerEventListenersForUpload(GalleryEntry entry) {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('[Gallery Controller] - Registering event listeners for upload');
@@ -365,16 +350,19 @@ class GalleryController extends _$GalleryController {
     if (data.isEmpty) {
       throw Exception('No data provided');
     }
+
     // so we need to find the image path for the type of image requested - these images are 'named' with profile_ or reference_
     // so are pretty easy to find actually
     try {
       // find the current profile / reference image in order to delete it
-      final currentMedia = profile.media.firstWhere((element) => element.name.startsWith(mediaTypePrefix(type)));
+      final Media currentMedia = profile.media.firstWhere((element) => element.name.startsWith(mediaTypePrefix(type)));
+
       // for which we need the actual path for this type
       final String path = _mediaTypePath(type, currentMedia.name);
       final String bucketPathWithoutFilename = path.substring(0, path.lastIndexOf('/'));
       final String filenameWithoutExtension = currentMedia.name.substring(0, currentMedia.name.lastIndexOf('.'));
       final String fileExtension = currentMedia.name.split('.').last;
+
       // for which we lso have thumbnails
       final Reference thumbnailPath = FirebaseStorage.instance.ref('$bucketPathWithoutFilename/thumbnails');
       for (final thumbnailSize in PositiveThumbnailTargetSize.values) {
@@ -385,6 +373,7 @@ class GalleryController extends _$GalleryController {
         } catch (e) {
           logger.i('[Gallery Controller] - Deleting thumbnail at $filenameTypeOne did not do anything');
         }
+
         final String filenameTypeTwo = '${filenameWithoutExtension}_${thumbnailSize.fileSuffix}.$fileExtension';
         try {
           thumbnailPath.child(filenameTypeTwo).delete();
@@ -404,10 +393,13 @@ class GalleryController extends _$GalleryController {
     // use the current dateTime to ensure each uploaded image is unique
     final newFilename = '${mediaTypePrefix(type)}_${DateTime.now().toIso8601String()}.jpeg';
     final newFilepath = _mediaTypePath(type, newFilename);
+
     // which can be made into a file reference
     final Reference reference = storage.ref().child(newFilepath);
+
     // which we can put data in place for (uploading the image basically)
     await reference.putData(data, SettableMetadata(contentType: 'image/jpeg'));
+
     // now we have uploaded this media - let's return the object that represents it
     final Media media = Media(
       name: newFilename,

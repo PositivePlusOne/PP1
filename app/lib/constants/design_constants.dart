@@ -29,6 +29,8 @@ const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
 const Duration kAnimationDurationHintPreview = Duration(milliseconds: 3000);
 
+const Duration kAnimationDurationFSWait = Duration(milliseconds: 1000);
+
 const double kMaxClipDurationSeconds = 180;
 
 const Curve kAnimationCurveDefault = Curves.easeInOut;
@@ -103,6 +105,7 @@ const double kDefaultCircleRadius = 3500;
 const double kDefaultSearchLocationNearbyRadius = 250;
 
 // Other
+const double kVideoThumbSize = 16.0;
 const double kCameraButtonSize = 70.0;
 const double kCarouselMaxHeight = 400.0;
 const double kCarouselMinHeight = 200.0;

@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_post_view_model.dart';
+part of 'clip_ffmpeg_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$createPostViewModelHash() =>
-    r'05db2ac28cbccc5f6889f2e61f276637d378b8ba';
+String _$createClipExportServiceHash() =>
+    r'e955f89d38203387700ef9959c0eceef21c0b76b';
 
-/// See also [CreatePostViewModel].
-@ProviderFor(CreatePostViewModel)
-final createPostViewModelProvider = AutoDisposeNotifierProvider<
-    CreatePostViewModel, CreatePostViewModelState>.internal(
-  CreatePostViewModel.new,
-  name: r'createPostViewModelProvider',
+/// See also [createClipExportService].
+@ProviderFor(createClipExportService)
+final createClipExportServiceProvider =
+    Provider<CreateClipExportService>.internal(
+  createClipExportService,
+  name: r'createClipExportServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$createPostViewModelHash,
+      : _$createClipExportServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CreatePostViewModel = AutoDisposeNotifier<CreatePostViewModelState>;
+typedef CreateClipExportServiceRef = ProviderRef<CreateClipExportService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
