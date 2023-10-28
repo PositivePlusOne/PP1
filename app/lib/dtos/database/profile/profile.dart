@@ -99,8 +99,8 @@ class ProfileStatistics with _$ProfileStatistics {
   /// private keys for the data as expected from the data store
   static const kPostKey = 'post';
   static const kShareKey = 'share';
-  static const kFollowersKey = 'follow';
-  static const kFollowingKey = 'follower';
+  static const kFollowersKey = 'follower';
+  static const kFollowingKey = 'follow';
   static const kPromotionsPermittedKey = 'promotionsPermitted';
 
   /// static def for the value to signify that no promotions are ever allowed for this profile
