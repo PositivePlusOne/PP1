@@ -67,6 +67,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.isBookmarked,
     required this.totalComments,
     this.onPostPageRequested,
+    this.onShare,
     super.key,
   });
 
@@ -96,6 +97,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
   final bool isBookmarked;
   final FutureOr<void> Function(BuildContext context)? onBookmark;
+
+  final FutureOr<void> Function(BuildContext context)? onShare;
 
   final int totalComments;
 
@@ -519,29 +522,26 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final String publisherId = postContent?.publisherInformation?.publisherId ?? '';
 
     final ActivitySecurityConfigurationMode shareMode = postContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool canActShare = shareMode.canActOnActivity(
+      activity: postContent,
+      currentProfile: currentProfile,
+      publisherRelationship: publisherRelationship,
+    );
 
-    final bool canActShare = shareMode.canActOnActivity(activity: postContent, currentProfile: currentProfile, publisherRelationship: publisherRelationship);
     final bool isPublisher = currentProfileId == publisherId;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
-        //TODO(S): like enabled and onlike functionality here
         isLiked: isLiked,
         likes: totalLikes,
         likesEnabled: !isBusy && !isPublisher && likesEnabled,
         onLike: onLike,
-
-        //TODO(S): share enabled and on share functionality here
         shareEnabled: !isBusy && canActShare,
-        onShare: (context) => postContent?.share(context, currentProfile),
-
-        //TODO(S): comment enabled and on comment functionality here
+        onShare: onShare,
         comments: totalComments,
         commentsEnabled: !isBusy,
         onComment: onComment,
-
-        //TODO(S): bookmark enabled and on bookmark functionality here
         bookmarkEnabled: !isBusy && bookmarkEnabled,
         bookmarked: isBookmarked,
         onBookmark: onBookmark,

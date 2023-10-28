@@ -230,7 +230,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-      state = state.copyWith(isBusy: true, isUploadingMedia: true);
+      state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty);
 
       final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
       for (final GalleryEntry entry in galleryEntries) {

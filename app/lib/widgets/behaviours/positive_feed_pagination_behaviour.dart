@@ -42,7 +42,6 @@ import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
-import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
 
@@ -292,23 +291,23 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String activityReactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
     final ReactionStatistics? activityReactionStatistics = cacheController.get(activityReactionStatisticsCacheKey);
 
+    final String activityRepostReactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activity?.repostConfiguration?.targetActivityId ?? '');
+    final ReactionStatistics? activityRepostReactionStatistics = cacheController.get(activityRepostReactionStatisticsCacheKey);
+
     final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile).toList();
-    final List<Reaction> currentProfileReactions = cacheController.list(expectedUniqueReactionKeys);
+    final List<Reaction> activityProfileReactions = cacheController.list(expectedUniqueReactionKeys);
 
-    final String reactionsFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
-      activityId: activityId,
-      profileId: currentProfileId,
-    );
-
-    final PositiveReactionsState? activityReactionFeedState = cacheController.get(reactionsFeedStateCacheKey);
+    final List<String> expectedUniqueRepostReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: repostedActivity, currentProfile: currentProfile).toList();
+    final List<Reaction> activityRepostProfileReactions = cacheController.list(expectedUniqueRepostReactionKeys);
 
     return PositiveActivityWidget(
       activity: item,
       activityReactionStatistics: activityReactionStatistics,
       activityPromotion: promotion,
       currentProfile: currentProfile,
-      currentProfileReactions: currentProfileReactions,
-      activityReactionFeedState: activityReactionFeedState,
+      activityProfileReactions: activityProfileReactions,
+      reposterReactionStatistics: activityRepostReactionStatistics,
+      reposterActivityProfileReactions: activityRepostProfileReactions,
       targetProfile: targetProfile,
       targetRelationship: relationship,
       reposterProfile: reposterProfile,
