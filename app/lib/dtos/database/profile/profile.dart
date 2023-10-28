@@ -98,6 +98,7 @@ class ProfileStatistics with _$ProfileStatistics {
 
   /// private keys for the data as expected from the data store
   static const kPostKey = 'post';
+  static const kLikeKey = 'like';
   static const kShareKey = 'share';
   static const kFollowersKey = 'follower';
   static const kFollowingKey = 'follow';
@@ -112,19 +113,20 @@ class ProfileStatistics with _$ProfileStatistics {
     // we will return a map of data (keyed with the internationalised string) and the data being the value for each
     final Map<String, String> data = {
       localizations.page_profile_personal_data_posts: '0',
-      localizations.page_profile_personal_data_shares: '0',
+      localizations.page_profile_personal_data_likes: '0',
       localizations.page_profile_personal_data_followers: '0',
       localizations.page_profile_personal_data_following: '0',
       // localizations.page_profile_personal_data_promotioms ommitted to as not to show when default (-1)
     };
+
     // map each internal data key to the external data expected
     for (final MapEntry<String, int> entry in profileStatistics?.counts.entries ?? []) {
       switch (entry.key) {
         case kPostKey:
           data[localizations.page_profile_personal_data_posts] = entry.value.toString();
           break;
-        case kShareKey:
-          data[localizations.page_profile_personal_data_shares] = entry.value.toString();
+        case kLikeKey:
+          data[localizations.page_profile_personal_data_likes] = entry.value.toString();
           break;
         case kFollowersKey:
           data[localizations.page_profile_personal_data_followers] = entry.value.toString();

@@ -494,6 +494,7 @@
     "page_profile_promoted_posts_tab_hub": "Hub ({count})",
     "page_profile_promoted_posts_tab_chat": "Chat ({count})",
     "page_profile_personal_data_posts": "Posts",
+    "page_profile_personal_data_likes": "Likes",
     "page_profile_personal_data_shares": "Shares",
     "page_profile_personal_data_followers": "Followers",
     "page_profile_personal_data_following": "Following",

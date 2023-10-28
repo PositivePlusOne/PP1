@@ -304,16 +304,11 @@ extension ProfileExtensions on Profile {
 }
 
 extension ProfileStatisticsExtensions on ProfileStatistics {
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  /// Accessors for the data which is in a nasty little map (gets the data from the map and defaults to zero)
   int get posts => counts[ProfileStatistics.kPostKey] ?? 0;
-
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  int get likes => counts[ProfileStatistics.kLikeKey] ?? 0;
   int get shares => counts[ProfileStatistics.kShareKey] ?? 0;
-
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
   int get followers => counts[ProfileStatistics.kFollowersKey] ?? 0;
-
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
   int get following => counts[ProfileStatistics.kFollowingKey] ?? 0;
 
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to -1 which is the error (never permitted) case)
