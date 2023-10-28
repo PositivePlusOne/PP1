@@ -184,6 +184,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     );
 
     if (isRepost) {
+      final bool isPublisher = widget.activity?.publisherInformation?.publisherId == widget.currentProfile?.flMeta?.id;
       return Column(
         children: <Widget>[
           PositiveTapBehaviour(
@@ -240,7 +241,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingSmall),
             isLiked: isParentActivityLiked,
             likes: totalParentActivityLikes,
-            likesEnabled: true,
+            likesEnabled: !isLiking && !isPublisher,
             onBookmark: (context) => _onInternalBookmarkRequested(context: context, useReposter: true),
             onComment: (context) => widget.activity?.requestPostRoute(
               context: context,
