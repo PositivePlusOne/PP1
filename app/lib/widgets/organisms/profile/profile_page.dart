@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -57,25 +58,24 @@ class ProfilePage extends HookConsumerWidget {
 
     final AppRouter router = ref.read(appRouterProvider);
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final List<String> members = <String>[
-      controllerState.currentProfile?.flMeta?.id ?? '',
-      state.profile?.flMeta?.id ?? '',
-    ];
 
     final Profile? currentProfile = controllerState.currentProfile;
-    final Profile targetProfile = state.profile ?? Profile.empty();
-    final Relationship relationship = state.relationship ?? Relationship.empty(members);
+    final Profile? targetProfile = cacheController.get(state.targetProfileId ?? '');
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
 
-    final String expectedProfileStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: targetProfile.flMeta?.id ?? '');
+    final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
+    final Relationship? relationship = cacheController.get(relationshipId);
+
+    final String expectedProfileStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: targetProfileId);
     final ProfileStatistics? profileStatistics = cacheController.get(expectedProfileStatisticsKey);
     final Map<String, String> profileStatisticsData = ProfileStatistics.getDisplayItems(profileStatistics, appLocalizations);
 
     //* Check for a cover image
-    final Media? coverImage = targetProfile.coverImage;
+    final Media? coverImage = targetProfile?.coverImage;
 
     final TargetFeed targetFeed = TargetFeed(
       targetSlug: 'user',
-      targetUserId: targetProfile.flMeta?.id ?? '',
+      targetUserId: targetProfile?.flMeta?.id ?? '',
     );
 
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
@@ -88,14 +88,17 @@ class ProfilePage extends HookConsumerWidget {
 
     useCacheHook(keys: expectedCacheKeys);
 
+    final Color appBarColor = targetProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow;
+    final Color appBarTextColor = appBarColor.complimentTextColor;
+
     PreferredSizeWidget? appBarBottomWidget;
-    if (state.profile != null) {
+    if (targetProfile != null) {
       appBarBottomWidget = ProfileAppBarHeader(
-        profile: state.profile!,
+        profile: targetProfile,
         children: <PreferredSizeWidget>[
           PositiveProfileTile(
-            profile: state.profile ?? Profile.empty(),
-            brightness: viewModel.appBarColor.impliedBrightness,
+            profile: targetProfile,
+            brightness: appBarColor.impliedBrightness,
             enableProfileImageFullscreen: true,
             metadata: profileStatisticsData,
           ),
@@ -110,20 +113,20 @@ class ProfilePage extends HookConsumerWidget {
 
     final List<Widget> actions = [];
     if (controllerState.currentProfile != null) {
-      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: viewModel.appBarTextColor));
+      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: appBarTextColor));
     }
 
     return PositiveScaffold(
-      appBarColor: viewModel.appBarColor,
+      appBarColor: appBarColor,
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
           child: PositiveAppBar(
-            title: targetProfile.name.isNotEmpty ? targetProfile.displayName.asHandle : '',
+            title: targetProfile?.name.isNotEmpty == true ? targetProfile?.displayName.asHandle ?? '' : '',
             centerTitle: true,
             includeLogoWherePossible: false,
-            foregroundColor: viewModel.appBarTextColor,
-            backgroundColor: viewModel.appBarColor,
+            foregroundColor: appBarTextColor,
+            backgroundColor: appBarColor,
             decorationColor: colors.colorGray1,
             backgroundImage: coverImage,
             trailType: PositiveAppBarTrailType.concave,
@@ -132,7 +135,7 @@ class ProfilePage extends HookConsumerWidget {
             bottom: appBarBottomWidget,
             leading: PositiveButton.appBarIcon(
               colors: colors,
-              primaryColor: viewModel.appBarTextColor,
+              primaryColor: appBarTextColor,
               icon: UniconsLine.angle_left_b,
               onTapped: () => router.removeLast(),
             ),
@@ -151,16 +154,16 @@ class ProfilePage extends HookConsumerWidget {
               //   ],
               // ),
               //const SizedBox(height: kPaddingSmall),
-              if (state.profile!.biography.isNotEmpty) ...<Widget>[
+              if (targetProfile?.biography.isNotEmpty == true) ...<Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                  child: ProfileBiographyTile(profile: state.profile!),
+                  child: ProfileBiographyTile(profile: targetProfile!),
                 ),
               ],
-              if (state.profile!.interests.isNotEmpty) ...<Widget>[
+              if (targetProfile?.interests.isNotEmpty == true) ...<Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                  child: PositiveProfileInterestsList(profile: state.profile!),
+                  child: PositiveProfileInterestsList(profile: targetProfile!),
                 ),
               ],
             ],

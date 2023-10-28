@@ -141,10 +141,10 @@ class CacheController {
     final bool hasRecord = record != null;
     final FlMeta newMetadata = metadata ?? FlMeta.empty(key, '');
     final bool isDataPartial = newMetadata.isPartial;
-    final int newFetchMillis = newMetadata.lastFetchMillis;
+    final int newFetchMillis = DateTime.tryParse(newMetadata.lastModifiedDate ?? '')?.millisecondsSinceEpoch ?? -1;
 
     final bool isOldDataPartial = record?.metadata.isPartial ?? true;
-    final int oldFetchMillis = record?.metadata.lastFetchMillis ?? -1;
+    final int oldFetchMillis = DateTime.tryParse(record?.metadata.lastModifiedDate ?? '')?.millisecondsSinceEpoch ?? -1;
 
     final bool shouldSkipOnDataIntegrity = isDataPartial && !isOldDataPartial;
     if (hasRecord && shouldSkipOnDataIntegrity) {
@@ -152,8 +152,8 @@ class CacheController {
       return;
     }
 
-    if (hasRecord && newFetchMillis < oldFetchMillis) {
-      logger.w('Skipping cache update on $key due to new data being older');
+    if (hasRecord && newFetchMillis <= oldFetchMillis) {
+      logger.w('Skipping cache update on $key due to new data being older or equal to existing data');
       return;
     }
 

@@ -100,7 +100,7 @@ class ProfileStatistics with _$ProfileStatistics {
   static const kPostKey = 'post';
   static const kShareKey = 'share';
   static const kFollowersKey = 'follow';
-  static const kFollowingKey = 'following';
+  static const kFollowingKey = 'follower';
   static const kPromotionsPermittedKey = 'promotionsPermitted';
 
   /// static def for the value to signify that no promotions are ever allowed for this profile

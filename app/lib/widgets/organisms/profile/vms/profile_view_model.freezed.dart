@@ -16,8 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ProfileViewModelState {
-  Profile? get profile => throw _privateConstructorUsedError;
-  Relationship? get relationship => throw _privateConstructorUsedError;
+  String? get targetProfileId => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -31,10 +30,7 @@ abstract class $ProfileViewModelStateCopyWith<$Res> {
           $Res Function(ProfileViewModelState) then) =
       _$ProfileViewModelStateCopyWithImpl<$Res, ProfileViewModelState>;
   @useResult
-  $Res call({Profile? profile, Relationship? relationship, bool isBusy});
-
-  $ProfileCopyWith<$Res>? get profile;
-  $RelationshipCopyWith<$Res>? get relationship;
+  $Res call({String? targetProfileId, bool isBusy});
 }
 
 /// @nodoc
@@ -51,48 +47,19 @@ class _$ProfileViewModelStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? profile = freezed,
-    Object? relationship = freezed,
+    Object? targetProfileId = freezed,
     Object? isBusy = null,
   }) {
     return _then(_value.copyWith(
-      profile: freezed == profile
-          ? _value.profile
-          : profile // ignore: cast_nullable_to_non_nullable
-              as Profile?,
-      relationship: freezed == relationship
-          ? _value.relationship
-          : relationship // ignore: cast_nullable_to_non_nullable
-              as Relationship?,
+      targetProfileId: freezed == targetProfileId
+          ? _value.targetProfileId
+          : targetProfileId // ignore: cast_nullable_to_non_nullable
+              as String?,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ProfileCopyWith<$Res>? get profile {
-    if (_value.profile == null) {
-      return null;
-    }
-
-    return $ProfileCopyWith<$Res>(_value.profile!, (value) {
-      return _then(_value.copyWith(profile: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $RelationshipCopyWith<$Res>? get relationship {
-    if (_value.relationship == null) {
-      return null;
-    }
-
-    return $RelationshipCopyWith<$Res>(_value.relationship!, (value) {
-      return _then(_value.copyWith(relationship: value) as $Val);
-    });
   }
 }
 
@@ -105,12 +72,7 @@ abstract class _$$ProfileViewModelStateImplCopyWith<$Res>
       __$$ProfileViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Profile? profile, Relationship? relationship, bool isBusy});
-
-  @override
-  $ProfileCopyWith<$Res>? get profile;
-  @override
-  $RelationshipCopyWith<$Res>? get relationship;
+  $Res call({String? targetProfileId, bool isBusy});
 }
 
 /// @nodoc
@@ -125,19 +87,14 @@ class __$$ProfileViewModelStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? profile = freezed,
-    Object? relationship = freezed,
+    Object? targetProfileId = freezed,
     Object? isBusy = null,
   }) {
     return _then(_$ProfileViewModelStateImpl(
-      profile: freezed == profile
-          ? _value.profile
-          : profile // ignore: cast_nullable_to_non_nullable
-              as Profile?,
-      relationship: freezed == relationship
-          ? _value.relationship
-          : relationship // ignore: cast_nullable_to_non_nullable
-              as Relationship?,
+      targetProfileId: freezed == targetProfileId
+          ? _value.targetProfileId
+          : targetProfileId // ignore: cast_nullable_to_non_nullable
+              as String?,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -150,19 +107,17 @@ class __$$ProfileViewModelStateImplCopyWithImpl<$Res>
 
 class _$ProfileViewModelStateImpl implements _ProfileViewModelState {
   const _$ProfileViewModelStateImpl(
-      {this.profile, this.relationship, this.isBusy = false});
+      {this.targetProfileId, this.isBusy = false});
 
   @override
-  final Profile? profile;
-  @override
-  final Relationship? relationship;
+  final String? targetProfileId;
   @override
   @JsonKey()
   final bool isBusy;
 
   @override
   String toString() {
-    return 'ProfileViewModelState(profile: $profile, relationship: $relationship, isBusy: $isBusy)';
+    return 'ProfileViewModelState(targetProfileId: $targetProfileId, isBusy: $isBusy)';
   }
 
   @override
@@ -170,14 +125,13 @@ class _$ProfileViewModelStateImpl implements _ProfileViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileViewModelStateImpl &&
-            (identical(other.profile, profile) || other.profile == profile) &&
-            (identical(other.relationship, relationship) ||
-                other.relationship == relationship) &&
+            (identical(other.targetProfileId, targetProfileId) ||
+                other.targetProfileId == targetProfileId) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, profile, relationship, isBusy);
+  int get hashCode => Object.hash(runtimeType, targetProfileId, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -189,14 +143,11 @@ class _$ProfileViewModelStateImpl implements _ProfileViewModelState {
 
 abstract class _ProfileViewModelState implements ProfileViewModelState {
   const factory _ProfileViewModelState(
-      {final Profile? profile,
-      final Relationship? relationship,
+      {final String? targetProfileId,
       final bool isBusy}) = _$ProfileViewModelStateImpl;
 
   @override
-  Profile? get profile;
-  @override
-  Relationship? get relationship;
+  String? get targetProfileId;
   @override
   bool get isBusy;
   @override

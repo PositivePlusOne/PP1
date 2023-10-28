@@ -128,11 +128,11 @@ export namespace PostEndpoints {
     const conversations = await ConversationService.getOneOnOneChannels(streamClient, uid, targets);
     await ConversationService.sendBulkMessage(conversations, uid, title, description);
 
-    await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
+    const newStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [],
+      data: [newStats],
     });
   });
 
@@ -250,7 +250,7 @@ export namespace PostEndpoints {
     const userActivity = await ActivitiesService.postActivity(uid, feed, activityRequest);
     await ActivitiesService.updateTagFeedsForActivity(userActivity);
 
-    await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", 1);
+    const newProfileStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", 1);
 
     // Deduct a promotion from the profile if the activity was promoted
     if (isPromotion) {
@@ -260,7 +260,7 @@ export namespace PostEndpoints {
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [userActivity, ...tagObjects, promotion],
+      data: [userActivity, ...tagObjects, promotion, newProfileStats],
     });
   });
 
@@ -313,7 +313,7 @@ export namespace PostEndpoints {
     });
 
     functions.logger.info("Deleted user activity", { feedActivity: activity });
-    await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", -1);
+    const newStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "post", -1);
 
     const searchClient = SearchService.getAlgoliaClient();
     const index = SearchService.getIndex(searchClient, "activities");
@@ -322,7 +322,7 @@ export namespace PostEndpoints {
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [activity],
+      data: [activity, newStats],
     });
   });
 

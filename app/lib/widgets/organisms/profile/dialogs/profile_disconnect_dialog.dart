@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -30,10 +32,13 @@ class ProfileDisconnectDialog extends ConsumerWidget {
     final ProfileViewModelState state = ref.watch(profileViewModelProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final String displayName = state.profile?.displayName ?? '';
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Profile? profile = cacheController.get(state.targetProfileId);
+    final String displayName = profile?.displayName ?? '';
 
     return Column(
-      children: [
+      children: <Widget>[
         Text(
           localizations.profile_disconnect_dialog_remove_confirmation(displayName.asHandle),
           style: typography.styleBody.copyWith(color: colors.white),

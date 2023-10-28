@@ -295,6 +295,15 @@ export namespace RelationshipEndpoints {
       throw new functions.https.HttpsError("permission-denied", "You cannot follow this user");
     }
 
+    const isFollowing = RelationshipHelpers.isUserFollowing(uid, relationship);
+    if (isFollowing) {
+      functions.logger.info("User already following", { uid, targetUid });
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [relationship],
+      });
+    }
+
     // Create two feed requests and follow the target user
     const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
     const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
@@ -304,13 +313,13 @@ export namespace RelationshipEndpoints {
 
     const newRelationship = await RelationshipService.followRelationship(uid, relationship);
 
-    await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
-    await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
+    const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
+    const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [newRelationship],
+      data: [newRelationship, newSourceStats, newTargetStats],
     });
   });
 
@@ -331,6 +340,15 @@ export namespace RelationshipEndpoints {
 
     const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
 
+    const isFollowing = RelationshipHelpers.isUserFollowing(uid, relationship);
+    if (!isFollowing) {
+      functions.logger.info("User already unfollowed", { uid, targetUid });
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [relationship],
+      });
+    }
+
     const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
     const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
     const feedClient = FeedService.getFeedsClient();
@@ -339,13 +357,13 @@ export namespace RelationshipEndpoints {
 
     const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
 
-    await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", -1);
-    await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", -1);
+    const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", -1);
+    const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", -1);
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [newRelationship],
+      data: [newRelationship, newSourceStats, newTargetStats],
     });
   });
 

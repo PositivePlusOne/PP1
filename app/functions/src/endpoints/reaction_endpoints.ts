@@ -64,13 +64,13 @@ export namespace ReactionEndpoints {
         const streamClient = FeedService.getFeedsClient();
 
         functions.logger.info("Adding reaction", { reactionJSON });
-        const reaction = await ReactionService.addReaction(streamClient, reactionJSON);
+        const [reaction, profileStats, reactionStats] = await ReactionService.addReaction(streamClient, reactionJSON);
 
         await ReactionService.processNotifications(kind, uid, activity, reaction);
 
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [activity, reaction],
+            data: [activity, reaction, profileStats, reactionStats],
         });
     });
 
@@ -126,12 +126,12 @@ export namespace ReactionEndpoints {
 
         functions.logger.info("Deleting reaction", { reactionId });
         const streamClient = FeedService.getFeedsClient();
-        await ReactionService.deleteReaction(streamClient, reaction);
+        const [reactionStats, profileStats] = await ReactionService.deleteReaction(streamClient, reaction);
 
         functions.logger.info("Reaction deleted", { reactionId });
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [activity],
+            data: [activity, reactionStats, profileStats],
         });
     });
 
