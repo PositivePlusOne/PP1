@@ -30,7 +30,7 @@ export namespace NotificationsService {
     * @param {NotificationBody} notification The notification to send
     * @return {Promise<void>} The result of the send operation
    */
-  export async function sendPayloadToUserIfTokenSet(token: string, notification: NotificationPayload): Promise<void> {
+  export async function sendPayloadToUserIfTokenSet(token: string | undefined, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to send payload to user: ${notification.user_id}`);
     if (!token || token.length === 0) {
       return;
