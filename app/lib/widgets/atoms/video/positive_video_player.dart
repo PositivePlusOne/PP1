@@ -78,8 +78,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     url = await getDownloadUrl();
 
     final Media media = Media(url!, httpHeaders: {
-      'Accept': '*/*',
-      'Range': 'bytes=0-',
+      'Accept': 'video/mp4',
       'Accept-Encoding': 'gzip, deflate, br',
       'Cache-Control': 'max-age=31536000',
       'Connection': 'keep-alive',
@@ -122,8 +121,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final theme = buildVideoPlayerThemeData(colors: colors, typography: typography);
 
-    final double containerWidth = MediaQuery.of(context).size.width;
-    final double containerHeight = MediaQuery.of(context).size.width * 9.0 / 16.0;
+    final double size = MediaQuery.of(context).size.width;
 
     double? videoAspectRatio;
     if (widget.media.height > 0 && widget.media.width > 0) {
@@ -134,23 +132,22 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       key: widget.visibilityDetectorKey,
       onVisibilityChanged: (info) => onVisabilityChange(info),
       child: SizedBox(
-        height: containerHeight,
-        width: containerWidth,
+        height: size,
+        width: size,
         child: MaterialVideoControlsTheme(
           normal: theme,
           fullscreen: theme,
-          child: Align(
-            child: ClipRRect(
-              borderRadius: widget.borderRadius ?? BorderRadius.zero,
-              child: Video(
-                alignment: Alignment.center,
-                controller: videoController,
-                pauseUponEnteringBackgroundMode: true,
-                width: containerWidth,
-                height: containerHeight,
-                aspectRatio: videoAspectRatio,
-                wakelock: true,
-              ),
+          child: ClipRRect(
+            borderRadius: widget.borderRadius ?? BorderRadius.zero,
+            child: Video(
+              filterQuality: FilterQuality.none,
+              alignment: Alignment.center,
+              controller: videoController,
+              pauseUponEnteringBackgroundMode: true,
+              width: size,
+              height: size,
+              aspectRatio: videoAspectRatio,
+              wakelock: true,
             ),
           ),
         ),

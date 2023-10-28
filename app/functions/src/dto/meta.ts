@@ -1,8 +1,10 @@
+import { Timestamp } from "firebase-admin/firestore";
+
 export interface FlMetaJSON {
     createdBy?: string;
-    createdDate?: string | FirebaseFirestore.Timestamp;
+    createdDate?: string | Timestamp;
     ownedBy?: string;
-    ownedAsOfDate?: string | FirebaseFirestore.Timestamp;
+    ownedAsOfDate?: string | Timestamp;
     directoryEntryId?: string;
     docId?: string;
     fl_id?: string;
@@ -11,16 +13,16 @@ export interface FlMetaJSON {
     schema?: string;
     schemaRefId?: string;
     lastModifiedBy?: string;
-    lastModifiedDate?: string | FirebaseFirestore.Timestamp;
+    lastModifiedDate?: string | Timestamp;
     lastFetchMillis?: number;
     isPartial?: boolean;
 }
 
 export class FlMeta {
     createdBy?: string;
-    createdDate?: string | FirebaseFirestore.Timestamp;
+    createdDate?: string | Timestamp;
     ownedBy?: string;
-    ownedAsOfDate?: string | FirebaseFirestore.Timestamp;
+    ownedAsOfDate?: string | Timestamp;
     directoryEntryId?: string;
     docId?: string;
     fl_id?: string;
@@ -29,7 +31,7 @@ export class FlMeta {
     schema = '';
     schemaRefId?: string;
     lastModifiedBy?: string;
-    lastModifiedDate?: string | FirebaseFirestore.Timestamp;
+    lastModifiedDate?: string | Timestamp;
     lastFetchMillis?: number;
     isPartial?: boolean;
 

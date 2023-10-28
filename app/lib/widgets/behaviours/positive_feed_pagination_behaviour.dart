@@ -68,6 +68,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final bool isSliver;
 
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
+  static const int kCacheExtentHeightMultiplier = 5;
 
   Future<void> requestNextPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
@@ -352,6 +353,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return PagedSliverList.separated(
       pagingController: feedState.pagingController,
       separatorBuilder: buildSeparator,
+      addAutomaticKeepAlives: true,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,
@@ -372,6 +374,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return PagedListView.separated(
       pagingController: feedState.pagingController,
       separatorBuilder: buildSeparator,
+      addAutomaticKeepAlives: true,
+      cacheExtent: MediaQuery.of(context).size.height * kCacheExtentHeightMultiplier,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
         animateTransitions: true,
         transitionDuration: kAnimationDurationRegular,

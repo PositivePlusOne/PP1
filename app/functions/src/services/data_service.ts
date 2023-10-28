@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { DocumentData, DocumentReference, FieldPath } from "firebase-admin/firestore";
+import { DocumentData, DocumentReference, FieldPath, Timestamp } from "firebase-admin/firestore";
 import { adminApp } from "..";
 
 import { SystemService } from "./system_service";
@@ -148,8 +148,8 @@ export namespace DataService {
 
   export const needsMigration = (document: any): boolean => {
     return !!(document._fl_meta_ && (
-      (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof FirebaseFirestore.Timestamp)) ||
-      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof FirebaseFirestore.Timestamp))
+      (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
+      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp))
     ));
   };
 
@@ -157,18 +157,18 @@ export namespace DataService {
     const migratedDocument = { ...document };
 
     if (migratedDocument._fl_meta_) {
-      if (migratedDocument._fl_meta_.createdDate && !(migratedDocument._fl_meta_.createdDate instanceof FirebaseFirestore.Timestamp)) {
+      if (migratedDocument._fl_meta_.createdDate && !(migratedDocument._fl_meta_.createdDate instanceof Timestamp)) {
         const createdDate = typeof migratedDocument._fl_meta_.createdDate === 'string'
           ? new Date(migratedDocument._fl_meta_.createdDate)
           : migratedDocument._fl_meta_.createdDate;
-        migratedDocument._fl_meta_.createdDate = FirebaseFirestore.Timestamp.fromDate(createdDate);
+
+          if (!(createdDate instanceof Timestamp)) {
+            migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
+          }
       }
 
-      if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof FirebaseFirestore.Timestamp)) {
-        const lastModifiedDate = typeof migratedDocument._fl_meta_.lastModifiedDate === 'string'
-          ? new Date(migratedDocument._fl_meta_.lastModifiedDate)
-          : migratedDocument._fl_meta_.lastModifiedDate;
-        migratedDocument._fl_meta_.lastModifiedDate = FirebaseFirestore.Timestamp.fromDate(lastModifiedDate);
+      if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
+        migratedDocument._fl_meta_.lastModifiedDate = Timestamp.fromDate(new Date());
       }
     }
 
