@@ -109,12 +109,15 @@ export namespace ActivitiesService {
     const feedClient = FeedService.getFeedsClient();
     const feed = feedClient.feed(feedName, userID);
 
+    const createdTimestamp = activity?._fl_meta_?.createdDate;
+    const creationTime = createdTimestamp ? StreamHelpers.convertTimestampToUnix(createdTimestamp) : StreamHelpers.getCurrentUnixTimestamp();
+
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: userID,
       verb: ActivityActionVerb.Post,
       object: activityObjectForeignId,
       foreign_id: activityObjectForeignId,
-      time: activity?._fl_meta_?.createdDate ?? StreamHelpers.getCurrentTimestamp(),
+      time: creationTime,
     };
     
     await feed.addActivity(getStreamActivity);
@@ -142,14 +145,16 @@ export namespace ActivitiesService {
 
   export async function getForeignIdTimeForActivity(activity: ActivityJSON): Promise<ForeignIDTimes> {
     const activityId = activity?._fl_meta_?.fl_id ?? "";
-    const createTime = activity?._fl_meta_?.createdDate ?? StreamHelpers.getCurrentTimestamp();
     if (!activityId) {
       throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
     }
 
+    const createdTimestamp = activity?._fl_meta_?.createdDate;
+    const creationTime = createdTimestamp ? StreamHelpers.convertTimestampToUnix(createdTimestamp) : StreamHelpers.getCurrentUnixTimestamp();
+
     return {
       foreignID: activityId,
-      time: createTime,
+      time: creationTime,
     };
   }
 
@@ -269,6 +274,9 @@ export namespace ActivitiesService {
       throw new functions.https.HttpsError("invalid-argument", "Activity, actor or feed name is missing");
     }
 
+    const createdTimestamp = activity?._fl_meta_?.createdDate;
+    const creationTime = createdTimestamp ? StreamHelpers.convertTimestampToUnix(createdTimestamp) : StreamHelpers.getCurrentUnixTimestamp();
+
     const feed = client.feed(feedName, actorId);
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       origin: originFeed,
@@ -276,7 +284,7 @@ export namespace ActivitiesService {
       verb: ActivityActionVerb.Post,
       object: activityId,
       foreign_id: activityId,
-      time: activity?._fl_meta_?.createdDate ?? StreamHelpers.getCurrentTimestamp(),
+      time: creationTime,
     };
 
     await feed.addActivity(getStreamActivity);

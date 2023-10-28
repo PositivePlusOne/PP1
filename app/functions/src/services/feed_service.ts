@@ -210,17 +210,19 @@ export namespace FeedService {
    */
   export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activity: ActivityJSON): Promise<any> {
     const activityId = activity._fl_meta_?.fl_id ?? "";
-    const createTime = activity._fl_meta_?.createdDate ?? "";
-    if (!activityId || !createTime) {
+    if (!activityId) {
       throw new Error("Missing activity ID or create time");
     }
+
+    const createdTimestamp = activity?._fl_meta_?.createdDate;
+    const creationTime = createdTimestamp ? StreamHelpers.convertTimestampToUnix(createdTimestamp) : StreamHelpers.getCurrentUnixTimestamp();
 
     const getStreamActivity: NewActivity<DefaultGenerics> = {
       actor: uid,
       verb: ActivityActionVerb.Share,
       object: activityId,
       foreign_id: activityId,
-      time: createTime ?? StreamHelpers.getCurrentTimestamp(),
+      time: creationTime,
     };
     
     return senderUserFeed.addActivity(getStreamActivity);

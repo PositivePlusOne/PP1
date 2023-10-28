@@ -1,10 +1,15 @@
+import { Timestamp } from "firebase-admin/firestore";
 import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
 
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
 
-  export function getCurrentTimestamp() {
+  export function getCurrentTimestamp(): Timestamp {
     return getTimestampForDate(new Date());
+  }
+
+  export function getCurrentUnixTimestamp(): string {
+    return convertTimestampToUnix(getCurrentTimestamp());
   }
 
   export function getOriginFromFeed(feed: StreamFeed): string {
@@ -44,9 +49,25 @@ export namespace StreamHelpers {
     return parts[1];
   }
 
-  export function getTimestampForDate(date: Date) {
+  export function getTimestampForDate(date: Date): Timestamp {
     // return the nice ISO string to represent dates in our data
-    return date.toISOString();
+    return Timestamp.fromDate(date);
+  }
+
+  export function convertTimestampToUnix(timestamp: any): string {
+    if (timestamp instanceof Timestamp) {
+      return new Date(timestamp.toMillis()).toISOString();
+    }
+
+    if (typeof timestamp === "string") {
+      return timestamp;
+    }
+
+    if (typeof timestamp === "number") {
+      return new Date(timestamp).toISOString();
+    }
+
+    throw new Error("Invalid timestamp");
   }
 
   export function extractPaginationToken(url: string): string {

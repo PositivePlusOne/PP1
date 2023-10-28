@@ -1,8 +1,8 @@
 export interface FlMetaJSON {
     createdBy?: string;
-    createdDate?: string;
+    createdDate?: string | FirebaseFirestore.Timestamp;
     ownedBy?: string;
-    ownedAsOfDate?: string;
+    ownedAsOfDate?: string | FirebaseFirestore.Timestamp;
     directoryEntryId?: string;
     docId?: string;
     fl_id?: string;
@@ -11,16 +11,16 @@ export interface FlMetaJSON {
     schema?: string;
     schemaRefId?: string;
     lastModifiedBy?: string;
-    lastModifiedDate?: string;
+    lastModifiedDate?: string | FirebaseFirestore.Timestamp;
     lastFetchMillis?: number;
     isPartial?: boolean;
 }
 
 export class FlMeta {
     createdBy?: string;
-    createdDate?: string;
+    createdDate?: string | FirebaseFirestore.Timestamp;
     ownedBy?: string;
-    ownedAsOfDate?: string;
+    ownedAsOfDate?: string | FirebaseFirestore.Timestamp;
     directoryEntryId?: string;
     docId?: string;
     fl_id?: string;
@@ -29,7 +29,7 @@ export class FlMeta {
     schema = '';
     schemaRefId?: string;
     lastModifiedBy?: string;
-    lastModifiedDate?: string;
+    lastModifiedDate?: string | FirebaseFirestore.Timestamp;
     lastFetchMillis?: number;
     isPartial?: boolean;
 
