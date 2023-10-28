@@ -41,7 +41,10 @@ mixin _$CreatePostViewModelState {
       throw _privateConstructorUsedError;
   String get activeButtonFlexText => throw _privateConstructorUsedError;
   bool get saveToGallery => throw _privateConstructorUsedError;
-  AwesomeFilter get currentFilter => throw _privateConstructorUsedError;
+  AwesomeFilter get currentFilter =>
+      throw _privateConstructorUsedError; //? Repost
+  String? get reposterActivityID =>
+      throw _privateConstructorUsedError; //? Editing
   ActivityData get previousActivity =>
       throw _privateConstructorUsedError; //? Clip delay and clip length options
   int get delayTimerCurrentSelection => throw _privateConstructorUsedError;
@@ -92,6 +95,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       String activeButtonFlexText,
       bool saveToGallery,
       AwesomeFilter currentFilter,
+      String? reposterActivityID,
       ActivityData previousActivity,
       int delayTimerCurrentSelection,
       bool isDelayTimerEnabled,
@@ -138,6 +142,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
     Object? currentFilter = null,
+    Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
     Object? isDelayTimerEnabled = null,
@@ -218,6 +223,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
+      reposterActivityID: freezed == reposterActivityID
+          ? _value.reposterActivityID
+          : reposterActivityID // ignore: cast_nullable_to_non_nullable
+              as String?,
       previousActivity: null == previousActivity
           ? _value.previousActivity
           : previousActivity // ignore: cast_nullable_to_non_nullable
@@ -313,6 +322,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       String activeButtonFlexText,
       bool saveToGallery,
       AwesomeFilter currentFilter,
+      String? reposterActivityID,
       ActivityData previousActivity,
       int delayTimerCurrentSelection,
       bool isDelayTimerEnabled,
@@ -360,6 +370,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
     Object? currentFilter = null,
+    Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
     Object? isDelayTimerEnabled = null,
@@ -440,6 +451,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
+      reposterActivityID: freezed == reposterActivityID
+          ? _value.reposterActivityID
+          : reposterActivityID // ignore: cast_nullable_to_non_nullable
+              as String?,
       previousActivity: null == previousActivity
           ? _value.previousActivity
           : previousActivity // ignore: cast_nullable_to_non_nullable
@@ -513,6 +528,7 @@ class _$CreatePostViewModelStateImpl
       this.activeButtonFlexText = "",
       this.saveToGallery = false,
       required this.currentFilter,
+      this.reposterActivityID = '',
       required this.previousActivity,
       this.delayTimerCurrentSelection = 0,
       this.isDelayTimerEnabled = false,
@@ -591,6 +607,11 @@ class _$CreatePostViewModelStateImpl
   final bool saveToGallery;
   @override
   final AwesomeFilter currentFilter;
+//? Repost
+  @override
+  @JsonKey()
+  final String? reposterActivityID;
+//? Editing
   @override
   final ActivityData previousActivity;
 //? Clip delay and clip length options
@@ -623,7 +644,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isCreatingClip: $isCreatingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isCreatingClip: $isCreatingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -648,6 +669,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('activeButtonFlexText', activeButtonFlexText))
       ..add(DiagnosticsProperty('saveToGallery', saveToGallery))
       ..add(DiagnosticsProperty('currentFilter', currentFilter))
+      ..add(DiagnosticsProperty('reposterActivityID', reposterActivityID))
       ..add(DiagnosticsProperty('previousActivity', previousActivity))
       ..add(DiagnosticsProperty(
           'delayTimerCurrentSelection', delayTimerCurrentSelection))
@@ -701,6 +723,8 @@ class _$CreatePostViewModelStateImpl
                 other.saveToGallery == saveToGallery) &&
             (identical(other.currentFilter, currentFilter) ||
                 other.currentFilter == currentFilter) &&
+            (identical(other.reposterActivityID, reposterActivityID) ||
+                other.reposterActivityID == reposterActivityID) &&
             (identical(other.previousActivity, previousActivity) ||
                 other.previousActivity == previousActivity) &&
             (identical(other.delayTimerCurrentSelection,
@@ -749,6 +773,7 @@ class _$CreatePostViewModelStateImpl
         activeButtonFlexText,
         saveToGallery,
         currentFilter,
+        reposterActivityID,
         previousActivity,
         delayTimerCurrentSelection,
         isDelayTimerEnabled,
@@ -794,6 +819,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final String activeButtonFlexText,
           final bool saveToGallery,
           required final AwesomeFilter currentFilter,
+          final String? reposterActivityID,
           required final ActivityData previousActivity,
           final int delayTimerCurrentSelection,
           final bool isDelayTimerEnabled,
@@ -846,7 +872,9 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   bool get saveToGallery;
   @override
   AwesomeFilter get currentFilter;
-  @override
+  @override //? Repost
+  String? get reposterActivityID;
+  @override //? Editing
   ActivityData get previousActivity;
   @override //? Clip delay and clip length options
   int get delayTimerCurrentSelection;

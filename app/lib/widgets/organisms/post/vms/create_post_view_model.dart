@@ -66,6 +66,9 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default("") String activeButtonFlexText,
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
+    //? Repost
+    @Default('') String? reposterActivityID,
+    //? Editing
     required ActivityData previousActivity,
     //? Clip delay and clip length options
     @Default(0) int delayTimerCurrentSelection,
@@ -178,12 +181,29 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           currentPage = CreatePostCurrentPage.createPostMultiImage;
           currentPostType = PostType.multiImage;
           break;
+        case PostType.repost:
+          currentPage = CreatePostCurrentPage.repostPreview;
+          currentPostType = PostType.repost;
+          break;
         case PostType.event:
         case PostType.clip:
         default:
           currentPage = CreatePostCurrentPage.createPostText;
           currentPostType = PostType.text;
           break;
+      }
+
+      // If the post is a repost, we have no data so we can skip this
+      if (activityData.postType == PostType.repost) {
+        state = state.copyWith(
+          currentCreatePostPage: currentPage,
+          currentPostType: currentPostType,
+          reposterActivityID: activityData.reposterActivityID,
+          activeButton: PositivePostNavigationActiveButton.flex,
+          activeButtonFlexText: localisations.page_create_post_create,
+          previousActivity: activityData,
+        );
+        return;
       }
 
       captionController.text = activityData.content ?? "";

@@ -257,17 +257,6 @@ class SharingController extends _$SharingController implements ISharingControlle
       throw Exception('Activity is missing an ID');
     }
 
-    final EndpointResponse response = await reactionApiService.sharePostToFeed(activityId: activityId);
-    final List activityDataRaw = response.data.containsKey('activities') ? response.data['activities'] as List<dynamic> : [];
-    final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
-    final Activity? sharedActivity = activities.firstOrNull;
-
-    sharedActivity?.appendActivityToProfileFeeds(postOptions.currentProfile?.flMeta?.id ?? '');
-
-    await appRouter.pop();
-
-    Future<void>.delayed(kAnimationDurationDebounce, () {
-      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text('Post shared to your feed')));
-    });
+    await postOptions.activity.onRequestPostSharedToFeed(repostActivityId: activityId);
   }
 }

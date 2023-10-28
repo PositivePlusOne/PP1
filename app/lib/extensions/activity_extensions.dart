@@ -540,6 +540,23 @@ extension ActivityExt on Activity {
     }
   }
 
+  Future<void> onRequestPostSharedToFeed({
+    required String repostActivityId,
+  }) async {
+    if (repostActivityId.isEmpty) {
+      throw Exception('Invalid activity ID for repost');
+    }
+
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    await router.pop();
+    await router.push(
+      CreatePostRoute(
+        activityData: ActivityData(reposterActivityID: repostActivityId),
+        isEditPage: false,
+      ),
+    );
+  }
+
   Future<void> onPostEdited() async {
     final AppRouter router = providerContainer.read(appRouterProvider);
     if (generalConfiguration == null) {
