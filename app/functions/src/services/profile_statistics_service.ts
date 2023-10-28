@@ -5,7 +5,7 @@ import { ProfileStatisicsJSON, profileStatisticsSchemaKey } from "../dto/profile
 import { DataService } from "./data_service";
 
 export namespace ProfileStatisticsService {
-    export const REACTION_COUNT_TARGETS = ["like", "post"];
+    export const REACTION_COUNT_TARGETS = ["like", "post", "follow", "follower"];
 
     export function getExpectedKeyFromOptions(user_id: string): string {
         if (!user_id) {
