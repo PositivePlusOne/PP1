@@ -255,6 +255,8 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final bool isTargetOrganisation = widget.targetProfile.isOrganisation;
     final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
 
+    final bool isSourceManaged = relationshipStates.contains(RelationshipState.sourceManaged);
+
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;
     bool hasConnectedToTargetUser = false;
@@ -397,7 +399,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation) {
+    if (!isSourceManaged && ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation)) {
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
