@@ -1,12 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/activities/reactions.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
-import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,11 +10,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
@@ -425,7 +425,7 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
             activity: reposterActivity,
             activityReactionStatistics: null,
             activityPromotion: null,
-            activityProfileReactions: [],
+            activityProfileReactions: const [],
             isEnabled: false,
             isFullscreen: false,
             reposterProfile: null,

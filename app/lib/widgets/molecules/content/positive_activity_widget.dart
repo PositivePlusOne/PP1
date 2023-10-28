@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/activities/tags.dart';
-import 'package:app/helpers/brand_helpers.dart';
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,12 +8,15 @@ import 'package:html2md/html2md.dart' as html2md;
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/activity_post_heading_widget.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
