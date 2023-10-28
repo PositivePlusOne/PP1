@@ -146,6 +146,36 @@ export namespace DataService {
     return count;
   };
 
+  export const needsMigration = (document: any): boolean => {
+    return !!(document._fl_meta_ && (
+      (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
+      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp))
+    ));
+  };
+
+  export const migrateDocument = (document: any): any => {
+    const migratedDocument = { ...document };
+
+    if (migratedDocument._fl_meta_) {
+      if (migratedDocument._fl_meta_.createdDate && !(migratedDocument._fl_meta_.createdDate instanceof Timestamp)) {
+        const createdDate = typeof migratedDocument._fl_meta_.createdDate === 'string'
+          ? new Date(migratedDocument._fl_meta_.createdDate)
+          : migratedDocument._fl_meta_.createdDate;
+
+          if (!(createdDate instanceof Timestamp)) {
+            migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
+          }
+      }
+
+      if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
+        migratedDocument._fl_meta_.lastModifiedDate = Timestamp.fromDate(new Date());
+      }
+    }
+
+    return migratedDocument;
+  };
+
+
   /**
    * Updates a document.
    * @param {any} options the options to use.
@@ -165,13 +195,22 @@ export namespace DataService {
         document = await flamelinkApp.content.get(options);
       }
 
+      // Check if the document needs migration
+      if (document && needsMigration(document)) {
+        document = migrateDocument(document);
+      }
+
       if (!document) {
         functions.logger.info(`Document not found, creating new`);
         data = await flamelinkApp.content.add(options);
         return;
       }
 
-      const documentId = document._fl_meta_.docId;
+      const documentId = document._fl_meta_?.docId;
+      if (!documentId) {
+        throw new Error("Document ID not found");
+      }
+
       const documentRef = adminApp.firestore().collection("fl_content").doc(documentId);
       const isSame = FlamelinkHelpers.arePayloadsEqual(document, options.data);
 
@@ -181,13 +220,13 @@ export namespace DataService {
       }
 
       // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
-      // to ensure that the document is updated in the cache.
       if (options.data._fl_meta_) {
         options.data._fl_meta_.lastModifiedDate = StreamHelpers.getCurrentTimestamp();
       }
 
-      data = { ...document, ...options.data };
-      transaction.update(documentRef, data);
+      const updatedData = { ...document, ...options.data };
+      transaction.update(documentRef, updatedData);
+      data = updatedData;
     });
 
     return data;
@@ -215,8 +254,7 @@ export namespace DataService {
             // If the document is a valid FlameLink document, we need to update the _fl_meta_.lastModifiedDate field
             // to ensure that the document is updated in the cache.
             if (data._fl_meta_) {
-              const timeSecondsInteger = Math.floor(new Date().getTime() / 1000);
-              data._fl_meta_.lastModifiedDate = new Timestamp(timeSecondsInteger, 0);
+              data._fl_meta_.lastModifiedDate = StreamHelpers.getCurrentTimestamp();
             }
 
             batch.update(ref, { [dataChange]: data });

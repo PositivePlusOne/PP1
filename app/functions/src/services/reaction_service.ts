@@ -172,7 +172,7 @@ export namespace ReactionService {
             activity_id: expectedActivityId,
             source_reaction_id: expectedKey,
             user_id: expectedUserId,
-            time: StreamHelpers.getCurrentTimestamp(),
+            time: StreamHelpers.getCurrentUnixTimestamp(),
         } as ReactionEntryJSON;
 
         const response = await client.reactions.add(reaction.kind!, reaction.activity_id!, reactionEntry, {

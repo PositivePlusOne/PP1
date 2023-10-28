@@ -234,7 +234,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     altTextController: viewModel.altTextController,
                     promotionKeyTextController: viewModel.promotionKeyTextController,
                     onTagsPressed: (context) => viewModel.onTagsPressed(),
-                    onUpdateAllowSharing: (_) => viewModel.onUpdateAllowSharing,
+                    onUpdateAllowSharing: (_) => viewModel.onUpdateAllowSharing(),
                     onUpdateAllowComments: viewModel.onUpdateAllowComments,
                     onUpdatePromotedPost: (ctx) => viewModel.onUpdatePromotePost(currentProfileId!),
                     onUpdateSaveToGallery: state.isEditing ? null : (_) => viewModel.onUpdateSaveToGallery(),
