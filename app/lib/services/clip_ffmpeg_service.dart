@@ -91,6 +91,8 @@ class CreateClipExportService {
       "libx264",
       "-preset",
       "ultrafast",
+      "-vf",
+      "scale=-2:720",
       "-crf",
       "32",
       "-c:a",
