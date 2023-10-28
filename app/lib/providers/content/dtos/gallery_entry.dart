@@ -116,7 +116,13 @@ class GalleryEntry {
     //   data = await compressVideo(data: data);
     // }
 
-    storageUploadTask = reference?.putData(data, SettableMetadata(contentType: mimeType));
+    final SettableMetadata metadata = SettableMetadata(
+      contentType: mimeType,
+      cacheControl: 'public, max-age=31536000',
+      contentDisposition: 'attachment; filename="$fileName"',
+    );
+
+    storageUploadTask = reference?.putData(data, metadata);
     await storageUploadTask!.whenComplete(() {});
   }
 

@@ -77,7 +77,14 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
 
     url = await getDownloadUrl();
 
-    final Media media = Media(url!);
+    final Media media = Media(url!, httpHeaders: {
+      'Accept': '*/*',
+      'Range': 'bytes=0-',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Cache-Control': 'max-age=31536000',
+      'Connection': 'keep-alive',
+    });
+
     await player.open(media, play: false);
     setStateIfMounted();
   }
