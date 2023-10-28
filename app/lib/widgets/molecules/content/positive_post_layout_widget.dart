@@ -123,7 +123,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         post: () => _postBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         event: () => _eventBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         clip: () => _clipBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-        repost: () => const SizedBox.shrink(),
       ),
     );
   }

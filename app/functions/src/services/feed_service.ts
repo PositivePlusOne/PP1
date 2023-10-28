@@ -203,28 +203,4 @@ export namespace FeedService {
     await sourceFeed.unfollow(targetFeed.slug, targetFeed.userId);
     functions.logger.info("Feed unfollowed", { source, target });
   }
-
-  /**
-   * Adds an activity to a feed.
-   * @param {StreamFeed<DefaultGenerics>} feed the feed to add the activity to.
-   */
-  export async function shareActivityToFeed(uid: string, senderUserFeed: StreamFeed<DefaultGenerics>, activity: ActivityJSON): Promise<any> {
-    const activityId = activity._fl_meta_?.fl_id ?? "";
-    if (!activityId) {
-      throw new Error("Missing activity ID or create time");
-    }
-
-    const createdTimestamp = activity?._fl_meta_?.createdDate;
-    const creationTime = createdTimestamp ? StreamHelpers.convertTimestampToUnix(createdTimestamp) : StreamHelpers.getCurrentUnixTimestamp();
-
-    const getStreamActivity: NewActivity<DefaultGenerics> = {
-      actor: uid,
-      verb: ActivityActionVerb.Share,
-      object: activityId,
-      foreign_id: activityId,
-      time: creationTime,
-    };
-    
-    return senderUserFeed.addActivity(getStreamActivity);
-  }
 }

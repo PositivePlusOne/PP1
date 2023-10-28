@@ -72,14 +72,13 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
 
   factory ActivityGeneralConfigurationType.fromJson(String value) {
     switch (value) {
-      case 'post':
-        return const _ActivityGeneralConfigurationTypePost();
       case 'event':
         return const _ActivityGeneralConfigurationTypeEvent();
       case 'clip':
         return const _ActivityGeneralConfigurationTypeClip();
+      case 'post':
       default:
-        throw ArgumentError('Invalid value for ActivityGeneralConfigurationType: $value');
+        return const _ActivityGeneralConfigurationTypePost();
     }
   }
 }

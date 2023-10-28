@@ -50,7 +50,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
   void onFirstRender(Duration timeStamp) {
     ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
-    if (widget.isEditPage && widget.activityData != null) {
+    if (widget.isEditPage || widget.activityData != null) {
       ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
       ref.read(createPostViewModelProvider.notifier).initCamera();
@@ -225,6 +225,11 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-              Reposter preview                -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              if (state.currentCreatePostPage == CreatePostCurrentPage.repostPreview) ...[
+                Positioned.fill(
+                  child: Container(color: Colors.pink),
+                ),
+              ],
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-              Create Post Dialog              -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

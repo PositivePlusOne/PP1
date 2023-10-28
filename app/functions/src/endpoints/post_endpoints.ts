@@ -92,82 +92,6 @@ export namespace PostEndpoints {
     });
   });
 
-
-  export const shareActivityToFeed = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const activityId = request.data.activityId || "";
-
-    if (!activityId) {
-      throw new functions.https.HttpsError("invalid-argument", "Missing activity or feed");
-    }
-
-    const activity = await ActivitiesService.getActivity(activityId) as ActivityJSON;
-    const activityOriginFeed = activity.publisherInformation?.originFeed || "";
-    const activityOriginPosterId = activity.publisherInformation?.publisherId || "";
-    const activityPromotionKey = activity.enrichmentConfiguration?.promotionKey || "";
-    if (!activity || !activityOriginFeed || !activityOriginPosterId) {
-      throw new functions.https.HttpsError("not-found", "Activity not found");
-    }
-
-    const profile = await ProfileService.getProfile(uid) as ProfileJSON;
-    if (!profile) {
-      throw new functions.https.HttpsError("not-found", "Profile not found");
-    }
-
-    const isRepost = activity.generalConfiguration?.type === "repost";
-    if (isRepost) {
-      throw new functions.https.HttpsError("invalid-argument", "Cannot share a repost");
-    }
-
-    const relationship = await RelationshipService.getRelationship([uid, activityOriginPosterId], true) as RelationshipJSON;
-    const shareMode = activity.securityConfiguration?.shareMode || "disabled";
-    const canAct = SecurityHelpers.canActOnActivity(activity, relationship, uid, shareMode);
-
-    if (!canAct) {
-      throw new functions.https.HttpsError("permission-denied", "User cannot share activity");
-    }
-
-    const isPromotion = (activityPromotionKey && activityPromotionKey.length > 0) || false;
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(activity.enrichmentConfiguration?.tags || [], isPromotion);
-    const tagObjects = await TagsService.getOrCreateTags(validatedTags);
-
-    const activityRequest = {
-      searchDescription: ActivitiesService.generateFlamelinkDescription(activity, profile),
-      publisherInformation: {
-        publisherId: uid,
-        originFeed: `${FeedName.User}:${uid}`,
-      },
-      generalConfiguration: {
-        type: "repost",
-      },
-      enrichmentConfiguration: {
-        tags: validatedTags,
-        promotionKey: activityPromotionKey,
-      },
-      repostConfiguration: {
-        targetActivityId: activityId,
-        targetActivityOriginFeed: activityOriginFeed,
-        targetActivityPublisherId: activityOriginPosterId,
-      },
-      securityConfiguration: {
-        viewMode: "public",
-        commentMode: "public",
-        shareMode: "public",
-      },
-    } as ActivityJSON;
-
-    const userActivity = await ActivitiesService.postActivity(uid, FeedName.User, activityRequest);
-    await ActivitiesService.updateTagFeedsForActivity(userActivity);
-
-    await ProfileStatisticsService.updateReactionCountForProfile(uid, "share", 1);
-    
-    functions.logger.info("Posted user activity", { feedActivity: userActivity });
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [userActivity, ...tagObjects],
-    });
-  });
-
   export const shareActivityToConversations = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Sharing activity`, { request });
     
@@ -229,6 +153,29 @@ export namespace PostEndpoints {
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
     const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
 
+    const repostTargetActivityId = request.data.repostTargetActivityId || "";
+    let repostTargetActivityOriginFeed = '';
+    let repostTargetActivityPublisherId = '';
+
+    const isRepost = repostTargetActivityId && repostTargetActivityId.length > 0;
+    if (isRepost) {
+      const originalActivity = await ActivitiesService.getActivity(repostTargetActivityId) as ActivityJSON;
+      if (!originalActivity) {
+        throw new functions.https.HttpsError("not-found", "Original activity not found");
+      }
+
+      repostTargetActivityOriginFeed = originalActivity.publisherInformation?.originFeed || "";
+      repostTargetActivityPublisherId = originalActivity.publisherInformation?.publisherId || "";
+
+      const relationship = await RelationshipService.getRelationship([uid, repostTargetActivityPublisherId], true) as RelationshipJSON;
+      const shareMode = originalActivity.securityConfiguration?.shareMode || "disabled";
+      const canActOnRepost = SecurityHelpers.canActOnActivity(originalActivity, relationship, uid, shareMode);
+
+      if (!canActOnRepost) {
+        throw new functions.https.HttpsError("permission-denied", "User cannot share activity");
+      }
+    }
+
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
     }
@@ -288,6 +235,11 @@ export namespace PostEndpoints {
         viewMode: visibleTo,
         commentMode: allowComments,
         shareMode: allowSharing,
+      },
+      repostConfiguration: {
+        targetActivityId: repostTargetActivityId,
+        targetActivityOriginFeed: repostTargetActivityOriginFeed,
+        targetActivityPublisherId: repostTargetActivityPublisherId,
       },
       media: media,
     } as ActivityJSON;
