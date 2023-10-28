@@ -1,16 +1,10 @@
 // Dart imports:
 import 'dart:io' as io;
+import 'dart:io';
 
 // Flutter imports:
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/clip_ffmpeg_service.dart';
-import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
-import 'package:app/widgets/organisms/post/create_post_page.dart';
-import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:io' as io;
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
@@ -30,6 +24,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
@@ -40,9 +35,10 @@ import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
-import 'package:video_editor/video_editor.dart';
+import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import '../../../../services/third_party.dart';
 
 // Project imports:
@@ -54,6 +50,8 @@ part 'create_post_view_model.g.dart';
 class CreatePostViewModelState with _$CreatePostViewModelState {
   const factory CreatePostViewModelState({
     @Default(false) bool isBusy,
+    @Default(false) bool isProcessingMedia,
+    @Default(false) bool isUploadingMedia,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default(false) bool isEditing,
@@ -105,7 +103,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
-  Future<bool> onWillPopScope(BuildContext context) async {
+  Future<bool> onWillPopScope() async {
     bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
 
     //? if we are currently creating a clip request that we stop
@@ -113,7 +111,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       getCurrentCameraState.onCloseButtonTapped();
       return false;
     }
+
     if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
+      final AppRouter router = ref.read(appRouterProvider);
+      final BuildContext context = router.navigatorKey.currentContext!;
       final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
       final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
       canPop = !await positiveDiscardClipDialogue(
@@ -148,7 +149,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return canPop;
   }
 
-  Future<void> initCamera(BuildContext context) async {
+  Future<void> initCamera() async {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
       currentPostType: PostType.image,
@@ -156,7 +157,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  Future<void> loadActivityData(BuildContext context, ActivityData activityData) async {
+  Future<void> loadActivityData(ActivityData activityData) async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final Logger logger = ref.read(loggerProvider);
 
@@ -213,25 +216,22 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
   }
 
-  Future<void> onPostFinished(BuildContext context, Profile? currentProfile) async {
+  Future<void> onPostFinished(Profile? currentProfile) async {
+    final Logger logger = ref.read(loggerProvider);
     if (state.isBusy) {
+      logger.w("Attempted to post while busy");
       return;
     }
-
-    final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final AppRouter router = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
 
     if (currentProfile == null) {
       logger.e("Profile ID is null, cannot post");
       return;
     }
 
-    state = state.copyWith(isBusy: true);
-
     try {
+      final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
+      state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty);
+
       final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
       for (final GalleryEntry entry in galleryEntries) {
         entry.saveToGallery = state.saveToGallery;
@@ -242,66 +242,39 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         (e) => e.createMedia(
           filter: state.currentFilter,
           altText: altTextController.text.trim(),
+          mimeType: e.mimeType ?? "",
         ),
       ));
 
       if (!state.isEditing) {
+        final ActivityData activityData = ActivityData(content: captionController.text.trim(), altText: altTextController.text.trim(), promotionKey: promotionKeyTextController.text.trim(), tags: state.tags, postType: state.currentPostType, media: media, allowSharing: state.allowSharing, commentPermissionMode: state.allowComments, visibilityMode: state.visibleTo);
         await activityController.postActivity(
           currentProfile: currentProfile,
-          activityData: ActivityData(
-            content: captionController.text.trim(),
-            altText: altTextController.text.trim(),
-            promotionKey: promotionKeyTextController.text.trim(),
-            tags: state.tags,
-            postType: state.currentPostType,
-            media: media,
-            allowSharing: state.allowSharing,
-            commentPermissionMode: state.allowComments,
-            visibilityMode: state.visibleTo,
-          ),
+          activityData: activityData,
         );
       } else {
+        final ActivityData activityData = ActivityData(activityID: state.currentActivityID, content: captionController.text.trim(), altText: altTextController.text.trim(), promotionKey: promotionKeyTextController.text.trim(), tags: state.tags, postType: state.currentPostType, media: media, allowSharing: state.allowSharing, commentPermissionMode: state.allowComments, visibilityMode: state.visibleTo);
         await activityController.updateActivity(
           currentProfile: currentProfile,
-          activityData: ActivityData(
-            activityID: state.currentActivityID,
-            content: captionController.text.trim(),
-            altText: altTextController.text.trim(),
-            promotionKey: promotionKeyTextController.text.trim(),
-            tags: state.tags,
-            postType: state.currentPostType,
-            media: media,
-            allowSharing: state.allowSharing,
-            commentPermissionMode: state.allowComments,
-            visibilityMode: state.visibleTo,
-          ),
+          activityData: activityData,
         );
       }
+
+      await onPostActivitySuccess();
     } catch (e) {
       logger.e("Error posting activity: $e");
-      final bool alreadyExists = e is FirebaseException && e.code == "already-exists";
-
-      late final PositiveSnackBar snackBar;
-
-      if (alreadyExists) {
-        snackBar = PositiveGenericSnackBar(
-          title: "No update required",
-          icon: UniconsLine.envelope_exclamation,
-          backgroundColour: colours.black,
-        );
-      } else {
-        snackBar = PositiveErrorSnackBar(
-          text: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
-        );
-      }
-
-      if (router.navigatorKey.currentContext != null) {
-        ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
-      }
-
-      state = state.copyWith(isBusy: false);
+      await onPostActivityFailure(e);
       return;
+    } finally {
+      state = state.copyWith(isBusy: false, isUploadingMedia: false);
     }
+  }
+
+  Future<void> onPostActivitySuccess() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
+    final Logger logger = ref.read(loggerProvider);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     logger.i("Attempted to ${state.isEditing ? "edit" : "create"} post, Pop Create Post page, push Home page");
 
@@ -311,7 +284,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       backgroundColour: colours.black,
     );
 
-    state = state.copyWith(isBusy: false);
     router.removeLast();
 
     // Wait for the page to pop before pushing the snackbar
@@ -322,10 +294,39 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
   }
 
-  Future<void> onTagsPressed(BuildContext context) async {
+  Future<void> onPostActivityFailure(Object? exception) async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    logger.e("Error posting activity: $exception");
+    final bool alreadyExists = exception is FirebaseException && exception.code == "already-exists";
+
+    late final PositiveSnackBar snackBar;
+
+    if (alreadyExists) {
+      snackBar = PositiveGenericSnackBar(
+        title: "No update required",
+        icon: UniconsLine.envelope_exclamation,
+        backgroundColour: colours.black,
+      );
+    } else {
+      snackBar = PositiveErrorSnackBar(
+        text: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
+      );
+    }
+
+    if (router.navigatorKey.currentContext != null) {
+      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+    }
+  }
+
+  Future<void> onTagsPressed() async {
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
 
-    List<String>? newTags = await showGeneralDialog<List<String>>(
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final List<String>? newTags = await showGeneralDialog<List<String>>(
       context: context,
       transitionDuration: kAnimationDurationExtended,
       transitionBuilder: (context, anim1, anim2, child) {
@@ -361,17 +362,18 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
   }
 
-  void onUpdateSaveToGallery(BuildContext context) {
+  void onUpdateSaveToGallery() {
     state = state.copyWith(saveToGallery: !state.saveToGallery);
   }
 
-  void onUpdateAllowSharing(BuildContext context) {
+  void onUpdateAllowSharing() {
     state = state.copyWith(allowSharing: !state.allowSharing);
   }
 
-  void onUpdatePromotePost(BuildContext context, String userId) {
+  void onUpdatePromotePost(String userId) {
     // get the current tags
-    final newTags = [...state.tags];
+    final List<String> newTags = [...state.tags];
+
     // and toggle the state
     if (isPromotedPost) {
       // there is at least one tag that shows this is a promoted activity, remove them all
@@ -425,7 +427,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return false;
   }
 
-  void showCreateTextPost(BuildContext context) {
+  void showCreateTextPost() {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     state = state.copyWith(
@@ -452,7 +456,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  String clipDurationString(BuildContext context, int duration) {
+  String clipDurationString(int duration) {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     if (duration >= 120000) {
@@ -463,10 +469,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   /// Call to update main create post page UI
-  void onClipStateChange(BuildContext context, ClipRecordingState clipRecordingState) {
-    /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
+  void onClipStateChange(ClipRecordingState clipRecordingState) {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
+    /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
     state = state.copyWith(
       isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
       isCreatingClip: clipRecordingState.isActive,
@@ -481,7 +489,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   //? Create video Post here
-  Future<void> onVideoTaken(BuildContext context, XFile xFile) async {
+  Future<void> onVideoTaken(XFile xFile) async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final io.File file = io.File(xFile.path);
@@ -503,28 +513,23 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  Future<void> onClipEditFinish(BuildContext context) async {
-    CreateClipExportService exportService = CreateClipExportService();
-
+  Future<({File file, Size size})> onClipEditFinish() async {
+    final Logger logger = ref.read(loggerProvider);
     if (videoEditorController == null) {
-      //TODO crash with grace here
-      return;
+      logger.e("Video editor controller is null, cannot export clip");
+      return Future.error("Video editor controller is null, cannot export clip");
     }
 
-    exportService.exportVideoFromController(
-      videoEditorController!,
-      (file) => onClipEditProcessConcluded(
-        context,
-        file,
-        Size(
-          videoEditorController?.videoWidth ?? 640,
-          videoEditorController?.videoHeight ?? 640,
-        ),
-      ),
-    );
+    final CreateClipExportService exportService = ref.read(createClipExportServiceProvider);
+    final File outputFile = await exportService.exportVideoFromController(videoEditorController!);
+    final Size size = await exportService.getVideoSize(outputFile);
+
+    return (file: outputFile, size: size);
   }
 
-  Future<void> onClipEditProcessConcluded(BuildContext context, io.File file, Size size) async {
+  Future<void> onClipExported(io.File file, Size size) async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
@@ -554,7 +559,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   //? Create image Post here!
-  Future<void> onImageTaken(BuildContext context, XFile file) async {
+  Future<void> onImageTaken(XFile file) async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
@@ -581,7 +588,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return;
   }
 
-  void onMultiImagePicker(BuildContext context) async {
+  void onMultiImagePicker() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final Logger logger = ref.read(loggerProvider);
     final ImagePicker picker = ref.read(imagePickerProvider);
@@ -640,7 +649,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(currentFilter: filter);
   }
 
-  Future<void> onPostPressed(BuildContext context) async {
+  Future<void> onPostPressed() async {
     state = state.copyWith(
       activeButton: PositivePostNavigationActiveButton.post,
       lastActiveButton: PositivePostNavigationActiveButton.post,
@@ -648,7 +657,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  Future<void> onClipPressed(BuildContext context) async {
+  Future<void> onClipPressed() async {
     state = state.copyWith(
       activeButton: PositivePostNavigationActiveButton.clip,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
@@ -656,7 +665,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  Future<void> onEventPressed(BuildContext context) async {
+  Future<void> onEventPressed() async {
     state = state.copyWith(
       activeButton: PositivePostNavigationActiveButton.event,
       lastActiveButton: PositivePostNavigationActiveButton.event,
@@ -664,7 +673,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  Future<void> onFlexButtonPressed(BuildContext context) async {
+  Future<void> onFlexButtonPressed() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
@@ -681,26 +692,31 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         );
         break;
       case CreatePostCurrentPage.createPostEditClip:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.createPostClip,
-          activeButtonFlexText: localisations.page_create_post_create,
-        );
-        await onClipEditFinish(context);
+        try {
+          state = state.copyWith(isProcessingMedia: true, isBusy: true);
+          final ({io.File file, Size size}) completer = await onClipEditFinish();
+          await onClipExported(completer.file, completer.size);
+        } finally {
+          state = state.copyWith(isProcessingMedia: false, isBusy: false);
+        }
         break;
       case CreatePostCurrentPage.createPostClip:
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        await onPostFinished(context, profileController.currentProfile);
+        await onPostFinished(profileController.currentProfile);
         break;
     }
   }
 
-  void onGalleryEntrySelected(BuildContext context, GalleryEntry entry) {
+  void onGalleryEntrySelected(GalleryEntry entry) {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
     final Logger logger = ref.read(loggerProvider);
+
     final String fileName = entry.fileName;
     final bool isCurrentlySelected = state.editingGalleryEntry?.fileName == fileName;
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     if (!isCurrentlySelected) {
       logger.d("onGalleryEntrySelected: $fileName");

@@ -509,7 +509,7 @@
     "post_dialogue_delete_post_fail": "Post could not be deleted",
     "post_dialogue_delete_post_success": "Post Deleted",
     "post_dialogue_update_post": "Confirm Changes",
-    "post_dialogue_delete_post_confirm": "The post will be removed from your feed, along with any comments.\n \n Any media associated with this post will also be deleted from your gallery.",
+    "post_dialogue_delete_post_confirm": "The post will be removed from your feed, along with any comments.\n\nAny media associated with this post will also be deleted from your gallery.",
     "post_dialog_no_posts_to_display": "No Posts to Display",
 
     "profile_disconnect_dialog_remove_confirmation": "'Removing {displayName} as a connection will mean you can no longer message each other.'",
@@ -529,6 +529,8 @@
     "page_create_post_created": "Post Created",
     "page_create_post_additional_tags": "+{tags}",
     "page_create_post_edited": "Post Saved",
+    "page_create_post_processing": "Processing your clip...",
+    "page_create_post_uploading": "Uploading your clip...",
 
     "page_create_post_clip_length_limit": "Clips can be a maximum of 3 minutes long - trim yours down to post it.",
     "page_create_post_seconds": "s",

@@ -46,9 +46,8 @@ MarkdownWidget buildMarkdownWidgetFromBody(
     padding: EdgeInsets.zero,
     shrinkWrap: true,
     selectable: false,
-    config: MarkdownConfig(configs: buildMarkdownWidgetConfig(onTapLink: onTapLink, brightness: brightness)),
-    markdownGeneratorConfig: MarkdownGeneratorConfig(
-      linesMargin: lineMargin,
+    config: MarkdownConfig(
+      configs: buildMarkdownWidgetConfig(onTapLink: onTapLink, brightness: brightness),
     ),
   );
 }

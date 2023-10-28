@@ -1,8 +1,14 @@
 // Dart imports:
+import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/log.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/session_state.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
@@ -53,7 +59,7 @@ class GalleryEntry {
     }
   }
 
-  Future<Media> createMedia({AwesomeFilter? filter, String altText = ''}) async {
+  Future<Media> createMedia({AwesomeFilter? filter, String altText = '', String mimeType = ''}) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('createMedia() checking if uploaded');
 
@@ -71,7 +77,7 @@ class GalleryEntry {
       width: width ?? -1,
       priority: kMediaPriorityDefault,
       bucketPath: reference!.fullPath,
-      type: MediaType.fromMimeType('', storedInBucket: true),
+      type: MediaType.fromMimeType(mimeType, storedInBucket: true),
     );
   }
 
@@ -91,7 +97,7 @@ class GalleryEntry {
     }
 
     final String fileName = this.fileName;
-    final String mimeType = lookupMimeType(fileName) ?? 'application/octet-stream';
+    final String mimeType = lookupMimeType(fileName, headerBytes: data) ?? 'application/octet-stream';
 
     if (saveToGallery) {
       reference = galleryController.rootProfileGalleryReference.child(fileName);
@@ -99,27 +105,77 @@ class GalleryEntry {
       reference = galleryController.rootProfilePublicReference.child(fileName);
     }
 
-    // Check if in image
     if (mimeType.startsWith('image/')) {
       logger.d('upload() mimeType.startsWith(image/)');
-      data = await FlutterImageCompress.compressWithList(
-        data,
-        keepExif: kImageCompressKeepExif,
-        minHeight: kImageCompressMaxHeight,
-        minWidth: kImageCompressMaxWidth,
-        quality: kImageCompressMaxQuality,
-        format: kImageCompressFormat,
-      );
-
-      // Apply filter if not none
-      if (filter != null && filter != AwesomeFilter.None) {
-        logger.d('upload() filter != null && filter != AwesomeFilter.none');
-        data = applyColorMatrix(data, filter.matrix);
-      }
+      data = await compressImageAndApplyFilter(data: data, filter: filter);
     }
 
-    storageUploadTask = reference?.putData(data, SettableMetadata(contentType: mimeType));
+    //* This is optional, so leaving commented out as currently the editor will handle this
+    // if (mimeType.startsWith('video/')) {
+    //   logger.d('upload() mimeType.startsWith(video/)');
+    //   data = await compressVideo(data: data);
+    // }
+
+    final SettableMetadata metadata = SettableMetadata(
+      contentType: mimeType,
+      cacheControl: 'public, max-age=31536000',
+      contentDisposition: 'attachment; filename="$fileName"',
+    );
+
+    storageUploadTask = reference?.putData(data, metadata);
     await storageUploadTask!.whenComplete(() {});
+  }
+
+  Future<Uint8List> compressVideo({required Uint8List data}) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.d('upload() mimeType.startsWith(video/)');
+
+    // Create a new file which matches the path of the current with _compressed appended
+    final String tempFilePath = file!.path.replaceAll(RegExp(r'\.[^\.]+$'), '_compressed.mp4');
+    await File(tempFilePath).writeAsBytes(data);
+
+    // All videos are compressed to 720p vertically to match the aspect ratio of the app
+    final String command = '-y -i ${file!.path} -vf scale=-2:720 -c:v libx264 -crf 28 -preset veryfast $tempFilePath';
+    final FFmpegSession session = await FFmpegKit.executeAsync(command);
+
+    final SessionState state = await session.getState();
+    if (state == SessionState.failed) {
+      final ReturnCode? returnCode = await session.getReturnCode();
+      final String? output = await session.getOutput();
+      final List<Log> logs = await session.getLogs();
+      logger.e('upload() ffmpeg failed: $returnCode\n$output\n$logs');
+      throw Exception('upload() ffmpeg failed: $returnCode\n$output\n$logs');
+    }
+
+    final Uint8List compressedData = await File(tempFilePath).readAsBytes();
+    await File(tempFilePath).delete();
+
+    return compressedData;
+  }
+
+  Future<Uint8List> compressImageAndApplyFilter({
+    required Uint8List data,
+    required AwesomeFilter? filter,
+  }) async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.d('upload() mimeType.startsWith(image/)');
+
+    data = await FlutterImageCompress.compressWithList(
+      data,
+      keepExif: kImageCompressKeepExif,
+      minHeight: kImageCompressMaxHeight,
+      minWidth: kImageCompressMaxWidth,
+      quality: kImageCompressMaxQuality,
+      format: kImageCompressFormat,
+    );
+
+    // Apply filter if not none
+    if (filter != null && filter != AwesomeFilter.None) {
+      logger.d('upload() filter != null && filter != AwesomeFilter.none');
+      data = applyColorMatrix(data, filter.matrix);
+    }
+
+    return data;
   }
 
   Future<void> syncData() async {

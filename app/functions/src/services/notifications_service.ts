@@ -16,7 +16,7 @@ export namespace NotificationsService {
     }
 
     // if created_at is not set, set it to now
-    if (!notification.created_at || notification.created_at.length === 0) {
+    if (!notification.created_at) {
       notification.created_at = StreamHelpers.getCurrentTimestamp();
       functions.logger.info(`Setting created_at to now for notification: ${notification.id} to ${notification.created_at}`);
     }
@@ -60,6 +60,9 @@ export namespace NotificationsService {
       throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
 
+    const createdTimestamp = notification?.created_at;
+    const creationTime = createdTimestamp ? StreamHelpers.convertTimestampToUnix(createdTimestamp) : StreamHelpers.getCurrentUnixTimestamp();
+
     const client = FeedService.getFeedsClient();
     const feed = client.feed("notification", uid);
     await feed.addActivity({
@@ -67,7 +70,7 @@ export namespace NotificationsService {
       actor: uid,
       object: notification,
       foreign_id: notification.id,
-      time: StreamHelpers.getCurrentTimestamp(),
+      time: creationTime,
     });
 
     await FeedStatisticsService.updateCountForFeedStatistics("notification", uid, "total_posts", 1);

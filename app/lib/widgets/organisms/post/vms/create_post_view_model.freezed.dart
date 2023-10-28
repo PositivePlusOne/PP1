@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$CreatePostViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
+  bool get isProcessingMedia => throw _privateConstructorUsedError;
+  bool get isUploadingMedia => throw _privateConstructorUsedError;
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
@@ -68,6 +70,8 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isBusy,
+      bool isProcessingMedia,
+      bool isUploadingMedia,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       bool isEditing,
@@ -118,6 +122,8 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? isProcessingMedia = null,
+    Object? isUploadingMedia = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? isEditing = null,
@@ -147,6 +153,14 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isProcessingMedia: null == isProcessingMedia
+          ? _value.isProcessingMedia
+          : isProcessingMedia // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isUploadingMedia: null == isUploadingMedia
+          ? _value.isUploadingMedia
+          : isUploadingMedia // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -277,6 +291,8 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool isBusy,
+      bool isProcessingMedia,
+      bool isUploadingMedia,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       bool isEditing,
@@ -328,6 +344,8 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? isProcessingMedia = null,
+    Object? isUploadingMedia = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? isEditing = null,
@@ -357,6 +375,14 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isProcessingMedia: null == isProcessingMedia
+          ? _value.isProcessingMedia
+          : isProcessingMedia // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isUploadingMedia: null == isUploadingMedia
+          ? _value.isUploadingMedia
+          : isUploadingMedia // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -465,6 +491,8 @@ class _$CreatePostViewModelStateImpl
     implements _CreatePostViewModelState {
   const _$CreatePostViewModelStateImpl(
       {this.isBusy = false,
+      this.isProcessingMedia = false,
+      this.isUploadingMedia = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
       this.isEditing = false,
@@ -501,6 +529,12 @@ class _$CreatePostViewModelStateImpl
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  @JsonKey()
+  final bool isProcessingMedia;
+  @override
+  @JsonKey()
+  final bool isUploadingMedia;
   @override
   @JsonKey()
   final PostType currentPostType;
@@ -589,7 +623,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isCreatingClip: $isCreatingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isCreatingClip: $isCreatingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -598,6 +632,8 @@ class _$CreatePostViewModelStateImpl
     properties
       ..add(DiagnosticsProperty('type', 'CreatePostViewModelState'))
       ..add(DiagnosticsProperty('isBusy', isBusy))
+      ..add(DiagnosticsProperty('isProcessingMedia', isProcessingMedia))
+      ..add(DiagnosticsProperty('isUploadingMedia', isUploadingMedia))
       ..add(DiagnosticsProperty('currentPostType', currentPostType))
       ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
       ..add(DiagnosticsProperty('isEditing', isEditing))
@@ -634,6 +670,10 @@ class _$CreatePostViewModelStateImpl
         (other.runtimeType == runtimeType &&
             other is _$CreatePostViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.isProcessingMedia, isProcessingMedia) ||
+                other.isProcessingMedia == isProcessingMedia) &&
+            (identical(other.isUploadingMedia, isUploadingMedia) ||
+                other.isUploadingMedia == isUploadingMedia) &&
             (identical(other.currentPostType, currentPostType) ||
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
@@ -693,6 +733,8 @@ class _$CreatePostViewModelStateImpl
   int get hashCode => Object.hashAll([
         runtimeType,
         isBusy,
+        isProcessingMedia,
+        isUploadingMedia,
         currentPostType,
         currentCreatePostPage,
         isEditing,
@@ -730,6 +772,8 @@ class _$CreatePostViewModelStateImpl
 abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   const factory _CreatePostViewModelState(
           {final bool isBusy,
+          final bool isProcessingMedia,
+          final bool isUploadingMedia,
           final PostType currentPostType,
           final CreatePostCurrentPage currentCreatePostPage,
           final bool isEditing,
@@ -764,6 +808,10 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
 
   @override
   bool get isBusy;
+  @override
+  bool get isProcessingMedia;
+  @override
+  bool get isUploadingMedia;
   @override
   PostType get currentPostType;
   @override

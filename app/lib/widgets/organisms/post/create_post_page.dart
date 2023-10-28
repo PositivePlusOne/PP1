@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,6 +14,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/organisms/post/component/positive_image_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_clip_editor.dart';
 import 'package:app/widgets/organisms/post/create_post_dialogue.dart';
@@ -52,9 +51,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
   void onFirstRender(Duration timeStamp) {
     ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
     if (widget.isEditPage && widget.activityData != null) {
-      ref.read(createPostViewModelProvider.notifier).loadActivityData(context, widget.activityData!);
+      ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
-      ref.read(createPostViewModelProvider.notifier).initCamera(context);
+      ref.read(createPostViewModelProvider.notifier).initCamera();
     }
   }
 
@@ -79,7 +78,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
-      onWillPop: state.isBusy ? (() async => false) : () => viewModel.onWillPopScope(context),
+      onWillPop: state.isBusy ? (() async => false) : () => viewModel.onWillPopScope(),
       child: Scaffold(
         backgroundColor: colours.black,
         resizeToAvoidBottomInset: false,
@@ -94,8 +93,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 Positioned.fill(
                   child: PositiveCamera(
                     key: state.cameraWidgetKey,
-                    onCameraImageTaken: (image) => viewModel.onImageTaken(context, image),
-                    onCameraVideoTaken: (video) => viewModel.onVideoTaken(context, video),
+                    onCameraImageTaken: (image) => viewModel.onImageTaken(image),
+                    onCameraVideoTaken: (video) => viewModel.onVideoTaken(video),
                     //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                     cameraNavigation: (_) {
                       return const SizedBox(
@@ -107,20 +106,20 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     leftActionWidget: state.currentPostType == PostType.image
                         ? CameraFloatingButton.postWithoutImage(
                             active: true,
-                            onTap: (context) => viewModel.showCreateTextPost(context),
+                            onTap: (context) => viewModel.showCreateTextPost(),
                           )
                         : const SizedBox(
                             width: kIconLarge,
                             height: kIconLarge,
                           ),
                     onTapClose: (_) => appRouter.pop(),
-                    onTapAddImage: (context) => viewModel.onMultiImagePicker(context),
+                    onTapAddImage: (context) => viewModel.onMultiImagePicker(),
                     isVideoMode: state.currentPostType == PostType.clip,
                     bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
                     topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
 
                     ///? Change UI state based on current clip state
-                    onClipStateChange: (state) => viewModel.onClipStateChange(context, state),
+                    onClipStateChange: (state) => viewModel.onClipStateChange(state),
 
                     ///? Options for camera delay before taking picture or clip
                     maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
@@ -131,7 +130,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
                     ///? Options for camera Maximum recording lenght before forcing the clip to end
                     maxRecordingLength: viewModel.maximumClipDurationOptions[state.maximumClipDurationSelection],
-                    recordingLengthOptions: viewModel.maximumClipDurationOptions.map((e) => viewModel.clipDurationString(context, e)).toList(),
+                    recordingLengthOptions: viewModel.maximumClipDurationOptions.map((e) => viewModel.clipDurationString(e)).toList(),
                     recordingLengthSelection: state.maximumClipDurationSelection,
                     onRecordingLengthChanged: viewModel.onClipDurationChanged,
                     isRecordingLengthEnabled: true,
@@ -206,7 +205,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   galleryEntry: state.editingGalleryEntry,
                   currentFilter: state.currentFilter,
                   onFilterSelected: viewModel.onFilterSelected,
-                  onBackButtonPressed: () => viewModel.onWillPopScope(context),
+                  onBackButtonPressed: () => viewModel.onWillPopScope(),
                 ),
               ],
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -234,11 +233,11 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     captionController: viewModel.captionController,
                     altTextController: viewModel.altTextController,
                     promotionKeyTextController: viewModel.promotionKeyTextController,
-                    onTagsPressed: (context) => viewModel.onTagsPressed(context),
-                    onUpdateAllowSharing: viewModel.onUpdateAllowSharing,
+                    onTagsPressed: (context) => viewModel.onTagsPressed(),
+                    onUpdateAllowSharing: (_) => viewModel.onUpdateAllowSharing(),
                     onUpdateAllowComments: viewModel.onUpdateAllowComments,
-                    onUpdatePromotedPost: (ctx) => viewModel.onUpdatePromotePost(ctx, currentProfileId!),
-                    onUpdateSaveToGallery: state.isEditing ? null : viewModel.onUpdateSaveToGallery,
+                    onUpdatePromotedPost: (ctx) => viewModel.onUpdatePromotePost(currentProfileId!),
+                    onUpdateSaveToGallery: state.isEditing ? null : (_) => viewModel.onUpdateSaveToGallery(),
                     onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                     valueAllowSharing: state.allowSharing,
                     valueSaveToGallery: state.saveToGallery,
@@ -274,15 +273,58 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                 left: kPaddingSmall,
                 right: kPaddingSmall,
                 child: PositivePostNavigationBar(
-                  onTapPost: (context) => viewModel.onPostPressed(context),
-                  onTapClip: (context) => viewModel.onClipPressed(context),
-                  onTapEvent: (context) => viewModel.onEventPressed(context),
-                  onTapFlex: (context) => viewModel.onFlexButtonPressed(context),
+                  onTapPost: (_) => viewModel.onPostPressed(),
+                  onTapClip: (_) => viewModel.onClipPressed(),
+                  onTapEvent: (_) => viewModel.onEventPressed(),
+                  onTapFlex: (_) => viewModel.onFlexButtonPressed(),
                   activeButton: state.activeButton,
                   flexCaption: state.activeButtonFlexText,
                   isEnabled: viewModel.isNavigationEnabled && !state.isBusy && state.isBottomNavigationEnabled,
                 ),
               ),
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-              Blocking Overlay               -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              if (state.isProcessingMedia) ...<Widget>[
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      color: colours.black.withOpacity(kOpacityBarrier),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          PositiveLoadingIndicator(color: colours.white),
+                          const SizedBox(height: kPaddingSmall),
+                          Text(
+                            localisations.page_create_post_processing,
+                            style: typography.styleSubtextBold.copyWith(color: colours.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              if (state.isUploadingMedia) ...<Widget>[
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      color: colours.black.withOpacity(kOpacityBarrier),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          PositiveLoadingIndicator(color: colours.white),
+                          const SizedBox(height: kPaddingSmall),
+                          Text(
+                            localisations.page_create_post_uploading,
+                            style: typography.styleSubtextBold.copyWith(color: colours.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

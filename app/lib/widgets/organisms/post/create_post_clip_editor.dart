@@ -1,5 +1,15 @@
-import 'dart:io';
+// Dart imports:
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
+import 'package:video_editor/video_editor.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -7,11 +17,6 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_external_shader.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:unicons/unicons.dart';
-import 'package:video_editor/video_editor.dart';
 
 //*-------------------*//
 //*VIDEO EDITOR SCREEN*//

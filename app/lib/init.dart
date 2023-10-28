@@ -11,6 +11,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:logger/logger.dart';
+import 'package:media_kit/media_kit.dart';
 
 // Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
@@ -27,7 +28,6 @@ import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:media_kit/media_kit.dart';
 import 'main.dart';
 
 Future<void> setupApplication() async {

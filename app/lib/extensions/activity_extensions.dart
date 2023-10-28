@@ -427,13 +427,33 @@ extension ActivityExt on Activity {
     cacheController.add(key: feedStateKey, value: newState);
   }
 
+  PositiveReactionsState? getReactionsFeedState({
+    required Profile? currentProfile,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    if (activityId.isEmpty) {
+      return null;
+    }
+
+    final String activityFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfile?.flMeta?.id ?? '',
+    );
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final PositiveReactionsState? activityReactionFeedState = cacheController.get(activityFeedStateCacheKey);
+
+    return activityReactionFeedState;
+  }
+
   Future<void> onPostBookmarked({
     required BuildContext context,
     required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
   }) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+
+    final PositiveReactionsState? reactionsFeedState = getReactionsFeedState(currentProfile: currentProfile);
 
     final String activityId = flMeta?.id ?? '';
     final String profileId = currentProfile?.flMeta?.id ?? '';

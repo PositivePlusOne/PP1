@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'gallery_controller.dart';
+part of 'clip_ffmpeg_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$galleryControllerHash() => r'a5eb6b45bd4a4804a59f7a8bc9af0cd1357d4a48';
+String _$createClipExportServiceHash() =>
+    r'e955f89d38203387700ef9959c0eceef21c0b76b';
 
-/// See also [GalleryController].
-@ProviderFor(GalleryController)
-final galleryControllerProvider =
-    NotifierProvider<GalleryController, GalleryControllerState>.internal(
-  GalleryController.new,
-  name: r'galleryControllerProvider',
+/// See also [createClipExportService].
+@ProviderFor(createClipExportService)
+final createClipExportServiceProvider =
+    Provider<CreateClipExportService>.internal(
+  createClipExportService,
+  name: r'createClipExportServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$galleryControllerHash,
+      : _$createClipExportServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$GalleryController = Notifier<GalleryControllerState>;
+typedef CreateClipExportServiceRef = ProviderRef<CreateClipExportService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
