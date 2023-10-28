@@ -32,6 +32,7 @@ import '../../atoms/buttons/positive_button.dart';
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
     required this.onOptions,
+    this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
     this.flMetaData,
     this.publisher,
     this.promotion,
@@ -41,6 +42,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   });
 
   final FlMeta? flMetaData;
+  final EdgeInsets padding;
   final Profile? publisher;
   final Promotion? promotion;
   final List<String> tags;
@@ -80,10 +82,10 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       type: MaterialType.canvas,
       color: Colors.transparent,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: isShared ? kPaddingMediumLarge : kPaddingMedium),
+        padding: padding,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          children: <Widget>[
             PositiveProfileCircularIndicator(profile: publisher),
             const SizedBox(width: kPaddingSmall),
             Flexible(

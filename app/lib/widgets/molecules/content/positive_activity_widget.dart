@@ -193,6 +193,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
             child: ActivityPostHeadingWidget(
               flMetaData: widget.activity?.flMeta,
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isShared: widget.isShared,
               publisher: widget.targetProfile,
               promotion: widget.activityPromotion,
@@ -265,6 +266,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
             child: ActivityPostHeadingWidget(
               flMetaData: widget.activity?.flMeta,
+              padding: EdgeInsets.symmetric(horizontal: widget.isShared ? kPaddingSmall : kPaddingMedium, vertical: kPaddingSuperSmall),
               publisher: widget.targetProfile,
               promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],

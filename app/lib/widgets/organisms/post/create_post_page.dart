@@ -379,8 +379,8 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final Activity? reposterActivity = cacheController.get(repostActivityId);
 
-    final String reposterProfileId = reposterActivity?.repostConfiguration?.targetActivityPublisherId ?? '';
-    final String reposterOriginFeed = reposterActivity?.repostConfiguration?.targetActivityOriginFeed ?? '';
+    final String reposterProfileId = reposterActivity?.publisherInformation?.publisherId ?? '';
+    final String reposterOriginFeed = reposterActivity?.publisherInformation?.originFeed ?? '';
 
     final Profile? reposterProfile = cacheController.get(reposterProfileId);
 
