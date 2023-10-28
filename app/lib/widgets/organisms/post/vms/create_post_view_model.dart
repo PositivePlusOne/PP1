@@ -168,6 +168,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     try {
       late final CreatePostCurrentPage currentPage;
       late final PostType currentPostType;
+
       switch (activityData.postType) {
         case PostType.image:
           currentPage = CreatePostCurrentPage.createPostImage;
@@ -700,6 +701,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           state = state.copyWith(isProcessingMedia: false, isBusy: false);
         }
         break;
+      case CreatePostCurrentPage.repostPreview:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostText,
+          activeButtonFlexText: localisations.page_create_post_create,
+        );
       case CreatePostCurrentPage.createPostClip:
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:

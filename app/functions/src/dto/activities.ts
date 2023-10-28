@@ -98,9 +98,8 @@ export class Activity {
  * @property {string} Post A post
  * @property {string} Event An event
  * @property {string} Clip A clip
- * @property {string} Repost A repost
  */
-export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip' | 'repost';
+export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip';
 
 /**
  * The style of activity
