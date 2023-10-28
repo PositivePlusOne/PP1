@@ -1,8 +1,12 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:html2md/html2md.dart' as html2md;
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
@@ -87,6 +91,8 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     _isBookmarking = value;
     setStateIfMounted();
   }
+
+  double get sidePadding => widget.isShared ? kPaddingExtraSmall : kPaddingSmall;
 
   Future<void> _onInternalLikeRequested({
     required BuildContext context,
@@ -230,6 +236,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             bookmarked: false,
             comments: totalParentActivityComments,
             commentsEnabled: true,
+            padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingSmall),
             isLiked: isParentActivityLiked,
             likes: totalParentActivityLikes,
             likesEnabled: true,
@@ -242,6 +249,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             shareEnabled: canActShare,
             onShare: (context) => widget.reposterActivity?.share(context, widget.currentProfile),
           ),
+          buildMarkdownBodyWidget(targetActivity: widget.activity),
         ],
       );
     }
@@ -271,13 +279,14 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
           if (canView) ...<Widget>[
             PositivePostLayoutWidget(
               postContent: widget.activity,
+              markdownWidget: buildMarkdownBodyWidget(targetActivity: widget.activity),
               currentProfile: widget.currentProfile,
               publisherProfile: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
               promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               isShortformPost: !widget.isFullscreen,
-              sidePadding: widget.isShared ? kPaddingExtraSmall : kPaddingSmall,
+              sidePadding: sidePadding,
               onLike: (context) => _onInternalLikeRequested(context: context),
               isLiked: isActivityLiked,
               onComment: (context) => widget.activity?.requestPostRoute(
@@ -315,6 +324,33 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
+  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+  Widget buildMarkdownBodyWidget({
+    required Activity? targetActivity,
+  }) {
+    String parsedMarkdown = html2md.convert(
+      targetActivity?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
+    );
+
+    if (!widget.isFullscreen && parsedMarkdown.length > kMaxLengthTruncatedPost) {
+      parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
+      parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
+    }
+
+    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+    final List<Tag> tags = tagsController.resolveTags(targetActivity?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
+
+    return PositiveTapBehaviour(
+      onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
+        child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
       ),
     );
   }

@@ -300,7 +300,7 @@ extension ActivityExt on Activity {
         context: context,
         barrierDismissible: true,
         child: PostOptionsDialog(
-          onEditPostSelected: () => onPostEdited(),
+          onEditPostSelected: () => onPostEdited(popRoute: true),
           onDeletePostSelected: () => onPostDeleted(context: context, currentProfile: currentProfile),
         ),
       );
@@ -548,22 +548,29 @@ extension ActivityExt on Activity {
     }
 
     final AppRouter router = providerContainer.read(appRouterProvider);
-    await router.pop();
     await router.push(
       CreatePostRoute(
-        activityData: ActivityData(reposterActivityID: repostActivityId),
+        activityData: ActivityData(
+          reposterActivityID: repostActivityId,
+          postType: PostType.repost,
+        ),
         isEditPage: false,
       ),
     );
   }
 
-  Future<void> onPostEdited() async {
+  Future<void> onPostEdited({
+    bool popRoute = false,
+  }) async {
     final AppRouter router = providerContainer.read(appRouterProvider);
     if (generalConfiguration == null) {
       return;
     }
 
-    await router.pop();
+    if (popRoute) {
+      await router.pop();
+    }
+
     await router.push(
       CreatePostRoute(
         activityData: ActivityData(

@@ -153,7 +153,7 @@ export namespace PostEndpoints {
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
     const allowComments = request.data.allowComments || "public" as ActivitySecurityConfigurationMode;
 
-    const repostTargetActivityId = request.data.repostTargetActivityId || "";
+    const repostTargetActivityId = request.data.reposterActivityId || "";
     let repostTargetActivityOriginFeed = '';
     let repostTargetActivityPublisherId = '';
 

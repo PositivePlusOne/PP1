@@ -66,6 +66,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.onBookmark,
     required this.isBookmarked,
     required this.totalComments,
+    required this.markdownWidget,
     this.onPostPageRequested,
     this.onShare,
     super.key,
@@ -101,6 +102,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final FutureOr<void> Function(BuildContext context)? onShare;
 
   final int totalComments;
+
+  final Widget markdownWidget;
 
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
@@ -215,7 +218,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         //* -=-=-=- Post Actions -=-=-=- *\\
         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-        _markdownBody(context: context, ref: ref),
+        markdownWidget,
       ],
     );
   }
@@ -250,7 +253,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-          _markdownBody(context: context, ref: ref),
+          markdownWidget,
         ],
       ),
     );
@@ -577,35 +580,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             colours: colours,
           ),
         ],
-      ),
-    );
-  }
-
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _markdownBody({
-    required BuildContext context,
-    required WidgetRef ref,
-  }) {
-    String parsedMarkdown = html2md.convert(
-      //TODO(S): either fork the package, find a new one, or replace the whole markdown idea to get around some hard coded issues
-      //? This is purest Jank, replace \n with an unusual string until after the markdown conversion as the converter is hardcoded to remove all whitespace
-      postContent?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
-    );
-    if (isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
-      parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
-    }
-
-    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
-
-    return PositiveTapBehaviour(
-      onTap: onPostPageRequested,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
       ),
     );
   }

@@ -1,10 +1,9 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, NewActivity, StreamClient, StreamFeed, connect } from "getstream";
+import { DefaultGenerics, StreamClient, StreamFeed, connect } from "getstream";
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequestJSON } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
-import { ActivityActionVerb, ActivityJSON } from "../dto/activities";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
@@ -13,7 +12,7 @@ import { TagsService } from "./tags_service";
 export namespace FeedService {
 
   let streamClient = null as StreamClient<DefaultGenerics> | null;
-  
+
   /**
    * Returns a StreamClient instance with the API key and secret.
    * @return {StreamClient<DefaultGenerics>} instance of StreamClient
@@ -23,7 +22,7 @@ export namespace FeedService {
     if (streamClient) {
       return streamClient;
     }
-    
+
     functions.logger.info("Connecting to feeds", { structuredData: true });
     const apiKey = process.env.STREAM_API_KEY;
     const apiSecret = process.env.STREAM_API_SECRET;
@@ -83,7 +82,7 @@ export namespace FeedService {
     }
 
     const userTimelineFeed = client.feed("timeline", userId);
-    
+
     // We add the feed promotion tag to the user's tags to ensure that the user's timeline feed is subscribed to the feed promotion feed.
     const additionalTags = [...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
 
@@ -95,7 +94,7 @@ export namespace FeedService {
         if (additionalTag.length === 0) {
           continue;
         }
-        
+
         expectedFeeds.push({ targetSlug: "tags", targetUserId: additionalTag });
       }
 

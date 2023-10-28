@@ -529,6 +529,7 @@
     "page_create_post_created": "Post Created",
     "page_create_post_additional_tags": "+{tags}",
     "page_create_post_edited": "Post Saved",
+    "page_create_post_repost_heading": "Repost",
     "page_create_post_processing": "Processing your clip...",
     "page_create_post_uploading": "Uploading your clip...",
 
