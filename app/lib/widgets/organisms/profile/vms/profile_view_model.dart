@@ -2,21 +2,14 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
