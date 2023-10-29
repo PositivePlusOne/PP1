@@ -12,6 +12,7 @@ class PositiveCommunityFeedState with PositivePaginationControllerState {
     required this.pagingController,
     required this.profileId,
     required this.communityType,
+    this.searchQuery = '',
     this.currentPaginationKey = '',
     this.hasPerformedInitialLoad = false,
   });
@@ -24,20 +25,23 @@ class PositiveCommunityFeedState with PositivePaginationControllerState {
 
   bool hasPerformedInitialLoad;
   String currentPaginationKey;
+  String searchQuery;
 
   @override
   String buildCacheKey() {
-    return buildFeedCacheKey(profileId, communityType);
+    return buildFeedCacheKey(profileId, communityType, searchQuery);
   }
 
   static PositiveCommunityFeedState buildNewState({
     required CommunityType communityType,
     required String currentProfileId,
+    required String searchQuery,
     PagingController<String, String>? pagingController,
   }) {
     return PositiveCommunityFeedState(
       communityType: communityType,
       profileId: currentProfileId,
+      searchQuery: searchQuery,
       pagingController: pagingController ??
           PagingController<String, String>(
             firstPageKey: '',
@@ -45,7 +49,7 @@ class PositiveCommunityFeedState with PositivePaginationControllerState {
     );
   }
 
-  static String buildFeedCacheKey(String profileId, CommunityType communityType) {
-    return 'feed:paging:$profileId:${communityType.toString()}';
+  static String buildFeedCacheKey(String profileId, CommunityType communityType, String searchQuery) {
+    return 'feed:paging:$profileId:${communityType.name}:$searchQuery';
   }
 }
