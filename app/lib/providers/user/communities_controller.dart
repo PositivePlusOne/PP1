@@ -36,6 +36,7 @@ class CommunitiesControllerState with _$CommunitiesControllerState {
     required String currentUserId,
     required String currentProfileId,
     required CommunityType selectedCommunityType,
+    @Default('') String searchQuery,
     @Default(false) bool isBusy,
   }) = _CommunitiesControllerState;
 
@@ -110,6 +111,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
       communityType: state.selectedCommunityType,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     if (!feedState.hasPerformedInitialLoad) {
@@ -186,28 +188,32 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
       return PositiveCommunityFeedState.buildNewState(
         communityType: state.selectedCommunityType,
         currentProfileId: '',
+        searchQuery: '',
       );
     }
 
     return getCommunityFeedStateForType(
       communityType: state.selectedCommunityType,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
   }
 
   PositiveCommunityFeedState getCommunityFeedStateForType({
     required CommunityType communityType,
     required Profile? profile,
+    required String searchQuery,
   }) {
     final String currentProfileId = profile?.flMeta?.id ?? '';
     if (currentProfileId.isEmpty) {
       return PositiveCommunityFeedState.buildNewState(
         communityType: communityType,
         currentProfileId: currentProfileId,
+        searchQuery: searchQuery,
       );
     }
 
-    final String feedsCacheKey = PositiveCommunityFeedState.buildFeedCacheKey(currentProfileId, communityType);
+    final String feedsCacheKey = PositiveCommunityFeedState.buildFeedCacheKey(currentProfileId, communityType, searchQuery);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final PositiveCommunityFeedState? cachedState = cacheController.get(feedsCacheKey);
@@ -218,6 +224,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     final PositiveCommunityFeedState newState = PositiveCommunityFeedState.buildNewState(
       communityType: communityType,
       currentProfileId: currentProfileId,
+      searchQuery: searchQuery,
     );
 
     cacheController.add(key: feedsCacheKey, value: newState);
@@ -237,26 +244,31 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     final PositiveCommunityFeedState connectionFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.connected,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     final PositiveCommunityFeedState followerFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.followers,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     final PositiveCommunityFeedState followingFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.following,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     final PositiveCommunityFeedState blockedFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.blocked,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     final PositiveCommunityFeedState managedFeedState = getCommunityFeedStateForType(
       communityType: CommunityType.managed,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     final bool hasConnectionId = (connectionFeedState.pagingController.value.itemList ?? []).contains(otherMemberId);
@@ -326,6 +338,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
       communityType: type,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     feedState.hasPerformedInitialLoad = false;
@@ -368,6 +381,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
       communityType: CommunityType.following,
       profile: currentProfile,
+      searchQuery: '',
     );
 
     if (feedState.hasPerformedInitialLoad) {
@@ -397,6 +411,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
       communityType: type,
       profile: currentProfile,
+      searchQuery: state.searchQuery,
     );
 
     final bool canGetNext = feedState.pagingController.value.status != PagingStatus.completed;

@@ -567,8 +567,8 @@ export namespace RelationshipService {
 
     // Remove the blocked flag if all members have unblocked.
     relationship.blocked = hasRemainingBlockers;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     await DataService.updateDocument({
       schemaKey: "relationships",
@@ -612,8 +612,8 @@ export namespace RelationshipService {
 
     relationship.blocked = true;
     relationship.connected = isRelationshipConnectedAfterBlock;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
@@ -712,8 +712,8 @@ export namespace RelationshipService {
     }
 
     relationship.managed = relationshipManagedFlag;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     // Add the new managed profiles to the sender's identity
     await firebaseAuth.setCustomUserClaims(sender, {
@@ -763,8 +763,8 @@ export namespace RelationshipService {
 
     // Sets a flag on the relationship to indicate that it is muted.
     relationship.muted = true;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
@@ -805,8 +805,8 @@ export namespace RelationshipService {
 
     // Remove the muted flag if all members have unmuted.
     relationship.muted = hasRemainingMuters;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
@@ -845,8 +845,8 @@ export namespace RelationshipService {
     }
 
     relationship.connected = true;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     if (!relationship.channelId) {
       functions.logger.info("Creating conversation for newly connected relationship");
@@ -893,8 +893,8 @@ export namespace RelationshipService {
 
     // Remove the connected flag if all members have disconnected.
     relationship.connected = false;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return DataService.updateDocument({
       schemaKey: "relationships",
@@ -949,8 +949,8 @@ export namespace RelationshipService {
 
     // Sets a flag on the relationship to indicate that it is followed.
     relationship.following = true;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
@@ -991,8 +991,8 @@ export namespace RelationshipService {
 
     // Remove the followed flag if all members have unfollowed.
     relationship.followed = hasRemainingFollowers;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
@@ -1028,8 +1028,8 @@ export namespace RelationshipService {
 
     // Sets a flag on the relationship to indicate that it is hidden.
     relationship.hidden = true;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",
@@ -1070,8 +1070,8 @@ export namespace RelationshipService {
 
     // Remove the hidden flag if all members have unhidden.
     relationship.hidden = hasRemainingHidden;
-    relationship = RelationshipHelpers.updateRelationshipWithIndexes(relationship);
-    resetRelationshipPaginationCache(relationship);
+    relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
+    await resetRelationshipPaginationCache(relationship);
 
     return await DataService.updateDocument({
       schemaKey: "relationships",

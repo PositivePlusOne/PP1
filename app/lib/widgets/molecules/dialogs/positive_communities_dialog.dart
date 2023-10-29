@@ -1,6 +1,9 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -129,9 +132,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   PositiveCommunityFeedState getCurrentFeedState({
     required Profile? profile,
     required CommunityType communityType,
+    required String searchQuery,
   }) {
     final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
     final CommunitiesController controller = providerContainer.read(provider.notifier);
+
     return controller.getCommunityFeedStateForType(profile: profile, communityType: communityType);
   }
 
@@ -153,6 +158,21 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     );
 
     return feedState;
+  }
+
+  FutureOr<void> onSearchSubmitted(String query) async {}
+
+  //? We only want to check if the query is empty, and if so, we want to reset the feed
+  FutureOr<void> onSearchChanged(String query) async {
+    if (!isSearching) {
+      return;
+    }
+
+    if (query.isEmpty) {
+      final Logger logger = ref.read(loggerProvider);
+      logger.i('PositiveCommunitiesDialog - onSearchChanged - Resetting feed');
+      searchQuery = '';
+    }
   }
 
   Future<void> requestRefresh({required Profile? profile}) async {
@@ -188,7 +208,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     useLifecycleHook(controller);
 
-    final PositiveCommunityFeedState currentFeedState = getCurrentFeedState(profile: currentProfile, communityType: selectedCommunityType);
+    final PositiveCommunityFeedState currentFeedState = getCurrentFeedState(
+      profile: currentProfile,
+      communityType: selectedCommunityType,
+      searchQuery: searchQuery,
+    );
 
     useCacheHook(keys: <String>[
       currentProfile?.flMeta?.id ?? '',
@@ -420,7 +444,14 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           primaryColor: colors.black,
         ),
         const SizedBox(width: kPaddingMedium),
-        Expanded(child: PositiveSearchField(hintText: 'Search People', onChange: (_) {}, isEnabled: false)),
+        Expanded(
+          child: PositiveSearchField(
+            hintText: 'Search People',
+            onSubmitted: onSearchSubmitted,
+            onChange: onSearchChanged,
+            isEnabled: true,
+          ),
+        ),
       ],
     );
   }

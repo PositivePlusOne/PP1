@@ -201,4 +201,11 @@ export class Profile {
             this.media.filter((media) => !media.isPrivate).length > 0 ? 'hasPublicMedia' : '',
         ];
     }
+
+    generateExternalSearchTags(): string[] {
+        return [
+            this.displayName,
+            this.name,
+        ];
+    }
 }
