@@ -1,39 +1,47 @@
+import 'dart:collection';
+
 class RelationshipSearchFilterBuilder {
   List<String> _filters = [];
 
-  void addFollowingMeFilter(String memberId) {
-    _filters.add('searchIndexRelationshipFollowers:$memberId');
-  }
-
-  void addIFollowFilter(String memberId) {
-    _filters.add('searchIndexRelationshipFollows:$memberId');
-  }
-
-  void addFullyConnectedFilter(String memberId) {
-    _filters.add('relationship.isFullyConnected:true AND searchIndexRelationshipConnections:$memberId');
-  }
-
-  void addPendingConnectionFilter(String memberId) {
-    _filters.add('relationship.isPendingConnection:true AND NOT searchIndexRelationshipConnections:$memberId');
-  }
-
-  void addHiddenFilter(String memberId) {
-    _filters.add('searchIndexRelationshipHides:$memberId');
+  void addMutedFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipMutes:$memberId');
   }
 
   void addBlockedFilter(String memberId) {
-    _filters.add('searchIndexRelationshipBlocks:$memberId');
+    _filters.add('relationship.searchIndexRelationshipBlocks:$memberId');
   }
 
-  void addIManageFilter(String memberId) {
-    _filters.add('searchIndexRelationshipManages:$memberId');
+  void addConnectedFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipConnections:$memberId');
+  }
+
+  void addFollowingFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipFollows:$memberId');
+  }
+
+  void addFollowerFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipFollowers:$memberId');
+  }
+
+  void addHiddenFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipHides:$memberId');
+  }
+
+  void addManagerFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipManages:$memberId');
+  }
+
+  void addManagedFilter(String memberId) {
+    _filters.add('relationship.searchIndexRelationshipManaged:$memberId');
+  }
+
+  void addFullyConnectedFilter() {
+    _filters.add('relationship.isFullyConnected:true');
   }
 
   void clearFilters() {
     _filters = [];
   }
 
-  String build() {
-    return _filters.join(' AND ');
-  }
+  UnmodifiableListView<String> get filters => UnmodifiableListView(_filters);
 }
