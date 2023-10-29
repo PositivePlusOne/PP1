@@ -139,6 +139,9 @@ export namespace SearchService {
       case "users":
         filters.push("_tags:hasDisplayName");
         break;
+      case "relationships":
+        attributes.push("_tags");
+        break;
       default:
         break;
     }

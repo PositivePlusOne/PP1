@@ -1,3 +1,5 @@
+import * as functions from "firebase-functions";
+
 import { Profile } from "../dto/profile";
 import { RelationshipJSON } from "../dto/relationships";
 import { ProfileService } from "../services/profile_service";
@@ -87,8 +89,8 @@ export namespace RelationshipHelpers {
     relationship.searchIndexRelationshipManaged = managedSearchIndex;
 
     // Add in facet data for algolia.
-    relationship.isPendingConnection = !relationship.hasConnected && relationship.searchIndexRelationshipConnections.length > 0;
-    relationship.isFullyConnected = relationship.hasConnected && relationship.searchIndexRelationshipConnections.length === memberCount;
+    relationship.isPendingConnection = relationship.searchIndexRelationshipConnections.length > 0 && relationship.searchIndexRelationshipConnections.length < memberCount;
+    relationship.isFullyConnected = relationship.searchIndexRelationshipConnections.length === memberCount;
     relationship._tags = [];
 
     // Add some user information into the relationship for easier searching.
@@ -107,6 +109,10 @@ export namespace RelationshipHelpers {
       const searchTags = profile.generateExternalSearchTags();
       relationship._tags = relationship._tags.concat(searchTags);
     }
+
+    functions.logger.info("Updated relationship with indexes", {
+      relationship,
+    });
 
     return relationship;
   }
