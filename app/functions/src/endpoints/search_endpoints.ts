@@ -69,7 +69,12 @@ export namespace SearchEndpoints {
     const filters = request.data.filters || [] as string[];
     const limit = request.limit || 10;
 
-    functions.logger.info(`Searching for ${query} in ${index} with page ${page} and limit ${limit} and filters ${filters}`);
+    functions.logger.info(`Searching for ${query} in ${index}`, {
+      structuredData: true,
+      page: page,
+      limit: limit,
+      filters: filters,
+    });
 
     // Verify index is a valid PositiveSearchIndex
     if (!Object.values(PositiveSearchIndex).includes(index)) {
