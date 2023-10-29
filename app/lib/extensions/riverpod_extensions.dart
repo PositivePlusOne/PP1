@@ -154,7 +154,7 @@ void cacheReactionStatisticsData(Map<String, dynamic> data) {
   final List<dynamic> reactionStatisticsRaw = (data.containsKey('reactionStatistics') ? data['reactionStatistics'] : []).map((dynamic reactionStatistic) => json.decodeSafe(reactionStatistic)).toList();
   final List<ReactionStatistics> reactionStatistics = reactionStatisticsRaw.map((dynamic stat) => ReactionStatistics.fromJson(stat)).toList();
 
-  for (ReactionStatistics reactionStatistic in reactionStatistics) {
+  for (final ReactionStatistics reactionStatistic in reactionStatistics) {
     final String activityId = reactionStatistic.activityId;
     if (activityId.isEmpty) {
       logger.e('requestNextTimelinePage() - Failed to cache reaction statistics: $reactionStatistic');
@@ -174,7 +174,7 @@ void cacheProfileStatisticsData(Map<String, dynamic> data) {
   final List<dynamic> profileStatisticsRaw = (data.containsKey('userStatistics') ? data['userStatistics'] : []).map((dynamic profileStatistic) => json.decodeSafe(profileStatistic)).toList();
   final List<ProfileStatistics> profileStatistics = profileStatisticsRaw.map((dynamic stat) => ProfileStatistics.fromJson(stat)).toList();
 
-  for (ProfileStatistics profileStatistic in profileStatistics) {
+  for (final ProfileStatistics profileStatistic in profileStatistics) {
     final String profileId = profileStatistic.profileId;
     if (profileId.isEmpty) {
       logger.e('requestNextTimelinePage() - Failed to cache profile statistics: $profileStatistic');

@@ -45,6 +45,7 @@ export namespace ReactionEndpoints {
         // Build reaction
         const reactionJSON = {
             activity_id: activityId,
+            target_user_id: publisher,
             reaction_id: "",
             user_id: uid,
             kind: kind,
@@ -64,13 +65,13 @@ export namespace ReactionEndpoints {
         const streamClient = FeedService.getFeedsClient();
 
         functions.logger.info("Adding reaction", { reactionJSON });
-        const [reaction, profileStats, reactionStats] = await ReactionService.addReaction(streamClient, reactionJSON);
+        const [reaction, reactionStats, sourceProfileStats, targetProfileStats] = await ReactionService.addReaction(streamClient, reactionJSON);
 
         await ReactionService.processNotifications(kind, uid, activity, reaction);
 
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [activity, reaction, profileStats, reactionStats],
+            data: [activity, reaction, reactionStats, sourceProfileStats, targetProfileStats],
         });
     });
 
@@ -126,12 +127,12 @@ export namespace ReactionEndpoints {
 
         functions.logger.info("Deleting reaction", { reactionId });
         const streamClient = FeedService.getFeedsClient();
-        const [reactionStats, profileStats] = await ReactionService.deleteReaction(streamClient, reaction);
+        const [reactionStats, sourceProfileStats, targetProfileStats] = await ReactionService.deleteReaction(streamClient, reaction);
 
         functions.logger.info("Reaction deleted", { reactionId });
         return buildEndpointResponse(context, {
             sender: uid,
-            data: [activity, reactionStats, profileStats],
+            data: [activity, reactionStats, sourceProfileStats, targetProfileStats],
         });
     });
 

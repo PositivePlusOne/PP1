@@ -152,7 +152,7 @@ class CacheController {
       return;
     }
 
-    if (hasRecord && newFetchMillis <= oldFetchMillis) {
+    if (hasRecord && newFetchMillis > 0 && newFetchMillis <= oldFetchMillis) {
       logger.w('Skipping cache update on $key due to new data being older or equal to existing data');
       return;
     }

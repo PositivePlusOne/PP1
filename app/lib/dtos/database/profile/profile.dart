@@ -104,6 +104,9 @@ class ProfileStatistics with _$ProfileStatistics {
   static const kFollowingKey = 'follow';
   static const kPromotionsPermittedKey = 'promotionsPermitted';
 
+  static const kGivenSuffix = '_given';
+  static const kReceivedSuffix = '_received';
+
   /// static def for the value to signify that no promotions are ever allowed for this profile
   static const kPromotionsNotPermitted = -1;
 
@@ -115,18 +118,19 @@ class ProfileStatistics with _$ProfileStatistics {
       localizations.page_profile_personal_data_posts: '0',
       localizations.page_profile_personal_data_likes: '0',
       localizations.page_profile_personal_data_followers: '0',
-      localizations.page_profile_personal_data_following: '0',
+      // localizations.page_profile_personal_data_following: '0',
       // localizations.page_profile_personal_data_promotioms ommitted to as not to show when default (-1)
     };
 
     // map each internal data key to the external data expected
     for (final MapEntry<String, int> entry in profileStatistics?.counts.entries ?? []) {
       switch (entry.key) {
+        //? Reaction counts have both given and received values
+        case '$kLikeKey$kReceivedSuffix':
+          data[localizations.page_profile_personal_data_likes] = entry.value.toString();
+          break;
         case kPostKey:
           data[localizations.page_profile_personal_data_posts] = entry.value.toString();
-          break;
-        case kLikeKey:
-          data[localizations.page_profile_personal_data_likes] = entry.value.toString();
           break;
         case kFollowersKey:
           data[localizations.page_profile_personal_data_followers] = entry.value.toString();

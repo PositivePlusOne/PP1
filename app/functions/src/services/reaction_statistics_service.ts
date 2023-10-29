@@ -8,8 +8,6 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { ReactionStatistics, ReactionStatisticsJSON, reactionStatisticsSchemaKey } from "../dto/reaction_statistics";
 
 export namespace ReactionStatisticsService {
-    export const REACTION_COUNT_TARGETS = ["like", "bookmark", "comment"];
-
     export function getExpectedKeyFromOptions(activity_id?: string): string {
         return `statistics:activity:${activity_id ?? ""}`;
     }
@@ -58,11 +56,7 @@ export namespace ReactionStatisticsService {
 
     export async function updateReactionCountForActivity(activity_id: string, kind: string, offset: number): Promise<ReactionStatisticsJSON> {
         functions.logger.info(`Updating reaction count for activity`, { activity_id, kind, offset });
-        if (!REACTION_COUNT_TARGETS.includes(kind)) {
-            functions.logger.error(`Invalid reaction kind: ${kind}`);
-            return {};
-        }
-
+        
         const stats = await getReactionStatisticsForActivity(activity_id);
         stats.counts ??= {};
         stats.counts[kind] = (stats.counts[kind] ?? 0) + offset;

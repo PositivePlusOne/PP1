@@ -1,8 +1,6 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -15,6 +13,10 @@ import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../services/third_party.dart';
+
+// Flutter imports:
+
+
 
 part 'profile_view_model.freezed.dart';
 part 'profile_view_model.g.dart';

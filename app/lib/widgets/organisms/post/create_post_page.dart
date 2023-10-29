@@ -339,7 +339,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                             if (state.isUploadingMedia) ...<Widget>[
                               const SizedBox(height: kPaddingSmall),
                               Text(
-                                localisations.page_create_post_uploading,
+                                state.isEditing ? localisations.page_edit_post_uploading : localisations.page_create_post_uploading,
                                 style: typography.styleSubtextBold.copyWith(color: colours.white),
                               ),
                             ],

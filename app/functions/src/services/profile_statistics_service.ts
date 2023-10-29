@@ -5,7 +5,6 @@ import { ProfileStatisicsJSON, profileStatisticsSchemaKey } from "../dto/profile
 import { DataService } from "./data_service";
 
 export namespace ProfileStatisticsService {
-    export const REACTION_COUNT_TARGETS = ["like", "post", "follow", "follower"];
 
     export function getExpectedKeyFromOptions(user_id: string): string {
         if (!user_id) {
@@ -32,8 +31,8 @@ export namespace ProfileStatisticsService {
 
     export async function updateReactionCountForProfile(userId: string, kind: string, offset: number): Promise<ProfileStatisicsJSON> {
         functions.logger.info(`Updating reaction count for profile`, { userId, kind, offset });
-        if (!REACTION_COUNT_TARGETS.includes(kind)) {
-            functions.logger.error(`Invalid reaction kind: ${kind}`);
+        if (!userId) {
+            functions.logger.error(`Invalid user id: ${userId}`);
             return {};
         }
 
