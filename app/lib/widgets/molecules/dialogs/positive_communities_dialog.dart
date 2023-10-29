@@ -3,6 +3,7 @@
 // Flutter imports:
 import 'dart:async';
 
+import 'package:app/dtos/builders/relationship_search_filter_builder.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -137,7 +138,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
     final CommunitiesController controller = providerContainer.read(provider.notifier);
 
-    return controller.getCommunityFeedStateForType(profile: profile, communityType: communityType);
+    return controller.getCommunityFeedStateForType(profile: profile, communityType: communityType, searchQuery: searchQuery);
   }
 
   PositiveCommunityFeedState buildPageStateFromSupportedProfiles() {
@@ -153,6 +154,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     final PositiveCommunityFeedState feedState = PositiveCommunityFeedState.buildNewState(
       currentProfileId: '',
+      searchQuery: '',
       communityType: CommunityType.supported,
       pagingController: pagingController,
     );
@@ -160,10 +162,28 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     return feedState;
   }
 
-  FutureOr<void> onSearchSubmitted(String query) async {}
+  FutureOr<void> onSearchSubmitted(String query) async {
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
+    final String searchQuery = controller.state.searchQuery;
+    final bool isSearching = searchQuery.isNotEmpty;
+
+    if (isSearching) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('PositiveCommunitiesDialog - onSearchSubmitted - Loading next community data: $query');
+    await controller.updateSearchQuery(query);
+  }
 
   //? We only want to check if the query is empty, and if so, we want to reset the feed
   FutureOr<void> onSearchChanged(String query) async {
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
+    final String searchQuery = controller.state.searchQuery;
+    final bool isSearching = searchQuery.isNotEmpty;
+
     if (!isSearching) {
       return;
     }
@@ -171,7 +191,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     if (query.isEmpty) {
       final Logger logger = ref.read(loggerProvider);
       logger.i('PositiveCommunitiesDialog - onSearchChanged - Resetting feed');
-      searchQuery = '';
+      controller.updateSearchQuery('');
     }
   }
 
@@ -182,7 +202,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final CommunityType communityType = controller.state.selectedCommunityType;
 
     logger.d('PositiveCommunitiesDialog - requestRefresh - Loading next community data: $communityType');
-    controller.resetCommunityDataForType(type: communityType, currentProfile: profile);
+    controller.resetCommunityDataForType(
+      type: communityType,
+      currentProfile: profile,
+      searchQuery: controller.state.searchQuery,
+    );
   }
 
   @override
@@ -205,6 +229,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
     final CommunitiesController controller = ref.read(provider.notifier);
     final CommunityType selectedCommunityType = ref.watch(provider.select((value) => value.selectedCommunityType));
+    final String searchQuery = ref.watch(provider.select((value) => value.searchQuery));
 
     useLifecycleHook(controller);
 

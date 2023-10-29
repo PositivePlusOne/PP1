@@ -122,7 +122,12 @@ class SharingController extends _$SharingController implements ISharingControlle
     final CommunitiesController communitiesController = providerContainer.read(communitiesControllerProvider.notifier);
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(communityType: CommunityType.connected, profile: postOptions?.currentProfile);
+    final PositiveCommunityFeedState feedState = communitiesController.getCommunityFeedStateForType(
+      communityType: CommunityType.connected,
+      profile: postOptions?.currentProfile,
+      searchQuery: '',
+    );
+
     final bool hasConnections = feedState.pagingController.value.itemList?.isNotEmpty == true;
     final bool hasValidProfile = profileController.state.currentProfile != null;
 
