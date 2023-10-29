@@ -7,7 +7,7 @@ part of 'communities_controller.dart';
 // **************************************************************************
 
 String _$communitiesControllerHash() =>
-    r'f009398dcf642cff2008b40d4d8140f11db5c64a';
+    r'cc89d682d7edc68794962b53360403299515634c';
 
 /// Copied from Dart SDK
 class _SystemHash {

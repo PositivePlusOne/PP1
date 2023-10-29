@@ -19,6 +19,7 @@ mixin _$CommunitiesControllerState {
   String get currentUserId => throw _privateConstructorUsedError;
   String get currentProfileId => throw _privateConstructorUsedError;
   CommunityType get selectedCommunityType => throw _privateConstructorUsedError;
+  String get searchQuery => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -37,6 +38,7 @@ abstract class $CommunitiesControllerStateCopyWith<$Res> {
       {String currentUserId,
       String currentProfileId,
       CommunityType selectedCommunityType,
+      String searchQuery,
       bool isBusy});
 }
 
@@ -57,6 +59,7 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
     Object? currentUserId = null,
     Object? currentProfileId = null,
     Object? selectedCommunityType = null,
+    Object? searchQuery = null,
     Object? isBusy = null,
   }) {
     return _then(_value.copyWith(
@@ -72,6 +75,10 @@ class _$CommunitiesControllerStateCopyWithImpl<$Res,
           ? _value.selectedCommunityType
           : selectedCommunityType // ignore: cast_nullable_to_non_nullable
               as CommunityType,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -93,6 +100,7 @@ abstract class _$$CommunitiesControllerStateImplCopyWith<$Res>
       {String currentUserId,
       String currentProfileId,
       CommunityType selectedCommunityType,
+      String searchQuery,
       bool isBusy});
 }
 
@@ -112,6 +120,7 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
     Object? currentUserId = null,
     Object? currentProfileId = null,
     Object? selectedCommunityType = null,
+    Object? searchQuery = null,
     Object? isBusy = null,
   }) {
     return _then(_$CommunitiesControllerStateImpl(
@@ -127,6 +136,10 @@ class __$$CommunitiesControllerStateImplCopyWithImpl<$Res>
           ? _value.selectedCommunityType
           : selectedCommunityType // ignore: cast_nullable_to_non_nullable
               as CommunityType,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
@@ -142,6 +155,7 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
       {required this.currentUserId,
       required this.currentProfileId,
       required this.selectedCommunityType,
+      this.searchQuery = '',
       this.isBusy = false});
 
   @override
@@ -152,11 +166,14 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
   final CommunityType selectedCommunityType;
   @override
   @JsonKey()
+  final String searchQuery;
+  @override
+  @JsonKey()
   final bool isBusy;
 
   @override
   String toString() {
-    return 'CommunitiesControllerState(currentUserId: $currentUserId, currentProfileId: $currentProfileId, selectedCommunityType: $selectedCommunityType, isBusy: $isBusy)';
+    return 'CommunitiesControllerState(currentUserId: $currentUserId, currentProfileId: $currentProfileId, selectedCommunityType: $selectedCommunityType, searchQuery: $searchQuery, isBusy: $isBusy)';
   }
 
   @override
@@ -170,12 +187,14 @@ class _$CommunitiesControllerStateImpl implements _CommunitiesControllerState {
                 other.currentProfileId == currentProfileId) &&
             (identical(other.selectedCommunityType, selectedCommunityType) ||
                 other.selectedCommunityType == selectedCommunityType) &&
+            (identical(other.searchQuery, searchQuery) ||
+                other.searchQuery == searchQuery) &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, currentUserId, currentProfileId,
-      selectedCommunityType, isBusy);
+      selectedCommunityType, searchQuery, isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -191,6 +210,7 @@ abstract class _CommunitiesControllerState
       {required final String currentUserId,
       required final String currentProfileId,
       required final CommunityType selectedCommunityType,
+      final String searchQuery,
       final bool isBusy}) = _$CommunitiesControllerStateImpl;
 
   @override
@@ -199,6 +219,8 @@ abstract class _CommunitiesControllerState
   String get currentProfileId;
   @override
   CommunityType get selectedCommunityType;
+  @override
+  String get searchQuery;
   @override
   bool get isBusy;
   @override
