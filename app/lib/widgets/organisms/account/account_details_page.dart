@@ -193,7 +193,7 @@ class AccountDetailsPage extends HookConsumerWidget {
           const SizedBox(height: kPaddingMedium),
           PositiveFakeTextFieldButton(
             hintText: localisations.page_company_details_managed_address,
-            labelText: profile?.companySectors.join(', ') ?? '',
+            labelText: profile?.formattedLocation ?? '',
             onTap: (_) {},
             isEnabled: false,
           ),

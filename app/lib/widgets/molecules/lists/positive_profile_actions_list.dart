@@ -399,7 +399,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if (!isSourceManaged && ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation)) {
+    if ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation) {
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,

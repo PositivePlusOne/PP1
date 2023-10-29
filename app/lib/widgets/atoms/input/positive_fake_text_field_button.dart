@@ -91,7 +91,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
             style: BorderStyle.solid,
           ),
           color: backgroundColor ?? colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(kBorderRadiusHuge)),
+          borderRadius: const BorderRadius.all(Radius.circular(kBorderRadiusExtraLarge)),
         ),
         padding: EdgeInsets.fromLTRB(leftPadding, kPaddingExtraSmall, kPaddingExtraSmall, kPaddingExtraSmall),
         child: Row(
