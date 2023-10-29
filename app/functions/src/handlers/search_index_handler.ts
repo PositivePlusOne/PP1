@@ -5,6 +5,7 @@ import { DataHandlerRegistry } from "./data_change_handler";
 import { DataChangeType } from "./data_change_type";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { Profile, ProfileJSON } from "../dto/profile";
+import { Relationship, RelationshipJSON } from "../dto/relationships";
 
 export namespace SearchIndexHandler {
   /**
@@ -13,7 +14,7 @@ export namespace SearchIndexHandler {
   export function register(): void {
     functions.logger.info("Registering search index handler");
 
-    DataHandlerRegistry.registerChangeHandler(DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete, ["activities", "users", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"], "*", execute);
+    DataHandlerRegistry.registerChangeHandler(DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete, ["activities", "users", "relationships", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"], "*", execute);
   }
 
   /**

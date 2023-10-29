@@ -161,6 +161,25 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     joinedDataRecords.get(promotionsSchemaKey)?.add(activity.enrichmentConfiguration?.promotionKey);
                 }
                 break;
+            case relationshipSchemaKey:
+                const relationship = obj as RelationshipJSON;
+                const members = relationship.members || [];
+
+                for (const member of members) {
+                    const memberId = member.memberId || "";
+                    const isCurrentMember = sender && sender === memberId;
+                    const hasId = obj._fl_meta_?.fl_id;
+
+                    if (sender && hasId && !isCurrentMember) {
+                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, obj._fl_meta_!.fl_id!]);
+                        joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
+                    }
+
+                    if (sender && memberId && !isCurrentMember) {
+                        joinedDataRecords.get(profileSchemaKey)?.add(memberId);
+                    }
+                }
+                break;
             case profileSchemaKey:
                 const isCurrentProfile = sender && sender === obj._fl_meta_?.fl_id;
                 const hasId = obj._fl_meta_?.fl_id;
