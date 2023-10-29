@@ -23,6 +23,7 @@ export namespace RelationshipHelpers {
     const managedSearchIndex = [] as string[];
 
     const allMemberIds = relationship.members.map((member: any) => member.memberId);
+    const memberCount = allMemberIds.length;
 
     for (const member of relationship.members) {
       if (typeof member.memberId !== "string") {
@@ -82,6 +83,10 @@ export namespace RelationshipHelpers {
     relationship.searchIndexRelationshipHides = hiddenSearchIndex;
     relationship.searchIndexRelationshipManages = managersSearchIndex;
     relationship.searchIndexRelationshipManaged = managedSearchIndex;
+
+    // Add in facet data for algolia.
+    relationship.isPendingConnection = !relationship.hasConnected && relationship.searchIndexRelationshipConnections.length > 0;
+    relationship.isFullyConnected = relationship.hasConnected && relationship.searchIndexRelationshipConnections.length === memberCount;
 
     return relationship;
   }
