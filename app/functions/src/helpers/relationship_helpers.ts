@@ -1,4 +1,6 @@
+import { Profile } from "../dto/profile";
 import { RelationshipJSON } from "../dto/relationships";
+import { ProfileService } from "../services/profile_service";
 import { RelationshipFlags, defaultRelationshipFlags } from "../services/types/relationship_flags";
 
 export namespace RelationshipHelpers {
@@ -7,7 +9,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to update.
    * @return {any} the updated relationship.
    */
-  export function updateRelationshipWithIndexes(relationship: any): any {
+  export async function updateRelationshipWithIndexes(relationship: any): Promise<any> {
     if (!relationship || !relationship.members || relationship.members.length === 0) {
       return relationship;
     }
@@ -87,6 +89,24 @@ export namespace RelationshipHelpers {
     // Add in facet data for algolia.
     relationship.isPendingConnection = !relationship.hasConnected && relationship.searchIndexRelationshipConnections.length > 0;
     relationship.isFullyConnected = relationship.hasConnected && relationship.searchIndexRelationshipConnections.length === memberCount;
+    relationship._tags = [];
+
+    // Add some user information into the relationship for easier searching.
+    for (const member of relationship.members) {
+      const memberId = member.memberId;
+      if (typeof memberId !== "string") {
+        continue;
+      }
+
+      const profileJson = await ProfileService.getProfile(memberId);
+      if (!profileJson) {
+        continue;
+      }
+
+      const profile = new Profile(profileJson);
+      const searchTags = profile.generateExternalSearchTags();
+      relationship._tags = relationship._tags.concat(searchTags);
+    }
 
     return relationship;
   }
