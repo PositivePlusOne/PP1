@@ -32,7 +32,6 @@ class PositiveChannelListTile extends ConsumerWidget {
     this.isEnabled = true,
     this.onTap,
     this.isSelected,
-    this.showProfileTagline = false,
     super.key,
   });
 
@@ -41,7 +40,6 @@ class PositiveChannelListTile extends ConsumerWidget {
   final void Function(BuildContext context)? onTap;
 
   final bool? isSelected;
-  final bool showProfileTagline;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +56,7 @@ class PositiveChannelListTile extends ConsumerWidget {
     final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentProfileId).toList();
 
     final Message? latestMessage = channel?.state?.messages.reversed.firstOrNull;
-    final bool isOneToOne = channel?.state?.members.length == 2;
+    // final bool isOneToOne = channel?.state?.members.length == 2;
 
     String title = '';
     String description = '';
@@ -80,10 +78,10 @@ class PositiveChannelListTile extends ConsumerWidget {
       time = latestMessage.createdAt.timeAgoFromNow;
     }
 
-    if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
-      final Profile profile = otherProfiles.first;
-      description = profile.getTagline(localizations);
-    }
+    // if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
+    //   final Profile profile = otherProfiles.first;
+    //   description = profile.getTagline(localizations);
+    // }
 
     final List<Widget> indicators = [];
     const double overlapValue = kIconHuge * 0.50;

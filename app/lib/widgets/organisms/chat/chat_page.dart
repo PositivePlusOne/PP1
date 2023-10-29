@@ -558,23 +558,11 @@ class MessageInput extends ConsumerWidget {
           PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
           const SizedBox(width: kPaddingSmall),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  getSafeDisplayNameFromProfile(targetProfile),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: typography.styleTitle.copyWith(color: colors.colorGray7),
-                ),
-                const SizedBox(width: kPaddingSmall),
-                Text(
-                  targetProfile?.getTagline(appLocalizations) ?? appLocalizations.shared_profile_tagline,
-                  maxLines: 1,
-                  style: typography.styleSubtext.copyWith(color: colors.colorGray3),
-                ),
-              ],
+            child: Text(
+              getSafeDisplayNameFromProfile(targetProfile),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: typography.styleTitle.copyWith(color: colors.colorGray7),
             ),
           ),
         ],

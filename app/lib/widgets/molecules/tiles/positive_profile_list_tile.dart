@@ -103,9 +103,6 @@ class PositiveProfileListTile extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final String tagline = targetProfile?.getTagline(localizations) ?? '';
-
     return PositiveTapBehaviour(
       onTap: onListTileSelected,
       isEnabled: isEnabled,
@@ -124,23 +121,11 @@ class PositiveProfileListTile extends ConsumerWidget {
             PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
             const SizedBox(width: kPaddingSmall),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    getSafeDisplayNameFromProfile(targetProfile),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
-                  ),
-                  Text(
-                    tagline,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.styleSubtext.copyWith(color: colors.colorGray3),
-                  ),
-                ],
+              child: Text(
+                getSafeDisplayNameFromProfile(targetProfile),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: typography.styleTitle.copyWith(color: colors.colorGray7),
               ),
             ),
             const SizedBox(width: kPaddingSmall),

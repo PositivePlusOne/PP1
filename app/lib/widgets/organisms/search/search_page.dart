@@ -90,7 +90,7 @@ class SearchPage extends ConsumerWidget {
             <Widget>[
               const SizedBox(height: kPaddingLarge),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                 child: PositiveTitleBodyWidget(
                   title: viewModel.searchNotFoundTitle(localisations),
                   body: viewModel.searchNotFoundBody(localisations),
@@ -102,7 +102,7 @@ class SearchPage extends ConsumerWidget {
           searchResultWidgets.addAll(
             <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                 child: Text(
                   localisations.page_search_subtitle_pending,
                   style: typography.styleSubtext.copyWith(color: colours.colorGray7),
@@ -232,8 +232,8 @@ class SearchPage extends ConsumerWidget {
         ),
         SliverPadding(
           padding: EdgeInsets.only(
-            left: kPaddingSmall,
-            right: kPaddingSmall,
+            left: kPaddingNone,
+            right: kPaddingNone,
             bottom: kPaddingMedium + mediaQuery.padding.bottom,
           ),
           sliver: SliverToBoxAdapter(
