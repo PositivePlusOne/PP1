@@ -22,7 +22,7 @@ export namespace UpdatePromotionMixpanelAnalyticsAction {
             schemaKey: 'promotions',
             where: [
                 { fieldPath: 'isActive', op: '==', value: true },
-            ]
+            ],
         }) as PromotionJSON[];
 
         AdminQuickActionService.appendOutput(action, `Updating ${promotions.length} promotions`);
@@ -54,7 +54,7 @@ export namespace UpdatePromotionMixpanelAnalyticsAction {
         // const startDate = startDateTimestamp ? StreamHelpers.timestampToYYYYMMDD(startDateTimestamp) : StreamHelpers.getCurrentYYYYMMDD();
         // const endDate = StreamHelpers.getCurrentYYYYMMDD();
 
-        let totalViews = promotionStatistics.counts?.total_views ?? 0;
+        const totalViews = promotionStatistics.counts?.total_views ?? 0;
 
         AdminQuickActionService.appendOutput(action, `Fetching data from Mixpanel for promotion ${promotion._fl_meta_.fl_id}`);
 

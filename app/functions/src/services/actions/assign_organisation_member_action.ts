@@ -5,6 +5,7 @@ import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { RelationshipService } from '../relationship_service';
 import { FeedService } from '../feed_service';
+import { allVisibilityFlags } from '../../dto/profile';
 
 export namespace AssignOrganisationMemberAction {
     export async function assignOrganisationMember(action: AdminQuickActionJSON): Promise<void> {
@@ -58,13 +59,18 @@ export namespace AssignOrganisationMemberAction {
         if (!targetProfile?.featureFlags?.includes('organisation')) {
             targetProfile.featureFlags = targetProfile?.featureFlags ?? [];
             targetProfile.featureFlags.push('organisation');
-            await targetProfileReference?.update(targetProfile);
             AdminQuickActionService.appendOutput(action, `Successfully added the organisation flag to the profile ${targetProfileId}.`);
         } else {
             AdminQuickActionService.appendOutput(action, `The organisation flag already exists on the profile ${targetProfileId}.`);
         }
 
-        AdminQuickActionService.appendOutput(action, `Verifying the orginisation is subscribed to the correct feeds.`);
+        AdminQuickActionService.appendOutput(action, `Adding all expected visibility flags to the organisation profile`);
+        targetProfile.visibilityFlags = [...allVisibilityFlags];
+        
+        AdminQuickActionService.appendOutput(action, `Updating the organisation profile.`);
+        await targetProfileReference?.update(targetProfile);
+
+        AdminQuickActionService.appendOutput(action, `Verifying the organisation is subscribed to the correct feeds.`);
         const streamClient = FeedService.getFeedsClient();
         await FeedService.verifyDefaultFeedSubscriptionsForUser(streamClient, targetProfile);
 
