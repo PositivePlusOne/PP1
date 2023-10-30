@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -624,6 +626,19 @@ extension ActivityExt on Activity {
       logger.i('Already on post $activityId');
       return;
     }
+
+    logger.d('Tracking post view for $activityId');
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    await analyticsController.trackEvent(
+      AnalyticEvents.postViewed,
+      includeDefaultProperties: true,
+      properties: {
+        'activityId': activityId,
+        'feed': primaryFeed.targetSlug,
+        'profileId': profileId,
+        'promotionId': enrichmentConfiguration?.promotionKey ?? '',
+      },
+    );
 
     logger.i('Navigating to post $activityId');
     await router.push(postRoute);

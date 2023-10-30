@@ -17,13 +17,13 @@ class Promotion with _$Promotion {
   const factory Promotion({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') String title,
-    @Default('') String descriptionMarkdown,
     @Default('') String link,
     @Default('') String linkText,
     @Default([]) List<PromotionOwner> owners,
     @Default([]) List<PromotedActivity> activities,
-    @JsonKey(fromJson: dateFromUnknown) String? startTime,
-    @JsonKey(fromJson: dateFromUnknown) String? endTime,
+    @Default(false) bool isActive,
+    @Default(0) int totalViewsSinceLastUpdate,
+    @Default(0) int totalViewsAllotment,
   }) = _Promotion;
 
   factory Promotion.fromJson(Map<String, dynamic> json) => _$PromotionFromJson(json);
