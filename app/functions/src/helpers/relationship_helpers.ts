@@ -78,6 +78,8 @@ export namespace RelationshipHelpers {
       }
     }
 
+    // TODO: Move the top level flags to this function (connected, followed, etc)
+
     relationship.searchIndexRelationship = searchIndex;
     relationship.searchIndexRelationshipMutes = mutedSearchIndex;
     relationship.searchIndexRelationshipBlocks = blockedSearchIndex;
