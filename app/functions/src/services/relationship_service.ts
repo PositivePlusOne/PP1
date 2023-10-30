@@ -832,6 +832,8 @@ export namespace RelationshipService {
       throw new Error("Relationship does not have a flamelink id");
     }
 
+    let isConnected = true;
+
     const memberIds = [];
     for (const member of relationship.members) {
       if (typeof member.memberId !== "string") {
@@ -842,9 +844,13 @@ export namespace RelationshipService {
       if (member.memberId === sender) {
         member.hasConnected = true;
       }
+
+      if (!member.hasConnected) {
+        isConnected = false;
+      }
     }
 
-    relationship.connected = true;
+    relationship.connected = isConnected;
     relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     await resetRelationshipPaginationCache(relationship);
 
