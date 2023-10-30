@@ -4,6 +4,16 @@ import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
 
+  export function getCurrentYYYYMMDD(): string {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+  }
+
+  export function timestampToYYYYMMDD(timestamp: Timestamp): string {
+    const date = timestamp.toDate();
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  }
+
   export function getCurrentTimestamp(): Timestamp {
     return getTimestampForDate(new Date());
   }
