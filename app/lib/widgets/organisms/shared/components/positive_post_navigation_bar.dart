@@ -51,7 +51,8 @@ class PositivePostNavigationBar extends HookConsumerWidget {
 
     final double screenWidth = MediaQuery.of(context).size.width;
     final double availableWidth = screenWidth - kPaddingSmall * 2 - kPaddingSmallMedium * 2;
-    final double buttonWidth = (availableWidth - kPaddingExtraSmall * 2) / 3;
+    // final double buttonWidth = (availableWidth - kPaddingExtraSmall * 2) / 3;
+    final double buttonWidth = (availableWidth - kPaddingExtraSmall * 2) / 2;
 
     final Widget buttonFlex = PositivePostNavigationBarButton(
       buttonStyle: PositivePostNavigationButtonStyle.filled,
@@ -161,8 +162,8 @@ class PositivePostNavigationBar extends HookConsumerWidget {
                     buttonPost,
                     animatedPadding,
                     buttonClip,
-                    animatedPadding,
-                    buttonEvent,
+                    // animatedPadding,
+                    // buttonEvent,
                   ],
                 ),
             ],
