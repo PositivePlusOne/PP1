@@ -1,10 +1,9 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
-// Flutter imports:
+// Dart imports:
 import 'dart:async';
 
-import 'package:app/dtos/builders/relationship_search_filter_builder.dart';
-import 'package:app/extensions/widget_extensions.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -165,12 +164,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   FutureOr<void> onSearchSubmitted(String query) async {
     final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
     final CommunitiesController controller = providerContainer.read(provider.notifier);
-    final String searchQuery = controller.state.searchQuery;
-    final bool isSearching = searchQuery.isNotEmpty;
-
-    if (isSearching) {
-      return;
-    }
 
     final Logger logger = ref.read(loggerProvider);
     logger.i('PositiveCommunitiesDialog - onSearchSubmitted - Loading next community data: $query');
@@ -244,6 +237,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       currentFeedState.buildCacheKey(),
     ]);
 
+    final bool isSearching = searchQuery.isNotEmpty;
+
     final Widget child = switch (selectedCommunityType) {
       CommunityType.following => buildRelationshipList(
           context: context,
@@ -252,7 +247,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_following_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_following_empty_title,
           noDataBody: localizations.page_community_following_empty_body,
         ),
       CommunityType.followers => buildRelationshipList(
@@ -262,7 +257,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_followers_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_followers_empty_title,
           noDataBody: localizations.page_community_followers_empty_body,
         ),
       CommunityType.connected => buildRelationshipList(
@@ -272,7 +267,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_connections_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_connections_empty_title,
           noDataBody: localizations.page_community_connections_empty_body,
         ),
       CommunityType.blocked => buildRelationshipList(
@@ -282,7 +277,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_blocked_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_blocked_empty_title,
           noDataBody: localizations.page_community_blocked_empty_body,
         ),
       CommunityType.managed => buildRelationshipList(
@@ -292,7 +287,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_managed_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_managed_empty_title,
           noDataBody: localizations.page_community_managed_empty_body,
         ),
       CommunityType.supported => buildRelationshipList(
@@ -302,7 +297,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: buildPageStateFromSupportedProfiles().pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_supported_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_supported_empty_title,
           noDataBody: localizations.page_community_supported_empty_body,
         ),
     };
@@ -327,7 +322,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         PositiveBasicSliverList(
           includeAppBar: false,
           children: <Widget>[
-            buildAppBar(context, colors),
+            buildAppBar(context, colors, controller.searchController),
             const SizedBox(height: kPaddingMedium),
             if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
@@ -455,7 +450,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     );
   }
 
-  Widget buildAppBar(BuildContext context, DesignColorsModel colors) {
+  Widget buildAppBar(BuildContext context, DesignColorsModel colors, TextEditingController controller) {
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     return Row(
       children: <Widget>[
@@ -474,6 +469,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             hintText: 'Search People',
             onSubmitted: onSearchSubmitted,
             onChange: onSearchChanged,
+            controller: controller,
             isEnabled: true,
           ),
         ),

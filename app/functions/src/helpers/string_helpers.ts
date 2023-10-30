@@ -32,4 +32,9 @@ export namespace StringHelpers {
   export function generateHmac(key: string): crypto.Hmac {
     return crypto.createHmac("sha256", key);
   }
+
+  export function isFirebaseUID(uid: string): boolean {
+    const expectedLength = 28;
+    return uid.length === expectedLength && /^[A-Za-z0-9]+$/.test(uid);
+}
 }
