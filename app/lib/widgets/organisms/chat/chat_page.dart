@@ -23,8 +23,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/chat_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/extensions/localization_extensions.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';

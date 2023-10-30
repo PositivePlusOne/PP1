@@ -33,12 +33,14 @@ class SearchApiService {
     required String index,
     required T Function(Map<String, dynamic> json) fromJson,
     List<String> filters = const [],
+    List<String> facetFilters = const [],
     Pagination? pagination,
   }) async {
     final requestPayload = buildRequestPayload(name: 'search-search', pagination: pagination, parameters: {
       'query': query,
       'index': index,
       'filters': filters,
+      'facetFilters': facetFilters,
     });
 
     final Logger logger = providerContainer.read(loggerProvider);
@@ -58,6 +60,7 @@ class SearchApiService {
         'query': query,
         'index': index,
         'filters': filters,
+        'facetFilters': facetFilters,
       },
     );
 

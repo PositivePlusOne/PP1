@@ -8,6 +8,7 @@ import { CacheService } from "../services/cache_service";
 import { MediaJSON } from "../dto/media";
 import { ProfileJSON } from "../dto/profile";
 import { DataService } from "../services/data_service";
+import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace ProfileEndpoints {
   export const getProfiles = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -194,6 +195,11 @@ export namespace ProfileEndpoints {
     });
 
     if (!(typeof displayName === "string") || displayName.length < 3) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
+    }
+
+    const isFirebaseUIDFormat = StringHelpers.isFirebaseUID(displayName);
+    if (isFirebaseUIDFormat) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
     }
 
