@@ -10,14 +10,10 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart' as pp1_media;
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 
 class PositiveVideoPlayer extends StatefulHookConsumerWidget {
@@ -117,11 +113,11 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final theme = buildVideoPlayerThemeData(colors: colors, typography: typography);
+    // final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    // final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    final double size = MediaQuery.of(context).size.width;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     double? videoAspectRatio;
     if (widget.media.height > 0 && widget.media.width > 0) {
@@ -131,46 +127,27 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     return VisibilityDetector(
       key: widget.visibilityDetectorKey,
       onVisibilityChanged: (info) => onVisabilityChange(info),
-      child: SizedBox(
-        height: size,
-        width: size,
-        child: MaterialDesktopVideoControlsTheme(
-          normal: theme,
-          fullscreen: theme,
-          child: ClipRRect(
-            borderRadius: widget.borderRadius ?? BorderRadius.zero,
+      child: Container(
+        constraints: BoxConstraints(
+          minWidth: screenWidth,
+          maxWidth: screenWidth,
+          maxHeight: screenHeight * 0.7,
+        ),
+        child: ClipRRect(
+          borderRadius: widget.borderRadius ?? BorderRadius.zero,
+          child: AspectRatio(
+            aspectRatio: widget.media.width / widget.media.height,
             child: Video(
               filterQuality: FilterQuality.none,
               alignment: Alignment.center,
               controller: videoController,
               pauseUponEnteringBackgroundMode: true,
-              width: size,
-              height: size,
               aspectRatio: videoAspectRatio,
               wakelock: true,
-              controls: (state) => MaterialDesktopVideoControls(state),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  MaterialDesktopVideoControlsThemeData buildVideoPlayerThemeData({
-    required DesignColorsModel colors,
-    required DesignTypographyModel typography,
-  }) {
-    return MaterialDesktopVideoControlsThemeData(
-      padding: const EdgeInsets.all(kPaddingSmallMedium),
-      seekBarThumbColor: colors.purple,
-      seekBarPositionColor: colors.purple,
-      seekBarBufferColor: colors.colorGray1,
-      seekBarColor: colors.white,
-      buttonBarButtonColor: colors.white,
-      seekBarThumbSize: kVideoThumbSize,
-      visibleOnMount: true,
-      seekBarHoverColor: colors.purple,
-      volumeBarActiveColor: colors.purple,
     );
   }
 }
