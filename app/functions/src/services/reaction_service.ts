@@ -12,10 +12,11 @@ import { RelationshipService } from "./relationship_service";
 import { RelationshipState } from "./types/relationship_state";
 import { ReactionCommentNotification } from "./builders/notifications/activities/reaction_comment_notification";
 import { ProfileService } from "./profile_service";
-import { ProfileJSON } from "../dto/profile";
+import { ProfileJSON, ProfileStatisicsJSON } from "../dto/profile";
 import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
 import { ProfileStatisticsService } from "./profile_statistics_service";
 import { ReactionStatisticsService } from "./reaction_statistics_service";
+import { ReactionStatisticsJSON } from "../dto/reaction_statistics";
 
 export namespace ReactionService {
 
@@ -157,7 +158,7 @@ export namespace ReactionService {
         return `${feed}:${userId}`;
     }
 
-    export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<ReactionJSON> {
+    export async function addReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<[ReactionJSON, ReactionStatisticsJSON, ProfileStatisicsJSON, ProfileStatisicsJSON]> {
         if (!reaction.activity_id || !reaction.kind || !reaction.user_id) {
             throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
         }
@@ -165,6 +166,7 @@ export namespace ReactionService {
         const expectedKey = getExpectedKeyFromOptions(reaction);
         const expectedActivityId = reaction.activity_id;
         const expectedUserId = reaction.user_id;
+        const targetUserId = reaction.target_user_id;
         const expectedKind = reaction.kind;
 
         const reactionEntry = {
@@ -183,7 +185,7 @@ export namespace ReactionService {
         if (!reaction.entry_id) {
             throw new functions.https.HttpsError("internal", "Unable to add reaction");
         }
-        
+
         reaction = await DataService.updateDocument({
             schemaKey: reactionSchemaKey,
             entryId: expectedKey,
@@ -192,14 +194,18 @@ export namespace ReactionService {
             },
         }) as ReactionJSON;
 
-        await Promise.all([
+        const expectedKindReceived = `${expectedKind}_received`;
+        const expectedKindGiven = `${expectedKind}_given`;
+
+        const [newReactionStats, newSourceProfileStats, newTargetProfileStats] = await Promise.all([
             ReactionStatisticsService.updateReactionCountForActivity(expectedActivityId, expectedKind, 1),
-            ProfileStatisticsService.updateReactionCountForProfile(expectedUserId, expectedKind, 1),
+            ProfileStatisticsService.updateReactionCountForProfile(expectedUserId, expectedKindGiven, 1),
+            ProfileStatisticsService.updateReactionCountForProfile(targetUserId || "", expectedKindReceived, 1),
         ]);
 
         functions.logger.info("Added reaction", { reaction });
 
-        return reaction;
+        return [reaction, newReactionStats, newSourceProfileStats, newTargetProfileStats];
     }
 
     export async function getReaction(reactionId: string): Promise<ReactionJSON> {
@@ -219,7 +225,7 @@ export namespace ReactionService {
         }) as ReactionJSON;
     }
 
-    export async function deleteReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<void> {
+    export async function deleteReaction(client: StreamClient<DefaultGenerics>, reaction: ReactionJSON): Promise<[ReactionStatisticsJSON, ProfileStatisicsJSON, ProfileStatisicsJSON]> {
         const id = FlamelinkHelpers.getFlamelinkIdFromObject(reaction);
         if (!id || !reaction.activity_id || !reaction.kind || !reaction.user_id) {
             throw new Error(`Invalid reaction: ${JSON.stringify(reaction)}`);
@@ -229,15 +235,22 @@ export namespace ReactionService {
             await client.reactions.delete(reaction.entry_id);
         }
 
-        await Promise.all([
+        const expectedKindReceived = `${reaction.kind}_received`;
+        const expectedKindGiven = `${reaction.kind}_given`;
+
+        const [newReactionStats, newSourceProfileStats, newTargetProfileStats] = await Promise.all([
             ReactionStatisticsService.updateReactionCountForActivity(reaction.activity_id, reaction.kind, -1),
-            ProfileStatisticsService.updateReactionCountForProfile(reaction.user_id, reaction.kind, -1),
+            ProfileStatisticsService.updateReactionCountForProfile(reaction.target_user_id || "", expectedKindReceived, -1),
+            ProfileStatisticsService.updateReactionCountForProfile(reaction.user_id, expectedKindGiven, -1),
         ]);
 
         await DataService.deleteDocument({
             schemaKey: reactionSchemaKey,
             entryId: id,
         });
+
+        functions.logger.info("Deleted reaction", { reaction });
+        return [newReactionStats, newSourceProfileStats, newTargetProfileStats];
     }
 
     export async function listReactionsForActivity(client: StreamClient<DefaultGenerics>, kind: string, activity_id: string, limit = 25, cursor = ""): Promise<ReactionJSON[]> {

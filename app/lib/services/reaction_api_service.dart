@@ -19,15 +19,6 @@ FutureOr<ReactionApiService> reactionApiService(ReactionApiServiceRef ref) async
 }
 
 class ReactionApiService {
-  FutureOr<EndpointResponse> sharePostToFeed({required String activityId}) async {
-    return await getHttpsCallableResult<EndpointResponse>(
-      name: 'post-shareActivityToFeed',
-      parameters: {
-        'activityId': activityId,
-      },
-    );
-  }
-
   FutureOr<EndpointResponse> sharePostToConversations({
     required String activityId,
     required List<String> targets,

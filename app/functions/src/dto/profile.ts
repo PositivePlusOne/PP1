@@ -138,8 +138,9 @@ export class Profile {
     removeFlaggedData(): void {
         const visibilityFlags = Array.from(this.visibilityFlags);
         const isIncognito = this.isIncognito();
+        const isOrganisation = this.isOrganisation();
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagName)) {
+        if (isIncognito || (isOrganisation || !visibilityFlags.includes(visibilityFlagName))) {
             this.name = '';
         }
 
@@ -155,7 +156,7 @@ export class Profile {
             this.genders = new Set();
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagLocation)) {
+        if (isIncognito || (isOrganisation || !visibilityFlags.includes(visibilityFlagLocation))) {
             this.place = undefined;
             this.placeSkipped = false;
         }
@@ -164,7 +165,7 @@ export class Profile {
             this.hivStatus = '';
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
+        if (isIncognito || (isOrganisation || !visibilityFlags.includes(visibilityFlagCompanySectors))) {
             this.companySectors = new Set();
         }
 

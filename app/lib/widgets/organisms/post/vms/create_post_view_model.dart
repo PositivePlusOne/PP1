@@ -52,6 +52,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isBusy,
     @Default(false) bool isProcessingMedia,
     @Default(false) bool isUploadingMedia,
+    @Default(false) bool isCreatingPost,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default(false) bool isEditing,
@@ -66,6 +67,9 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default("") String activeButtonFlexText,
     @Default(false) bool saveToGallery,
     required AwesomeFilter currentFilter,
+    //? Repost
+    @Default('') String? reposterActivityID,
+    //? Editing
     required ActivityData previousActivity,
     //? Clip delay and clip length options
     @Default(0) int delayTimerCurrentSelection,
@@ -73,7 +77,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(0) int maximumClipDurationSelection,
     @Default(false) bool isMaximumClipDurationEnabled,
     @Default(true) bool isBottomNavigationEnabled,
-    @Default(false) bool isCreatingClip,
+    @Default(false) bool isRecordingClip,
     required GlobalKey<PositiveCameraState> cameraWidgetKey,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton activeButton,
     @Default(PositivePostNavigationActiveButton.post) PositivePostNavigationActiveButton lastActiveButton,
@@ -107,7 +111,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
 
     //? if we are currently creating a clip request that we stop
-    if (state.isCreatingClip) {
+    if (state.isRecordingClip) {
       getCurrentCameraState.onCloseButtonTapped();
       return false;
     }
@@ -168,6 +172,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     try {
       late final CreatePostCurrentPage currentPage;
       late final PostType currentPostType;
+
       switch (activityData.postType) {
         case PostType.image:
           currentPage = CreatePostCurrentPage.createPostImage;
@@ -177,12 +182,30 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           currentPage = CreatePostCurrentPage.createPostMultiImage;
           currentPostType = PostType.multiImage;
           break;
+        case PostType.repost:
+          currentPage = CreatePostCurrentPage.repostPreview;
+          currentPostType = PostType.repost;
+          break;
         case PostType.event:
         case PostType.clip:
         default:
           currentPage = CreatePostCurrentPage.createPostText;
           currentPostType = PostType.text;
           break;
+      }
+
+      // If the post is a repost, we have no data so we can skip this
+      if (activityData.postType == PostType.repost) {
+        state = state.copyWith(
+          currentCreatePostPage: currentPage,
+          currentPostType: currentPostType,
+          reposterActivityID: activityData.reposterActivityID,
+          activeButton: PositivePostNavigationActiveButton.flex,
+          activeButtonFlexText: localisations.page_create_post_create,
+          previousActivity: activityData,
+        );
+
+        return;
       }
 
       captionController.text = activityData.content ?? "";
@@ -230,7 +253,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-      state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty);
+      state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty, isCreatingPost: true);
 
       final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
       for (final GalleryEntry entry in galleryEntries) {
@@ -246,14 +269,47 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         ),
       ));
 
+      late final ActivityData activityData;
+
+      if (state.isEditing) {
+        activityData = ActivityData(
+          activityID: state.currentActivityID,
+          content: captionController.text.trim(),
+          altText: altTextController.text.trim(),
+          promotionKey: promotionKeyTextController.text.trim(),
+          tags: state.tags,
+          postType: state.currentPostType,
+          media: media,
+          allowSharing: state.allowSharing,
+          commentPermissionMode: state.allowComments,
+          visibilityMode: state.visibleTo,
+        );
+      } else {
+        activityData = ActivityData(
+          content: captionController.text.trim(),
+          altText: altTextController.text.trim(),
+          promotionKey: promotionKeyTextController.text.trim(),
+          tags: state.tags,
+          postType: state.currentPostType,
+          media: media,
+          allowSharing: state.allowSharing,
+          commentPermissionMode: state.allowComments,
+          visibilityMode: state.visibleTo,
+          reposterActivityID: state.reposterActivityID,
+        );
+      }
+
+      // Prevent sharing of reposts (for now)
+      if (activityData.postType == PostType.repost) {
+        activityData.allowSharing = false;
+      }
+
       if (!state.isEditing) {
-        final ActivityData activityData = ActivityData(content: captionController.text.trim(), altText: altTextController.text.trim(), promotionKey: promotionKeyTextController.text.trim(), tags: state.tags, postType: state.currentPostType, media: media, allowSharing: state.allowSharing, commentPermissionMode: state.allowComments, visibilityMode: state.visibleTo);
         await activityController.postActivity(
           currentProfile: currentProfile,
           activityData: activityData,
         );
       } else {
-        final ActivityData activityData = ActivityData(activityID: state.currentActivityID, content: captionController.text.trim(), altText: altTextController.text.trim(), promotionKey: promotionKeyTextController.text.trim(), tags: state.tags, postType: state.currentPostType, media: media, allowSharing: state.allowSharing, commentPermissionMode: state.allowComments, visibilityMode: state.visibleTo);
         await activityController.updateActivity(
           currentProfile: currentProfile,
           activityData: activityData,
@@ -266,7 +322,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       await onPostActivityFailure(e);
       return;
     } finally {
-      state = state.copyWith(isBusy: false, isUploadingMedia: false);
+      state = state.copyWith(isBusy: false, isUploadingMedia: false, isCreatingPost: false);
     }
   }
 
@@ -371,7 +427,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   void onUpdatePromotePost(String userId) {
-    // get the current tags
+    if (userId.isEmpty) {
+      throw Exception("User ID is empty, cannot promote post");
+    }
+
     final List<String> newTags = [...state.tags];
 
     // and toggle the state
@@ -477,7 +536,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
     state = state.copyWith(
       isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
-      isCreatingClip: clipRecordingState.isActive,
+      isRecordingClip: clipRecordingState.isActive,
       activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
@@ -505,7 +564,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.createPostEditClip,
       currentPostType: PostType.clip,
-      isCreatingClip: false,
+      isRecordingClip: false,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
       isBottomNavigationEnabled: true,
@@ -700,6 +759,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           state = state.copyWith(isProcessingMedia: false, isBusy: false);
         }
         break;
+      case CreatePostCurrentPage.repostPreview:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostText,
+          activeButtonFlexText: localisations.page_create_post_create,
+        );
       case CreatePostCurrentPage.createPostClip:
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:

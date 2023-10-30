@@ -272,8 +272,14 @@ class AccountFormController extends _$AccountFormController {
     state = state.copyWith(isBusy: true);
 
     try {
-      final UserController userController = ref.read(userControllerProvider.notifier);
-      await userController.updateEmailAddress(state.emailAddress);
+      //? User profiles are bound to firebase auth users, so we need to update the email address of the firebase auth user
+      if (profileController.isCurrentlyUserProfile) {
+        final UserController userController = ref.read(userControllerProvider.notifier);
+        logger.d('Updating email address of the authenticated user');
+        await userController.updateEmailAddress(state.emailAddress);
+      }
+
+      //? Then we need to update the email address of the profile
       await profileController.updateEmailAddress(emailAddress: state.emailAddress);
 
       final AccountUpdatedRoute route = AccountUpdatedRoute(

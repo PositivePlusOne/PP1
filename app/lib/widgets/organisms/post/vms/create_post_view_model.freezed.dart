@@ -19,6 +19,7 @@ mixin _$CreatePostViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
   bool get isProcessingMedia => throw _privateConstructorUsedError;
   bool get isUploadingMedia => throw _privateConstructorUsedError;
+  bool get isCreatingPost => throw _privateConstructorUsedError;
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
@@ -41,7 +42,10 @@ mixin _$CreatePostViewModelState {
       throw _privateConstructorUsedError;
   String get activeButtonFlexText => throw _privateConstructorUsedError;
   bool get saveToGallery => throw _privateConstructorUsedError;
-  AwesomeFilter get currentFilter => throw _privateConstructorUsedError;
+  AwesomeFilter get currentFilter =>
+      throw _privateConstructorUsedError; //? Repost
+  String? get reposterActivityID =>
+      throw _privateConstructorUsedError; //? Editing
   ActivityData get previousActivity =>
       throw _privateConstructorUsedError; //? Clip delay and clip length options
   int get delayTimerCurrentSelection => throw _privateConstructorUsedError;
@@ -49,7 +53,7 @@ mixin _$CreatePostViewModelState {
   int get maximumClipDurationSelection => throw _privateConstructorUsedError;
   bool get isMaximumClipDurationEnabled => throw _privateConstructorUsedError;
   bool get isBottomNavigationEnabled => throw _privateConstructorUsedError;
-  bool get isCreatingClip => throw _privateConstructorUsedError;
+  bool get isRecordingClip => throw _privateConstructorUsedError;
   GlobalKey<PositiveCameraState> get cameraWidgetKey =>
       throw _privateConstructorUsedError;
   PositivePostNavigationActiveButton get activeButton =>
@@ -72,6 +76,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       {bool isBusy,
       bool isProcessingMedia,
       bool isUploadingMedia,
+      bool isCreatingPost,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       bool isEditing,
@@ -92,13 +97,14 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       String activeButtonFlexText,
       bool saveToGallery,
       AwesomeFilter currentFilter,
+      String? reposterActivityID,
       ActivityData previousActivity,
       int delayTimerCurrentSelection,
       bool isDelayTimerEnabled,
       int maximumClipDurationSelection,
       bool isMaximumClipDurationEnabled,
       bool isBottomNavigationEnabled,
-      bool isCreatingClip,
+      bool isRecordingClip,
       GlobalKey<PositiveCameraState> cameraWidgetKey,
       PositivePostNavigationActiveButton activeButton,
       PositivePostNavigationActiveButton lastActiveButton});
@@ -124,6 +130,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isBusy = null,
     Object? isProcessingMedia = null,
     Object? isUploadingMedia = null,
+    Object? isCreatingPost = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? isEditing = null,
@@ -138,13 +145,14 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
     Object? currentFilter = null,
+    Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
     Object? isDelayTimerEnabled = null,
     Object? maximumClipDurationSelection = null,
     Object? isMaximumClipDurationEnabled = null,
     Object? isBottomNavigationEnabled = null,
-    Object? isCreatingClip = null,
+    Object? isRecordingClip = null,
     Object? cameraWidgetKey = null,
     Object? activeButton = null,
     Object? lastActiveButton = null,
@@ -161,6 +169,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
       isUploadingMedia: null == isUploadingMedia
           ? _value.isUploadingMedia
           : isUploadingMedia // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isCreatingPost: null == isCreatingPost
+          ? _value.isCreatingPost
+          : isCreatingPost // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -218,6 +230,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
+      reposterActivityID: freezed == reposterActivityID
+          ? _value.reposterActivityID
+          : reposterActivityID // ignore: cast_nullable_to_non_nullable
+              as String?,
       previousActivity: null == previousActivity
           ? _value.previousActivity
           : previousActivity // ignore: cast_nullable_to_non_nullable
@@ -242,9 +258,9 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.isBottomNavigationEnabled
           : isBottomNavigationEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      isCreatingClip: null == isCreatingClip
-          ? _value.isCreatingClip
-          : isCreatingClip // ignore: cast_nullable_to_non_nullable
+      isRecordingClip: null == isRecordingClip
+          ? _value.isRecordingClip
+          : isRecordingClip // ignore: cast_nullable_to_non_nullable
               as bool,
       cameraWidgetKey: null == cameraWidgetKey
           ? _value.cameraWidgetKey
@@ -293,6 +309,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       {bool isBusy,
       bool isProcessingMedia,
       bool isUploadingMedia,
+      bool isCreatingPost,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       bool isEditing,
@@ -313,13 +330,14 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       String activeButtonFlexText,
       bool saveToGallery,
       AwesomeFilter currentFilter,
+      String? reposterActivityID,
       ActivityData previousActivity,
       int delayTimerCurrentSelection,
       bool isDelayTimerEnabled,
       int maximumClipDurationSelection,
       bool isMaximumClipDurationEnabled,
       bool isBottomNavigationEnabled,
-      bool isCreatingClip,
+      bool isRecordingClip,
       GlobalKey<PositiveCameraState> cameraWidgetKey,
       PositivePostNavigationActiveButton activeButton,
       PositivePostNavigationActiveButton lastActiveButton});
@@ -346,6 +364,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? isBusy = null,
     Object? isProcessingMedia = null,
     Object? isUploadingMedia = null,
+    Object? isCreatingPost = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? isEditing = null,
@@ -360,13 +379,14 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
     Object? currentFilter = null,
+    Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
     Object? isDelayTimerEnabled = null,
     Object? maximumClipDurationSelection = null,
     Object? isMaximumClipDurationEnabled = null,
     Object? isBottomNavigationEnabled = null,
-    Object? isCreatingClip = null,
+    Object? isRecordingClip = null,
     Object? cameraWidgetKey = null,
     Object? activeButton = null,
     Object? lastActiveButton = null,
@@ -383,6 +403,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
       isUploadingMedia: null == isUploadingMedia
           ? _value.isUploadingMedia
           : isUploadingMedia // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isCreatingPost: null == isCreatingPost
+          ? _value.isCreatingPost
+          : isCreatingPost // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -440,6 +464,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
+      reposterActivityID: freezed == reposterActivityID
+          ? _value.reposterActivityID
+          : reposterActivityID // ignore: cast_nullable_to_non_nullable
+              as String?,
       previousActivity: null == previousActivity
           ? _value.previousActivity
           : previousActivity // ignore: cast_nullable_to_non_nullable
@@ -464,9 +492,9 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.isBottomNavigationEnabled
           : isBottomNavigationEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      isCreatingClip: null == isCreatingClip
-          ? _value.isCreatingClip
-          : isCreatingClip // ignore: cast_nullable_to_non_nullable
+      isRecordingClip: null == isRecordingClip
+          ? _value.isRecordingClip
+          : isRecordingClip // ignore: cast_nullable_to_non_nullable
               as bool,
       cameraWidgetKey: null == cameraWidgetKey
           ? _value.cameraWidgetKey
@@ -493,6 +521,7 @@ class _$CreatePostViewModelStateImpl
       {this.isBusy = false,
       this.isProcessingMedia = false,
       this.isUploadingMedia = false,
+      this.isCreatingPost = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
       this.isEditing = false,
@@ -513,13 +542,14 @@ class _$CreatePostViewModelStateImpl
       this.activeButtonFlexText = "",
       this.saveToGallery = false,
       required this.currentFilter,
+      this.reposterActivityID = '',
       required this.previousActivity,
       this.delayTimerCurrentSelection = 0,
       this.isDelayTimerEnabled = false,
       this.maximumClipDurationSelection = 0,
       this.isMaximumClipDurationEnabled = false,
       this.isBottomNavigationEnabled = true,
-      this.isCreatingClip = false,
+      this.isRecordingClip = false,
       required this.cameraWidgetKey,
       this.activeButton = PositivePostNavigationActiveButton.post,
       this.lastActiveButton = PositivePostNavigationActiveButton.post})
@@ -535,6 +565,9 @@ class _$CreatePostViewModelStateImpl
   @override
   @JsonKey()
   final bool isUploadingMedia;
+  @override
+  @JsonKey()
+  final bool isCreatingPost;
   @override
   @JsonKey()
   final PostType currentPostType;
@@ -591,6 +624,11 @@ class _$CreatePostViewModelStateImpl
   final bool saveToGallery;
   @override
   final AwesomeFilter currentFilter;
+//? Repost
+  @override
+  @JsonKey()
+  final String? reposterActivityID;
+//? Editing
   @override
   final ActivityData previousActivity;
 //? Clip delay and clip length options
@@ -611,7 +649,7 @@ class _$CreatePostViewModelStateImpl
   final bool isBottomNavigationEnabled;
   @override
   @JsonKey()
-  final bool isCreatingClip;
+  final bool isRecordingClip;
   @override
   final GlobalKey<PositiveCameraState> cameraWidgetKey;
   @override
@@ -623,7 +661,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isCreatingClip: $isCreatingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -634,6 +672,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('isBusy', isBusy))
       ..add(DiagnosticsProperty('isProcessingMedia', isProcessingMedia))
       ..add(DiagnosticsProperty('isUploadingMedia', isUploadingMedia))
+      ..add(DiagnosticsProperty('isCreatingPost', isCreatingPost))
       ..add(DiagnosticsProperty('currentPostType', currentPostType))
       ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
       ..add(DiagnosticsProperty('isEditing', isEditing))
@@ -648,6 +687,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('activeButtonFlexText', activeButtonFlexText))
       ..add(DiagnosticsProperty('saveToGallery', saveToGallery))
       ..add(DiagnosticsProperty('currentFilter', currentFilter))
+      ..add(DiagnosticsProperty('reposterActivityID', reposterActivityID))
       ..add(DiagnosticsProperty('previousActivity', previousActivity))
       ..add(DiagnosticsProperty(
           'delayTimerCurrentSelection', delayTimerCurrentSelection))
@@ -658,7 +698,7 @@ class _$CreatePostViewModelStateImpl
           'isMaximumClipDurationEnabled', isMaximumClipDurationEnabled))
       ..add(DiagnosticsProperty(
           'isBottomNavigationEnabled', isBottomNavigationEnabled))
-      ..add(DiagnosticsProperty('isCreatingClip', isCreatingClip))
+      ..add(DiagnosticsProperty('isRecordingClip', isRecordingClip))
       ..add(DiagnosticsProperty('cameraWidgetKey', cameraWidgetKey))
       ..add(DiagnosticsProperty('activeButton', activeButton))
       ..add(DiagnosticsProperty('lastActiveButton', lastActiveButton));
@@ -674,6 +714,8 @@ class _$CreatePostViewModelStateImpl
                 other.isProcessingMedia == isProcessingMedia) &&
             (identical(other.isUploadingMedia, isUploadingMedia) ||
                 other.isUploadingMedia == isUploadingMedia) &&
+            (identical(other.isCreatingPost, isCreatingPost) ||
+                other.isCreatingPost == isCreatingPost) &&
             (identical(other.currentPostType, currentPostType) ||
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
@@ -701,10 +743,11 @@ class _$CreatePostViewModelStateImpl
                 other.saveToGallery == saveToGallery) &&
             (identical(other.currentFilter, currentFilter) ||
                 other.currentFilter == currentFilter) &&
+            (identical(other.reposterActivityID, reposterActivityID) ||
+                other.reposterActivityID == reposterActivityID) &&
             (identical(other.previousActivity, previousActivity) ||
                 other.previousActivity == previousActivity) &&
-            (identical(other.delayTimerCurrentSelection,
-                    delayTimerCurrentSelection) ||
+            (identical(other.delayTimerCurrentSelection, delayTimerCurrentSelection) ||
                 other.delayTimerCurrentSelection ==
                     delayTimerCurrentSelection) &&
             (identical(other.isDelayTimerEnabled, isDelayTimerEnabled) ||
@@ -719,8 +762,8 @@ class _$CreatePostViewModelStateImpl
                     isMaximumClipDurationEnabled) &&
             (identical(other.isBottomNavigationEnabled, isBottomNavigationEnabled) ||
                 other.isBottomNavigationEnabled == isBottomNavigationEnabled) &&
-            (identical(other.isCreatingClip, isCreatingClip) ||
-                other.isCreatingClip == isCreatingClip) &&
+            (identical(other.isRecordingClip, isRecordingClip) ||
+                other.isRecordingClip == isRecordingClip) &&
             (identical(other.cameraWidgetKey, cameraWidgetKey) ||
                 other.cameraWidgetKey == cameraWidgetKey) &&
             (identical(other.activeButton, activeButton) ||
@@ -735,6 +778,7 @@ class _$CreatePostViewModelStateImpl
         isBusy,
         isProcessingMedia,
         isUploadingMedia,
+        isCreatingPost,
         currentPostType,
         currentCreatePostPage,
         isEditing,
@@ -749,13 +793,14 @@ class _$CreatePostViewModelStateImpl
         activeButtonFlexText,
         saveToGallery,
         currentFilter,
+        reposterActivityID,
         previousActivity,
         delayTimerCurrentSelection,
         isDelayTimerEnabled,
         maximumClipDurationSelection,
         isMaximumClipDurationEnabled,
         isBottomNavigationEnabled,
-        isCreatingClip,
+        isRecordingClip,
         cameraWidgetKey,
         activeButton,
         lastActiveButton
@@ -774,6 +819,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           {final bool isBusy,
           final bool isProcessingMedia,
           final bool isUploadingMedia,
+          final bool isCreatingPost,
           final PostType currentPostType,
           final CreatePostCurrentPage currentCreatePostPage,
           final bool isEditing,
@@ -794,13 +840,14 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final String activeButtonFlexText,
           final bool saveToGallery,
           required final AwesomeFilter currentFilter,
+          final String? reposterActivityID,
           required final ActivityData previousActivity,
           final int delayTimerCurrentSelection,
           final bool isDelayTimerEnabled,
           final int maximumClipDurationSelection,
           final bool isMaximumClipDurationEnabled,
           final bool isBottomNavigationEnabled,
-          final bool isCreatingClip,
+          final bool isRecordingClip,
           required final GlobalKey<PositiveCameraState> cameraWidgetKey,
           final PositivePostNavigationActiveButton activeButton,
           final PositivePostNavigationActiveButton lastActiveButton}) =
@@ -812,6 +859,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   bool get isProcessingMedia;
   @override
   bool get isUploadingMedia;
+  @override
+  bool get isCreatingPost;
   @override
   PostType get currentPostType;
   @override
@@ -846,7 +895,9 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   bool get saveToGallery;
   @override
   AwesomeFilter get currentFilter;
-  @override
+  @override //? Repost
+  String? get reposterActivityID;
+  @override //? Editing
   ActivityData get previousActivity;
   @override //? Clip delay and clip length options
   int get delayTimerCurrentSelection;
@@ -859,7 +910,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   @override
   bool get isBottomNavigationEnabled;
   @override
-  bool get isCreatingClip;
+  bool get isRecordingClip;
   @override
   GlobalKey<PositiveCameraState> get cameraWidgetKey;
   @override

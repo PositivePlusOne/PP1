@@ -260,14 +260,19 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = isSourceBlocked || isTargetBlocked;
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
 
+    final bool isSourceOrganisation = currentProfile?.isOrganisation ?? false;
+    final bool isTargetOrganisation = targetProfile.isOrganisation;
+    final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
+
     switch (option) {
       case ProfileModalDialogOptionType.connect:
+        return !relationshipContainsOrganisation;
       case ProfileModalDialogOptionType.follow:
       case ProfileModalDialogOptionType.mute:
       case ProfileModalDialogOptionType.viewProfile:
         return !isBlocked;
       case ProfileModalDialogOptionType.message:
-        return !isBlocked && isConnected;
+        return !isBlocked && (isConnected || relationshipContainsOrganisation);
       default:
         break;
     }

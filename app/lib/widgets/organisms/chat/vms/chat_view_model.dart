@@ -306,9 +306,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       await conversationApiService.archiveMembers(conversationId: channel.id!, members: state.selectedMembers);
     }
 
-    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).first;
-    if (channelResults.isNotEmpty) {
-      await onChatChannelSelected(channelResults.first);
+    final channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', state.currentChannel!.id!)).firstOrNull;
+    if (channelResults?.isNotEmpty ?? false) {
+      await onChatChannelSelected(channelResults!.first);
     }
   }
 
@@ -340,13 +340,13 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final List<Channel> channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).first;
-    if (channelResults.length != 1) {
+    final List<Channel>? channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).firstOrNull;
+    if (channelResults?.length != 1) {
       logger.e('ChatViewModel.onChatIdSelected(), channelResults.length != 1');
       return;
     }
 
-    await onChatChannelSelected(channelResults.first);
+    await onChatChannelSelected(channelResults!.first);
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {

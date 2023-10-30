@@ -46,7 +46,7 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
 
   final Profile? currentProfile;
   final Profile targetProfile;
-  final Relationship relationship;
+  final Relationship? relationship;
 
   static const double kButtonListHeight = 42.0;
 
@@ -248,12 +248,14 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return const SizedBox.shrink();
     }
 
-    final Set<RelationshipState> relationshipStates = widget.relationship.relationshipStatesForEntity(profileController.currentProfileId!);
+    final Set<RelationshipState> relationshipStates = widget.relationship?.relationshipStatesForEntity(profileController.currentProfileId!) ?? {};
     final String flamelinkId = widget.targetProfile.flMeta?.id ?? '';
 
     final bool isSourceOrganisation = widget.currentProfile?.isOrganisation ?? false;
     final bool isTargetOrganisation = widget.targetProfile.isOrganisation;
     final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
+
+    final bool isSourceManaged = relationshipStates.contains(RelationshipState.sourceManaged);
 
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;

@@ -78,6 +78,7 @@ class AccountUpdateEmailAddressPage extends ConsumerWidget {
     ];
 
     return PositiveScaffold(
+      isBusy: state.isBusy,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,

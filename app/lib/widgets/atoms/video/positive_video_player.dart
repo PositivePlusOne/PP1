@@ -134,7 +134,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       child: SizedBox(
         height: size,
         width: size,
-        child: MaterialVideoControlsTheme(
+        child: MaterialDesktopVideoControlsTheme(
           normal: theme,
           fullscreen: theme,
           child: ClipRRect(
@@ -148,6 +148,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
               height: size,
               aspectRatio: videoAspectRatio,
               wakelock: true,
+              controls: (state) => MaterialDesktopVideoControls(state),
             ),
           ),
         ),
@@ -155,13 +156,12 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     );
   }
 
-  MaterialVideoControlsThemeData buildVideoPlayerThemeData({
+  MaterialDesktopVideoControlsThemeData buildVideoPlayerThemeData({
     required DesignColorsModel colors,
     required DesignTypographyModel typography,
   }) {
-    return MaterialVideoControlsThemeData(
+    return MaterialDesktopVideoControlsThemeData(
       padding: const EdgeInsets.all(kPaddingSmallMedium),
-      backdropColor: colors.black.withOpacity(kOpacityBarrier),
       seekBarThumbColor: colors.purple,
       seekBarPositionColor: colors.purple,
       seekBarBufferColor: colors.colorGray1,
@@ -169,6 +169,8 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       buttonBarButtonColor: colors.white,
       seekBarThumbSize: kVideoThumbSize,
       visibleOnMount: true,
+      seekBarHoverColor: colors.purple,
+      volumeBarActiveColor: colors.purple,
     );
   }
 }

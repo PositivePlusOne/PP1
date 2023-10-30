@@ -165,60 +165,60 @@ extension ProfileExtensions on Profile {
   bool get isOrganisation => featureFlags.contains(kFeatureFlagOrganisation);
 
   /// Checks the following properties, and comma seperates them if they are not empty and the visibility flag is set to true
-  String getTagline(AppLocalizations localizations) {
-    final List<String> taglineParts = [];
-    final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
-    final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
-    final CompanySectorsControllerState companySectorsControllerState = providerContainer.read(companySectorsControllerProvider);
+  // String getTagline(AppLocalizations localizations) {
+  //   final List<String> taglineParts = [];
+  //   final HivStatusControllerState hivControllerState = providerContainer.read(hivStatusControllerProvider);
+  //   final GenderControllerState genderControllerState = providerContainer.read(genderControllerProvider);
+  //   final CompanySectorsControllerState companySectorsControllerState = providerContainer.read(companySectorsControllerProvider);
 
-    if (birthday.isNotEmpty && !isOrganisation) {
-      taglineParts.add('$age');
-    }
+  //   if (birthday.isNotEmpty && !isOrganisation) {
+  //     taglineParts.add('$age');
+  //   }
 
-    if (companySectors.isNotEmpty && isOrganisation) {
-      // show the company's sector(s)
-      for (final String companySector in companySectors) {
-        if (!companySectorsControllerState.options.any((element) => element.value == companySector)) {
-          continue;
-        }
+  //   if (companySectors.isNotEmpty && isOrganisation) {
+  //     // show the company's sector(s)
+  //     for (final String companySector in companySectors) {
+  //       if (!companySectorsControllerState.options.any((element) => element.value == companySector)) {
+  //         continue;
+  //       }
 
-        taglineParts.add(companySectorsControllerState.options.firstWhere((element) => element.value == companySector).label);
-      }
-    }
+  //       taglineParts.add(companySectorsControllerState.options.firstWhere((element) => element.value == companySector).label);
+  //     }
+  //   }
 
-    if (place != null && place!.description.isNotEmpty) {
-      taglineParts.add(place!.description);
-    }
+  //   if (place != null && place!.description.isNotEmpty) {
+  //     taglineParts.add(place!.description);
+  //   }
 
-    if (hivStatus.isNotEmpty && !isOrganisation) {
-      for (var status in hivControllerState.hivStatuses) {
-        if (status.children == null) continue;
+  //   if (hivStatus.isNotEmpty && !isOrganisation) {
+  //     for (var status in hivControllerState.hivStatuses) {
+  //       if (status.children == null) continue;
 
-        for (var element in status.children!) {
-          if (element.value == hivStatus) {
-            taglineParts.add(element.label);
-            break;
-          }
-        }
-      }
-    }
+  //       for (var element in status.children!) {
+  //         if (element.value == hivStatus) {
+  //           taglineParts.add(element.label);
+  //           break;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    if (genders.isNotEmpty && !isOrganisation) {
-      for (final String gender in genders) {
-        if (!genderControllerState.options.any((element) => element.value == gender)) {
-          continue;
-        }
+  //   if (genders.isNotEmpty && !isOrganisation) {
+  //     for (final String gender in genders) {
+  //       if (!genderControllerState.options.any((element) => element.value == gender)) {
+  //         continue;
+  //       }
 
-        taglineParts.add(genderControllerState.options.firstWhere((element) => element.value == gender).label);
-      }
-    }
+  //       taglineParts.add(genderControllerState.options.firstWhere((element) => element.value == gender).label);
+  //     }
+  //   }
 
-    if (taglineParts.isEmpty) {
-      return localizations.shared_profile_tagline;
-    }
+  //   if (taglineParts.isEmpty) {
+  //     return localizations.shared_profile_tagline;
+  //   }
 
-    return taglineParts.join(', ');
-  }
+  //   return taglineParts.join(', ');
+  // }
 
   String get formattedGenderIgnoreFlags {
     final List<String> taglineParts = [];
@@ -304,16 +304,11 @@ extension ProfileExtensions on Profile {
 }
 
 extension ProfileStatisticsExtensions on ProfileStatistics {
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  /// Accessors for the data which is in a nasty little map (gets the data from the map and defaults to zero)
   int get posts => counts[ProfileStatistics.kPostKey] ?? 0;
-
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
+  int get likes => counts[ProfileStatistics.kLikeKey] ?? 0;
   int get shares => counts[ProfileStatistics.kShareKey] ?? 0;
-
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
   int get followers => counts[ProfileStatistics.kFollowersKey] ?? 0;
-
-  /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to zero)
   int get following => counts[ProfileStatistics.kFollowingKey] ?? 0;
 
   /// a nice accessor for the data which is in a nasty little map (gets the data from the map and defaults to -1 which is the error (never permitted) case)

@@ -999,7 +999,6 @@ mixin _$ActivityGeneralConfigurationType {
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
-    required TResult Function() repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1007,7 +1006,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
-    TResult? Function()? repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1015,7 +1013,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
-    TResult Function()? repost,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1025,8 +1022,6 @@ mixin _$ActivityGeneralConfigurationType {
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
-        repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1034,7 +1029,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -1042,7 +1036,6 @@ mixin _$ActivityGeneralConfigurationType {
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -1115,7 +1108,6 @@ class _$ActivityGeneralConfigurationTypePostImpl
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
-    required TResult Function() repost,
   }) {
     return post();
   }
@@ -1126,7 +1118,6 @@ class _$ActivityGeneralConfigurationTypePostImpl
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
-    TResult? Function()? repost,
   }) {
     return post?.call();
   }
@@ -1137,7 +1128,6 @@ class _$ActivityGeneralConfigurationTypePostImpl
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
-    TResult Function()? repost,
     required TResult orElse(),
   }) {
     if (post != null) {
@@ -1153,8 +1143,6 @@ class _$ActivityGeneralConfigurationTypePostImpl
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
-        repost,
   }) {
     return post(this);
   }
@@ -1165,7 +1153,6 @@ class _$ActivityGeneralConfigurationTypePostImpl
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) {
     return post?.call(this);
   }
@@ -1176,7 +1163,6 @@ class _$ActivityGeneralConfigurationTypePostImpl
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) {
     if (post != null) {
@@ -1238,7 +1224,6 @@ class _$ActivityGeneralConfigurationTypeEventImpl
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
-    required TResult Function() repost,
   }) {
     return event();
   }
@@ -1249,7 +1234,6 @@ class _$ActivityGeneralConfigurationTypeEventImpl
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
-    TResult? Function()? repost,
   }) {
     return event?.call();
   }
@@ -1260,7 +1244,6 @@ class _$ActivityGeneralConfigurationTypeEventImpl
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
-    TResult Function()? repost,
     required TResult orElse(),
   }) {
     if (event != null) {
@@ -1276,8 +1259,6 @@ class _$ActivityGeneralConfigurationTypeEventImpl
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
-        repost,
   }) {
     return event(this);
   }
@@ -1288,7 +1269,6 @@ class _$ActivityGeneralConfigurationTypeEventImpl
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) {
     return event?.call(this);
   }
@@ -1299,7 +1279,6 @@ class _$ActivityGeneralConfigurationTypeEventImpl
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) {
     if (event != null) {
@@ -1361,7 +1340,6 @@ class _$ActivityGeneralConfigurationTypeClipImpl
     required TResult Function() post,
     required TResult Function() event,
     required TResult Function() clip,
-    required TResult Function() repost,
   }) {
     return clip();
   }
@@ -1372,7 +1350,6 @@ class _$ActivityGeneralConfigurationTypeClipImpl
     TResult? Function()? post,
     TResult? Function()? event,
     TResult? Function()? clip,
-    TResult? Function()? repost,
   }) {
     return clip?.call();
   }
@@ -1383,7 +1360,6 @@ class _$ActivityGeneralConfigurationTypeClipImpl
     TResult Function()? post,
     TResult Function()? event,
     TResult Function()? clip,
-    TResult Function()? repost,
     required TResult orElse(),
   }) {
     if (clip != null) {
@@ -1399,8 +1375,6 @@ class _$ActivityGeneralConfigurationTypeClipImpl
     required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
         event,
     required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
-        repost,
   }) {
     return clip(this);
   }
@@ -1411,7 +1385,6 @@ class _$ActivityGeneralConfigurationTypeClipImpl
     TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
   }) {
     return clip?.call(this);
   }
@@ -1422,7 +1395,6 @@ class _$ActivityGeneralConfigurationTypeClipImpl
     TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
     TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
     TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
     required TResult orElse(),
   }) {
     if (clip != null) {
@@ -1436,129 +1408,6 @@ abstract class _ActivityGeneralConfigurationTypeClip
     implements ActivityGeneralConfigurationType {
   const factory _ActivityGeneralConfigurationTypeClip() =
       _$ActivityGeneralConfigurationTypeClipImpl;
-}
-
-/// @nodoc
-abstract class _$$ActivityGeneralConfigurationTypeRepostImplCopyWith<$Res> {
-  factory _$$ActivityGeneralConfigurationTypeRepostImplCopyWith(
-          _$ActivityGeneralConfigurationTypeRepostImpl value,
-          $Res Function(_$ActivityGeneralConfigurationTypeRepostImpl) then) =
-      __$$ActivityGeneralConfigurationTypeRepostImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$ActivityGeneralConfigurationTypeRepostImplCopyWithImpl<$Res>
-    extends _$ActivityGeneralConfigurationTypeCopyWithImpl<$Res,
-        _$ActivityGeneralConfigurationTypeRepostImpl>
-    implements _$$ActivityGeneralConfigurationTypeRepostImplCopyWith<$Res> {
-  __$$ActivityGeneralConfigurationTypeRepostImplCopyWithImpl(
-      _$ActivityGeneralConfigurationTypeRepostImpl _value,
-      $Res Function(_$ActivityGeneralConfigurationTypeRepostImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$ActivityGeneralConfigurationTypeRepostImpl
-    implements _ActivityGeneralConfigurationTypeRepost {
-  const _$ActivityGeneralConfigurationTypeRepostImpl();
-
-  @override
-  String toString() {
-    return 'ActivityGeneralConfigurationType.repost()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ActivityGeneralConfigurationTypeRepostImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() post,
-    required TResult Function() event,
-    required TResult Function() clip,
-    required TResult Function() repost,
-  }) {
-    return repost();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? post,
-    TResult? Function()? event,
-    TResult? Function()? clip,
-    TResult? Function()? repost,
-  }) {
-    return repost?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? post,
-    TResult Function()? event,
-    TResult Function()? clip,
-    TResult Function()? repost,
-    required TResult orElse(),
-  }) {
-    if (repost != null) {
-      return repost();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_ActivityGeneralConfigurationTypePost value) post,
-    required TResult Function(_ActivityGeneralConfigurationTypeEvent value)
-        event,
-    required TResult Function(_ActivityGeneralConfigurationTypeClip value) clip,
-    required TResult Function(_ActivityGeneralConfigurationTypeRepost value)
-        repost,
-  }) {
-    return repost(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_ActivityGeneralConfigurationTypePost value)? post,
-    TResult? Function(_ActivityGeneralConfigurationTypeEvent value)? event,
-    TResult? Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult? Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-  }) {
-    return repost?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_ActivityGeneralConfigurationTypePost value)? post,
-    TResult Function(_ActivityGeneralConfigurationTypeEvent value)? event,
-    TResult Function(_ActivityGeneralConfigurationTypeClip value)? clip,
-    TResult Function(_ActivityGeneralConfigurationTypeRepost value)? repost,
-    required TResult orElse(),
-  }) {
-    if (repost != null) {
-      return repost(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _ActivityGeneralConfigurationTypeRepost
-    implements ActivityGeneralConfigurationType {
-  const factory _ActivityGeneralConfigurationTypeRepost() =
-      _$ActivityGeneralConfigurationTypeRepostImpl;
 }
 
 /// @nodoc

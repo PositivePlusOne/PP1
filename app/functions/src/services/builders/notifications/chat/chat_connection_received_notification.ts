@@ -1,5 +1,6 @@
 import { NotificationAction } from "../../../../constants/notification_actions";
 import { NotificationTopic } from "../../../../constants/notification_topics";
+import { ProfileJSON } from "../../../../dto/profile";
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
@@ -12,7 +13,7 @@ export namespace ChatConnectionReceivedNotification {
    * @param {any} userProfile the user profile of the current user.
    * @param {any} target the target of the notification.
    */
-  export async function sendNotification(userProfile: any, target: any): Promise<void> {
+  export async function sendNotification(userProfile: ProfileJSON, target: ProfileJSON): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
     const displayName = userProfile.displayName || "";
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);

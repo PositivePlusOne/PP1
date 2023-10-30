@@ -10,7 +10,7 @@ class ProfileDisplayGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     final ProfileViewModelState profileViewModelState = providerContainer.read(profileViewModelProvider);
-    final bool hasProfile = profileViewModelState.profile != null;
+    final bool hasProfile = profileViewModelState.targetProfileId?.isNotEmpty == true;
 
     // If the user is logged in but doesn't have a profile, redirect to the account created page
     if (!hasProfile) {
