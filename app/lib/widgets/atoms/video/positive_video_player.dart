@@ -122,6 +122,8 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     double? videoAspectRatio;
     if (widget.media.height > 0 && widget.media.width > 0) {
       videoAspectRatio = widget.media.width / widget.media.height;
+    } else {
+      videoAspectRatio = 1.0;
     }
 
     return VisibilityDetector(
