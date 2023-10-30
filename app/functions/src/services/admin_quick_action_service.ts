@@ -16,6 +16,7 @@ import { RemoveAccountFlagAction } from "./actions/remove_account_flag_action";
 import { UpdateCoverImageAction } from "./actions/update_cover_image_action";
 import { LinkDirectoryEntryAction } from "./actions/link_directory_entry_action";
 import { UnlinkDirectoryEntryAction } from "./actions/unlink_directory_entry_action";
+import { UpdatePromotionMixpanelAnalyticsAction } from "./actions/update_promotion_mixpanel_analytics_action";
 
 export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
@@ -33,6 +34,7 @@ export namespace AdminQuickActionService {
         'updateCoverImage': UpdateCoverImageAction.updateCoverImage,
         'linkDirectoryEntry': LinkDirectoryEntryAction.linkDirectoryEntry,
         'unlinkDirectoryEntry': UnlinkDirectoryEntryAction.unlinkDirectoryEntry,
+        'updatePromotionMixpanelAnalytics': UpdatePromotionMixpanelAnalyticsAction.updatePromotionsMixpanelAnalytics,
     };
 
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {

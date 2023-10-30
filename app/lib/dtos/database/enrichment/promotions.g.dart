@@ -12,7 +12,6 @@ _$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
       title: json['title'] as String? ?? '',
-      descriptionMarkdown: json['descriptionMarkdown'] as String? ?? '',
       link: json['link'] as String? ?? '',
       linkText: json['linkText'] as String? ?? '',
       owners: (json['owners'] as List<dynamic>?)
@@ -23,21 +22,22 @@ _$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
               ?.map((e) => PromotedActivity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      startTime: dateFromUnknown(json['startTime']),
-      endTime: dateFromUnknown(json['endTime']),
+      isActive: json['isActive'] as bool? ?? false,
+      totalViewsSinceLastUpdate: json['totalViewsSinceLastUpdate'] as int? ?? 0,
+      totalViewsAllotment: json['totalViewsAllotment'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
     <String, dynamic>{
       '_fl_meta_': instance.flMeta?.toJson(),
       'title': instance.title,
-      'descriptionMarkdown': instance.descriptionMarkdown,
       'link': instance.link,
       'linkText': instance.linkText,
       'owners': instance.owners.map((e) => e.toJson()).toList(),
       'activities': instance.activities.map((e) => e.toJson()).toList(),
-      'startTime': instance.startTime,
-      'endTime': instance.endTime,
+      'isActive': instance.isActive,
+      'totalViewsSinceLastUpdate': instance.totalViewsSinceLastUpdate,
+      'totalViewsAllotment': instance.totalViewsAllotment,
     };
 
 _$PromotionOwnerImpl _$$PromotionOwnerImplFromJson(Map<String, dynamic> json) =>

@@ -1,6 +1,8 @@
+import { Timestamp } from "firebase-admin/firestore";
 import { FlMeta, FlMetaJSON } from "./meta";
 
 export const promotionsSchemaKey = "promotions";
+export const promotionsStatisticsSchemaKey = "promotionsStatistics";
 
 export interface PromotionOwnerJSON {
     profileId?: string;
@@ -29,38 +31,59 @@ export class PromotedActivity {
     }
 }
 
+export interface PromotionStatisticsJSON {
+    _fl_meta_?: FlMetaJSON;
+    promotionId?: string;
+    counts?: Record<string, number>;
+    lastFetchedFromMixpanel?: Timestamp;
+}
+
+export class PromotionStatistics {
+    _fl_meta_?: FlMeta;
+    promotionId?: string;
+    counts?: Record<string, number>;
+    lastFetchedFromMixpanel?: Timestamp;
+
+    constructor(json: PromotionStatisticsJSON) {
+        this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
+        this.promotionId = json.promotionId;
+        this.counts = json.counts;
+        this.lastFetchedFromMixpanel = json.lastFetchedFromMixpanel;
+    }
+}
+
 export interface PromotionJSON {
     _fl_meta_?: FlMetaJSON;
     title?: string;
-    descriptionMarkdown?: string;
     link?: string;
     linkText?: string;
     owners?: PromotionOwnerJSON[];
     activities?: PromotedActivityJSON[];
-    startTime?: string;
-    endTime?: string;
+    isActive?: boolean;
+    totalViewsSinceLastUpdate?: number;
+    totalViewsAllotment?: number;
 }
 
 export class Promotion {
     _fl_meta_?: FlMeta;
     title?: string;
-    descriptionMarkdown?: string;
     link?: string;
     linkText?: string;
     owners?: PromotionOwner[];
     activities?: PromotedActivity[];
-    startTime?: string;
-    endTime?: string;
+    isActive?: boolean;
+    totalViewsSinceLastUpdate?: number;
+    totalViewsAllotment?: number;
 
     constructor(json: PromotionJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
         this.title = json.title;
-        this.descriptionMarkdown = json.descriptionMarkdown;
         this.link = json.link;
         this.linkText = json.linkText;
         this.owners = json.owners && json.owners.map((owner) => new PromotionOwner(owner));
         this.activities = json.activities && json.activities.map((activity) => new PromotedActivity(activity));
-        this.startTime = json.startTime;
-        this.endTime = json.endTime;
+        this.isActive = json.isActive;
+        this.totalViewsSinceLastUpdate = json.totalViewsSinceLastUpdate;
+        this.totalViewsAllotment = json.totalViewsAllotment;
     }
 }
