@@ -164,6 +164,8 @@ extension ProfileExtensions on Profile {
   /// from the featureFlags data - does it contain the entry 'organisation'
   bool get isOrganisation => featureFlags.contains(kFeatureFlagOrganisation);
 
+  bool get isPendingDeletion => featureFlags.contains(kFeatureFlagPendingDeletion);
+
   /// Checks the following properties, and comma seperates them if they are not empty and the visibility flag is set to true
   // String getTagline(AppLocalizations localizations) {
   //   final List<String> taglineParts = [];

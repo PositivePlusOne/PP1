@@ -322,6 +322,8 @@
     "page_account_actions_change_disable_facebook_sign_in": "Disable Facebook Sign In",
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
+    "page_account_actions_change_undelete_account": "Undelete Account",
+    "page_account_actions_change_delete_account_pending": "Your account has been flagged for deletion and will be deleted in the next 24 hours",
 
     "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
     "page_account_actions_change_delete_account_splash_body": "but we understand why. We ask you to verify some of your details just to be sure it’s you trying to delete your account.",
