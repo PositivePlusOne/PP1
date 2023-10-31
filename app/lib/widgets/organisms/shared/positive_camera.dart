@@ -65,6 +65,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.isBusy = false,
     this.leftActionWidget,
     this.onTapClose,
+    this.onTapForceClose,
     this.onTapAddImage,
     this.enableFlashControls = true,
     this.displayCameraShade = true,
@@ -104,6 +105,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final String? takePictureCaption;
 
   final void Function(BuildContext context)? onTapClose;
+  final void Function(BuildContext context)? onTapForceClose;
   final void Function(BuildContext context)? onTapAddImage;
   final bool enableFlashControls;
 
@@ -882,6 +884,14 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   List<Widget> getPositiveCameraGenericTopChildren(CameraState state) {
+    if (clipRecordingState.isRecordingOrPaused) {
+      return [
+        if (widget.onTapClose != null) CameraFloatingButton(active: true, onTap: widget.onTapClose!, iconData: UniconsLine.angle_left),
+        const Spacer(),
+        if (widget.onTapForceClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapForceClose!),
+      ];
+    }
+
     return [
       if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
       const Spacer(),
