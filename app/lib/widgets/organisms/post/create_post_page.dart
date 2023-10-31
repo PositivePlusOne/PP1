@@ -123,7 +123,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                               height: kIconLarge,
                             ),
                       onTapClose: (_) => appRouter.pop(),
-                      onTapAddImage: (context) => viewModel.onMultiImagePicker(),
+                      onTapAddImage: (context) => viewModel.onMultiMediaPicker(),
                       isVideoMode: state.currentPostType == PostType.clip,
                       bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
                       topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
