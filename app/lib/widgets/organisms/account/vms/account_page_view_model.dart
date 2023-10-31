@@ -32,16 +32,8 @@ class AccountPageViewModelState with _$AccountPageViewModelState {
 
 @riverpod
 class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, ProfileSwitchMixin {
-  late final PageController pageController;
-
   @override
   AccountPageViewModelState build() {
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final Profile? profile = profileController.currentProfile;
-    pageController = PageController(
-      initialPage: (profile?.isOrganisation ?? false) ? 1 : 0,
-    );
-
     return AccountPageViewModelState.initialState();
   }
 
@@ -49,8 +41,6 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
     final Profile targetProfile = mixin.getSupportedProfiles()[profileIndex];
     final bool isOrganisation = targetProfile.isOrganisation;
     final Color accentColour = targetProfile.accentColor.toSafeColorFromHex();
-
-    final int targetPage = (isOrganisation ? 1 : 0);
 
     mixin.switchProfile(targetProfile.flMeta?.id ?? '');
 
@@ -61,12 +51,6 @@ class AccountPageViewModel extends _$AccountPageViewModel with LifecycleMixin, P
       default:
         state = state.copyWith(profileAccentColour: accentColour);
     }
-
-    pageController.animateToPage(
-      targetPage,
-      duration: kAnimationDurationExtended,
-      curve: Curves.easeInOut,
-    );
   }
 
   @override
