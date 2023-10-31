@@ -37,9 +37,9 @@ export namespace DeleteMemberAction {
             return Promise.resolve();
         }
 
-        const visibilityFlags = [...sourceProfile?.visibilityFlags ?? []];
-        const isPendingDeletion = visibilityFlags?.includes('pending_deletion') ?? false;
-        AdminQuickActionService.appendOutput(action, `Is pending deletion: ${isPendingDeletion} with flags ${visibilityFlags}`);
+        const accountFlags = [...sourceProfile?.accountFlags ?? []];
+        const isPendingDeletion = accountFlags?.includes('pending_deletion') ?? false;
+        AdminQuickActionService.appendOutput(action, `Is pending deletion: ${isPendingDeletion} with flags ${accountFlags}`);
 
         if (!isPendingDeletion) {
             AdminQuickActionService.appendOutput(action, `The source profile is not pending deletion.`);
