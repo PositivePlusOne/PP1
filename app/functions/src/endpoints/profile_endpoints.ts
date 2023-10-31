@@ -70,19 +70,23 @@ export namespace ProfileEndpoints {
     functions.logger.info("Deleting user profile", { structuredData: true });
 
     let profile = await ProfileService.getProfile(uid);
-    if (!profile) {
+    const profileId = profile?._fl_meta_?.fl_id || "";
+
+    if (!profile || profileId.length === 0) {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    const visibilityFlags = [...profile?.visibilityFlags ?? []];
-    const isPendingDeletion = visibilityFlags?.includes('pending_deletion') ?? false;
+    let accountFlags = [...profile?.accountFlags ?? []];
+    const isPendingDeletion = accountFlags?.includes('pending_deletion') ?? false;
 
     if (isPendingDeletion) {
+      accountFlags = accountFlags.filter((flag: string) => flag !== 'pending_deletion');
       functions.logger.info("User profile deletion cancelled");
-      profile = await ProfileService.removeAccountFlags(profile, ["pending_deletion"]);
+      profile = await ProfileService.updateAccountFlags(profileId, accountFlags);
     } else {
+      accountFlags.push('pending_deletion');
       functions.logger.info("User profile deletion requested");
-      profile = await ProfileService.updateAccountFlags(profile, ["pending_deletion"]);
+      profile = await ProfileService.updateAccountFlags(profileId, accountFlags);
     }
 
     return buildEndpointResponse(context, {
