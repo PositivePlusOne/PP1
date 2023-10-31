@@ -65,14 +65,30 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const deleteProfile = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const toggleProfileDeletion = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Deleting user profile", { structuredData: true });
 
-    await ProfileService.deleteProfile(uid);
-    functions.logger.info("User profile deleted");
+    let profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
 
-    return JSON.stringify({ success: true });
+    const visibilityFlags = [...profile?.visibilityFlags ?? []];
+    const isPendingDeletion = visibilityFlags?.includes('pending_deletion') ?? false;
+
+    if (isPendingDeletion) {
+      functions.logger.info("User profile deletion cancelled");
+      profile = await ProfileService.removeAccountFlags(profile, ["pending_deletion"]);
+    } else {
+      functions.logger.info("User profile deletion requested");
+      profile = await ProfileService.updateAccountFlags(profile, ["pending_deletion"]);
+    }
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [profile],
+    });
   });
 
   export const updateFcmToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {

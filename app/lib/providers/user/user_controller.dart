@@ -448,25 +448,4 @@ class UserController extends _$UserController {
       await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
     }
   }
-
-  Future<void> deleteAccount() async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-
-    log.d('[UserController] deleteAccount()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] deleteAccount() user is not logged in');
-      return;
-    }
-
-    await firebaseAuth.currentUser?.delete();
-    log.i('[UserController] deleteAccount() Deleted user from Firebase');
-
-    await analyticsController.trackEvent(AnalyticEvents.accountDelete);
-
-    appRouter.removeWhere((route) => true);
-    await appRouter.push(const HomeRoute());
-  }
 }

@@ -4,6 +4,8 @@ import { AdminQuickActionService } from '../admin_quick_action_service';
 import { FlamelinkHelpers } from '../../helpers/flamelink_helpers';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
+import { ProfileJSON } from '../../dto/profile';
+import { DataService } from '../data_service';
 
 export namespace DeleteMemberAction {
     export async function deleteMember(action: AdminQuickActionJSON): Promise<void> {
@@ -27,16 +29,18 @@ export namespace DeleteMemberAction {
             sourceProfileData.profiles![0].get(),
         ]);
 
-        const sourceProfile = sourceProfileSnapshot.data();
+        const sourceProfile = sourceProfileSnapshot.data() as ProfileJSON;
         const sourceProfileId = FlamelinkHelpers.getFlamelinkIdFromObject(sourceProfile);
-
         if (!sourceProfileId || !sourceProfile) {
             AdminQuickActionService.appendOutput(action, `No source or target profile specified.`);
             AdminQuickActionService.updateStatus(action, 'error');
             return Promise.resolve();
         }
 
-        const isPendingDeletion = sourceProfile?.visibilityFlags?.includes('pending_deletion');
+        const visibilityFlags = [...sourceProfile?.visibilityFlags ?? []];
+        const isPendingDeletion = visibilityFlags?.includes('pending_deletion') ?? false;
+        AdminQuickActionService.appendOutput(action, `Is pending deletion: ${isPendingDeletion} with flags ${visibilityFlags}`);
+
         if (!isPendingDeletion) {
             AdminQuickActionService.appendOutput(action, `The source profile is not pending deletion.`);
             AdminQuickActionService.updateStatus(action, 'error');
@@ -58,7 +62,10 @@ export namespace DeleteMemberAction {
 
         // Delete the source profile.
         AdminQuickActionService.appendOutput(action, `Deleting profile ${sourceProfileId}`);
-        await sourceProfileReference?.delete();
+        await DataService.deleteDocument({
+            schemaKey: 'users',
+            entryId: sourceProfileId,
+        });
 
         AdminQuickActionService.appendOutput(action, `Successfully deleted profile ${sourceProfileId}`);
         AdminQuickActionService.updateStatus(action, 'success');

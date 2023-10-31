@@ -2,6 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -198,6 +202,36 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     logger.d('onUpdatePasswordButtonPressed');
     controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.deleteProfile);
     await appRouter.push(const AccountDeleteProfileRoute());
+  }
+
+  Future<void> onUndeleteAccountButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
+    final Logger logger = ref.read(loggerProvider);
+
+    try {
+      logger.i('Undeleting profile');
+      state = state.copyWith(isBusy: true);
+
+      final AppRouter appRouter = ref.read(appRouterProvider);
+      final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+      final Profile? profile = profileController.currentProfile;
+      if (profile == null) {
+        logger.e('No profile found');
+        return;
+      }
+
+      final Set<String> visibilityFlags = profile.visibilityFlags;
+      if (!visibilityFlags.contains(kFeatureFlagPendingDeletion)) {
+        logger.i('Profile is not pending deletion');
+        return;
+      }
+
+      await profileApiService.toggleProfileDeletion();
+      await appRouter.pop();
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onConnectSocialUserRequested() async {

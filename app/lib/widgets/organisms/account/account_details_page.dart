@@ -252,6 +252,7 @@ class AccountDetailsPage extends HookConsumerWidget {
     required String name,
     required String emailAddress,
     required (String, String) phoneNumberComponents,
+    required bool isPendingDeletion,
   }) {
     return [
       Text(
@@ -367,12 +368,19 @@ class AccountDetailsPage extends HookConsumerWidget {
       ],
       PositiveButton(
         colors: colors,
-        onTapped: () => viewModel.onDeleteAccountButtonPressed(context, locale, controller),
+        onTapped: () => isPendingDeletion ? viewModel.onUndeleteAccountButtonPressed(context, locale, controller) : viewModel.onDeleteAccountButtonPressed(context, locale, controller),
         isDisabled: viewModelState.isBusy,
         primaryColor: colors.colorGray7,
-        label: localisations.page_account_actions_change_delete_account,
+        label: isPendingDeletion ? localisations.page_account_actions_change_undelete_account : localisations.page_account_actions_change_delete_account,
         style: PositiveButtonStyle.ghost,
       ),
+      if (isPendingDeletion) ...<Widget>[
+        const SizedBox(height: kPaddingMedium),
+        PositiveHint(
+          label: localisations.page_account_actions_change_delete_account_pending,
+          icon: UniconsLine.check_circle,
+          iconColor: colors.black,
+        ),
     ];
   }
 }
