@@ -41,8 +41,8 @@ class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccoun
       final Profile? profile = profileController.currentProfile;
       final String currentProfileId = profile?.flMeta?.id ?? '';
 
-      final visibilityFlags = profile?.visibilityFlags ?? <String>{};
-      if (!visibilityFlags.contains(kFeatureFlagPendingDeletion)) {
+      final accountFlags = profile?.accountFlags ?? <String>{};
+      if (!accountFlags.contains(kFeatureFlagPendingDeletion)) {
         await profileApiService.toggleProfileDeletion(uid: currentProfileId);
       }
 

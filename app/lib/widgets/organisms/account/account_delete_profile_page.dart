@@ -50,14 +50,14 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
         return;
       }
 
-      final Set<String> visibilityFlags = profile.visibilityFlags;
-      if (visibilityFlags.contains(kFeatureFlagPendingDeletion)) {
+      final Set<String> accountFlags = profile.visibilityFlags;
+      if (accountFlags.contains(kFeatureFlagPendingDeletion)) {
         logger.i('Profile already pending deletion');
         return;
       }
 
       await profileApiService.toggleProfileDeletion(uid: profileId);
-      await appRouter.pop();
+      appRouter.popUntil((route) => route.settings.name == AccountDetailsRoute.name);
     } finally {
       isDeleting = false;
     }
