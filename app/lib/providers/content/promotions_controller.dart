@@ -10,6 +10,7 @@ part 'promotions_controller.g.dart';
 class PromotionsControllerState with _$PromotionsControllerState {
   const factory PromotionsControllerState({
     @Default(0) int promotionIndex,
+    @Default('') String cursor,
     @Default([]) List<String> promotionIds,
   }) = _PromotionsControllerState;
   factory PromotionsControllerState.initialState() => const PromotionsControllerState();
