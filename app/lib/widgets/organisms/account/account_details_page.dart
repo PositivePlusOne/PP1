@@ -10,6 +10,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/country_constants.dart';
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/localization/country.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -91,6 +92,8 @@ class AccountDetailsPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final Profile? ownerProfile = cacheController.get(ownerId);
 
+    final bool isPendingDeletion = profile?.visibilityFlags.contains(kFeatureFlagPendingDeletion) == true;
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       headingWidgets: <Widget>[
@@ -116,6 +119,7 @@ class AccountDetailsPage extends HookConsumerWidget {
                 name: name,
                 emailAddress: emailAddress,
                 phoneNumberComponents: phoneNumberComponents,
+                isPendingDeletion: isPendingDeletion,
               ),
             ] else ...<Widget>[
               ...buildManagedAccountDetails(
@@ -381,6 +385,7 @@ class AccountDetailsPage extends HookConsumerWidget {
           icon: UniconsLine.check_circle,
           iconColor: colors.black,
         ),
+      ],
     ];
   }
 }

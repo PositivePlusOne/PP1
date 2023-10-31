@@ -36,7 +36,6 @@ import 'package:app/widgets/organisms/post/post_share_page.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_company_sectors_select_page.dart';
-import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';

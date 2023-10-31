@@ -1,20 +1,19 @@
 // Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_route/auto_route.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:auto_route/auto_route.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-// Project imports:
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
-import 'package:logger/logger.dart';
 
 @RoutePage()
 class AccountDeleteProfilePage extends ConsumerStatefulWidget {
@@ -45,7 +44,8 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
       final Profile? profile = profileController.currentProfile;
-      if (profile == null) {
+      final String profileId = profile?.flMeta?.id ?? '';
+      if (profileId.isEmpty || profile == null) {
         logger.e('No profile found');
         return;
       }
@@ -56,7 +56,7 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
         return;
       }
 
-      await profileApiService.updateVisibilityFlags(visibilityFlags: visibilityFlags..add(kFeatureFlagPendingDeletion));
+      await profileApiService.toggleProfileDeletion(uid: profileId);
       await appRouter.pop();
     } finally {
       isDeleting = false;
