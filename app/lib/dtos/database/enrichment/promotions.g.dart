@@ -25,6 +25,8 @@ _$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
       isActive: json['isActive'] as bool? ?? false,
       totalViewsSinceLastUpdate: json['totalViewsSinceLastUpdate'] as int? ?? 0,
       totalViewsAllotment: json['totalViewsAllotment'] as int? ?? 0,
+      startDate: dateFromUnknown(json['startDate']),
+      endDate: dateFromUnknown(json['endDate']),
     );
 
 Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
@@ -38,6 +40,8 @@ Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
       'isActive': instance.isActive,
       'totalViewsSinceLastUpdate': instance.totalViewsSinceLastUpdate,
       'totalViewsAllotment': instance.totalViewsAllotment,
+      'startDate': instance.startDate,
+      'endDate': instance.endDate,
     };
 
 _$PromotionOwnerImpl _$$PromotionOwnerImplFromJson(Map<String, dynamic> json) =>

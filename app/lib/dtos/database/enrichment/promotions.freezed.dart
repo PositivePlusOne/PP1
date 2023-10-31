@@ -30,6 +30,10 @@ mixin _$Promotion {
   bool get isActive => throw _privateConstructorUsedError;
   int get totalViewsSinceLastUpdate => throw _privateConstructorUsedError;
   int get totalViewsAllotment => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: dateFromUnknown)
+  String? get startDate => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: dateFromUnknown)
+  String? get endDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +55,9 @@ abstract class $PromotionCopyWith<$Res> {
       List<PromotedActivity> activities,
       bool isActive,
       int totalViewsSinceLastUpdate,
-      int totalViewsAllotment});
+      int totalViewsAllotment,
+      @JsonKey(fromJson: dateFromUnknown) String? startDate,
+      @JsonKey(fromJson: dateFromUnknown) String? endDate});
 
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -78,6 +84,8 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
     Object? isActive = null,
     Object? totalViewsSinceLastUpdate = null,
     Object? totalViewsAllotment = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -116,6 +124,14 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
           ? _value.totalViewsAllotment
           : totalViewsAllotment // ignore: cast_nullable_to_non_nullable
               as int,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -149,7 +165,9 @@ abstract class _$$PromotionImplCopyWith<$Res>
       List<PromotedActivity> activities,
       bool isActive,
       int totalViewsSinceLastUpdate,
-      int totalViewsAllotment});
+      int totalViewsAllotment,
+      @JsonKey(fromJson: dateFromUnknown) String? startDate,
+      @JsonKey(fromJson: dateFromUnknown) String? endDate});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -175,6 +193,8 @@ class __$$PromotionImplCopyWithImpl<$Res>
     Object? isActive = null,
     Object? totalViewsSinceLastUpdate = null,
     Object? totalViewsAllotment = null,
+    Object? startDate = freezed,
+    Object? endDate = freezed,
   }) {
     return _then(_$PromotionImpl(
       flMeta: freezed == flMeta
@@ -213,6 +233,14 @@ class __$$PromotionImplCopyWithImpl<$Res>
           ? _value.totalViewsAllotment
           : totalViewsAllotment // ignore: cast_nullable_to_non_nullable
               as int,
+      startDate: freezed == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as String?,
+      endDate: freezed == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -229,7 +257,9 @@ class _$PromotionImpl implements _Promotion {
       final List<PromotedActivity> activities = const [],
       this.isActive = false,
       this.totalViewsSinceLastUpdate = 0,
-      this.totalViewsAllotment = 0})
+      this.totalViewsAllotment = 0,
+      @JsonKey(fromJson: dateFromUnknown) this.startDate,
+      @JsonKey(fromJson: dateFromUnknown) this.endDate})
       : _owners = owners,
         _activities = activities;
 
@@ -275,10 +305,16 @@ class _$PromotionImpl implements _Promotion {
   @override
   @JsonKey()
   final int totalViewsAllotment;
+  @override
+  @JsonKey(fromJson: dateFromUnknown)
+  final String? startDate;
+  @override
+  @JsonKey(fromJson: dateFromUnknown)
+  final String? endDate;
 
   @override
   String toString() {
-    return 'Promotion(flMeta: $flMeta, title: $title, link: $link, linkText: $linkText, owners: $owners, activities: $activities, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment)';
+    return 'Promotion(flMeta: $flMeta, title: $title, link: $link, linkText: $linkText, owners: $owners, activities: $activities, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -300,7 +336,10 @@ class _$PromotionImpl implements _Promotion {
                     totalViewsSinceLastUpdate) ||
                 other.totalViewsSinceLastUpdate == totalViewsSinceLastUpdate) &&
             (identical(other.totalViewsAllotment, totalViewsAllotment) ||
-                other.totalViewsAllotment == totalViewsAllotment));
+                other.totalViewsAllotment == totalViewsAllotment) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate));
   }
 
   @JsonKey(ignore: true)
@@ -315,7 +354,9 @@ class _$PromotionImpl implements _Promotion {
       const DeepCollectionEquality().hash(_activities),
       isActive,
       totalViewsSinceLastUpdate,
-      totalViewsAllotment);
+      totalViewsAllotment,
+      startDate,
+      endDate);
 
   @JsonKey(ignore: true)
   @override
@@ -333,15 +374,18 @@ class _$PromotionImpl implements _Promotion {
 
 abstract class _Promotion implements Promotion {
   const factory _Promotion(
-      {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
-      final String title,
-      final String link,
-      final String linkText,
-      final List<PromotionOwner> owners,
-      final List<PromotedActivity> activities,
-      final bool isActive,
-      final int totalViewsSinceLastUpdate,
-      final int totalViewsAllotment}) = _$PromotionImpl;
+          {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
+          final String title,
+          final String link,
+          final String linkText,
+          final List<PromotionOwner> owners,
+          final List<PromotedActivity> activities,
+          final bool isActive,
+          final int totalViewsSinceLastUpdate,
+          final int totalViewsAllotment,
+          @JsonKey(fromJson: dateFromUnknown) final String? startDate,
+          @JsonKey(fromJson: dateFromUnknown) final String? endDate}) =
+      _$PromotionImpl;
 
   factory _Promotion.fromJson(Map<String, dynamic> json) =
       _$PromotionImpl.fromJson;
@@ -365,6 +409,12 @@ abstract class _Promotion implements Promotion {
   int get totalViewsSinceLastUpdate;
   @override
   int get totalViewsAllotment;
+  @override
+  @JsonKey(fromJson: dateFromUnknown)
+  String? get startDate;
+  @override
+  @JsonKey(fromJson: dateFromUnknown)
+  String? get endDate;
   @override
   @JsonKey(ignore: true)
   _$$PromotionImplCopyWith<_$PromotionImpl> get copyWith =>

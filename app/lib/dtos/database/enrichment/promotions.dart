@@ -24,6 +24,8 @@ class Promotion with _$Promotion {
     @Default(false) bool isActive,
     @Default(0) int totalViewsSinceLastUpdate,
     @Default(0) int totalViewsAllotment,
+    @JsonKey(fromJson: dateFromUnknown) String? startDate,
+    @JsonKey(fromJson: dateFromUnknown) String? endDate,
   }) = _Promotion;
 
   factory Promotion.fromJson(Map<String, dynamic> json) => _$PromotionFromJson(json);

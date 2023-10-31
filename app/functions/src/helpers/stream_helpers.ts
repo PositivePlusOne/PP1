@@ -18,6 +18,14 @@ export namespace StreamHelpers {
     return getTimestampForDate(new Date());
   }
 
+  export function timestampToDate(timestamp: Timestamp): Date {
+    return timestamp.toDate();
+  }
+
+  export function timestampToUnixTime(timestamp: Timestamp): number {
+    return Math.floor(timestamp.toMillis() / 1000);
+  }
+
   export function getCurrentUnixTimestamp(): string {
     return convertTimestampToUnix(getCurrentTimestamp());
   }
@@ -75,6 +83,22 @@ export namespace StreamHelpers {
 
     if (typeof timestamp === "number") {
       return new Date(timestamp).toISOString();
+    }
+
+    throw new Error("Invalid timestamp");
+  }
+
+  export function convertTimestampToUnixNumber(timestamp: any): number {
+    if (timestamp instanceof Timestamp) {
+      return timestamp.toMillis();
+    }
+
+    if (typeof timestamp === "string") {
+      return new Date(timestamp).getTime();
+    }
+
+    if (typeof timestamp === "number") {
+      return timestamp;
     }
 
     throw new Error("Invalid timestamp");

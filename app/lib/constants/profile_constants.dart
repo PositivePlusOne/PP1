@@ -9,6 +9,7 @@ const String kVisibilityFlagCompanySectors = 'company_sectors';
 const String kFeatureFlagMarketing = 'marketing';
 const String kFeatureFlagIncognito = 'incognito';
 const String kFeatureFlagOrganisation = 'organisation';
+const String kFeatureFlagPendingDeletion = 'pending_deletion';
 const String kFeatureFlagVerified = 'verified';
 
 const String kAccountFlagNameOffensive = 'name_offensive';
