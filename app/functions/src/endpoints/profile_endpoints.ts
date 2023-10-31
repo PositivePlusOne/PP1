@@ -14,9 +14,14 @@ export namespace ProfileEndpoints {
 
   /**
    * helper function to determine if a profile is completed now
+   * @param profileUid is the UID of the profile we are checking
    * @param profile is the profile to check
    */
-  export function isProfileComplete(profile: any): boolean {
+  export function isProfileComplete(profileUid: string, profile: any): boolean {
+    if (!profile || !profile.data || !profile.data.email) {
+      // just to make this robust - if we don't have enough of a picture of the profile, we will get a better one
+      profile = ProfileService.getProfile(profileUid);
+    }
     //!TODO what constitues a completed profile - so we don't send hundreds of emails as they type in each bit for the first time
     //! probably something to do with the color being set - or whatever is the last required thing...
     return profile && profile.data && profile.data.accentColor;
@@ -24,11 +29,16 @@ export namespace ProfileEndpoints {
 
   /**
    * helper to send an update email when they change something about the profile
+   * @param profileUid is the UID of the profile we are checking
    * @param profile is the profile they just changed
    * @returns promise of true if sent, else false
    */
-  export function sendRequiredAccountUpdateEmail(profile: any): Promise<boolean> {
-    if (isProfileComplete(profile)) {
+  export function sendRequiredAccountUpdateEmail(profileUid: string, profile: any): Promise<boolean> {
+    if (!profile || !profile.data || !profile.data.email) {
+      // just to make this robust - if we don't have enough of a picture of the profile, we will get a better one
+      profile = ProfileService.getProfile(profileUid);
+    }
+    if (isProfileComplete(profileUid, profile)) {
       // the new profile is complete - but they just updated it, send an email please
       return EmailHelpers.sendEmail(
         profile.data.email,
@@ -201,7 +211,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -240,7 +250,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -271,7 +281,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -302,7 +312,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -332,7 +342,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -362,7 +372,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -393,7 +403,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -425,7 +435,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -455,7 +465,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -476,7 +486,7 @@ export namespace ProfileEndpoints {
     functions.logger.info("Profile biography updated");
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -503,7 +513,7 @@ export namespace ProfileEndpoints {
     }
 
     let wasWelcomeEmailSent = false;
-    if (!isProfileComplete(profile)) {
+    if (!isProfileComplete(uid, profile)) {
       // this is the first time we will set the profile colour which signifies the end of the account creation process
       //TODO we need to send a different email if a company account
       //TODO somewhere as well a user is invited to a company account and that's different too
@@ -529,7 +539,7 @@ export namespace ProfileEndpoints {
 
     if (!wasWelcomeEmailSent) {
       // we might want to send an update email here as didn't send a welcome email
-      await sendRequiredAccountUpdateEmail(newProfile);
+      await sendRequiredAccountUpdateEmail(uid, newProfile);
     }
 
     return buildEndpointResponse(context, {
@@ -557,7 +567,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -584,7 +594,7 @@ export namespace ProfileEndpoints {
     });
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -608,7 +618,7 @@ export namespace ProfileEndpoints {
     const newProfile = await ProfileService.addMedia(profile, media);
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -632,7 +642,7 @@ export namespace ProfileEndpoints {
     const newProfile = await ProfileService.removeMedia(profile, mediaId);
 
     // we might want to send an update email here
-    await sendRequiredAccountUpdateEmail(newProfile);
+    await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
