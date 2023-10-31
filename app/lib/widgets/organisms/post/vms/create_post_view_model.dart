@@ -109,6 +109,30 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
+  Future<bool> onForceClosePage() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    bool canPop = false;
+
+    canPop = !await positiveDiscardClipDialogue(
+      context: context,
+      colors: colors,
+      typography: typography,
+    );
+
+    if (!canPop) {
+      logger.i("Pop Search page, push Home page");
+      router.removeWhere((route) => true);
+      router.push(const HomeRoute());
+    }
+
+    return false;
+  }
+
   Future<bool> onWillPopScope() async {
     bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
 
