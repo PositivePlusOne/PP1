@@ -81,6 +81,15 @@ export namespace ActivitiesService {
     }) as ActivityJSON[];
   }
 
+  export async function getActivitiesForProfile(profileId: string): Promise<ActivityJSON[]> {
+    return await DataService.getDocumentWindowRaw({
+      schemaKey: "activities",
+      where: [
+        { fieldPath: "publisherInformation.publisherId", op: "==", value: profileId },
+      ],
+    }) as ActivityJSON[];
+  }
+
   /**
    * Gets a list of activities from a list of feed entrys.
    * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
@@ -129,6 +138,26 @@ export namespace ActivitiesService {
     }) as ActivityJSON;
     
     return activityResponse;
+  }
+
+  export async function deleteActivity(activityId: string): Promise<void> {
+    functions.logger.info("Deleting activity", {
+      activityId,
+    });
+
+    const activity = await getActivity(activityId);
+    if (!activity) {
+      throw new functions.https.HttpsError("invalid-argument", "Activity does not exist");
+    }
+
+    const publisherId = activity.publisherInformation?.publisherId ?? "";
+    const publisherFeed = FeedService.getFeedsClient().feed(FeedName.User, publisherId);
+    await publisherFeed.removeActivity({ foreign_id: activityId });
+
+    await DataService.deleteDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+    });
   }
 
   /**

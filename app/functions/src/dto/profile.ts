@@ -29,6 +29,7 @@ export const allVisibilityFlags = [
 export const featureFlagMarketing = 'marketing';
 export const featureFlagIncognito = 'incognito';
 export const featureFlagOrganisationControls = 'organisation';
+export const featureFlagPendingDeletion = 'pending_deletion';
 
 export const maximumProfileTags = 10;
 
