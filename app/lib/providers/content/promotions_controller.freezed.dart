@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PromotionsControllerState {
   int get promotionIndex => throw _privateConstructorUsedError;
+  String get cursor => throw _privateConstructorUsedError;
   List<String> get promotionIds => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +31,7 @@ abstract class $PromotionsControllerStateCopyWith<$Res> {
           $Res Function(PromotionsControllerState) then) =
       _$PromotionsControllerStateCopyWithImpl<$Res, PromotionsControllerState>;
   @useResult
-  $Res call({int promotionIndex, List<String> promotionIds});
+  $Res call({int promotionIndex, String cursor, List<String> promotionIds});
 }
 
 /// @nodoc
@@ -48,6 +49,7 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? promotionIndex = null,
+    Object? cursor = null,
     Object? promotionIds = null,
   }) {
     return _then(_value.copyWith(
@@ -55,6 +57,10 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
           ? _value.promotionIndex
           : promotionIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      cursor: null == cursor
+          ? _value.cursor
+          : cursor // ignore: cast_nullable_to_non_nullable
+              as String,
       promotionIds: null == promotionIds
           ? _value.promotionIds
           : promotionIds // ignore: cast_nullable_to_non_nullable
@@ -72,7 +78,7 @@ abstract class _$$PromotionsControllerStateImplCopyWith<$Res>
       __$$PromotionsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int promotionIndex, List<String> promotionIds});
+  $Res call({int promotionIndex, String cursor, List<String> promotionIds});
 }
 
 /// @nodoc
@@ -89,6 +95,7 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? promotionIndex = null,
+    Object? cursor = null,
     Object? promotionIds = null,
   }) {
     return _then(_$PromotionsControllerStateImpl(
@@ -96,6 +103,10 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
           ? _value.promotionIndex
           : promotionIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      cursor: null == cursor
+          ? _value.cursor
+          : cursor // ignore: cast_nullable_to_non_nullable
+              as String,
       promotionIds: null == promotionIds
           ? _value._promotionIds
           : promotionIds // ignore: cast_nullable_to_non_nullable
@@ -108,12 +119,17 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
 
 class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   const _$PromotionsControllerStateImpl(
-      {this.promotionIndex = 0, final List<String> promotionIds = const []})
+      {this.promotionIndex = 0,
+      this.cursor = '',
+      final List<String> promotionIds = const []})
       : _promotionIds = promotionIds;
 
   @override
   @JsonKey()
   final int promotionIndex;
+  @override
+  @JsonKey()
+  final String cursor;
   final List<String> _promotionIds;
   @override
   @JsonKey()
@@ -125,7 +141,7 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 
   @override
   String toString() {
-    return 'PromotionsControllerState(promotionIndex: $promotionIndex, promotionIds: $promotionIds)';
+    return 'PromotionsControllerState(promotionIndex: $promotionIndex, cursor: $cursor, promotionIds: $promotionIds)';
   }
 
   @override
@@ -135,12 +151,13 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
             other is _$PromotionsControllerStateImpl &&
             (identical(other.promotionIndex, promotionIndex) ||
                 other.promotionIndex == promotionIndex) &&
+            (identical(other.cursor, cursor) || other.cursor == cursor) &&
             const DeepCollectionEquality()
                 .equals(other._promotionIds, _promotionIds));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, promotionIndex,
+  int get hashCode => Object.hash(runtimeType, promotionIndex, cursor,
       const DeepCollectionEquality().hash(_promotionIds));
 
   @JsonKey(ignore: true)
@@ -154,10 +171,13 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 abstract class _PromotionsControllerState implements PromotionsControllerState {
   const factory _PromotionsControllerState(
       {final int promotionIndex,
+      final String cursor,
       final List<String> promotionIds}) = _$PromotionsControllerStateImpl;
 
   @override
   int get promotionIndex;
+  @override
+  String get cursor;
   @override
   List<String> get promotionIds;
   @override
