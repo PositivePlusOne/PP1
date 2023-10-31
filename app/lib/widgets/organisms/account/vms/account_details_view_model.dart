@@ -222,8 +222,8 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
         return;
       }
 
-      final Set<String> visibilityFlags = profile.visibilityFlags;
-      if (!visibilityFlags.contains(kFeatureFlagPendingDeletion)) {
+      final Set<String> accountFlags = profile.accountFlags;
+      if (!accountFlags.contains(kFeatureFlagPendingDeletion)) {
         logger.i('Profile is not pending deletion');
         return;
       }

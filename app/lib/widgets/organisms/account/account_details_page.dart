@@ -92,10 +92,11 @@ class AccountDetailsPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final Profile? ownerProfile = cacheController.get(ownerId);
 
-    final bool isPendingDeletion = profile?.visibilityFlags.contains(kFeatureFlagPendingDeletion) == true;
+    final bool isPendingDeletion = profile?.accountFlags.contains(kFeatureFlagPendingDeletion) == true;
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      isBusy: viewModelState.isBusy,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarLeading: PositiveButton.appBarIcon(
