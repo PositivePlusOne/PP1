@@ -163,7 +163,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),
         AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [signedInGuard]),
         AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [signedInGuard]),
-        AutoRoute(page: ProfileDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
+        AutoRoute(page: BirthdayDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
         AutoRoute(page: ProfileCompanySectorSelectRoute.page, path: '/profile/setup/companysectors', guards: [signedInGuard]),

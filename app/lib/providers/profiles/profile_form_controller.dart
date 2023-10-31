@@ -426,7 +426,7 @@ class ProfileFormController extends _$ProfileFormController {
 
     if (birthday.isAfter(thirteenYearsAgo)) {
       logger.e('User is not 13 years old, navigating to age requirement screen');
-      await appRouter.push(const ProfileDeleteAccountRoute());
+      await appRouter.push(const BirthdayDeleteAccountRoute());
       return;
     }
 
