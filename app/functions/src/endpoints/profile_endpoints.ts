@@ -42,6 +42,7 @@ export namespace ProfileEndpoints {
       // the new profile is complete - but they just updated it, send an email please
       return EmailHelpers.sendEmail(
         profile.data.email,
+        "Positive+1 Account Updated",
         "Account Updated", 
         "Some details have been updated in your Positive+1 account settings<br/>" +
         "If this wasn’t you, please check your account and get in touch at email:support@positiveplusone.com",
@@ -120,12 +121,10 @@ export namespace ProfileEndpoints {
 
     await EmailHelpers.sendEmail(
       userProfile.data.email,
+      "Positive+1 Account Deleted",
       "Account Deleted",
-      //!TODO this copy needs to change when designed
-      "Welcome to the beginning of your Positive+1 experience<br/>" +
-      `An account has been started with ${userProfile.data.email}<br/>` +
-      "If this wasn’t you, please get in touch at mail:support@positiveplusone.com<br/>" +
-      "If you did not finish your registration, you can continue on your mobile app, or by tapping below.",
+      "We're sorry to see you go, but we've deleted your account as requested.<br/>" + 
+      "If this wasn’t you, please get in touch at mail:support@positiveplusone.com",
       "Return to Positive+1");
 
     return JSON.stringify({ success: true });
@@ -178,6 +177,7 @@ export namespace ProfileEndpoints {
     // the email address is intrinsicly connected to their account - so this is a new account by setting this?
     await EmailHelpers.sendEmail(
       emailAddress,
+      "Positive+1 Account Created",
       "Account Created",
       "Welcome to the beginning of your Positive+1 experience<br/>" +
       `An account has been started with ${emailAddress}<br/>` +
@@ -519,16 +519,18 @@ export namespace ProfileEndpoints {
       //TODO somewhere as well a user is invited to a company account and that's different too
       // wasWelcomeEmailSent = await EmailHelpers.sendEmail(
       //   profile.data.email,
+      // "Positive+1 Company Account Invite",
       // "Your company has been created on Positive+1",
       // "A new company has been created for you on Positive+1.<br/>Please check your Positive+1 app for your invitation to post and manage content on behalf of your company.",
       // "Return to Positive+1");
       //else we are a normal profile created
       wasWelcomeEmailSent = await EmailHelpers.sendEmail(
         profile.data.email,
-      "You Are All set",
-      "Your account has been fully set up. Welcome to the community!<br/>" +
-      "If this wasn’t you, please get in touch at mail:support@positiveplusone.com<br/>",
-      "Return to Positive+1");
+        "Positive+1 Account Setup",
+        "You Are All Set",
+        "Your account has been fully set up. Welcome to the community!<br/>" +
+        "If this wasn’t you, please get in touch at mail:support@positiveplusone.com<br/>",
+        "Return to Positive+1");
     }
 
     const newProfile = await ProfileService.updateAccentColor(uid, accentColor);
