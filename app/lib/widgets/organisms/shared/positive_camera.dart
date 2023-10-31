@@ -501,6 +501,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     } catch (e) {
       final Logger logger = ref.read(loggerProvider);
       logger.e("Error stopping video recording: $e");
+      resetClipStateToDefault();
     }
     MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
 
@@ -522,15 +523,20 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    if (clipRecordingState == ClipRecordingState.recording) {
+    if (clipRecordingState.isRecording) {
       onPauseResumeClip(forcePause: true);
     }
 
-    final bool deactivate = await positiveDiscardClipDialogue(
-      context: context,
-      colors: colors,
-      typography: typography,
-    );
+    late final bool deactivate;
+    if (clipRecordingState.isPreRecording) {
+      deactivate = true;
+    } else {
+      deactivate = await positiveDiscardClipDialogue(
+        context: context,
+        colors: colors,
+        typography: typography,
+      );
+    }
 
     if (deactivate) {
       resetClipStateToDefault();
@@ -571,10 +577,17 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   ///? Attempt to stop the clip recording, does not capture the resulting video
-  void stopClipRecording() {
+  Future<void> stopClipRecording() async {
     if (cachedCameraState != null) {
       VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
-      videoRecordingCameraState.stopRecording();
+      try {
+        await videoRecordingCameraState.stopRecording();
+      } catch (e) {
+        stopClipTimers();
+        if (widget.onClipStateChange != null) {
+          widget.onClipStateChange!(clipRecordingState);
+        }
+      }
     }
     clipRecordingState = ClipRecordingState.notRecording;
   }

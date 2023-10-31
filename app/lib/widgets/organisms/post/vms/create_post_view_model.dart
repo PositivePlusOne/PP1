@@ -121,6 +121,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       final BuildContext context = router.navigatorKey.currentContext!;
       final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
       final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+      //? this is required here as the version within the camera will not be mounted on this page
       canPop = !await positiveDiscardClipDialogue(
         context: context,
         colors: colors,
