@@ -134,8 +134,6 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           CameraFloatingButton.close(active: true, onTap: widget.onTapClose ?? (_) {}),
-                          const Spacer(),
-                          CameraFloatingButton.addImage(active: true, onTap: widget.onInternalAddImageTap ?? (_) {}),
                         ],
                       ),
                     ),
