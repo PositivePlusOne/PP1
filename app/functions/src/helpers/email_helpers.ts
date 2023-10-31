@@ -11,14 +11,13 @@ export namespace EmailHelpers {
     
   /**
    * function to send an email, formatted nicely with branding etc, from whoever, to whomever and containing what you want it to
-   * @param from is the email (string) who this is from
    * @param to is the email (string) of who this is to be sent to
    * @param title is the title of the email and the big title in the HTML content of the body
    * @param body is the texy body of the email (html) so include <br/> for line breaks etc
    * @param buttonText is the text to show in the button that is inluded in the email
    * @returns a promise of a boolean which will be true when successful and false when there was an error
    */
-    export async function sendEmail(from: string, to: string, title: string, body: string, buttonText: string): Promise<boolean> {
+    export async function sendEmail(to: string, title: string, body: string, buttonText: string): Promise<boolean> {
       // using the ts library, we can keep this nice and simple
       // https://postmarkapp.com/developer/user-guide/send-email-with-api/send-a-single-email
 
@@ -37,7 +36,8 @@ export namespace EmailHelpers {
       const client = new postmark.ServerClient("POSTMARK_API_TEST");
       // and send the email
       const result = await client.sendEmail({
-        "From": from,
+        //!TODO check the 'from' address from which to send these admin emails
+        "From": "noreply@pp1.com",
         "To": to,
         "Subject": title,
         "TextBody": emailString,

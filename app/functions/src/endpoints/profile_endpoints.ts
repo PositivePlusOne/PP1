@@ -8,8 +8,40 @@ import { CacheService } from "../services/cache_service";
 import { MediaJSON } from "../dto/media";
 import { ProfileJSON } from "../dto/profile";
 import { DataService } from "../services/data_service";
+import { EmailHelpers } from "../helpers/email_helpers";
 
 export namespace ProfileEndpoints {
+
+  /**
+   * helper function to determine if a profile is completed now
+   * @param profile is the profile to check
+   */
+  export function isProfileComplete(profile: any): boolean {
+    //!TODO what constitues a completed profile - so we don't send hundreds of emails as they type in each bit for the first time
+    //! probably something to do with the color being set - or whatever is the last required thing...
+    return profile && profile.data && profile.data.accentColor;
+  }
+
+  /**
+   * helper to send an update email when they change something about the profile
+   * @param profile is the profile they just changed
+   * @returns promise of true if sent, else false
+   */
+  export function sendRequiredAccountUpdateEmail(profile: any): Promise<boolean> {
+    if (isProfileComplete(profile)) {
+      // the new profile is complete - but they just updated it, send an email please
+      return EmailHelpers.sendEmail(
+        profile.data.email,
+        "Account Updated", 
+        "Some details have been updated in your Positive+1 account settings<br/>" +
+        "If this wasn’t you, please check your account and get in touch at email:support@positiveplusone.com",
+        "Return to Positive+1");
+    } else {
+      // return that this failed
+      return Promise.resolve(false);
+    }
+  }
+
   export const getProfiles = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info("Getting user profiles", { structuredData: true });
     const uid = request.sender || context.auth?.uid || "";
@@ -65,11 +97,26 @@ export namespace ProfileEndpoints {
   });
 
   export const deleteProfile = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    const targetUid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Deleting user profile", { structuredData: true });
 
-    await ProfileService.deleteProfile(uid);
+    const userProfile = await ProfileService.getProfile(targetUid);
+    if (!userProfile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist so cannot be deleted");
+    }
+
+    await ProfileService.deleteProfile(targetUid);
     functions.logger.info("User profile deleted");
+
+    await EmailHelpers.sendEmail(
+      userProfile.data.email,
+      "Account Deleted",
+      //!TODO this copy needs to change when designed
+      "Welcome to the beginning of your Positive+1 experience<br/>" +
+      `An account has been started with ${userProfile.data.email}<br/>` +
+      "If this wasn’t you, please get in touch at mail:support@positiveplusone.com<br/>" +
+      "If you did not finish your registration, you can continue on your mobile app, or by tapping below.",
+      "Return to Positive+1");
 
     return JSON.stringify({ success: true });
   });
@@ -118,6 +165,16 @@ export namespace ProfileEndpoints {
       emailAddress,
     });
 
+    // the email address is intrinsicly connected to their account - so this is a new account by setting this?
+    await EmailHelpers.sendEmail(
+      emailAddress,
+      "Account Created",
+      "Welcome to the beginning of your Positive+1 experience<br/>" +
+      `An account has been started with ${emailAddress}<br/>` +
+      "If this wasn’t you, please get in touch at mail:support@positiveplusone.com<br/>" +
+      "If you did not finish your registration, you can continue on your mobile app, or by tapping below.",
+      "Return to Positive+1");
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -142,6 +199,9 @@ export namespace ProfileEndpoints {
       uid,
       phoneNumber,
     });
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -179,6 +239,9 @@ export namespace ProfileEndpoints {
       name,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -206,6 +269,9 @@ export namespace ProfileEndpoints {
       uid,
       displayName,
     });
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -235,6 +301,9 @@ export namespace ProfileEndpoints {
       birthday,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -261,6 +330,9 @@ export namespace ProfileEndpoints {
       uid,
       interests,
     });
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -289,6 +361,9 @@ export namespace ProfileEndpoints {
       genders,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -316,6 +391,9 @@ export namespace ProfileEndpoints {
       uid,
       companySectors,
     });
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -346,6 +424,9 @@ export namespace ProfileEndpoints {
       placeId,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -373,6 +454,9 @@ export namespace ProfileEndpoints {
       status,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -390,6 +474,9 @@ export namespace ProfileEndpoints {
 
     const newProfile = await ProfileService.updateBiography(uid, biography);
     functions.logger.info("Profile biography updated");
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -410,11 +497,40 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid accent colour");
     }
 
+    const profile = await ProfileService.getProfile(uid);
+    if (!profile) {
+      throw new functions.https.HttpsError("not-found", "The existing user profile does not exist");
+    }
+
+    let wasWelcomeEmailSent = false;
+    if (!isProfileComplete(profile)) {
+      // this is the first time we will set the profile colour which signifies the end of the account creation process
+      //TODO we need to send a different email if a company account
+      //TODO somewhere as well a user is invited to a company account and that's different too
+      // wasWelcomeEmailSent = await EmailHelpers.sendEmail(
+      //   profile.data.email,
+      // "Your company has been created on Positive+1",
+      // "A new company has been created for you on Positive+1.<br/>Please check your Positive+1 app for your invitation to post and manage content on behalf of your company.",
+      // "Return to Positive+1");
+      //else we are a normal profile created
+      wasWelcomeEmailSent = await EmailHelpers.sendEmail(
+        profile.data.email,
+      "You Are All set",
+      "Your account has been fully set up. Welcome to the community!<br/>" +
+      "If this wasn’t you, please get in touch at mail:support@positiveplusone.com<br/>",
+      "Return to Positive+1");
+    }
+
     const newProfile = await ProfileService.updateAccentColor(uid, accentColor);
     functions.logger.info("Profile accent colour updated", {
       uid,
       accentColor,
     });
+
+    if (!wasWelcomeEmailSent) {
+      // we might want to send an update email here as didn't send a welcome email
+      await sendRequiredAccountUpdateEmail(newProfile);
+    }
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -440,6 +556,9 @@ export namespace ProfileEndpoints {
       featureFlags,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -464,6 +583,9 @@ export namespace ProfileEndpoints {
       visibilityFlags,
     });
 
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -484,6 +606,10 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.addMedia(profile, media);
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
@@ -504,6 +630,10 @@ export namespace ProfileEndpoints {
     }
 
     const newProfile = await ProfileService.removeMedia(profile, mediaId);
+
+    // we might want to send an update email here
+    await sendRequiredAccountUpdateEmail(newProfile);
+
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfile],
