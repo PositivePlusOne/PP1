@@ -22,7 +22,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
-import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/dropdowns/positive_modal_dropdown.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
@@ -1131,24 +1130,5 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Navigating to $route');
     appRouter.removeWhere((route) => true);
     await appRouter.push(route);
-  }
-
-  Future<void> onDeleteAccountSelected(BuildContext context) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-
-    logger.i('Deleting account');
-
-    logger.i('Account deletion confirmed');
-    state = state.copyWith(isBusy: true);
-
-    try {
-      await userController.deleteAccount();
-      logger.i('Account deleted');
-      await appRouter.replace(const HomeRoute());
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
   }
 }

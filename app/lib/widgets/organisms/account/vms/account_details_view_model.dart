@@ -2,10 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,14 +13,18 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import '../../../../services/third_party.dart';
 
@@ -216,7 +216,8 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
       final Profile? profile = profileController.currentProfile;
-      if (profile == null) {
+      final String profileId = profile?.flMeta?.id ?? '';
+      if (profileId.isEmpty || profile == null) {
         logger.e('No profile found');
         return;
       }
@@ -227,7 +228,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
         return;
       }
 
-      await profileApiService.toggleProfileDeletion();
+      await profileApiService.toggleProfileDeletion(uid: profileId);
       await appRouter.pop();
     } finally {
       state = state.copyWith(isBusy: false);
