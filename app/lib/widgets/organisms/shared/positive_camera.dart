@@ -65,6 +65,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.isBusy = false,
     this.leftActionWidget,
     this.onTapClose,
+    this.onTapForceClose,
     this.onTapAddImage,
     this.enableFlashControls = true,
     this.displayCameraShade = true,
@@ -104,6 +105,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final String? takePictureCaption;
 
   final void Function(BuildContext context)? onTapClose;
+  final void Function(BuildContext context)? onTapForceClose;
   final void Function(BuildContext context)? onTapAddImage;
   final bool enableFlashControls;
 
@@ -173,7 +175,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   PermissionStatus? cameraPermissionStatus;
   PermissionStatus? microphonePermissionStatus;
-  PermissionStatus? libraryPermissionStatus;
+  PermissionStatus? libraryImagePermissionStatus;
+  PermissionStatus? libraryVideoPermissionStatus;
 
   bool isPhysicalDevice = true;
 
@@ -192,7 +195,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   Timer? clipTimer;
 
   bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
-  bool get hasLibraryPermission => libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
+  bool get hasLibraryPermission => (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
 
@@ -283,22 +286,49 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
-  Future<void> checkLibraryPermission({bool request = false}) async {
+  Future<void> checkLibraryPermission({bool request = true}) async {
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-    Permission baseLibraryPermission = Permission.photos;
+    Permission baseLibraryPermissionPhoto = Permission.photos;
+    Permission baseLibraryPermissionVideo = Permission.videos;
 
     // Check if Android and past Tiramisu version
     if (deviceInfo is AndroidDeviceInfo) {
       final int sdkInt = deviceInfo.version.sdkInt;
-      if (sdkInt < 30) {
-        baseLibraryPermission = Permission.storage;
+      if (sdkInt <= 32) {
+        Permission baseLibraryPermission = Permission.storage;
+        try {
+          if (request) {
+            libraryImagePermissionStatus = await baseLibraryPermission.request();
+          } else {
+            libraryImagePermissionStatus = await baseLibraryPermission.status;
+          }
+          libraryVideoPermissionStatus = libraryImagePermissionStatus;
+        } catch (e) {
+          libraryImagePermissionStatus = PermissionStatus.denied;
+          libraryVideoPermissionStatus = PermissionStatus.denied;
+        }
+        return;
       }
     }
 
     try {
-      libraryPermissionStatus = await baseLibraryPermission.request();
+      if (request) {
+        libraryImagePermissionStatus = await baseLibraryPermissionPhoto.request();
+      } else {
+        libraryImagePermissionStatus = await baseLibraryPermissionPhoto.status;
+      }
     } catch (e) {
-      libraryPermissionStatus = PermissionStatus.denied;
+      libraryImagePermissionStatus = PermissionStatus.denied;
+    }
+
+    try {
+      if (request) {
+        libraryVideoPermissionStatus = await baseLibraryPermissionVideo.request();
+      } else {
+        libraryVideoPermissionStatus = await baseLibraryPermissionVideo.status;
+      }
+    } catch (e) {
+      libraryVideoPermissionStatus = PermissionStatus.denied;
     }
   }
 
@@ -783,25 +813,15 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           typography: typography,
           ref: ref,
           onTapClose: () async {
-            final BaseDeviceInfo deviceInfoPlugin = await ref.read(deviceInfoProvider.future);
-            Permission basePermission = Permission.photos;
-            if (deviceInfoPlugin is AndroidDeviceInfo) {
-              final int sdkInt = deviceInfoPlugin.version.sdkInt;
-              if (sdkInt < 30) {
-                basePermission = Permission.storage;
-              }
-            }
-
-            libraryPermissionStatus = await basePermission.status;
-            final bool isGranted = libraryPermissionStatus == PermissionStatus.granted || libraryPermissionStatus == PermissionStatus.limited;
-            if (!isGranted) {
+            await checkLibraryPermission(request: false);
+            if (!hasLibraryPermission) {
               final SystemController systemController = ref.read(systemControllerProvider.notifier);
               await systemController.openPermissionSettings();
-              libraryPermissionStatus == await basePermission.status;
+              await checkLibraryPermission(request: false);
             }
 
-            viewMode = libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-            if (libraryPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) {
+            viewMode = hasLibraryPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
+            if (hasLibraryPermission) {
               onInternalAddImageTap(context);
             }
           },
@@ -877,6 +897,14 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   List<Widget> getPositiveCameraGenericTopChildren(CameraState state) {
+    if (clipRecordingState.isRecordingOrPaused) {
+      return [
+        if (widget.onTapClose != null) CameraFloatingButton(active: true, onTap: widget.onTapClose!, iconData: UniconsLine.angle_left),
+        const Spacer(),
+        if (widget.onTapForceClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapForceClose!),
+      ];
+    }
+
     return [
       if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
       const Spacer(),

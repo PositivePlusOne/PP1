@@ -103,8 +103,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   Positioned.fill(
                     child: PositiveCamera(
                       key: state.cameraWidgetKey,
+                      //? On Tap section
                       onCameraImageTaken: (image) => viewModel.onImageTaken(image),
                       onCameraVideoTaken: (video) => viewModel.onVideoTaken(video),
+                      onTapClose: (_) => appRouter.pop(),
+                      onTapForceClose: (_) => viewModel.onForceClosePage(),
+                      onTapAddImage: (context) => viewModel.onMultiMediaPicker(),
                       //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                       cameraNavigation: (_) {
                         return const SizedBox(
@@ -122,8 +126,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                               width: kIconLarge,
                               height: kIconLarge,
                             ),
-                      onTapClose: (_) => appRouter.pop(),
-                      onTapAddImage: (context) => viewModel.onMultiImagePicker(),
                       isVideoMode: state.currentPostType == PostType.clip,
                       bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
                       topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
@@ -278,8 +280,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   Positioned.fill(
                     child: PositiveClipEditor(
                       onTapClose: (_) => appRouter.pop(),
+                      onTapFullClose: (_) => viewModel.onForceClosePage(),
                       controller: viewModel.videoEditorController,
-                      // targetVideoAspectRatio: aspectRatio,
+                      // targetVideoAspectRatio: kClipAspectRatio,
                       bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
                       topNavigationSize: kIconLarge + kPaddingSmall * 2,
                     ),

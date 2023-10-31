@@ -28,6 +28,7 @@ class PositiveClipEditor extends StatefulHookConsumerWidget {
     required this.controller,
     this.targetVideoAspectRatio,
     this.onTapClose,
+    this.onTapFullClose,
     this.onInternalAddImageTap,
     super.key,
   });
@@ -39,6 +40,7 @@ class PositiveClipEditor extends StatefulHookConsumerWidget {
   final VideoEditorController? controller;
 
   final Function(BuildContext context)? onTapClose;
+  final Function(BuildContext context)? onTapFullClose;
   final Function(BuildContext context)? onInternalAddImageTap;
 
   @override
@@ -133,9 +135,9 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CameraFloatingButton.close(active: true, onTap: widget.onTapClose ?? (_) {}),
+                          CameraFloatingButton(active: true, onTap: widget.onTapClose ?? (_) {}, iconData: UniconsLine.angle_left),
                           const Spacer(),
-                          CameraFloatingButton.addImage(active: true, onTap: widget.onInternalAddImageTap ?? (_) {}),
+                          CameraFloatingButton.close(active: true, onTap: widget.onTapFullClose ?? (_) {}),
                         ],
                       ),
                     ),
