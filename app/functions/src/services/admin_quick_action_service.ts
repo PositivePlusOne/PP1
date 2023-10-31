@@ -17,11 +17,15 @@ import { UpdateCoverImageAction } from "./actions/update_cover_image_action";
 import { LinkDirectoryEntryAction } from "./actions/link_directory_entry_action";
 import { UnlinkDirectoryEntryAction } from "./actions/unlink_directory_entry_action";
 import { UpdatePromotionMixpanelAnalyticsAction } from "./actions/update_promotion_mixpanel_analytics_action";
+import { ShufflePromotionSeedsAction } from "./actions/shuffle_promotion_seeds_action";
+import { DeactivateInactivePromotionsAction } from "./actions/deactivate_inactive_promotions_action";
+import { DeleteMemberAction } from "./actions/delete_member_action";
 
 export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
 
     const actionMapping: { [key: string]: ActionFunction } = {
+        'deleteMember': DeleteMemberAction.deleteMember,
         'removeOrganisationMember': RemoveOrganisationMemberAction.removeOrganisationMember,
         'assignOrganisationMember': AssignOrganisationMemberAction.assignOrganisationMember,
         'assignOrganisationOwner': AssignOrganisationOwnerAction.assignOrganisationOwner,
@@ -35,6 +39,8 @@ export namespace AdminQuickActionService {
         'linkDirectoryEntry': LinkDirectoryEntryAction.linkDirectoryEntry,
         'unlinkDirectoryEntry': UnlinkDirectoryEntryAction.unlinkDirectoryEntry,
         'updatePromotionMixpanelAnalytics': UpdatePromotionMixpanelAnalyticsAction.updatePromotionsMixpanelAnalytics,
+        'shufflePromotionSeeds': ShufflePromotionSeedsAction.shufflePromotionSeeds,
+        'deactivateInactivePromotions': DeactivateInactivePromotionsAction.deactivateInactivePromotions,
     };
 
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {

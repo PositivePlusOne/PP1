@@ -60,8 +60,11 @@ export interface PromotionJSON {
     owners?: PromotionOwnerJSON[];
     activities?: PromotedActivityJSON[];
     isActive?: boolean;
+    seed?: number;
     totalViewsSinceLastUpdate?: number;
     totalViewsAllotment?: number;
+    startDate?: Timestamp;
+    endDate?: Timestamp;
 }
 
 export class Promotion {
@@ -72,8 +75,11 @@ export class Promotion {
     owners?: PromotionOwner[];
     activities?: PromotedActivity[];
     isActive?: boolean;
+    seed?: number;
     totalViewsSinceLastUpdate?: number;
     totalViewsAllotment?: number;
+    startDate?: Timestamp;
+    endDate?: Timestamp;
 
     constructor(json: PromotionJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -83,7 +89,10 @@ export class Promotion {
         this.owners = json.owners && json.owners.map((owner) => new PromotionOwner(owner));
         this.activities = json.activities && json.activities.map((activity) => new PromotedActivity(activity));
         this.isActive = json.isActive;
+        this.seed = json.seed;
         this.totalViewsSinceLastUpdate = json.totalViewsSinceLastUpdate;
         this.totalViewsAllotment = json.totalViewsAllotment;
+        this.startDate = json.startDate;
+        this.endDate = json.endDate;
     }
 }
