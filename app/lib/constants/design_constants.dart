@@ -116,6 +116,8 @@ const double kCreatePostHeight = 50.0;
 const double kCreatePostNavigationHeight = 60;
 const String kObscuringTextCharacter = '*';
 
+const double kClipAspectRatio = 9 / 16;
+
 // Text and Formatting
 const int kMaxLengthTruncatedPost = 75;
 const int kMaxLengthCaption = 320;
