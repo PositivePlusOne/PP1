@@ -13,7 +13,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/buttons/promotion_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
@@ -103,7 +102,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
-                    localizations.shared_promotion,
+                    localizations.post_promoted_label,
                     style: typography.styleSubtextBold.copyWith(color: colors.colorGray7),
                   ),
                 ],

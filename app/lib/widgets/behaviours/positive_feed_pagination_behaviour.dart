@@ -236,11 +236,21 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kPaddingLarge / 2),
-      child: buildItem(context, promotedActivity, index),
+      child: buildItem(
+        context: context,
+        item: promotedActivity,
+        index: index,
+        promotion: promotion,
+      ),
     );
   }
 
-  Widget buildItem(BuildContext context, Activity item, int index) {
+  Widget buildItem({
+    required BuildContext context,
+    required Activity item,
+    required int index,
+    Promotion? promotion,
+  }) {
     final String activityId = item.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherId = item.publisherInformation?.publisherId ?? '';
@@ -266,6 +276,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         index: index,
         relationshipId: relationshipId,
         reposterRelationshipId: reposterRelationshipId,
+        promotion: promotion,
       ),
     );
   }
@@ -278,6 +289,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required int index,
     required String relationshipId,
     required String reposterRelationshipId,
+    Promotion? promotion,
   }) {
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -286,7 +298,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Activity? activity = cacheController.get(activityId);
     final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId ?? '');
     final Profile? currentProfile = cacheController.get(currentProfileId);
-    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey ?? '');
+    // final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey ?? '');
 
     final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
     final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
@@ -375,7 +387,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         noItemsFoundIndicatorBuilder: (context) => noPostsWidget,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
+        itemBuilder: (_, item, index) => buildItem(context: context, item: item, index: index),
       ),
     );
   }
@@ -396,7 +408,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
+        itemBuilder: (_, item, index) => buildItem(context: context, item: item, index: index),
       ),
     );
   }
