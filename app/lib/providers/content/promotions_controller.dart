@@ -24,7 +24,20 @@ class PromotionsController extends _$PromotionsController {
     return PromotionsControllerState.initialState();
   }
 
-  Future<void> loadNextPromotionWindow() async {}
+  Future<void> loadNextPromotionWindow() async {
+    // final CacheController cacheController = ref.read(cacheControllerProvider);
+    // final Promotion? promotions = cacheController.get(state.cursor);
+
+    // if (promotions == null) {
+    //   return;
+    // }
+
+    // final List<String> promotionIds = promotions.promotions.map((Promotion promotion) => promotion.id).toList();
+    // state = state.copyWith(
+    //   cursor: promotions.cursor,
+    //   promotionIds: [...state.promotionIds, ...promotionIds],
+    // );
+  }
 
   Promotion? getNextPromotion() {
     if (state.promotionIds.isEmpty) {

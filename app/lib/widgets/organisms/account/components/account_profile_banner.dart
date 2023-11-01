@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -47,6 +48,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final Profile? currentProfile = profileControllerState.currentProfile;
+    final bool isOrganisation = currentProfile?.isOrganisation == true;
 
     final bool isViewingOwnProfile = profile != null && profile?.flMeta?.id == currentProfile?.flMeta?.id;
 
@@ -104,7 +106,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
             onTapped: () => viewModel.onViewProfileButtonSelected(profile),
             tooltip: localizations.page_account_actions_view_profile,
           ),
-          if (isViewingOwnProfile) ...<Widget>[
+          if (isViewingOwnProfile && !isOrganisation) ...<Widget>[
             const SizedBox(width: kPaddingSmall),
             PositiveButton.appBarIcon(
               colors: colors,
