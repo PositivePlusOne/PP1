@@ -45,7 +45,9 @@ export namespace ProfileEndpoints {
         "Positive+1 Account Updated",
         "Account Updated", 
         "Some details have been updated in your Positive+1 account settings",
-        "Return to Positive+1");
+        "",
+        "Return to Positive+1",
+        "https://www.positiveplusone.com");
     } else {
       // return that this failed
       return Promise.resolve(false);
@@ -123,7 +125,9 @@ export namespace ProfileEndpoints {
       "Positive+1 Account Deleted",
       "Account Deleted",
       "We're sorry to see you go, but we've deleted your account as requested.",
-      "Return to Positive+1");
+      "",
+      "Return to Positive+1",
+      "https://www.positiveplusone.com");
 
     return JSON.stringify({ success: true });
   });
@@ -178,7 +182,9 @@ export namespace ProfileEndpoints {
       "Positive+1 Account Created",
       "Account Created",
       `Welcome to the beginning of your Positive+1 experience. An account has been started with ${emailAddress}.`,
-      "Return to Positive+1");
+      "If you did not finish your registration, you can continue on your mobile app, or by tapping below.",
+      "Return to Positive+1",
+      "https://www.positiveplusone.com");
 
     return buildEndpointResponse(context, {
       sender: uid,
@@ -517,14 +523,18 @@ export namespace ProfileEndpoints {
       // "Positive+1 Company Account Invite",
       // "Your company has been created on Positive+1",
       // "A new company has been created for you on Positive+1. Please check your Positive+1 app for your invitation to post and manage content on behalf of your company.",
-      // "Return to Positive+1");
+      // "",
+      // "Return to Positive+1",
+      // "https://www.positiveplusone.com");
       //else we are a normal profile created
       wasWelcomeEmailSent = await EmailHelpers.sendEmail(
         profile.data.email,
         "Positive+1 Account Setup",
         "You Are All Set",
         "Your account has been fully set up. Welcome to the community!",
-        "Return to Positive+1");
+        "",
+        "Return to Positive+1",
+        "https://www.positiveplusone.com");
     }
 
     const newProfile = await ProfileService.updateAccentColor(uid, accentColor);

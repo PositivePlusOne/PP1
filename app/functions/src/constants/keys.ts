@@ -8,7 +8,7 @@ export namespace Keys {
   export const AlgoliaApiKey = "ALGOLIA_API_KEY";
   export const AlgoliaAppId = "ALGOLIA_APP_ID";
   export const SlackSigningSecret = "SLACK_SIGNING_SECRET";
-  export const PostmarkApiKey = "POSTMARK_API_KEY"; //"d59a4d11-81d5-494b-a964-782415bf4d2d";
+  export const PostmarkApiKey = "SMTP_API_SECRET";
 
   //* Feature flags
   export const FeatureFlagManagedOrganisation = "MANAGED_ORGANISATION";
