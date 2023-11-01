@@ -605,7 +605,6 @@
     "shared_name":"Name",
     "shared_email_address": "Email Address",
     "shared_phone_number": "Phone Number",
-    "shared_promotion": "Promotion",
 
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_sign_in": "Sign In",
