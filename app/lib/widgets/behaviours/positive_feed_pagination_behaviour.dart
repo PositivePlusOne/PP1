@@ -407,6 +407,18 @@ class SliverNoPostsPlaceholder extends StatelessWidget {
     return SliverStack(
       positionedAlignment: Alignment.bottomCenter,
       children: <Widget>[
+        SliverFillRemaining(
+          fillOverscroll: false,
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType2ScaffoldDecorations(colors)),
+            ),
+          ),
+        ),
         SliverPositioned(
           left: 0.0,
           right: 0.0,
@@ -422,18 +434,6 @@ class SliverNoPostsPlaceholder extends StatelessWidget {
                     style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
                   ),
                 ),
-          ),
-        ),
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType2ScaffoldDecorations(colors)),
-            ),
           ),
         ),
       ],
