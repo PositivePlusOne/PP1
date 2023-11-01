@@ -20,6 +20,7 @@ import 'package:universal_platform/universal_platform.dart';
 import 'package:app/constants/key_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
@@ -147,6 +148,7 @@ class SystemController extends _$SystemController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
+    final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
 
     //* Data is assumed to be correct, if not the app cannot be used
     final EndpointResponse endpointResponse = await systemApiService.getSystemConfiguration();
@@ -162,6 +164,7 @@ class SystemController extends _$SystemController {
     final List genders = payload.containsKey('genders') && payload['genders'] is List<dynamic> ? payload['genders'] as List<dynamic> : [];
     final List companySectors = payload.containsKey('companySectors') && payload['companySectors'] is List<dynamic> ? payload['companySectors'] as List<dynamic> : [];
     final List hivStatuses = payload.containsKey('medicalConditions') && payload['medicalConditions'] is List<dynamic> ? payload['medicalConditions'] as List<dynamic> : [];
+    final List promotions = payload.containsKey('promotions') && payload['promotions'] is List<dynamic> ? payload['promotions'] as List<dynamic> : [];
     final Set<String> supportedProfiles = (payload.containsKey('supportedProfiles') && payload['supportedProfiles'] is List<dynamic> ? payload['supportedProfiles'] as List<dynamic> : []).whereType<String>().toSet();
 
     final List popularTags = payload.containsKey('popularTags') && payload['popularTags'] is List<dynamic> ? payload['popularTags'] as List<dynamic> : [];
@@ -182,6 +185,7 @@ class SystemController extends _$SystemController {
     tagsController.updateTopicTags(topicTags);
 
     profileController.onSupportedProfilesUpdated(supportedProfiles);
+    promotionsController.addInitialPromotionWindow(promotions);
 
     state = state.copyWith(hasPerformedInitialSetup: true);
     logger.i('updateSystemConfiguration: Completed');

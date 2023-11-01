@@ -1,8 +1,20 @@
+// Dart imports:
+import 'dart:async';
+import 'dart:convert';
+
 // Package imports:
-import 'package:app/dtos/database/enrichment/promotions.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// Project imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
+import 'package:app/extensions/future_extensions.dart';
+import 'package:app/extensions/json_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/enrichment_api_service.dart';
+import 'package:app/services/third_party.dart';
 
 part 'promotions_controller.freezed.dart';
 part 'promotions_controller.g.dart';
@@ -10,9 +22,9 @@ part 'promotions_controller.g.dart';
 @freezed
 class PromotionsControllerState with _$PromotionsControllerState {
   const factory PromotionsControllerState({
-    @Default(0) int promotionIndex,
     @Default('') String cursor,
     @Default([]) List<String> promotionIds,
+    @Default(false) bool isExhausted,
   }) = _PromotionsControllerState;
   factory PromotionsControllerState.initialState() => const PromotionsControllerState();
 }
@@ -24,45 +36,69 @@ class PromotionsController extends _$PromotionsController {
     return PromotionsControllerState.initialState();
   }
 
-  Future<void> loadNextPromotionWindow() async {
-    // final CacheController cacheController = ref.read(cacheControllerProvider);
-    // final Promotion? promotions = cacheController.get(state.cursor);
+  void addInitialPromotionWindow(List promotions) {
+    final Logger logger = ref.read(loggerProvider);
+    if (state.promotionIds.isNotEmpty) {
+      logger.w('Promotions already loaded');
+      return;
+    }
 
-    // if (promotions == null) {
-    //   return;
-    // }
+    final Iterable<String> promotionIds = promotions.map((dynamic promotion) => Promotion.fromJson(json.decodeSafe(promotion)).flMeta?.id ?? '').where((element) => element.isNotEmpty).toList();
+    if (promotionIds.isEmpty) {
+      logger.w('No promotions found');
+      return;
+    }
 
-    // final List<String> promotionIds = promotions.promotions.map((Promotion promotion) => promotion.id).toList();
-    // state = state.copyWith(
-    //   cursor: promotions.cursor,
-    //   promotionIds: [...state.promotionIds, ...promotionIds],
-    // );
+    logger.i('Loaded ${promotionIds.length} initial promotions');
+    state = state.copyWith(promotionIds: [...state.promotionIds, ...promotionIds]);
   }
 
-  Promotion? getNextPromotion() {
+  Promotion? getPromotionFromIndex(int index) {
     if (state.promotionIds.isEmpty) {
       return null;
     }
 
-    // Check if we need to reset the index
-    if (state.promotionIndex >= state.promotionIds.length) {
-      state = state.copyWith(promotionIndex: 0);
-    }
-
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final String promotionId = state.promotionIds[state.promotionIndex];
-    final Promotion? promotion = cacheController.get(promotionId);
 
+    // Work out the real index from the modulo
+    final int realIndex = index % state.promotionIds.length;
+    final String promotionId = state.promotionIds[realIndex];
+
+    final Promotion? promotion = cacheController.get(promotionId);
     if (promotion == null) {
       return null;
     }
 
-    state = state.copyWith(promotionIndex: state.promotionIndex + 1);
     return promotion;
   }
 
-  //? Play with this number to see what works best
-  bool shouldGrabNextPromotionsWindow() {
-    return state.promotionIndex >= state.promotionIds.length - 5;
-  }
+  Future<void> loadNextPromotionWindow() => runWithMutex(() async {
+        final Logger logger = ref.read(loggerProvider);
+        const int limit = 30;
+
+        logger.i('Attempting to load next promotion window');
+
+        if (state.isExhausted) {
+          logger.w('Promotions are exhausted');
+          return;
+        }
+
+        final EnrichmentApiService enrichmentApiService = await ref.read(enrichmentApiServiceProvider.future);
+        final EndpointResponse response = await enrichmentApiService.getPromotionWindow(
+          cursor: state.cursor,
+          limit: limit,
+        );
+
+        final Iterable<Promotion> promotions = (response.data['promotions'] as List).map((dynamic promotion) => Promotion.fromJson(json.decodeSafe(promotion))).cast<Promotion>();
+        final Iterable<String> promotionIds = promotions.map((Promotion promotion) => promotion.flMeta?.id ?? '').where((element) => element.isNotEmpty).toList();
+        final String cursor = response.cursor ?? '';
+
+        state = state.copyWith(
+          cursor: cursor,
+          isExhausted: promotions.length < limit || cursor.isEmpty,
+          promotionIds: [...state.promotionIds, ...promotionIds],
+        );
+
+        logger.i('Loaded ${promotionIds.length} promotions');
+      });
 }

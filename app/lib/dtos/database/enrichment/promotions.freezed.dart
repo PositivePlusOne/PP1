@@ -23,6 +23,7 @@ mixin _$Promotion {
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
   String get link => throw _privateConstructorUsedError;
   String get linkText => throw _privateConstructorUsedError;
   List<PromotionOwner> get owners => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $PromotionCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String title,
+      String description,
       String link,
       String linkText,
       List<PromotionOwner> owners,
@@ -77,6 +79,7 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
   $Res call({
     Object? flMeta = freezed,
     Object? title = null,
+    Object? description = null,
     Object? link = null,
     Object? linkText = null,
     Object? owners = null,
@@ -95,6 +98,10 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
       link: null == link
           ? _value.link
@@ -159,6 +166,7 @@ abstract class _$$PromotionImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: '_fl_meta_') FlMeta? flMeta,
       String title,
+      String description,
       String link,
       String linkText,
       List<PromotionOwner> owners,
@@ -186,6 +194,7 @@ class __$$PromotionImplCopyWithImpl<$Res>
   $Res call({
     Object? flMeta = freezed,
     Object? title = null,
+    Object? description = null,
     Object? link = null,
     Object? linkText = null,
     Object? owners = null,
@@ -204,6 +213,10 @@ class __$$PromotionImplCopyWithImpl<$Res>
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String,
       link: null == link
           ? _value.link
@@ -251,6 +264,7 @@ class _$PromotionImpl implements _Promotion {
   const _$PromotionImpl(
       {@JsonKey(name: '_fl_meta_') this.flMeta,
       this.title = '',
+      this.description = '',
       this.link = '',
       this.linkText = '',
       final List<PromotionOwner> owners = const [],
@@ -272,6 +286,9 @@ class _$PromotionImpl implements _Promotion {
   @override
   @JsonKey()
   final String title;
+  @override
+  @JsonKey()
+  final String description;
   @override
   @JsonKey()
   final String link;
@@ -314,7 +331,7 @@ class _$PromotionImpl implements _Promotion {
 
   @override
   String toString() {
-    return 'Promotion(flMeta: $flMeta, title: $title, link: $link, linkText: $linkText, owners: $owners, activities: $activities, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment, startDate: $startDate, endDate: $endDate)';
+    return 'Promotion(flMeta: $flMeta, title: $title, description: $description, link: $link, linkText: $linkText, owners: $owners, activities: $activities, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -324,6 +341,8 @@ class _$PromotionImpl implements _Promotion {
             other is _$PromotionImpl &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.link, link) || other.link == link) &&
             (identical(other.linkText, linkText) ||
                 other.linkText == linkText) &&
@@ -348,6 +367,7 @@ class _$PromotionImpl implements _Promotion {
       runtimeType,
       flMeta,
       title,
+      description,
       link,
       linkText,
       const DeepCollectionEquality().hash(_owners),
@@ -376,6 +396,7 @@ abstract class _Promotion implements Promotion {
   const factory _Promotion(
           {@JsonKey(name: '_fl_meta_') final FlMeta? flMeta,
           final String title,
+          final String description,
           final String link,
           final String linkText,
           final List<PromotionOwner> owners,
@@ -395,6 +416,8 @@ abstract class _Promotion implements Promotion {
   FlMeta? get flMeta;
   @override
   String get title;
+  @override
+  String get description;
   @override
   String get link;
   @override
@@ -427,7 +450,8 @@ PromotionOwner _$PromotionOwnerFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PromotionOwner {
-  String get activityId => throw _privateConstructorUsedError;
+  String get profileId => throw _privateConstructorUsedError;
+  String get role => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -441,7 +465,7 @@ abstract class $PromotionOwnerCopyWith<$Res> {
           PromotionOwner value, $Res Function(PromotionOwner) then) =
       _$PromotionOwnerCopyWithImpl<$Res, PromotionOwner>;
   @useResult
-  $Res call({String activityId});
+  $Res call({String profileId, String role});
 }
 
 /// @nodoc
@@ -457,12 +481,17 @@ class _$PromotionOwnerCopyWithImpl<$Res, $Val extends PromotionOwner>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? activityId = null,
+    Object? profileId = null,
+    Object? role = null,
   }) {
     return _then(_value.copyWith(
-      activityId: null == activityId
-          ? _value.activityId
-          : activityId // ignore: cast_nullable_to_non_nullable
+      profileId: null == profileId
+          ? _value.profileId
+          : profileId // ignore: cast_nullable_to_non_nullable
+              as String,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -476,7 +505,7 @@ abstract class _$$PromotionOwnerImplCopyWith<$Res>
       __$$PromotionOwnerImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String activityId});
+  $Res call({String profileId, String role});
 }
 
 /// @nodoc
@@ -490,12 +519,17 @@ class __$$PromotionOwnerImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? activityId = null,
+    Object? profileId = null,
+    Object? role = null,
   }) {
     return _then(_$PromotionOwnerImpl(
-      activityId: null == activityId
-          ? _value.activityId
-          : activityId // ignore: cast_nullable_to_non_nullable
+      profileId: null == profileId
+          ? _value.profileId
+          : profileId // ignore: cast_nullable_to_non_nullable
+              as String,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -504,18 +538,21 @@ class __$$PromotionOwnerImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$PromotionOwnerImpl implements _PromotionOwner {
-  const _$PromotionOwnerImpl({this.activityId = ''});
+  const _$PromotionOwnerImpl({this.profileId = '', this.role = ''});
 
   factory _$PromotionOwnerImpl.fromJson(Map<String, dynamic> json) =>
       _$$PromotionOwnerImplFromJson(json);
 
   @override
   @JsonKey()
-  final String activityId;
+  final String profileId;
+  @override
+  @JsonKey()
+  final String role;
 
   @override
   String toString() {
-    return 'PromotionOwner(activityId: $activityId)';
+    return 'PromotionOwner(profileId: $profileId, role: $role)';
   }
 
   @override
@@ -523,13 +560,14 @@ class _$PromotionOwnerImpl implements _PromotionOwner {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PromotionOwnerImpl &&
-            (identical(other.activityId, activityId) ||
-                other.activityId == activityId));
+            (identical(other.profileId, profileId) ||
+                other.profileId == profileId) &&
+            (identical(other.role, role) || other.role == role));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, activityId);
+  int get hashCode => Object.hash(runtimeType, profileId, role);
 
   @JsonKey(ignore: true)
   @override
@@ -547,14 +585,16 @@ class _$PromotionOwnerImpl implements _PromotionOwner {
 }
 
 abstract class _PromotionOwner implements PromotionOwner {
-  const factory _PromotionOwner({final String activityId}) =
+  const factory _PromotionOwner({final String profileId, final String role}) =
       _$PromotionOwnerImpl;
 
   factory _PromotionOwner.fromJson(Map<String, dynamic> json) =
       _$PromotionOwnerImpl.fromJson;
 
   @override
-  String get activityId;
+  String get profileId;
+  @override
+  String get role;
   @override
   @JsonKey(ignore: true)
   _$$PromotionOwnerImplCopyWith<_$PromotionOwnerImpl> get copyWith =>
