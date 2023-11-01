@@ -17,6 +17,7 @@ class Promotion with _$Promotion {
   const factory Promotion({
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
     @Default('') String title,
+    @Default('') String description,
     @Default('') String link,
     @Default('') String linkText,
     @Default([]) List<PromotionOwner> owners,
@@ -42,7 +43,8 @@ class Promotion with _$Promotion {
 @freezed
 class PromotionOwner with _$PromotionOwner {
   const factory PromotionOwner({
-    @Default('') String activityId,
+    @Default('') String profileId,
+    @Default('') String role,
   }) = _PromotionOwner;
 
   factory PromotionOwner.fromJson(Map<String, dynamic> json) => _$PromotionOwnerFromJson(json);

@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -33,6 +34,7 @@ import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -221,7 +223,21 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return const SizedBox(height: kPaddingLarge);
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(index);
+
+    final PromotedActivity? promotedActivityRecord = promotion?.activities.firstWhereOrNull((element) => element.activityId.isNotEmpty);
+    final String promotedActivityId = promotedActivityRecord?.activityId ?? '';
+    final Activity? promotedActivity = cacheController.get(promotedActivityId);
+
+    if (promotedActivity == null || promotion == null) {
+      return const SizedBox(height: kPaddingLarge);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: kPaddingLarge / 2),
+      child: buildItem(context, promotedActivity, index),
+    );
   }
 
   Widget buildItem(BuildContext context, Activity item, int index) {

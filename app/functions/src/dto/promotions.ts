@@ -55,6 +55,7 @@ export class PromotionStatistics {
 export interface PromotionJSON {
     _fl_meta_?: FlMetaJSON;
     title?: string;
+    description?: string;
     link?: string;
     linkText?: string;
     owners?: PromotionOwnerJSON[];
@@ -70,6 +71,7 @@ export interface PromotionJSON {
 export class Promotion {
     _fl_meta_?: FlMeta;
     title?: string;
+    description?: string;
     link?: string;
     linkText?: string;
     owners?: PromotionOwner[];
@@ -84,6 +86,7 @@ export class Promotion {
     constructor(json: PromotionJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
         this.title = json.title;
+        this.description = json.description;
         this.link = json.link;
         this.linkText = json.linkText;
         this.owners = json.owners && json.owners.map((owner) => new PromotionOwner(owner));

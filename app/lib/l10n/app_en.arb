@@ -605,6 +605,7 @@
     "shared_name":"Name",
     "shared_email_address": "Email Address",
     "shared_phone_number": "Phone Number",
+    "shared_promotion": "Promotion",
 
     "shared_actions_sign_up": "Sign In / Register",
     "shared_actions_sign_in": "Sign In",
@@ -646,6 +647,7 @@
     "shared_actions_send_message": "Send Message",
     "shared_actions_report": "Report",
     "shared_actions_more": "More",
+    "shared_actions_view_more": "View More",
 
     "shared_profile_tagline": "Positive+1 Member",
     "shared_profile_unknown_location": "Location not shared",
