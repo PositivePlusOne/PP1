@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_view_model.dart';
+part of 'clip_ffmpeg_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$chatViewModelHash() => r'5dcb2185ad0a45420c8c63d9f6e9c176dbb6750d';
+String _$createClipExportServiceHash() =>
+    r'e955f89d38203387700ef9959c0eceef21c0b76b';
 
-/// See also [ChatViewModel].
-@ProviderFor(ChatViewModel)
-final chatViewModelProvider =
-    NotifierProvider<ChatViewModel, ChatViewModelState>.internal(
-  ChatViewModel.new,
-  name: r'chatViewModelProvider',
+/// See also [createClipExportService].
+@ProviderFor(createClipExportService)
+final createClipExportServiceProvider =
+    Provider<CreateClipExportService>.internal(
+  createClipExportService,
+  name: r'createClipExportServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$chatViewModelHash,
+      : _$createClipExportServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatViewModel = Notifier<ChatViewModelState>;
+typedef CreateClipExportServiceRef = ProviderRef<CreateClipExportService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

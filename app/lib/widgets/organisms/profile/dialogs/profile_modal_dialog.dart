@@ -260,23 +260,19 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isBlocked = isSourceBlocked || isTargetBlocked;
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
 
+    final bool isSourceOrganisation = currentProfile?.isOrganisation ?? false;
+    final bool isTargetOrganisation = targetProfile.isOrganisation;
+    final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
+
     switch (option) {
       case ProfileModalDialogOptionType.connect:
-        if (currentProfile?.isOrganisation ?? false) {
-          // we are an organisation, organisations cannot connect to users
-          // we would return false, but if they are connected already, I think
-          // we should let them disconnect...
-          if (!isConnected) {
-            // so, they are not connected, don't let them connect
-            return false;
-          }
-        }
+        return !relationshipContainsOrganisation;
       case ProfileModalDialogOptionType.follow:
       case ProfileModalDialogOptionType.mute:
       case ProfileModalDialogOptionType.viewProfile:
         return !isBlocked;
       case ProfileModalDialogOptionType.message:
-        return !isBlocked && isConnected;
+        return !isBlocked && (isConnected || relationshipContainsOrganisation);
       default:
         break;
     }

@@ -171,17 +171,25 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
-    channelsSubscription = streamChatClient
-        .queryChannels(
-          filter: filter,
-          messageLimit: 1,
-          watch: true,
-          presence: true,
-          state: true,
-          paginationParams: const PaginationParams(limit: 30),
-        )
-        .listen(onChannelsUpdated);
+    try {
+      final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
+      channelsSubscription = streamChatClient
+          .queryChannels(
+            filter: filter,
+            messageLimit: 1,
+            watch: true,
+            presence: true,
+            state: true,
+            paginationParams: const PaginationParams(limit: 30),
+          )
+          .listen(onChannelsUpdated);
+    } catch (e) {
+      log.e('[GetStreamController] setupProfileListeners() error: $e');
+      //? This can be thrown from the internal framework for a number of reasons
+      //? We see it however when swapping profiles, and handle it with a loading state; so we can ignore it
+      await channelsSubscription?.cancel();
+      channelsSubscription = null;
+    }
   }
 
   Future<Channel?> forceChannelUpdate(Channel channel) async {
@@ -194,15 +202,22 @@ class GetStreamController extends _$GetStreamController {
       return null;
     }
 
-    final Channel? newChannel = (await streamChatClient
-            .queryChannels(
-              filter: Filter.equal('cid', channel.cid!),
-              watch: false,
-              state: true,
-              paginationParams: const PaginationParams(limit: 30),
-            )
-            .first)
-        .firstOrNull;
+    Channel? newChannel;
+
+    try {
+      newChannel = (await streamChatClient
+              .queryChannels(
+                filter: Filter.equal('cid', channel.cid!),
+                watch: false,
+                state: true,
+                paginationParams: const PaginationParams(limit: 30),
+              )
+              .first)
+          .firstOrNull;
+    } catch (e) {
+      log.e('[GetStreamController] forceChannelUpdate() error: $e');
+      return null;
+    }
 
     if (newChannel == null) {
       log.i('[GetStreamController] forceChannelUpdate() newChannel is null');
@@ -643,8 +658,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    // Query the channel
-    streamChatClient
+    final List<Channel>? channels = await streamChatClient
         .queryChannels(
           filter: Filter.in_('cid', [relationship.channelId]),
           watch: true,
@@ -652,7 +666,14 @@ class GetStreamController extends _$GetStreamController {
           presence: true,
           messageLimit: 1,
         )
-        .first
-        .then((value) => onChannelsUpdated(value));
+        .firstOrNull;
+
+    if (channels == null || channels.isEmpty) {
+      log.i('[GetStreamController] onRelationshipUpdated() channel does not exist');
+      return;
+    }
+
+    log.i('[GetStreamController] onRelationshipUpdated() adding channel');
+    onChannelsUpdated(channels);
   }
 }

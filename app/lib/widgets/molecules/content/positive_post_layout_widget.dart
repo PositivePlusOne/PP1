@@ -1,21 +1,15 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:banner_carousel/banner_carousel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html2md/html2md.dart' as html2md;
 import 'package:logger/logger.dart';
-import 'package:mime/mime.dart';
 import 'package:unicons/unicons.dart';
-import 'package:video_player/video_player.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
@@ -28,13 +22,12 @@ import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
 import 'package:app/widgets/molecules/content/positive_post_tags.dart';
@@ -43,7 +36,6 @@ import '../../../dtos/database/activities/activities.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../dtos/system/design_typography_model.dart';
-import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../../services/third_party.dart';
 import '../../atoms/indicators/positive_loading_indicator.dart';
@@ -70,7 +62,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     required this.onBookmark,
     required this.isBookmarked,
     required this.totalComments,
+    required this.markdownWidget,
     this.onPostPageRequested,
+    this.onShare,
     super.key,
   });
 
@@ -101,7 +95,11 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   final bool isBookmarked;
   final FutureOr<void> Function(BuildContext context)? onBookmark;
 
+  final FutureOr<void> Function(BuildContext context)? onShare;
+
   final int totalComments;
+
+  final Widget markdownWidget;
 
   DesignColorsModel get colours => providerContainer.read(designControllerProvider.select((value) => value.colors));
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
@@ -124,7 +122,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         post: () => _postBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         event: () => _eventBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         clip: () => _clipBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-        repost: () => const SizedBox.shrink(),
       ),
     );
   }
@@ -217,7 +214,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         //* -=-=-=- Post Actions -=-=-=- *\\
         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-        _markdownBody(context: context, ref: ref),
+        markdownWidget,
       ],
     );
   }
@@ -252,7 +249,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
           //* -=-=-=- Post Actions -=-=-=- *\\
           _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-          _markdownBody(context: context, ref: ref),
+          markdownWidget,
         ],
       ),
     );
@@ -439,14 +436,23 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _postAttachedVideo() {
     final Media? media = postContent?.media.firstOrNull;
-    if (media != null && media.type == MediaType.bucket_path) {
-      final Key postIdKey = Key(postContent?.flMeta?.id ?? "test");
-      return PositiveVideoPlayer(
-        media: media,
-        visibilityDetectorKey: postIdKey,
-      );
+    if (media == null || media.type != MediaType.bucket_path) {
+      return const SizedBox.shrink();
     }
-    return const SizedBox();
+
+    final Key postIdKey = Key(postContent?.flMeta?.id ?? '');
+    return Padding(
+      padding: EdgeInsets.only(
+        left: sidePadding,
+        right: sidePadding,
+        top: kPaddingSmall,
+      ),
+      child: PositiveVideoPlayer(
+        media: media,
+        borderRadius: sidePadding > 0 ? BorderRadius.circular(kBorderRadiusLarge) : BorderRadius.zero,
+        visibilityDetectorKey: postIdKey,
+      ),
+    );
   }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -514,29 +520,26 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final String publisherId = postContent?.publisherInformation?.publisherId ?? '';
 
     final ActivitySecurityConfigurationMode shareMode = postContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final bool canActShare = shareMode.canActOnActivity(
+      activity: postContent,
+      currentProfile: currentProfile,
+      publisherRelationship: publisherRelationship,
+    );
 
-    final bool canActShare = shareMode.canActOnActivity(activity: postContent, currentProfile: currentProfile, publisherRelationship: publisherRelationship);
     final bool isPublisher = currentProfileId == publisherId;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
       child: PositivePostActions(
-        //TODO(S): like enabled and onlike functionality here
         isLiked: isLiked,
         likes: totalLikes,
         likesEnabled: !isBusy && !isPublisher && likesEnabled,
         onLike: onLike,
-
-        //TODO(S): share enabled and on share functionality here
         shareEnabled: !isBusy && canActShare,
-        onShare: (context) => postContent?.share(context, currentProfile),
-
-        //TODO(S): comment enabled and on comment functionality here
+        onShare: onShare,
         comments: totalComments,
         commentsEnabled: !isBusy,
         onComment: onComment,
-
-        //TODO(S): bookmark enabled and on bookmark functionality here
         bookmarkEnabled: !isBusy && bookmarkEnabled,
         bookmarked: isBookmarked,
         onBookmark: onBookmark,
@@ -573,35 +576,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             colours: colours,
           ),
         ],
-      ),
-    );
-  }
-
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  //* -=-=-=-=-=- Markdown body, displayed for video and posts -=-=-=-=-=- *\\
-  //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-  Widget _markdownBody({
-    required BuildContext context,
-    required WidgetRef ref,
-  }) {
-    String parsedMarkdown = html2md.convert(
-      //TODO(S): either fork the package, find a new one, or replace the whole markdown idea to get around some hard coded issues
-      //? This is purest Jank, replace \n with an unusual string until after the markdown conversion as the converter is hardcoded to remove all whitespace
-      postContent?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
-    );
-    if (isShortformPost && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
-      parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
-    }
-
-    final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
-    final List<Tag> tags = tagsController.resolveTags(postContent?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
-
-    return PositiveTapBehaviour(
-      onTap: onPostPageRequested,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
       ),
     );
   }

@@ -1,11 +1,9 @@
 // Dart imports:
-import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,11 +15,9 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
@@ -33,7 +29,6 @@ import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/services/reaction_api_service.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/state/positive_community_feed_state.dart';
 
@@ -244,7 +239,6 @@ class SharingController extends _$SharingController implements ISharingControlle
   @override
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {
     final Logger logger = ref.read(loggerProvider);
-    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     if (postOptions == null) {
@@ -257,17 +251,7 @@ class SharingController extends _$SharingController implements ISharingControlle
       throw Exception('Activity is missing an ID');
     }
 
-    final EndpointResponse response = await reactionApiService.sharePostToFeed(activityId: activityId);
-    final List activityDataRaw = response.data.containsKey('activities') ? response.data['activities'] as List<dynamic> : [];
-    final List<Activity> activities = activityDataRaw.map((dynamic data) => Activity.fromJson(json.decodeSafe(data))).toList();
-    final Activity? sharedActivity = activities.firstOrNull;
-
-    sharedActivity?.appendActivityToProfileFeeds(postOptions.currentProfile?.flMeta?.id ?? '');
-
     await appRouter.pop();
-
-    Future<void>.delayed(kAnimationDurationDebounce, () {
-      ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text('Post shared to your feed')));
-    });
+    await postOptions.activity.onRequestPostSharedToFeed(repostActivityId: activityId);
   }
 }

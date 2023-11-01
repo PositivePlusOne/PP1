@@ -2,9 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'dart:math';
-
-import 'package:app/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:

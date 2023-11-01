@@ -165,14 +165,16 @@ class PostApiService {
 
   FutureOr<Activity> postActivity({
     required ActivityData activityData,
+    String reposterActivityId = '',
   }) async {
     late String type;
     switch (activityData.postType) {
       case PostType.clip:
         type = 'clip';
         break;
+      //? We only support reposting with text posts for now
       case PostType.repost:
-        type = 'repost';
+        type = 'post';
         break;
       case PostType.event:
         type = 'event';
@@ -185,8 +187,8 @@ class PostApiService {
         type = 'post';
         break;
     }
-    final List<Media> media = activityData.media ?? const [];
 
+    final List<Media> media = activityData.media ?? const [];
     return await getHttpsCallableResult<Activity>(
       name: 'post-postActivity',
       selector: (response) => Activity.fromJson(json.decodeSafe((response.data['activities'] as Iterable).first)),
@@ -197,6 +199,7 @@ class PostApiService {
         'media': media.map((e) => e.toJson()).toList(),
         'style': 'text',
         'type': type,
+        'reposterActivityId': reposterActivityId,
         'allowSharing': activityData.allowSharing ?? false,
         'visibleTo': ActivitySecurityConfigurationMode.toJson(activityData.visibilityMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
         'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.commentPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),

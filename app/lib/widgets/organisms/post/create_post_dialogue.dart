@@ -215,14 +215,16 @@ class CreatePostDialogue extends HookConsumerWidget {
             const SizedBox(height: kPaddingSmall),
 
             //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
-            CreatePostToggleContainer(
-              value: valueAllowSharing,
-              colours: colours,
-              onTap: isBusy ? (context) {} : onUpdateAllowSharing,
-              textStyle: textStyle,
-              text: localisations.page_create_post_allow_sharing,
-            ),
-            const SizedBox(height: kPaddingSmall),
+            if (postType != PostType.repost) ...[
+              CreatePostToggleContainer(
+                value: valueAllowSharing,
+                colours: colours,
+                onTap: isBusy ? (context) {} : onUpdateAllowSharing,
+                textStyle: textStyle,
+                text: localisations.page_create_post_allow_sharing,
+              ),
+              const SizedBox(height: kPaddingSmall),
+            ],
 
             //* -=-=-=-=- Promoted Post -=-=-=-=- *\\
             if (remainingPromotions > 0) ...[
@@ -381,14 +383,17 @@ class CreatePostDialogue extends HookConsumerWidget {
                     ),
                   ],
                   const SizedBox(height: kPaddingSmall),
-                  CreatePostToggleContainer(
-                    value: valueAllowSharing,
-                    colours: colours,
-                    onTap: onUpdateAllowSharing,
-                    textStyle: textStyle,
-                    text: localisations.page_create_post_allow_sharing,
-                  ),
-                  const SizedBox(height: kPaddingSmall),
+                  //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
+                  if (postType != PostType.repost) ...[
+                    CreatePostToggleContainer(
+                      value: valueAllowSharing,
+                      colours: colours,
+                      onTap: onUpdateAllowSharing,
+                      textStyle: textStyle,
+                      text: localisations.page_create_post_allow_sharing,
+                    ),
+                    const SizedBox(height: kPaddingSmall),
+                  ],
                   //* -=-=-=-=- Promoted Post -=-=-=-=- *\\
                   if (remainingPromotions > 0) ...[
                     // only showing if they are permitted

@@ -1,3 +1,4 @@
+import { RelationshipJSON } from "../dto/relationships";
 import { RelationshipFlags, defaultRelationshipFlags } from "../services/types/relationship_flags";
 
 export namespace RelationshipHelpers {
@@ -278,7 +279,7 @@ export namespace RelationshipHelpers {
    * @param {any} relationship the relationship to check.
    * @return {boolean} true if the user is connected, false otherwise.
    */
-  export function isUserConnected(uid: string, relationship: any): boolean {
+  export function isUserConnected(uid: string, relationship: RelationshipJSON): boolean {
     if (!relationship) {
       return false;
     }
@@ -292,6 +293,29 @@ export namespace RelationshipHelpers {
     }
 
     return false;
+  }
+
+  export function isPartiallyConnected(uid: string, relationship: RelationshipJSON): boolean {
+    if (!relationship) {
+      return false;
+    }
+
+    let hasOtherMemberConnected = false;
+    let hasCurrentMemberConnected = false;
+    if (relationship.members && relationship.members.length > 0) {
+      for (const member of relationship.members) {
+        if (typeof member.memberId === "string" && member.memberId === uid && member.hasConnected) {
+          hasCurrentMemberConnected = member.hasConnected;
+          continue;
+        }
+
+        if (member.hasConnected) {
+          hasOtherMemberConnected = true;
+        }
+      }
+    }
+
+    return hasCurrentMemberConnected && hasOtherMemberConnected;
   }
 
   export function isUserDisconnected(uid: string, relationship: any): boolean {

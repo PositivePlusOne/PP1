@@ -6,6 +6,7 @@ import 'package:app/dtos/database/common/media.dart';
 class ActivityData {
   ActivityData({
     this.activityID,
+    this.reposterActivityID,
     this.content,
     this.altText,
     this.promotionKey,
@@ -18,6 +19,7 @@ class ActivityData {
   });
 
   String? activityID;
+  String? reposterActivityID;
 
   String? content;
   List<String>? tags;
@@ -43,7 +45,15 @@ enum PostType {
   error;
 
   static PostType getPostTypeFromActivity(Activity activity) {
-    if (activity.generalConfiguration == null) return PostType.error;
+    if (activity.generalConfiguration == null) {
+      return PostType.error;
+    }
+
+    // All post types can be reposted, so we check for repost first
+    if (activity.repostConfiguration?.targetActivityId.isNotEmpty == true) {
+      return PostType.repost;
+    }
+
     return activity.generalConfiguration!.type.when<PostType>(
       post: () {
         switch (activity.media.length) {
@@ -57,7 +67,6 @@ enum PostType {
       },
       event: () => PostType.clip,
       clip: () => PostType.event,
-      repost: () => PostType.repost,
     );
   }
 }
@@ -86,6 +95,7 @@ enum CreatePostCurrentPage {
   entry,
   camera,
   editPhoto,
+  repostPreview,
   createPostText,
   createPostImage,
   createPostMultiImage,

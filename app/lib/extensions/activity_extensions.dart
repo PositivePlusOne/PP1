@@ -300,7 +300,7 @@ extension ActivityExt on Activity {
         context: context,
         barrierDismissible: true,
         child: PostOptionsDialog(
-          onEditPostSelected: () => onPostEdited(),
+          onEditPostSelected: () => onPostEdited(popRoute: true),
           onDeletePostSelected: () => onPostDeleted(context: context, currentProfile: currentProfile),
         ),
       );
@@ -427,13 +427,33 @@ extension ActivityExt on Activity {
     cacheController.add(key: feedStateKey, value: newState);
   }
 
+  PositiveReactionsState? getReactionsFeedState({
+    required Profile? currentProfile,
+  }) {
+    final String activityId = flMeta?.id ?? '';
+    if (activityId.isEmpty) {
+      return null;
+    }
+
+    final String activityFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
+      activityId: activityId,
+      profileId: currentProfile?.flMeta?.id ?? '',
+    );
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final PositiveReactionsState? activityReactionFeedState = cacheController.get(activityFeedStateCacheKey);
+
+    return activityReactionFeedState;
+  }
+
   Future<void> onPostBookmarked({
     required BuildContext context,
     required Profile? currentProfile,
-    required PositiveReactionsState? reactionsFeedState,
   }) async {
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+
+    final PositiveReactionsState? reactionsFeedState = getReactionsFeedState(currentProfile: currentProfile);
 
     final String activityId = flMeta?.id ?? '';
     final String profileId = currentProfile?.flMeta?.id ?? '';
@@ -520,13 +540,37 @@ extension ActivityExt on Activity {
     }
   }
 
-  Future<void> onPostEdited() async {
+  Future<void> onRequestPostSharedToFeed({
+    required String repostActivityId,
+  }) async {
+    if (repostActivityId.isEmpty) {
+      throw Exception('Invalid activity ID for repost');
+    }
+
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    await router.push(
+      CreatePostRoute(
+        activityData: ActivityData(
+          reposterActivityID: repostActivityId,
+          postType: PostType.repost,
+        ),
+        isEditPage: false,
+      ),
+    );
+  }
+
+  Future<void> onPostEdited({
+    bool popRoute = false,
+  }) async {
     final AppRouter router = providerContainer.read(appRouterProvider);
     if (generalConfiguration == null) {
       return;
     }
 
-    await router.pop();
+    if (popRoute) {
+      await router.pop();
+    }
+
     await router.push(
       CreatePostRoute(
         activityData: ActivityData(

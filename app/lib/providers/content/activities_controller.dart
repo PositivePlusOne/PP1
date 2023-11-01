@@ -151,7 +151,10 @@ class ActivitiesController extends _$ActivitiesController {
     logger.i('[Activities Service] - Posting activity');
 
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
-    final Activity activity = await postApiService.postActivity(activityData: activityData);
+    final Activity activity = await postApiService.postActivity(
+      activityData: activityData,
+      reposterActivityId: activityData.reposterActivityID ?? '',
+    );
 
     // Add the tags to the users recent tags
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);

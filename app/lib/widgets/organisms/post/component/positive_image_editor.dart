@@ -303,13 +303,13 @@ class _PositiveGalleryPreviewState extends State<PositiveGalleryPreview> {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: PositiveToastHint(
-              isShowing: isShowingPinchRotateHint,
-              text: 'Pinch and rotate with 2 fingers to resize and position your photo',
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: PositiveToastHint(
+          //     isShowing: isShowingPinchRotateHint,
+          //     text: 'Pinch and rotate with 2 fingers to resize and position your photo',
+          //   ),
+          // ),
         ],
       ),
     );

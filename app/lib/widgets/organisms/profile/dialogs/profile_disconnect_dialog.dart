@@ -8,9 +8,11 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
@@ -30,10 +32,13 @@ class ProfileDisconnectDialog extends ConsumerWidget {
     final ProfileViewModelState state = ref.watch(profileViewModelProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final String displayName = state.profile?.displayName ?? '';
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final Profile? profile = cacheController.get(state.targetProfileId);
+    final String displayName = profile?.displayName ?? '';
 
     return Column(
-      children: [
+      children: <Widget>[
         Text(
           localizations.profile_disconnect_dialog_remove_confirmation(displayName.asHandle),
           style: typography.styleBody.copyWith(color: colors.white),

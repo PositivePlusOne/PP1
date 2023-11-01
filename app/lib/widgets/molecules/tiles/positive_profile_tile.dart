@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -39,10 +38,8 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
   final String imageOverridePath;
   final bool enableProfileImageFullscreen;
 
-  static const double kTaglineAreaHeight = 60.0;
-
   @override
-  Size get preferredSize => const Size.fromHeight(kPaddingSmall + kIconHeader + kTaglineAreaHeight);
+  Size get preferredSize => const Size.fromHeight(kPaddingExtraLarge + kIconHeader);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,8 +48,8 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final String tagline = profile.getTagline(localizations);
+    // final AppLocalizations localizations = AppLocalizations.of(context)!;
+    // final String tagline = profile.getTagline(localizations);
 
     final List<Widget> children = <Widget>[];
     for (final MapEntry<String, String> entry in metadata.entries) {
@@ -84,58 +81,32 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(
-            height: kIconHeader,
-            width: double.infinity,
-            child: Row(
-              children: <Widget>[
-                PositiveProfileCircularIndicator(
-                  profile: profile,
-                  size: kIconHeader,
-                  complimentRingColorForBackground: true,
-                  imageOverridePath: imageOverridePath,
-                  onTap: () => enableProfileImageFullscreen && profile.profileImage != null ? appRouter.push(MediaRoute(media: profile.profileImage!)) : () {},
-                ),
-                const SizedBox(width: kPaddingMedium),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Flexible(
-                        child: Text(
-                          profile.name.isNotEmpty ? profile.name : profile.displayName.asHandle,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: typography.styleHeroMedium.copyWith(color: textColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: kPaddingMedium),
-              ],
-            ),
-          ),
-          const SizedBox(height: kPaddingSmall),
-          SizedBox(
-            height: kTaglineAreaHeight,
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  tagline,
+          Row(
+            children: <Widget>[
+              PositiveProfileCircularIndicator(
+                profile: profile,
+                size: kIconHeader,
+                complimentRingColorForBackground: true,
+                imageOverridePath: imageOverridePath,
+                onTap: () => enableProfileImageFullscreen && profile.profileImage != null ? appRouter.push(MediaRoute(media: profile.profileImage!)) : () {},
+              ),
+              const SizedBox(width: kPaddingMedium),
+              Expanded(
+                child: Text(
+                  profile.name.isNotEmpty ? profile.name : profile.displayName.asHandle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: typography.styleSubtitle.copyWith(color: textColor),
+                  style: typography.styleHeroMedium.copyWith(color: textColor),
                 ),
-                Wrap(
-                  spacing: kPaddingSmall,
-                  runSpacing: kPaddingNone,
-                  children: children,
-                )
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: kPaddingSmall),
+          Flexible(
+            child: Wrap(
+              spacing: kPaddingSmall,
+              runSpacing: kPaddingNone,
+              children: children,
             ),
           ),
         ],

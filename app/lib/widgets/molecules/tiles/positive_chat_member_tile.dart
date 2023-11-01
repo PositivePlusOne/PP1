@@ -51,7 +51,6 @@ class PositiveChatMemberTile extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final String tagline = profile.getTagline(localizations);
 
     final Color accentColor = profile.accentColor.toSafeColorFromHex();
     final Color complementaryColor = accentColor.complimentTextColor;
@@ -81,21 +80,15 @@ class PositiveChatMemberTile extends ConsumerWidget {
             ),
             const SizedBox(width: kPaddingSmall),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Flexible(
-                        child: Text(profile.displayName.asHandle, style: typography.styleTitle),
-                      ),
-                      if (profile.isVerified) ...<Widget>[
-                        const SizedBox(width: kPaddingSmall),
-                        PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
-                      ],
-                    ],
+                  Flexible(
+                    child: Text(profile.displayName.asHandle, style: typography.styleTitle),
                   ),
-                  Text(tagline, style: typography.styleSubtext.copyWith(color: colors.colorGray3)),
+                  if (profile.isVerified) ...<Widget>[
+                    const SizedBox(width: kPaddingSmall),
+                    PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
+                  ],
                 ],
               ),
             ),

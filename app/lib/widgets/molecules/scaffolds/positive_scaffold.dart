@@ -13,6 +13,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import '../../../constants/design_constants.dart';
@@ -126,35 +127,51 @@ class PositiveScaffold extends ConsumerWidget {
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: MediaQuery(
             data: buildMediaQuery(mediaQueryData),
-            child: Scaffold(
-              backgroundColor: actualBackgroundColor,
-              resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-              extendBody: extendBody,
-              appBar: appBar,
-              bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
-              body: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: PositiveScaffoldContent(
-                      controller: controller,
-                      physics: physics,
-                      visibleComponents: visibleComponents,
-                      headingWidgets: headingWidgets,
-                      decorationColor: decorationColor,
-                      decorations: decorations,
-                      decorationBoxSize: decorationBoxSize,
-                      decorationWidget: decorationWidget,
-                      trailingWidgets: trailingWidgets,
-                      footerWidgets: footerWidgets,
-                      isBusy: isBusy,
-                      bottomPadding: bottomPadding,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Scaffold(
+                    backgroundColor: actualBackgroundColor,
+                    resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+                    extendBody: extendBody,
+                    appBar: appBar,
+                    bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
+                    body: Stack(
+                      children: <Widget>[
+                        Positioned.fill(
+                          child: PositiveScaffoldContent(
+                            controller: controller,
+                            physics: physics,
+                            visibleComponents: visibleComponents,
+                            headingWidgets: headingWidgets,
+                            decorationColor: decorationColor,
+                            decorations: decorations,
+                            decorationBoxSize: decorationBoxSize,
+                            decorationWidget: decorationWidget,
+                            trailingWidgets: trailingWidgets,
+                            footerWidgets: footerWidgets,
+                            isBusy: isBusy,
+                            bottomPadding: bottomPadding,
+                          ),
+                        ),
+                        if (overlayWidgets.isNotEmpty) ...<Widget>[
+                          ...overlayWidgets,
+                        ],
+                      ],
                     ),
                   ),
-                  if (overlayWidgets.isNotEmpty) ...<Widget>[
-                    ...overlayWidgets,
-                  ],
+                ),
+                if (isBusy) ...<Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      color: Colors.black.withOpacity(kOpacityBarrier),
+                      child: Center(
+                        child: PositiveLoadingIndicator(color: colors.white),
+                      ),
+                    ),
+                  ),
                 ],
-              ),
+              ],
             ),
           ),
         ),

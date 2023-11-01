@@ -167,7 +167,6 @@ class CreateConversationPage extends HookConsumerWidget {
                   channel: channel,
                   onTap: (_) => chatViewModel.onCurrentChannelMemberSelected(otherMemberId),
                   isSelected: chatViewModelState.selectedMembers.contains(otherMemberId),
-                  showProfileTagline: true,
                 );
               },
               separatorBuilder: (_, __) => const SizedBox(height: kPaddingSmall),

@@ -29,6 +29,8 @@ const Duration kAnimationDurationEntry = Duration(milliseconds: 1000);
 const Duration kAnimationDurationSlow = Duration(milliseconds: 1500);
 const Duration kAnimationDurationHintPreview = Duration(milliseconds: 3000);
 
+const Duration kAnimationDurationFSWait = Duration(milliseconds: 1000);
+
 const double kMaxClipDurationSeconds = 180;
 
 const Curve kAnimationCurveDefault = Curves.easeInOut;
@@ -58,6 +60,7 @@ const double kBorderRadiusSmall = 5.0;
 const double kBorderRadiusMedium = 10.0;
 const double kBorderRadiusLarge = 20.0;
 const double kBorderRadiusLargePlus = 25.0;
+const double kBorderRadiusExtraLarge = 30.0;
 const double kBorderRadiusMassive = 40.0;
 const double kBorderRadiusHuge = 50.0;
 const double kBorderRadiusInfinite = 10000;
@@ -103,6 +106,7 @@ const double kDefaultCircleRadius = 3500;
 const double kDefaultSearchLocationNearbyRadius = 250;
 
 // Other
+const double kVideoThumbSize = 16.0;
 const double kCameraButtonSize = 70.0;
 const double kCarouselMaxHeight = 400.0;
 const double kCarouselMinHeight = 200.0;
@@ -111,6 +115,8 @@ const double kClipsDelayTimerWidth = 155.0;
 const double kCreatePostHeight = 50.0;
 const double kCreatePostNavigationHeight = 60;
 const String kObscuringTextCharacter = '*';
+
+const double kClipAspectRatio = 9 / 16;
 
 // Text and Formatting
 const int kMaxLengthTruncatedPost = 75;

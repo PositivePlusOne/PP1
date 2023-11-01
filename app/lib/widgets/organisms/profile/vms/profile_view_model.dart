@@ -1,27 +1,22 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
-import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/event/cache_key_updated_event.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../services/third_party.dart';
+
+// Flutter imports:
+
+
 
 part 'profile_view_model.freezed.dart';
 part 'profile_view_model.g.dart';
@@ -29,8 +24,7 @@ part 'profile_view_model.g.dart';
 @freezed
 class ProfileViewModelState with _$ProfileViewModelState {
   const factory ProfileViewModelState({
-    Profile? profile,
-    Relationship? relationship,
+    String? targetProfileId,
     @Default(false) bool isBusy,
   }) = _ProfileViewModelState;
 
@@ -39,10 +33,6 @@ class ProfileViewModelState with _$ProfileViewModelState {
 
 @Riverpod(keepAlive: true)
 class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
-  StreamSubscription<CacheKeyUpdatedEvent>? relationshipsUpdatedSubscription;
-  Color get appBarColor => state.profile?.accentColor.toSafeColorFromHex() ?? Colors.white;
-  Color get appBarTextColor => appBarColor.complimentTextColor;
-
   @override
   ProfileViewModelState build() {
     return ProfileViewModelState.initialState();
@@ -51,48 +41,12 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   Future<void> preloadUserProfile(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    relationshipsUpdatedSubscription ??= eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdatedEvent);
 
     logger.d('[Profile View Model] - Preloading profile for user: $uid');
     final Profile profile = await profileController.getProfile(uid);
-    final List<String> members = <String>[
-      profileController.currentProfileId ?? '',
-      profile.flMeta?.id ?? '',
-    ];
-
-    Relationship relationship = Relationship.empty(members);
-
-    if (profileController.currentProfileId != null && profileController.currentProfileId != uid) {
-      final Relationship? cachedRelationship = cacheController.get(members.asGUID);
-      if (cachedRelationship != null) {
-        logger.d('[Profile View Model] - Preloading relationship for user: $uid');
-        relationship = cachedRelationship;
-      }
-    }
 
     logger.i('[Profile View Model] - Preloaded profile for user: $uid');
-    state = state.copyWith(profile: profile, relationship: relationship);
-  }
-
-  Future<void> onCacheKeyUpdatedEvent(CacheKeyUpdatedEvent event) async {
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('[Profile View Model] - Relationships updated event received');
-
-    if (state.relationship == null) {
-      logger.e('[Profile View Model] - Relationship is null');
-      return;
-    }
-
-    final bool isValidChange = event.value is Relationship && (event.value as Relationship).flMeta?.id == state.relationship!.flMeta?.id;
-    if (!isValidChange) {
-      return;
-    }
-
-    state = state.copyWith(relationship: event.value as Relationship);
-    logger.i('[Profile View Model] - Relationships updated event processed');
+    state = state.copyWith(targetProfileId: profile.flMeta?.id);
   }
 
   Future<void> onAccountSelected() async {
@@ -110,8 +64,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     final AppRouter router = ref.read(appRouterProvider);
 
     logger.d('[Profile View Model] - Disconnecting from profile');
-    final String profileId = state.profile?.flMeta?.id ?? '';
-    if (profileId.isEmpty) {
+    if (state.targetProfileId?.isEmpty ?? true) {
       logger.e('[Profile View Model] - Profile ID is empty');
       return;
     }
@@ -119,7 +72,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
     state = state.copyWith(isBusy: true);
 
     try {
-      await relationshipController.disconnectRelationship(profileId);
+      await relationshipController.disconnectRelationship(state.targetProfileId ?? '');
       state = state.copyWith(isBusy: false);
 
       // Pop the disconnect dialog

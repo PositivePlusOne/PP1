@@ -82,13 +82,20 @@ class PostPage extends HookConsumerWidget {
     final Activity? reposterActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId);
 
     final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-    final String expectedReactionStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
-    final ReactionStatistics? reactionStatistics = cacheController.get(expectedReactionStatisticsKey);
+
+    final String expectedReactionActivityStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
+    final ReactionStatistics? reactionActivityStatistics = cacheController.get(expectedReactionActivityStatisticsKey);
+
+    final String expectedReactionRepostActivityStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: reposterActivity?.flMeta?.id ?? '');
+    final ReactionStatistics? reactionRepostActivityStatistics = cacheController.get(expectedReactionRepostActivityStatisticsKey);
 
     final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile);
-    final List<Reaction> uniqueReactions = cacheController.list(expectedUniqueReactionKeys);
+    final List<Reaction> uniqueActivityReactions = cacheController.list(expectedUniqueReactionKeys);
 
-    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity, feed, reactionStatistics, ...uniqueReactions]).toList();
+    final List<String> expectedUniqueRepostReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: reposterActivity, currentProfile: currentProfile);
+    final List<Reaction> uniqueRepostActivityReactions = cacheController.list(expectedUniqueRepostReactionKeys);
+
+    final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [activity, reposterActivity, feed, reactionActivityStatistics, reactionRepostActivityStatistics, ...uniqueRepostActivityReactions, ...uniqueActivityReactions]).toList();
 
     useLifecycleHook(viewModel);
     useCacheHook(keys: expectedCacheKeys);
@@ -168,14 +175,15 @@ class PostPage extends HookConsumerWidget {
             PositiveActivityWidget(
               currentProfile: currentProfile,
               activityPromotion: promotion,
-              activityReactionFeedState: reactionsState,
               targetProfile: targetProfile,
               targetRelationship: targetRelationship,
               reposterProfile: reposterProfile,
               reposterRelationship: reposterRelationship,
               reposterActivity: reposterActivity,
-              activityReactionStatistics: reactionStatistics,
-              currentProfileReactions: uniqueReactions,
+              activityReactionStatistics: reactionActivityStatistics,
+              activityProfileReactions: uniqueActivityReactions,
+              reposterActivityProfileReactions: uniqueRepostActivityReactions,
+              reposterReactionStatistics: reactionRepostActivityStatistics,
               activity: activity,
               targetFeed: feed,
               isFullscreen: true,
