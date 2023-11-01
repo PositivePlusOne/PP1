@@ -50,7 +50,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       case SplashStyle.tomorrowStartsNow:
         return const Duration(seconds: 2);
       default:
-        return const Duration(seconds: 3);
+        return const Duration(milliseconds: 1500);
     }
   }
 
