@@ -26,6 +26,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/buttons/promotion_button.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/atoms/video/positive_video_player.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
@@ -475,30 +476,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       padding: EdgeInsets.only(
         left: sidePadding,
         right: sidePadding,
-        // if we are showing the carousel then there are indicators to show which image is showing
-        // so the banner has to be a little higher so the user can see these indicators
         bottom: isOnCarousel ? kPaddingLarge : 0,
       ),
-      child: PositiveGlassSheet(
+      child: PromotionButton(
+        link: link,
+        linkText: linkText,
         borderRadius: isOnCarousel ? 0 : kBorderRadiusLarge,
-        children: [
-          PositiveButton(
-            onTapped: () {
-              // we can only nav away to another page if there is one
-              if (link.isNotEmpty) {
-                link.attemptToLaunchURL();
-              }
-            },
-            colors: colours,
-            primaryColor: colours.black,
-            label: linkText,
-            size: PositiveButtonSize.small,
-            style: PositiveButtonStyle.primary,
-            layout: PositiveButtonLayout.iconRight,
-            // and if there is a link - hint that we can go to it
-            icon: link.isNotEmpty ? Icons.navigate_next : null,
-          ),
-        ],
       ),
     );
   }

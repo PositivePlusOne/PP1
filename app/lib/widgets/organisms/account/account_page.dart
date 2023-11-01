@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,7 +12,9 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
@@ -190,6 +191,10 @@ class AccountPage extends HookConsumerWidget {
           appBarSpacing: kPaddingMedium,
           horizontalPadding: kPaddingNone,
           children: <Widget>[
+            MaterialButton(
+              onPressed: () => ref.read(promotionsControllerProvider.notifier).loadNextPromotionWindow(),
+              child: Text('Click me! ♥'),
+            ),
             if (currentProfile?.isOrganisation == true) ...<Widget>[
               AccountOptionsPane(
                 colors: colors,

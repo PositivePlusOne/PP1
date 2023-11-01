@@ -67,11 +67,11 @@ export namespace EnrichmentEndpoints {
   export const getPromotionWindow = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     functions.logger.info(`Getting a promotion window`);
 
-    const cursor = request.data.cursor || "";
-    const limit = request.data.limit || 10;
+    const cursor = request.cursor || null;
+    const limit = request.limit || 30;
     const uid = context.auth?.uid || "";
 
-    if (!cursor || !limit) {
+    if (!limit) {
       throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
 

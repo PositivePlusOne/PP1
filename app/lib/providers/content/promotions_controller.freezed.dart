@@ -16,9 +16,9 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PromotionsControllerState {
-  int get promotionIndex => throw _privateConstructorUsedError;
   String get cursor => throw _privateConstructorUsedError;
   List<String> get promotionIds => throw _privateConstructorUsedError;
+  bool get isExhausted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PromotionsControllerStateCopyWith<PromotionsControllerState> get copyWith =>
@@ -31,7 +31,7 @@ abstract class $PromotionsControllerStateCopyWith<$Res> {
           $Res Function(PromotionsControllerState) then) =
       _$PromotionsControllerStateCopyWithImpl<$Res, PromotionsControllerState>;
   @useResult
-  $Res call({int promotionIndex, String cursor, List<String> promotionIds});
+  $Res call({String cursor, List<String> promotionIds, bool isExhausted});
 }
 
 /// @nodoc
@@ -48,15 +48,11 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? promotionIndex = null,
     Object? cursor = null,
     Object? promotionIds = null,
+    Object? isExhausted = null,
   }) {
     return _then(_value.copyWith(
-      promotionIndex: null == promotionIndex
-          ? _value.promotionIndex
-          : promotionIndex // ignore: cast_nullable_to_non_nullable
-              as int,
       cursor: null == cursor
           ? _value.cursor
           : cursor // ignore: cast_nullable_to_non_nullable
@@ -65,6 +61,10 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
           ? _value.promotionIds
           : promotionIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isExhausted: null == isExhausted
+          ? _value.isExhausted
+          : isExhausted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -78,7 +78,7 @@ abstract class _$$PromotionsControllerStateImplCopyWith<$Res>
       __$$PromotionsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int promotionIndex, String cursor, List<String> promotionIds});
+  $Res call({String cursor, List<String> promotionIds, bool isExhausted});
 }
 
 /// @nodoc
@@ -94,15 +94,11 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? promotionIndex = null,
     Object? cursor = null,
     Object? promotionIds = null,
+    Object? isExhausted = null,
   }) {
     return _then(_$PromotionsControllerStateImpl(
-      promotionIndex: null == promotionIndex
-          ? _value.promotionIndex
-          : promotionIndex // ignore: cast_nullable_to_non_nullable
-              as int,
       cursor: null == cursor
           ? _value.cursor
           : cursor // ignore: cast_nullable_to_non_nullable
@@ -111,6 +107,10 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
           ? _value._promotionIds
           : promotionIds // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isExhausted: null == isExhausted
+          ? _value.isExhausted
+          : isExhausted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -119,14 +119,11 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
 
 class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   const _$PromotionsControllerStateImpl(
-      {this.promotionIndex = 0,
-      this.cursor = '',
-      final List<String> promotionIds = const []})
+      {this.cursor = '',
+      final List<String> promotionIds = const [],
+      this.isExhausted = false})
       : _promotionIds = promotionIds;
 
-  @override
-  @JsonKey()
-  final int promotionIndex;
   @override
   @JsonKey()
   final String cursor;
@@ -140,8 +137,12 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   }
 
   @override
+  @JsonKey()
+  final bool isExhausted;
+
+  @override
   String toString() {
-    return 'PromotionsControllerState(promotionIndex: $promotionIndex, cursor: $cursor, promotionIds: $promotionIds)';
+    return 'PromotionsControllerState(cursor: $cursor, promotionIds: $promotionIds, isExhausted: $isExhausted)';
   }
 
   @override
@@ -149,16 +150,16 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PromotionsControllerStateImpl &&
-            (identical(other.promotionIndex, promotionIndex) ||
-                other.promotionIndex == promotionIndex) &&
             (identical(other.cursor, cursor) || other.cursor == cursor) &&
             const DeepCollectionEquality()
-                .equals(other._promotionIds, _promotionIds));
+                .equals(other._promotionIds, _promotionIds) &&
+            (identical(other.isExhausted, isExhausted) ||
+                other.isExhausted == isExhausted));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, promotionIndex, cursor,
-      const DeepCollectionEquality().hash(_promotionIds));
+  int get hashCode => Object.hash(runtimeType, cursor,
+      const DeepCollectionEquality().hash(_promotionIds), isExhausted);
 
   @JsonKey(ignore: true)
   @override
@@ -170,16 +171,16 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 
 abstract class _PromotionsControllerState implements PromotionsControllerState {
   const factory _PromotionsControllerState(
-      {final int promotionIndex,
-      final String cursor,
-      final List<String> promotionIds}) = _$PromotionsControllerStateImpl;
+      {final String cursor,
+      final List<String> promotionIds,
+      final bool isExhausted}) = _$PromotionsControllerStateImpl;
 
-  @override
-  int get promotionIndex;
   @override
   String get cursor;
   @override
   List<String> get promotionIds;
+  @override
+  bool get isExhausted;
   @override
   @JsonKey(ignore: true)
   _$$PromotionsControllerStateImplCopyWith<_$PromotionsControllerStateImpl>
