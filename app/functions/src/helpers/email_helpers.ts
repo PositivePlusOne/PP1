@@ -1,15 +1,9 @@
 
 import * as postmark from 'postmark';
-import * as fs from 'fs';
+import { Keys } from '../constants/keys';
 
 export namespace EmailHelpers {
-
-  /**
-   * this is the global variable to store the template html so we only load it once
-   */
-  let _loadedTemplate: string|undefined = undefined;
-    
-  /**
+    /**
    * function to send an email, formatted nicely with branding etc, from whoever, to whomever and containing what you want it to
    * @param to is the email (string) of who this is to be sent to
    * @param subjectLine is the subject line of the email 
@@ -23,26 +17,31 @@ export namespace EmailHelpers {
       // https://postmarkapp.com/developer/user-guide/send-email-with-api/send-a-single-email
 
       // first we have to load the template file we created for this email
-      const templateContent = _loadedTemplate ? _loadedTemplate : fs.readFileSync("../constants/email_template.html").toString();
-      if (!_loadedTemplate) {
-        // setting this global so next time we don't load it
-        _loadedTemplate = templateContent;
-      }
-      // now we have the content, but we need to replace a few things first
-      let emailString = templateContent.replace("%%INSERT_TITLE%%", title);
-      emailString = emailString.replace("%%INSERT_BODY%%", body);
-      emailString = emailString.replace("%%INSERT_BUTTON_TEXT%%", buttonText);
+      // but we are using a template from postmark cause we think that's probably better
+      //
+      // https://account.postmarkapp.com/servers/11935164/templates/33677731/edit#preview
       
       // connect to the proper API required to send an email using the postmark library
-      const client = new postmark.ServerClient("POSTMARK_API_TEST");
+      const client = new postmark.ServerClient(Keys.PostmarkApiKey);
       // and send the email
-      const result = await client.sendEmail({
-        //!TODO check the 'from' address from which to send these admin emails
-        "From": "support@positiveplusone.com",
+      const result = await client.sendEmailWithTemplate({
+        "From": "admin@positiveplusone.com",
+        "TemplateId": 33677731,
         "To": to,
-        "Subject": subjectLine,
-        "TextBody": emailString,
-      });
+        "TemplateModel": {
+          "product_url": "https://www.positiveplusone.com",
+          "product_name": "Positive+1",
+          "title": title,
+          "body": body,
+          "button_text": buttonText,
+          "company_name": "Positive+1",
+          "company_address": "First Floor, 2 Collingwood Street, Newcastle Upon Tyne, England, NE1 1JF",
+          "action_url": "https://www.positiveplusone.com",
+          "support_email": "support@positiveplusone.com",
+          "sender_name": "Positive+1",
+          "help_url": "https://www.positiveplusone.com/help",
+          "mail_subject": subjectLine,
+        }});
       // return that the error code is equal to 0 - success
       return result && result.ErrorCode == 0;
     }
