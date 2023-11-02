@@ -138,8 +138,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     //? if we are currently creating a clip request that we stop
     if (state.isRecordingClip) {
-      getCurrentCameraState.onCloseButtonTapped();
-      return false;
+      canPop = await getCurrentCameraState.onCloseButtonTapped();
     }
 
     if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {

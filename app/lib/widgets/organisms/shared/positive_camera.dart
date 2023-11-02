@@ -549,7 +549,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
-  Future<void> onCloseButtonTapped() async {
+  Future<bool> onCloseButtonTapped() async {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
@@ -571,6 +571,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     if (deactivate) {
       resetClipStateToDefault();
     }
+    return !deactivate;
   }
 
   ///? End the current clip recording, discard currently recorded video
