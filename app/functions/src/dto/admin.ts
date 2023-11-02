@@ -12,6 +12,7 @@ export interface AdminQuickActionDataJSON {
     accountFlag?: string;
     promotionTypes?: string[];
     url?: string;
+    feed?: string;
 }
 
 export class AdminQuickActionData {
@@ -23,6 +24,7 @@ export class AdminQuickActionData {
     accountFlag: string;
     promotionTypes: string[];
     url: string;
+    feed: string;
 
     constructor(data: AdminQuickActionDataJSON) {
         this.target = data.target || '';
@@ -33,6 +35,7 @@ export class AdminQuickActionData {
         this.accountFlag = data.accountFlag || '';
         this.promotionTypes = data.promotionTypes || [];
         this.url = data.url || '';
+        this.feed = data.feed || '';
     }
 
     toJSON(): AdminQuickActionDataJSON {
@@ -45,6 +48,7 @@ export class AdminQuickActionData {
             accountFlag: this.accountFlag,
             promotionTypes: this.promotionTypes,
             url: this.url,
+            feed: this.feed,
         };
     }
 }
