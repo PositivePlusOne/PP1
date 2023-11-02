@@ -1,6 +1,4 @@
-
 import * as postmark from 'postmark';
-import { Keys } from '../constants/keys';
 
 export namespace EmailHelpers {
     /**
@@ -31,7 +29,11 @@ export namespace EmailHelpers {
       // for safety - the template is also in the ./constants/template_email.html file so it's controlled in git
       
       // connect to the proper API required to send an email using the postmark library
-      const client = new postmark.ServerClient(Keys.PostmarkApiKey);
+      const apiKey = process.env.SMTP_API_SECRET;
+      if (!apiKey) {
+        throw new Error("SMTP_API_SECRET cannot be null.");
+      }
+      const client = new postmark.ServerClient(apiKey);
       // and send the email
       const result = await client.sendEmailWithTemplate({
         "From": "admin@positiveplusone.com",
@@ -54,3 +56,4 @@ export namespace EmailHelpers {
       return result && result.ErrorCode == 0;
     }
   }
+  

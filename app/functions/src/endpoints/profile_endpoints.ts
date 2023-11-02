@@ -38,7 +38,7 @@ export namespace ProfileEndpoints {
       // just to make this robust - if we don't have enough of a picture of the profile, we will get a better one
       profile = ProfileService.getProfile(profileUid);
     }
-    if (isProfileComplete(profileUid, profile)) {
+    if (isProfileComplete(profileUid, profile) && !profile.data.suppressEmail) {
       // the new profile is complete - but they just updated it, send an email please
       return EmailHelpers.sendEmail(
         profile.data.email,
@@ -120,14 +120,17 @@ export namespace ProfileEndpoints {
     await ProfileService.deleteProfile(targetUid);
     functions.logger.info("User profile deleted");
 
-    await EmailHelpers.sendEmail(
-      userProfile.data.email,
-      "Positive+1 Account Deleted",
-      "Account Deleted",
-      "We're sorry to see you go, but we've deleted your account as requested.",
-      "",
-      "Return to Positive+1",
-      "https://www.positiveplusone.com");
+    if (!userProfile.data.suppressEmail) {
+      // not suppressing email, send one informing the user they have deleted their profile
+      await EmailHelpers.sendEmail(
+        userProfile.data.email,
+        "Positive+1 Account Deleted",
+        "Account Deleted",
+        "We're sorry to see you go, but we've deleted your account as requested.",
+        "",
+        "Return to Positive+1",
+        "https://www.positiveplusone.com");
+    }
 
     return JSON.stringify({ success: true });
   });
@@ -514,7 +517,8 @@ export namespace ProfileEndpoints {
     }
 
     let wasWelcomeEmailSent = false;
-    if (!isProfileComplete(uid, profile)) {
+    if (!isProfileComplete(uid, profile) && !profile.data.suppressEmail) {
+      // not suppressing email, send one informing the user they have deleted their profile) {
       // this is the first time we will set the profile colour which signifies the end of the account creation process
       //TODO we need to send a different email if a company account
       //TODO somewhere as well a user is invited to a company account and that's different too

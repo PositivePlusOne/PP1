@@ -38,6 +38,7 @@ mixin _$Profile {
   @JsonKey(fromJson: stringSetFromJson)
   Set<String> get tags => throw _privateConstructorUsedError;
   bool get placeSkipped => throw _privateConstructorUsedError;
+  bool get suppressEmail => throw _privateConstructorUsedError;
   PositivePlace? get place => throw _privateConstructorUsedError;
   String get biography => throw _privateConstructorUsedError;
   List<Media> get media => throw _privateConstructorUsedError;
@@ -82,6 +83,7 @@ abstract class $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> tags,
       bool placeSkipped,
+      bool suppressEmail,
       PositivePlace? place,
       String biography,
       List<Media> media,
@@ -129,6 +131,7 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? interests = null,
     Object? tags = null,
     Object? placeSkipped = null,
+    Object? suppressEmail = null,
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
@@ -196,6 +199,10 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
       placeSkipped: null == placeSkipped
           ? _value.placeSkipped
           : placeSkipped // ignore: cast_nullable_to_non_nullable
+              as bool,
+      suppressEmail: null == suppressEmail
+          ? _value.suppressEmail
+          : suppressEmail // ignore: cast_nullable_to_non_nullable
               as bool,
       place: freezed == place
           ? _value.place
@@ -295,6 +302,7 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       @JsonKey(fromJson: stringSetFromJson) Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) Set<String> tags,
       bool placeSkipped,
+      bool suppressEmail,
       PositivePlace? place,
       String biography,
       List<Media> media,
@@ -343,6 +351,7 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? interests = null,
     Object? tags = null,
     Object? placeSkipped = null,
+    Object? suppressEmail = null,
     Object? place = freezed,
     Object? biography = null,
     Object? media = null,
@@ -411,6 +420,10 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value.placeSkipped
           : placeSkipped // ignore: cast_nullable_to_non_nullable
               as bool,
+      suppressEmail: null == suppressEmail
+          ? _value.suppressEmail
+          : suppressEmail // ignore: cast_nullable_to_non_nullable
+              as bool,
       place: freezed == place
           ? _value.place
           : place // ignore: cast_nullable_to_non_nullable
@@ -475,6 +488,7 @@ class _$ProfileImpl implements _Profile {
       final Set<String> interests = const {},
       @JsonKey(fromJson: stringSetFromJson) final Set<String> tags = const {},
       this.placeSkipped = false,
+      this.suppressEmail = false,
       this.place,
       this.biography = '',
       final List<Media> media = const [],
@@ -566,6 +580,9 @@ class _$ProfileImpl implements _Profile {
   @JsonKey()
   final bool placeSkipped;
   @override
+  @JsonKey()
+  final bool suppressEmail;
+  @override
   final PositivePlace? place;
   @override
   @JsonKey()
@@ -630,7 +647,7 @@ class _$ProfileImpl implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, placeSkipped: $placeSkipped, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, companySectors: $companySectors, companySize: $companySize, availablePromotionsCount: $availablePromotionsCount, activePromotionsCount: $activePromotionsCount)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, placeSkipped: $placeSkipped, suppressEmail: $suppressEmail, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, companySectors: $companySectors, companySize: $companySize, availablePromotionsCount: $availablePromotionsCount, activePromotionsCount: $activePromotionsCount)';
   }
 
   @override
@@ -660,6 +677,8 @@ class _$ProfileImpl implements _Profile {
             const DeepCollectionEquality().equals(other._tags, _tags) &&
             (identical(other.placeSkipped, placeSkipped) ||
                 other.placeSkipped == placeSkipped) &&
+            (identical(other.suppressEmail, suppressEmail) ||
+                other.suppressEmail == suppressEmail) &&
             (identical(other.place, place) || other.place == place) &&
             (identical(other.biography, biography) ||
                 other.biography == biography) &&
@@ -699,6 +718,7 @@ class _$ProfileImpl implements _Profile {
         const DeepCollectionEquality().hash(_interests),
         const DeepCollectionEquality().hash(_tags),
         placeSkipped,
+        suppressEmail,
         place,
         biography,
         const DeepCollectionEquality().hash(_media),
@@ -741,6 +761,7 @@ abstract class _Profile implements Profile {
       @JsonKey(fromJson: stringSetFromJson) final Set<String> interests,
       @JsonKey(fromJson: stringSetFromJson) final Set<String> tags,
       final bool placeSkipped,
+      final bool suppressEmail,
       final PositivePlace? place,
       final String biography,
       final List<Media> media,
@@ -790,6 +811,8 @@ abstract class _Profile implements Profile {
   Set<String> get tags;
   @override
   bool get placeSkipped;
+  @override
+  bool get suppressEmail;
   @override
   PositivePlace? get place;
   @override

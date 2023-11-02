@@ -28,6 +28,7 @@ class Profile with _$Profile {
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> interests,
     @JsonKey(fromJson: stringSetFromJson) @Default({}) Set<String> tags,
     @Default(false) bool placeSkipped,
+    @Default(false) bool suppressEmail,
     PositivePlace? place,
     @Default('') String biography,
     @Default([]) List<Media> media,
