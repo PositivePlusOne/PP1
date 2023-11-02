@@ -289,7 +289,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   Future<void> checkLibraryPermission({bool request = true}) async {
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
     Permission baseLibraryPermissionPhoto = Permission.photos;
-    Permission baseLibraryPermissionVideo = Permission.videos;
+    Permission baseLibraryPermissionVideo = (deviceInfo is IosDeviceInfo) ? Permission.mediaLibrary : Permission.videos;
 
     // Check if Android and past Tiramisu version
     if (deviceInfo is AndroidDeviceInfo) {
