@@ -37,7 +37,7 @@ class PromotionButton extends StatelessWidget {
         PositiveButton(
           isDisabled: !isEnabled,
           isActive: true,
-          onTapped: () => link.isNotEmpty ? () => link.attemptToLaunchURL() : () {},
+          onTapped: link.isNotEmpty ? () => link.attemptToLaunchURL() : () {},
           colors: colors,
           primaryColor: colors.black,
           label: linkText,

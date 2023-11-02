@@ -8,10 +8,12 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -19,6 +21,7 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 class PositivePromotedChannelListTile extends ConsumerWidget {
   const PositivePromotedChannelListTile({
     required this.promotion,
+    required this.promotedActivity,
     required this.owner,
     this.isEnabled = true,
     this.onTap,
@@ -29,6 +32,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
   final void Function(BuildContext context)? onTap;
 
   final Promotion promotion;
+  final Activity? promotedActivity;
   final Profile owner;
 
   @override
@@ -36,6 +40,8 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final String promotedDescription = (promotedActivity?.generalConfiguration?.content ?? '');
 
     return PositiveTapBehaviour(
       isEnabled: isEnabled,
@@ -58,29 +64,25 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  if (promotion.title.isNotEmpty) ...<Widget>[
+                  Text(
+                    owner.getSafeDisplayName(localizations),
+                    maxLines: 1,
+                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                  ),
+                  if (promotedDescription.isNotEmpty) ...<Widget>[
                     Text(
-                      promotion.title,
-                      maxLines: 1,
-                      style: typography.styleTitle.copyWith(color: colors.colorGray7),
-                    ),
-                  ],
-                  if (promotion.description.isNotEmpty) ...<Widget>[
-                    Text(
-                      promotion.description,
+                      promotedDescription,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: typography.styleSubtext.copyWith(color: colors.colorGray3),
                     ),
                   ],
-                  if (promotion.linkText.isNotEmpty) ...<Widget>[
-                    Text(
-                      promotion.linkText,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: typography.styleSubtext.copyWith(color: colors.linkBlue),
-                    ),
-                  ],
+                  Text(
+                    promotion.linkText.isEmpty ? localizations.shared_actions_view_more : promotion.linkText,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: typography.styleSubtext.copyWith(color: colors.linkBlue),
+                  ),
                 ],
               ),
             ),
@@ -90,7 +92,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall, vertical: kPaddingExtraSmall),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(kBorderRadiusHuge),
-                color: colors.white,
+                color: colors.colorGray1,
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

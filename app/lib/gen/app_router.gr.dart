@@ -340,6 +340,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: PostPage(
           activityId: args.activityId,
           feed: args.feed,
+          promotionId: args.promotionId,
           key: args.key,
         ),
       );
@@ -1456,6 +1457,7 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
     required String activityId,
     required TargetFeed feed,
+    String promotionId = '',
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -1463,6 +1465,7 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
           args: PostRouteArgs(
             activityId: activityId,
             feed: feed,
+            promotionId: promotionId,
             key: key,
           ),
           initialChildren: children,
@@ -1477,6 +1480,7 @@ class PostRouteArgs {
   const PostRouteArgs({
     required this.activityId,
     required this.feed,
+    this.promotionId = '',
     this.key,
   });
 
@@ -1484,11 +1488,13 @@ class PostRouteArgs {
 
   final TargetFeed feed;
 
+  final String promotionId;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'PostRouteArgs{activityId: $activityId, feed: $feed, key: $key}';
+    return 'PostRouteArgs{activityId: $activityId, feed: $feed, promotionId: $promotionId, key: $key}';
   }
 }
 

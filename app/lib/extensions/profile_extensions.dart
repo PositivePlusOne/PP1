@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
@@ -51,6 +52,14 @@ extension ProfileExtensions on Profile {
 
   String? get directoryEntryId {
     return flMeta?.directoryEntryId;
+  }
+
+  String getSafeDisplayName(AppLocalizations localizations) {
+    if (displayName.isEmpty || isIncognito) {
+      return localizations.shared_placeholders_empty_display_name;
+    }
+
+    return displayName.asHandle;
   }
 
   bool matchesStringSearch(String str) {

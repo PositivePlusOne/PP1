@@ -607,6 +607,7 @@ extension ActivityExt on Activity {
   Future<void> requestPostRoute({
     required BuildContext context,
     required Profile? currentProfile,
+    String promotionId = '',
   }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final AppRouter router = providerContainer.read(appRouterProvider);
@@ -618,6 +619,7 @@ extension ActivityExt on Activity {
     final String activityId = flMeta?.id ?? '';
     final PostRoute postRoute = PostRoute(
       activityId: activityId,
+      promotionId: promotionId,
       feed: primaryFeed,
     );
 
@@ -636,7 +638,7 @@ extension ActivityExt on Activity {
         'activityId': activityId,
         'feed': primaryFeed.targetSlug,
         'profileId': profileId,
-        'promotionId': enrichmentConfiguration?.promotionKey ?? '',
+        'promotionId': promotionId,
       },
     );
 
