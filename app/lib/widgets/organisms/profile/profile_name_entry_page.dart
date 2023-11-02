@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -77,7 +78,8 @@ class ProfileNameEntryPage extends ConsumerWidget {
     final String currentName = profile?.name ?? '';
     final String newName = state.name;
 
-    final bool hasChanges = currentVisibilityFlagStatus != newVisibilityFlagStatus || currentName != newName;
+    final bool isEditing = state.formMode == FormMode.edit;
+    final bool hasChanges = isEditing && currentVisibilityFlagStatus != newVisibilityFlagStatus || currentName != newName;
 
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileNameEntryRoute),
@@ -95,8 +97,8 @@ class ProfileNameEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onNameConfirmed,
-          isDisabled: !controller.isNameValid || !hasChanges,
-          label: localizations.shared_actions_update,
+          isDisabled: !controller.isNameValid || (isEditing && !hasChanges),
+          label: isEditing ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
       headingWidgets: <Widget>[
@@ -117,6 +119,11 @@ class ProfileNameEntryPage extends ConsumerWidget {
                     layout: PositiveButtonLayout.textOnly,
                     size: PositiveButtonSize.small,
                   ),
+                ),
+                PositivePageIndicator(
+                  color: colors.black,
+                  pagesNum: 6,
+                  currentPage: 0,
                 ),
               ],
             ),

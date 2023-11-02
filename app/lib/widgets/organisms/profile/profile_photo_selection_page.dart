@@ -47,6 +47,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
+      forceDecorationMaxSize: true,
       decorationWidget: Image.asset(
         MockImages.bike,
         fit: BoxFit.cover,
