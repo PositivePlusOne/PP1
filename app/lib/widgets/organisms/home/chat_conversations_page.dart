@@ -10,8 +10,10 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/hooks/channel_hook.dart';
@@ -19,8 +21,10 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/promotions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -140,16 +144,21 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
     final Promotion? promotion = promotionsController.getPromotionFromIndex(index);
     if (promotion == null) {
-      return const SizedBox(height: kPaddingLarge);
+      return const SizedBox(height: kPaddingSmall);
     }
+
+    final PromotedActivity? promotedActivity = promotion.activities.firstWhereOrNull((element) => element.activityId.isNotEmpty);
+    final String activityId = promotedActivity?.activityId ?? '';
 
     final PromotionOwner? promotionOwner = promotion.owners.firstWhereOrNull((element) => element.profileId.isNotEmpty);
     final String profileId = promotionOwner?.profileId ?? '';
+
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final Profile? promotionProfile = cacheController.get(profileId);
+    final Activity? promotionActivity = cacheController.get(activityId);
 
     if (promotionProfile == null) {
-      return const SizedBox(height: kPaddingLarge);
+      return const SizedBox(height: kPaddingSmall);
     }
 
     return Padding(
@@ -157,8 +166,34 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
       child: PositivePromotedChannelListTile(
         owner: promotionProfile,
         promotion: promotion,
-        onTap: (_) => promotion.link.attemptToLaunchURL(),
+        promotedActivity: promotionActivity,
+        onTap: (_) => onPromotionTapped(context, promotion, promotionActivity),
       ),
     );
+  }
+
+  Future<void> onPromotionTapped(BuildContext context, Promotion promotion, Activity? activity) async {
+    final logger = providerContainer.read(loggerProvider);
+    final String linkUrl = promotion.link;
+    if (linkUrl.isNotEmpty) {
+      logger.d('Opening link: $linkUrl');
+      await linkUrl.attemptToLaunchURL();
+      return;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Profile? currentProfile = profileController.currentProfile;
+
+    if (activity != null) {
+      logger.d('Opening activity: ${activity.flMeta?.id}');
+      await activity.requestPostRoute(
+        context: context,
+        currentProfile: currentProfile,
+        promotionId: promotion.flMeta?.id ?? '',
+      );
+      return;
+    }
+
+    logger.e('Unable to open promotion: $promotion');
   }
 }

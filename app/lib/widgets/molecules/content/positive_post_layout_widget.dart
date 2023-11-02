@@ -476,6 +476,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         link: link,
         linkText: linkText,
         borderRadius: isOnCarousel ? 0 : kBorderRadiusLarge,
+        isEnabled: true,
       ),
     );
   }
