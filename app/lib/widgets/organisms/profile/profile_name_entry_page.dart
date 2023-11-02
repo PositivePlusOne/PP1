@@ -72,6 +72,14 @@ class ProfileNameEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
+    final bool currentVisibilityFlagStatus = profile?.visibilityFlags.contains(kVisibilityFlagName) ?? false;
+    final bool newVisibilityFlagStatus = state.visibilityFlags[kVisibilityFlagName] ?? false;
+
+    final String currentName = profile?.name ?? '';
+    final String newName = state.name;
+
+    final bool hasChanges = currentVisibilityFlagStatus != newVisibilityFlagStatus || currentName != newName;
+
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileNameEntryRoute),
       backgroundColor: colors.colorGray1,
@@ -88,29 +96,28 @@ class ProfileNameEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onNameConfirmed,
-          isDisabled: !controller.isNameValid,
-          label: localizations.shared_actions_continue,
+          isDisabled: !controller.isNameValid || !hasChanges,
+          label: localizations.shared_actions_update,
         ),
       ],
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             Row(
-              children: [
-                PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  isDisabled: state.formMode == FormMode.create,
-                  onTapped: () => controller.onBackSelected(ProfileNameEntryRoute),
-                  label: localizations.shared_actions_back,
-                  style: PositiveButtonStyle.text,
-                  layout: PositiveButtonLayout.textOnly,
-                  size: PositiveButtonSize.small,
-                ),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 6,
-                  currentPage: 0,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: PositiveButton(
+                    colors: colors,
+                    primaryColor: colors.black,
+                    isDisabled: state.formMode == FormMode.create,
+                    onTapped: () => controller.onBackSelected(ProfileNameEntryRoute),
+                    label: localizations.shared_actions_back,
+                    style: PositiveButtonStyle.text,
+                    layout: PositiveButtonLayout.textOnly,
+                    size: PositiveButtonSize.small,
+                  ),
                 ),
               ],
             ),

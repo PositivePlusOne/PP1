@@ -184,25 +184,22 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
-    const profile = await ProfileService.getProfile(uid);
+    let profile = await ProfileService.getProfile(uid);
     if (!profile) {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateName(uid, name);
-
-    // Remove the name_offensive flag if it exists
-    await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
+    profile = await ProfileService.updateName(uid, name);
+    profile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    profile = await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
     
     functions.logger.info("Profile name updated", {
-      uid,
-      name,
+      profile,
     });
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [newProfile],
+      data: [profile],
     });
   });
 

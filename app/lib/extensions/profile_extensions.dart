@@ -125,23 +125,22 @@ extension ProfileExtensions on Profile {
 
   Map<String, bool> buildFormVisibilityFlags() {
     final Map<String, bool> newVisibilityFlags = {
-      kVisibilityFlagBirthday: kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? true,
-      kVisibilityFlagInterests: kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? true,
-      kVisibilityFlagLocation: kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? true,
-      kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? true,
-      kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true,
-      kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? true,
-      kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? true,
+      kVisibilityFlagBirthday: kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false,
+      kVisibilityFlagInterests: kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false,
+      kVisibilityFlagLocation: kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false,
+      kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? false,
+      kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false,
+      kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false,
+      kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? false,
     };
 
     final List<(String flag, bool newValue)> overrideFlags = [];
     for (final String flag in visibilityFlags) {
-      final bool? newValue = bool.tryParse(flag);
-      if (newValue == null) {
+      if (flag.isEmpty) {
         continue;
       }
 
-      overrideFlags.add((flag, newValue));
+      overrideFlags.add((flag, true));
     }
 
     for (final (String flag, bool newValue) in overrideFlags) {
