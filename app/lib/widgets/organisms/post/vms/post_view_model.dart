@@ -152,7 +152,6 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
         return;
       }
 
-      final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
       final String reactionsCacheKey = PositiveReactionsState.buildReactionsCacheKey(
         activityId: activityId,
         profileId: profileController.currentProfileId ?? '',
@@ -166,10 +165,6 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
 
       // Save new state
       cacheController.add(key: reactionsCacheKey, value: reactionsState);
-
-      // Update the reaction counts
-      ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
-      activity.incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.comment(), offset: 1);
 
       commentTextController.clear();
       state = state.copyWith(currentCommentText: '');
