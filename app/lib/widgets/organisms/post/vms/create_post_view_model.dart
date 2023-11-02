@@ -4,6 +4,7 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:app/widgets/molecules/dialogs/positive_toast_hint.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -176,6 +177,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         currentPostType: postType,
         activeButton: state.lastActiveButton,
       );
+    }
+
+    final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+    if (canPop && deviceInfo is IosDeviceInfo) {
+      return true;
     }
 
     return canPop;
