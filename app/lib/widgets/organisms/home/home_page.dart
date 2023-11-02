@@ -95,6 +95,7 @@ class HomePage extends HookConsumerWidget {
           children: <Widget>[
             PositiveHubFloatingBar(
               index: state.currentTabIndex,
+              currentProfile: currentProfile,
               onTapped: viewModel.onTabSelected,
               topics: tagsControllerState.topicTags.values.toList(),
               onTopicSelected: viewModel.onTopicSelected,

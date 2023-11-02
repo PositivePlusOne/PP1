@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +20,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
     this.onTopicSelected,
     this.onSeeMoreTopicsSelected,
     this.index = -1,
+    this.currentProfile,
     super.key,
   });
 
@@ -27,6 +29,8 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
   final Future<void> Function(int index) onTapped;
   final List<Tag> topics;
   final List<Color> tabColours;
+
+  final Profile? currentProfile;
 
   final void Function(BuildContext context, Tag tag)? onTopicSelected;
   final void Function(BuildContext context)? onSeeMoreTopicsSelected;
@@ -51,8 +55,6 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
-
     return Column(
       children: [
         const SizedBox(height: kPaddingMedium),
@@ -60,6 +62,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
           PositiveRecommendedTopics(
             tags: topics,
             onTagSelected: (context, tag) => onTopicSelected?.call(context, tag),
+            canSeeMore: currentProfile != null,
             onSeeMoreSelected: (context) => onSeeMoreTopicsSelected?.call(context),
           ),
         },
