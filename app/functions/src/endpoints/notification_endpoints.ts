@@ -41,21 +41,4 @@ export namespace NotificationEndpoints {
       },
     });
   });
-
-  export const markNotificationsAsReadAndSeen = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-
-    functions.logger.info(`Marking notifications as read and seen for current user: ${uid}`);
-    if (uid.length === 0) {
-      throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
-    }
-
-    const client = FeedService.getFeedsClient();
-    await NotificationsService.markAllNotificationsReadAndSeen(client, uid);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [],
-    });
-  });
 }

@@ -16,13 +16,13 @@ const String kAccountFlagNameOffensive = 'name_offensive';
 const String kAccountFlagDisplayNameOffensive = 'display_name_offensive';
 
 const Map<String, bool> kDefaultVisibilityFlags = {
-  kVisibilityFlagName: true,
-  kVisibilityFlagBirthday: true,
-  kVisibilityFlagInterests: true,
-  kVisibilityFlagGenders: true,
-  kVisibilityFlagLocation: true,
-  kVisibilityFlagHivStatus: true,
-  kVisibilityFlagCompanySectors: true,
+  kVisibilityFlagName: false,
+  kVisibilityFlagBirthday: false,
+  kVisibilityFlagInterests: false,
+  kVisibilityFlagGenders: false,
+  kVisibilityFlagLocation: false,
+  kVisibilityFlagHivStatus: false,
+  kVisibilityFlagCompanySectors: false,
 };
 
 const Map<String, bool> kDefaultFeatureFlags = {
