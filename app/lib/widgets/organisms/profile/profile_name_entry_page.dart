@@ -29,7 +29,6 @@ import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/prompts/positive_visibility_hint.dart';
 
 @RoutePage()

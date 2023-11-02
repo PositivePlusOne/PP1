@@ -256,7 +256,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
 
-    if (activityId.isEmpty || currentProfileId.isEmpty || publisherId.isEmpty) {
+    if (activityId.isEmpty || publisherId.isEmpty) {
       return const SizedBox.shrink();
     }
 
