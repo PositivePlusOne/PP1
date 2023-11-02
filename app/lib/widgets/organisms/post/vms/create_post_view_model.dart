@@ -170,6 +170,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       state = state.copyWith(
+        isBottomNavigationEnabled: true,
+        isRecordingClip: false,
         currentCreatePostPage: CreatePostCurrentPage.camera,
         currentPostType: postType,
         activeButton: state.lastActiveButton,

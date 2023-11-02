@@ -109,6 +109,10 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       onTapClose: (_) => appRouter.pop(),
                       onTapForceClose: (_) => viewModel.onForceClosePage(),
                       onTapAddImage: (context) => viewModel.onMultiMediaPicker(),
+
+                      ///? Change UI state based on current clip state
+                      onClipStateChange: (state) => viewModel.onClipStateChange(state),
+
                       //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                       cameraNavigation: (_) {
                         return const SizedBox(
@@ -129,9 +133,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       isVideoMode: state.currentPostType == PostType.clip,
                       bottomNavigationSize: bottomNavigationArea + kPaddingSmall,
                       topNavigationSize: mediaQueryData.padding.top + kIconLarge + kPaddingSmall * 2,
-
-                      ///? Change UI state based on current clip state
-                      onClipStateChange: (state) => viewModel.onClipStateChange(state),
 
                       ///? Options for camera delay before taking picture or clip
                       maxDelay: viewModel.delayTimerOptions[state.delayTimerCurrentSelection],
