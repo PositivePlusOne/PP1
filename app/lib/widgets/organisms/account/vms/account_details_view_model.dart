@@ -16,7 +16,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
@@ -84,11 +83,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
   Future<void> onUpdateNameButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final ProfileFormController profileFormController = ref.read(profileFormControllerProvider.notifier);
 
     logger.d('onUpdateNameButtonPressed');
-    profileFormController.resetState(FormMode.edit);
-    await appRouter.push(const ProfileNameEntryRoute());
+    controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.name);
+    await appRouter.push(const AccountUpdateNameRoute());
   }
 
   Future<void> onUpdateEmailAddressButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
