@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -1014,6 +1015,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     return Padding(
       padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
@@ -1106,7 +1108,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               if (clipRecordingState.isActive)
                 CameraFloatingButton.close(
                   active: clipRecordingState.isPaused,
-                  onTap: (context) => onCloseButtonTapped(),
+                  onTap: (context) => appRouter.pop(),
                   isDisplayed: clipRecordingState.isPaused,
                   iconColour: colours.black,
                   backgroundColour: colours.yellow,

@@ -136,6 +136,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<bool> onWillPopScope() async {
     bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     //? if we are currently creating a clip request that we stop
     if (state.isRecordingClip) {
@@ -181,7 +182,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
     if (canPop && deviceInfo is IosDeviceInfo) {
-      return true;
+      appRouter.removeUntil((route) => true);
+      await appRouter.push(const HomeRoute());
+      return false;
     }
 
     return canPop;
