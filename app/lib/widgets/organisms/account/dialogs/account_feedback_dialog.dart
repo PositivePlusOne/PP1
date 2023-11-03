@@ -20,7 +20,7 @@ class AccountFeedbackDialog extends ConsumerWidget {
   const AccountFeedbackDialog({super.key});
 
   static const int kFeedbackLineCount = 7;
-  static const int kFeedbackMinimumLength = 10;
+  static const int kFeedbackMinimumLength = 0;
   static const int kFeedbackMaximumLength = 5000;
 
   @override
