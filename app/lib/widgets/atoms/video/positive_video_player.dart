@@ -120,10 +120,15 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     final double screenHeight = MediaQuery.of(context).size.height;
 
     double? videoAspectRatio;
+
     if (widget.media.height > 0 && widget.media.width > 0) {
       videoAspectRatio = widget.media.width / widget.media.height;
     } else {
       videoAspectRatio = 1.0;
+    }
+
+    if (videoAspectRatio > 1) {
+      videoAspectRatio = 1 / videoAspectRatio;
     }
 
     return VisibilityDetector(
@@ -137,16 +142,13 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
         ),
         child: ClipRRect(
           borderRadius: widget.borderRadius ?? BorderRadius.zero,
-          child: AspectRatio(
-            aspectRatio: widget.media.width / widget.media.height,
-            child: Video(
-              filterQuality: FilterQuality.none,
-              alignment: Alignment.center,
-              controller: videoController,
-              pauseUponEnteringBackgroundMode: true,
-              aspectRatio: videoAspectRatio,
-              wakelock: true,
-            ),
+          child: Video(
+            filterQuality: FilterQuality.none,
+            alignment: Alignment.center,
+            controller: videoController,
+            pauseUponEnteringBackgroundMode: true,
+            aspectRatio: videoAspectRatio,
+            wakelock: true,
           ),
         ),
       ),

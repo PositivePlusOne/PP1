@@ -18,6 +18,8 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
@@ -605,6 +607,7 @@ extension ActivityExt on Activity {
   Future<void> requestPostRoute({
     required BuildContext context,
     required Profile? currentProfile,
+    String promotionId = '',
   }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final AppRouter router = providerContainer.read(appRouterProvider);
@@ -616,6 +619,7 @@ extension ActivityExt on Activity {
     final String activityId = flMeta?.id ?? '';
     final PostRoute postRoute = PostRoute(
       activityId: activityId,
+      promotionId: promotionId,
       feed: primaryFeed,
     );
 
@@ -624,6 +628,19 @@ extension ActivityExt on Activity {
       logger.i('Already on post $activityId');
       return;
     }
+
+    logger.d('Tracking post view for $activityId');
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    await analyticsController.trackEvent(
+      AnalyticEvents.postViewed,
+      includeDefaultProperties: true,
+      properties: {
+        'activityId': activityId,
+        'feed': primaryFeed.targetSlug,
+        'profileId': profileId,
+        'promotionId': promotionId,
+      },
+    );
 
     logger.i('Navigating to post $activityId');
     await router.push(postRoute);

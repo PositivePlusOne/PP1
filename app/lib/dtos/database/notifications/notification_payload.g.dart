@@ -10,10 +10,12 @@ _$NotificationPayloadImpl _$$NotificationPayloadImplFromJson(
         Map<String, dynamic> json) =>
     _$NotificationPayloadImpl(
       id: json['id'] as String? ?? '',
+      foreignKey: json['foreignKey'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
       sender: json['sender'] as String? ?? '',
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
+      bodyMarkdown: json['bodyMarkdown'] as String? ?? '',
       icon: json['icon'] as String? ?? '',
       createdAt: dateFromUnknown(json['created_at']),
       extraData: json['extra_data'] as Map<String, dynamic>? ?? const {},
@@ -32,10 +34,12 @@ Map<String, dynamic> _$$NotificationPayloadImplToJson(
         _$NotificationPayloadImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'foreignKey': instance.foreignKey,
       'user_id': instance.userId,
       'sender': instance.sender,
       'title': instance.title,
       'body': instance.body,
+      'bodyMarkdown': instance.bodyMarkdown,
       'icon': instance.icon,
       'created_at': instance.createdAt,
       'extra_data': instance.extraData,

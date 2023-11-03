@@ -13,10 +13,12 @@ part 'notification_payload.g.dart';
 abstract class NotificationPayload with _$NotificationPayload {
   const factory NotificationPayload({
     @Default('') String id,
+    @Default('') String foreignKey,
     @Default('') @JsonKey(name: 'user_id') String userId,
     @Default('') String sender,
     @Default('') String title,
     @Default('') String body,
+    @Default('') String bodyMarkdown,
     @Default('') String icon,
     @JsonKey(name: 'created_at', fromJson: dateFromUnknown) String? createdAt,
     @Default({}) @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,

@@ -112,6 +112,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BiometricsPreferencesPage(),
       );
     },
+    BirthdayDeleteAccountRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BirthdayDeleteAccountPage(),
+      );
+    },
     ChatConversationsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -340,6 +346,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: PostPage(
           activityId: args.activityId,
           feed: args.feed,
+          promotionId: args.promotionId,
           key: args.key,
         ),
       );
@@ -383,12 +390,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProfileCompanySectorSelectPage(),
-      );
-    },
-    ProfileDeleteAccountRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ProfileDeleteAccountPage(),
       );
     },
     ProfileDisplayNameEntryRoute.name: (routeData) {
@@ -806,6 +807,20 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [BirthdayDeleteAccountPage]
+class BirthdayDeleteAccountRoute extends PageRouteInfo<void> {
+  const BirthdayDeleteAccountRoute({List<PageRouteInfo>? children})
+      : super(
+          BirthdayDeleteAccountRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BirthdayDeleteAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1462,6 +1477,7 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
   PostRoute({
     required String activityId,
     required TargetFeed feed,
+    String promotionId = '',
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -1469,6 +1485,7 @@ class PostRoute extends PageRouteInfo<PostRouteArgs> {
           args: PostRouteArgs(
             activityId: activityId,
             feed: feed,
+            promotionId: promotionId,
             key: key,
           ),
           initialChildren: children,
@@ -1483,6 +1500,7 @@ class PostRouteArgs {
   const PostRouteArgs({
     required this.activityId,
     required this.feed,
+    this.promotionId = '',
     this.key,
   });
 
@@ -1490,11 +1508,13 @@ class PostRouteArgs {
 
   final TargetFeed feed;
 
+  final String promotionId;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'PostRouteArgs{activityId: $activityId, feed: $feed, key: $key}';
+    return 'PostRouteArgs{activityId: $activityId, feed: $feed, promotionId: $promotionId, key: $key}';
   }
 }
 
@@ -1607,20 +1627,6 @@ class ProfileCompanySectorSelectRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProfileCompanySectorSelectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfileDeleteAccountPage]
-class ProfileDeleteAccountRoute extends PageRouteInfo<void> {
-  const ProfileDeleteAccountRoute({List<PageRouteInfo>? children})
-      : super(
-          ProfileDeleteAccountRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfileDeleteAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

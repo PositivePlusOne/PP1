@@ -7,18 +7,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
-class ProfileDeleteAccountPage extends ConsumerStatefulWidget {
-  const ProfileDeleteAccountPage({super.key});
+class BirthdayDeleteAccountPage extends ConsumerStatefulWidget {
+  const BirthdayDeleteAccountPage({super.key});
 
   @override
-  ConsumerState<ProfileDeleteAccountPage> createState() => _ProfileDeleteAccountPageState();
+  ConsumerState<BirthdayDeleteAccountPage> createState() => _BirthdayDeleteAccountPageState();
 }
 
-class _ProfileDeleteAccountPageState extends ConsumerState<ProfileDeleteAccountPage> {
+class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccountPage> {
   bool _isDeleting = false;
   bool get isDeleting => _isDeleting;
   set isDeleting(bool value) {
@@ -32,8 +36,18 @@ class _ProfileDeleteAccountPageState extends ConsumerState<ProfileDeleteAccountP
     isDeleting = true;
 
     try {
+      final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final Profile? profile = profileController.currentProfile;
+      final String currentProfileId = profile?.flMeta?.id ?? '';
+
+      final accountFlags = profile?.accountFlags ?? <String>{};
+      if (!accountFlags.contains(kFeatureFlagPendingDeletion)) {
+        await profileApiService.toggleProfileDeletion(uid: currentProfileId);
+      }
+
       final UserController userController = ref.read(userControllerProvider.notifier);
-      userController.deleteAccount();
+      await userController.signOut(shouldNavigate: true);
     } finally {
       isDeleting = false;
     }

@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
@@ -51,6 +52,14 @@ extension ProfileExtensions on Profile {
 
   String? get directoryEntryId {
     return flMeta?.directoryEntryId;
+  }
+
+  String getSafeDisplayName(AppLocalizations localizations) {
+    if (displayName.isEmpty || isIncognito) {
+      return localizations.shared_placeholders_empty_display_name;
+    }
+
+    return displayName.asHandle;
   }
 
   bool matchesStringSearch(String str) {
@@ -116,23 +125,22 @@ extension ProfileExtensions on Profile {
 
   Map<String, bool> buildFormVisibilityFlags() {
     final Map<String, bool> newVisibilityFlags = {
-      kVisibilityFlagBirthday: kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? true,
-      kVisibilityFlagInterests: kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? true,
-      kVisibilityFlagLocation: kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? true,
-      kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? true,
-      kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? true,
-      kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? true,
-      kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? true,
+      kVisibilityFlagBirthday: kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false,
+      kVisibilityFlagInterests: kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false,
+      kVisibilityFlagLocation: kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false,
+      kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? false,
+      kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false,
+      kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false,
+      kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? false,
     };
 
     final List<(String flag, bool newValue)> overrideFlags = [];
     for (final String flag in visibilityFlags) {
-      final bool? newValue = bool.tryParse(flag);
-      if (newValue == null) {
+      if (flag.isEmpty) {
         continue;
       }
 
-      overrideFlags.add((flag, newValue));
+      overrideFlags.add((flag, true));
     }
 
     for (final (String flag, bool newValue) in overrideFlags) {
@@ -163,6 +171,8 @@ extension ProfileExtensions on Profile {
   /// small function to return if this profile is the profile of an organisation - as taken
   /// from the featureFlags data - does it contain the entry 'organisation'
   bool get isOrganisation => featureFlags.contains(kFeatureFlagOrganisation);
+
+  bool get isPendingDeletion => accountFlags.contains(kFeatureFlagPendingDeletion);
 
   /// Checks the following properties, and comma seperates them if they are not empty and the visibility flag is set to true
   // String getTagline(AppLocalizations localizations) {

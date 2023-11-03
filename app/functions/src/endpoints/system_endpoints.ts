@@ -19,6 +19,7 @@ import { ProfileJSON } from "../dto/profile";
 import { RelationshipJSON } from "../dto/relationships";
 import { RelationshipService } from "../services/relationship_service";
 import { Pagination } from "../helpers/pagination";
+import { PromotionsService } from "../services/promotions_service";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -64,7 +65,7 @@ export namespace SystemEndpoints {
       cursor: request.data.cursor || "",
     } as Pagination;
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors, promotions] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -76,6 +77,7 @@ export namespace SystemEndpoints {
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({ data: [], pagination: {} }),
       LocalizationsService.getDefaultCompanySectors(locale),
+      PromotionsService.getActivePromotionWindow("", 30),
     ]);
 
     const joinRecords = [] as string[];
@@ -137,7 +139,7 @@ export namespace SystemEndpoints {
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [profile, ...supportedProfiles],
+      data: [profile, ...supportedProfiles, ...promotions],
       joins: joinRecords,
       seedData: {
         genders,

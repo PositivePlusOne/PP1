@@ -18,12 +18,15 @@ import '../../../providers/system/design_controller.dart';
 class PositiveRecommendedTopics extends ConsumerWidget {
   const PositiveRecommendedTopics({
     required this.tags,
+    required this.canSeeMore,
     required this.onTagSelected,
     required this.onSeeMoreSelected,
     super.key,
   });
 
   final List<Tag> tags;
+  final bool canSeeMore;
+
   final void Function(BuildContext context, Tag tag) onTagSelected;
   final void Function(BuildContext context) onSeeMoreSelected;
 
@@ -54,7 +57,7 @@ class PositiveRecommendedTopics extends ConsumerWidget {
               ),
             ),
           ],
-          if (isSubset) ...<Widget>[
+          if (isSubset && canSeeMore) ...<Widget>[
             PositiveTileEntryAnimation(
               direction: AxisDirection.right,
               child: PositiveViewMoreTopicsTile(

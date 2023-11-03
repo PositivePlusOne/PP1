@@ -10,13 +10,16 @@ import { RelationshipJSON } from "../dto/relationships";
 import { ActivityJSON } from "../dto/activities";
 import { RelationshipService } from "./relationship_service";
 import { RelationshipState } from "./types/relationship_state";
-import { ReactionCommentNotification } from "./builders/notifications/activities/reaction_comment_notification";
+import { ReactionInduividualCommentNotification } from "./builders/notifications/activities/reaction_induividual_comment_notification";
 import { ProfileService } from "./profile_service";
 import { ProfileJSON, ProfileStatisicsJSON } from "../dto/profile";
-import { ReactionLikeNotification } from "./builders/notifications/activities/reaction_like_notification";
 import { ProfileStatisticsService } from "./profile_statistics_service";
 import { ReactionStatisticsService } from "./reaction_statistics_service";
 import { ReactionStatisticsJSON } from "../dto/reaction_statistics";
+import { NumberHelpers } from "../helpers/number_helpers";
+import { ReactionInduividualLikedNotification } from "./builders/notifications/activities/reaction_induividual_like_notification";
+import { ReactionGroupedCommentNotification } from "./builders/notifications/activities/reaction_grouped_comment_notification";
+import { ReactionGroupedLikedNotification } from "./builders/notifications/activities/reaction_grouped_liked_notification";
 
 export namespace ReactionService {
 
@@ -106,7 +109,7 @@ export namespace ReactionService {
         }
     }
 
-    export async function processNotifications(kind: string, userId: string, activity: ActivityJSON, reaction: ReactionJSON): Promise<void> {
+    export async function processNotifications(kind: string, userId: string, activity: ActivityJSON, reaction: ReactionJSON, reactionStats: ReactionStatisticsJSON): Promise<void> {
         functions.logger.info("Processing notifications", { kind, userId, activity });
 
         const publisherId = activity?.publisherInformation?.publisherId || "";
@@ -120,21 +123,50 @@ export namespace ReactionService {
             return;
         }
 
-        // TODO, add publisher check as to not send notifications to the publisher
         if (userProfile._fl_meta_.fl_id === publisherProfile._fl_meta_.fl_id) {
             functions.logger.info("Cannot send content notifications to yourself", { userId, publisherId, userProfile, publisherProfile });
             return;
         }
 
-        switch (kind) {
-            case "comment":
-                await ReactionCommentNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
-                break;
-            case "like":
-                await ReactionLikeNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
-                break;
-            default:
-                break;
+        // Use the reaction statistics and the fibbonacci sequence to determine the notification type
+        // This is so we don't spam users with notifications for every like, but instead group them together
+        // The math is very cursed too, check it out!
+
+        let totalReactionCountOfKind = 0;
+        if (reactionStats.counts && reactionStats.counts[kind]) {
+            totalReactionCountOfKind = reactionStats.counts[kind];
+        }
+
+        const isFibbonacci = NumberHelpers.isFibbonacci(totalReactionCountOfKind);
+        if (!isFibbonacci) {
+            functions.logger.info("Reaction count is not a fibbonacci number, skipping notification", { userId, publisherId, userProfile, publisherProfile, totalReactionCountOfKind });
+            return;
+        }
+
+        // Now we need to determine if the count is 1, so we can send a different notification
+        const isOne = totalReactionCountOfKind === 1;
+        if (isOne) {
+            switch (kind) {
+                case "comment":
+                    await ReactionInduividualCommentNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
+                    break;
+                case "like":
+                    await ReactionInduividualLikedNotification.sendNotification(userProfile, publisherProfile, activity, reaction);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (kind) {
+                case "comment":
+                    await ReactionGroupedCommentNotification.sendNotification(publisherProfile, activity, reaction, reactionStats);
+                    break;
+                case "like":
+                    await ReactionGroupedLikedNotification.sendNotification(publisherProfile, activity, reaction, reactionStats);
+                    break;
+                default:
+                    break;
+            }
         }
 
         functions.logger.info("Finished processing notifications", { kind, userId, activity });

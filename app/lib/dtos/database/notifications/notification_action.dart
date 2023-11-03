@@ -12,8 +12,13 @@ class NotificationAction with _$NotificationAction {
   const factory NotificationAction.connectionRequestSent() = ConnectionRequestSent;
   const factory NotificationAction.connectionRequestReceived() = ConnectionRequestReceived;
   const factory NotificationAction.postCommented() = PostCommented;
+  const factory NotificationAction.postCommentedGrouped() = PostCommentedGrouped;
   const factory NotificationAction.postLiked() = PostLiked;
+  const factory NotificationAction.postLikedGrouped() = PostLikedGrouped;
   const factory NotificationAction.postShared() = PostShared;
+  const factory NotificationAction.postSharedGrouped() = PostSharedGrouped;
+  const factory NotificationAction.postBookmarked() = PostBookmarked;
+  const factory NotificationAction.postBookmarkedGrouped() = PostBookmarkedGrouped;
   const factory NotificationAction.relationshipUpdated() = RelationshipUpdated;
 
   static String toJson(NotificationAction type) {
@@ -25,8 +30,13 @@ class NotificationAction with _$NotificationAction {
       connectionRequestSent: () => 'connection_request_sent',
       connectionRequestReceived: () => 'connection_request_received',
       postCommented: () => 'post_commented',
+      postCommentedGrouped: () => 'post_commented_grouped',
       postLiked: () => 'post_liked',
+      postLikedGrouped: () => 'post_liked_grouped',
       postShared: () => 'post_shared',
+      postSharedGrouped: () => 'post_shared_grouped',
+      postBookmarked: () => 'post_bookmarked',
+      postBookmarkedGrouped: () => 'post_bookmarked_grouped',
       relationshipUpdated: () => 'relationship_updated',
     );
   }
@@ -47,10 +57,18 @@ class NotificationAction with _$NotificationAction {
         return const NotificationAction.connectionRequestReceived();
       case 'post_commented':
         return const NotificationAction.postCommented();
+      case 'post_commented_group':
+        return const NotificationAction.postCommentedGrouped();
       case 'post_liked':
         return const NotificationAction.postLiked();
+      case 'post_liked_group':
+        return const NotificationAction.postLikedGrouped();
       case 'post_shared':
         return const NotificationAction.postShared();
+      case 'post_shared_group':
+        return const NotificationAction.postSharedGrouped();
+      case 'post_bookmarked':
+        return const NotificationAction.postBookmarked();
       case 'relationship_updated':
         return const NotificationAction.relationshipUpdated();
       default:

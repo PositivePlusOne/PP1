@@ -4,9 +4,15 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/providers/user/user_controller.dart';
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
@@ -28,11 +34,30 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
   }
 
   Future<void> onContinueSelected() async {
+    final Logger logger = ref.read(loggerProvider);
     isDeleting = true;
 
     try {
-      final UserController userController = ref.read(userControllerProvider.notifier);
-      await userController.deleteAccount();
+      logger.i('Deleting profile');
+      final AppRouter appRouter = ref.read(appRouterProvider);
+      final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+      final Profile? profile = profileController.currentProfile;
+      final String profileId = profile?.flMeta?.id ?? '';
+      if (profileId.isEmpty || profile == null) {
+        logger.e('No profile found');
+        return;
+      }
+
+      final Set<String> accountFlags = profile.accountFlags;
+      if (accountFlags.contains(kFeatureFlagPendingDeletion)) {
+        logger.i('Profile already pending deletion');
+        return;
+      }
+
+      await profileApiService.toggleProfileDeletion(uid: profileId);
+      appRouter.popUntil((route) => route.settings.name == AccountDetailsRoute.name);
     } finally {
       isDeleting = false;
     }

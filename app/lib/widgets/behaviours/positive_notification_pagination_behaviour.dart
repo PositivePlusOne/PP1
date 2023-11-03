@@ -19,6 +19,7 @@ import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
@@ -53,7 +54,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   final Map<String, bool> busyNotifications = {};
 
-  static String getExpectedCacheKey(String uid) => 'notifications:$uid';
+  static String getExpectedCacheKey(String uid) => 'notification:$uid';
 
   @override
   void initState() {
@@ -229,6 +230,11 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
   Widget build(BuildContext context) {
     const Widget loadingIndicator = Align(alignment: Alignment.center, child: PositiveLoadingIndicator());
     final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    final String stateCacheKey = notificationsState.buildCacheKey();
+    useCacheHook(keys: [
+      stateCacheKey,
+    ]);
 
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),

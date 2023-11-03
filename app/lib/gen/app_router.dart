@@ -35,9 +35,9 @@ import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/post/post_page.dart';
 import 'package:app/widgets/organisms/post/post_share_page.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
+import 'package:app/widgets/organisms/profile/birthday_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_company_sectors_select_page.dart';
-import 'package:app/widgets/organisms/profile/profile_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
@@ -165,7 +165,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),
         AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [signedInGuard]),
         AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [signedInGuard]),
-        AutoRoute(page: ProfileDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
+        AutoRoute(page: BirthdayDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
         AutoRoute(page: ProfileCompanySectorSelectRoute.page, path: '/profile/setup/companysectors', guards: [signedInGuard]),

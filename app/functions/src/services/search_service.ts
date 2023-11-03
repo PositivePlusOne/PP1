@@ -128,7 +128,7 @@ export namespace SearchService {
     @param {string[]} filters the filters to apply to the search.
     @return {Promise<any>} a promise that resolves with the search results.
     */
-  export async function search(index: SearchIndex, query: string, page: number, limit: number, filters: string[]): Promise<any> {
+  export async function search(index: SearchIndex, query: string, page: number, limit: number, attributeFilters: string[], facetFilters: string[]): Promise<any> {
     functions.logger.info("Searching Algolia index");
 
     const attributes = ["_fl_meta_.fl_id"];
@@ -137,21 +137,24 @@ export namespace SearchService {
     //? Also filtering private data from the search results
     switch (index.indexName) {
       case "users":
-        filters.push("_tags:hasDisplayName");
+        attributeFilters.push("_tags:hasDisplayName");
+        break;
+      case "relationships":
+        attributes.push("_tags");
         break;
       default:
         break;
     }
 
-    const actualFilters = filters.join(" AND ");
+    const filters = attributeFilters.join(" AND ");
     functions.logger.info("Searching Algolia index", {
       structuredData: true,
-      filters: actualFilters,
+      filters: attributeFilters,
       attributes: attributes,
       index: index.indexName,
     });
 
-    const cacheKey = `search:${index.indexName}:${query}:${page}:${limit}:${actualFilters}`;
+    const cacheKey = `search:${index.indexName}:${query}:${page}:${limit}:${filters}:${facetFilters}`;
     const cachedResults = await CacheService.get(cacheKey);
     if (cachedResults) {
       functions.logger.info("Got cached search results", {
@@ -164,8 +167,9 @@ export namespace SearchService {
     const searchResponse = await index.search(query, {
       hitsPerPage: limit,
       page: page,
-      filters: actualFilters,
       attributesToHighlight: attributes,
+      filters: filters,
+      facetFilters: facetFilters,
       snippetEllipsisText: "…",
       minWordSizefor1Typo: 4,
     });

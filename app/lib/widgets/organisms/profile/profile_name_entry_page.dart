@@ -22,6 +22,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
@@ -29,7 +30,6 @@ import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../constants/design_constants.dart';
 import '../../../providers/system/design_controller.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
 import '../../molecules/prompts/positive_visibility_hint.dart';
 
 @RoutePage()
@@ -72,6 +72,15 @@ class ProfileNameEntryPage extends ConsumerWidget {
     final Color tintColor = getTextFieldTintColor(controller, colors);
     final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
 
+    final bool currentVisibilityFlagStatus = profile?.visibilityFlags.contains(kVisibilityFlagName) ?? false;
+    final bool newVisibilityFlagStatus = state.visibilityFlags[kVisibilityFlagName] ?? false;
+
+    final String currentName = profile?.name ?? '';
+    final String newName = state.name;
+
+    final bool isEditing = state.formMode == FormMode.edit;
+    final bool hasChanges = isEditing && currentVisibilityFlagStatus != newVisibilityFlagStatus || currentName != newName;
+
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileNameEntryRoute),
       backgroundColor: colors.colorGray1,
@@ -88,24 +97,27 @@ class ProfileNameEntryPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: controller.onNameConfirmed,
-          isDisabled: !controller.isNameValid,
-          label: localizations.shared_actions_continue,
+          isDisabled: !controller.isNameValid || (isEditing && !hasChanges),
+          label: isEditing ? localizations.shared_actions_update : localizations.shared_actions_continue,
         ),
       ],
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
             Row(
-              children: [
-                PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  isDisabled: state.formMode == FormMode.create,
-                  onTapped: () => controller.onBackSelected(ProfileNameEntryRoute),
-                  label: localizations.shared_actions_back,
-                  style: PositiveButtonStyle.text,
-                  layout: PositiveButtonLayout.textOnly,
-                  size: PositiveButtonSize.small,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: PositiveButton(
+                    colors: colors,
+                    primaryColor: colors.black,
+                    onTapped: () => controller.onBackSelected(ProfileNameEntryRoute),
+                    label: localizations.shared_actions_back,
+                    style: PositiveButtonStyle.text,
+                    layout: PositiveButtonLayout.textOnly,
+                    size: PositiveButtonSize.small,
+                  ),
                 ),
                 PositivePageIndicator(
                   color: colors.black,

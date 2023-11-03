@@ -12,6 +12,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/color_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -87,7 +88,7 @@ class AccountPage extends HookConsumerWidget {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
 
-    final Profile? currentProfile = profileController.currentProfile;
+    final Profile? currentProfile = profileState.currentProfile;
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
@@ -189,28 +190,32 @@ class AccountPage extends HookConsumerWidget {
           appBarSpacing: kPaddingMedium,
           horizontalPadding: kPaddingNone,
           children: <Widget>[
-            SizedBox(
-              height: profileController.isCurrentlyOrganisation ? 454.0 : 380.0,
-              child: PageView(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: viewModel.pageController,
-                children: <Widget>[
-                  AccountOptionsPane(
-                    colors: colors,
-                    edgePadding: kPaddingSmall,
-                    accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
-                    mixin: viewModel,
-                  ),
-                  AccountOptionsPane(
-                    colors: colors,
-                    isOrganisation: true,
-                    edgePadding: kPaddingSmall,
-                    accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
-                    mixin: viewModel,
-                  ),
-                ],
+            if (currentProfile?.isOrganisation == true) ...<Widget>[
+              AccountOptionsPane(
+                colors: colors,
+                isOrganisation: true,
+                edgePadding: kPaddingSmall,
+                accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
+                mixin: viewModel,
               ),
-            ),
+            ] else ...<Widget>[
+              AccountOptionsPane(
+                colors: colors,
+                edgePadding: kPaddingSmall,
+                accentColour: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
+                mixin: viewModel,
+              ),
+            ],
+            // SizedBox(
+            //   height: profileController.isCurrentlyOrganisation ? 454.0 : 380.0,
+            //   child: PageView(
+            //     physics: const NeverScrollableScrollPhysics(),
+            //     controller: viewModel.pageController,
+            //     children: <Widget>[
+
+            //     ],
+            //   ),
+            // ),
             //! PP1-984
             // const SizedBox(height: kPaddingMedium),
             // PremiumMembershipBanner(colors: colors, typography: typography),
