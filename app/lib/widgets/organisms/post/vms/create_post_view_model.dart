@@ -181,9 +181,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-    if (canPop && deviceInfo is IosDeviceInfo) {
-      appRouter.removeUntil((route) => true);
-      await appRouter.push(const HomeRoute());
+    if (!canPop && (deviceInfo is IosDeviceInfo)) {
+      appRouter.replaceAll([const HomeRoute()]);
       return false;
     }
 
