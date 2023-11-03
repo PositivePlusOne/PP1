@@ -2,12 +2,30 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 extension PagingExtensions on PagingController {
-  void update() {
-    value = PagingState(
-      itemList: itemList,
-      error: null,
-      nextPageKey: nextPageKey,
-    );
+  void insertItem<T>(
+    int index,
+    T item, {
+    bool Function(T a, T b)? equals,
+  }) {
+    if (itemList == null) {
+      itemList = <T>[item];
+
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      notifyListeners();
+      return;
+    }
+
+    if (equals != null) {
+      final bool exists = itemList!.any((dynamic element) => equals(element, item));
+      if (exists) {
+        return;
+      }
+    }
+
+    itemList!.insert(index, item);
+
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    notifyListeners();
   }
 
   // Append a page to the current list of items and advance the pageKey.

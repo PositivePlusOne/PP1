@@ -22,6 +22,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/dropdowns/positive_modal_dropdown.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
@@ -174,12 +175,16 @@ class ProfileFormController extends _$ProfileFormController {
   Future<bool> onBackCreate(Type type) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     logger.i('Navigating back to create page');
 
     switch (type) {
+      case ProfileNameEntryRoute:
+        await userController.signOut(shouldNavigate: false);
+        appRouter.replaceAll([const HomeRoute()]);
+        break;
       case ProfileDisplayNameEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileNameEntryRoute());
+        appRouter.replaceAll([const ProfileNameEntryRoute()]);
         break;
 
       case ProfileAboutRoute:
@@ -187,8 +192,19 @@ class ProfileFormController extends _$ProfileFormController {
         break;
 
       case ProfileBirthdayEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileDisplayNameEntryRoute());
+        appRouter.replaceAll([const ProfileDisplayNameEntryRoute()]);
+        break;
+
+      case ProfileReferenceImageWelcomeRoute:
+        appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
+        break;
+
+      case ProfilePhotoSelectionRoute:
+        appRouter.replaceAll([const ProfileReferenceImageWelcomeRoute()]);
+        break;
+
+      case ProfileBiographyEntryRoute:
+        appRouter.replaceAll([const ProfilePhotoSelectionRoute()]);
         break;
 
       case ProfileHivStatusRoute:
@@ -196,27 +212,8 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileGenderSelectRoute:
       case ProfileCompanySectorSelectRoute:
       case ProfileLocationRoute:
-        // not showing this any more so just go back to the start if here by mistake
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileNameEntryRoute());
-        break;
-
-      case ProfileReferenceImageWelcomeRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileBirthdayEntryRoute());
-        break;
-
-      case ProfilePhotoSelectionRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileReferenceImageWelcomeRoute());
-        break;
-
-      case ProfileBiographyEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfilePhotoSelectionRoute());
-        break;
       default:
-        logger.e('Unknown route type: $type');
+        appRouter.replaceAll([const HomeRoute()]);
         break;
     }
 

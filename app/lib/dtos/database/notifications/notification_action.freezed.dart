@@ -25,8 +25,13 @@ mixin _$NotificationAction {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -39,8 +44,13 @@ mixin _$NotificationAction {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -53,8 +63,13 @@ mixin _$NotificationAction {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) =>
@@ -72,8 +87,14 @@ mixin _$NotificationAction {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -89,8 +110,13 @@ mixin _$NotificationAction {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) =>
       throw _privateConstructorUsedError;
@@ -106,8 +132,13 @@ mixin _$NotificationAction {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) =>
@@ -176,8 +207,13 @@ class _$NoneImpl implements None {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return none();
@@ -193,8 +229,13 @@ class _$NoneImpl implements None {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return none?.call();
@@ -210,8 +251,13 @@ class _$NoneImpl implements None {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -235,8 +281,14 @@ class _$NoneImpl implements None {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return none(this);
@@ -255,8 +307,13 @@ class _$NoneImpl implements None {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return none?.call(this);
@@ -275,8 +332,13 @@ class _$NoneImpl implements None {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -335,8 +397,13 @@ class _$TestImpl implements Test {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return test();
@@ -352,8 +419,13 @@ class _$TestImpl implements Test {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return test?.call();
@@ -369,8 +441,13 @@ class _$TestImpl implements Test {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -394,8 +471,14 @@ class _$TestImpl implements Test {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return test(this);
@@ -414,8 +497,13 @@ class _$TestImpl implements Test {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return test?.call(this);
@@ -434,8 +522,13 @@ class _$TestImpl implements Test {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -499,8 +592,13 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestAccepted();
@@ -516,8 +614,13 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestAccepted?.call();
@@ -533,8 +636,13 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -558,8 +666,14 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestAccepted(this);
@@ -578,8 +692,13 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestAccepted?.call(this);
@@ -598,8 +717,13 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -663,8 +787,13 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestRejected();
@@ -680,8 +809,13 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestRejected?.call();
@@ -697,8 +831,13 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -722,8 +861,14 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestRejected(this);
@@ -742,8 +887,13 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestRejected?.call(this);
@@ -762,8 +912,13 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -825,8 +980,13 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestSent();
@@ -842,8 +1002,13 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestSent?.call();
@@ -859,8 +1024,13 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -884,8 +1054,14 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestSent(this);
@@ -904,8 +1080,13 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestSent?.call(this);
@@ -924,8 +1105,13 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -989,8 +1175,13 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return connectionRequestReceived();
@@ -1006,8 +1197,13 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return connectionRequestReceived?.call();
@@ -1023,8 +1219,13 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1048,8 +1249,14 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return connectionRequestReceived(this);
@@ -1068,8 +1275,13 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return connectionRequestReceived?.call(this);
@@ -1088,8 +1300,13 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1149,8 +1366,13 @@ class _$PostCommentedImpl implements PostCommented {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return postCommented();
@@ -1166,8 +1388,13 @@ class _$PostCommentedImpl implements PostCommented {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return postCommented?.call();
@@ -1183,8 +1410,13 @@ class _$PostCommentedImpl implements PostCommented {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1208,8 +1440,14 @@ class _$PostCommentedImpl implements PostCommented {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return postCommented(this);
@@ -1228,8 +1466,13 @@ class _$PostCommentedImpl implements PostCommented {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return postCommented?.call(this);
@@ -1248,8 +1491,13 @@ class _$PostCommentedImpl implements PostCommented {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1262,6 +1510,198 @@ class _$PostCommentedImpl implements PostCommented {
 
 abstract class PostCommented implements NotificationAction {
   const factory PostCommented() = _$PostCommentedImpl;
+}
+
+/// @nodoc
+abstract class _$$PostCommentedGroupedImplCopyWith<$Res> {
+  factory _$$PostCommentedGroupedImplCopyWith(_$PostCommentedGroupedImpl value,
+          $Res Function(_$PostCommentedGroupedImpl) then) =
+      __$$PostCommentedGroupedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostCommentedGroupedImplCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostCommentedGroupedImpl>
+    implements _$$PostCommentedGroupedImplCopyWith<$Res> {
+  __$$PostCommentedGroupedImplCopyWithImpl(_$PostCommentedGroupedImpl _value,
+      $Res Function(_$PostCommentedGroupedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostCommentedGroupedImpl implements PostCommentedGrouped {
+  const _$PostCommentedGroupedImpl();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postCommentedGrouped()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PostCommentedGroupedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
+    required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
+    required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postCommentedGrouped();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
+    TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
+    TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postCommentedGrouped?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
+    TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
+    TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postCommentedGrouped != null) {
+      return postCommentedGrouped();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postCommentedGrouped(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postCommentedGrouped?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postCommentedGrouped != null) {
+      return postCommentedGrouped(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostCommentedGrouped implements NotificationAction {
+  const factory PostCommentedGrouped() = _$PostCommentedGroupedImpl;
 }
 
 /// @nodoc
@@ -1309,8 +1749,13 @@ class _$PostLikedImpl implements PostLiked {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return postLiked();
@@ -1326,8 +1771,13 @@ class _$PostLikedImpl implements PostLiked {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return postLiked?.call();
@@ -1343,8 +1793,13 @@ class _$PostLikedImpl implements PostLiked {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1368,8 +1823,14 @@ class _$PostLikedImpl implements PostLiked {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return postLiked(this);
@@ -1388,8 +1849,13 @@ class _$PostLikedImpl implements PostLiked {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return postLiked?.call(this);
@@ -1408,8 +1874,13 @@ class _$PostLikedImpl implements PostLiked {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1422,6 +1893,197 @@ class _$PostLikedImpl implements PostLiked {
 
 abstract class PostLiked implements NotificationAction {
   const factory PostLiked() = _$PostLikedImpl;
+}
+
+/// @nodoc
+abstract class _$$PostLikedGroupedImplCopyWith<$Res> {
+  factory _$$PostLikedGroupedImplCopyWith(_$PostLikedGroupedImpl value,
+          $Res Function(_$PostLikedGroupedImpl) then) =
+      __$$PostLikedGroupedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostLikedGroupedImplCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostLikedGroupedImpl>
+    implements _$$PostLikedGroupedImplCopyWith<$Res> {
+  __$$PostLikedGroupedImplCopyWithImpl(_$PostLikedGroupedImpl _value,
+      $Res Function(_$PostLikedGroupedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostLikedGroupedImpl implements PostLikedGrouped {
+  const _$PostLikedGroupedImpl();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postLikedGrouped()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostLikedGroupedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
+    required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
+    required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postLikedGrouped();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
+    TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
+    TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postLikedGrouped?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
+    TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
+    TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postLikedGrouped != null) {
+      return postLikedGrouped();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postLikedGrouped(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postLikedGrouped?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postLikedGrouped != null) {
+      return postLikedGrouped(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostLikedGrouped implements NotificationAction {
+  const factory PostLikedGrouped() = _$PostLikedGroupedImpl;
 }
 
 /// @nodoc
@@ -1469,8 +2131,13 @@ class _$PostSharedImpl implements PostShared {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return postShared();
@@ -1486,8 +2153,13 @@ class _$PostSharedImpl implements PostShared {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return postShared?.call();
@@ -1503,8 +2175,13 @@ class _$PostSharedImpl implements PostShared {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1528,8 +2205,14 @@ class _$PostSharedImpl implements PostShared {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return postShared(this);
@@ -1548,8 +2231,13 @@ class _$PostSharedImpl implements PostShared {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return postShared?.call(this);
@@ -1568,8 +2256,13 @@ class _$PostSharedImpl implements PostShared {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1582,6 +2275,581 @@ class _$PostSharedImpl implements PostShared {
 
 abstract class PostShared implements NotificationAction {
   const factory PostShared() = _$PostSharedImpl;
+}
+
+/// @nodoc
+abstract class _$$PostSharedGroupedImplCopyWith<$Res> {
+  factory _$$PostSharedGroupedImplCopyWith(_$PostSharedGroupedImpl value,
+          $Res Function(_$PostSharedGroupedImpl) then) =
+      __$$PostSharedGroupedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostSharedGroupedImplCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostSharedGroupedImpl>
+    implements _$$PostSharedGroupedImplCopyWith<$Res> {
+  __$$PostSharedGroupedImplCopyWithImpl(_$PostSharedGroupedImpl _value,
+      $Res Function(_$PostSharedGroupedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostSharedGroupedImpl implements PostSharedGrouped {
+  const _$PostSharedGroupedImpl();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postSharedGrouped()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostSharedGroupedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
+    required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
+    required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postSharedGrouped();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
+    TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
+    TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postSharedGrouped?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
+    TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
+    TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postSharedGrouped != null) {
+      return postSharedGrouped();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postSharedGrouped(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postSharedGrouped?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postSharedGrouped != null) {
+      return postSharedGrouped(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostSharedGrouped implements NotificationAction {
+  const factory PostSharedGrouped() = _$PostSharedGroupedImpl;
+}
+
+/// @nodoc
+abstract class _$$PostBookmarkedImplCopyWith<$Res> {
+  factory _$$PostBookmarkedImplCopyWith(_$PostBookmarkedImpl value,
+          $Res Function(_$PostBookmarkedImpl) then) =
+      __$$PostBookmarkedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostBookmarkedImplCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostBookmarkedImpl>
+    implements _$$PostBookmarkedImplCopyWith<$Res> {
+  __$$PostBookmarkedImplCopyWithImpl(
+      _$PostBookmarkedImpl _value, $Res Function(_$PostBookmarkedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostBookmarkedImpl implements PostBookmarked {
+  const _$PostBookmarkedImpl();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postBookmarked()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$PostBookmarkedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
+    required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
+    required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postBookmarked();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
+    TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
+    TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postBookmarked?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
+    TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
+    TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postBookmarked != null) {
+      return postBookmarked();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postBookmarked(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postBookmarked?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postBookmarked != null) {
+      return postBookmarked(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostBookmarked implements NotificationAction {
+  const factory PostBookmarked() = _$PostBookmarkedImpl;
+}
+
+/// @nodoc
+abstract class _$$PostBookmarkedGroupedImplCopyWith<$Res> {
+  factory _$$PostBookmarkedGroupedImplCopyWith(
+          _$PostBookmarkedGroupedImpl value,
+          $Res Function(_$PostBookmarkedGroupedImpl) then) =
+      __$$PostBookmarkedGroupedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$PostBookmarkedGroupedImplCopyWithImpl<$Res>
+    extends _$NotificationActionCopyWithImpl<$Res, _$PostBookmarkedGroupedImpl>
+    implements _$$PostBookmarkedGroupedImplCopyWith<$Res> {
+  __$$PostBookmarkedGroupedImplCopyWithImpl(_$PostBookmarkedGroupedImpl _value,
+      $Res Function(_$PostBookmarkedGroupedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$PostBookmarkedGroupedImpl implements PostBookmarkedGrouped {
+  const _$PostBookmarkedGroupedImpl();
+
+  @override
+  String toString() {
+    return 'NotificationAction.postBookmarkedGrouped()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PostBookmarkedGroupedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() none,
+    required TResult Function() test,
+    required TResult Function() connectionRequestAccepted,
+    required TResult Function() connectionRequestRejected,
+    required TResult Function() connectionRequestSent,
+    required TResult Function() connectionRequestReceived,
+    required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
+    required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
+    required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
+    required TResult Function() relationshipUpdated,
+  }) {
+    return postBookmarkedGrouped();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? none,
+    TResult? Function()? test,
+    TResult? Function()? connectionRequestAccepted,
+    TResult? Function()? connectionRequestRejected,
+    TResult? Function()? connectionRequestSent,
+    TResult? Function()? connectionRequestReceived,
+    TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
+    TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
+    TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
+    TResult? Function()? relationshipUpdated,
+  }) {
+    return postBookmarkedGrouped?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? none,
+    TResult Function()? test,
+    TResult Function()? connectionRequestAccepted,
+    TResult Function()? connectionRequestRejected,
+    TResult Function()? connectionRequestSent,
+    TResult Function()? connectionRequestReceived,
+    TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
+    TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
+    TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
+    TResult Function()? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postBookmarkedGrouped != null) {
+      return postBookmarkedGrouped();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(None value) none,
+    required TResult Function(Test value) test,
+    required TResult Function(ConnectionRequestAccepted value)
+        connectionRequestAccepted,
+    required TResult Function(ConnectionRequestRejected value)
+        connectionRequestRejected,
+    required TResult Function(ConnectionRequestSent value)
+        connectionRequestSent,
+    required TResult Function(ConnectionRequestReceived value)
+        connectionRequestReceived,
+    required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
+    required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
+    required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
+    required TResult Function(RelationshipUpdated value) relationshipUpdated,
+  }) {
+    return postBookmarkedGrouped(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(None value)? none,
+    TResult? Function(Test value)? test,
+    TResult? Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult? Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult? Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult? Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult? Function(RelationshipUpdated value)? relationshipUpdated,
+  }) {
+    return postBookmarkedGrouped?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(None value)? none,
+    TResult Function(Test value)? test,
+    TResult Function(ConnectionRequestAccepted value)?
+        connectionRequestAccepted,
+    TResult Function(ConnectionRequestRejected value)?
+        connectionRequestRejected,
+    TResult Function(ConnectionRequestSent value)? connectionRequestSent,
+    TResult Function(ConnectionRequestReceived value)?
+        connectionRequestReceived,
+    TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
+    TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
+    TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
+    TResult Function(RelationshipUpdated value)? relationshipUpdated,
+    required TResult orElse(),
+  }) {
+    if (postBookmarkedGrouped != null) {
+      return postBookmarkedGrouped(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class PostBookmarkedGrouped implements NotificationAction {
+  const factory PostBookmarkedGrouped() = _$PostBookmarkedGroupedImpl;
 }
 
 /// @nodoc
@@ -1630,8 +2898,13 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
     required TResult Function() connectionRequestSent,
     required TResult Function() connectionRequestReceived,
     required TResult Function() postCommented,
+    required TResult Function() postCommentedGrouped,
     required TResult Function() postLiked,
+    required TResult Function() postLikedGrouped,
     required TResult Function() postShared,
+    required TResult Function() postSharedGrouped,
+    required TResult Function() postBookmarked,
+    required TResult Function() postBookmarkedGrouped,
     required TResult Function() relationshipUpdated,
   }) {
     return relationshipUpdated();
@@ -1647,8 +2920,13 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
     TResult? Function()? connectionRequestSent,
     TResult? Function()? connectionRequestReceived,
     TResult? Function()? postCommented,
+    TResult? Function()? postCommentedGrouped,
     TResult? Function()? postLiked,
+    TResult? Function()? postLikedGrouped,
     TResult? Function()? postShared,
+    TResult? Function()? postSharedGrouped,
+    TResult? Function()? postBookmarked,
+    TResult? Function()? postBookmarkedGrouped,
     TResult? Function()? relationshipUpdated,
   }) {
     return relationshipUpdated?.call();
@@ -1664,8 +2942,13 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
     TResult Function()? connectionRequestSent,
     TResult Function()? connectionRequestReceived,
     TResult Function()? postCommented,
+    TResult Function()? postCommentedGrouped,
     TResult Function()? postLiked,
+    TResult Function()? postLikedGrouped,
     TResult Function()? postShared,
+    TResult Function()? postSharedGrouped,
+    TResult Function()? postBookmarked,
+    TResult Function()? postBookmarkedGrouped,
     TResult Function()? relationshipUpdated,
     required TResult orElse(),
   }) {
@@ -1689,8 +2972,14 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
     required TResult Function(ConnectionRequestReceived value)
         connectionRequestReceived,
     required TResult Function(PostCommented value) postCommented,
+    required TResult Function(PostCommentedGrouped value) postCommentedGrouped,
     required TResult Function(PostLiked value) postLiked,
+    required TResult Function(PostLikedGrouped value) postLikedGrouped,
     required TResult Function(PostShared value) postShared,
+    required TResult Function(PostSharedGrouped value) postSharedGrouped,
+    required TResult Function(PostBookmarked value) postBookmarked,
+    required TResult Function(PostBookmarkedGrouped value)
+        postBookmarkedGrouped,
     required TResult Function(RelationshipUpdated value) relationshipUpdated,
   }) {
     return relationshipUpdated(this);
@@ -1709,8 +2998,13 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
     TResult? Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult? Function(PostCommented value)? postCommented,
+    TResult? Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult? Function(PostLiked value)? postLiked,
+    TResult? Function(PostLikedGrouped value)? postLikedGrouped,
     TResult? Function(PostShared value)? postShared,
+    TResult? Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult? Function(PostBookmarked value)? postBookmarked,
+    TResult? Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult? Function(RelationshipUpdated value)? relationshipUpdated,
   }) {
     return relationshipUpdated?.call(this);
@@ -1729,8 +3023,13 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
     TResult Function(ConnectionRequestReceived value)?
         connectionRequestReceived,
     TResult Function(PostCommented value)? postCommented,
+    TResult Function(PostCommentedGrouped value)? postCommentedGrouped,
     TResult Function(PostLiked value)? postLiked,
+    TResult Function(PostLikedGrouped value)? postLikedGrouped,
     TResult Function(PostShared value)? postShared,
+    TResult Function(PostSharedGrouped value)? postSharedGrouped,
+    TResult Function(PostBookmarked value)? postBookmarked,
+    TResult Function(PostBookmarkedGrouped value)? postBookmarkedGrouped,
     TResult Function(RelationshipUpdated value)? relationshipUpdated,
     required TResult orElse(),
   }) {

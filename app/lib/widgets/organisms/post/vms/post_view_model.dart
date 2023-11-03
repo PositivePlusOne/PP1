@@ -17,7 +17,6 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';

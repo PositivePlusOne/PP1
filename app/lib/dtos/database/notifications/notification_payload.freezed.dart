@@ -21,11 +21,13 @@ NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$NotificationPayload {
   String get id => throw _privateConstructorUsedError;
+  String get foreignKey => throw _privateConstructorUsedError;
   @JsonKey(name: 'user_id')
   String get userId => throw _privateConstructorUsedError;
   String get sender => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
+  String get bodyMarkdown => throw _privateConstructorUsedError;
   String get icon => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at', fromJson: dateFromUnknown)
   String? get createdAt => throw _privateConstructorUsedError;
@@ -56,10 +58,12 @@ abstract class $NotificationPayloadCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String foreignKey,
       @JsonKey(name: 'user_id') String userId,
       String sender,
       String title,
       String body,
+      String bodyMarkdown,
       String icon,
       @JsonKey(name: 'created_at', fromJson: dateFromUnknown) String? createdAt,
       @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
@@ -95,10 +99,12 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
   @override
   $Res call({
     Object? id = null,
+    Object? foreignKey = null,
     Object? userId = null,
     Object? sender = null,
     Object? title = null,
     Object? body = null,
+    Object? bodyMarkdown = null,
     Object? icon = null,
     Object? createdAt = freezed,
     Object? extraData = null,
@@ -110,6 +116,10 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      foreignKey: null == foreignKey
+          ? _value.foreignKey
+          : foreignKey // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -126,6 +136,10 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
       body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
+              as String,
+      bodyMarkdown: null == bodyMarkdown
+          ? _value.bodyMarkdown
+          : bodyMarkdown // ignore: cast_nullable_to_non_nullable
               as String,
       icon: null == icon
           ? _value.icon
@@ -189,10 +203,12 @@ abstract class _$$NotificationPayloadImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String foreignKey,
       @JsonKey(name: 'user_id') String userId,
       String sender,
       String title,
       String body,
+      String bodyMarkdown,
       String icon,
       @JsonKey(name: 'created_at', fromJson: dateFromUnknown) String? createdAt,
       @JsonKey(name: 'extra_data') Map<String, dynamic> extraData,
@@ -229,10 +245,12 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? foreignKey = null,
     Object? userId = null,
     Object? sender = null,
     Object? title = null,
     Object? body = null,
+    Object? bodyMarkdown = null,
     Object? icon = null,
     Object? createdAt = freezed,
     Object? extraData = null,
@@ -244,6 +262,10 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      foreignKey: null == foreignKey
+          ? _value.foreignKey
+          : foreignKey // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -260,6 +282,10 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
       body: null == body
           ? _value.body
           : body // ignore: cast_nullable_to_non_nullable
+              as String,
+      bodyMarkdown: null == bodyMarkdown
+          ? _value.bodyMarkdown
+          : bodyMarkdown // ignore: cast_nullable_to_non_nullable
               as String,
       icon: null == icon
           ? _value.icon
@@ -294,10 +320,12 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
 class _$NotificationPayloadImpl implements _NotificationPayload {
   const _$NotificationPayloadImpl(
       {this.id = '',
+      this.foreignKey = '',
       @JsonKey(name: 'user_id') this.userId = '',
       this.sender = '',
       this.title = '',
       this.body = '',
+      this.bodyMarkdown = '',
       this.icon = '',
       @JsonKey(name: 'created_at', fromJson: dateFromUnknown) this.createdAt,
       @JsonKey(name: 'extra_data')
@@ -323,6 +351,9 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   @JsonKey()
   final String id;
   @override
+  @JsonKey()
+  final String foreignKey;
+  @override
   @JsonKey(name: 'user_id')
   final String userId;
   @override
@@ -334,6 +365,9 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   @override
   @JsonKey()
   final String body;
+  @override
+  @JsonKey()
+  final String bodyMarkdown;
   @override
   @JsonKey()
   final String icon;
@@ -365,7 +399,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
 
   @override
   String toString() {
-    return 'NotificationPayload(id: $id, userId: $userId, sender: $sender, title: $title, body: $body, icon: $icon, createdAt: $createdAt, extraData: $extraData, topic: $topic, action: $action, priority: $priority)';
+    return 'NotificationPayload(id: $id, foreignKey: $foreignKey, userId: $userId, sender: $sender, title: $title, body: $body, bodyMarkdown: $bodyMarkdown, icon: $icon, createdAt: $createdAt, extraData: $extraData, topic: $topic, action: $action, priority: $priority)';
   }
 
   @override
@@ -374,10 +408,14 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
         (other.runtimeType == runtimeType &&
             other is _$NotificationPayloadImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.foreignKey, foreignKey) ||
+                other.foreignKey == foreignKey) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.sender, sender) || other.sender == sender) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.body, body) || other.body == body) &&
+            (identical(other.bodyMarkdown, bodyMarkdown) ||
+                other.bodyMarkdown == bodyMarkdown) &&
             (identical(other.icon, icon) || other.icon == icon) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -394,10 +432,12 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      foreignKey,
       userId,
       sender,
       title,
       body,
+      bodyMarkdown,
       icon,
       createdAt,
       const DeepCollectionEquality().hash(_extraData),
@@ -423,10 +463,12 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
 abstract class _NotificationPayload implements NotificationPayload {
   const factory _NotificationPayload(
       {final String id,
+      final String foreignKey,
       @JsonKey(name: 'user_id') final String userId,
       final String sender,
       final String title,
       final String body,
+      final String bodyMarkdown,
       final String icon,
       @JsonKey(name: 'created_at', fromJson: dateFromUnknown)
       final String? createdAt,
@@ -450,6 +492,8 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get id;
   @override
+  String get foreignKey;
+  @override
   @JsonKey(name: 'user_id')
   String get userId;
   @override
@@ -458,6 +502,8 @@ abstract class _NotificationPayload implements NotificationPayload {
   String get title;
   @override
   String get body;
+  @override
+  String get bodyMarkdown;
   @override
   String get icon;
   @override

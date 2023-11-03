@@ -33,6 +33,6 @@ class PositiveNotificationsState with PositivePaginationControllerState {
   }
 
   static String buildNotificationsCacheKey(String uid) {
-    return 'paging:notifications:$uid';
+    return 'notification:$uid';
   }
 }

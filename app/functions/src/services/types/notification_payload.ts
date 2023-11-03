@@ -25,10 +25,12 @@ export class NotificationPayloadResponse {
  */
 export class NotificationPayload {
     public id = '';
+    public foreign_id = '';
     public user_id = '';
     public sender = '';
     public title = '';
     public body = '';
+    public bodyMarkdown = '';
     public icon = '';
     public created_at = StreamHelpers.getCurrentTimestamp();
     public extra_data: Record<string, any> = {};
@@ -44,10 +46,12 @@ export class NotificationPayload {
     constructor(payload?: Partial<NotificationPayload>) {
         if (payload) {
             this.id = payload.id || '';
+            this.foreign_id = payload.foreign_id || '';
             this.user_id = payload.user_id || '';
             this.sender = payload.sender || '';
             this.title = payload.title || '';
             this.body = payload.body || '';
+            this.bodyMarkdown = payload.bodyMarkdown || '';
             this.icon = payload.icon || '';
             this.created_at = payload.created_at || StreamHelpers.getCurrentTimestamp();
             this.extra_data = payload.extra_data || {};

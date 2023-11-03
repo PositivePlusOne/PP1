@@ -167,10 +167,7 @@ class NotificationsPage extends HookConsumerWidget {
           ],
         ),
         if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) ...<Widget>[
-          //TODO: load additional profile notification data after loading first profile
-          PositiveNotificationsPaginationBehaviour(
-            uid: currentProfile!.flMeta!.id!,
-          ),
+          PositiveNotificationsPaginationBehaviour(uid: currentProfile?.flMeta?.id ?? ''),
           const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
           SliverToBoxAdapter(child: SizedBox(height: PositiveNavigationBar.calculateHeight(mediaQueryData))),
         ],

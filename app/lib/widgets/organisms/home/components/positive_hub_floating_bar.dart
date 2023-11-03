@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/widgets/molecules/content/positive_recommended_topics.dart';
 
 class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidget {

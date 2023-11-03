@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +22,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
@@ -112,7 +112,6 @@ class ProfileNameEntryPage extends ConsumerWidget {
                   child: PositiveButton(
                     colors: colors,
                     primaryColor: colors.black,
-                    isDisabled: state.formMode == FormMode.create,
                     onTapped: () => controller.onBackSelected(ProfileNameEntryRoute),
                     label: localizations.shared_actions_back,
                     style: PositiveButtonStyle.text,

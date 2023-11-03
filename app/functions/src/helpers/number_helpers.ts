@@ -11,4 +11,13 @@ export namespace NumberHelpers {
     }
     return parsedValue;
   }
+
+  export function isPerfectSquare(number: number): boolean {
+    const sqrt = Math.sqrt(number);
+    return sqrt % 1 === 0;
+  }
+
+  export function isFibbonacci(number: number): boolean {
+    return isPerfectSquare(5 * number * number + 4) || isPerfectSquare(5 * number * number - 4);
+  }
 }
