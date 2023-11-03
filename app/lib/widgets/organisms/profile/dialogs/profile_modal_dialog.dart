@@ -302,7 +302,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final bool isHidden = relationshipStates.contains(RelationshipState.sourceHidden);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
 
-    Widget buttonFromOptionType(ProfileModalDialogOptionType type, IconData? icon, String label, {bool highlightOption = false, bool isDisabled = false}) {
+    Widget buttonFromOptionType(ProfileModalDialogOptionType type, IconData? icon, String label, {bool highlightOption = false, bool isDisabled = false, forceIconPadding = false}) {
       if (widget.styleOverrides.containsKey(type)) {
         final ProfileModalDialogOption? styleOverride = widget.styleOverrides[type];
         if (styleOverride != null) {
@@ -328,7 +328,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         primaryColor: highlightOption ? colors.yellow : colors.black,
         label: label,
         icon: icon,
-        forceIconPadding: true,
+        forceIconPadding: forceIconPadding,
         onTapped: () => onOptionSelected(
           type: type,
           currentProfile: currentProfile,
@@ -343,7 +343,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.viewProfile:
         return buttonFromOptionType(type, UniconsLine.user_circle, localizations.shared_profile_modal_action_view_profile);
       case ProfileModalDialogOptionType.follow:
-        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_follow(targetProfileDisplayNameHandle), highlightOption: isFollowing);
+        return buttonFromOptionType(type, UniconsLine.user_plus, isFollowing ? localizations.shared_profile_modal_action_unfollow(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_follow(targetProfileDisplayNameHandle), highlightOption: isFollowing, forceIconPadding: true);
       case ProfileModalDialogOptionType.connect:
         String label = isConnected ? localizations.shared_profile_modal_action_disconnect : localizations.shared_profile_modal_action_connect;
         if (isPendingConnection) {
@@ -354,13 +354,13 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       case ProfileModalDialogOptionType.message:
         return buttonFromOptionType(type, UniconsLine.envelope, localizations.shared_profile_modal_action_message(targetProfileDisplayNameHandle));
       case ProfileModalDialogOptionType.block:
-        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_block(targetProfileDisplayNameHandle), highlightOption: isSourceBlocked);
+        return buttonFromOptionType(type, UniconsLine.ban, isSourceBlocked ? localizations.shared_profile_modal_action_unblock(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_block(targetProfileDisplayNameHandle), highlightOption: isSourceBlocked, forceIconPadding: true);
       case ProfileModalDialogOptionType.report:
-        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(targetProfileDisplayNameHandle));
+        return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report(targetProfileDisplayNameHandle), forceIconPadding: true);
       case ProfileModalDialogOptionType.reportPost:
         return buttonFromOptionType(type, UniconsLine.exclamation_circle, localizations.shared_profile_modal_action_report_post);
       case ProfileModalDialogOptionType.hidePosts:
-        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_hide_posts(targetProfileDisplayNameHandle), highlightOption: isHidden);
+        return buttonFromOptionType(type, isHidden ? UniconsLine.eye_slash : UniconsLine.eye, isHidden ? localizations.shared_profile_modal_action_unhide_posts(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_hide_posts(targetProfileDisplayNameHandle), highlightOption: isHidden, forceIconPadding: true);
       case ProfileModalDialogOptionType.mute:
         return buttonFromOptionType(type, isMuted ? UniconsLine.volume : UniconsLine.volume_mute, isMuted ? localizations.shared_profile_modal_action_unmute(targetProfileDisplayNameHandle) : localizations.shared_profile_modal_action_mute(targetProfileDisplayNameHandle), highlightOption: isMuted);
     }
