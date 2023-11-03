@@ -50,7 +50,7 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
         return;
       }
 
-      final Set<String> accountFlags = profile.visibilityFlags;
+      final Set<String> accountFlags = profile.accountFlags;
       if (accountFlags.contains(kFeatureFlagPendingDeletion)) {
         logger.i('Profile already pending deletion');
         return;
