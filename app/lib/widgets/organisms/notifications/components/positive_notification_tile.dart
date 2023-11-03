@@ -72,6 +72,15 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     setupListeners();
   }
 
+  @override
+  void didUpdateWidget(PositiveNotificationTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.notification.id != widget.notification.id) {
+      reloadPresenter();
+    }
+  }
+
   void setupListeners() {
     final EventBus eventBus = ref.read(eventBusProvider);
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
