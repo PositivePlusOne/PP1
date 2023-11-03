@@ -70,6 +70,7 @@ class ProfileBlockDialog extends HookConsumerWidget {
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
+          forceIconPadding: true,
           onTapped: () => viewModel.onBlockUserRequested(
             currentProfile: currentProfile,
             targetProfile: targetProfile,
@@ -96,6 +97,7 @@ class ProfileBlockDialog extends HookConsumerWidget {
             );
           },
           icon: UniconsLine.exclamation_octagon,
+          forceIconPadding: true,
           label: localizations.shared_profile_modal_action_block_report(targetProfile?.displayName.asHandle ?? ''),
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
