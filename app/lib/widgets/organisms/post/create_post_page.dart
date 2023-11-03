@@ -65,6 +65,26 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     }
   }
 
+  String postTypeToLocalization(PostType type, AppLocalizations localizations) {
+    switch (type) {
+      case PostType.text:
+        return localizations.page_create_post_post_type_text;
+      case PostType.image:
+        return localizations.page_create_post_post_type_image;
+      case PostType.multiImage:
+        return localizations.page_create_post_post_type_multi_image;
+      case PostType.clip:
+        return localizations.page_create_post_post_type_clip;
+      case PostType.event:
+        return localizations.page_create_post_post_type_event;
+      case PostType.repost:
+        return localizations.page_create_post_post_type_repost;
+      case PostType.error:
+        return localizations.page_create_post_post_type_errpr;
+      // default not doing so warns us if enum grows and we forget this function
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -321,7 +341,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                             PositiveLoadingIndicator(color: colours.white),
                             const SizedBox(height: kPaddingSmall),
                             Text(
-                              localisations.page_create_post_processing,
+                              // show that we are processing a clip, image, whatever
+                              localisations.page_create_post_processing(postTypeToLocalization(state.currentPostType, localisations)),
                               style: typography.styleSubtextBold.copyWith(color: colours.white),
                             ),
                           ],
@@ -342,7 +363,13 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                             if (state.isUploadingMedia) ...<Widget>[
                               const SizedBox(height: kPaddingSmall),
                               Text(
-                                state.isEditing ? localisations.page_edit_post_uploading : localisations.page_create_post_uploading,
+                                state.isEditing
+                                    ? localisations.page_edit_post_uploading(
+                                        postTypeToLocalization(state.currentPostType, localisations),
+                                      )
+                                    : localisations.page_create_post_uploading(
+                                        postTypeToLocalization(state.currentPostType, localisations),
+                                      ),
                                 style: typography.styleSubtextBold.copyWith(color: colours.white),
                               ),
                             ],
