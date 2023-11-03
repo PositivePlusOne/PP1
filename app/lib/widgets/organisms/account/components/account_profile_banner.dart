@@ -13,6 +13,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../atoms/buttons/positive_button.dart';
@@ -47,6 +48,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
 
     final ProfileControllerState profileControllerState = ref.watch(profileControllerProvider);
     final Profile? currentProfile = profileControllerState.currentProfile;
+    final bool isOrganisation = currentProfile?.isOrganisation == true;
 
     final bool isViewingOwnProfile = profile != null && profile?.flMeta?.id == currentProfile?.flMeta?.id;
 
@@ -104,7 +106,7 @@ class AccountProfileBanner extends ConsumerWidget implements PreferredSizeWidget
             onTapped: () => viewModel.onViewProfileButtonSelected(profile),
             tooltip: localizations.page_account_actions_view_profile,
           ),
-          if (isViewingOwnProfile) ...<Widget>[
+          if (isViewingOwnProfile && !isOrganisation) ...<Widget>[
             const SizedBox(width: kPaddingSmall),
             PositiveButton.appBarIcon(
               colors: colors,

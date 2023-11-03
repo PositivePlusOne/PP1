@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -33,6 +34,7 @@ import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -221,16 +223,40 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return const SizedBox(height: kPaddingLarge);
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(index);
+
+    final PromotedActivity? promotedActivityRecord = promotion?.activities.firstWhereOrNull((element) => element.activityId.isNotEmpty);
+    final String promotedActivityId = promotedActivityRecord?.activityId ?? '';
+    final Activity? promotedActivity = cacheController.get(promotedActivityId);
+
+    if (promotedActivity == null || promotion == null) {
+      return const SizedBox(height: kPaddingLarge);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: kPaddingLarge / 2),
+      child: buildItem(
+        context: context,
+        item: promotedActivity,
+        index: index,
+        promotion: promotion,
+      ),
+    );
   }
 
-  Widget buildItem(BuildContext context, Activity item, int index) {
+  Widget buildItem({
+    required BuildContext context,
+    required Activity item,
+    required int index,
+    Promotion? promotion,
+  }) {
     final String activityId = item.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
 
-    if (activityId.isEmpty || currentProfileId.isEmpty || publisherId.isEmpty) {
+    if (activityId.isEmpty || publisherId.isEmpty) {
       return const SizedBox.shrink();
     }
 
@@ -250,6 +276,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         index: index,
         relationshipId: relationshipId,
         reposterRelationshipId: reposterRelationshipId,
+        promotion: promotion,
       ),
     );
   }
@@ -262,6 +289,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required int index,
     required String relationshipId,
     required String reposterRelationshipId,
+    Promotion? promotion,
   }) {
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -270,7 +298,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Activity? activity = cacheController.get(activityId);
     final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId ?? '');
     final Profile? currentProfile = cacheController.get(currentProfileId);
-    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey ?? '');
+    // final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey ?? '');
 
     final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
     final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
@@ -359,7 +387,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         noItemsFoundIndicatorBuilder: (context) => noPostsWidget,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
+        itemBuilder: (_, item, index) => buildItem(context: context, item: item, index: index),
       ),
     );
   }
@@ -380,7 +408,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (_, item, index) => buildItem(context, item, index),
+        itemBuilder: (_, item, index) => buildItem(context: context, item: item, index: index),
       ),
     );
   }
@@ -407,6 +435,18 @@ class SliverNoPostsPlaceholder extends StatelessWidget {
     return SliverStack(
       positionedAlignment: Alignment.bottomCenter,
       children: <Widget>[
+        SliverFillRemaining(
+          fillOverscroll: false,
+          hasScrollBody: false,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: decorationBoxSize,
+              width: decorationBoxSize,
+              child: Stack(children: buildType2ScaffoldDecorations(colors)),
+            ),
+          ),
+        ),
         SliverPositioned(
           left: 0.0,
           right: 0.0,
@@ -422,18 +462,6 @@ class SliverNoPostsPlaceholder extends StatelessWidget {
                     style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
                   ),
                 ),
-          ),
-        ),
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType2ScaffoldDecorations(colors)),
-            ),
           ),
         ),
       ],

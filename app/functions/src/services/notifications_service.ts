@@ -7,6 +7,7 @@ import { adminApp } from "..";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
+import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace NotificationsService {
   export function prepareNewNotification(notification: NotificationPayload): NotificationPayload {
@@ -15,10 +16,22 @@ export namespace NotificationsService {
       functions.logger.info(`Setting id for notification to: ${notification.id}`);
     }
 
+    if (!notification.foreign_id || notification.foreign_id.length === 0) {
+      notification.foreign_id = FlamelinkHelpers.generateIdentifier();
+      functions.logger.info(`Setting foreign_id for notification to: ${notification.foreign_id}`);
+    }
+
     // if created_at is not set, set it to now
     if (!notification.created_at) {
       notification.created_at = StreamHelpers.getCurrentTimestamp();
       functions.logger.info(`Setting created_at to now for notification: ${notification.id} to ${notification.created_at}`);
+    }
+
+    // Copy body to bodyMarkdown if bodyMarkdown is not set
+    // Then format the bodyMarkdown to remove markdown
+    if (!notification.bodyMarkdown || notification.bodyMarkdown.length === 0) {
+      notification.bodyMarkdown = notification.body;
+      notification.body = StringHelpers.markdownToPlainText(notification.body);
     }
 
     return notification;
@@ -65,6 +78,30 @@ export namespace NotificationsService {
 
     const client = FeedService.getFeedsClient();
     const feed = client.feed("notification", uid);
+
+    const foreignIdTime = {
+      foreignID: notification.id,
+      time: creationTime,
+    };
+    
+    const activities = await client.getActivities({
+      foreignIDTimes: [foreignIdTime],
+    });
+    
+    if (activities.results && activities.results.length > 0) {
+      functions.logger.info(`Notification already exists for user: ${uid}. Deleting`, { activities });
+      for (const activity of activities.results) {
+        const activityId = activity.id;
+        const isValidUUID = FlamelinkHelpers.isValidUUIDv1(activityId);
+        if (!activityId || !isValidUUID) {
+          continue;
+        }
+
+        functions.logger.info(`Deleting notification for user: ${uid}`, { activity });
+        await feed.removeActivity(activity.id);
+      }
+    }
+
     await feed.addActivity({
       verb: "post",
       actor: uid,

@@ -43,8 +43,9 @@ class PositiveScaffold extends ConsumerWidget {
     this.appBarColor,
     this.bottomNavigationBar,
     this.decorations = const <PositiveScaffoldDecoration>[],
-    this.backgroundColor,
     this.decorationColor,
+    this.forceDecorationMaxSize = false,
+    this.backgroundColor,
     this.resizeToAvoidBottomInset = true,
     this.extendBody = true,
     this.onWillPopScope,
@@ -88,6 +89,8 @@ class PositiveScaffold extends ConsumerWidget {
 
   final ScrollPhysics physics;
 
+  final bool forceDecorationMaxSize;
+
   static Future<void> dismissKeyboardIfPresent(BuildContext context) async {
     final FocusScopeNode currentFocus = FocusScope.of(context);
     if (!currentFocus.hasPrimaryFocus) {
@@ -107,7 +110,11 @@ class PositiveScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(400.0, screenSize.width);
+
+    double decorationBoxSize = min(400.0, screenSize.width);
+    if (forceDecorationMaxSize) {
+      decorationBoxSize = screenSize.width;
+    }
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 

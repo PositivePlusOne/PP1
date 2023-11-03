@@ -12,7 +12,7 @@ import { StringHelpers } from '../../helpers/string_helpers';
 import { Reaction, reactionSchemaKey } from '../../dto/reactions';
 import { ReactionStatisticsService } from '../../services/reaction_statistics_service';
 import { ReactionService } from '../../services/reaction_service';
-import { Promotion, promotionsSchemaKey } from '../../dto/promotions';
+import { Promotion, PromotionJSON, promotionsSchemaKey } from '../../dto/promotions';
 import { ProfileStatisticsService } from '../../services/profile_statistics_service';
 import { ReactionStatistics, reactionStatisticsSchemaKey } from '../../dto/reaction_statistics';
 import { feedStatisticsSchemaKey } from '../../dto/feed_statistics';
@@ -161,6 +161,25 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     joinedDataRecords.get(promotionsSchemaKey)?.add(activity.enrichmentConfiguration?.promotionKey);
                 }
                 break;
+            case relationshipSchemaKey:
+                const relationship = obj as RelationshipJSON;
+                const members = relationship.members || [];
+
+                for (const member of members) {
+                    const memberId = member.memberId || "";
+                    const isCurrentMember = sender && sender === memberId;
+                    const hasId = obj._fl_meta_?.fl_id;
+
+                    if (sender && hasId && !isCurrentMember) {
+                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, obj._fl_meta_!.fl_id!]);
+                        joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
+                    }
+
+                    if (sender && memberId && !isCurrentMember) {
+                        joinedDataRecords.get(profileSchemaKey)?.add(memberId);
+                    }
+                }
+                break;
             case profileSchemaKey:
                 const isCurrentProfile = sender && sender === obj._fl_meta_?.fl_id;
                 const hasId = obj._fl_meta_?.fl_id;
@@ -202,6 +221,22 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, userId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     joinedDataRecords.get(profileSchemaKey)?.add(userId);
+                }
+                break;
+            case promotionsSchemaKey:
+                const promotion = obj as PromotionJSON;
+                for (const activity of promotion.activities ?? []) {
+                    const activityId = activity.activityId || "";
+                    if (activityId) {
+                        joinedDataRecords.get(activitySchemaKey)?.add(activityId);
+                    }
+                }
+
+                for (const owner of promotion.owners ?? []) {
+                    const ownerId = owner.profileId || "";
+                    if (ownerId) {
+                        joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
+                    }
                 }
                 break;
             default:

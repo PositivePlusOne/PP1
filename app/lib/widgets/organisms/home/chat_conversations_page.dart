@@ -3,23 +3,35 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/hooks/channel_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/content/promotions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
+import 'package:app/widgets/organisms/chat/components/positive_promoted_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 import 'package:app/widgets/organisms/home/components/loading_chat_placeholder.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -104,7 +116,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverList.separated(
-              separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
+              separatorBuilder: buildSeparator,
               itemCount: searchedChannels.length,
               itemBuilder: (context, index) {
                 final Channel channel = searchedChannels[index];
@@ -126,5 +138,62 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
         ],
       ],
     );
+  }
+
+  Widget? buildSeparator(BuildContext context, int index) {
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(index);
+    if (promotion == null) {
+      return const SizedBox(height: kPaddingSmall);
+    }
+
+    final PromotedActivity? promotedActivity = promotion.activities.firstWhereOrNull((element) => element.activityId.isNotEmpty);
+    final String activityId = promotedActivity?.activityId ?? '';
+
+    final PromotionOwner? promotionOwner = promotion.owners.firstWhereOrNull((element) => element.profileId.isNotEmpty);
+    final String profileId = promotionOwner?.profileId ?? '';
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final Profile? promotionProfile = cacheController.get(profileId);
+    final Activity? promotionActivity = cacheController.get(activityId);
+
+    if (promotionProfile == null) {
+      return const SizedBox(height: kPaddingSmall);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: kPaddingSmall / 2),
+      child: PositivePromotedChannelListTile(
+        owner: promotionProfile,
+        promotion: promotion,
+        promotedActivity: promotionActivity,
+        onTap: (_) => onPromotionTapped(context, promotion, promotionActivity),
+      ),
+    );
+  }
+
+  Future<void> onPromotionTapped(BuildContext context, Promotion promotion, Activity? activity) async {
+    final logger = providerContainer.read(loggerProvider);
+    final String linkUrl = promotion.link;
+    if (linkUrl.isNotEmpty) {
+      logger.d('Opening link: $linkUrl');
+      await linkUrl.attemptToLaunchURL();
+      return;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Profile? currentProfile = profileController.currentProfile;
+
+    if (activity != null) {
+      logger.d('Opening activity: ${activity.flMeta?.id}');
+      await activity.requestPostRoute(
+        context: context,
+        currentProfile: currentProfile,
+        promotionId: promotion.flMeta?.id ?? '',
+      );
+      return;
+    }
+
+    logger.e('Unable to open promotion: $promotion');
   }
 }

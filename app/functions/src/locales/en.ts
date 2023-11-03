@@ -84,15 +84,40 @@ export const enTranslations = {
       body: "**@{{displayName}}** commented on **{{shortBody}}.**",
       body_empty: "**@{{displayName}}** commented on your post.",
     },
+    post_comment_grouped: {
+      title: "New comment",
+      body: "**{{shortBody}}** commented on **{{count}}** times.",
+      body_empty: "Post commented **{{count}}** times.",
+    },
     post_liked: {
       title: "New like",
       body: "**@{{displayName}}** liked **{{shortBody}}.**",
       body_empty: "**@{{displayName}}** liked your post.",
     },
+    post_liked_grouped: {
+      title: "New like",
+      body: "**{{shortBody}}** liked **{{count}}** times.",
+      body_empty: "Post liked **{{count}}** times.",
+    },
     post_shared: {
       title: "New share",
       body: "**@{{displayName}}** shared **{{shortBody}}.**",
       body_empty: "**@{{displayName}}** shared your post.",
+    },
+    post_shared_grouped: {
+      title: "New share",
+      body: "**{{shortBody}}** shared **{{count}}** times.",
+      body_empty: "Post shared **{{count}}** times.",
+    },
+    post_bookmarked: {
+      title: "New bookmark",
+      body: "**@{{displayName}}** bookmarked **{{shortBody}}.**",
+      body_empty: "**@{{displayName}}** bookmarked your post.",
+    },
+    post_bookmarked_grouped: {
+      title: "New bookmark",
+      body: "**{{shortBody}}** bookmarked **{{count}}** times.",
+      body_empty: "Post bookmarked **{{count}}** times.",
     },
   },
 };

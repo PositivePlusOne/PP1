@@ -42,10 +42,12 @@ class PostPage extends HookConsumerWidget {
   const PostPage({
     required this.activityId,
     required this.feed,
+    this.promotionId = '',
     super.key,
   });
 
   final String activityId;
+  final String promotionId;
   final TargetFeed feed;
 
   @override
@@ -69,7 +71,7 @@ class PostPage extends HookConsumerWidget {
     PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
     reactionsState ??= PositiveReactionsState.createNewFeedState(activityId, currentProfileId);
 
-    final Promotion? promotion = cacheController.get(activity?.enrichmentConfiguration?.promotionKey);
+    final Promotion? promotion = cacheController.get(promotionId);
 
     final Profile? targetProfile = cacheController.get(activity?.publisherInformation?.publisherId);
     final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId);

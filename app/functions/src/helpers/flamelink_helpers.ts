@@ -1,10 +1,18 @@
 import * as functions from "firebase-functions";
 import { isEqual } from "lodash";
-import { v1 as uuidv1 } from "uuid";
+import { v1 as uuidv1, validate as uuidv1Validate } from "uuid";
 
 export namespace FlamelinkHelpers {
   export function generateIdentifier(): string {
     return uuidv1();
+  }
+
+  export function isValidUUIDv1(uuid: string): boolean {
+    return uuidv1Validate(uuid);
+  }
+
+  export function generateIdentifierFromStrings(strings: string[]): string {
+    return strings.join(":");
   }
   
   /**

@@ -13,7 +13,7 @@ export namespace SearchIndexHandler {
   export function register(): void {
     functions.logger.info("Registering search index handler");
 
-    DataHandlerRegistry.registerChangeHandler(DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete, ["activities", "users", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"], "*", execute);
+    DataHandlerRegistry.registerChangeHandler(DataChangeType.Create | DataChangeType.Update | DataChangeType.Delete, ["activities", "users", "relationships", "tags", "venues", "guidanceArticles", "guidanceCategories", "guidanceDirectoryEntries"], "*", execute);
   }
 
   /**

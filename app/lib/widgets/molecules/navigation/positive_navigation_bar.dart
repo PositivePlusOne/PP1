@@ -148,12 +148,6 @@ class PositiveNavigationBarContent extends ConsumerWidget {
       return;
     }
 
-    // Check if that route is in our history, if so pop to it
-    if (router.stack.any((route) => route.name == routeInfo.routeName)) {
-      router.popUntil((route) => route.data?.name == routeInfo.routeName);
-      return;
-    }
-
     // Check if we require a logged in user
     final bool isSignedIn = userController.currentUser != null;
     final bool requiresSignIn = switch (routeInfo.routeName) {
@@ -162,6 +156,12 @@ class PositiveNavigationBarContent extends ConsumerWidget {
       SearchRoute.name => true,
       _ => false,
     };
+
+    // Check if that route is in our history, if so pop to it
+    if (router.stack.any((route) => route.name == routeInfo.routeName)) {
+      router.popUntil((route) => route.data?.name == routeInfo.routeName);
+      return;
+    }
 
     // If we require a logged in user and we are not logged in...
     // Then push the login reminder page

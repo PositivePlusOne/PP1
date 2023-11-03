@@ -239,7 +239,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         unknown: () {},
         userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
         postReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post Reported"))),
-        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
+        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Submitted"))),
       );
     } catch (ex) {
       logger.e('Failed to send feedback. $ex');
@@ -352,7 +352,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         unknown: () {},
         userReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("User Reported"))),
         postReport: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Post Reported"))),
-        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Sent"))),
+        genericFeedback: () => ScaffoldMessenger.of(context).showSnackBar(PositiveSnackBar(content: const Text("Feedback Submitted"))),
       );
     } catch (ex) {
       logger.e('Failed to send feedback. $ex');

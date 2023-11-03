@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -394,6 +395,24 @@ class NotificationsController extends _$NotificationsController {
     }
 
     await handler.onNotificationDisplayed(payload, isForeground);
+    await attemptToStoreNotificationPayloadInFeed(payload, isForeground);
+  }
+
+  Future<void> attemptToStoreNotificationPayloadInFeed(NotificationPayload payload, bool isForeground) async {
+    if (!isForeground) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final PositiveNotificationsState notificationsState = getOrCreateNotificationCacheState(payload.userId);
+
+    logger.d('attemptToStoreNotificationPayloadInFeed: $payload, $isForeground');
+    notificationsState.pagingController.insertItem(0, payload, equals: (a, b) => a.id == b.id);
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final String cacheKey = notificationsState.buildCacheKey();
+
+    cacheController.add(key: cacheKey, value: notificationsState);
   }
 
   Future<bool> isSubscribedToTopic(String sharedPreferencesKey) async {

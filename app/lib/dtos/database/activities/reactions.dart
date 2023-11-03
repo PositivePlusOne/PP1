@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/notifications/notification_payload.dart';
 
 part 'reactions.freezed.dart';
 part 'reactions.g.dart';
@@ -113,6 +114,8 @@ class TargetFeed with _$TargetFeed {
   /// tags:promoted
   /// tags:promoted-{userId}
   static TargetFeed fromPromoted({String? userId}) => TargetFeed(targetSlug: 'tags', targetUserId: TagHelpers.createPromotedTag(userId: userId));
+
+  static TargetFeed fromNotificationPayload(NotificationPayload payload) => TargetFeed(targetSlug: 'notification', targetUserId: payload.userId);
 
   static TargetFeed fromOrigin(String origin) {
     final List<String> parts = origin.split(':');

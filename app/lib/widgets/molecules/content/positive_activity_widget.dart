@@ -197,7 +197,6 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isShared: widget.isShared,
               publisher: widget.targetProfile,
-              promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
@@ -264,6 +263,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             onTap: (_) => widget.activity?.requestPostRoute(
               context: context,
               currentProfile: widget.currentProfile,
+              promotionId: widget.activityPromotion?.flMeta?.id ?? '',
             ),
             child: ActivityPostHeadingWidget(
               flMetaData: widget.activity?.flMeta,
@@ -295,6 +295,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               onComment: (context) => widget.activity?.requestPostRoute(
                 context: context,
                 currentProfile: widget.currentProfile,
+                promotionId: widget.activityPromotion?.flMeta?.id ?? '',
               ),
               totalLikes: totalLikes,
               likesEnabled: !isLiking,
@@ -303,7 +304,11 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               onBookmark: (context) => _onInternalBookmarkRequested(context: context),
               bookmarkEnabled: !isBookmarking,
               isBusy: !widget.isEnabled,
-              onPostPageRequested: (context) => widget.activity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
+              onPostPageRequested: (context) => widget.activity?.requestPostRoute(
+                context: context,
+                currentProfile: widget.currentProfile,
+                promotionId: widget.activityPromotion?.flMeta?.id ?? '',
+              ),
               isShared: widget.isShared,
               onShare: (context) => widget.isShared ? widget.reposterActivity?.share(context, widget.currentProfile) : widget.activity?.share(context, widget.currentProfile),
               onImageTap: (media) => widget.isFullscreen
@@ -311,6 +316,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
                   : widget.activity?.requestPostRoute(
                       context: context,
                       currentProfile: widget.currentProfile,
+                      promotionId: widget.activityPromotion?.flMeta?.id ?? '',
                     ),
             ),
           ] else ...<Widget>[
