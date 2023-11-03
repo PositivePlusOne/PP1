@@ -124,21 +124,19 @@ extension ProfileExtensions on Profile {
       kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? true,
       kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? true,
     };
-
-    final List<(String flag, bool newValue)> overrideFlags = [];
+    // this list is now full of the defauts, but the profile has a list of values that are true - so set these now
     for (final String flag in visibilityFlags) {
-      final bool? newValue = bool.tryParse(flag);
-      if (newValue == null) {
-        continue;
+      // if the flag is in the list to show, it should be true
+      newVisibilityFlags[flag] = true;
+    }
+    // but, if one is missing from the profile, we need to set it to be false
+    for (final key in newVisibilityFlags.keys) {
+      if (!visibilityFlags.contains(key)) {
+        // this visibility flag is not in our list we are showing, so this should be false
+        newVisibilityFlags[key] = false;
       }
-
-      overrideFlags.add((flag, newValue));
     }
-
-    for (final (String flag, bool newValue) in overrideFlags) {
-      newVisibilityFlags[flag] = newValue;
-    }
-
+    // which is now the list of flags to show
     return newVisibilityFlags;
   }
 
