@@ -106,12 +106,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const BiometricsPreferencesPage(),
       );
     },
-    BirthdayDeleteAccountRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const BirthdayDeleteAccountPage(),
-      );
-    },
     ChatConversationsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -787,20 +781,6 @@ class BiometricsPreferencesRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'BiometricsPreferencesRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [BirthdayDeleteAccountPage]
-class BirthdayDeleteAccountRoute extends PageRouteInfo<void> {
-  const BirthdayDeleteAccountRoute({List<PageRouteInfo>? children})
-      : super(
-          BirthdayDeleteAccountRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'BirthdayDeleteAccountRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
