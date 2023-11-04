@@ -1,9 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/resources/resources.dart';
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -17,11 +12,16 @@ import 'package:unicons/unicons.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart' as pp1_media;
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/resources/resources.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveVideoPlayer extends StatefulHookConsumerWidget {
   const PositiveVideoPlayer({
