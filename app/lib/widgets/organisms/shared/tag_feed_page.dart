@@ -1,11 +1,9 @@
 // Flutter imports:
-import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
@@ -42,29 +40,6 @@ class TagFeedPage extends StatefulHookConsumerWidget {
 }
 
 class _TagFeedPageState extends ConsumerState<TagFeedPage> {
-  Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    logger.d('onRefresh()');
-    cacheController.remove(cacheKey);
-    feedState.pagingController.refresh();
-
-    // Wait until the first page is loaded
-    int counter = 0;
-    while (feedState.pagingController.itemList == null && counter < 10) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      counter++;
-
-      // Check for an error
-      if (feedState.pagingController.error != null) {
-        throw feedState.pagingController.error!;
-      }
-    }
-
-    cacheController.add(key: cacheKey, value: feedState);
-  }
-
   @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -96,7 +71,7 @@ class _TagFeedPageState extends ConsumerState<TagFeedPage> {
 
     return PositiveScaffold(
       onWillPopScope: onWillPopScope,
-      onRefresh: () => onRefresh(feedState, feedStateKey),
+      onRefresh: () => feedState.requestRefresh(feedStateKey),
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,

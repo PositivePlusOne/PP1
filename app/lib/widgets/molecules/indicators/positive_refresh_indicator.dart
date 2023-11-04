@@ -1,10 +1,14 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+
+// Package imports:
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 
 /// This allows a value of type T or T?
 /// to be treated as a value of type T?.
@@ -176,10 +180,10 @@ class _WarpIndicatorState extends State<WarpIndicator> with SingleTickerProvider
                       child: Transform.translate(
                         offset: _offsetTween.transform(shakeController.value),
                         child: ClipRRect(
-                          child: child,
                           borderRadius: BorderRadius.circular(
                             _radiusTween.transform(controller.value),
                           ),
+                          child: child,
                         ),
                       ),
                     );

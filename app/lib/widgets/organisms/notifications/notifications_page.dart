@@ -51,9 +51,10 @@ class NotificationsPage extends HookConsumerWidget {
     final List<String> cacheKeys = [];
     bool hasNotifications = false;
 
+    String notificationCacheKey = '';
     if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) {
       actions.addAll(currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
-      final String notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
+      notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
       final PositiveNotificationsState? cachedFeedState = cacheController.get(notificationCacheKey);
       hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
       cacheKeys.add(notificationCacheKey);
@@ -75,6 +76,7 @@ class NotificationsPage extends HookConsumerWidget {
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      onRefresh: () => PositiveNotificationsState.requestRefresh(notificationCacheKey),
       visibleComponents: {
         PositiveScaffoldComponent.headingWidgets,
         if (!hasNotifications) PositiveScaffoldComponent.decorationWidget,
