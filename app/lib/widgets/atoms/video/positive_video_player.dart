@@ -2,11 +2,13 @@
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/resources/resources.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:media_kit/media_kit.dart';
@@ -166,28 +168,47 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
             maxWidth: screenWidth,
             maxHeight: screenHeight * 0.7,
           ),
-          child: AnimatedSwitcher(
-            duration: kAnimationDurationRegular,
-            child: videoController != null
-                ? Video(
-                    filterQuality: FilterQuality.none,
-                    alignment: Alignment.center,
-                    controller: videoController!,
-                    pauseUponEnteringBackgroundMode: true,
-                    aspectRatio: videoAspectRatio,
-                    wakelock: true,
-                  )
-                : PositiveTapBehaviour(
-                    isEnabled: !isLoadingVideoPlayer,
-                    onTap: (_) async => handleTrackRequest(),
-                    child: Center(
-                      child: Icon(
-                        UniconsLine.play,
-                        color: colors.white,
-                        size: kIconMedium,
-                      ),
-                    ),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                bottom: kPaddingInformationBreak * -1,
+                right: kPaddingInformationBreak * -1,
+                child: Opacity(
+                  opacity: kOpacityFaint,
+                  child: SvgPicture.asset(
+                    SvgImages.logosCircular,
+                    color: colors.colorGray8,
+                    height: screenHeight * 0.5,
+                    width: screenHeight * 0.5,
                   ),
+                ),
+              ),
+              Positioned.fill(
+                child: AnimatedSwitcher(
+                  duration: kAnimationDurationRegular,
+                  child: videoController != null
+                      ? Video(
+                          filterQuality: FilterQuality.none,
+                          alignment: Alignment.center,
+                          controller: videoController!,
+                          pauseUponEnteringBackgroundMode: true,
+                          aspectRatio: videoAspectRatio,
+                          wakelock: true,
+                        )
+                      : PositiveTapBehaviour(
+                          isEnabled: !isLoadingVideoPlayer,
+                          onTap: (_) async => handleTrackRequest(),
+                          child: Center(
+                            child: Icon(
+                              UniconsLine.play,
+                              color: colors.white,
+                              size: kIconMedium,
+                            ),
+                          ),
+                        ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
