@@ -111,18 +111,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppRouter router = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
-    final BuildContext context = router.navigatorKey.currentContext!;
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     bool canPop = false;
+    if (state.isRecordingClip) {
+      canPop = await getCurrentCameraState.onCloseButtonTapped();
+    }
 
-    canPop = !await positiveDiscardClipDialogue(
-      context: context,
-      colors: colors,
-      typography: typography,
-    );
-
-    if (!canPop) {
+    if (canPop) {
       logger.i("Pop Search page, push Home page");
       router.removeWhere((route) => true);
       router.push(const HomeRoute());
@@ -132,6 +126,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<bool> onWillPopScope() async {
+    if (state.currentCreatePostPage == CreatePostCurrentPage.entry) {
+      return true;
+    }
+
     bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
 
     //? if we are currently creating a clip request that we stop
