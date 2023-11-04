@@ -88,9 +88,13 @@ class LoginViewModel extends _$LoginViewModel {
   Future<bool> onBackSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    appRouter.removeWhere((route) => true);
-    unawaited(appRouter.push(const HomeRoute()));
+    final bool isHomeRoute = appRouter.stack.any((element) => element.name == HomeRoute.name);
+    if (isHomeRoute) {
+      appRouter.removeLast();
+      return true;
+    }
 
+    await appRouter.replaceAll([const HomeRoute()]);
     return false;
   }
 

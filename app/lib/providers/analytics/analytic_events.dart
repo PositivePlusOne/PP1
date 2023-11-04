@@ -82,7 +82,11 @@ enum AnalyticEvents {
   securityMissingSecureEnclaveDetected,
   securityJailbreakDetected,
   securityDeviceIdDetected,
-  securityDeviceChangeDetected;
+  securityDeviceChangeDetected,
+
+  // Custom conversion events
+  conversionRegisterFromInterestRegistration,
+  conversionRegisterFromPostComments;
 
   // Takes the camel case name of the enum and converts it to a string with spaces and capital letters
   String get friendlyName {
