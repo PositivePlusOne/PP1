@@ -56,12 +56,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     WidgetsBinding.instance.addPostFrameCallback(onFirstRender);
   }
 
-  void onFirstRender(Duration timeStamp) {
+  Future<void> onFirstRender(Duration timeStamp) async {
     ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
     if (widget.isEditPage || widget.activityData != null) {
-      ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
+      await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
-      ref.read(createPostViewModelProvider.notifier).initCamera();
+      await ref.read(createPostViewModelProvider.notifier).initCamera();
     }
   }
 
@@ -170,17 +170,16 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
                       topAdditionalActions: [
                         Row(
-                          children: [
+                          children: <Widget>[
                             //? top right set of icons found on the clips page, move this later to a builder?
                             const Spacer(),
-                            if (state.isDelayTimerEnabled)
+                            if (state.isDelayTimerEnabled) ...<Widget>[
                               Text(
                                 localisations.page_create_post_ui_timer,
                                 style: typography.styleButtonRegular.copyWith(color: colours.white),
                               ),
-                            const SizedBox(
-                              width: kPaddingSmall,
-                            ),
+                              const SizedBox(width: kPaddingSmall),
+                            ],
                             SizedBox(
                               height: kIconLarge + kPaddingExtraSmall,
                               width: kIconLarge + kPaddingVerySmall,
