@@ -49,6 +49,7 @@ class ChatViewModelState with _$ChatViewModelState {
     Channel? currentChannel,
     ChannelExtraData? currentChannelExtraData,
     @Default(<String>[]) List<String> selectedMembers,
+    @Default(false) bool isBusy,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -356,12 +357,27 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     );
   }
 
+  FutureOr<void> onCreateConversationSelected(BuildContext context) async {
+    final bool isInCurrentConversation = state.currentChannel != null;
+    if (isInCurrentConversation) {
+      await onCurrentChannelMembersConfirmed(context);
+      return;
+    }
+
+    await onCreateNewConversationSelected(context);
+  }
+
   FutureOr<void> onCurrentChannelMembersConfirmed(BuildContext context) async {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     if (state.currentChannel == null) {
-      await getStreamController.createConversation(state.selectedMembers);
+      try {
+        state = state.copyWith(isBusy: true);
+        await getStreamController.createConversation(state.selectedMembers);
+      } finally {
+        state = state.copyWith(isBusy: false);
+      }
       return;
     }
 
