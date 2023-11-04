@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -85,10 +86,16 @@ class HomePage extends HookConsumerWidget {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetFeed]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
+    final ScrollController controller = useScrollController();
+
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
-      onRefresh: () => viewModel.onRefresh(!isLoggedOut ? feedState : everyoneFeedState),
+      onRefresh: () => viewModel.onRefresh(
+        !isLoggedOut ? feedState : everyoneFeedState,
+        !isLoggedOut ? expectedFeedStateKey : everyoneFeedStateKey,
+      ),
       appBarColor: colors.pink,
+      controller: controller,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -97,6 +104,7 @@ class HomePage extends HookConsumerWidget {
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
         index: NavigationBarIndex.hub,
+        scrollController: controller,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
