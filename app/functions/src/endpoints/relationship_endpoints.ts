@@ -263,12 +263,12 @@ export namespace RelationshipEndpoints {
       });
     }
     
-    const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
+    // const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
     const newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
 
-    if (canReject) {
-      await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
-    }
+    // if (canReject) {
+    //   await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
+    // }
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
