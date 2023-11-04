@@ -17,15 +17,17 @@ export namespace ProfileEndpoints {
    * helper function to determine if a profile is completed now
    * @param profileUid is the UID of the profile we are checking
    * @param profile is the profile to check
+   * @return a boolean to signal if the profile is complete enough to be sending emails
    */
   export function isProfileComplete(profileUid: string, profile: any): boolean {
-    if (!profile || !profile.data || !profile.data.email) {
+    // to be safe if the profile is incomplete, let's get it again to have the total picture here
+    if (!profile || !profile.email) {
       // just to make this robust - if we don't have enough of a picture of the profile, we will get a better one
       profile = ProfileService.getProfile(profileUid);
     }
     //!TODO what constitues a completed profile - so we don't send hundreds of emails as they type in each bit for the first time
     //! probably something to do with the color being set - or whatever is the last required thing...
-    return profile && profile.data && profile.data.accentColor;
+    return profile && profile && profile.accentColor;
   }
 
   /**
@@ -35,14 +37,14 @@ export namespace ProfileEndpoints {
    * @returns promise of true if sent, else false
    */
   export function sendRequiredAccountUpdateEmail(profileUid: string, profile: any): Promise<boolean> {
-    if (!profile || !profile.data || !profile.data.email) {
+    if (!profile || !profile.email) {
       // just to make this robust - if we don't have enough of a picture of the profile, we will get a better one
       profile = ProfileService.getProfile(profileUid);
     }
-    if (isProfileComplete(profileUid, profile) && !profile.data.suppressEmailNotifications) {
+    if (isProfileComplete(profileUid, profile) && !profile.suppressEmailNotifications) {
       // the new profile is complete - but they just updated it, send an email please
       return EmailHelpers.sendEmail(
-        profile.data.email,
+        profile.email,
         "Positive+1 Account Updated",
         "Account Updated", 
         "Some details have been updated in your Positive+1 account settings",
@@ -133,10 +135,10 @@ export namespace ProfileEndpoints {
       profile = await ProfileService.updateAccountFlags(profileId, accountFlags);
 
       // and send an email informing them they have requested a deleted profile
-      if (!userProfile.data.suppressEmailNotifications) {
+      if (isProfileComplete(profileId, profile) && !profile.suppressEmailNotifications) {
         // not suppressing email, send one informing the user they have deleted their profile
         await EmailHelpers.sendEmail(
-          userProfile.data.email,
+          profile.email,
           "Positive+1 Account Deleted",
           "Account Deleted",
           "We're sorry to see you go, but we've deleted your account as requested.",
@@ -536,13 +538,13 @@ export namespace ProfileEndpoints {
     }
 
     let wasWelcomeEmailSent = false;
-    if (!isProfileComplete(uid, profile) && !profile.data.suppressEmailNotifications) {
+    if (!isProfileComplete(uid, profile) && !profile.suppressEmailNotifications) {
       // not suppressing email, send one informing the user they have deleted their profile) {
       // this is the first time we will set the profile colour which signifies the end of the account creation process
       //TODO we need to send a different email if a company account
       //TODO somewhere as well a user is invited to a company account and that's different too
       // wasWelcomeEmailSent = await EmailHelpers.sendEmail(
-      //   profile.data.email,
+      //   profile.email,
       // "Positive+1 Company Account Invite",
       // "Your company has been created on Positive+1",
       // "A new company has been created for you on Positive+1. Please check your Positive+1 app for your invitation to post and manage content on behalf of your company.",
@@ -552,7 +554,7 @@ export namespace ProfileEndpoints {
       
       // else we are a normal profile created
       wasWelcomeEmailSent = await EmailHelpers.sendEmail(
-        profile.data.email,
+        profile.email,
         "Positive+1 Account Setup",
         "You Are All Set",
         "Your account has been fully set up. Welcome to the community!",
@@ -569,7 +571,7 @@ export namespace ProfileEndpoints {
 
     if (!wasWelcomeEmailSent) {
       // we might want to send an update email here as didn't send a welcome email
-      await sendRequiredAccountUpdateEmail(uid, newProfile);
+      // await sendRequiredAccountUpdateEmail(uid, newProfile);
     }
 
     return buildEndpointResponse(context, {

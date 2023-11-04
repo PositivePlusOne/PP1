@@ -1,3 +1,4 @@
+import * as functions from "firebase-functions";
 import * as postmark from 'postmark';
 
 export namespace EmailHelpers {
@@ -29,31 +30,38 @@ export namespace EmailHelpers {
       // for safety - the template is also in the ./constants/template_email.html file so it's controlled in git
       
       // connect to the proper API required to send an email using the postmark library
-      const apiKey = process.env.SMTP_API_SECRET;
-      if (!apiKey) {
-        throw new Error("SMTP_API_SECRET cannot be null.");
+      try {
+        const apiKey = process.env.SMTP_API_SECRET;
+        if (!apiKey) {
+          throw new Error("SMTP_API_SECRET cannot be null.");
+        }
+        const client = new postmark.ServerClient(apiKey);
+        // and send the email
+        const result = await client.sendEmailWithTemplate({
+          "From": "admin@positiveplusone.com",
+          "TemplateId": 33677731,
+          "To": to,
+          "TemplateModel": {
+            "title": title,
+            "body": body,
+            "body_postscript": bodyPostscript,
+            "button_text": buttonText,
+            "action_url": buttonActionUrl,
+            "name": to,
+            "product_name": "Positive+1",
+            "support_email": "support@positiveplusone.com",
+            "sender_name": "admin@positiveplusone.com",
+            "help_url": "https://www.positiveplusone.com/help.html",
+            "mail_subject": subjectLine,
+          }});
+        // return that the error code is equal to 0 - success
+        return result && result.ErrorCode == 0;
       }
-      const client = new postmark.ServerClient(apiKey);
-      // and send the email
-      const result = await client.sendEmailWithTemplate({
-        "From": "admin@positiveplusone.com",
-        "TemplateId": 33677731,
-        "To": to,
-        "TemplateModel": {
-          "title": title,
-          "body": body,
-          "body_postscript": bodyPostscript,
-          "button_text": buttonText,
-          "action_url": buttonActionUrl,
-          "name": to,
-          "product_name": "Positive+1",
-          "support_email": "support@positiveplusone.com",
-          "sender_name": "admin@positiveplusone.com",
-          "help_url": "https://www.positiveplusone.com/help.html",
-          "mail_subject": subjectLine,
-        }});
-      // return that the error code is equal to 0 - success
-      return result && result.ErrorCode == 0;
+      catch (error) {
+        functions.logger.error(`failed to send email to ${to}: ${error}`);
+      }
+      // if here then there was a failure
+      return false;
     }
   }
   
