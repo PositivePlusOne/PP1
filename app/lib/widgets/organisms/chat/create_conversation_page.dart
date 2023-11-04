@@ -7,39 +7,14 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/helpers/brand_helpers.dart';
-import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
-import 'package:app/providers/user/get_stream_controller.dart';
-import 'package:app/services/third_party.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/input/positive_search_field.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
-import 'package:app/widgets/state/positive_community_feed_state.dart';
 
 @RoutePage()
 class CreateConversationPage extends HookConsumerWidget {
@@ -87,7 +62,7 @@ class CreateConversationPage extends HookConsumerWidget {
       initialCommunityType: CommunityType.connected,
       mode: CommunitiesDialogMode.select,
       searchTooltip: 'Search Conversations',
-      supportedCommunityTypes: <CommunityType>[
+      supportedCommunityTypes: const <CommunityType>[
         CommunityType.connected,
       ],
       profileDescriptionBuilder: buildProfileDescription,
