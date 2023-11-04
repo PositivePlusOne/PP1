@@ -251,7 +251,11 @@ export namespace RelationshipEndpoints {
     }
 
     const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]) as RelationshipJSON;
-    if (!oldRelationship.connected) {
+    const isTargetConnected = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
+    const isUserConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
+    const isConnectedOrPending = isTargetConnected || isUserConnected;
+
+    if (!isConnectedOrPending) {
       functions.logger.info("User already disconnected", { uid, targetUid });
       return buildEndpointResponse(context, {
         sender: uid,
