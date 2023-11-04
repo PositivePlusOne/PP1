@@ -141,6 +141,7 @@
     "page_account_recovery_new_password_title": "Create A New Password",
     "page_account_recovery_new_password_body": "New password, new you",
 
+    "page_community_search_empty_title": "No search results",
     "page_community_connections_empty_title": "You Have No Connections",
     "page_community_connections_empty_body": "Get out there and connect with people across Positive+1!",
     "page_community_followers_empty_title": "You Have No Followers",
@@ -321,6 +322,8 @@
     "page_account_actions_change_disable_facebook_sign_in": "Disable Facebook Sign In",
     "page_account_actions_change_connect_social_account": "Connect Social Account",
     "page_account_actions_change_delete_account": "Delete Account",
+    "page_account_actions_change_undelete_account": "Cancel Account Deletion",
+    "page_account_actions_change_delete_account_pending": "Your account has been flagged for deletion and will be deleted in the next 24 hours",
 
     "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
     "page_account_actions_change_delete_account_splash_body": "but we understand why. We ask you to verify some of your details just to be sure it’s you trying to delete your account.",
@@ -531,9 +534,17 @@
     "page_create_post_additional_tags": "+{tags}",
     "page_create_post_edited": "Post Saved",
     "page_create_post_repost_heading": "Repost",
-    "page_create_post_processing": "Processing your clip...",
-    "page_create_post_uploading": "Uploading your clip...",
-    "page_edit_post_uploading": "Editing your clip...",
+    "page_create_post_processing": "Processing your {postType}...",
+    "page_create_post_uploading": "Uploading your {postType}...",
+    "page_edit_post_uploading": "Editing your {postType}...",
+
+    "page_create_post_post_type_text": "text",
+    "page_create_post_post_type_image": "image",
+    "page_create_post_post_type_multi_image": "multi-image",
+    "page_create_post_post_type_clip": "clip",
+    "page_create_post_post_type_event": "event",
+    "page_create_post_post_type_repost": "repost",
+    "page_create_post_post_type_errpr": "error",
 
     "page_create_post_clip_length_limit": "Clips can be a maximum of 3 minutes long - trim yours down to post it.",
     "page_create_post_seconds": "s",
@@ -635,6 +646,7 @@
     "shared_actions_send_message": "Send Message",
     "shared_actions_report": "Report",
     "shared_actions_more": "More",
+    "shared_actions_view_more": "View More",
 
     "shared_profile_tagline": "Positive+1 Member",
     "shared_profile_unknown_location": "Location not shared",

@@ -519,6 +519,15 @@ class ProfileApiService {
       },
     );
   }
+
+  FutureOr<Map<String, Object?>> toggleProfileDeletion({
+    required String uid,
+  }) async {
+    return await getHttpsCallableResult<Map<String, Object?>>(
+      name: 'profile-toggleProfileDeletion',
+      selector: (response) => json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == uid)),
+    );
+  }
 }
 
 @Riverpod(keepAlive: true)

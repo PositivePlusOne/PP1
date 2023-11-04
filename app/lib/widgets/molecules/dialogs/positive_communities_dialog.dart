@@ -1,5 +1,8 @@
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -129,10 +132,12 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
   PositiveCommunityFeedState getCurrentFeedState({
     required Profile? profile,
     required CommunityType communityType,
+    required String searchQuery,
   }) {
     final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
     final CommunitiesController controller = providerContainer.read(provider.notifier);
-    return controller.getCommunityFeedStateForType(profile: profile, communityType: communityType);
+
+    return controller.getCommunityFeedStateForType(profile: profile, communityType: communityType, searchQuery: searchQuery);
   }
 
   PositiveCommunityFeedState buildPageStateFromSupportedProfiles() {
@@ -148,11 +153,39 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     final PositiveCommunityFeedState feedState = PositiveCommunityFeedState.buildNewState(
       currentProfileId: '',
+      searchQuery: '',
       communityType: CommunityType.supported,
       pagingController: pagingController,
     );
 
     return feedState;
+  }
+
+  FutureOr<void> onSearchSubmitted(String query) async {
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
+
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('PositiveCommunitiesDialog - onSearchSubmitted - Loading next community data: $query');
+    await controller.updateSearchQuery(query);
+  }
+
+  //? We only want to check if the query is empty, and if so, we want to reset the feed
+  FutureOr<void> onSearchChanged(String query) async {
+    final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
+    final CommunitiesController controller = providerContainer.read(provider.notifier);
+    final String searchQuery = controller.state.searchQuery;
+    final bool isSearching = searchQuery.isNotEmpty;
+
+    if (!isSearching) {
+      return;
+    }
+
+    if (query.isEmpty) {
+      final Logger logger = ref.read(loggerProvider);
+      logger.i('PositiveCommunitiesDialog - onSearchChanged - Resetting feed');
+      controller.updateSearchQuery('');
+    }
   }
 
   Future<void> requestRefresh({required Profile? profile}) async {
@@ -162,7 +195,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final CommunityType communityType = controller.state.selectedCommunityType;
 
     logger.d('PositiveCommunitiesDialog - requestRefresh - Loading next community data: $communityType');
-    controller.resetCommunityDataForType(type: communityType, currentProfile: profile);
+    controller.resetCommunityDataForType(
+      type: communityType,
+      currentProfile: profile,
+      searchQuery: controller.state.searchQuery,
+    );
   }
 
   @override
@@ -185,15 +222,22 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     final CommunitiesControllerProvider provider = getCommunitiesControllerProvider();
     final CommunitiesController controller = ref.read(provider.notifier);
     final CommunityType selectedCommunityType = ref.watch(provider.select((value) => value.selectedCommunityType));
+    final String searchQuery = ref.watch(provider.select((value) => value.searchQuery));
 
     useLifecycleHook(controller);
 
-    final PositiveCommunityFeedState currentFeedState = getCurrentFeedState(profile: currentProfile, communityType: selectedCommunityType);
+    final PositiveCommunityFeedState currentFeedState = getCurrentFeedState(
+      profile: currentProfile,
+      communityType: selectedCommunityType,
+      searchQuery: searchQuery,
+    );
 
     useCacheHook(keys: <String>[
       currentProfile?.flMeta?.id ?? '',
       currentFeedState.buildCacheKey(),
     ]);
+
+    final bool isSearching = searchQuery.isNotEmpty;
 
     final Widget child = switch (selectedCommunityType) {
       CommunityType.following => buildRelationshipList(
@@ -203,7 +247,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_following_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_following_empty_title,
           noDataBody: localizations.page_community_following_empty_body,
         ),
       CommunityType.followers => buildRelationshipList(
@@ -213,7 +257,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_followers_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_followers_empty_title,
           noDataBody: localizations.page_community_followers_empty_body,
         ),
       CommunityType.connected => buildRelationshipList(
@@ -223,7 +267,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_connections_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_connections_empty_title,
           noDataBody: localizations.page_community_connections_empty_body,
         ),
       CommunityType.blocked => buildRelationshipList(
@@ -233,7 +277,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_blocked_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_blocked_empty_title,
           noDataBody: localizations.page_community_blocked_empty_body,
         ),
       CommunityType.managed => buildRelationshipList(
@@ -243,7 +287,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: currentFeedState.pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_managed_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_managed_empty_title,
           noDataBody: localizations.page_community_managed_empty_body,
         ),
       CommunityType.supported => buildRelationshipList(
@@ -253,7 +297,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           controller: buildPageStateFromSupportedProfiles().pagingController,
           cacheController: cacheController,
           senderProfile: currentProfile,
-          noDataTitle: localizations.page_community_supported_empty_title,
+          noDataTitle: isSearching ? localizations.page_community_search_empty_title : localizations.page_community_supported_empty_title,
           noDataBody: localizations.page_community_supported_empty_body,
         ),
     };
@@ -278,7 +322,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         PositiveBasicSliverList(
           includeAppBar: false,
           children: <Widget>[
-            buildAppBar(context, colors),
+            buildAppBar(context, colors, controller.searchController),
             const SizedBox(height: kPaddingMedium),
             if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
@@ -406,7 +450,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     );
   }
 
-  Widget buildAppBar(BuildContext context, DesignColorsModel colors) {
+  Widget buildAppBar(BuildContext context, DesignColorsModel colors, TextEditingController controller) {
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     return Row(
       children: <Widget>[
@@ -420,7 +464,15 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           primaryColor: colors.black,
         ),
         const SizedBox(width: kPaddingMedium),
-        Expanded(child: PositiveSearchField(hintText: 'Search People', onChange: (_) {}, isEnabled: false)),
+        Expanded(
+          child: PositiveSearchField(
+            hintText: 'Search People',
+            onSubmitted: onSearchSubmitted,
+            onChange: onSearchChanged,
+            controller: controller,
+            isEnabled: true,
+          ),
+        ),
       ],
     );
   }

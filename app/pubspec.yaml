@@ -1,7 +1,7 @@
 name: app
 description: The Positive +1 application.
 publish_to: "none"
-version: 3.3.0+1
+version: 3.1.195+195
 
 environment:
   sdk: ">=3.0.0 <=4.0.0"
@@ -22,30 +22,30 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.1
   shared_preferences: ^2.1.1
-  permission_handler: ^10.2.0
+  permission_handler: ^11.0.1
   flutter_cache_manager: ^3.3.1
   local_auth: ^2.1.6
   event_bus: ^2.0.0
-  flutter_local_notifications: ^15.1.1
+  flutter_local_notifications: ^16.1.0
   universal_platform: 1.0.0+1
   tuple: ^2.0.1
   synchronized: ^3.1.0
   collection: ^1.17.1
   rxdart: ^0.27.7
   infinite_scroll_pagination: ^4.0.0
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^9.0.0
   cron: ^0.5.1
   flutter_linkify: ^6.0.0
 
   # Backend
-  firebase_core: ^2.15.1
-  firebase_auth: ^4.8.0
-  firebase_messaging: ^14.6.7
-  firebase_crashlytics: ^3.3.5
-  firebase_storage: ^11.2.6
-  cloud_firestore: ^4.9.0
-  cloud_functions: ^4.4.0
-  firebase_performance: ^0.9.2+5
+  firebase_core: ^2.21.0
+  firebase_auth: ^4.12.1
+  firebase_messaging: ^14.7.3
+  firebase_crashlytics: ^3.4.3
+  firebase_storage: ^11.4.1
+  cloud_firestore: ^4.12.2
+  cloud_functions: ^4.5.3
+  firebase_performance: ^0.9.3+3
   google_sign_in: ^6.1.4
   mixpanel_flutter: ^2.1.1
   freerasp: ^6.2.0
@@ -95,7 +95,7 @@ dependencies:
   video_editor: ^3.0.0
   ffmpeg_kit_flutter_full_gpl: ^6.0.3-LTS
   photo_view: ^0.14.0
-  video_player_avfoundation: ^2.5.0
+  video_player_avfoundation: ^2.5.1
   media_kit: ^1.1.10                             # Primary package.
   media_kit_video: ^1.2.4                        # For video rendering.
   media_kit_libs_video: ^1.0.4                   # Native video dependencies.

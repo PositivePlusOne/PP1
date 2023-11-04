@@ -175,12 +175,16 @@ class ProfileFormController extends _$ProfileFormController {
   Future<bool> onBackCreate(Type type) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
     logger.i('Navigating back to create page');
 
     switch (type) {
+      case ProfileNameEntryRoute:
+        await userController.signOut(shouldNavigate: false);
+        appRouter.replaceAll([const HomeRoute()]);
+        break;
       case ProfileDisplayNameEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileNameEntryRoute());
+        appRouter.replaceAll([const ProfileNameEntryRoute()]);
         break;
 
       case ProfileAboutRoute:
@@ -188,8 +192,19 @@ class ProfileFormController extends _$ProfileFormController {
         break;
 
       case ProfileBirthdayEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileDisplayNameEntryRoute());
+        appRouter.replaceAll([const ProfileDisplayNameEntryRoute()]);
+        break;
+
+      case ProfileReferenceImageWelcomeRoute:
+        appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
+        break;
+
+      case ProfilePhotoSelectionRoute:
+        appRouter.replaceAll([const ProfileReferenceImageWelcomeRoute()]);
+        break;
+
+      case ProfileBiographyEntryRoute:
+        appRouter.replaceAll([const ProfilePhotoSelectionRoute()]);
         break;
 
       case ProfileHivStatusRoute:
@@ -197,27 +212,8 @@ class ProfileFormController extends _$ProfileFormController {
       case ProfileGenderSelectRoute:
       case ProfileCompanySectorSelectRoute:
       case ProfileLocationRoute:
-        // not showing this any more so just go back to the start if here by mistake
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileNameEntryRoute());
-        break;
-
-      case ProfileReferenceImageWelcomeRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileBirthdayEntryRoute());
-        break;
-
-      case ProfilePhotoSelectionRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfileReferenceImageWelcomeRoute());
-        break;
-
-      case ProfileBiographyEntryRoute:
-        appRouter.removeWhere((_) => true);
-        appRouter.push(const ProfilePhotoSelectionRoute());
-        break;
       default:
-        logger.e('Unknown route type: $type');
+        appRouter.replaceAll([const HomeRoute()]);
         break;
     }
 
@@ -427,7 +423,7 @@ class ProfileFormController extends _$ProfileFormController {
 
     if (birthday.isAfter(thirteenYearsAgo)) {
       logger.e('User is not 13 years old, navigating to age requirement screen');
-      await appRouter.push(const ProfileDeleteAccountRoute());
+      await appRouter.push(const BirthdayDeleteAccountRoute());
       return;
     }
 
@@ -1131,24 +1127,5 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Navigating to $route');
     appRouter.removeWhere((route) => true);
     await appRouter.push(route);
-  }
-
-  Future<void> onDeleteAccountSelected(BuildContext context) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-    final UserController userController = ref.read(userControllerProvider.notifier);
-
-    logger.i('Deleting account');
-
-    logger.i('Account deletion confirmed');
-    state = state.copyWith(isBusy: true);
-
-    try {
-      await userController.deleteAccount();
-      logger.i('Account deleted');
-      await appRouter.replace(const HomeRoute());
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
   }
 }

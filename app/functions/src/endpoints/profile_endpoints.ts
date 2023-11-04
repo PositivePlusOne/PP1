@@ -9,6 +9,7 @@ import { MediaJSON } from "../dto/media";
 import { ProfileJSON } from "../dto/profile";
 import { DataService } from "../services/data_service";
 import { EmailHelpers } from "../helpers/email_helpers";
+import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace ProfileEndpoints {
 
@@ -108,31 +109,47 @@ export namespace ProfileEndpoints {
     });
   });
 
-  export const deleteProfile = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    const targetUid = await UserService.verifyAuthenticated(context, request.sender);
+  export const toggleProfileDeletion = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Deleting user profile", { structuredData: true });
 
-    const userProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile) {
-      throw new functions.https.HttpsError("not-found", "The user profile does not exist so cannot be deleted");
+    let profile = await ProfileService.getProfile(uid);
+    const profileId = profile?._fl_meta_?.fl_id || "";
+
+    if (!profile || profileId.length === 0) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    await ProfileService.deleteProfile(targetUid);
-    functions.logger.info("User profile deleted");
+    let accountFlags = [...profile?.accountFlags ?? []];
+    const isPendingDeletion = accountFlags?.includes('pending_deletion') ?? false;
 
-    if (!userProfile.data.suppressEmailNotifications) {
-      // not suppressing email, send one informing the user they have deleted their profile
-      await EmailHelpers.sendEmail(
-        userProfile.data.email,
-        "Positive+1 Account Deleted",
-        "Account Deleted",
-        "We're sorry to see you go, but we've deleted your account as requested.",
-        "",
-        "Return to Positive+1",
-        "https://www.positiveplusone.com");
+    if (isPendingDeletion) {
+      accountFlags = accountFlags.filter((flag: string) => flag !== 'pending_deletion');
+      functions.logger.info("User profile deletion cancelled");
+      profile = await ProfileService.updateAccountFlags(profileId, accountFlags);
+    } else {
+      accountFlags.push('pending_deletion');
+      functions.logger.info("User profile deletion requested");
+      profile = await ProfileService.updateAccountFlags(profileId, accountFlags);
+
+      // and send an email informing them they have requested a deleted profile
+      if (!userProfile.data.suppressEmailNotifications) {
+        // not suppressing email, send one informing the user they have deleted their profile
+        await EmailHelpers.sendEmail(
+          userProfile.data.email,
+          "Positive+1 Account Deleted",
+          "Account Deleted",
+          "We're sorry to see you go, but we've deleted your account as requested.",
+          "",
+          "Return to Positive+1",
+          "https://www.positiveplusone.com");
+      }
     }
 
-    return JSON.stringify({ success: true });
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [profile],
+    });
   });
 
   export const updateFcmToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -237,20 +254,17 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
-    const profile = await ProfileService.getProfile(uid);
+    let profile = await ProfileService.getProfile(uid);
     if (!profile) {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateName(uid, name);
-
-    // Remove the name_offensive flag if it exists
-    await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
+    profile = await ProfileService.updateName(uid, name);
+    profile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    profile = await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
     
     functions.logger.info("Profile name updated", {
-      uid,
-      name,
+      profile,
     });
 
     //TODO we might want to send an update email here
@@ -258,7 +272,7 @@ export namespace ProfileEndpoints {
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [newProfile],
+      data: [profile],
     });
   });
 
@@ -271,6 +285,11 @@ export namespace ProfileEndpoints {
     });
 
     if (!(typeof displayName === "string") || displayName.length < 3) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
+    }
+
+    const isFirebaseUIDFormat = StringHelpers.isFirebaseUID(displayName);
+    if (isFirebaseUIDFormat) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
     }
 

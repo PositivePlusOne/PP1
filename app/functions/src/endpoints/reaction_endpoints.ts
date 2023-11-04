@@ -67,7 +67,7 @@ export namespace ReactionEndpoints {
         functions.logger.info("Adding reaction", { reactionJSON });
         const [reaction, reactionStats, sourceProfileStats, targetProfileStats] = await ReactionService.addReaction(streamClient, reactionJSON);
 
-        await ReactionService.processNotifications(kind, uid, activity, reaction);
+        await ReactionService.processNotifications(kind, uid, activity, reaction, reactionStats);
 
         return buildEndpointResponse(context, {
             sender: uid,

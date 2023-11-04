@@ -10,6 +10,7 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/constants/country_constants.dart';
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/localization/country.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -91,8 +92,11 @@ class AccountDetailsPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final Profile? ownerProfile = cacheController.get(ownerId);
 
+    final bool isPendingDeletion = profile?.accountFlags.contains(kFeatureFlagPendingDeletion) == true;
+
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      isBusy: viewModelState.isBusy,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarLeading: PositiveButton.appBarIcon(
@@ -116,6 +120,7 @@ class AccountDetailsPage extends HookConsumerWidget {
                 name: name,
                 emailAddress: emailAddress,
                 phoneNumberComponents: phoneNumberComponents,
+                isPendingDeletion: isPendingDeletion,
               ),
             ] else ...<Widget>[
               ...buildManagedAccountDetails(
@@ -252,6 +257,7 @@ class AccountDetailsPage extends HookConsumerWidget {
     required String name,
     required String emailAddress,
     required (String, String) phoneNumberComponents,
+    required bool isPendingDeletion,
   }) {
     return [
       Text(
@@ -367,12 +373,20 @@ class AccountDetailsPage extends HookConsumerWidget {
       ],
       PositiveButton(
         colors: colors,
-        onTapped: () => viewModel.onDeleteAccountButtonPressed(context, locale, controller),
+        onTapped: () => isPendingDeletion ? viewModel.onUndeleteAccountButtonPressed(context, locale, controller) : viewModel.onDeleteAccountButtonPressed(context, locale, controller),
         isDisabled: viewModelState.isBusy,
         primaryColor: colors.colorGray7,
-        label: localisations.page_account_actions_change_delete_account,
+        label: isPendingDeletion ? localisations.page_account_actions_change_undelete_account : localisations.page_account_actions_change_delete_account,
         style: PositiveButtonStyle.ghost,
       ),
+      if (isPendingDeletion) ...<Widget>[
+        const SizedBox(height: kPaddingMedium),
+        PositiveHint(
+          label: localisations.page_account_actions_change_delete_account_pending,
+          icon: UniconsLine.check_circle,
+          iconColor: colors.black,
+        ),
+      ],
     ];
   }
 }

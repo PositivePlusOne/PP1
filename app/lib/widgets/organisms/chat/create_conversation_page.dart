@@ -72,6 +72,7 @@ class CreateConversationPage extends HookConsumerWidget {
     final PositiveCommunityFeedState feedState = controller.getCommunityFeedStateForType(
       communityType: CommunityType.connected,
       profile: currentProfile,
+      searchQuery: '',
     );
 
     final Set<String> connectedProfileIds = feedState.pagingController.value.itemList?.toSet() ?? {};

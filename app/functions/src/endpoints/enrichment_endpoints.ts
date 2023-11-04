@@ -9,6 +9,8 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { TagsService } from "../services/tags_service";
 import { DataService } from "../services/data_service";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
+import { PromotionsService } from "../services/promotions_service";
+import { Promotion } from "../dto/promotions";
 
 export namespace EnrichmentEndpoints {
   export const followTags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
@@ -59,6 +61,25 @@ export namespace EnrichmentEndpoints {
     return buildEndpointResponse(context, {
       sender: uid,
       data: [newProfileData],
+    });
+  });
+
+  export const getPromotionWindow = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    functions.logger.info(`Getting a promotion window`);
+
+    const cursor = request.cursor || null;
+    const limit = request.limit || 30;
+    const uid = context.auth?.uid || "";
+
+    if (!limit) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
+    }
+
+    const promotions = await PromotionsService.getActivePromotionWindow(cursor, limit) as Promotion[];
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [...promotions],
     });
   });
 }

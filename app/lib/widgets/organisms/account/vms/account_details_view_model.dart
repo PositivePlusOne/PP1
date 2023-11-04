@@ -13,14 +13,18 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import '../../../../services/third_party.dart';
 
@@ -198,6 +202,37 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     logger.d('onUpdatePasswordButtonPressed');
     controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.deleteProfile);
     await appRouter.push(const AccountDeleteProfileRoute());
+  }
+
+  Future<void> onUndeleteAccountButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
+    final Logger logger = ref.read(loggerProvider);
+
+    try {
+      logger.i('Undeleting profile');
+      state = state.copyWith(isBusy: true);
+
+      final AppRouter appRouter = ref.read(appRouterProvider);
+      final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+      final Profile? profile = profileController.currentProfile;
+      final String profileId = profile?.flMeta?.id ?? '';
+      if (profileId.isEmpty || profile == null) {
+        logger.e('No profile found');
+        return;
+      }
+
+      final Set<String> accountFlags = profile.accountFlags;
+      if (!accountFlags.contains(kFeatureFlagPendingDeletion)) {
+        logger.i('Profile is not pending deletion');
+        return;
+      }
+
+      await profileApiService.toggleProfileDeletion(uid: profileId);
+      await appRouter.pop();
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onConnectSocialUserRequested() async {

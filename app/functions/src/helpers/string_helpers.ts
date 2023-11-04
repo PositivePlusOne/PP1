@@ -1,5 +1,7 @@
 import * as crypto from "crypto";
 
+import removeMd from 'remove-markdown';
+
 export namespace StringHelpers {
   /**
    * Generates a private channel name for the given profiles.
@@ -31,5 +33,14 @@ export namespace StringHelpers {
 
   export function generateHmac(key: string): crypto.Hmac {
     return crypto.createHmac("sha256", key);
+  }
+
+  export function isFirebaseUID(uid: string): boolean {
+    const expectedLength = 28;
+    return uid.length === expectedLength && /^[A-Za-z0-9]+$/.test(uid);
+  }
+
+  export function markdownToPlainText(markdown: string): string {
+    return removeMd(markdown);
   }
 }

@@ -11,7 +11,6 @@ export const DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS = [
     { targetSlug: "tags", targetUserId: "new" } as FeedRequestJSON,
     { targetSlug: "tags", targetUserId: "featured" } as FeedRequestJSON,
     { targetSlug: "tags", targetUserId: "events" } as FeedRequestJSON,
-    { targetSlug: "tags", targetUserId: "promotion_feed" } as FeedRequestJSON,
 ];
 
 export enum FeedGroupType {

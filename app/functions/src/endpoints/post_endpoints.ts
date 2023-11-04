@@ -26,7 +26,7 @@ import { SearchService } from "../services/search_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+        const uid = context.auth?.uid || "";
 
         const targetUserId = request.data.targetUserId || "";
         const targetSlug = request.data.targetSlug || "";
@@ -49,19 +49,13 @@ export namespace PostEndpoints {
 
         // We supply this so we can support reposts and the client can filter out the nested activity
         const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
-
-        // Get promotions from activities where the promotion key is set
-        let promotionIds = activities.filter((activity) => activity?.enrichmentConfiguration?.promotionKey).map((activity) => activity?.enrichmentConfiguration?.promotionKey || "");
-        promotionIds = [...new Set(promotionIds)].filter((promotionId) => promotionId.length > 0);
-        const promotionKeys = promotionIds.map((promotionId) => `promotions_${promotionId}`);
-
         const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
 
         functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
     
         return buildEndpointResponse(context, {
           sender: uid,
-          joins: [feedStatisticsKey, ...promotionKeys],
+          joins: [feedStatisticsKey],
           data: [...activities],
           limit: limit,
           cursor: paginationToken,

@@ -25,6 +25,7 @@ class HomeLoginPromptPage extends ConsumerWidget {
       buttonText: localisations.shared_actions_sign_up,
       isBusy: false,
       style: PositiveGenericPageStyle.imaged,
+      canBack: true,
       onContinueSelected: () => appRouter.push(LoginRoute(senderRoute: HomeRoute)),
     );
   }

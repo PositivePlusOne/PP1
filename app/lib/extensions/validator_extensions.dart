@@ -29,10 +29,10 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   AbstractRuleBuilder isValidReportTypeOrNotAReport({String? message}) {
     return must((dynamic dyn) {
       final bool isWrapper = dyn is FeedbackWrapper;
-      final bool isUserReport = isWrapper && dyn.feedbackType == const FeedbackType.userReport();
+      final bool isUserOrPostReport = isWrapper && (dyn.feedbackType == const FeedbackType.userReport() || dyn.feedbackType == const FeedbackType.postReport());
       final bool hasReportType = isWrapper && dyn.reportType != const ReportType.unknown();
 
-      return isWrapper && (!isUserReport || hasReportType);
+      return isWrapper && (!isUserOrPostReport || hasReportType);
     }, message ?? "Must select a report type", code: "reportType");
   }
 

@@ -4,8 +4,26 @@ import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
 
+  export function getCurrentYYYYMMDD(): string {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+  }
+
+  export function timestampToYYYYMMDD(timestamp: Timestamp): string {
+    const date = timestamp.toDate();
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  }
+
   export function getCurrentTimestamp(): Timestamp {
     return getTimestampForDate(new Date());
+  }
+
+  export function timestampToDate(timestamp: Timestamp): Date {
+    return timestamp.toDate();
+  }
+
+  export function timestampToUnixTime(timestamp: Timestamp): number {
+    return Math.floor(timestamp.toMillis() / 1000);
   }
 
   export function getCurrentUnixTimestamp(): string {
@@ -65,6 +83,22 @@ export namespace StreamHelpers {
 
     if (typeof timestamp === "number") {
       return new Date(timestamp).toISOString();
+    }
+
+    throw new Error("Invalid timestamp");
+  }
+
+  export function convertTimestampToUnixNumber(timestamp: any): number {
+    if (timestamp instanceof Timestamp) {
+      return timestamp.toMillis();
+    }
+
+    if (typeof timestamp === "string") {
+      return new Date(timestamp).getTime();
+    }
+
+    if (typeof timestamp === "number") {
+      return timestamp;
     }
 
     throw new Error("Invalid timestamp");

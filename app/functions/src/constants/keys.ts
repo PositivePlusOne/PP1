@@ -9,6 +9,9 @@ export namespace Keys {
   export const AlgoliaAppId = "ALGOLIA_APP_ID";
   export const SlackSigningSecret = "SLACK_SIGNING_SECRET";
   export const PostmarkApiKey = "SMTP_API_SECRET";
+  export const MixpanelProjectToken = "MIXPANEL_PROJECT_TOKEN";
+  export const MixpanelApiSecret = "MIXPANEL_API_SECRET";
+  export const MixpanelProjectId = "MIXPANEL_PROJECT_ID";
 
   //* Feature flags
   export const FeatureFlagManagedOrganisation = "MANAGED_ORGANISATION";
@@ -24,5 +27,8 @@ export namespace Keys {
     AlgoliaAppId,
     SlackSigningSecret,
     PostmarkApiKey,
+    MixpanelProjectToken,
+    MixpanelApiSecret,
+    MixpanelProjectId,
   ];
 }

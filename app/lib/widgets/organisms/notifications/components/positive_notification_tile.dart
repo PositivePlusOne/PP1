@@ -72,6 +72,15 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     setupListeners();
   }
 
+  @override
+  void didUpdateWidget(PositiveNotificationTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.notification.id != widget.notification.id) {
+      reloadPresenter();
+    }
+  }
+
   void setupListeners() {
     final EventBus eventBus = ref.read(eventBusProvider);
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
@@ -163,7 +172,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
 
     // Once we're live and have more time, we need to find a nice way to localize this
     // As when we go to the African market, this might go haywire.
-    String body = payload.body;
+    String body = payload.bodyMarkdown.isEmpty ? payload.body : payload.bodyMarkdown;
     if (includeTimestamp && payload.createdAt != null) {
       try {
         // Remove full stop from end of body if it exists

@@ -66,10 +66,16 @@ export namespace SearchEndpoints {
     const page = parseInt(request.data.page) || 0;
     const index = request.data.index || PositiveSearchIndex.USERS;
     const query = request.data.query || "";
-    const filters = request.data.filters || [] as string[];
+    const attributeFilters = request.data.filters || [] as string[];
+    const facetFilters = request.data.facetFilters || [] as string[];
     const limit = request.limit || 10;
 
-    functions.logger.info(`Searching for ${query} in ${index} with page ${page} and limit ${limit} and filters ${filters}`);
+    functions.logger.info(`Searching for ${query} in ${index}`, {
+      structuredData: true,
+      page: page,
+      limit: limit,
+      filters: attributeFilters,
+    });
 
     // Verify index is a valid PositiveSearchIndex
     if (!Object.values(PositiveSearchIndex).includes(index)) {
@@ -78,7 +84,7 @@ export namespace SearchEndpoints {
 
     const algoliaClient = SearchService.getAlgoliaClient();
     const algoliaIndex = algoliaClient.initIndex(index);
-    const searchResults = await SearchService.search(algoliaIndex, query, page, limit, filters);
+    const searchResults = await SearchService.search(algoliaIndex, query, page, limit, attributeFilters, facetFilters);
 
     functions.logger.info(`Got search results`, searchResults);
 

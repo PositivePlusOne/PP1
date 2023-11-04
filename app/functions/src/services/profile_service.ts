@@ -198,6 +198,54 @@ export namespace ProfileService {
     });
   }
 
+  export async function markProfileForDeletion(profile: ProfileJSON): Promise<void> {
+    const profileId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!profile || !profileId) {
+      throw new functions.https.HttpsError("not-found", `User profile does not exist`);
+    }
+    
+    functions.logger.info(`Marking user profile for deletion for user: ${profileId}`);
+    const visibilityFlags = [...profile.visibilityFlags ?? []];
+    if (visibilityFlags.includes("pending_deletion")) {
+      functions.logger.info(`User profile ${profileId} is already marked for deletion`);
+      return;
+    }
+
+    visibilityFlags.push("pending_deletion");
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: profileId,
+      data: {
+        visibilityFlags,
+      },
+    });
+  }
+
+  export async function unmarkProfileForDeletion(profile: ProfileJSON): Promise<void> {
+    const profileId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
+    if (!profile || !profileId) {
+      throw new functions.https.HttpsError("not-found", `User profile does not exist`);
+    }
+    
+    functions.logger.info(`Unmarking user profile for deletion for user: ${profileId}`);
+    const visibilityFlags = [...profile.visibilityFlags ?? []];
+    if (!visibilityFlags.includes("pending_deletion")) {
+      functions.logger.info(`User profile ${profileId} is not marked for deletion`);
+      return;
+    }
+
+    const index = visibilityFlags.indexOf("pending_deletion");
+    visibilityFlags.splice(index, 1);
+
+    return await DataService.updateDocument({
+      schemaKey: "users",
+      entryId: profileId,
+      data: {
+        visibilityFlags,
+      },
+    });
+  }
+
   /**
    * Updates the email address of the user profile.
    * @param {string} uid The user ID of the user to update the name for.

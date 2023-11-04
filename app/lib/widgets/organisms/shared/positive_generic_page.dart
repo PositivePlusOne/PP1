@@ -77,6 +77,13 @@ class PositiveGenericPage extends ConsumerWidget {
         return false;
       },
       isBusy: isBusy,
+      visibleComponents: {
+        if (style == PositiveGenericPageStyle.imaged) ...[
+          ...PositiveScaffoldComponent.excludeFooterPadding,
+        ] else ...[
+          ...PositiveScaffoldComponent.values,
+        ],
+      },
       decorations: [
         if (style == PositiveGenericPageStyle.decorated) ...[
           ...buildType1ScaffoldDecorations(colors),
