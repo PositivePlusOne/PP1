@@ -14,6 +14,7 @@ import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';
+import 'package:app/widgets/organisms/account/account_update_name_page.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/chat_create_page.dart';
@@ -43,6 +44,7 @@ import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
 import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
+import 'package:app/widgets/organisms/registration/registration_complete_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/organisms/shared/tag_feed_page.dart';
@@ -147,6 +149,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegistrationPasswordEntryRoute.page, path: '/registration/create/password'),
         AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
         AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
+        AutoRoute(page: RegistrationCompleteRoute.page, path: '/registration/profile/complete'),
         //* Login and Authentication
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
         AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),
@@ -190,6 +193,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountRoute.page, path: '/account', guards: kCommonGuards),
         AutoRoute(page: AccountDetailsRoute.page, path: '/account/details', guards: kCommonGuards),
         AutoRoute(page: AccountCommunitiesRoute.page, path: '/account/communities', guards: kCommonGuards),
+        AutoRoute(page: AccountUpdateNameRoute.page, path: '/account/update/name', guards: kCommonGuards),
         AutoRoute(page: AccountUpdateEmailAddressRoute.page, path: '/account/update/email', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: kCommonGuards),

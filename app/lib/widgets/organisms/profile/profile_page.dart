@@ -17,12 +17,14 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -31,6 +33,7 @@ import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
+import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../behaviours/positive_feed_pagination_behaviour.dart';
 import '../../molecules/lists/positive_profile_actions_list.dart';
@@ -44,6 +47,16 @@ class ProfilePage extends HookConsumerWidget {
   const ProfilePage({
     super.key,
   });
+
+  Widget buildBlockedProfilePage() {
+    return PositiveGenericPage(
+      title: 'You are not allowed to view this page',
+      body: 'You are not allowed to view this profile, if you think this is an error, please check out our app guidance.',
+      buttonText: 'Back',
+      style: PositiveGenericPageStyle.decorated,
+      onContinueSelected: () async => providerContainer.read(appRouterProvider).removeLast(),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,6 +78,11 @@ class ProfilePage extends HookConsumerWidget {
 
     final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
     final Relationship? relationship = cacheController.get(relationshipId);
+    final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfile?.flMeta?.id ?? '') ?? {};
+    final bool isBlockedByTarget = relationshipStates.contains(RelationshipState.targetBlocked);
+    if (isBlockedByTarget) {
+      return buildBlockedProfilePage();
+    }
 
     final String expectedProfileStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: targetProfileId);
     final ProfileStatistics? profileStatistics = cacheController.get(expectedProfileStatisticsKey);

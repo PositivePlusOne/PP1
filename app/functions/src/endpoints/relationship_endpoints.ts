@@ -202,6 +202,7 @@ export namespace RelationshipEndpoints {
     const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
     const isUserAlreadyConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
     const isTargetAlreadyRequested = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
+    const isNewRelationship = !isUserAlreadyConnected && !isTargetAlreadyRequested;
 
     if (isUserAlreadyConnected) {
       functions.logger.info("User already connected", { uid, targetUid });
@@ -219,9 +220,9 @@ export namespace RelationshipEndpoints {
     const newRelationship = await RelationshipService.connectRelationship(uid, oldRelationship);
     functions.logger.info("User connected, sending notifications", { uid, targetUid, isUserAlreadyConnected, isTargetAlreadyRequested });
     
-    if (isTargetAlreadyRequested) {
+    if (isTargetAlreadyRequested && !isUserAlreadyConnected) {
       await ChatConnectionAcceptedNotification.sendNotification(userProfile, targetProfile);
-    } else {
+    } else if (isNewRelationship) {
       await ChatConnectionSentNotification.sendNotification(targetProfile, userProfile);
       await ChatConnectionReceivedNotification.sendNotification(userProfile, targetProfile);
     }

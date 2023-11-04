@@ -12,6 +12,7 @@ export namespace Keys {
   export const MixpanelProjectToken = "MIXPANEL_PROJECT_TOKEN";
   export const MixpanelApiSecret = "MIXPANEL_API_SECRET";
   export const MixpanelProjectId = "MIXPANEL_PROJECT_ID";
+  export const SmtpApiSecret = "SMTP_API_SECRET";
 
   //* Feature flags
   export const FeatureFlagManagedOrganisation = "MANAGED_ORGANISATION";
@@ -30,5 +31,6 @@ export namespace Keys {
     MixpanelProjectToken,
     MixpanelApiSecret,
     MixpanelProjectId,
+    SmtpApiSecret,
   ];
 }

@@ -137,13 +137,13 @@ export namespace ReactionEndpoints {
     });
 
     export const listReactionsForActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-        const uid = await UserService.verifyAuthenticated(context, request.sender);
+        const uid = context.auth?.uid || "";
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const limit = request.limit || 25;
         let cursor = request.cursor;
 
-        const streamClient = FeedService.getFeedsUserClient(uid);
+        const streamClient = FeedService.getFeedsClient();
         const reactions = await ReactionService.listReactionsForActivity(streamClient, kind, activityId, limit, cursor);
         functions.logger.info("Reactions for activity", { activityId, reactions });
 

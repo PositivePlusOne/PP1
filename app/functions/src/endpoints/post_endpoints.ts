@@ -199,7 +199,8 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "No promotions available");
     }
 
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
+    let validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
+    validatedTags = TagsService.appendActivityTagsToTags(visibleTo, validatedTags);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });
@@ -375,7 +376,8 @@ export namespace PostEndpoints {
 
     // validate updated set of tags and replace activity tags
     // Validated tags are the new tags provided by the user, minus any restricted tags
-    const validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
+    let validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
+    validatedTags = TagsService.appendActivityTagsToTags(visibleTo, validatedTags);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });

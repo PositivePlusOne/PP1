@@ -56,6 +56,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     this.isSliver = true,
     this.onPageLoaded,
     this.emptyDataWidget,
+    this.noPostsWidget,
     super.key,
   });
 
@@ -65,6 +66,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final int windowSize;
   final void Function()? onPageLoaded;
   final Widget? emptyDataWidget;
+
+  final Widget? noPostsWidget;
 
   final bool isSliver;
 
@@ -174,24 +177,26 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts();
-    final Widget noPostsSliverWidget = SliverNoPostsPlaceholder(
+    final Widget defaultNoPostsSliverWidget = SliverNoPostsPlaceholder(
       typography: typography,
       colors: colors,
       emptyDataWidget: emptyDataWidget,
     );
 
-    final Widget noPostsWidget = NoPostsPlaceholder(
+    final Widget defaultNoPostsWidget = NoPostsPlaceholder(
       typography: typography,
       colors: colors,
     );
 
-    if (shouldDisplayNoPosts) {
-      return noPostsSliverWidget;
+    if (shouldDisplayNoPosts && noPostsWidget != null) {
+      return noPostsWidget!;
+    } else if (shouldDisplayNoPosts) {
+      return defaultNoPostsSliverWidget;
     }
 
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     if (isSliver) {
-      return buildSliverFeed(context, loadingIndicator, noPostsWidget);
+      return buildSliverFeed(context, loadingIndicator, defaultNoPostsWidget);
     } else {
       return buildFeed(context, loadingIndicator);
     }

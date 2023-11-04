@@ -75,6 +75,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountUpdateEmailAddressPage(),
       );
     },
+    AccountUpdateNameRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdateNamePage(),
+      );
+    },
     AccountUpdatePasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -487,6 +493,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const RegistrationAccountSetupPage(),
       );
     },
+    RegistrationCompleteRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RegistrationCompletePage(),
+      );
+    },
     RegistrationEmailEntryRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -692,6 +704,20 @@ class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountUpdateEmailAddressRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountUpdateNamePage]
+class AccountUpdateNameRoute extends PageRouteInfo<void> {
+  const AccountUpdateNameRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountUpdateNameRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountUpdateNameRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -1882,6 +1908,20 @@ class RegistrationAccountSetupRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'RegistrationAccountSetupRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RegistrationCompletePage]
+class RegistrationCompleteRoute extends PageRouteInfo<void> {
+  const RegistrationCompleteRoute({List<PageRouteInfo>? children})
+      : super(
+          RegistrationCompleteRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RegistrationCompleteRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

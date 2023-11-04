@@ -315,6 +315,7 @@
     
     "page_account_actions_change_return_account": "Back to Account",
     "page_account_actions_change_return_profile": "Back to Profile",
+    "page_account_actions_change_return_account_details": "Back to Account Details",
 
     "page_account_actions_change_password": "Change Password",
     "page_account_actions_change_disable_google_sign_in": "Disable Google Sign In",
@@ -343,6 +344,11 @@
     "page_account_promote_posts_body_five": "Promoted",
     "page_account_promote_posts_body_six": "Posts",
     "page_account_close_button": "Got it",
+
+    "page_account_actions_change_name_title": "Your Name",
+    "page_account_actions_change_name_body": "Let us know your new name",
+    "page_account_actions_change_name_updated_title": "Thanks!",
+    "page_account_actions_change_name_updated_body": "Your name has been changed.",
 
     "page_account_actions_change_email_address_title": "Change Email Address",
     "page_account_actions_change_email_address_body": "Switching emails? Great! What's your shiny new email address?",

@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$AccountFormState {
+  String get name => throw _privateConstructorUsedError;
   String get emailAddress => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   Country get country => throw _privateConstructorUsedError;
@@ -23,6 +24,7 @@ mixin _$AccountFormState {
   String get pin => throw _privateConstructorUsedError;
   bool get isBusy => throw _privateConstructorUsedError;
   FormMode get formMode => throw _privateConstructorUsedError;
+  Map<String, bool> get visibilityFlags => throw _privateConstructorUsedError;
   AccountEditTarget get editTarget => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -37,13 +39,15 @@ abstract class $AccountFormStateCopyWith<$Res> {
       _$AccountFormStateCopyWithImpl<$Res, AccountFormState>;
   @useResult
   $Res call(
-      {String emailAddress,
+      {String name,
+      String emailAddress,
       String password,
       Country country,
       String phoneNumber,
       String pin,
       bool isBusy,
       FormMode formMode,
+      Map<String, bool> visibilityFlags,
       AccountEditTarget editTarget});
 
   $CountryCopyWith<$Res> get country;
@@ -62,6 +66,7 @@ class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
     Object? emailAddress = null,
     Object? password = null,
     Object? country = null,
@@ -69,9 +74,14 @@ class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
     Object? pin = null,
     Object? isBusy = null,
     Object? formMode = null,
+    Object? visibilityFlags = null,
     Object? editTarget = null,
   }) {
     return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       emailAddress: null == emailAddress
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
@@ -100,6 +110,10 @@ class _$AccountFormStateCopyWithImpl<$Res, $Val extends AccountFormState>
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
               as FormMode,
+      visibilityFlags: null == visibilityFlags
+          ? _value.visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
       editTarget: null == editTarget
           ? _value.editTarget
           : editTarget // ignore: cast_nullable_to_non_nullable
@@ -125,13 +139,15 @@ abstract class _$$AccountFormStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String emailAddress,
+      {String name,
+      String emailAddress,
       String password,
       Country country,
       String phoneNumber,
       String pin,
       bool isBusy,
       FormMode formMode,
+      Map<String, bool> visibilityFlags,
       AccountEditTarget editTarget});
 
   @override
@@ -149,6 +165,7 @@ class __$$AccountFormStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? name = null,
     Object? emailAddress = null,
     Object? password = null,
     Object? country = null,
@@ -156,9 +173,14 @@ class __$$AccountFormStateImplCopyWithImpl<$Res>
     Object? pin = null,
     Object? isBusy = null,
     Object? formMode = null,
+    Object? visibilityFlags = null,
     Object? editTarget = null,
   }) {
     return _then(_$AccountFormStateImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       emailAddress: null == emailAddress
           ? _value.emailAddress
           : emailAddress // ignore: cast_nullable_to_non_nullable
@@ -187,6 +209,10 @@ class __$$AccountFormStateImplCopyWithImpl<$Res>
           ? _value.formMode
           : formMode // ignore: cast_nullable_to_non_nullable
               as FormMode,
+      visibilityFlags: null == visibilityFlags
+          ? _value._visibilityFlags
+          : visibilityFlags // ignore: cast_nullable_to_non_nullable
+              as Map<String, bool>,
       editTarget: null == editTarget
           ? _value.editTarget
           : editTarget // ignore: cast_nullable_to_non_nullable
@@ -199,15 +225,20 @@ class __$$AccountFormStateImplCopyWithImpl<$Res>
 
 class _$AccountFormStateImpl implements _AccountFormState {
   const _$AccountFormStateImpl(
-      {required this.emailAddress,
+      {required this.name,
+      required this.emailAddress,
       required this.password,
       required this.country,
       required this.phoneNumber,
       required this.pin,
       required this.isBusy,
       required this.formMode,
-      required this.editTarget});
+      required final Map<String, bool> visibilityFlags,
+      required this.editTarget})
+      : _visibilityFlags = visibilityFlags;
 
+  @override
+  final String name;
   @override
   final String emailAddress;
   @override
@@ -222,12 +253,20 @@ class _$AccountFormStateImpl implements _AccountFormState {
   final bool isBusy;
   @override
   final FormMode formMode;
+  final Map<String, bool> _visibilityFlags;
+  @override
+  Map<String, bool> get visibilityFlags {
+    if (_visibilityFlags is EqualUnmodifiableMapView) return _visibilityFlags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_visibilityFlags);
+  }
+
   @override
   final AccountEditTarget editTarget;
 
   @override
   String toString() {
-    return 'AccountFormState(emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy, formMode: $formMode, editTarget: $editTarget)';
+    return 'AccountFormState(name: $name, emailAddress: $emailAddress, password: $password, country: $country, phoneNumber: $phoneNumber, pin: $pin, isBusy: $isBusy, formMode: $formMode, visibilityFlags: $visibilityFlags, editTarget: $editTarget)';
   }
 
   @override
@@ -235,6 +274,7 @@ class _$AccountFormStateImpl implements _AccountFormState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AccountFormStateImpl &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.emailAddress, emailAddress) ||
                 other.emailAddress == emailAddress) &&
             (identical(other.password, password) ||
@@ -246,13 +286,25 @@ class _$AccountFormStateImpl implements _AccountFormState {
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
             (identical(other.formMode, formMode) ||
                 other.formMode == formMode) &&
+            const DeepCollectionEquality()
+                .equals(other._visibilityFlags, _visibilityFlags) &&
             (identical(other.editTarget, editTarget) ||
                 other.editTarget == editTarget));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, emailAddress, password, country,
-      phoneNumber, pin, isBusy, formMode, editTarget);
+  int get hashCode => Object.hash(
+      runtimeType,
+      name,
+      emailAddress,
+      password,
+      country,
+      phoneNumber,
+      pin,
+      isBusy,
+      formMode,
+      const DeepCollectionEquality().hash(_visibilityFlags),
+      editTarget);
 
   @JsonKey(ignore: true)
   @override
@@ -264,15 +316,19 @@ class _$AccountFormStateImpl implements _AccountFormState {
 
 abstract class _AccountFormState implements AccountFormState {
   const factory _AccountFormState(
-      {required final String emailAddress,
+      {required final String name,
+      required final String emailAddress,
       required final String password,
       required final Country country,
       required final String phoneNumber,
       required final String pin,
       required final bool isBusy,
       required final FormMode formMode,
+      required final Map<String, bool> visibilityFlags,
       required final AccountEditTarget editTarget}) = _$AccountFormStateImpl;
 
+  @override
+  String get name;
   @override
   String get emailAddress;
   @override
@@ -287,6 +343,8 @@ abstract class _AccountFormState implements AccountFormState {
   bool get isBusy;
   @override
   FormMode get formMode;
+  @override
+  Map<String, bool> get visibilityFlags;
   @override
   AccountEditTarget get editTarget;
   @override
