@@ -59,6 +59,7 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     this.initialCommunityType,
     this.profileDescriptionBuilder,
     this.searchTooltip = '',
+    this.displayManagementTooltipIfAvailable = true,
     super.key,
   });
 
@@ -80,6 +81,8 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final String Function(Profile? profile)? profileDescriptionBuilder;
 
   final String searchTooltip;
+
+  final bool displayManagementTooltipIfAvailable;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveCommunitiesDialogState();
@@ -345,7 +348,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
               ),
               const SizedBox(height: kPaddingSmall),
             ],
-            if (isOrganisationManager) ...<Widget>[
+            if (widget.displayManagementTooltipIfAvailable && isOrganisationManager) ...<Widget>[
               PositiveTransparentSheet(
                 children: <Widget>[
                   PositiveRichText(
