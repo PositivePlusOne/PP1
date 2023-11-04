@@ -87,6 +87,7 @@ class HomePage extends HookConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
+      onRefresh: () => viewModel.onRefresh(!isLoggedOut ? feedState : everyoneFeedState),
       appBarColor: colors.pink,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
