@@ -127,13 +127,14 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
             padding: const EdgeInsets.all(kPaddingSmall),
             child: Row(
               children: [
-                if (user != null)
+                if (user != null) ...<Widget>[
                   PositiveProfileCircularIndicator(
                     profile: Profile(
                       name: user.name,
                       accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
                     ),
                   ),
+                ],
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),

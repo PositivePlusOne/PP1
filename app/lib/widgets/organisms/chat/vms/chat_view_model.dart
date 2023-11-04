@@ -213,18 +213,18 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
-    log.d('ChatController: onChatChannelSelected');
-    state = state.copyWith(
-      currentChannel: channel,
-      currentChannelExtraData: extraData,
-    );
-
     try {
       await getStreamController.forceChannelUpdate(channel);
     } catch (ex) {
       log.e('ChatController: onChatChannelSelected, error: $ex');
       return;
     }
+
+    log.d('ChatController: onChatChannelSelected');
+    state = state.copyWith(
+      currentChannel: channel,
+      currentChannelExtraData: extraData,
+    );
 
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
@@ -355,16 +355,6 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       context: context,
       child: ChatActionsDialog(channel: channel),
     );
-  }
-
-  FutureOr<void> onCreateConversationSelected(BuildContext context) async {
-    final bool isInCurrentConversation = state.currentChannel != null;
-    if (isInCurrentConversation) {
-      await onCurrentChannelMembersConfirmed(context);
-      return;
-    }
-
-    await onCreateNewConversationSelected(context);
   }
 
   FutureOr<void> onCurrentChannelMembersConfirmed(BuildContext context) async {
