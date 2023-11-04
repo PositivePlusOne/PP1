@@ -1,9 +1,11 @@
 // Flutter imports:
+import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
 
@@ -27,7 +29,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 
 @RoutePage()
-class TagFeedPage extends HookConsumerWidget {
+class TagFeedPage extends StatefulHookConsumerWidget {
   const TagFeedPage({
     super.key,
     required this.tag,
@@ -36,7 +38,35 @@ class TagFeedPage extends HookConsumerWidget {
   final Tag tag;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TagFeedPage> createState() => _TagFeedPageState();
+}
+
+class _TagFeedPageState extends ConsumerState<TagFeedPage> {
+  Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    logger.d('onRefresh()');
+    cacheController.remove(cacheKey);
+    feedState.pagingController.refresh();
+
+    // Wait until the first page is loaded
+    int counter = 0;
+    while (feedState.pagingController.itemList == null && counter < 10) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      counter++;
+
+      // Check for an error
+      if (feedState.pagingController.error != null) {
+        throw feedState.pagingController.error!;
+      }
+    }
+
+    cacheController.add(key: cacheKey, value: feedState);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
@@ -44,7 +74,7 @@ class TagFeedPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    final TargetFeed feed = TargetFeed.fromTag(tag.key);
+    final TargetFeed feed = TargetFeed.fromTag(widget.tag.key);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
@@ -66,6 +96,7 @@ class TagFeedPage extends HookConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: onWillPopScope,
+      onRefresh: () => onRefresh(feedState, feedStateKey),
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -79,7 +110,7 @@ class TagFeedPage extends HookConsumerWidget {
         SliverPinnedHeader(
           child: PositiveTapBehaviour(
             onTap: (_) => onWillPopScope(),
-            child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, tag: tag, typography: typography),
+            child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, tag: widget.tag, typography: typography),
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),
