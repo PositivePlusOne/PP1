@@ -42,6 +42,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     this.isSelected = false,
     this.type = PositiveProfileListTileType.view,
     this.onSelected,
+    this.profileDescriptionBuilder,
     super.key,
   });
 
@@ -55,6 +56,8 @@ class PositiveProfileListTile extends ConsumerWidget {
 
   final bool isSelected;
   final VoidCallback? onSelected;
+
+  final String Function(Profile? profile)? profileDescriptionBuilder;
 
   static const double kProfileTileHeight = 72.0;
   static const double kProfileTileBorderRadius = 40.0;
@@ -101,6 +104,8 @@ class PositiveProfileListTile extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
+    final String profileDescription = profileDescriptionBuilder?.call(targetProfile!) ?? '';
+
     return PositiveTapBehaviour(
       onTap: onListTileSelected,
       isEnabled: isEnabled,
@@ -119,11 +124,25 @@ class PositiveProfileListTile extends ConsumerWidget {
             PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
             const SizedBox(width: kPaddingSmall),
             Expanded(
-              child: Text(
-                getSafeDisplayNameFromProfile(targetProfile),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: typography.styleTitle.copyWith(color: colors.colorGray7),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    getSafeDisplayNameFromProfile(targetProfile),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                  ),
+                  if (profileDescription.isNotEmpty) ...<Widget>[
+                    Text(
+                      profileDescription,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                    ),
+                  ],
+                ],
               ),
             ),
             const SizedBox(width: kPaddingSmall),
