@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -88,25 +89,27 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     }
   }
 
-  Future<void> onRefresh() async {
+  Future<void> onRefresh(PositiveFeedState feedState) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    if (profileController.currentProfileId == null) {
-      logger.d('onRefresh() - profileController.currentProfileId is null');
-      return;
-    }
 
     try {
       logger.d('onRefresh()');
       state = state.copyWith(isRefreshing: true);
-      final String cacheId = 'feeds:timeline-${profileController.currentProfileId}';
-      final PositiveFeedState? feedState = cacheController.get<PositiveFeedState>(cacheId);
+      feedState.pagingController.refresh();
 
-      // Check if the feed is already loaded
-      if (feedState != null && (feedState.pagingController.itemList?.isNotEmpty ?? false)) {
-        feedState.pagingController.refresh();
+      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      feedState.pagingController.notifyListeners();
+
+      // Wait until the first page is loaded
+      int counter = 0;
+      while (feedState.pagingController.itemList == null && counter < 10) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        counter++;
+
+        // Check for an error
+        if (feedState.pagingController.error != null) {
+          throw feedState.pagingController.error!;
+        }
       }
     } finally {
       state = state.copyWith(isRefreshing: false);
