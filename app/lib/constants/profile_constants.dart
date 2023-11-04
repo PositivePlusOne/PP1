@@ -30,4 +30,4 @@ const Map<String, bool> kDefaultFeatureFlags = {
 };
 
 const int kAgeRequirement13 = 13;
-const int kBiographyMaxLength = 320;
+const int kBiographyMaxLength = 200;

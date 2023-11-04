@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/registration/registration_complete_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -147,6 +148,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegistrationPasswordEntryRoute.page, path: '/registration/create/password'),
         AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
         AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
+        AutoRoute(page: RegistrationCompleteRoute.page, path: '/registration/profile/complete'),
         //* Login and Authentication
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
         AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),

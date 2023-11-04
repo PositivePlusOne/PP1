@@ -296,8 +296,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.pop();
@@ -1058,8 +1057,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const RegistrationCompleteRoute()]);
           break;
         case FormMode.edit:
           await appRouter.pop();
