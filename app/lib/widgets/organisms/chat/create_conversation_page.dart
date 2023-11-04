@@ -3,8 +3,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_communities_dialog.dart';
 import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
