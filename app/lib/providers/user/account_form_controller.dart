@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -34,6 +36,7 @@ part 'account_form_controller.g.dart';
 @freezed
 class AccountFormState with _$AccountFormState {
   const factory AccountFormState({
+    required String name,
     required String emailAddress,
     required String password,
     required Country country,
@@ -41,6 +44,7 @@ class AccountFormState with _$AccountFormState {
     required String pin,
     required bool isBusy,
     required FormMode formMode,
+    required Map<String, bool> visibilityFlags,
     required AccountEditTarget editTarget,
   }) = _AccountFormState;
 
@@ -50,6 +54,7 @@ class AccountFormState with _$AccountFormState {
     AccountEditTarget editTarget = AccountEditTarget.email,
   }) =>
       AccountFormState(
+        name: '',
         emailAddress: '',
         password: '',
         country: Country.fromLocale(locale),
@@ -57,20 +62,27 @@ class AccountFormState with _$AccountFormState {
         pin: '',
         isBusy: false,
         formMode: formMode,
+        visibilityFlags: {},
         editTarget: editTarget,
       );
 }
 
 class NewAccountValidator extends AbstractValidator<AccountFormState> {
   NewAccountValidator({
+    this.currentName = '',
     this.currentEmailAddress = '',
     this.currentPhoneNumber = '',
   }) {
+    ruleFor((e) => e.name, key: 'name').notEmpty().isAlphaNumericWithSpaces();
     ruleFor((e) => e.emailAddress, key: 'email').isFormattedEmailAddress();
     ruleFor((e) => e.password, key: 'password').meetsPasswordComplexity();
     ruleFor((e) => e.country, key: 'phone-prefix').notNull();
     ruleFor((e) => e.phoneNumber, key: 'phone').isValidPhoneNumber();
     ruleFor((e) => e.pin, key: 'pin').length(6, 6);
+
+    if (currentName.isNotEmpty) {
+      ruleFor((e) => e.name, key: 'name');
+    }
 
     if (currentEmailAddress.isNotEmpty) {
       ruleFor((e) => e.emailAddress, key: 'email');
@@ -81,11 +93,13 @@ class NewAccountValidator extends AbstractValidator<AccountFormState> {
     }
   }
 
+  final String currentName;
   final String currentEmailAddress;
   final String currentPhoneNumber;
 }
 
 enum AccountEditTarget {
+  name,
   email,
   phone,
   password,
@@ -96,8 +110,19 @@ enum AccountEditTarget {
 class AccountFormController extends _$AccountFormController {
   NewAccountValidator validator = NewAccountValidator();
 
+  List<ValidationError> get nameValidationResults => validator.validate(state).getErrorList('name');
+  bool get isNameValid => nameValidationResults.isEmpty;
+
+  bool get isNameChanged => state.name.trim() != providerContainer.read(profileControllerProvider).currentProfile?.name.trim();
+
+  bool get isNameVisibilityChanged => (state.visibilityFlags[kVisibilityFlagName] ?? false) != (providerContainer.read(profileControllerProvider).currentProfile?.visibilityFlags.contains(kVisibilityFlagName) ?? false);
+
+  bool get isDisplayingName => state.visibilityFlags[kVisibilityFlagName] ?? kDefaultVisibilityFlags[kVisibilityFlagName] ?? true;
+
   List<ValidationError> get emailValidationResults => validator.validate(state).getErrorList('email');
   bool get isEmailValid => emailValidationResults.isEmpty;
+
+  bool get isEmailChanged => state.emailAddress.trim() != providerContainer.read(profileControllerProvider).currentProfile?.email.trim();
 
   List<ValidationError> get passwordValidationResults => validator.validate(state).getErrorList('password');
   bool get isPasswordValid => passwordValidationResults.isEmpty;
@@ -149,6 +174,7 @@ class AccountFormController extends _$AccountFormController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
     validator = NewAccountValidator(
+      currentName: profileController.state.currentProfile?.name ?? '',
       currentEmailAddress: profileController.state.currentProfile?.email ?? '',
       currentPhoneNumber: profileController.state.currentProfile?.phoneNumber ?? '',
     );
@@ -164,17 +190,58 @@ class AccountFormController extends _$AccountFormController {
       }
 
       state = state.copyWith(
+        name: profileController.state.currentProfile!.name,
         emailAddress: profileController.state.currentProfile!.email,
         phoneNumber: phoneNumber,
         country: Country.fromPhoneCode(country) ?? Country.fromLocale(locale),
+        visibilityFlags: profileController.state.currentProfile!.buildFormVisibilityFlags(),
       );
     } else {
       state = state.copyWith(
+        name: '',
         emailAddress: '',
         phoneNumber: '',
         country: Country.fromLocale(locale),
+        visibilityFlags: {},
       );
     }
+  }
+
+  Set<String> buildVisibilityFlags() {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Set<String> flags = {};
+
+    //* Add existing flags
+    if (profileController.state.currentProfile != null) {
+      flags.addAll(profileController.state.currentProfile!.visibilityFlags);
+    }
+
+    //* Override with new values
+    for (final String key in state.visibilityFlags.keys) {
+      if (state.visibilityFlags[key] ?? true) {
+        flags.add(key);
+      } else {
+        flags.remove(key);
+      }
+    }
+
+    return flags;
+  }
+
+  void onNameChanged(String value) {
+    state = state.copyWith(name: value.trim());
+  }
+
+  void onNameVisibilityToggleRequested(BuildContext context) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Toggling name visibility');
+
+    state = state.copyWith(
+      visibilityFlags: {
+        ...state.visibilityFlags,
+        'name': !(state.visibilityFlags['name'] ?? true),
+      },
+    );
   }
 
   void onEmailAddressChanged(String value) {
@@ -241,6 +308,77 @@ class AccountFormController extends _$AccountFormController {
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> onChangeNameRequested() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+    final AppLocalizations localisations = AppLocalizations.of(appRouter.navigatorKey.currentContext!)!;
+
+    logger.d('Updating name to: ${state.name}');
+    if (!isNameValid) {
+      logger.e('Name is not valid');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      final Set<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateName(state.name, visibilityFlags);
+
+      final AccountUpdatedRoute route = AccountUpdatedRoute(
+        title: localisations.page_account_actions_change_name_updated_title,
+        body: localisations.page_account_actions_change_name_updated_body,
+        buttonText: localisations.page_account_actions_change_return_account_details,
+      );
+
+      state = state.copyWith(isBusy: false);
+      // and return to the account details page
+      appRouter.popUntil((route) => route.settings.name == AccountDetailsRoute.name);
+      await appRouter.push(route);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onNameConfirmed(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    // final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+
+    if (!isNameValid) {
+      logger.e('Name is not valid');
+      return;
+    }
+
+    state = state.copyWith(isBusy: true);
+    logger.i('Saving name: ${state.name}');
+
+    try {
+      final Set<String> visibilityFlags = buildVisibilityFlags();
+      await profileController.updateName(state.name, visibilityFlags);
+      //TODO which we might want to track
+      // analyticsController.trackEvent(AnalyticEvents.accountNameUpdated);
+
+      // and remove the page showing
+      appRouter.removeWhere((route) => true);
+      await appRouter.push(const HomeRoute());
+    } catch (ex) {
+      logger.e('Error updating name. $ex');
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onNameHelpRequested(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    logger.i('Requesting name help');
+
+    final HintDialogRoute hint = buildProfileNameHint(context);
+    await appRouter.push(hint);
   }
 
   Future<void> onEmailAddressConfirmed() async {

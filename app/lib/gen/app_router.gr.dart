@@ -75,6 +75,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AccountUpdateEmailAddressPage(),
       );
     },
+    AccountUpdateNameRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountUpdateNamePage(),
+      );
+    },
     AccountUpdatePasswordRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -698,6 +704,20 @@ class AccountUpdateEmailAddressRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountUpdateEmailAddressRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountUpdateNamePage]
+class AccountUpdateNameRoute extends PageRouteInfo<void> {
+  const AccountUpdateNameRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountUpdateNameRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountUpdateNameRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
