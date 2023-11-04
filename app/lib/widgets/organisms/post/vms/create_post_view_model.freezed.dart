@@ -20,6 +20,7 @@ mixin _$CreatePostViewModelState {
   bool get isProcessingMedia => throw _privateConstructorUsedError;
   bool get isUploadingMedia => throw _privateConstructorUsedError;
   bool get isCreatingPost => throw _privateConstructorUsedError;
+  bool get isCameraReady => throw _privateConstructorUsedError;
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
@@ -77,6 +78,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       bool isProcessingMedia,
       bool isUploadingMedia,
       bool isCreatingPost,
+      bool isCameraReady,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       bool isEditing,
@@ -131,6 +133,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isProcessingMedia = null,
     Object? isUploadingMedia = null,
     Object? isCreatingPost = null,
+    Object? isCameraReady = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? isEditing = null,
@@ -173,6 +176,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
       isCreatingPost: null == isCreatingPost
           ? _value.isCreatingPost
           : isCreatingPost // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isCameraReady: null == isCameraReady
+          ? _value.isCameraReady
+          : isCameraReady // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -310,6 +317,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       bool isProcessingMedia,
       bool isUploadingMedia,
       bool isCreatingPost,
+      bool isCameraReady,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       bool isEditing,
@@ -365,6 +373,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? isProcessingMedia = null,
     Object? isUploadingMedia = null,
     Object? isCreatingPost = null,
+    Object? isCameraReady = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? isEditing = null,
@@ -407,6 +416,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
       isCreatingPost: null == isCreatingPost
           ? _value.isCreatingPost
           : isCreatingPost // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isCameraReady: null == isCameraReady
+          ? _value.isCameraReady
+          : isCameraReady // ignore: cast_nullable_to_non_nullable
               as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
@@ -522,6 +535,7 @@ class _$CreatePostViewModelStateImpl
       this.isProcessingMedia = false,
       this.isUploadingMedia = false,
       this.isCreatingPost = false,
+      this.isCameraReady = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
       this.isEditing = false,
@@ -568,6 +582,9 @@ class _$CreatePostViewModelStateImpl
   @override
   @JsonKey()
   final bool isCreatingPost;
+  @override
+  @JsonKey()
+  final bool isCameraReady;
   @override
   @JsonKey()
   final PostType currentPostType;
@@ -661,7 +678,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isCameraReady: $isCameraReady, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditing: $isEditing, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -673,6 +690,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('isProcessingMedia', isProcessingMedia))
       ..add(DiagnosticsProperty('isUploadingMedia', isUploadingMedia))
       ..add(DiagnosticsProperty('isCreatingPost', isCreatingPost))
+      ..add(DiagnosticsProperty('isCameraReady', isCameraReady))
       ..add(DiagnosticsProperty('currentPostType', currentPostType))
       ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
       ..add(DiagnosticsProperty('isEditing', isEditing))
@@ -716,6 +734,8 @@ class _$CreatePostViewModelStateImpl
                 other.isUploadingMedia == isUploadingMedia) &&
             (identical(other.isCreatingPost, isCreatingPost) ||
                 other.isCreatingPost == isCreatingPost) &&
+            (identical(other.isCameraReady, isCameraReady) ||
+                other.isCameraReady == isCameraReady) &&
             (identical(other.currentPostType, currentPostType) ||
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
@@ -779,6 +799,7 @@ class _$CreatePostViewModelStateImpl
         isProcessingMedia,
         isUploadingMedia,
         isCreatingPost,
+        isCameraReady,
         currentPostType,
         currentCreatePostPage,
         isEditing,
@@ -820,6 +841,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final bool isProcessingMedia,
           final bool isUploadingMedia,
           final bool isCreatingPost,
+          final bool isCameraReady,
           final PostType currentPostType,
           final CreatePostCurrentPage currentCreatePostPage,
           final bool isEditing,
@@ -861,6 +883,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   bool get isUploadingMedia;
   @override
   bool get isCreatingPost;
+  @override
+  bool get isCameraReady;
   @override
   PostType get currentPostType;
   @override
