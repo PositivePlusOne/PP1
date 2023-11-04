@@ -28,6 +28,8 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
           : stringSetFromJson(json['interests']),
       tags: json['tags'] == null ? const {} : stringSetFromJson(json['tags']),
       placeSkipped: json['placeSkipped'] as bool? ?? false,
+      suppressEmailNotifications:
+          json['suppressEmailNotifications'] as bool? ?? false,
       place: json['place'] == null
           ? null
           : PositivePlace.fromJson(json['place'] as Map<String, dynamic>),
@@ -71,6 +73,7 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'interests': instance.interests.toList(),
       'tags': instance.tags.toList(),
       'placeSkipped': instance.placeSkipped,
+      'suppressEmailNotifications': instance.suppressEmailNotifications,
       'place': instance.place?.toJson(),
       'biography': instance.biography,
       'media': instance.media.map((e) => e.toJson()).toList(),
