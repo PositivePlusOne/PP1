@@ -7,7 +7,7 @@ import { RelationshipHelpers } from "../helpers/relationship_helpers";
 
 import { ChatConnectionAcceptedNotification } from "../services/builders/notifications/chat/chat_connection_accepted_notification";
 import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat/chat_connection_received_notification";
-import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat/chat_connection_rejected_notification";
+// import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat/chat_connection_rejected_notification";
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat/chat_connection_sent_notification";
 
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";

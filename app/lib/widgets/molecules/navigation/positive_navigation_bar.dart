@@ -30,12 +30,15 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
     required this.mediaQuery,
     this.index = NavigationBarIndex.hub,
     this.isDisabled = false,
+    this.scrollController,
     Key? key,
   }) : super(key: key);
 
   final MediaQueryData mediaQuery;
   final NavigationBarIndex index;
   final bool isDisabled;
+
+  final ScrollController? scrollController;
 
   static double calculateHeight(MediaQueryData mediaQuery) {
     return kBottomNavigationBarHeight + (kBottomNavigationBarVerticalMargin * 2) + mediaQuery.padding.bottom + kBottomNavigationBarBorderWidth;
@@ -73,6 +76,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
             child: PositiveNavigationBarContent(
               index: index,
               isDisabled: isDisabled,
+              scrollController: scrollController,
             ),
           ),
         ],
@@ -113,14 +117,24 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     Key? key,
     required this.index,
     required this.isDisabled,
+    this.scrollController,
   }) : super(key: key);
 
   final NavigationBarIndex index;
   final bool isDisabled;
+  final ScrollController? scrollController;
 
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
+
+    final bool isOnHomeRoute = router.current.name == HomeRoute.name;
+    if (isOnHomeRoute && newIndex == NavigationBarIndex.hub) {
+      // If we are on the home route and we want to navigate to the hub...
+      // Then scroll to the top of the feed
+      scrollController?.jumpTo(0.0);
+      return;
+    }
 
     late final PageRouteInfo routeInfo;
     switch (newIndex) {

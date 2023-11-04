@@ -89,16 +89,15 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     }
   }
 
-  Future<void> onRefresh(PositiveFeedState feedState) async {
+  Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
     final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
     try {
       logger.d('onRefresh()');
       state = state.copyWith(isRefreshing: true);
+      cacheController.remove(cacheKey);
       feedState.pagingController.refresh();
-
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      feedState.pagingController.notifyListeners();
 
       // Wait until the first page is loaded
       int counter = 0;
@@ -111,6 +110,8 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
           throw feedState.pagingController.error!;
         }
       }
+
+      cacheController.add(key: cacheKey, value: feedState);
     } finally {
       state = state.copyWith(isRefreshing: false);
     }
