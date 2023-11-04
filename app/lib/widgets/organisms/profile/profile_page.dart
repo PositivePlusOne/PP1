@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,6 +48,16 @@ class ProfilePage extends HookConsumerWidget {
     super.key,
   });
 
+  Widget buildBlockedProfilePage() {
+    return PositiveGenericPage(
+      title: 'You are not allowed to view this page',
+      body: 'You are not allowed to view this profile, if you think this is an error, please check out our app guidance.',
+      buttonText: 'Back',
+      style: PositiveGenericPageStyle.decorated,
+      onContinueSelected: () async => providerContainer.read(appRouterProvider).removeLast(),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ProfileViewModelState state = ref.watch(profileViewModelProvider);
@@ -65,6 +78,11 @@ class ProfilePage extends HookConsumerWidget {
 
     final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
     final Relationship? relationship = cacheController.get(relationshipId);
+    final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfile?.flMeta?.id ?? '') ?? {};
+    final bool isBlockedByTarget = relationshipStates.contains(RelationshipState.targetBlocked);
+    if (isBlockedByTarget) {
+      return buildBlockedProfilePage();
+    }
 
     final String expectedProfileStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: targetProfileId);
     final ProfileStatistics? profileStatistics = cacheController.get(expectedProfileStatisticsKey);
