@@ -137,6 +137,10 @@ class ProfilePage extends HookConsumerWidget {
     return PositiveScaffold(
       appBarColor: appBarColor,
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      onRefresh: () => viewModel.onRefresh(
+        feedState,
+        expectedFeedStateKey,
+      ),
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
           child: PositiveAppBar(
