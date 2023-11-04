@@ -93,8 +93,25 @@ class TagHelpers {
   /// helper to determine if a tag (as a string) represents an activity that is promoted
   static bool isPromoted(String tag) => tag.startsWith(_kPromotedKey);
 
+  // These feeds are subscribed to by signed in users, and can also when set to everyone be displayed by signed out users.
+  static bool isDefaultFeedTag(String tag) => tag == 'signed_in_users' || tag == 'everyone';
+
+  static bool isReserved(String tag) {
+    final bool isPromotedTag = isPromoted(tag);
+    if (isPromotedTag) {
+      return true;
+    }
+
+    final bool isDefaultFeedTag = TagHelpers.isDefaultFeedTag(tag);
+    if (isDefaultFeedTag) {
+      return true;
+    }
+
+    return false;
+  }
+
   /// helper to filter out (remove) all the tags that are special reserved strings (ie 'promoted*')
-  static List<Tag> filterReservedTags(List<Tag> tags) => tags.whereNot((element) => isPromoted(element.key)).toList();
+  static List<Tag> filterReservedTags(List<Tag> tags) => tags.whereNot((element) => isReserved(element.key)).toList();
 
   /// helper to filter out (remove) all the tag strings that are special reserved strings (ie 'promoted*')
   static List<String> filterReservedTagStrings(List<String> tags) => tags.whereNot((element) => isPromoted(element)).toList();

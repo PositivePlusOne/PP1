@@ -43,6 +43,7 @@ import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
 import 'package:app/widgets/organisms/profile/profile_location_page.dart';
 import 'package:app/widgets/organisms/profile/profile_page.dart';
 import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
+import 'package:app/widgets/organisms/registration/registration_complete_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/organisms/shared/tag_feed_page.dart';
@@ -147,6 +148,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegistrationPasswordEntryRoute.page, path: '/registration/create/password'),
         AutoRoute(page: RegistrationPhoneEntryRoute.page, path: '/registration/create/phone'),
         AutoRoute(page: RegistrationAccountSetupRoute.page, path: '/registration/profile/start'),
+        AutoRoute(page: RegistrationCompleteRoute.page, path: '/registration/profile/complete'),
         //* Login and Authentication
         AutoRoute(page: LoginRoute.page, path: '/login', guards: [signedOutGuard]),
         AutoRoute(page: LoginPasswordRoute.page, path: '/login/password', guards: [signedOutGuard]),

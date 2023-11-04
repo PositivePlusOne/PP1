@@ -1,10 +1,13 @@
 // Dart imports:
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/annotations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 import 'package:unicons/unicons.dart';
@@ -27,6 +30,9 @@ import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/resources/resources.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_reaction_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
@@ -58,12 +64,15 @@ class PostPage extends HookConsumerWidget {
     final PostViewModel viewModel = ref.read(provider.notifier);
     final PostViewModelState state = ref.watch(provider);
 
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final Profile? currentProfile = profileState.currentProfile;
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final bool isSignedOut = currentProfile == null;
 
     final Activity? activity = cacheController.get(activityId);
 
@@ -109,7 +118,8 @@ class PostPage extends HookConsumerWidget {
     }
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
-    final double maxSafePadding = PostCommentBox.calculateHeight(mediaQuery);
+    final double maxSafePadding = max(mediaQuery.padding.bottom, mediaQuery.viewInsets.bottom);
+    final double commentBoxSize = PostCommentBox.calculateHeight(mediaQuery);
 
     final bool commentsDisabled = activity?.securityConfiguration?.commentMode == const ActivitySecurityConfigurationMode.disabled();
 
@@ -149,6 +159,31 @@ class PostPage extends HookConsumerWidget {
       onWillPopScope: viewModel.onWillPopScope,
       overlayWidgets: <Widget>[
         if (canComment && !commentsDisabled) commentBox,
+        if (isSignedOut) ...<Widget>[
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: maxSafePadding + kPaddingMedium,
+                left: kPaddingMedium,
+                right: kPaddingMedium,
+              ),
+              child: PositiveButton(
+                colors: colors,
+                primaryColor: colors.pink,
+                label: localizations.shared_actions_sign_up,
+                layout: PositiveButtonLayout.iconLeft,
+                style: PositiveButtonStyle.primary,
+                onTapped: viewModel.onRegisterRequested,
+                iconWidgetBuilder: (Color color) => SvgPicture.asset(
+                  SvgImages.logosCircular,
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                  height: PositiveButton.kButtonIconRadiusRegular,
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,

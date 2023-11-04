@@ -9,6 +9,7 @@ enum AnalyticEvents {
   signInWithFacebook, // A user has just signed in with Facebook
   signInWithApple, // A user has just signed in with Apple
   signInWithPhone, // A user has just signed in with their phone number
+  registrationComplete, // A user has completed the registration process
   sessionTimeout, // A user has been signed out for inactivity
   accountLinkedEmail, // An email address has been linked to the users account
   accountLinkedGoogle, // A Google account has been linked to the users account
@@ -82,7 +83,11 @@ enum AnalyticEvents {
   securityMissingSecureEnclaveDetected,
   securityJailbreakDetected,
   securityDeviceIdDetected,
-  securityDeviceChangeDetected;
+  securityDeviceChangeDetected,
+
+  // Custom conversion events
+  conversionRegisterFromInterestRegistration,
+  conversionRegisterFromPostComments;
 
   // Takes the camel case name of the enum and converts it to a string with spaces and capital letters
   String get friendlyName {

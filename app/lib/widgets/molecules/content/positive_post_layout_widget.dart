@@ -100,9 +100,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   DesignTypographyModel get typeography => providerContainer.read(designControllerProvider.select((value) => value.typography));
 
   /// return if this layout is for an activity that is 'promoted'
-  bool get _isPromoted =>
-      // we are promoted when there is a promotion or there is a tag that signals that it is
-      promotion != null || tags.indexWhere((tag) => TagHelpers.isPromoted(tag)) != -1;
+  // we are promoted when there is a promotion or there is a tag that signals that it is
+  bool get _isPromoted => promotion != null || tags.indexWhere((tag) => TagHelpers.isPromoted(tag)) != -1;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

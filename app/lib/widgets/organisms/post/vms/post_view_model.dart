@@ -17,6 +17,8 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
@@ -171,5 +173,15 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
     } finally {
       state = state.copyWith(isBusy: false);
     }
+  }
+
+  Future<void> onRegisterRequested() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('Register requested');
+    await analyticsController.trackEvent(AnalyticEvents.conversionRegisterFromPostComments);
+    await appRouter.push(LoginRoute(senderRoute: PostRoute));
   }
 }

@@ -80,8 +80,10 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       'Connection': 'keep-alive',
     });
 
-    await player.open(media, play: false);
-    setStateIfMounted();
+    if (player.platform?.isVideoControllerAttached == true) {
+      await player.open(media, play: false);
+      setStateIfMounted();
+    }
   }
 
   Future<String> getDownloadUrl() async {

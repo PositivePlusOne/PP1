@@ -81,8 +81,6 @@ export namespace FeedService {
       return;
     }
 
-    const userTimelineFeed = client.feed("timeline", userId);
-
     // We add the feed promotion tag to the user's tags to ensure that the user's timeline feed is subscribed to the feed promotion feed.
     const additionalTags = [...(profile.tags ?? [])].map((tag) => TagsService.formatTag(tag));
 
@@ -98,13 +96,25 @@ export namespace FeedService {
         expectedFeeds.push({ targetSlug: "tags", targetUserId: additionalTag });
       }
 
-      const userTimelineFeedFollowing = await userTimelineFeed.following();
-      for (const expectedFeed of expectedFeeds) {
-        const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id.split(":")[0] === expectedFeed.targetSlug && feed.feed_id.split(":")[1] === expectedFeed.targetUserId);
-        if (!isFollowing) {
-          functions.logger.info("Following feed", { feed: expectedFeed });
-          await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetUserId);
+      try {
+        const userTimelineFeed = client.feed("timeline", userId);
+        const userTimelineFeedFollowing = await userTimelineFeed.following();
+        try {
+          for (const expectedFeed of expectedFeeds) {
+            const isFollowing = userTimelineFeedFollowing.results.some((feed) => feed.feed_id.split(":")[0] === expectedFeed.targetSlug && feed.feed_id.split(":")[1] === expectedFeed.targetUserId);
+            if (!isFollowing) {
+              functions.logger.info("Following feed", { feed: expectedFeed });
+              await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetUserId);
+            }
+          }
+        } catch (error) {
+          // This may occur if the thing you're subscribing to doesn't exist anymore, or if the socket times out for a number of reasons.
+          functions.logger.warn("Error following feed", { error });
         }
+      } catch (timelineFollowing) {
+        // This may be thrown if the timeline feed has recently been created.
+        // For example a new user, as they will not have an existing timeline feed yet.
+        functions.logger.warn("Error getting timeline feed following", { timelineFollowing });
       }
     } catch (error) {
       functions.logger.error("Error verifying default feed subscriptions for user", { userId, error });
