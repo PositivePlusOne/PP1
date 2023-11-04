@@ -13,10 +13,10 @@ export namespace ChatConnectionReceivedNotification {
    * @param {any} userProfile the user profile of the current user.
    * @param {any} target the target of the notification.
    */
-  export async function sendNotification(userProfile: ProfileJSON, target: ProfileJSON): Promise<void> {
+  export async function sendNotification(sender: ProfileJSON, target: ProfileJSON): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
-    const displayName = userProfile.displayName || "";
-    const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
+    const displayName = sender.displayName || "";
+    const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(sender);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_received.title");

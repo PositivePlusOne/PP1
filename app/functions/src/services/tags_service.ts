@@ -5,7 +5,7 @@ import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
 import { FeedService } from "./feed_service";
 import { ActivitiesService } from "./activities_service";
-import { ActivityJSON } from "../dto/activities";
+import { ActivityJSON, ActivitySecurityConfigurationMode } from "../dto/activities";
 
 export namespace TagsService {
   /**
@@ -21,6 +21,11 @@ export namespace TagsService {
     promotion = "promotion",
     chatPromotion = "promotion_chat",
     feedPromotion = "promotion_feed",
+    everyone = "everyone",
+    signed_in_users = "signed_in_users",
+    trending = "trending",
+    events = "events",
+    sponsored = "sponsored",
   }
 
   /**
@@ -270,6 +275,24 @@ export namespace TagsService {
     
     // and return the final list of tags that are all valid and formattted
     return returnTags;
+  }
+
+  /**
+   * Appends activity tags to tags based on security mode.
+   * @param {ActivitySecurityConfigurationMode} securityMode the security mode.
+   * @param {string[]} tags the tags.
+   */
+  export function appendActivityTagsToTags(securityMode: ActivitySecurityConfigurationMode, tags: string[]): string[] {
+    switch (securityMode) {
+      case "public":
+        tags.push(RestrictedTagKey.everyone);
+        break;
+      case "signed_in":
+        tags.push(RestrictedTagKey.signed_in_users);
+        break;
+    }
+
+    return tags;
   }
 
   /**

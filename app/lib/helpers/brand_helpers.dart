@@ -33,6 +33,11 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
   final StringBuffer tagBuffer = StringBuffer();
   for (final Tag tag in tags) {
+    final bool isReserved = TagHelpers.isReserved(tag.key);
+    if (isReserved) {
+      continue;
+    }
+
     tagBuffer.write('[#${tag.key}](${tag.feedLink}) ');
   }
 

@@ -11,6 +11,9 @@ export const DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS = [
     { targetSlug: "tags", targetUserId: "new" } as FeedRequestJSON,
     { targetSlug: "tags", targetUserId: "featured" } as FeedRequestJSON,
     { targetSlug: "tags", targetUserId: "events" } as FeedRequestJSON,
+    // This means EVERYONE will see these posts, eventually we will want to swap this to Mixpanel stats for trending
+    { targetSlug: "tags", targetUserId: "everyone" } as FeedRequestJSON,
+    { targetSlug: "tags", targetUserId: "signed_in_users" } as FeedRequestJSON,
 ];
 
 export enum FeedGroupType {

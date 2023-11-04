@@ -68,6 +68,14 @@ class HomePage extends HookConsumerWidget {
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(targetFeed);
     final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: targetFeed, currentProfileId: currentProfileId);
 
+    const TargetFeed everyoneTargetFeed = TargetFeed(
+      targetSlug: 'tags',
+      targetUserId: 'everyone',
+    );
+
+    final String everyoneFeedStateKey = PositiveFeedState.buildFeedCacheKey(everyoneTargetFeed);
+    final PositiveFeedState everyoneFeedState = cacheController.get(everyoneFeedStateKey) ?? PositiveFeedState.buildNewState(feed: everyoneTargetFeed, currentProfileId: currentProfileId);
+
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetFeed]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
@@ -120,6 +128,13 @@ class HomePage extends HookConsumerWidget {
             currentProfile: currentProfile,
             feedState: feedState,
             feed: targetFeed,
+            isSliver: true,
+          ),
+        ] else ...<Widget>[
+          PositiveFeedPaginationBehaviour(
+            currentProfile: null,
+            feedState: everyoneFeedState,
+            feed: everyoneTargetFeed,
             isSliver: true,
           ),
         ],
