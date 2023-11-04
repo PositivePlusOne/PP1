@@ -3,6 +3,8 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -58,12 +60,22 @@ class CreateConversationPage extends HookConsumerWidget {
     // If we're already in a channel, we want to hide all current members from the list
     final List<String> currentChannelMembers = chatViewModelState.currentChannel?.state?.members.map((e) => e.userId).where((element) => element?.isNotEmpty == true).cast<String>().toList() ?? <String>[];
 
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+
+    final bool isManagedProfile = profileController.isCurrentlyManagedProfile;
+
     return PositiveCommunitiesDialog(
       initialCommunityType: CommunityType.connected,
       mode: CommunitiesDialogMode.select,
       searchTooltip: 'Search Conversations',
-      supportedCommunityTypes: const <CommunityType>[
-        CommunityType.connected,
+      displayManagementTooltipIfAvailable: false,
+      supportedCommunityTypes: <CommunityType>[
+        if (isManagedProfile) ...[
+          CommunityType.followers,
+        ] else ...[
+          CommunityType.connected,
+        ],
       ],
       profileDescriptionBuilder: buildProfileDescription,
       selectedProfiles: chatViewModelState.selectedMembers.toList(),
