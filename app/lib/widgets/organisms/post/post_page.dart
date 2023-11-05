@@ -139,18 +139,21 @@ class PostPage extends HookConsumerWidget {
 
     final Widget commentBox = Align(
       alignment: Alignment.bottomCenter,
-      child: PostCommentBox(
-        mediaQuery: mediaQuery,
-        currentProfile: currentProfile,
-        canSwitchProfile: viewModel.canSwitchProfile,
-        onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
-          context,
-          activity?.securityConfiguration?.commentMode,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: maxSafePadding + kPaddingMedium),
+        child: PostCommentBox(
+          mediaQuery: mediaQuery,
+          currentProfile: currentProfile,
+          canSwitchProfile: viewModel.canSwitchProfile,
+          onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
+            context,
+            activity?.securityConfiguration?.commentMode,
+          ),
+          commentTextController: viewModel.commentTextController,
+          onCommentChanged: viewModel.onCommentTextChanged,
+          onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
+          isBusy: state.isBusy,
         ),
-        commentTextController: viewModel.commentTextController,
-        onCommentChanged: viewModel.onCommentTextChanged,
-        onPostCommentRequested: (_) => viewModel.onPostCommentRequested(),
-        isBusy: state.isBusy,
       ),
     );
 
@@ -267,7 +270,7 @@ class PostPage extends HookConsumerWidget {
                     feed: feed,
                     reactionMode: activity?.securityConfiguration?.commentMode,
                   ),
-                  SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),
+                  SliverToBoxAdapter(child: SizedBox(height: commentBoxSize)),
                 ],
               ),
             ],
