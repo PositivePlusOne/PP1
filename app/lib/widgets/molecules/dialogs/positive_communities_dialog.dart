@@ -332,6 +332,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,
+          appBarSpacing: 0.0,
+          appBarTrailingHeight: 0.0,
           children: <Widget>[
             buildAppBar(context, colors, controller.searchController),
             const SizedBox(height: kPaddingMedium),

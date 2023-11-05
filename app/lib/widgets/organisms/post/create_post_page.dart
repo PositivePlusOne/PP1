@@ -61,7 +61,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     if (widget.isEditPage || widget.activityData != null) {
       await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
-      await ref.read(createPostViewModelProvider.notifier).initCamera();
+      ref.read(createPostViewModelProvider.notifier).initCamera();
     }
   }
 
@@ -465,7 +465,7 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
             isShared: true,
           ),
         ),
-        const SizedBox(height: kPaddingAppBarBreak),
+        const SizedBox(height: kPaddingMassive),
       ],
     );
   }

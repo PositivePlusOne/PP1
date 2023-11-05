@@ -77,6 +77,7 @@ class NotificationsPage extends HookConsumerWidget {
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       onRefresh: () => PositiveNotificationsState.requestRefresh(notificationCacheKey),
+      physics: const AlwaysScrollableScrollPhysics(),
       visibleComponents: {
         PositiveScaffoldComponent.headingWidgets,
         if (!hasNotifications) PositiveScaffoldComponent.decorationWidget,

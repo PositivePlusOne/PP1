@@ -49,7 +49,7 @@ class PositiveBasicSliverList extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     final EdgeInsets padding = EdgeInsets.only(
-      top: includeAppBar ? 0.0 : kPaddingAppBarBreak,
+      top: includeAppBar ? 0.0 : kPaddingMassive,
       left: horizontalPadding,
       right: horizontalPadding,
     );

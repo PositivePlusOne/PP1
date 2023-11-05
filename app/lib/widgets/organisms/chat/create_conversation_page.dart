@@ -65,9 +65,9 @@ class CreateConversationPage extends HookConsumerWidget {
     final bool isManagedProfile = profileController.isCurrentlyManagedProfile;
 
     return PositiveCommunitiesDialog(
-      initialCommunityType: CommunityType.connected,
+      initialCommunityType: isManagedProfile ? CommunityType.followers : CommunityType.connected,
       mode: CommunitiesDialogMode.select,
-      searchTooltip: 'Search Conversations',
+      searchTooltip: isManagedProfile ? 'Search Followers' : 'Search Connections',
       displayManagementTooltipIfAvailable: false,
       supportedCommunityTypes: <CommunityType>[
         if (isManagedProfile) ...[

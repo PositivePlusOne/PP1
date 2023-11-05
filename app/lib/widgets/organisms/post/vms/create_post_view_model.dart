@@ -268,7 +268,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return false;
   }
 
-  Future<void> initCamera() async {
+  void initCamera() {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
       currentPostType: PostType.image,

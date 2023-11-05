@@ -750,12 +750,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       right: kPaddingNone,
       child: AppBar(
         backgroundColor: colours.black,
-        elevation: viewMode != PositiveCameraViewMode.none ? 1.0 : 0.0, // Add a white line to the top of the app bar
-        shadowColor: colours.white,
-        leadingWidth: kPaddingAppBarBreak,
+        elevation: 0.0,
+        shadowColor: colours.black,
+        leadingWidth: kPaddingInformationBreak,
         leading: viewMode != PositiveCameraViewMode.none
             ? Container(
-                padding: const EdgeInsets.only(left: kPaddingMedium),
+                // The Flutter AppBar has a default padding of 16.0, so we need to offset this
+                padding: const EdgeInsets.only(left: kPaddingMedium, top: 4.0, right: 1.0),
                 alignment: Alignment.centerLeft,
                 child: CameraFloatingButton.close(
                   active: true,
