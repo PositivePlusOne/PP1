@@ -111,7 +111,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Logger logger = providerContainer.read(loggerProvider);
 
     final List<dynamic> activityData = data['activities'] as List<dynamic>;
-    final List<String> newKnownActivities = [];
     final List<Activity> activities = [];
 
     for (final dynamic activity in activityData) {
@@ -127,13 +126,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         continue;
       }
 
-      newKnownActivities.add(activityId);
+      feedState.knownActivities.add(activityId);
       activities.add(activityObject);
     }
 
     logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
     feedState.pagingController.appendPage(activities, next);
-    feedState.knownActivities.addAll(newKnownActivities);
   }
 
   void saveActivitiesState() {
