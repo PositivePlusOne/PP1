@@ -117,6 +117,17 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     if (state.isRecordingClip) {
       canPop = await getCurrentCameraState.onCloseButtonTapped();
     }
+    if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
+      final AppRouter router = ref.read(appRouterProvider);
+      final BuildContext context = router.navigatorKey.currentContext!;
+      final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+      final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+      canPop = await positiveDiscardClipDialogue(
+        context: context,
+        colors: colors,
+        typography: typography,
+      );
+    }
 
     if (canPop) {
       logger.i("Pop Search page, push Home page");
