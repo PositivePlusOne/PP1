@@ -97,10 +97,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const activity = obj as ActivityJSON;
                 const publisherId = activity.publisherInformation?.publisherId || "";
                 const activityId = activity._fl_meta_?.fl_id || "";
-                const isActivityPublisher = sender && sender === publisherId;
+                const isActivityPublisher = publisherId && sender === publisherId;
+
+                if (publisherId && !isActivityPublisher) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(publisherId);
+                }
 
                 if (sender && publisherId && !isActivityPublisher) {
-                    joinedDataRecords.get(profileSchemaKey)?.add(activity.publisherInformation!.publisherId!);
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, publisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
@@ -125,17 +128,20 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 const repostTargetActivityPublisherId = activity.repostConfiguration?.targetActivityPublisherId || "";
                 const repostTargetActivityOriginFeed = activity.repostConfiguration?.targetActivityOriginFeed || "";
                 const isRepost = repostTargetActivityId && repostTargetActivityPublisherId && repostTargetActivityOriginFeed;
-                const isReposter = sender && sender === repostTargetActivityPublisherId;
+                const isReposter = repostTargetActivityPublisherId && sender === repostTargetActivityPublisherId;
+
+                if (isRepost && !isReposter) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(repostTargetActivityPublisherId);
+                }
 
                 if (sender && isRepost && !isReposter) {
-                    joinedDataRecords.get(activitySchemaKey)?.add(repostTargetActivityId);
-                    joinedDataRecords.get(profileSchemaKey)?.add(repostTargetActivityPublisherId);
-
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, repostTargetActivityPublisherId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                 }
 
                 if (isRepost) {
+                    joinedDataRecords.get(activitySchemaKey)?.add(repostTargetActivityId);
+
                     const expectedStatisticsKey = ReactionStatisticsService.getExpectedKeyFromOptions(repostTargetActivityId);
                     joinedDataRecords.get(reactionStatisticsSchemaKey)?.add(expectedStatisticsKey);
 
@@ -181,7 +187,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
                 break;
             case profileSchemaKey:
-                const isCurrentProfile = sender && sender === obj._fl_meta_?.fl_id;
+                const isCurrentProfile = obj._fl_meta_?.fl_id && sender === obj._fl_meta_?.fl_id;
                 const hasId = obj._fl_meta_?.fl_id;
                 if (sender && hasId && !isCurrentProfile) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, obj._fl_meta_!.fl_id!]);
@@ -189,10 +195,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 }
 
                 const ownerId = obj._fl_meta_?.ownedBy || "";
+                if (ownerId && !isCurrentProfile) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
+                }
+
                 if (sender && ownerId && !isCurrentProfile) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, ownerId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
-                    joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
                 }
 
                 const directoryEntry = obj._fl_meta_?.directoryEntryId || "";
@@ -217,10 +226,13 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case reactionSchemaKey:
                 const userId = obj?.user_id || "";
+                if (userId && userId !== sender) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(userId);
+                }
+
                 if (sender && userId && userId !== sender) {
                     const flid = StringHelpers.generateDocumentNameFromGuids([sender, userId]);
                     joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
-                    joinedDataRecords.get(profileSchemaKey)?.add(userId);
                 }
                 break;
             case promotionsSchemaKey:
@@ -375,6 +387,10 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                         profile.removePrivateData();
                         profile.notifyPartial();
                     }
+                } else if (!isCurrentDocument) {
+                    profile.removeFlaggedData();
+                    profile.removePrivateData();
+                    profile.notifyPartial();
                 }
 
                 responseData.data[profileSchemaKey].push(profile);
