@@ -145,6 +145,27 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     return blockedRelationships;
   }
 
+  List<Relationship> getCachedTargetBlockedMemberRelationships(List<Relationship> relationships) {
+    final logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    logger.i('ChatViewModel.getCachedBlockedMemberRelationships()');
+    final List<Relationship> blockedRelationships = [];
+
+    // Get members from the current channel
+    if (currentProfileId.isNotEmpty) {
+      for (final Relationship relationship in relationships) {
+        final relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+        if (relationshipStates.contains(RelationshipState.targetBlocked)) {
+          blockedRelationships.add(relationship);
+        }
+      }
+    }
+
+    return blockedRelationships;
+  }
+
   List<Relationship> getCachedMemberRelationships() {
     final logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
