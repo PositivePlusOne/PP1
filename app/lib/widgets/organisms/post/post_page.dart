@@ -157,6 +157,8 @@ class PostPage extends HookConsumerWidget {
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
+      physics: const AlwaysScrollableScrollPhysics(),
+      onRefresh: () async => reactionsState?.requestRefresh(expectedReactionsKey),
       overlayWidgets: <Widget>[
         if (canComment && !commentsDisabled) commentBox,
         if (isSignedOut) ...<Widget>[

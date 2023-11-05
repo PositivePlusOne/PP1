@@ -21,6 +21,7 @@ NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$NotificationPayload {
   String get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'foreign_id')
   String get foreignKey => throw _privateConstructorUsedError;
   @JsonKey(name: 'user_id')
   String get userId => throw _privateConstructorUsedError;
@@ -58,7 +59,7 @@ abstract class $NotificationPayloadCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String foreignKey,
+      @JsonKey(name: 'foreign_id') String foreignKey,
       @JsonKey(name: 'user_id') String userId,
       String sender,
       String title,
@@ -203,7 +204,7 @@ abstract class _$$NotificationPayloadImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      String foreignKey,
+      @JsonKey(name: 'foreign_id') String foreignKey,
       @JsonKey(name: 'user_id') String userId,
       String sender,
       String title,
@@ -320,7 +321,7 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
 class _$NotificationPayloadImpl implements _NotificationPayload {
   const _$NotificationPayloadImpl(
       {this.id = '',
-      this.foreignKey = '',
+      @JsonKey(name: 'foreign_id') this.foreignKey = '',
       @JsonKey(name: 'user_id') this.userId = '',
       this.sender = '',
       this.title = '',
@@ -351,7 +352,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   @JsonKey()
   final String id;
   @override
-  @JsonKey()
+  @JsonKey(name: 'foreign_id')
   final String foreignKey;
   @override
   @JsonKey(name: 'user_id')
@@ -463,7 +464,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
 abstract class _NotificationPayload implements NotificationPayload {
   const factory _NotificationPayload(
       {final String id,
-      final String foreignKey,
+      @JsonKey(name: 'foreign_id') final String foreignKey,
       @JsonKey(name: 'user_id') final String userId,
       final String sender,
       final String title,
@@ -492,6 +493,7 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get id;
   @override
+  @JsonKey(name: 'foreign_id')
   String get foreignKey;
   @override
   @JsonKey(name: 'user_id')

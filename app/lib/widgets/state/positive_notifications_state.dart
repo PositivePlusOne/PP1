@@ -19,6 +19,7 @@ class PositiveNotificationsState with PositivePaginationControllerState {
     required this.unreadCount,
     required this.unseenCount,
     required this.hasFirstLoad,
+    this.knownGroups = const {},
   });
 
   @override
@@ -30,10 +31,15 @@ class PositiveNotificationsState with PositivePaginationControllerState {
   int unreadCount;
   int unseenCount;
   bool hasFirstLoad;
+  Set<String> knownGroups;
 
   @override
   String buildCacheKey() {
     return buildNotificationsCacheKey(uid);
+  }
+
+  void appendKnownGroup(String group) {
+    knownGroups.add(group);
   }
 
   static Future<void> requestRefresh(String key) async {
@@ -46,6 +52,7 @@ class PositiveNotificationsState with PositivePaginationControllerState {
       return;
     }
 
+    state.knownGroups = {};
     state.pagingController.refresh();
 
     // Wait until the first page is loaded

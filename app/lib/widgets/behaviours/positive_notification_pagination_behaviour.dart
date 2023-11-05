@@ -171,6 +171,8 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     final List<NotificationPayload> newNotifications = [];
     final List<dynamic> notifications = (data.containsKey('notifications') ? data['notifications'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
+    // Some notifications may be treated as groups, so we need to keep track of the foreign keys
+    // Then we can drop the duplicates
     for (final dynamic notification in notifications) {
       try {
         logger.d('requestNextTimelinePage() - parsing notification: $notification');
@@ -178,6 +180,20 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
         if (newNotification.id.isEmpty) {
           logger.e('requestNextTimelinePage() - Failed to parse notification: $notification');
           continue;
+        }
+
+        final String foreignKey = newNotification.foreignKey;
+        if (foreignKey.isNotEmpty && foreignKey.contains(':')) {
+          final List<String> parts = foreignKey.split(':').take(3).toList();
+          if (parts.length == 3) {
+            final String newForeignKey = parts.join(':');
+            if (notificationsState.knownGroups.contains(newForeignKey)) {
+              logger.d('requestNextTimelinePage() - Skipping duplicate notification: $notification');
+              continue;
+            }
+
+            notificationsState.knownGroups.add(newForeignKey);
+          }
         }
 
         newNotifications.add(newNotification);

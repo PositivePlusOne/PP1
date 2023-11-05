@@ -13,7 +13,7 @@ part 'notification_payload.g.dart';
 abstract class NotificationPayload with _$NotificationPayload {
   const factory NotificationPayload({
     @Default('') String id,
-    @Default('') String foreignKey,
+    @Default('') @JsonKey(name: 'foreign_id') String foreignKey,
     @Default('') @JsonKey(name: 'user_id') String userId,
     @Default('') String sender,
     @Default('') String title,
