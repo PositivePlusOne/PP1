@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_256 } from "../constants/domain";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { UserService } from "../services/user_service";
 import { ActivitiesService } from "../services/activities_service";
@@ -11,7 +11,7 @@ import { CommentHelpers } from "../helpers/comment_helpers";
 import { RelationshipService } from "../services/relationship_service";
 
 export namespace ReactionEndpoints {
-    export const postReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const postReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
