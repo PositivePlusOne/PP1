@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -54,6 +57,22 @@ class PositiveChannelListTile extends ConsumerWidget {
     final List<Member> members = channel?.state?.members.toList() ?? [];
     final List<Profile> profiles = members.map((e) => cacheController.get<Profile>(e.userId!)).nonNulls.toList();
     final List<Profile> otherProfiles = profiles.where((element) => element.flMeta?.id != currentProfileId).toList();
+    final List<Profile> otherAvailableProfiles = [];
+
+    for (final Profile profile in otherProfiles) {
+      final String userId = profile.flMeta?.id ?? '';
+      if (userId.isEmpty) {
+        continue;
+      }
+
+      final String expectedRelationshipId = [currentProfileId, userId].asGUID;
+      final Relationship? relationship = cacheController.get<Relationship>(expectedRelationshipId);
+      final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+      final bool isTargetBlocked = states.contains(RelationshipState.targetBlocked);
+      if (!isTargetBlocked) {
+        otherAvailableProfiles.add(profile);
+      }
+    }
 
     final Message? latestMessage = channel?.state?.messages.reversed.firstOrNull;
     // final bool isOneToOne = channel?.state?.members.length == 2;
@@ -62,20 +81,29 @@ class PositiveChannelListTile extends ConsumerWidget {
     String description = '';
     String time = '';
 
-    if (otherProfiles.length == 1) {
-      title = otherProfiles.first.displayName.asHandle;
-    } else if (otherProfiles.length > 1 && otherProfiles.length < 4) {
-      title = otherProfiles.map((e) => e.displayName.asHandle).join(', ');
-    } else if (otherProfiles.length >= 4) {
-      final List<String> handles = otherProfiles.take(3).map((e) => e.displayName.asHandle).toList();
+    if (otherAvailableProfiles.length == 1) {
+      title = otherAvailableProfiles.first.displayName.asHandle;
+    } else if (otherAvailableProfiles.length > 1 && otherAvailableProfiles.length < 4) {
+      title = otherAvailableProfiles.map((e) => e.displayName.asHandle).join(', ');
+    } else if (otherAvailableProfiles.length >= 4) {
+      final List<String> handles = otherAvailableProfiles.take(3).map((e) => e.displayName.asHandle).toList();
       final int remaining = otherProfiles.length - 3;
       handles.add(localizations.shared_placeholders_member_count_more(remaining));
       title = handles.join(', ');
     }
 
     if (latestMessage != null) {
-      description = latestMessage.getFormattedDescription(localizations);
-      time = latestMessage.createdAt.timeAgoFromNow;
+      final String userId = latestMessage.user?.id ?? '';
+      final String expectedRelationshipId = [currentProfileId, userId].asGUID;
+      final Relationship? relationship = cacheController.get<Relationship>(expectedRelationshipId);
+      final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+      final bool isTargetBlocked = states.contains(RelationshipState.targetBlocked);
+      if (isTargetBlocked) {
+        description = localizations.shared_placeholders_blocked_user;
+      } else {
+        description = latestMessage.getFormattedDescription(localizations);
+        time = latestMessage.createdAt.timeAgoFromNow;
+      }
     }
 
     // if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
@@ -105,7 +133,7 @@ class PositiveChannelListTile extends ConsumerWidget {
         break;
       }
 
-      final Profile profile = otherProfiles[i];
+      final Profile profile = otherAvailableProfiles[i];
       final Widget indicator = PositiveProfileCircularIndicator(profile: profile, size: kIconHuge);
       indicatorWidth += overlapValue;
       indicators.add(indicator);
@@ -122,9 +150,9 @@ class PositiveChannelListTile extends ConsumerWidget {
     bool isVerified = false;
     Color accentColor = colors.teal;
     Color complementaryColor = accentColor.complimentTextColor;
-    if (otherProfiles.length == 1) {
-      isVerified = otherProfiles.first.isVerified;
-      accentColor = otherProfiles.first.accentColor.toSafeColorFromHex();
+    if (otherAvailableProfiles.length == 1) {
+      isVerified = otherAvailableProfiles.first.isVerified;
+      accentColor = otherAvailableProfiles.first.accentColor.toSafeColorFromHex();
       complementaryColor = accentColor.complimentTextColor;
     }
 
@@ -155,7 +183,7 @@ class PositiveChannelListTile extends ConsumerWidget {
                 ],
               ),
             ),
-            if (otherProfiles.isNotEmpty) ...<Widget>[
+            if (otherAvailableProfiles.isNotEmpty) ...<Widget>[
               const SizedBox(width: kPaddingSmall),
               Flexible(
                 child: Column(

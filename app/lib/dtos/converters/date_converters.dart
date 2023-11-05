@@ -22,6 +22,26 @@ String dateFromUnknown(dynamic json) {
   return '';
 }
 
+DateTime? dateTimeFromUnknown(dynamic json) {
+  if (json is String) {
+    return DateTime.parse(json);
+  }
+
+  if (json is int) {
+    return DateTime.fromMillisecondsSinceEpoch(json);
+  }
+
+  if (json is Map<String, dynamic>) {
+    if (json.containsKey('_seconds') && json.containsKey('_nanoseconds')) {
+      final int seconds = json['_seconds'] as int;
+      final int nanoseconds = json['_nanoseconds'] as int;
+      return DateTime.fromMillisecondsSinceEpoch(seconds * 1000 + nanoseconds ~/ 1000000);
+    }
+  }
+
+  return null;
+}
+
 String dateToUnknown(String? date) {
   if (date == null || date.isEmpty) {
     return '';

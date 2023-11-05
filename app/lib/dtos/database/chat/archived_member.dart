@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/dtos/converters/date_converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'archived_member.freezed.dart';
@@ -8,7 +9,7 @@ part 'archived_member.g.dart';
 class ArchivedMember with _$ArchivedMember {
   const factory ArchivedMember({
     @JsonKey(name: 'member_id') String? memberId,
-    @JsonKey(name: 'date_archived') DateTime? dateArchived,
+    @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown) DateTime? dateArchived,
     @JsonKey(name: 'last_message_id') String? lastMessageId,
   }) = _ArchivedMember;
 
