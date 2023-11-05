@@ -79,29 +79,6 @@ export namespace NotificationsService {
     const client = FeedService.getFeedsClient();
     const feed = client.feed("notification", uid);
 
-    const foreignIdTime = {
-      foreignID: notification.id,
-      time: creationTime,
-    };
-    
-    const activities = await client.getActivities({
-      foreignIDTimes: [foreignIdTime],
-    });
-    
-    if (activities.results && activities.results.length > 0) {
-      functions.logger.info(`Notification already exists for user: ${uid}. Deleting`, { activities });
-      for (const activity of activities.results) {
-        const activityId = activity.id;
-        const isValidUUID = FlamelinkHelpers.isValidUUIDv1(activityId);
-        if (!activityId || !isValidUUID) {
-          continue;
-        }
-
-        functions.logger.info(`Deleting notification for user: ${uid}`, { activity });
-        await feed.removeActivity(activity.id);
-      }
-    }
-
     await feed.addActivity({
       verb: "post",
       actor: uid,
