@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -134,10 +135,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     //? if we are currently creating a clip request that we stop
     if (state.isRecordingClip) {
-      getCurrentCameraState.onCloseButtonTapped();
-      return false;
+      await getCurrentCameraState.onCloseButtonTapped();
     }
 
+    //? Only do this if we are on the edit clip page, as the camera is no longer mounted at that point
     if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
       final AppRouter router = ref.read(appRouterProvider);
       final BuildContext context = router.navigatorKey.currentContext!;
@@ -171,6 +172,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         currentPostType: postType,
         activeButton: state.lastActiveButton,
       );
+    }
+
+    final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+    if (canPop && state.isRecordingClip && (deviceInfo is IosDeviceInfo)) {
+      onForceClosePage();
+      return false;
     }
 
     return canPop;
