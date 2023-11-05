@@ -406,8 +406,25 @@ class NotificationsController extends _$NotificationsController {
     final Logger logger = ref.read(loggerProvider);
     final PositiveNotificationsState notificationsState = getOrCreateNotificationCacheState(payload.userId);
 
+    final String foreignKey = payload.foreignKey;
+    if (foreignKey.isNotEmpty) {
+      // We need to do some checks, as if we can group match
+      // We need to remove the old one and add the new one
+
+      final Iterable<String> parts = foreignKey.split(':').take(3);
+      if (parts.length == 3) {
+        // This means we can build a group, and must check against the feed
+        final String groupId = parts.join(':');
+        final bool hasGroupMatch = notificationsState.knownGroups.contains(groupId);
+        if (hasGroupMatch) {
+          logger.d('attemptToStoreNotificationPayloadInFeed: Has group match, removing old notification');
+          notificationsState.pagingController.itemList?.removeWhere((element) => element.foreignKey == foreignKey);
+        }
+      }
+    }
+
     logger.d('attemptToStoreNotificationPayloadInFeed: $payload, $isForeground');
-    notificationsState.pagingController.insertItem(0, payload, equals: (a, b) => a.id == b.id);
+    notificationsState.pagingController.insertItem(0, payload);
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final String cacheKey = notificationsState.buildCacheKey();
