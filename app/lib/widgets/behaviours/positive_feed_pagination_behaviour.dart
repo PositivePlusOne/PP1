@@ -110,14 +110,28 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   void appendActivityPageToState(Map<String, dynamic> data, String? next) {
     final Logger logger = providerContainer.read(loggerProvider);
 
-    final List<dynamic> activities = data['activities'] as List<dynamic>;
-    final List<Activity> activityList = activities.map((dynamic activity) {
-      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
-      return Activity.fromJson(activityMap);
-    }).toList();
+    final List<dynamic> activityData = data['activities'] as List<dynamic>;
+    final List<Activity> activities = [];
 
-    logger.d('appendActivityPageToState() - activityList.length: ${activityList.length}');
-    feedState.pagingController.appendPage(activityList, next);
+    for (final dynamic activity in activityData) {
+      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
+      final Activity activityObject = Activity.fromJson(activityMap);
+      final String activityId = activityObject.flMeta?.id ?? '';
+
+      if (activityId.isEmpty) {
+        continue;
+      }
+
+      if (feedState.knownActivities.contains(activityId)) {
+        continue;
+      }
+
+      feedState.knownActivities.add(activityId);
+      activities.add(activityObject);
+    }
+
+    logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
+    feedState.pagingController.appendPage(activities, next);
   }
 
   void saveActivitiesState() {
