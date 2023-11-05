@@ -30,6 +30,16 @@ class PositiveFeedState with PositivePaginationControllerState {
   bool hasPerformedInitialLoad;
   String currentPaginationKey;
 
+  final Set<String> knownActivities = <String>{};
+
+  void appendKnownActivity(String str) {
+    knownActivities.add(str);
+  }
+
+  void appendKnownActivities(List<String> strs) {
+    knownActivities.addAll(strs);
+  }
+
   @override
   String buildCacheKey() {
     return buildFeedCacheKey(feed);
