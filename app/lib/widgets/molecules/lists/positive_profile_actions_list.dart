@@ -42,16 +42,17 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
     required this.targetProfile,
     required this.relationship,
     super.key,
-  });
+  }) : height = currentProfile == null ? 0.0 : kButtonListHeight;
 
   final Profile? currentProfile;
   final Profile targetProfile;
   final Relationship? relationship;
+  final double height;
 
   static const double kButtonListHeight = 42.0;
 
   @override
-  Size get preferredSize => const Size.fromHeight(kButtonListHeight);
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveProfileActionsListState();
