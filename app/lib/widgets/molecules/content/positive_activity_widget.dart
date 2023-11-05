@@ -193,10 +193,12 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               currentProfile: widget.currentProfile,
             ),
             child: ActivityPostHeadingWidget(
+              publisher: widget.targetProfile,
+              publisherRelationship: widget.targetRelationship,
+              currentProfile: widget.currentProfile,
               flMetaData: widget.activity?.flMeta,
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isShared: widget.isShared,
-              publisher: widget.targetProfile,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
@@ -269,6 +271,8 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               flMetaData: widget.activity?.flMeta,
               padding: EdgeInsets.symmetric(horizontal: widget.isShared ? kPaddingSmall : kPaddingMedium, vertical: kPaddingSuperSmall),
               publisher: widget.targetProfile,
+              publisherRelationship: widget.targetRelationship,
+              currentProfile: widget.currentProfile,
               promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               onOptions: () => widget.activity?.onPostOptionsSelected(

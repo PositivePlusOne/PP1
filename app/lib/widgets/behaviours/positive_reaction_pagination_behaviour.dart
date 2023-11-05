@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -170,6 +172,8 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: buildCommentHeaderText(localizations));
     final bool commentsDisabled = reactionMode == const ActivitySecurityConfigurationMode.disabled();
 
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+
     usePagingController(
       controller: reactionsState.pagingController,
       listener: requestNextPage,
@@ -209,7 +213,11 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
               transitionDuration: kAnimationDurationRegular,
-              itemBuilder: (_, reaction, index) => PositiveComment(comment: reaction, isFirst: index == 0),
+              itemBuilder: (_, reaction, index) => PositiveComment(
+                currentProfile: currentProfile,
+                comment: reaction,
+                isFirst: index == 0,
+              ),
               firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),

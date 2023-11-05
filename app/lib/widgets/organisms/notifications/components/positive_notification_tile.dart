@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,6 +10,9 @@ import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
@@ -160,6 +164,8 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
   Widget build(BuildContext context) {
     final logger = ref.read(loggerProvider);
 
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     final NotificationPayload payload = presenter.payload;
     final NotificationHandler handler = presenter.handler;
     final bool includeTimestamp = handler.includeTimestampOnFeed(payload);
@@ -167,7 +173,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     final Color backgroundColor = handler.getBackgroundColor(payload);
     final Color foregroundColor = handler.getForegroundColor(payload);
 
-    final Widget leading = handler.buildNotificationLeading(this);
+    Widget leading = handler.buildNotificationLeading(this);
     final List<Widget> trailing = handler.buildNotificationTrailing(this);
 
     // Once we're live and have more time, we need to find a nice way to localize this
@@ -184,6 +190,22 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
         body = '$body $timeAgo.';
       } catch (ex) {
         logger.e('Failed to parse createdAt: ${payload.createdAt} - ex: $ex');
+      }
+    }
+
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (currentProfile != null) {
+      final Set<RelationshipState> relationshipStates = presenter.senderRelationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+      final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+      if (isTargetBlocked) {
+        leading = const PositiveProfileCircularIndicator();
+      }
+
+      // Replace all instances of the sender's display name with a generic "Someone"
+      final String senderDisplayName = presenter.senderProfile?.displayName.asHandle ?? '';
+      if (senderDisplayName.isNotEmpty && isTargetBlocked) {
+        body = body.replaceAll(senderDisplayName, localizations.shared_placeholders_empty_display_name);
       }
     }
 

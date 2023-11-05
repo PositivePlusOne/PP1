@@ -3,6 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -163,6 +169,9 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   void appendNotificationsPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
     final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != notificationsState.currentPaginationKey;
 
     notificationsState.currentPaginationKey = nextPageKey;
@@ -176,12 +185,13 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     for (final dynamic notification in notifications) {
       try {
         logger.d('requestNextTimelinePage() - parsing notification: $notification');
-        final NotificationPayload newNotification = NotificationPayload.fromJson(notification);
+        NotificationPayload newNotification = NotificationPayload.fromJson(notification);
         if (newNotification.id.isEmpty) {
           logger.e('requestNextTimelinePage() - Failed to parse notification: $notification');
           continue;
         }
 
+        // Prevent grouped notifications (for example 2 likes vs 3 likes)
         final String foreignKey = newNotification.foreignKey;
         if (foreignKey.isNotEmpty) {
           if (notificationsState.knownGroups.contains(foreignKey)) {
