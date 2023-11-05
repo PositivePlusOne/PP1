@@ -759,7 +759,7 @@ class _AvatarList extends ConsumerWidget {
       );
     }
 
-    final numAvatars = min(filteredMembers.length, 3);
+    final int numAvatars = min(filteredMembers.length, 3);
     const double targetWidth = 40 * 3 - (avatarOffset * 2);
 
     return SizedBox(
