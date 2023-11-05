@@ -205,14 +205,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
   }
 
-  Future<void> onMessageTapped() async {
-    if (!mounted) {
-      return;
-    }
-
-    // TODO
-  }
-
   Future<void> onMoreActionsTapped() async {
     if (!mounted) {
       return;
@@ -255,8 +247,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final bool isSourceOrganisation = widget.currentProfile?.isOrganisation ?? false;
     final bool isTargetOrganisation = widget.targetProfile.isOrganisation;
     final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
-
-    final bool isSourceManaged = relationshipStates.contains(RelationshipState.sourceManaged);
 
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;
@@ -400,7 +390,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation) {
+    if ((!isCurrentUser && hasConnectedToTargetUser) || (!isCurrentUser && relationshipContainsOrganisation)) {
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,
