@@ -152,6 +152,28 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       );
     }
 
+    final bool isCreatingRepost = state.currentPostType == PostType.repost;
+    final bool isShowingRepostPreview = state.currentCreatePostPage == CreatePostCurrentPage.repostPreview;
+    if (isShowingRepostPreview) {
+      return true;
+    }
+
+    // The only other page in this process is the creation screen on the repost, so we can just pop back to the repost preview
+    if (isCreatingRepost) {
+      final AppRouter router = ref.read(appRouterProvider);
+      final BuildContext context = router.navigatorKey.currentContext!;
+      final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+      state = state.copyWith(
+        currentCreatePostPage: CreatePostCurrentPage.repostPreview,
+        currentPostType: PostType.repost,
+        activeButton: PositivePostNavigationActiveButton.flex,
+        activeButtonFlexText: localisations.page_create_post_create,
+      );
+
+      return false;
+    }
+
     if (!canPop) {
       late PostType postType;
       switch (state.lastActiveButton) {
