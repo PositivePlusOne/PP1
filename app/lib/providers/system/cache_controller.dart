@@ -152,7 +152,8 @@ class CacheController {
       return;
     }
 
-    if (hasRecord && newFetchMillis > 0 && newFetchMillis <= oldFetchMillis) {
+    final bool isOverwritingPartialData = !isDataPartial && isOldDataPartial;
+    if (hasRecord && !isOverwritingPartialData && newFetchMillis > 0 && newFetchMillis <= oldFetchMillis) {
       logger.w('Skipping cache update on $key due to new data being older or equal to existing data');
       return;
     }
