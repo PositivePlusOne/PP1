@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -1122,16 +1123,19 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-            Close Button to Pop Scope             -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               if (clipRecordingState.isActive)
                 CameraFloatingButton.close(
                   active: clipRecordingState.isPaused,
-                  onTap: (context) => onCloseButtonTapped(),
+                  onTap: (context) => context.popRoute(),
                   isDisplayed: clipRecordingState.isPaused,
                   iconColour: colours.black,
                   backgroundColour: colours.yellow,
                 ),
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+              //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               if (clipRecordingState.isInactive)
                 CameraFloatingButton.changeCamera(
                   active: canTakePictureOrVideo,
