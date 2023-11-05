@@ -94,24 +94,26 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     //* -=-=-=-=-=-            Video Preview             -=-=-=-=-=- *\\
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                    Positioned.fill(
-                      child: CropGridViewer.preview(
-                        controller: widget.controller!,
+                    if (widget.controller?.video.hasListeners == true)
+                      Positioned.fill(
+                        child: CropGridViewer.preview(
+                          controller: widget.controller!,
+                        ),
                       ),
-                    ),
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     //* -=-=-=-=-=-           Video Trim Slider          -=-=-=-=-=- *\\
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                    Positioned(
-                      bottom: widget.bottomNavigationSize + kPaddingMediumLarge,
-                      height: kIconHuge,
-                      left: kPaddingMediumLarge,
-                      right: kPaddingMediumLarge,
-                      child: SizedBox(
+                    if (widget.controller?.video.hasListeners == true)
+                      Positioned(
+                        bottom: widget.bottomNavigationSize + kPaddingMediumLarge,
                         height: kIconHuge,
-                        child: _trimSlider(),
+                        left: kPaddingMediumLarge,
+                        right: kPaddingMediumLarge,
+                        child: SizedBox(
+                          height: kIconHuge,
+                          child: _trimSlider(),
+                        ),
                       ),
-                    ),
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     //* -=-=-=-=-=-            Overlay Shader            -=-=-=-=-=- *\\
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
