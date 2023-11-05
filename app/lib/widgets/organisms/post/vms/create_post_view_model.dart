@@ -168,21 +168,49 @@ class CreatePostViewModel extends _$CreatePostViewModel {
             return false;
           }
 
-          //? if we are currently creating a clip request that we pause it, and display a dialogue asking the user if they would like to discard
-          //? also handles all state changes required in both the create post view model and the camera view model
-          await getCurrentCameraState.onCloseButtonTapped();
-          return false;
-        } else {
-          //? If we are not recording a clip, pop the scope
-          return true;
-        }
-      case CreatePostCurrentPage.createPostClip:
-        if (uneditedVideoFile != null) {
-          videoEditorController = VideoEditorController.file(
-            uneditedVideoFile!,
-            minDuration: const Duration(seconds: 1),
-            maxDuration: const Duration(seconds: 180),
-          );
+    //? Only do this if we are on the edit clip page, as the camera is no longer mounted at that point
+    if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
+      final AppRouter router = ref.read(appRouterProvider);
+      final BuildContext context = router.navigatorKey.currentContext!;
+      final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+      final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+      //? this is required here as the version within the camera will not be mounted on this page
+      canPop = !await positiveDiscardClipDialogue(
+        context: context,
+        colors: colors,
+        typography: typography,
+      );
+    }
+
+    final bool isCreatingRepost = state.currentPostType == PostType.repost;
+    final bool isShowingRepostPreview = state.currentCreatePostPage == CreatePostCurrentPage.repostPreview;
+    if (isShowingRepostPreview) {
+      return true;
+    }
+
+    // The only other page in this process is the creation screen on the repost, so we can just pop back to the repost preview
+    if (isCreatingRepost) {
+      final AppRouter router = ref.read(appRouterProvider);
+      final BuildContext context = router.navigatorKey.currentContext!;
+      final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+      state = state.copyWith(
+        currentCreatePostPage: CreatePostCurrentPage.repostPreview,
+        currentPostType: PostType.repost,
+        activeButton: PositivePostNavigationActiveButton.flex,
+        activeButtonFlexText: localisations.page_create_post_create,
+      );
+
+      return false;
+    }
+
+    if (!canPop) {
+      late PostType postType;
+      switch (state.lastActiveButton) {
+        case PositivePostNavigationActiveButton.post:
+          postType = PostType.text;
+          break;
+        case PositivePostNavigationActiveButton.clip:
           postType = PostType.clip;
           pageToNavigateTo = CreatePostCurrentPage.createPostEditClip;
           activeButton = state.lastActiveButton;
