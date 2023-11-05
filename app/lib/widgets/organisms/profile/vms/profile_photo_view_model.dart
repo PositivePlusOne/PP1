@@ -60,16 +60,16 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     logger.d("onSelectCamera");
     await appRouter.pop();
 
-    state = state.copyWith(isBusy: true);
-
-    final XFile result = await showCupertinoDialog(
-      context: context,
-      builder: (_) => const PositiveCameraDialog(),
-    );
-
-    logger.d("onSelectCamera: result is $result");
-
     try {
+      state = state.copyWith(isBusy: true);
+
+      final XFile result = await showCupertinoDialog(
+        context: context,
+        builder: (_) => const PositiveCameraDialog(),
+      );
+
+      logger.d("onSelectCamera: result is $result");
+
       await profileController.updateProfileImage(result);
       state = state.copyWith(isBusy: false);
 
