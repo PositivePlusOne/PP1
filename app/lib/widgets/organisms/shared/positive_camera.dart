@@ -559,6 +559,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
+  /// Offers user dialogue asking if they want to discard the clip
+  /// Returns true if user selects discard clip, otherwise returns false
+  /// Pauses the currently recording clip if needed
   Future<bool> onCloseButtonTapped() async {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
@@ -567,23 +570,22 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       await onPauseResumeClip(forcePause: true);
     }
 
-    late final bool deactivate;
+    late final bool discard;
     if (clipRecordingState.isPreRecording) {
-      deactivate = true;
+      discard = true;
     } else {
-      deactivate = await positiveDiscardClipDialogue(
+      discard = await positiveDiscardClipDialogue(
         context: context,
         colors: colors,
         typography: typography,
       );
     }
 
-    if (deactivate) {
+    if (discard) {
       await resetClipStateToDefault();
-      return true;
     }
 
-    return false;
+    return discard;
   }
 
   ///? End the current clip recording, discard currently recorded video

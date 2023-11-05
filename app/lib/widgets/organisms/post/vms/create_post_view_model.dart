@@ -98,6 +98,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   final TextEditingController promotionKeyTextController = TextEditingController();
 
   VideoEditorController? videoEditorController;
+  io.File? uneditedVideoFile;
 
   PositiveCameraState get getCurrentCameraState {
     return state.cameraWidgetKey.currentState as PositiveCameraState;
@@ -119,68 +120,113 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     if (canPop) {
       logger.i("Pop Search page, push Home page");
-      router.removeWhere((route) => true);
-      router.push(const HomeRoute());
+      router.popUntil((_) => !router.stack.any((route) => route.name == CreatePostRoute.name));
     }
 
     return false;
   }
 
   Future<bool> onWillPopScope() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    //? If we are on the entry page, allow the user to pop scope, taking them to their last page
     if (state.currentCreatePostPage == CreatePostCurrentPage.entry) {
       return true;
     }
 
-    bool canPop = (state.currentCreatePostPage == CreatePostCurrentPage.camera || state.isEditing);
+    //? If we are handling the pop ourselves, we need to return to the correct page
+    //? postType tells us which tab to go back to on the camera page
+    late PostType postType;
+    late CreatePostCurrentPage pageToNavigateTo;
+    late PositivePostNavigationActiveButton activeButton;
+    late String activeButtonFlexText;
 
-    //? if we are currently creating a clip request that we stop
-    if (state.isRecordingClip) {
-      await getCurrentCameraState.onCloseButtonTapped();
-    }
+    switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.entry:
+      case CreatePostCurrentPage.repostPreview:
+        return true;
+      case CreatePostCurrentPage.camera:
+        if (state.isRecordingClip) {
+          //! If we are on an ios device during clip recording, return to the hub page
+          //! This is a workaround due to an error in the camera software state
+          final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+          if (deviceInfo is IosDeviceInfo) {
+            onForceClosePage();
+            return false;
+          }
 
-    //? Only do this if we are on the edit clip page, as the camera is no longer mounted at that point
-    if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
-      final AppRouter router = ref.read(appRouterProvider);
-      final BuildContext context = router.navigatorKey.currentContext!;
-      final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-      final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-      //? this is required here as the version within the camera will not be mounted on this page
-      canPop = !await positiveDiscardClipDialogue(
-        context: context,
-        colors: colors,
-        typography: typography,
-      );
-    }
-
-    if (!canPop) {
-      late PostType postType;
-      switch (state.lastActiveButton) {
-        case PositivePostNavigationActiveButton.post:
-          postType = PostType.text;
-          break;
-        case PositivePostNavigationActiveButton.clip:
+          //? if we are currently creating a clip request that we pause it, and display a dialogue asking the user if they would like to discard
+          //? also handles all state changes required in both the create post view model and the camera view model
+          await getCurrentCameraState.onCloseButtonTapped();
+          return false;
+        } else {
+          //? If we are not recording a clip, pop the scope
+          return true;
+        }
+      case CreatePostCurrentPage.createPostClip:
+        if (uneditedVideoFile != null) {
+          videoEditorController = VideoEditorController.file(
+            uneditedVideoFile!,
+            minDuration: const Duration(seconds: 1),
+            maxDuration: const Duration(seconds: 180),
+          );
           postType = PostType.clip;
-          break;
-        case PositivePostNavigationActiveButton.event:
-          break;
-        default:
-          postType = PostType.event;
-      }
-
-      state = state.copyWith(
-        currentCreatePostPage: CreatePostCurrentPage.camera,
-        currentPostType: postType,
-        activeButton: state.lastActiveButton,
-      );
+          pageToNavigateTo = CreatePostCurrentPage.createPostEditClip;
+          activeButton = state.lastActiveButton;
+          activeButtonFlexText = localisations.shared_actions_next;
+        } else {
+          postType = PostType.image;
+          pageToNavigateTo = CreatePostCurrentPage.camera;
+          activeButton = state.lastActiveButton;
+          activeButtonFlexText = localisations.shared_actions_next;
+        }
+        postType = PostType.clip;
+        pageToNavigateTo = CreatePostCurrentPage.createPostEditClip;
+        activeButton = PositivePostNavigationActiveButton.flex;
+        activeButtonFlexText = localisations.shared_actions_next;
+      case CreatePostCurrentPage.createPostImage:
+        postType = PostType.image;
+        pageToNavigateTo = CreatePostCurrentPage.editPhoto;
+        activeButton = PositivePostNavigationActiveButton.flex;
+        activeButtonFlexText = localisations.shared_actions_next;
+      case CreatePostCurrentPage.createPostEditClip:
+        final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+        final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+        //? Discard Dialogue is required here as the version within the camera will not be mounted at this point
+        final bool discardClip = await positiveDiscardClipDialogue(
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+        if (discardClip) {
+          postType = PostType.clip;
+          pageToNavigateTo = CreatePostCurrentPage.camera;
+          activeButton = state.lastActiveButton;
+          activeButtonFlexText = localisations.shared_actions_next;
+        } else {
+          return false;
+        }
+      case CreatePostCurrentPage.editPhoto:
+      case CreatePostCurrentPage.createPostMultiImage:
+      case CreatePostCurrentPage.createPostText:
+      default:
+        postType = PostType.image;
+        pageToNavigateTo = CreatePostCurrentPage.camera;
+        activeButton = state.lastActiveButton;
+        activeButtonFlexText = localisations.shared_actions_next;
     }
 
-    final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-    if (canPop && state.isRecordingClip && (deviceInfo is IosDeviceInfo)) {
-      onForceClosePage();
-      return false;
-    }
+    state = state.copyWith(
+      currentCreatePostPage: pageToNavigateTo,
+      currentPostType: postType,
+      activeButton: activeButton,
+      activeButtonFlexText: activeButtonFlexText,
+      isBottomNavigationEnabled: true,
+    );
 
-    return canPop;
+    return false;
   }
 
   Future<void> initCamera() async {
@@ -583,10 +629,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    final io.File file = io.File(xFile.path);
+    uneditedVideoFile = io.File(xFile.path);
 
     videoEditorController = VideoEditorController.file(
-      file,
+      uneditedVideoFile!,
       minDuration: const Duration(seconds: 1),
       maxDuration: const Duration(seconds: 180),
     );
