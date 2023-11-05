@@ -109,9 +109,23 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
   }
 
   Widget buildSystemMessage(BuildContext context, Message message, DesignColorsModel colors, DesignTypographyModel typography, AppLocalizations locale, User currentStreamUser) {
-    final isOwnMessage = message.user?.id == currentStreamUser.id;
-    final isLeaveMessage = message.extraData["eventType"] == GetStreamSystemMessageType.userRemoved;
-    final user = message.mentionedUsers.firstOrNull;
+    final bool isOwnMessage = message.user?.id == currentStreamUser.id;
+    final bool isLeaveMessage = message.extraData["eventType"] == GetStreamSystemMessageType.userRemoved;
+    final User? user = message.mentionedUsers.firstOrNull;
+
+    bool canDisplay = false;
+    final String senderUserId = user?.id ?? '';
+    final String currentUserId = currentStreamUser.id;
+    final String expectedRelationshipId = [senderUserId, currentUserId].asGUID;
+
+    final Relationship? relationship = providerContainer.read(cacheControllerProvider).get<Relationship>(expectedRelationshipId);
+    final Profile? profile = providerContainer.read(cacheControllerProvider).get<Profile>(senderUserId);
+
+    if (relationship != null) {
+      final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentUserId);
+      canDisplay = !states.contains(RelationshipState.targetBlocked);
+    }
+
     final String messageText = buildMessageText(isOwnMessage, isLeaveMessage, message.text ?? '', locale);
 
     return Padding(
@@ -128,12 +142,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
             child: Row(
               children: [
                 if (user != null) ...<Widget>[
-                  PositiveProfileCircularIndicator(
-                    profile: Profile(
-                      name: user.name,
-                      accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                    ),
-                  ),
+                  PositiveProfileCircularIndicator(profile: canDisplay ? null : profile),
                 ],
                 Expanded(
                   child: Padding(
