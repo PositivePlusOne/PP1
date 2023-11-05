@@ -57,7 +57,7 @@ class HomePage extends HookConsumerWidget {
 
     final Profile? currentProfile = profileControllerState.currentProfile;
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    if (currentProfile != null) {
+    if (currentProfileId.isNotEmpty) {
       actions.addAll(profileControllerState.currentProfile?.buildCommonProfilePageActions() ?? []);
     }
 
