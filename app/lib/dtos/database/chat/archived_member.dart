@@ -1,6 +1,8 @@
 // Package imports:
-import 'package:app/dtos/converters/date_converters.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+// Project imports:
+import 'package:app/dtos/converters/date_converters.dart';
 
 part 'archived_member.freezed.dart';
 part 'archived_member.g.dart';

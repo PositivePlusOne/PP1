@@ -3,12 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,6 +21,7 @@ import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
