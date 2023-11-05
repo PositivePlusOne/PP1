@@ -140,7 +140,7 @@ class PostPage extends HookConsumerWidget {
     final Widget commentBox = Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: maxSafePadding + kPaddingMedium),
+        padding: EdgeInsets.only(bottom: maxSafePadding),
         child: PostCommentBox(
           mediaQuery: mediaQuery,
           currentProfile: currentProfile,
