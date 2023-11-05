@@ -6,6 +6,7 @@ import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ChatConnectionRejectedNotification {
+  export const TAG = "ChatConnectionRejectedNotification";
 
   /**
    * Sends a notification to the user that a connection request has been rejected.
@@ -21,14 +22,17 @@ export namespace ChatConnectionRejectedNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_rejected.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_rejected.body", { displayName });
-    const id = FlamelinkHelpers.generateIdentifier();
-
+    
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
     
+    const id = FlamelinkHelpers.generateIdentifier();
+    const foreignKey = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
+    
     const payload = new NotificationPayload({
       id,
+      foreign_id: foreignKey,
       sender: senderId,
       user_id: receiverId,
       title,

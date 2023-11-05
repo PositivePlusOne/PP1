@@ -43,7 +43,7 @@ export namespace ReactionGroupedLikedNotification {
     }
 
     const identifierParts = [
-      NotificationAction.POST_LIKED_GROUP, receiverId, activityId, reactionId,
+      NotificationAction.POST_LIKED_GROUP, receiverId, activityId,
     ];
 
 

@@ -43,7 +43,7 @@ export namespace ReactionGroupedCommentNotification {
     }
 
     const identifierParts = [
-      NotificationAction.POST_COMMENTED_GROUP, receiverId, activityId, reactionId,
+      NotificationAction.POST_COMMENTED_GROUP, receiverId, activityId,
     ];
 
 

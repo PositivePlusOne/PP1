@@ -7,6 +7,8 @@ import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ChatConnectionSentNotification {
+  export const TAG = "ChatConnectionSentNotification";
+
   /**
    * Sends a notification to the user that a connection request has been sent.
    * @param {any} userProfile the user profile of the current user.
@@ -21,14 +23,17 @@ export namespace ChatConnectionSentNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_sent.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_sent.body", { displayName });
-    const id = FlamelinkHelpers.generateIdentifier();
-
+    
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
+    
+    const id = FlamelinkHelpers.generateIdentifier();
+    const foreignKey = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
 
     const payload = new NotificationPayload({
       id,
+      foreign_id: foreignKey,
       sender: senderId,
       user_id: receiverId,
       title,

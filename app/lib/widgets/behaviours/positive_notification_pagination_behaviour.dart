@@ -183,17 +183,13 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
         }
 
         final String foreignKey = newNotification.foreignKey;
-        if (foreignKey.isNotEmpty && foreignKey.contains(':')) {
-          final List<String> parts = foreignKey.split(':').take(3).toList();
-          if (parts.length == 3) {
-            final String newForeignKey = parts.join(':');
-            if (notificationsState.knownGroups.contains(newForeignKey)) {
-              logger.d('requestNextTimelinePage() - Skipping duplicate notification: $notification');
-              continue;
-            }
-
-            notificationsState.knownGroups.add(newForeignKey);
+        if (foreignKey.isNotEmpty) {
+          if (notificationsState.knownGroups.contains(foreignKey)) {
+            logger.d('requestNextTimelinePage() - Skipping duplicate notification: $notification');
+            continue;
           }
+
+          notificationsState.knownGroups.add(foreignKey);
         }
 
         newNotifications.add(newNotification);
