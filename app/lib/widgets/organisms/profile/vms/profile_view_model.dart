@@ -44,6 +44,7 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
 
     logger.d('onRefresh()');
     cacheController.remove(cacheKey);
+    feedState.knownActivities.clear();
     feedState.pagingController.refresh();
 
     // Wait until the first page is loaded

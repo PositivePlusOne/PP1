@@ -111,6 +111,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Logger logger = providerContainer.read(loggerProvider);
 
     final List<dynamic> activityData = data['activities'] as List<dynamic>;
+    final List<String> newKnownActivities = [];
     final List<Activity> activities = [];
 
     for (final dynamic activity in activityData) {
@@ -126,12 +127,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         continue;
       }
 
-      feedState.knownActivities.add(activityId);
+      newKnownActivities.add(activityId);
       activities.add(activityObject);
     }
 
     logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
     feedState.pagingController.appendPage(activities, next);
+    feedState.knownActivities.addAll(newKnownActivities);
   }
 
   void saveActivitiesState() {
@@ -160,8 +162,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   bool checkShouldDisplayNoPosts({
     Profile? currentProfile,
-    Relationship? relationship,
   }) {
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final bool requestedFirstWindow = feedState.hasPerformedInitialLoad;
     if (!requestedFirstWindow) {
       return false;
@@ -171,6 +173,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Iterable<Activity>? activities = feedState.pagingController.itemList;
     final bool canDisplayAny = activities?.any((element) {
           final String publisherId = element.publisherInformation?.publisherId ?? '';
+          if (currentProfileId.isNotEmpty && publisherId == currentProfileId) {
+            return true;
+          }
+
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
           return element.canDisplayOnFeed(currentProfile, relationship);
@@ -190,7 +196,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       listener: requestNextPage,
     );
 
-    final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts();
+    final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);
+
     final Widget defaultNoPostsSliverWidget = SliverNoPostsPlaceholder(
       typography: typography,
       colors: colors,
