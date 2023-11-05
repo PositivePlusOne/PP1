@@ -1,5 +1,3 @@
-import * as functions from 'firebase-functions';
-
 import { FlMeta, FlMetaJSON } from "./meta";
 import { Place, PlaceJSON } from "./location";
 import { Media, MediaJSON } from "./media";
@@ -151,11 +149,6 @@ export class Profile {
     removeFlaggedData(): void {
         const isIncognito = this.isIncognito();
         const currentVisibilityFlagsSet = Array.from(this.visibilityFlags);
-
-        functions.logger.log(`Removing flagged data for ${this.displayName}`, {
-            currentVisibilityFlagsSet,
-            isIncognito,
-        });
 
         if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagName)) {
             this.name = '';
