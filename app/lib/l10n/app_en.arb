@@ -719,6 +719,7 @@
     "shared_form_information_display": "Why do we need this?",
 
     "shared_placeholders_empty_display_name": "@Anonymous",
+    "shared_placeholders_blocked_user": "A message was received",
     "shared_placeholders_empty_name": "Positive +1 member",
     "shared_placeholders_member_count_more": "+{count} More",
     "shared_placeholders_empty_message": "{handle} sent a message.",

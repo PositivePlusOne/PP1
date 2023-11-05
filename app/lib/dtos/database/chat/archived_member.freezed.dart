@@ -22,7 +22,7 @@ ArchivedMember _$ArchivedMemberFromJson(Map<String, dynamic> json) {
 mixin _$ArchivedMember {
   @JsonKey(name: 'member_id')
   String? get memberId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'date_archived')
+  @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
   DateTime? get dateArchived => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_message_id')
   String? get lastMessageId => throw _privateConstructorUsedError;
@@ -41,7 +41,8 @@ abstract class $ArchivedMemberCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'member_id') String? memberId,
-      @JsonKey(name: 'date_archived') DateTime? dateArchived,
+      @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
+      DateTime? dateArchived,
       @JsonKey(name: 'last_message_id') String? lastMessageId});
 }
 
@@ -89,7 +90,8 @@ abstract class _$$ArchivedMemberImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'member_id') String? memberId,
-      @JsonKey(name: 'date_archived') DateTime? dateArchived,
+      @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
+      DateTime? dateArchived,
       @JsonKey(name: 'last_message_id') String? lastMessageId});
 }
 
@@ -130,7 +132,8 @@ class __$$ArchivedMemberImplCopyWithImpl<$Res>
 class _$ArchivedMemberImpl implements _ArchivedMember {
   const _$ArchivedMemberImpl(
       {@JsonKey(name: 'member_id') this.memberId,
-      @JsonKey(name: 'date_archived') this.dateArchived,
+      @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
+      this.dateArchived,
       @JsonKey(name: 'last_message_id') this.lastMessageId});
 
   factory _$ArchivedMemberImpl.fromJson(Map<String, dynamic> json) =>
@@ -140,7 +143,7 @@ class _$ArchivedMemberImpl implements _ArchivedMember {
   @JsonKey(name: 'member_id')
   final String? memberId;
   @override
-  @JsonKey(name: 'date_archived')
+  @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
   final DateTime? dateArchived;
   @override
   @JsonKey(name: 'last_message_id')
@@ -187,7 +190,8 @@ class _$ArchivedMemberImpl implements _ArchivedMember {
 abstract class _ArchivedMember implements ArchivedMember {
   const factory _ArchivedMember(
           {@JsonKey(name: 'member_id') final String? memberId,
-          @JsonKey(name: 'date_archived') final DateTime? dateArchived,
+          @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
+          final DateTime? dateArchived,
           @JsonKey(name: 'last_message_id') final String? lastMessageId}) =
       _$ArchivedMemberImpl;
 
@@ -198,7 +202,7 @@ abstract class _ArchivedMember implements ArchivedMember {
   @JsonKey(name: 'member_id')
   String? get memberId;
   @override
-  @JsonKey(name: 'date_archived')
+  @JsonKey(name: 'date_archived', fromJson: dateTimeFromUnknown)
   DateTime? get dateArchived;
   @override
   @JsonKey(name: 'last_message_id')
