@@ -37,9 +37,16 @@ export namespace ReactionInduividualLikedNotification {
         throw new Error("Unable to generate notification payload");
     }
 
+    const identifierParts = [
+      NotificationAction.POST_LIKED_GROUP, receiverId, activityId, senderId,
+    ];
+
     const id = FlamelinkHelpers.generateIdentifier();
+    const groupId = FlamelinkHelpers.generateIdentifierFromStrings(identifierParts);
+
     const payload = new NotificationPayload({
       id,
+      group_id: groupId,
       sender: senderId,
       user_id: receiverId,
       title,

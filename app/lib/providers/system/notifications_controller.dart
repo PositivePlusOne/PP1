@@ -406,14 +406,14 @@ class NotificationsController extends _$NotificationsController {
     final Logger logger = ref.read(loggerProvider);
     final PositiveNotificationsState notificationsState = getOrCreateNotificationCacheState(payload.userId);
 
-    final String foreignKey = payload.foreignKey;
-    if (foreignKey.isNotEmpty) {
+    final String groupId = payload.groupId;
+    if (groupId.isNotEmpty) {
       // We need to do some checks, as if we can group match
       // We need to remove the old one and add the new one
-      final bool hasGroupMatch = notificationsState.knownGroups.contains(foreignKey);
+      final bool hasGroupMatch = notificationsState.knownGroups.contains(groupId);
       if (hasGroupMatch) {
         logger.d('attemptToStoreNotificationPayloadInFeed: Has group match, removing old notification');
-        notificationsState.pagingController.itemList?.removeWhere((element) => element.foreignKey == foreignKey);
+        notificationsState.pagingController.itemList?.removeWhere((element) => element.groupId == groupId);
       }
     }
 

@@ -21,8 +21,8 @@ NotificationPayload _$NotificationPayloadFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$NotificationPayload {
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: 'foreign_id')
-  String get foreignKey => throw _privateConstructorUsedError;
+  @JsonKey(name: 'group_id')
+  String get groupId => throw _privateConstructorUsedError;
   @JsonKey(name: 'user_id')
   String get userId => throw _privateConstructorUsedError;
   String get sender => throw _privateConstructorUsedError;
@@ -59,7 +59,7 @@ abstract class $NotificationPayloadCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'foreign_id') String foreignKey,
+      @JsonKey(name: 'group_id') String groupId,
       @JsonKey(name: 'user_id') String userId,
       String sender,
       String title,
@@ -100,7 +100,7 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
   @override
   $Res call({
     Object? id = null,
-    Object? foreignKey = null,
+    Object? groupId = null,
     Object? userId = null,
     Object? sender = null,
     Object? title = null,
@@ -118,9 +118,9 @@ class _$NotificationPayloadCopyWithImpl<$Res, $Val extends NotificationPayload>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      foreignKey: null == foreignKey
-          ? _value.foreignKey
-          : foreignKey // ignore: cast_nullable_to_non_nullable
+      groupId: null == groupId
+          ? _value.groupId
+          : groupId // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -204,7 +204,7 @@ abstract class _$$NotificationPayloadImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      @JsonKey(name: 'foreign_id') String foreignKey,
+      @JsonKey(name: 'group_id') String groupId,
       @JsonKey(name: 'user_id') String userId,
       String sender,
       String title,
@@ -246,7 +246,7 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? foreignKey = null,
+    Object? groupId = null,
     Object? userId = null,
     Object? sender = null,
     Object? title = null,
@@ -264,9 +264,9 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      foreignKey: null == foreignKey
-          ? _value.foreignKey
-          : foreignKey // ignore: cast_nullable_to_non_nullable
+      groupId: null == groupId
+          ? _value.groupId
+          : groupId // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -321,7 +321,7 @@ class __$$NotificationPayloadImplCopyWithImpl<$Res>
 class _$NotificationPayloadImpl implements _NotificationPayload {
   const _$NotificationPayloadImpl(
       {this.id = '',
-      @JsonKey(name: 'foreign_id') this.foreignKey = '',
+      @JsonKey(name: 'group_id') this.groupId = '',
       @JsonKey(name: 'user_id') this.userId = '',
       this.sender = '',
       this.title = '',
@@ -352,8 +352,8 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   @JsonKey()
   final String id;
   @override
-  @JsonKey(name: 'foreign_id')
-  final String foreignKey;
+  @JsonKey(name: 'group_id')
+  final String groupId;
   @override
   @JsonKey(name: 'user_id')
   final String userId;
@@ -400,7 +400,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
 
   @override
   String toString() {
-    return 'NotificationPayload(id: $id, foreignKey: $foreignKey, userId: $userId, sender: $sender, title: $title, body: $body, bodyMarkdown: $bodyMarkdown, icon: $icon, createdAt: $createdAt, extraData: $extraData, topic: $topic, action: $action, priority: $priority)';
+    return 'NotificationPayload(id: $id, groupId: $groupId, userId: $userId, sender: $sender, title: $title, body: $body, bodyMarkdown: $bodyMarkdown, icon: $icon, createdAt: $createdAt, extraData: $extraData, topic: $topic, action: $action, priority: $priority)';
   }
 
   @override
@@ -409,8 +409,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
         (other.runtimeType == runtimeType &&
             other is _$NotificationPayloadImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.foreignKey, foreignKey) ||
-                other.foreignKey == foreignKey) &&
+            (identical(other.groupId, groupId) || other.groupId == groupId) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.sender, sender) || other.sender == sender) &&
             (identical(other.title, title) || other.title == title) &&
@@ -433,7 +432,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      foreignKey,
+      groupId,
       userId,
       sender,
       title,
@@ -464,7 +463,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
 abstract class _NotificationPayload implements NotificationPayload {
   const factory _NotificationPayload(
       {final String id,
-      @JsonKey(name: 'foreign_id') final String foreignKey,
+      @JsonKey(name: 'group_id') final String groupId,
       @JsonKey(name: 'user_id') final String userId,
       final String sender,
       final String title,
@@ -493,8 +492,8 @@ abstract class _NotificationPayload implements NotificationPayload {
   @override
   String get id;
   @override
-  @JsonKey(name: 'foreign_id')
-  String get foreignKey;
+  @JsonKey(name: 'group_id')
+  String get groupId;
   @override
   @JsonKey(name: 'user_id')
   String get userId;
