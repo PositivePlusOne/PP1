@@ -1,12 +1,6 @@
 // Flutter imports:
 
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
-import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
-import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,12 +9,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -30,6 +27,8 @@ import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
 import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
+import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';

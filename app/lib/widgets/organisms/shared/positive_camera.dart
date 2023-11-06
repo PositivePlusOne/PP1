@@ -34,7 +34,6 @@ import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
-import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
 import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
 import 'package:app/widgets/organisms/shared/components/scrolling_selector.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -168,6 +167,8 @@ class PositiveCamera extends StatefulHookConsumerWidget {
 
 class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMixin {
   FaceDetectionModel? faceDetectionModel;
+  CaptureRequest? videoCaptureRequest;
+
   FlashMode flashMode = FlashMode.auto;
 
   final SensorConfig config = SensorConfig.single(
@@ -217,9 +218,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     return true;
   }
 
-  ///? Shader parameters
-  ///
-
   final FaceDetector faceDetector = FaceDetector(
     options: FaceDetectorOptions(enableContours: true, enableLandmarks: true),
   );
@@ -240,12 +238,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (mounted) {
-        await checkCameraPermission(request: true);
-      }
+      await checkCameraPermission(request: true);
+      await checkLibraryPermission(request: true);
 
-      if (mounted) {
-        await checkLibraryPermission(request: true);
+      if (!mounted) {
+        return;
       }
 
       final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
@@ -267,12 +264,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   @override
   void onPause() {
-    resetClipStateToDefault();
+    super.onPause();
+    stopClipRecording();
   }
 
   @override
   void deactivate() {
-    stopClipTimers();
+    stopClipRecording();
 
     clipRecordingState = ClipRecordingState.notRecording;
     faceDetector.close();
@@ -433,8 +431,12 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   Future<void> onVideoRecordingRequestStart(CameraState cameraState) async {
+    if (!mounted) {
+      return;
+    }
+
     //? do not allow the user to begin recording when recording has already begun
-    if (clipRecordingState.isActive) {
+    if (clipRecordingState.isRecording) {
       return;
     }
 
@@ -452,9 +454,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         },
       );
 
-      if (widget.onClipStateChange != null) {
-        widget.onClipStateChange!(clipRecordingState);
-      }
+      widget.onClipStateChange?.call(clipRecordingState);
 
       delayTimer = Timer.periodic(
         const Duration(seconds: 1),
@@ -480,44 +480,76 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   Future<void> onVideoRecordingStart(CameraState cameraState) async {
-    late VideoCameraState videoState;
-    cameraState.when(
-      onVideoMode: (p0) {
-        videoState = p0;
-      },
-    );
+    if (!mounted) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    late final CameraState newCameraState;
+
+    try {
+      cameraState.setState(CaptureMode.video);
+      newCameraState = await cameraState.cameraContext.stateController.stream.firstWhere((element) => element is VideoCameraState || element is VideoRecordingCameraState);
+    } catch (ex) {
+      logger.w("Failed to get camera state, maybe unmounted? $ex");
+      rethrow;
+    }
+
+    if (newCameraState is! VideoCameraState && newCameraState is! VideoRecordingCameraState) {
+      logger.e("Error starting video recording: Camera state is not a video camera state");
+      throw ("Error starting video recording: Camera state is not a video camera state");
+    }
 
     //? Begin clip recording
     try {
-      await videoState.startRecording();
-    } catch (e) {
-      final Logger logger = ref.read(loggerProvider);
-      logger.e("Error starting video recording: $e");
-    }
+      if (newCameraState is VideoCameraState) {
+        videoCaptureRequest = await newCameraState.startRecording();
+      }
 
-    setStateIfMounted(callback: () {
+      if (newCameraState is VideoRecordingCameraState) {
+        final MediaCapture? captureRequest = newCameraState.cameraContext.mediaCaptureController.value;
+        if (captureRequest == null) {
+          logger.e("Error starting video recording: No capture request was available");
+          throw ("Error starting video recording: No capture request was available");
+        }
+
+        await newCameraState.resumeRecording(captureRequest);
+      }
+
       clipRecordingState = ClipRecordingState.recording;
-    });
-
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(clipRecordingState);
-    }
-
-    if (widget.isRecordingLengthEnabled) {
+      widget.onClipStateChange?.call(clipRecordingState);
       clipCurrentTime = widget.maxRecordingLength ?? 1;
       startRecordingTimer();
+    } catch (e) {
+      logger.e("Error starting video recording: $e");
+      rethrow;
     }
 
-    //TODO impliment unlimited time here if needed
+    setStateIfMounted();
   }
 
   void startRecordingTimer() {
+    if (!mounted) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final bool isRecording = clipRecordingState.isRecording;
+    if (!isRecording) {
+      logger.w("Attempted to start clip recording timer when not recording");
+      return;
+    }
+
     clipTimer = Timer.periodic(
       const Duration(milliseconds: 100),
       (timer) async {
+        if (!mounted) {
+          return;
+        }
+
         if (clipCurrentTime <= 0) {
-          timer.cancel();
-          await onVideoRecordingEnd();
+          await stopClipRecording();
+          await attemptProcessVideoResult();
         } else {
           clipCurrentTime = clipCurrentTime - 100;
         }
@@ -525,116 +557,66 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
   }
 
-  Future<void> onVideoRecordingEnd() async {
-    //? Cleanup ui variables for video recording end
-    setStateIfMounted(
-      callback: () {
-        clipRecordingState = ClipRecordingState.notRecording;
-      },
+  Future<void> attemptProcessVideoResult() async {
+    if (!mounted) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    if (videoCaptureRequest == null) {
+      logger.e("Attempted to stop clip recording when no capture was available");
+      return;
+    }
+
+    final XFile? file = await videoCaptureRequest?.when(
+      single: (single) => single.file,
     );
 
-    final VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
-
-    try {
-      await videoRecordingCameraState.stopRecording();
-    } catch (e) {
-      final Logger logger = ref.read(loggerProvider);
-      logger.e("Error stopping video recording: $e");
-      await resetClipStateToDefault();
+    final int length = await file?.length() ?? 0;
+    if (length <= 0) {
+      logger.w("Attempted to stop clip recording when no file was available");
+      return;
     }
 
-    MediaCapture? currentCapture = videoRecordingCameraState.cameraContext.mediaCaptureController.value;
-
-    if (currentCapture != null) {
-      final XFile? file = await currentCapture.captureRequest.when(
-        single: (single) => single.file,
-      );
-
-      if (file == null) {
-        return;
-      }
-
-      //? we do not need to call the stateChange callback here as it is implicitly called by the callback below
-      await widget.onCameraVideoTaken?.call(file);
-    }
-  }
-
-  /// Offers user dialogue asking if they want to discard the clip
-  /// Returns true if user selects discard clip, otherwise returns false
-  /// Pauses the currently recording clip if needed
-  Future<bool> onCloseButtonTapped() async {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-
-    if (clipRecordingState.isRecording) {
-      await onPauseResumeClip(forcePause: true);
-    }
-
-    late final bool discard;
-    if (clipRecordingState.isPreRecording) {
-      discard = true;
-    } else {
-      discard = await positiveDiscardClipDialogue(
-        context: context,
-        colors: colors,
-        typography: typography,
-      );
-    }
-
-    if (discard) {
-      await resetClipStateToDefault();
-    }
-
-    return discard;
-  }
-
-  ///? End the current clip recording, discard currently recorded video
-  Future<void> resetClipStateToDefault() async {
-    stopClipTimers();
-    await stopClipRecording();
-    if (widget.onClipStateChange != null) {
-      widget.onClipStateChange!(clipRecordingState);
-    }
-  }
-
-  ///? End the video recording and process the currently recorded video as normal
-  void finishClipRecordingImmediately() {
-    stopClipTimers();
-    onVideoRecordingEnd();
-  }
-
-  ///? Deactivate all variables to do with delay timer and clip timer
-  ///
-  ///? Clears the current timers, stopping all further callbacks originating from them
-  void stopClipTimers() {
-    clipCurrentTime = -1;
-    currentDelay = -1;
-
-    if (delayTimer != null) {
-      delayTimer!.cancel();
-      delayTimer = null;
-    }
-
-    if (clipTimer != null) {
-      clipTimer!.cancel();
-      clipTimer = null;
-    }
+    //? we do not need to call the stateChange callback here as it is implicitly called by the callback below
+    clipRecordingState = ClipRecordingState.finishedRecording;
+    widget.onClipStateChange?.call(clipRecordingState);
+    await widget.onCameraVideoTaken?.call(file!);
   }
 
   ///? Attempt to stop the clip recording, does not capture the resulting video
   Future<void> stopClipRecording() async {
-    if (cachedCameraState != null) {
-      VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
-      try {
-        await videoRecordingCameraState.stopRecording();
-      } catch (e) {
-        stopClipTimers();
-        if (widget.onClipStateChange != null) {
-          widget.onClipStateChange!(clipRecordingState);
-        }
-      }
+    if (!mounted) {
+      return;
     }
-    clipRecordingState = ClipRecordingState.notRecording;
+
+    final Logger logger = ref.read(loggerProvider);
+    if (cachedCameraState == null) {
+      logger.w("Attempted to stop clip recording when no camera state was cached");
+      return;
+    }
+
+    try {
+      final bool isRecording = clipRecordingState.isRecording;
+      if (isRecording) {
+        final VideoRecordingCameraState videoRecordingCameraState = VideoRecordingCameraState.from(cachedCameraState!.cameraContext);
+        await videoRecordingCameraState.stopRecording();
+      }
+
+      clipCurrentTime = -1;
+      currentDelay = -1;
+
+      delayTimer?.cancel();
+      delayTimer = null;
+
+      clipTimer?.cancel();
+      clipTimer = null;
+
+      clipRecordingState = ClipRecordingState.notRecording;
+      widget.onClipStateChange?.call(clipRecordingState);
+    } catch (e) {
+      logger.e("Error stopping video recording: $e");
+    }
   }
 
   ///? if forcePause is given as true always try to pause the clip.
@@ -643,6 +625,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   ///
   ///? if forcePause is not given function will attempt to toggle the clip to its other state.
   Future<void> onPauseResumeClip({bool? forcePause, VideoRecordingCameraState? freshCameraState}) async {
+    if (!mounted) {
+      return;
+    }
+
     //? Only use cached version if needed
     late final VideoRecordingCameraState videoRecordingCameraState;
     if (freshCameraState != null) {
@@ -684,24 +670,25 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       startRecordingTimer();
       setStateIfMounted(callback: () {
         clipRecordingState = ClipRecordingState.recording;
-        widget.onClipStateChange!(clipRecordingState);
+        widget.onClipStateChange?.call(clipRecordingState);
       });
       return;
     }
 
     if (pause) {
       await videoRecordingCameraState.pauseRecording(currentCapture);
-      if (clipTimer != null) {
-        clipTimer!.cancel();
-      }
-
+      clipTimer?.cancel();
       clipRecordingState = ClipRecordingState.paused;
-      widget.onClipStateChange!(clipRecordingState);
+      widget.onClipStateChange?.call(clipRecordingState);
       setStateIfMounted();
     }
   }
 
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
+    if (!mounted) {
+      return;
+    }
+
     final CaptureRequest captureRequest = await cameraState.takePhoto();
     final XFile? file = captureRequest.when(
       single: (p0) => p0.file,
@@ -868,20 +855,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     if (!hasStartedCamera) {
       hasStartedCamera = true;
       widget.onCameraStarted?.call();
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setStateIfMounted());
-    }
-
-    //TODO move this to a less awkward area? if possible
-    //? Since for some reason the only way to access state is through the widget overlay builders in flutter awesome
-    //? we have to do some rudimentary checks here
-    if (widget.isVideoMode) {
-      if (mounted && state.captureMode != CaptureMode.video) {
-        state.setState(CaptureMode.video);
-      }
-    } else {
-      if (mounted && state.captureMode != CaptureMode.photo) {
-        state.setState(CaptureMode.photo);
-      }
     }
 
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
@@ -1113,15 +1086,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                 loadingColour: colours.yellow,
                 isLoading: clipRecordingState.isRecordingOrPaused,
                 maxCLipDuration: widget.maxRecordingLength,
-                isSmallButton: clipRecordingState.isActiveUnpaused,
+                isSmallButton: clipRecordingState.isRecordingOrPrerecording,
                 isPaused: clipRecordingState.isPaused,
-                onTap: (_) {
-                  state.when(
-                    onPhotoMode: onImageTaken,
-                    onVideoMode: (recordingState) => onVideoRecordingRequestStart(recordingState),
-                    onVideoRecordingMode: (recordingState) => onPauseResumeClip(freshCameraState: recordingState),
-                  );
-                },
+                onTap: (context) => onActiveButtonSelected(context, state),
               ),
 
               const SizedBox(width: kPaddingSmall),
@@ -1202,6 +1169,33 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
     await state.switchCameraSensor();
     await state.sensorConfig.setFlashMode(flashMode);
+  }
+
+  Future<void> onActiveButtonSelected(BuildContext context, CameraState state) async {
+    final Logger logger = ref.read(loggerProvider);
+
+    if (!widget.isVideoMode) {
+      logger.d("Taking photo");
+      state.setState(CaptureMode.photo);
+      await onImageTaken(state as PhotoCameraState);
+      return;
+    }
+
+    final bool isRecording = clipRecordingState.isRecording;
+    if (isRecording) {
+      logger.d("Stopping video recording");
+      await onPauseResumeClip();
+      return;
+    } else {
+      logger.d("Starting video recording");
+      await onVideoRecordingRequestStart(state);
+    }
+
+    // state.when(
+    //   onPhotoMode: ,
+    //   onVideoMode: (recordingState) => onVideoRecordingRequestStart(recordingState),
+    //   onVideoRecordingMode: (recordingState) => onPauseResumeClip(freshCameraState: recordingState),
+    // );
   }
 }
 
@@ -1327,7 +1321,8 @@ enum ClipRecordingState {
   notRecording,
   preRecording,
   paused,
-  recording;
+  recording,
+  finishedRecording;
 
   ///Has the user begun the recording process. That is: prerecording, recording or paused the recording
   bool get isActive => (this == preRecording || this == recording || this == paused);
@@ -1336,12 +1331,13 @@ enum ClipRecordingState {
   bool get isRecordingOrPaused => (this == recording || this == paused);
 
   ///Has the user begun the recording process but is not currently paused
-  bool get isActiveUnpaused => (this == recording || this == paused);
+  bool get isActiveUnpaused => (this == recording || this != paused);
 
   ///Has the user paused the current recording process or is not currently recording
   bool get isNotRecordingOrPaused => (this == notRecording || this == paused);
 
-  ///Returns true if the user is currently not in the process of recording a clip
+  /// Returns true if the user is currently not in the process of recording a clip
+  /// Finished recording is treated as an active state, as the page is currently in the process of transitioning.
   bool get isInactive => (this == notRecording);
 
   ///Is the clip in the pre-recording countdown stage.
@@ -1352,4 +1348,7 @@ enum ClipRecordingState {
 
   ///Is the clip recording now.
   bool get isRecording => (this == recording);
+
+  ///Is the clip recording or in the pre-recording countdown stage.
+  bool get isRecordingOrPrerecording => (this == recording) || (this == preRecording);
 }

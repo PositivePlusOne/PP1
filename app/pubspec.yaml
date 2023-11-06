@@ -8,6 +8,7 @@ environment:
 
 dependency_override:
   simple_animations: 5.0.2
+  video_player: 2.6.1
 
 dependencies:
   flutter:
