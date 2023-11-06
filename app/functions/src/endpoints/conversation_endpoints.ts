@@ -44,13 +44,12 @@ export namespace ConversationEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
     }
 
-    const containsMembersOtherThanCurrentUser = members.filter((member) => member !== uid).length > 0;
-    const expectedRole = containsMembersOtherThanCurrentUser ? "owner" : "member";
+    const conversationRole = await ConversationService.getMemberRoleForChannel(uid, channelId);
+    const isOwner = conversationRole === "owner";
+    const isMember = conversationRole === "member";
 
     functions.logger.info(`Attempting to archive members`, { members, channelId, uid });
-
-    const conversationRole = await ConversationService.getMemberRoleForChannel(uid, channelId);
-    if (conversationRole === expectedRole) {
+    if (!isOwner && !isMember) {
       throw new functions.https.HttpsError("permission-denied", "You do not have permission to remove members from this conversation");
     }
 
@@ -87,8 +86,13 @@ export namespace ConversationEndpoints {
 
     await Promise.all(memberPromises);
 
-    functions.logger.info(`Archiving members ${members} from ${channelId}`);
-    await ConversationService.archiveMembers(client, request.data.channelId, request.data.members);
+    if (isOwner) {
+      functions.logger.info(`Archiving all members ${members} from ${channelId}`);
+      await ConversationService.archiveMembers(client, request.data.channelId, request.data.members);
+    } else {
+      functions.logger.info(`Removing members ${members} from ${channelId}`);
+      await ConversationService.archiveMembers(client, request.data.channelId, [uid]);
+    }
 
     return buildEndpointResponse(context, {
       sender: uid,
