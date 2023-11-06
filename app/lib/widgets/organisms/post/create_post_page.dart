@@ -259,7 +259,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   ),
                 ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                //* -=-=-=-=-=-              Reposter preview                -=-=-=-=-=- *\\
+                //* -=-=-=-=-=-              Reposter Preview                -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (state.currentCreatePostPage == CreatePostCurrentPage.repostPreview) ...[
                   Positioned.fill(
@@ -470,7 +470,7 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
             isShared: true,
           ),
         ),
-        const SizedBox(height: kPaddingMassive),
+        const SizedBox(height: kPaddingGiiiiiiirthy),
       ],
     );
   }
