@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 import 'package:video_editor/video_editor.dart';
 
@@ -13,8 +14,13 @@ import 'package:video_editor/video_editor.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_external_shader.dart';
 
@@ -53,19 +59,50 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
   @override
   void initState() {
     super.initState();
-    if (widget.controller != null) {
-      widget.controller!.initialize(aspectRatio: widget.targetVideoAspectRatio).then((_) => setState(() {})).catchError((error) {
-        Navigator.pop(context);
-      }, test: (e) => e is VideoMinDurationError);
+    setupController();
+  }
+
+  @override
+  void didUpdateWidget(PositiveClipEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final String? newFile = widget.controller?.file.path;
+    final String? oldFile = oldWidget.controller?.file.path;
+    if (newFile != null && newFile != oldFile) {
+      setupController();
     }
   }
 
   @override
   void dispose() async {
-    if (widget.controller != null) {
-      widget.controller!.dispose();
-    }
+    widget.controller?.dispose();
     super.dispose();
+  }
+
+  Future<void> setupController() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (widget.controller == null) {
+      logger.e('VideoEditorController is null');
+      return;
+    }
+
+    if (widget.controller?.initialized == true) {
+      logger.i('VideoEditorController is already initialized');
+      return;
+    }
+
+    await Future<void>.delayed(kAnimationDurationDebounce);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await widget.controller?.initialize(aspectRatio: widget.targetVideoAspectRatio);
+        setStateIfMounted();
+      } catch (e) {
+        logger.e('VideoEditorController failed to initialize');
+        logger.e(e);
+        providerContainer.read(appRouterProvider).removeLast();
+        ScaffoldMessenger.of(context).showSnackBar(PositiveErrorSnackBar(text: 'An error occured while loading the video editor.'));
+      }
+    });
   }
 
   bool get checkVideoLength {
@@ -94,7 +131,7 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     //* -=-=-=-=-=-            Video Preview             -=-=-=-=-=- *\\
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                    if (widget.controller?.video.hasListeners == true)
+                    if (widget.controller != null)
                       Positioned.fill(
                         child: CropGridViewer.preview(
                           controller: widget.controller!,
@@ -103,7 +140,7 @@ class _PositiveClipEditorState extends ConsumerState<PositiveClipEditor> {
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                     //* -=-=-=-=-=-           Video Trim Slider          -=-=-=-=-=- *\\
                     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                    if (widget.controller?.video.hasListeners == true)
+                    if (widget.controller != null)
                       Positioned(
                         bottom: widget.bottomNavigationSize + kPaddingMediumLarge,
                         height: kIconHuge,
