@@ -133,6 +133,11 @@ class PositiveChannelListTile extends ConsumerWidget {
         break;
       }
 
+      // Check if we can use I as the index
+      if (i >= otherAvailableProfiles.length) {
+        break;
+      }
+
       final Profile profile = otherAvailableProfiles[i];
       final Widget indicator = PositiveProfileCircularIndicator(profile: profile, size: kIconHuge);
       indicatorWidth += overlapValue;

@@ -270,9 +270,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   @override
   void deactivate() {
-    stopClipRecording();
+    if (!clipRecordingState.isInactive) {
+      stopClipRecording();
+      clipRecordingState = ClipRecordingState.notRecording;
+    }
 
-    clipRecordingState = ClipRecordingState.notRecording;
     faceDetector.close();
     super.deactivate();
   }
@@ -612,7 +614,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       clipTimer?.cancel();
       clipTimer = null;
 
-      clipRecordingState = ClipRecordingState.notRecording;
+      clipRecordingState = ClipRecordingState.finishedRecording;
       widget.onClipStateChange?.call(clipRecordingState);
     } catch (e) {
       logger.e("Error stopping video recording: $e");
@@ -658,30 +660,31 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         pause = true;
       }
     } else {
-      if (videoRecordingCameraState.captureState!.isRecordingVideo) {
-        pause = true;
-      } else {
-        pause = false;
-      }
+      pause = forcePause;
     }
 
     if (!pause) {
-      await videoRecordingCameraState.resumeRecording(currentCapture);
-      startRecordingTimer();
-      setStateIfMounted(callback: () {
-        clipRecordingState = ClipRecordingState.recording;
-        widget.onClipStateChange?.call(clipRecordingState);
-      });
-      return;
+      // await videoRecordingCameraState.resumeRecording(currentCapture);
+      // startRecordingTimer();
+      // setStateIfMounted(callback: () {
+      //   clipRecordingState = ClipRecordingState.recording;
+      //   widget.onClipStateChange?.call(clipRecordingState);
+      // });
+      // return;
     }
 
     if (pause) {
-      await videoRecordingCameraState.pauseRecording(currentCapture);
+      await videoRecordingCameraState.stopRecording();
       clipTimer?.cancel();
       clipRecordingState = ClipRecordingState.paused;
       widget.onClipStateChange?.call(clipRecordingState);
       setStateIfMounted();
     }
+  }
+
+  void onClipResetState() {
+    clipRecordingState = ClipRecordingState.notRecording;
+    widget.onClipStateChange?.call(clipRecordingState);
   }
 
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
@@ -1181,14 +1184,15 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       return;
     }
 
-    final bool isRecording = clipRecordingState.isRecording;
-    if (isRecording) {
+    if (clipRecordingState.isRecording) {
       logger.d("Stopping video recording");
       await onPauseResumeClip();
       return;
     } else {
-      logger.d("Starting video recording");
-      await onVideoRecordingRequestStart(state);
+      if (clipRecordingState.isInactive) {
+        logger.d("Starting video recording");
+        await onVideoRecordingRequestStart(state);
+      }
     }
 
     // state.when(
@@ -1327,11 +1331,11 @@ enum ClipRecordingState {
   ///Has the user begun the recording process. That is: prerecording, recording or paused the recording
   bool get isActive => (this == preRecording || this == recording || this == paused);
 
-  ///Has the recording begun but is paused
-  bool get isRecordingOrPaused => (this == recording || this == paused);
-
   ///Has the user begun the recording process but is not currently paused
   bool get isActiveUnpaused => (this == recording || this != paused);
+
+  ///Has the recording begun but is paused
+  bool get isRecordingOrPaused => (this == recording || this == paused);
 
   ///Has the user paused the current recording process or is not currently recording
   bool get isNotRecordingOrPaused => (this == notRecording || this == paused);
@@ -1351,4 +1355,7 @@ enum ClipRecordingState {
 
   ///Is the clip recording or in the pre-recording countdown stage.
   bool get isRecordingOrPrerecording => (this == recording) || (this == preRecording);
+
+  /// Has recording finished
+  bool get isFinishedRecording => (this == finishedRecording);
 }
