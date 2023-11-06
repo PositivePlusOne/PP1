@@ -138,7 +138,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (isRecordingVideo || state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
-      // await currentPositiveCameraState?.stopClipRecording();
       await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
       // we were recording a video - this has a special dialog to show the user
       final bool hasAcceptedDiscardDialog = await positiveDiscardClipDialogue(
@@ -166,33 +165,25 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       // will discard their post
       bool isCancelDialogRequired = false;
       switch (state.currentCreatePostPage) {
-        case CreatePostCurrentPage.entry:
-        case CreatePostCurrentPage.repostPreview:
-        case CreatePostCurrentPage.camera:
-          // going back from the initial page shows the cancel dialog
-          isCancelDialogRequired = true;
-          break;
+        //? All create pages should request a dialog
         case CreatePostCurrentPage.createPostText:
-          // going back from entering text requires a cancel dialog
-          isCancelDialogRequired = true;
-          break;
-        case CreatePostCurrentPage.createPostImage:
-          // going back from the initial page shows the cancel dialog
-          isCancelDialogRequired = true;
-          break;
-        case CreatePostCurrentPage.editPhoto:
-          // eding the photo (filters) doesn't require a cancel dialog
-          isCancelDialogRequired = false;
-          break;
         case CreatePostCurrentPage.createPostMultiImage:
-          isCancelDialogRequired = false;
-          break;
-        case CreatePostCurrentPage.createPostEditClip:
-          isCancelDialogRequired = false;
-          break;
+        case CreatePostCurrentPage.createPostImage:
         case CreatePostCurrentPage.createPostClip:
+        //? As edit photo is equivalent of edit clip, and does not have criteria, assume dialog functionality should match.
+        case CreatePostCurrentPage.editPhoto:
+          isCancelDialogRequired = true;
+
+        //? PP1-615, back button on repost preview returns to last page
+        case CreatePostCurrentPage.repostPreview:
+        //? according to PP1-284 camera page should direct back to hub without dialog, unless a clip is being recorded
+        case CreatePostCurrentPage.camera:
+        //? Assuming entry page (called while camera initialises), should have the same logic as camera above
+        case CreatePostCurrentPage.entry:
+        //? Edit Clip page has its own dialog above
+        case CreatePostCurrentPage.createPostEditClip:
+        default:
           isCancelDialogRequired = false;
-          break;
       }
       if (isCancelDialogRequired) {
         final bool hasAcceptedDiscardDialog = await positiveDiscardPostDialogue(
