@@ -17,6 +17,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -25,6 +26,7 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -170,6 +172,8 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: buildCommentHeaderText(localizations));
     final bool commentsDisabled = reactionMode == const ActivitySecurityConfigurationMode.disabled();
 
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+
     usePagingController(
       controller: reactionsState.pagingController,
       listener: requestNextPage,
@@ -209,7 +213,11 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
               transitionDuration: kAnimationDurationRegular,
-              itemBuilder: (_, reaction, index) => PositiveComment(comment: reaction, isFirst: index == 0),
+              itemBuilder: (_, reaction, index) => PositiveComment(
+                currentProfile: currentProfile,
+                comment: reaction,
+                isFirst: index == 0,
+              ),
               firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),

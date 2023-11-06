@@ -8,19 +8,23 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'activity_post_heading_widget.dart';
 
 class PositiveComment extends ConsumerWidget {
   const PositiveComment({
+    required this.currentProfile,
     required this.comment,
     this.isFirst = false,
     super.key,
   });
 
+  final Profile? currentProfile;
   final Reaction comment;
   final bool isFirst;
 
@@ -33,6 +37,10 @@ class PositiveComment extends ConsumerWidget {
     // Load the publisher.
     final String publisherKey = comment.userId;
     final Profile? publisherProfile = cacheController.get(publisherKey);
+
+    final String currentProfileKey = currentProfile?.flMeta?.id ?? '';
+    final String expectedRelationshipId = [currentProfileKey, publisherKey].asGUID;
+    final Relationship? relationship = cacheController.get(expectedRelationshipId);
 
     return IgnorePointer(
       // ignoring: !widget.isEnabled,
@@ -47,8 +55,9 @@ class PositiveComment extends ConsumerWidget {
           children: <Widget>[
             ActivityPostHeadingWidget(
               flMetaData: comment.flMeta,
+              currentProfile: currentProfile,
               publisher: publisherProfile,
-              //TODO(S) this should be the generic profile options
+              publisherRelationship: relationship,
               onOptions: () {},
             ),
             const SizedBox(height: kPaddingSmall),

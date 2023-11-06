@@ -159,7 +159,7 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
       );
 
       final PositiveReactionsState reactionsState = cacheController.get<PositiveReactionsState>(reactionsCacheKey) ?? PositiveReactionsState.createNewFeedState(activityId, profileController.currentProfileId ?? '');
-      reactionsState.pagingController.itemList?.add(newReaction);
+      reactionsState.pagingController.itemList?.insert(0, newReaction);
 
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       reactionsState.pagingController.notifyListeners();

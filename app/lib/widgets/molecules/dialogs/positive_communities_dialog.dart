@@ -54,8 +54,12 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     this.onActionPressed,
     this.onProfileSelected,
     this.selectedProfiles = const <String>[],
+    this.hiddenProfiles = const <String>[],
     this.isEnabled = true,
     this.initialCommunityType,
+    this.profileDescriptionBuilder,
+    this.searchTooltip = '',
+    this.displayManagementTooltipIfAvailable = true,
     super.key,
   });
 
@@ -69,9 +73,16 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final void Function(String)? onProfileSelected;
 
   final List<String> selectedProfiles;
+  final List<String> hiddenProfiles;
   final bool isEnabled;
 
   final CommunityType? initialCommunityType;
+
+  final String Function(Profile? profile)? profileDescriptionBuilder;
+
+  final String searchTooltip;
+
+  final bool displayManagementTooltipIfAvailable;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => PositiveCommunitiesDialogState();
@@ -321,6 +332,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,
+          appBarSpacing: 0.0,
+          appBarTrailingHeight: 0.0,
           children: <Widget>[
             buildAppBar(context, colors, controller.searchController),
             const SizedBox(height: kPaddingMedium),
@@ -337,7 +350,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
               ),
               const SizedBox(height: kPaddingSmall),
             ],
-            if (isOrganisationManager) ...<Widget>[
+            if (widget.displayManagementTooltipIfAvailable && isOrganisationManager) ...<Widget>[
               PositiveTransparentSheet(
                 children: <Widget>[
                   PositiveRichText(
@@ -384,7 +397,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       pagingController: controller,
-      separatorBuilder: (context, index) => const SizedBox(height: kPaddingSmall),
+      separatorBuilder: (context, index) => buildSeparator(context: context, index: index, controller: controller),
       padding: EdgeInsets.zero,
       builderDelegate: PagedChildBuilderDelegate<String>(
         animateTransitions: true,
@@ -426,19 +439,31 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     );
   }
 
+  Widget buildSeparator({
+    required BuildContext context,
+    required int index,
+    required PagingController<String, String> controller,
+  }) {
+    final String targetProfileId = controller.itemList?[index] ?? '';
+    if (targetProfileId.isEmpty || widget.hiddenProfiles.contains(targetProfileId)) {
+      return const SizedBox.shrink();
+    }
+
+    return const SizedBox(height: kPaddingSmall);
+  }
+
   Widget buildProfileTile({
     required BuildContext context,
     required Profile? senderProfile,
     required Profile? targetProfile,
     required Relationship? relationship,
   }) {
-    if (targetProfile == null) {
-      return const SizedBox();
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    if (targetProfileId.isEmpty || widget.hiddenProfiles.contains(targetProfileId)) {
+      return const SizedBox.shrink();
     }
 
-    final String targetProfileId = targetProfile.flMeta?.id ?? '';
     final bool isSelected = widget.selectedProfiles.contains(targetProfileId);
-
     return PositiveProfileListTile(
       targetProfile: targetProfile,
       senderProfile: senderProfile,
@@ -447,6 +472,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       isSelected: isSelected,
       onSelected: () => widget.onProfileSelected?.call(targetProfileId),
       isEnabled: widget.isEnabled,
+      profileDescriptionBuilder: widget.profileDescriptionBuilder,
     );
   }
 
@@ -466,7 +492,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
         const SizedBox(width: kPaddingMedium),
         Expanded(
           child: PositiveSearchField(
-            hintText: 'Search People',
+            hintText: widget.searchTooltip.isEmpty ? 'Search People' : widget.searchTooltip,
             onSubmitted: onSearchSubmitted,
             onChange: onSearchChanged,
             controller: controller,

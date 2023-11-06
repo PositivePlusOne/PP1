@@ -7,6 +7,8 @@ import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ChatConnectionAcceptedNotification {
+  export const TAG = "ChatConnectionAcceptedNotification";
+
   /**
    * Sends a notification to the user that a connection request has been accepted.
    * @param {any} userProfile the user profile of the current user.
@@ -26,8 +28,11 @@ export namespace ChatConnectionAcceptedNotification {
     }
 
     const id = FlamelinkHelpers.generateIdentifier();
+    const foreignKey = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
+    
     const payload = new NotificationPayload({
       id,
+      foreign_id: foreignKey,
       sender: senderId,
       user_id: receiverId,
       title,

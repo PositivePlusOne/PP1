@@ -149,7 +149,7 @@ export namespace ProfileService {
     functions.logger.info(`Creating organisation profile for organisation: ${displayName} with members: ${members}`);
 
     // Check if the profile key is available
-    await adminApp.firestore().runTransaction(async (transaction) => {
+    await adminApp.firestore().runTransaction(async (transaction: any) => {
       const querySnapshot = await transaction.get(firestore.collection("fl_content").where("displayName", "==", displayName));
 
       if (querySnapshot.size > 0) {
@@ -195,54 +195,6 @@ export namespace ProfileService {
     return await DataService.deleteDocument({
       schemaKey: "users",
       entryId: uid,
-    });
-  }
-
-  export async function markProfileForDeletion(profile: ProfileJSON): Promise<void> {
-    const profileId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
-    if (!profile || !profileId) {
-      throw new functions.https.HttpsError("not-found", `User profile does not exist`);
-    }
-    
-    functions.logger.info(`Marking user profile for deletion for user: ${profileId}`);
-    const visibilityFlags = [...profile.visibilityFlags ?? []];
-    if (visibilityFlags.includes("pending_deletion")) {
-      functions.logger.info(`User profile ${profileId} is already marked for deletion`);
-      return;
-    }
-
-    visibilityFlags.push("pending_deletion");
-    return await DataService.updateDocument({
-      schemaKey: "users",
-      entryId: profileId,
-      data: {
-        visibilityFlags,
-      },
-    });
-  }
-
-  export async function unmarkProfileForDeletion(profile: ProfileJSON): Promise<void> {
-    const profileId = FlamelinkHelpers.getFlamelinkIdFromObject(profile);
-    if (!profile || !profileId) {
-      throw new functions.https.HttpsError("not-found", `User profile does not exist`);
-    }
-    
-    functions.logger.info(`Unmarking user profile for deletion for user: ${profileId}`);
-    const visibilityFlags = [...profile.visibilityFlags ?? []];
-    if (!visibilityFlags.includes("pending_deletion")) {
-      functions.logger.info(`User profile ${profileId} is not marked for deletion`);
-      return;
-    }
-
-    const index = visibilityFlags.indexOf("pending_deletion");
-    visibilityFlags.splice(index, 1);
-
-    return await DataService.updateDocument({
-      schemaKey: "users",
-      entryId: profileId,
-      data: {
-        visibilityFlags,
-      },
     });
   }
 
@@ -296,7 +248,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        visibilityFlags,
+        visibilityFlags: [...new Set(visibilityFlags)],
       },
     });
   }
@@ -326,7 +278,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: entryId,
       data: {
-        accountFlags: newAccountFlags,
+        accountFlags: [...new Set(newAccountFlags)],
       },
     });
   }
@@ -338,7 +290,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        accountFlags,
+        accountFlags: [...new Set(accountFlags)],
       },
     });
   }
@@ -356,7 +308,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        featureFlags,
+        featureFlags: [...new Set(featureFlags)],
       },
     });
   }
@@ -434,7 +386,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        interests,
+        interests: [...new Set(interests)],
       },
     });
   }
@@ -515,7 +467,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        genders: genders,
+        genders: [...new Set(genders)],
       },
     });
   }
@@ -550,7 +502,7 @@ export namespace ProfileService {
       schemaKey: "users",
       entryId: uid,
       data: {
-        companySectors: companySectors,
+        companySectors: [...new Set(companySectors)],
       },
     });
   }

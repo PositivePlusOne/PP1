@@ -44,13 +44,13 @@ enum PostType {
   repost,
   error;
 
-  static PostType getPostTypeFromActivity(Activity activity) {
+  static PostType getPostTypeFromActivity(Activity activity, bool isEditing) {
     if (activity.generalConfiguration == null) {
       return PostType.error;
     }
 
     // All post types can be reposted, so we check for repost first
-    if (activity.repostConfiguration?.targetActivityId.isNotEmpty == true) {
+    if (activity.repostConfiguration?.targetActivityId.isNotEmpty == true && !isEditing) {
       return PostType.repost;
     }
 

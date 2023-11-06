@@ -49,6 +49,7 @@ class ChatViewModelState with _$ChatViewModelState {
     Channel? currentChannel,
     ChannelExtraData? currentChannelExtraData,
     @Default(<String>[]) List<String> selectedMembers,
+    @Default(false) bool isBusy,
   }) = _ChatViewModelState;
 
   factory ChatViewModelState.initialState() => const ChatViewModelState();
@@ -144,6 +145,27 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     return blockedRelationships;
   }
 
+  List<Relationship> getCachedTargetBlockedMemberRelationships(List<Relationship> relationships) {
+    final logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+
+    logger.i('ChatViewModel.getCachedBlockedMemberRelationships()');
+    final List<Relationship> blockedRelationships = [];
+
+    // Get members from the current channel
+    if (currentProfileId.isNotEmpty) {
+      for (final Relationship relationship in relationships) {
+        final relationshipStates = relationship.relationshipStatesForEntity(currentProfileId);
+        if (relationshipStates.contains(RelationshipState.targetBlocked)) {
+          blockedRelationships.add(relationship);
+        }
+      }
+    }
+
+    return blockedRelationships;
+  }
+
   List<Relationship> getCachedMemberRelationships() {
     final logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -212,18 +234,18 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
-    log.d('ChatController: onChatChannelSelected');
-    state = state.copyWith(
-      currentChannel: channel,
-      currentChannelExtraData: extraData,
-    );
-
     try {
       await getStreamController.forceChannelUpdate(channel);
     } catch (ex) {
       log.e('ChatController: onChatChannelSelected, error: $ex');
       return;
     }
+
+    log.d('ChatController: onChatChannelSelected');
+    state = state.copyWith(
+      currentChannel: channel,
+      currentChannelExtraData: extraData,
+    );
 
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
@@ -361,7 +383,12 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
 
     if (state.currentChannel == null) {
-      await getStreamController.createConversation(state.selectedMembers);
+      try {
+        state = state.copyWith(isBusy: true);
+        await getStreamController.createConversation(state.selectedMembers);
+      } finally {
+        state = state.copyWith(isBusy: false);
+      }
       return;
     }
 

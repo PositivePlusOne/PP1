@@ -15,10 +15,12 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
@@ -32,18 +34,24 @@ import '../../atoms/buttons/positive_button.dart';
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
     required this.onOptions,
+    required this.currentProfile,
+    required this.publisher,
+    required this.publisherRelationship,
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
     this.flMetaData,
-    this.publisher,
     this.promotion,
     this.tags = const [],
     this.isShared = false,
     super.key,
   });
 
+  final Profile? currentProfile;
+  final Profile? publisher;
+  final Relationship? publisherRelationship;
+
   final FlMeta? flMetaData;
   final EdgeInsets padding;
-  final Profile? publisher;
+
   final Promotion? promotion;
   final List<String> tags;
 
@@ -78,6 +86,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
     final bool isVerified = (publisher?.isVerified ?? false) == true;
 
+    bool isBlocked = false;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (publisherRelationship != null && currentProfileId.isNotEmpty) {
+      final Set<RelationshipState> relationshipStates = publisherRelationship!.relationshipStatesForEntity(currentProfileId);
+      isBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+    }
+
     return Material(
       type: MaterialType.canvas,
       color: Colors.transparent,
@@ -86,21 +101,23 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            PositiveProfileCircularIndicator(profile: publisher),
+            PositiveProfileCircularIndicator(
+              profile: isBlocked ? null : publisher,
+            ),
             const SizedBox(width: kPaddingSmall),
             Flexible(
               fit: FlexFit.loose,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: <Widget>[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Flexible(
                         child: Text(
-                          displayName,
+                          isBlocked ? localisations.shared_placeholders_empty_display_name : displayName,
                           style: typeography.styleTitle,
                           overflow: TextOverflow.ellipsis,
                         ),

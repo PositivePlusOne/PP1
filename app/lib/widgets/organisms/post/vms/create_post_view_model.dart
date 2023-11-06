@@ -3,7 +3,6 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +12,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
+import 'package:universal_platform/universal_platform.dart';
 import 'package:video_editor/video_editor.dart';
 
 // Project imports:
@@ -54,9 +53,9 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isProcessingMedia,
     @Default(false) bool isUploadingMedia,
     @Default(false) bool isCreatingPost,
+    @Default(false) bool isEditingPost,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
-    @Default(false) bool isEditing,
     @Default('') String currentActivityID,
     @Default([]) List<GalleryEntry> galleryEntries,
     GalleryEntry? editingGalleryEntry,
@@ -100,8 +99,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   VideoEditorController? videoEditorController;
   io.File? uneditedVideoFile;
 
-  PositiveCameraState get getCurrentCameraState {
-    return state.cameraWidgetKey.currentState as PositiveCameraState;
+  PositiveCameraState? get currentPositiveCameraState {
+    return state.cameraWidgetKey.currentState is PositiveCameraState ? state.cameraWidgetKey.currentState as PositiveCameraState : null;
+  }
+
+  CameraState? get currentCameraState {
+    return currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.valueOrNull;
   }
 
   @override
@@ -109,142 +112,175 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
-  Future<bool> onForceClosePage() async {
+  Future<void> goBack({
+    bool shouldForceClose = false,
+  }) async {
     final AppRouter router = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final logger = ref.read(loggerProvider);
 
-    bool canPop = false;
-    if (state.isRecordingClip) {
-      canPop = await getCurrentCameraState.onCloseButtonTapped();
+    bool shouldDisplayDialog = false;
+
+    final CameraState? currentState = await currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.first;
+    final bool isHandlingVideo = currentState != null && (currentState is VideoRecordingCameraState || currentState is VideoCameraState);
+    final bool isRecordingVideo = isHandlingVideo && currentState.captureState?.isRecordingVideo == true;
+    final bool isPrerecordingVideo = isHandlingVideo && currentPositiveCameraState?.clipRecordingState == ClipRecordingState.preRecording;
+
+    // Quickly back out if in the countdown
+    if (isPrerecordingVideo) {
+      await currentPositiveCameraState?.stopClipRecording();
+      displayCamera(PostType.clip);
+      return;
     }
-    if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
-      final AppRouter router = ref.read(appRouterProvider);
-      final BuildContext context = router.navigatorKey.currentContext!;
-      final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-      final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-      canPop = await positiveDiscardClipDialogue(
+
+    if (isRecordingVideo) {
+      await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
+      shouldDisplayDialog = true;
+    }
+
+    if (shouldDisplayDialog) {
+      final bool hasAcceptedDiscardDialog = await positiveDiscardClipDialogue(
         context: context,
         colors: colors,
         typography: typography,
       );
+
+      if (!hasAcceptedDiscardDialog) {
+        logger.d("User has not accepted discard dialog, do not close page");
+        return;
+      }
+
+      await currentPositiveCameraState?.stopClipRecording();
+
+      // Close the video and remove the page
+      // TODO(ryan): Add iOS check
+      final bool isIOS = UniversalPlatform.isIOS;
+      if (shouldForceClose || (isIOS && isHandlingVideo)) {
+        router.removeLast();
+        return;
+      }
     }
 
-    if (canPop) {
-      logger.i("Pop Search page, push Home page");
-      router.popUntil((_) => !router.stack.any((route) => route.name == CreatePostRoute.name));
-    }
-
-    return false;
-  }
-
-  Future<bool> onWillPopScope() async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final BuildContext context = router.navigatorKey.currentContext!;
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
-
-    //? If we are on the entry page, allow the user to pop scope, taking them to their last page
-    if (state.currentCreatePostPage == CreatePostCurrentPage.entry) {
-      return true;
-    }
-
-    //? If we are handling the pop ourselves, we need to return to the correct page
-    //? postType tells us which tab to go back to on the camera page
-    late PostType postType;
-    late CreatePostCurrentPage pageToNavigateTo;
-    late PositivePostNavigationActiveButton activeButton;
-    late String activeButtonFlexText;
+    //! If we are on an ios device during clip recording, return to the hub page
+    //! This is a workaround due to an error in the camera software state
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
       case CreatePostCurrentPage.repostPreview:
-        return true;
       case CreatePostCurrentPage.camera:
-        if (state.isRecordingClip) {
-          //! If we are on an ios device during clip recording, return to the hub page
-          //! This is a workaround due to an error in the camera software state
-          final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-          if (deviceInfo is IosDeviceInfo) {
-            onForceClosePage();
-            return false;
-          }
-
-          //? if we are currently creating a clip request that we pause it, and display a dialogue asking the user if they would like to discard
-          //? also handles all state changes required in both the create post view model and the camera view model
-          await getCurrentCameraState.onCloseButtonTapped();
-          return false;
-        } else {
-          //? If we are not recording a clip, pop the scope
-          return true;
-        }
-      case CreatePostCurrentPage.createPostClip:
-        if (uneditedVideoFile != null) {
-          videoEditorController = VideoEditorController.file(
-            uneditedVideoFile!,
-            minDuration: const Duration(seconds: 1),
-            maxDuration: const Duration(seconds: 180),
+        await goBackFromCamera();
+        return;
+      case CreatePostCurrentPage.createPostText:
+        final bool isRepost = state.previousActivity.postType == PostType.repost;
+        if (isRepost) {
+          state = state.copyWith(
+            currentCreatePostPage: CreatePostCurrentPage.repostPreview,
+            activeButtonFlexText: localisations.shared_actions_next,
           );
-          postType = PostType.clip;
-          pageToNavigateTo = CreatePostCurrentPage.createPostEditClip;
-          activeButton = state.lastActiveButton;
-          activeButtonFlexText = localisations.shared_actions_next;
         } else {
-          postType = PostType.image;
-          pageToNavigateTo = CreatePostCurrentPage.camera;
-          activeButton = state.lastActiveButton;
-          activeButtonFlexText = localisations.shared_actions_next;
+          displayCamera(PostType.image);
         }
-        postType = PostType.clip;
-        pageToNavigateTo = CreatePostCurrentPage.createPostEditClip;
-        activeButton = PositivePostNavigationActiveButton.flex;
-        activeButtonFlexText = localisations.shared_actions_next;
+        break;
       case CreatePostCurrentPage.createPostImage:
-        postType = PostType.image;
-        pageToNavigateTo = CreatePostCurrentPage.editPhoto;
-        activeButton = PositivePostNavigationActiveButton.flex;
-        activeButtonFlexText = localisations.shared_actions_next;
-      case CreatePostCurrentPage.createPostEditClip:
-        final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-        final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-        //? Discard Dialogue is required here as the version within the camera will not be mounted at this point
-        final bool discardClip = await positiveDiscardClipDialogue(
-          context: context,
-          colors: colors,
-          typography: typography,
+        state = state.copyWith(
+          currentPostType: PostType.image,
+          currentCreatePostPage: CreatePostCurrentPage.editPhoto,
+          activeButton: PositivePostNavigationActiveButton.flex,
+          activeButtonFlexText: localisations.shared_actions_next,
         );
-        if (discardClip) {
-          postType = PostType.clip;
-          pageToNavigateTo = CreatePostCurrentPage.camera;
-          activeButton = state.lastActiveButton;
-          activeButtonFlexText = localisations.shared_actions_next;
-        } else {
-          return false;
-        }
+        break;
       case CreatePostCurrentPage.editPhoto:
       case CreatePostCurrentPage.createPostMultiImage:
-      case CreatePostCurrentPage.createPostText:
-      default:
-        postType = PostType.image;
-        pageToNavigateTo = CreatePostCurrentPage.camera;
-        activeButton = state.lastActiveButton;
-        activeButtonFlexText = localisations.shared_actions_next;
+        displayCamera(PostType.image);
+        break;
+      case CreatePostCurrentPage.createPostEditClip:
+        displayCamera(PostType.clip);
+        break;
+      case CreatePostCurrentPage.createPostClip:
+        await loadUneditedVideo();
+        break;
     }
-
-    state = state.copyWith(
-      currentCreatePostPage: pageToNavigateTo,
-      currentPostType: postType,
-      activeButton: activeButton,
-      activeButtonFlexText: activeButtonFlexText,
-      isBottomNavigationEnabled: true,
-    );
-
-    return false;
   }
 
-  Future<void> initCamera() async {
+  Future<void> goBackFromCamera() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final logger = ref.read(loggerProvider);
+
+    if (currentCameraState == null) {
+      logger.w("Camera state is null, cannot go back");
+      router.removeLast();
+      return;
+    }
+
+    final bool isRecordingMode = currentCameraState is VideoRecordingCameraState;
+    final bool isCurrentlyRecording = currentPositiveCameraState?.clipRecordingState.isRecording == true;
+    if (isCurrentlyRecording) {
+      await currentPositiveCameraState?.stopClipRecording();
+      displayCamera(PostType.clip);
+      return;
+    }
+
+    if (isRecordingMode) {
+      displayCamera(PostType.clip);
+      return;
+    }
+
+    router.removeLast();
+  }
+
+  Future<void> onFlexButtonPressed() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    switch (state.currentCreatePostPage) {
+      case CreatePostCurrentPage.entry:
+        break;
+      case CreatePostCurrentPage.camera:
+        await stopClipRecordingAndProcessResult();
+        break;
+      case CreatePostCurrentPage.editPhoto:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostImage,
+          activeButtonFlexText: localisations.page_create_post_create,
+        );
+        break;
+      case CreatePostCurrentPage.createPostEditClip:
+        try {
+          state = state.copyWith(isProcessingMedia: true, isBusy: true);
+          final ({io.File file, Size size}) completer = await onClipEditFinish();
+          await onClipExported(completer.file, completer.size);
+        } finally {
+          state = state.copyWith(isProcessingMedia: false, isBusy: false);
+        }
+        break;
+      case CreatePostCurrentPage.repostPreview:
+        state = state.copyWith(
+          currentCreatePostPage: CreatePostCurrentPage.createPostText,
+          activeButtonFlexText: localisations.page_create_post_create,
+        );
+      case CreatePostCurrentPage.createPostClip:
+      case CreatePostCurrentPage.createPostText:
+      case CreatePostCurrentPage.createPostImage:
+      case CreatePostCurrentPage.createPostMultiImage:
+        await onPostFinished(profileController.currentProfile);
+        break;
+    }
+  }
+
+  void displayCamera(PostType postType) {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
-      currentPostType: PostType.image,
-      activeButton: PositivePostNavigationActiveButton.post,
+      currentPostType: postType,
+      activeButton: switch (postType) {
+        PostType.clip => PositivePostNavigationActiveButton.clip,
+        PostType.event => PositivePostNavigationActiveButton.event,
+        (_) => PositivePostNavigationActiveButton.post,
+      },
     );
   }
 
@@ -252,7 +288,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
 
     state = state.copyWith(isBusy: true);
 
@@ -302,7 +338,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       //? State is updated in two steps, otherwise the camera can breifly activate on the edit page due to the asynchronus fucnctions required for gallery
       state = state.copyWith(
         currentActivityID: activityData.activityID ?? "",
-        isEditing: true,
+        isEditingPost: true,
         tags: activityData.tags ?? [],
         promotionKey: activityData.promotionKey ?? '',
         allowSharing: activityData.allowSharing ?? false,
@@ -327,7 +363,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> onPostFinished(Profile? currentProfile) async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     if (state.isBusy) {
       logger.w("Attempted to post while busy");
       return;
@@ -358,7 +394,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       late final ActivityData activityData;
 
-      if (state.isEditing) {
+      if (state.isEditingPost) {
         activityData = ActivityData(
           activityID: state.currentActivityID,
           content: captionController.text.trim(),
@@ -391,7 +427,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         activityData.allowSharing = false;
       }
 
-      if (!state.isEditing) {
+      if (!state.isEditingPost) {
         await activityController.postActivity(
           currentProfile: currentProfile,
           activityData: activityData,
@@ -416,13 +452,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> onPostActivitySuccess() async {
     final AppRouter router = ref.read(appRouterProvider);
     final AppLocalizations localisations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
-    logger.i("Attempted to ${state.isEditing ? "edit" : "create"} post, Pop Create Post page, push Home page");
+    logger.i("Attempted to ${state.isEditingPost ? "edit" : "create"} post, Pop Create Post page, push Home page");
 
     final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: state.isEditing ? localisations.page_create_post_edited : localisations.page_create_post_created,
+      title: state.isEditingPost ? localisations.page_create_post_edited : localisations.page_create_post_created,
       icon: UniconsLine.plus_circle,
       backgroundColour: colours.black,
     );
@@ -439,7 +475,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> onPostActivityFailure(Object? exception) async {
     final AppRouter router = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     logger.e("Error posting activity: $exception");
@@ -455,7 +491,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       );
     } else {
       snackBar = PositiveErrorSnackBar(
-        text: "Post ${state.isEditing ? "Edit" : "Creation"} Failed",
+        text: "Post ${state.isEditingPost ? "Edit" : "Creation"} Failed",
       );
     }
 
@@ -545,7 +581,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   bool get isNavigationEnabled {
-    final bool hasChanged = state.isEditing ? hasPostBeenUpdated : true;
+    final bool hasChanged = state.isEditingPost ? hasPostBeenUpdated : true;
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.createPostText:
@@ -620,11 +656,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
+    PositivePostNavigationActiveButton actionButton = PositivePostNavigationActiveButton.flex;
+    if (clipRecordingState.isInactive) {
+      actionButton = PositivePostNavigationActiveButton.clip;
+    }
+
     /// Called whenever clip begins or ends recording, returns true when begining, returns false when ending
     state = state.copyWith(
       isBottomNavigationEnabled: clipRecordingState.isNotRecordingOrPaused,
       isRecordingClip: clipRecordingState.isActive,
-      activeButton: clipRecordingState.isInactive ? PositivePostNavigationActiveButton.clip : PositivePostNavigationActiveButton.flex,
+      activeButton: actionButton,
       activeButtonFlexText: localisations.shared_actions_next,
       lastActiveButton: PositivePostNavigationActiveButton.clip,
     );
@@ -635,12 +676,30 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   //? Create video Post here
-  Future<void> onVideoTaken(XFile xFile) async {
+  Future<void> onVideoEditRequest(XFile xFile) async {
+    uneditedVideoFile = io.File(xFile.path);
+    await loadUneditedVideo();
+  }
+
+  Future<void> loadUneditedVideo() async {
+    final logger = ref.read(loggerProvider);
+    if (uneditedVideoFile == null) {
+      logger.e("Unedited video file is null, cannot create clip");
+      return;
+    }
+
+    final int length = await uneditedVideoFile?.length() ?? 0;
+    if (length <= 0) {
+      logger.e("Video file is null, cannot create clip");
+      return;
+    }
+
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    uneditedVideoFile = io.File(xFile.path);
+    await Future<void>.delayed(kAnimationDurationDebounce);
+    currentCameraState?.dispose();
 
     videoEditorController = VideoEditorController.file(
       uneditedVideoFile!,
@@ -660,7 +719,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<({File file, Size size})> onClipEditFinish() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     if (videoEditorController == null) {
       logger.e("Video editor controller is null, cannot export clip");
       return Future.error("Video editor controller is null, cannot export clip");
@@ -678,6 +737,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
+    final logger = ref.read(loggerProvider);
 
     // final XFile xFile = XFile.fromData(await file.readAsBytes());
     final XFile xFile = XFile(file.path);
@@ -689,7 +749,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (entries.isEmpty) {
-      return;
+      logger.e("onClipExported: entries list is empty");
+      throw Exception("onClipExported: entries list is empty");
     }
 
     state = state.copyWith(
@@ -700,8 +761,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
     );
-
-    return;
   }
 
   //? Create image Post here!
@@ -743,19 +802,20 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> onSingleVideoPicker() async {
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final ImagePicker picker = ref.read(imagePickerProvider);
 
-    logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
-    state = state.copyWith(isBusy: true);
-
     try {
+      logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
+      state = state.copyWith(isBusy: true);
+
       final XFile? media = await picker.pickVideo(source: ImageSource.gallery);
       if (media == null) {
-        logger.d("onMultiImagePicker: image list is empty");
+        logger.w("onMultiImagePicker: image list is empty");
         return;
       }
-      onVideoTaken(media);
+
+      await onVideoEditRequest(media);
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -765,7 +825,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
     final ImagePicker picker = ref.read(imagePickerProvider);
     final GalleryController galleryController = ref.read(galleryControllerProvider.notifier);
 
@@ -846,52 +906,16 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     );
   }
 
-  Future<void> onFlexButtonPressed() async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final BuildContext context = router.navigatorKey.currentContext!;
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    switch (state.currentCreatePostPage) {
-      case CreatePostCurrentPage.entry:
-        break;
-      case CreatePostCurrentPage.camera:
-        getCurrentCameraState.finishClipRecordingImmediately();
-        break;
-      case CreatePostCurrentPage.editPhoto:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.createPostImage,
-          activeButtonFlexText: localisations.page_create_post_create,
-        );
-        break;
-      case CreatePostCurrentPage.createPostEditClip:
-        try {
-          state = state.copyWith(isProcessingMedia: true, isBusy: true);
-          final ({io.File file, Size size}) completer = await onClipEditFinish();
-          await onClipExported(completer.file, completer.size);
-        } finally {
-          state = state.copyWith(isProcessingMedia: false, isBusy: false);
-        }
-        break;
-      case CreatePostCurrentPage.repostPreview:
-        state = state.copyWith(
-          currentCreatePostPage: CreatePostCurrentPage.createPostText,
-          activeButtonFlexText: localisations.page_create_post_create,
-        );
-      case CreatePostCurrentPage.createPostClip:
-      case CreatePostCurrentPage.createPostText:
-      case CreatePostCurrentPage.createPostImage:
-      case CreatePostCurrentPage.createPostMultiImage:
-        await onPostFinished(profileController.currentProfile);
-        break;
-    }
+  Future<void> stopClipRecordingAndProcessResult() async {
+    await currentPositiveCameraState?.stopClipRecording();
+    await currentPositiveCameraState?.attemptProcessVideoResult();
   }
 
   void onGalleryEntrySelected(GalleryEntry entry) {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
-    final Logger logger = ref.read(loggerProvider);
+    final logger = ref.read(loggerProvider);
 
     final String fileName = entry.fileName;
     final bool isCurrentlySelected = state.editingGalleryEntry?.fileName == fileName;

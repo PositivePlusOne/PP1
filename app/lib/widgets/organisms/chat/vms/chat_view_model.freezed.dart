@@ -26,6 +26,7 @@ mixin _$ChatViewModelState {
   ChannelExtraData? get currentChannelExtraData =>
       throw _privateConstructorUsedError;
   List<String> get selectedMembers => throw _privateConstructorUsedError;
+  bool get isBusy => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ChatViewModelStateCopyWith<ChatViewModelState> get copyWith =>
@@ -45,7 +46,8 @@ abstract class $ChatViewModelStateCopyWith<$Res> {
       DateTime? currentChannelLastUpdated,
       Channel? currentChannel,
       ChannelExtraData? currentChannelExtraData,
-      List<String> selectedMembers});
+      List<String> selectedMembers,
+      bool isBusy});
 
   $ChannelExtraDataCopyWith<$Res>? get currentChannelExtraData;
 }
@@ -70,6 +72,7 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
     Object? currentChannel = freezed,
     Object? currentChannelExtraData = freezed,
     Object? selectedMembers = null,
+    Object? isBusy = null,
   }) {
     return _then(_value.copyWith(
       lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
@@ -100,6 +103,10 @@ class _$ChatViewModelStateCopyWithImpl<$Res, $Val extends ChatViewModelState>
           ? _value.selectedMembers
           : selectedMembers // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -132,7 +139,8 @@ abstract class _$$ChatViewModelStateImplCopyWith<$Res>
       DateTime? currentChannelLastUpdated,
       Channel? currentChannel,
       ChannelExtraData? currentChannelExtraData,
-      List<String> selectedMembers});
+      List<String> selectedMembers,
+      bool isBusy});
 
   @override
   $ChannelExtraDataCopyWith<$Res>? get currentChannelExtraData;
@@ -156,6 +164,7 @@ class __$$ChatViewModelStateImplCopyWithImpl<$Res>
     Object? currentChannel = freezed,
     Object? currentChannelExtraData = freezed,
     Object? selectedMembers = null,
+    Object? isBusy = null,
   }) {
     return _then(_$ChatViewModelStateImpl(
       lastRelationshipsUpdated: freezed == lastRelationshipsUpdated
@@ -186,6 +195,10 @@ class __$$ChatViewModelStateImplCopyWithImpl<$Res>
           ? _value._selectedMembers
           : selectedMembers // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      isBusy: null == isBusy
+          ? _value.isBusy
+          : isBusy // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -200,7 +213,8 @@ class _$ChatViewModelStateImpl implements _ChatViewModelState {
       this.currentChannelLastUpdated,
       this.currentChannel,
       this.currentChannelExtraData,
-      final List<String> selectedMembers = const <String>[]})
+      final List<String> selectedMembers = const <String>[],
+      this.isBusy = false})
       : _selectedMembers = selectedMembers;
 
 // Chat List Properties
@@ -228,8 +242,12 @@ class _$ChatViewModelStateImpl implements _ChatViewModelState {
   }
 
   @override
+  @JsonKey()
+  final bool isBusy;
+
+  @override
   String toString() {
-    return 'ChatViewModelState(lastRelationshipsUpdated: $lastRelationshipsUpdated, lastChannelsUpdated: $lastChannelsUpdated, searchQuery: $searchQuery, currentChannelLastUpdated: $currentChannelLastUpdated, currentChannel: $currentChannel, currentChannelExtraData: $currentChannelExtraData, selectedMembers: $selectedMembers)';
+    return 'ChatViewModelState(lastRelationshipsUpdated: $lastRelationshipsUpdated, lastChannelsUpdated: $lastChannelsUpdated, searchQuery: $searchQuery, currentChannelLastUpdated: $currentChannelLastUpdated, currentChannel: $currentChannel, currentChannelExtraData: $currentChannelExtraData, selectedMembers: $selectedMembers, isBusy: $isBusy)';
   }
 
   @override
@@ -253,7 +271,8 @@ class _$ChatViewModelStateImpl implements _ChatViewModelState {
                     other.currentChannelExtraData, currentChannelExtraData) ||
                 other.currentChannelExtraData == currentChannelExtraData) &&
             const DeepCollectionEquality()
-                .equals(other._selectedMembers, _selectedMembers));
+                .equals(other._selectedMembers, _selectedMembers) &&
+            (identical(other.isBusy, isBusy) || other.isBusy == isBusy));
   }
 
   @override
@@ -265,7 +284,8 @@ class _$ChatViewModelStateImpl implements _ChatViewModelState {
       currentChannelLastUpdated,
       currentChannel,
       currentChannelExtraData,
-      const DeepCollectionEquality().hash(_selectedMembers));
+      const DeepCollectionEquality().hash(_selectedMembers),
+      isBusy);
 
   @JsonKey(ignore: true)
   @override
@@ -283,7 +303,8 @@ abstract class _ChatViewModelState implements ChatViewModelState {
       final DateTime? currentChannelLastUpdated,
       final Channel? currentChannel,
       final ChannelExtraData? currentChannelExtraData,
-      final List<String> selectedMembers}) = _$ChatViewModelStateImpl;
+      final List<String> selectedMembers,
+      final bool isBusy}) = _$ChatViewModelStateImpl;
 
   @override // Chat List Properties
   DateTime? get lastRelationshipsUpdated;
@@ -299,6 +320,8 @@ abstract class _ChatViewModelState implements ChatViewModelState {
   ChannelExtraData? get currentChannelExtraData;
   @override
   List<String> get selectedMembers;
+  @override
+  bool get isBusy;
   @override
   @JsonKey(ignore: true)
   _$$ChatViewModelStateImplCopyWith<_$ChatViewModelStateImpl> get copyWith =>

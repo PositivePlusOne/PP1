@@ -15,6 +15,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
@@ -638,42 +639,31 @@ class CreatePostTagsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> tagsList = [];
+    final List<Widget> tagsList = <Widget>[];
+    final bool tagsAllow = (tags.length >= 2 && tags.first.length <= 15) && (tags[1].length <= 15);
 
-    if (tags.isNotEmpty) {
+    if (tags.length == 2 && tagsAllow) {
+      tagsList.add(const SizedBox(width: kPaddingExtraSmall));
+
       tagsList.add(
         CreatePostTagPill(
-          tagName: tags.first,
+          tagName: tags[1],
           typography: typography,
           colours: colours,
         ),
       );
+    }
 
-      final bool tagsAllow = (tags.length >= 2 && tags.first.length <= 15) && (tags[1].length <= 15);
+    if (tags.length > 2 || (tags.length == 2 && !tagsAllow)) {
+      tagsList.add(const SizedBox(width: kPaddingExtraSmall));
 
-      if (tags.length == 2 && tagsAllow) {
-        tagsList.add(const SizedBox(width: kPaddingExtraSmall));
-
-        tagsList.add(
-          CreatePostTagPill(
-            tagName: tags[1],
-            typography: typography,
-            colours: colours,
-          ),
-        );
-      }
-
-      if (tags.length > 2 || (tags.length == 2 && !tagsAllow)) {
-        tagsList.add(const SizedBox(width: kPaddingExtraSmall));
-
-        tagsList.add(
-          CreatePostTagPill(
-            tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
-            typography: typography,
-            colours: colours,
-          ),
-        );
-      }
+      tagsList.add(
+        CreatePostTagPill(
+          tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
+          typography: typography,
+          colours: colours,
+        ),
+      );
     }
 
     return PositiveTapBehaviour(
@@ -690,9 +680,7 @@ class CreatePostTagsContainer extends StatelessWidget {
               style: textStyle,
             ),
             const Spacer(),
-            Row(
-              children: tagsList,
-            ),
+            Row(children: tagsList),
           ],
         ),
       ),

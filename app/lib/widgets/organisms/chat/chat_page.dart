@@ -21,7 +21,6 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/chat_extensions.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -109,9 +108,23 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
   }
 
   Widget buildSystemMessage(BuildContext context, Message message, DesignColorsModel colors, DesignTypographyModel typography, AppLocalizations locale, User currentStreamUser) {
-    final isOwnMessage = message.user?.id == currentStreamUser.id;
-    final isLeaveMessage = message.extraData["eventType"] == GetStreamSystemMessageType.userRemoved;
-    final user = message.mentionedUsers.firstOrNull;
+    final bool isOwnMessage = message.user?.id == currentStreamUser.id;
+    final bool isLeaveMessage = message.extraData["eventType"] == GetStreamSystemMessageType.userRemoved;
+    final User? user = message.mentionedUsers.firstOrNull;
+
+    bool canDisplay = false;
+    final String senderUserId = user?.id ?? '';
+    final String currentUserId = currentStreamUser.id;
+    final String expectedRelationshipId = [senderUserId, currentUserId].asGUID;
+
+    final Relationship? relationship = providerContainer.read(cacheControllerProvider).get<Relationship>(expectedRelationshipId);
+    final Profile? profile = providerContainer.read(cacheControllerProvider).get<Profile>(senderUserId);
+
+    if (relationship != null) {
+      final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentUserId);
+      canDisplay = !states.contains(RelationshipState.targetBlocked);
+    }
+
     final String messageText = buildMessageText(isOwnMessage, isLeaveMessage, message.text ?? '', locale);
 
     return Padding(
@@ -127,13 +140,9 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
             padding: const EdgeInsets.all(kPaddingSmall),
             child: Row(
               children: [
-                if (user != null)
-                  PositiveProfileCircularIndicator(
-                    profile: Profile(
-                      name: user.name,
-                      accentColor: (user.extraData['accentColor'] as String?) ?? colors.teal.toHex(),
-                    ),
-                  ),
+                if (user != null) ...<Widget>[
+                  PositiveProfileCircularIndicator(profile: canDisplay ? null : profile),
+                ],
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
@@ -198,7 +207,8 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
 
     // Get blocked members
     final List<Relationship> relationships = viewModel.getCachedMemberRelationships();
-    final List<Relationship> blockedRelationships = viewModel.getCachedSourceBlockedMemberRelationships(relationships);
+    final List<Relationship> sourceBlockedRelationships = viewModel.getCachedSourceBlockedMemberRelationships(relationships);
+    final List<Relationship> targetBlockedRelationships = viewModel.getCachedTargetBlockedMemberRelationships(relationships);
 
     final AppLocalizations locale = AppLocalizations.of(context)!;
 
@@ -230,7 +240,8 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                 memberProfiles: memberProfiles,
                 viewModel: viewModel,
                 channel: channel,
-                blockedMemberRelationships: blockedRelationships,
+                sourceBlockedRelationships: sourceBlockedRelationships,
+                targetBlockedRelationships: targetBlockedRelationships,
               ),
             ),
             SliverStack(
@@ -399,15 +410,24 @@ class ChatMemberUsernameRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     bool hasSourceBlocked = false;
+    bool isTargetBlocked = false;
     if (relationship != null && currentProfileId.isNotEmpty) {
       final Set<RelationshipState> states = relationship!.relationshipStatesForEntity(currentProfileId);
       hasSourceBlocked = states.contains(RelationshipState.sourceBlocked);
+      isTargetBlocked = states.contains(RelationshipState.targetBlocked);
+    }
+
+    String displayName = message.user?.name ?? '';
+    if (isTargetBlocked) {
+      displayName = localizations.shared_placeholders_empty_display_name;
     }
 
     return Row(
       children: <Widget>[
-        if (hasSourceBlocked)
+        if (hasSourceBlocked) ...<Widget>[
           Padding(
             padding: const EdgeInsets.only(right: kPaddingExtraSmall),
             child: Icon(
@@ -416,9 +436,10 @@ class ChatMemberUsernameRow extends StatelessWidget {
               color: colors.colorGray3,
             ),
           ),
+        ],
         Expanded(
           child: Text(
-            message.user?.name ?? '',
+            displayName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: typography.styleSubtext.copyWith(color: colors.colorGray3),
@@ -438,15 +459,21 @@ class ChatMemberUsernameRow extends StatelessWidget {
 PositiveProfileCircularIndicator _buildUserAvatar(User user, DesignColorsModel colors, Relationship? relationship) {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
   final Profile? profile = cacheController.get<Profile>(user.id);
+
+  final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+  final Profile? currentProfile = profileController.currentProfile;
+  final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
   // we have the ID of the user we are showing the icon for (has this target user been blocked)
   bool isTargetBlocked = false;
-  if (relationship != null && user.id.isNotEmpty) {
-    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(user.id);
+  if (relationship != null && currentProfileId.isNotEmpty) {
+    final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentProfileId);
     isTargetBlocked = states.contains(RelationshipState.targetBlocked);
   }
+
   // returning the icon (with a black border if they have been blocked)
   return PositiveProfileCircularIndicator(
-    profile: profile,
+    profile: isTargetBlocked ? null : profile,
     ringColorOverride: isTargetBlocked ? Colors.black : null,
   );
 }
@@ -544,7 +571,18 @@ class MessageInput extends ConsumerWidget {
     // we want to display the details about the actual target user rather than just letting the class
     // show user IDs. So we need to get the profile data instead of the user ID
     final Profile? targetProfile = cacheController.get(user.id);
-    // then return the nice display of this user
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Profile? currentProfile = profileController.currentProfile;
+
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final String expectedRelationshipId = [targetProfileId, currentProfileId].asGUID;
+    final Relationship? relationship = cacheController.get<Relationship>(expectedRelationshipId);
+    final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+    final bool isTargetBlocked = states.contains(RelationshipState.targetBlocked);
+
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
     return Container(
       decoration: BoxDecoration(
         color: colors.white,
@@ -553,11 +591,11 @@ class MessageInput extends ConsumerWidget {
       padding: const EdgeInsets.all(kPaddingSmall),
       child: Row(
         children: <Widget>[
-          PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
+          PositiveProfileCircularIndicator(profile: isTargetBlocked ? null : targetProfile, size: kIconHuge),
           const SizedBox(width: kPaddingSmall),
           Expanded(
             child: Text(
-              getSafeDisplayNameFromProfile(targetProfile),
+              isTargetBlocked ? localizations.shared_placeholders_empty_display_name : getSafeDisplayNameFromProfile(targetProfile),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: typography.styleTitle.copyWith(color: colors.colorGray7),
@@ -606,7 +644,8 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.memberProfiles,
     required this.viewModel,
     required this.channel,
-    this.blockedMemberRelationships = const [],
+    required this.sourceBlockedRelationships,
+    required this.targetBlockedRelationships,
   });
 
   final DesignColorsModel colors;
@@ -615,7 +654,8 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   final ChatViewModel viewModel;
   final Channel channel;
 
-  final List<Relationship> blockedMemberRelationships;
+  final List<Relationship> sourceBlockedRelationships;
+  final List<Relationship> targetBlockedRelationships;
 
   @override
   Widget build(BuildContext context) {
@@ -643,15 +683,16 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
             flex: 3,
             child: _AvatarList(
               members: memberProfiles,
-              blockedMemberRelationships: blockedMemberRelationships,
+              sourceBlockedRelationships: sourceBlockedRelationships,
+              targetBlockedRelationships: targetBlockedRelationships,
             ),
           ),
           const SizedBox(width: kPaddingSmall),
-          if (blockedMemberRelationships.isNotEmpty) ...<Widget>[
+          if (sourceBlockedRelationships.isNotEmpty) ...<Widget>[
             Expanded(
-              flex: 3,
+              flex: 5,
               child: PositiveHint(
-                label: '${blockedMemberRelationships.length} blocked',
+                label: '${sourceBlockedRelationships.length} blocked',
                 icon: UniconsLine.ban,
                 iconColor: colors.black,
               ),
@@ -681,11 +722,13 @@ class _AvatarList extends ConsumerWidget {
   const _AvatarList({
     Key? key,
     required this.members,
-    this.blockedMemberRelationships = const [],
+    required this.sourceBlockedRelationships,
+    required this.targetBlockedRelationships,
   }) : super(key: key);
 
   final List<Profile> members;
-  final List<Relationship> blockedMemberRelationships;
+  final List<Relationship> sourceBlockedRelationships;
+  final List<Relationship> targetBlockedRelationships;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -715,7 +758,7 @@ class _AvatarList extends ConsumerWidget {
       );
     }
 
-    final numAvatars = min(filteredMembers.length, 3);
+    final int numAvatars = min(filteredMembers.length, 3);
     const double targetWidth = 40 * 3 - (avatarOffset * 2);
 
     return SizedBox(
@@ -741,11 +784,11 @@ class _AvatarList extends ConsumerWidget {
                           ),
                         )
                       : PositiveProfileCircularIndicator(
-                          profile: filteredMembers[i],
+                          profile: ChatViewModel.getRelationshipForProfile(targetBlockedRelationships, filteredMembers[i])?.members.firstWhereOrNull((element) => element.memberId != currentProfileId && element.hasBlocked) != null ? null : filteredMembers[i],
                           size: avatarOffset,
                           // if the profile has a relationship in the list of blocked relationships (are blocked)
                           // so show a black ring around their profile image
-                          ringColorOverride: ChatViewModel.getRelationshipForProfile(blockedMemberRelationships, filteredMembers[i]) != null ? Colors.black : null,
+                          ringColorOverride: ChatViewModel.getRelationshipForProfile(targetBlockedRelationships, filteredMembers[i]) != null ? Colors.black : null,
                         ),
                 ),
               ),

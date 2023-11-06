@@ -42,16 +42,17 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
     required this.targetProfile,
     required this.relationship,
     super.key,
-  });
+  }) : height = currentProfile == null ? 0.0 : kButtonListHeight;
 
   final Profile? currentProfile;
   final Profile targetProfile;
   final Relationship? relationship;
+  final double height;
 
   static const double kButtonListHeight = 42.0;
 
   @override
-  Size get preferredSize => const Size.fromHeight(kButtonListHeight);
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PositiveProfileActionsListState();
@@ -204,14 +205,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     }
   }
 
-  Future<void> onMessageTapped() async {
-    if (!mounted) {
-      return;
-    }
-
-    // TODO
-  }
-
   Future<void> onMoreActionsTapped() async {
     if (!mounted) {
       return;
@@ -254,8 +247,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final bool isSourceOrganisation = widget.currentProfile?.isOrganisation ?? false;
     final bool isTargetOrganisation = widget.targetProfile.isOrganisation;
     final bool relationshipContainsOrganisation = isSourceOrganisation || isTargetOrganisation;
-
-    final bool isSourceManaged = relationshipStates.contains(RelationshipState.sourceManaged);
 
     bool isCurrentUser = false;
     bool hasFollowedTargetUser = false;
@@ -399,7 +390,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       children.add(disconnectAction);
     }
 
-    if ((!isCurrentUser && hasConnectedToTargetUser) || relationshipContainsOrganisation) {
+    if ((!isCurrentUser && hasConnectedToTargetUser) || (!isCurrentUser && relationshipContainsOrganisation)) {
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: colors.black,

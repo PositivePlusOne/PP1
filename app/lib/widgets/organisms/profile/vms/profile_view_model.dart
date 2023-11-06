@@ -8,15 +8,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/profiles/profile_controller.dart';
 import '../../../../services/third_party.dart';
 
 // Flutter imports:
-
-
 
 part 'profile_view_model.freezed.dart';
 part 'profile_view_model.g.dart';
@@ -36,6 +36,30 @@ class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
   @override
   ProfileViewModelState build() {
     return ProfileViewModelState.initialState();
+  }
+
+  Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    logger.d('onRefresh()');
+    cacheController.remove(cacheKey);
+    feedState.knownActivities.clear();
+    feedState.pagingController.refresh();
+
+    // Wait until the first page is loaded
+    int counter = 0;
+    while (feedState.pagingController.itemList == null && counter < 10) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      counter++;
+
+      // Check for an error
+      if (feedState.pagingController.error != null) {
+        throw feedState.pagingController.error!;
+      }
+    }
+
+    cacheController.add(key: cacheKey, value: feedState);
   }
 
   Future<void> preloadUserProfile(String uid) async {

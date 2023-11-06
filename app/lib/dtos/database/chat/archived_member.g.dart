@@ -9,9 +9,7 @@ part of 'archived_member.dart';
 _$ArchivedMemberImpl _$$ArchivedMemberImplFromJson(Map<String, dynamic> json) =>
     _$ArchivedMemberImpl(
       memberId: json['member_id'] as String?,
-      dateArchived: json['date_archived'] == null
-          ? null
-          : DateTime.parse(json['date_archived'] as String),
+      dateArchived: dateTimeFromUnknown(json['date_archived']),
       lastMessageId: json['last_message_id'] as String?,
     );
 

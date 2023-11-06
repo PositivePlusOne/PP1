@@ -7,7 +7,7 @@ import { RelationshipHelpers } from "../helpers/relationship_helpers";
 
 import { ChatConnectionAcceptedNotification } from "../services/builders/notifications/chat/chat_connection_accepted_notification";
 import { ChatConnectionReceivedNotification } from "../services/builders/notifications/chat/chat_connection_received_notification";
-import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat/chat_connection_rejected_notification";
+// import { ChatConnectionRejectedNotification } from "../services/builders/notifications/chat/chat_connection_rejected_notification";
 import { ChatConnectionSentNotification } from "../services/builders/notifications/chat/chat_connection_sent_notification";
 
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
@@ -251,7 +251,11 @@ export namespace RelationshipEndpoints {
     }
 
     const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]) as RelationshipJSON;
-    if (!oldRelationship.connected) {
+    const isTargetConnected = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
+    const isUserConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
+    const isConnectedOrPending = isTargetConnected || isUserConnected;
+
+    if (!isConnectedOrPending) {
       functions.logger.info("User already disconnected", { uid, targetUid });
       return buildEndpointResponse(context, {
         sender: uid,
@@ -259,12 +263,12 @@ export namespace RelationshipEndpoints {
       });
     }
     
-    const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
+    // const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
     const newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
 
-    if (canReject) {
-      await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
-    }
+    // if (canReject) {
+    //   await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
+    // }
 
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 

@@ -58,11 +58,21 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
+    ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
     final String searchQuery = ref.watch(chatViewModelProvider.select((value) => value.searchQuery));
     final Iterable<Channel> allChannels = ref.watch(getStreamControllerProvider.select((value) => value.conversationChannelsWithMessages));
     final bool hasFetchedInitialChannels = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedInitialChannels));
     final bool hasFetchedInitialRelationships = ref.watch(getStreamControllerProvider.select((value) => value.hasFetchedInitialRelationships));
-    final List<Channel> validChannels = allChannels.withValidRelationships.timeDescending.toList();
+
+    Iterable<Channel> validChannels = allChannels;
+    if (profileController.isCurrentlyUserProfile) {
+      validChannels = validChannels.withValidRelationships;
+    }
+
+    validChannels = validChannels.timeDescending;
+
     final List<Channel> searchedChannels = validChannels.withProfileTextSearch(searchQuery).toList();
 
     useChannelHook(validChannels);

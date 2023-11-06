@@ -157,6 +157,8 @@ class PostPage extends HookConsumerWidget {
     return PositiveScaffold(
       isBusy: state.isBusy,
       onWillPopScope: viewModel.onWillPopScope,
+      physics: const AlwaysScrollableScrollPhysics(),
+      onRefresh: () async => reactionsState?.requestRefresh(expectedReactionsKey),
       overlayWidgets: <Widget>[
         if (canComment && !commentsDisabled) commentBox,
         if (isSignedOut) ...<Widget>[
@@ -267,7 +269,7 @@ class PostPage extends HookConsumerWidget {
                     feed: feed,
                     reactionMode: activity?.securityConfiguration?.commentMode,
                   ),
-                  SliverToBoxAdapter(child: SizedBox(height: maxSafePadding + kPaddingMedium)),
+                  SliverToBoxAdapter(child: SizedBox(height: commentBoxSize)),
                 ],
               ),
             ],

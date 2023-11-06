@@ -27,7 +27,7 @@ import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 
 @RoutePage()
-class TagFeedPage extends HookConsumerWidget {
+class TagFeedPage extends StatefulHookConsumerWidget {
   const TagFeedPage({
     super.key,
     required this.tag,
@@ -36,7 +36,12 @@ class TagFeedPage extends HookConsumerWidget {
   final Tag tag;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TagFeedPage> createState() => _TagFeedPageState();
+}
+
+class _TagFeedPageState extends ConsumerState<TagFeedPage> {
+  @override
+  Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
@@ -44,7 +49,7 @@ class TagFeedPage extends HookConsumerWidget {
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
-    final TargetFeed feed = TargetFeed.fromTag(tag.key);
+    final TargetFeed feed = TargetFeed.fromTag(widget.tag.key);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
@@ -66,6 +71,7 @@ class TagFeedPage extends HookConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: onWillPopScope,
+      onRefresh: () => feedState.requestRefresh(feedStateKey),
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -79,7 +85,7 @@ class TagFeedPage extends HookConsumerWidget {
         SliverPinnedHeader(
           child: PositiveTapBehaviour(
             onTap: (_) => onWillPopScope(),
-            child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, tag: tag, typography: typography),
+            child: TagPagePinnedHeader(mediaQueryData: mediaQueryData, colors: colors, tag: widget.tag, typography: typography),
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: kPaddingSmall)),

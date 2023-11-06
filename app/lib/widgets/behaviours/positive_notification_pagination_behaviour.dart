@@ -21,6 +21,7 @@ import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -163,6 +164,9 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
 
   void appendNotificationsPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = providerContainer.read(loggerProvider);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+
     final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != notificationsState.currentPaginationKey;
 
     notificationsState.currentPaginationKey = nextPageKey;
@@ -171,13 +175,26 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     final List<NotificationPayload> newNotifications = [];
     final List<dynamic> notifications = (data.containsKey('notifications') ? data['notifications'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
+    // Some notifications may be treated as groups, so we need to keep track of the foreign keys
+    // Then we can drop the duplicates
     for (final dynamic notification in notifications) {
       try {
         logger.d('requestNextTimelinePage() - parsing notification: $notification');
-        final NotificationPayload newNotification = NotificationPayload.fromJson(notification);
+        NotificationPayload newNotification = NotificationPayload.fromJson(notification);
         if (newNotification.id.isEmpty) {
           logger.e('requestNextTimelinePage() - Failed to parse notification: $notification');
           continue;
+        }
+
+        // Prevent grouped notifications (for example 2 likes vs 3 likes)
+        final String foreignKey = newNotification.foreignKey;
+        if (foreignKey.isNotEmpty) {
+          if (notificationsState.knownGroups.contains(foreignKey)) {
+            logger.d('requestNextTimelinePage() - Skipping duplicate notification: $notification');
+            continue;
+          }
+
+          notificationsState.knownGroups.add(foreignKey);
         }
 
         newNotifications.add(newNotification);

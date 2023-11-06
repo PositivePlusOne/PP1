@@ -1,4 +1,3 @@
-import { StringSetFromJson } from "./generic";
 import { FlMeta, FlMetaJSON } from "./meta";
 import { Place, PlaceJSON } from "./location";
 import { Media, MediaJSON } from "./media";
@@ -64,19 +63,19 @@ export interface ProfileJSON {
     birthday?: string;
     accentColor?: string;
     hivStatus?: string;
-    genders?: StringSetFromJson;
-    interests?: StringSetFromJson;
-    tags?: StringSetFromJson;
+    genders?: string[];
+    interests?: string[];
+    tags?: string[];
     placeSkipped?: boolean;
     place?: PlaceJSON;
     referenceImage?: string;
     profileImage?: string;
     biography?: string;
     media?: MediaJSON[];
-    accountFlags?: StringSetFromJson;
-    visibilityFlags?: StringSetFromJson;
-    featureFlags?: StringSetFromJson;
-    companySectors?: StringSetFromJson;
+    accountFlags?: string[];
+    visibilityFlags?: string[];
+    featureFlags?: string[];
+    companySectors?: string[];
     companySize?: string;
     availablePromotionsCount?: number;
     activePromotionsCount?: number;
@@ -94,17 +93,17 @@ export class Profile {
     birthday: string;
     accentColor: string;
     hivStatus: string;
-    genders: StringSetFromJson;
-    interests: StringSetFromJson;
-    tags: StringSetFromJson;
+    genders: string[];
+    interests: string[];
+    tags: string[];
     placeSkipped: boolean;
     place?: Place;
     biography: string;
     media: Media[];
-    accountFlags: StringSetFromJson;
-    visibilityFlags: StringSetFromJson;
-    featureFlags: StringSetFromJson;
-    companySectors: StringSetFromJson;
+    accountFlags: string[];
+    visibilityFlags: string[];
+    featureFlags: string[];
+    companySectors: string[];
     companySize?: string;
     availablePromotionsCount: number;
     activePromotionsCount: number;
@@ -121,17 +120,17 @@ export class Profile {
         this.birthday = json.birthday || '';
         this.accentColor = json.accentColor || '';
         this.hivStatus = json.hivStatus || '';
-        this.genders = json.genders || new Set();
-        this.interests = json.interests || new Set();
-        this.tags = json.tags || new Set();
+        this.genders = json.genders || [];
+        this.interests = json.interests || [];
+        this.tags = json.tags || [];
         this.placeSkipped = json.placeSkipped || false;
         this.place = json.place && new Place(json.place);
         this.biography = json.biography || '';
         this.media = json.media ? json.media.map((media) => new Media(media)) : [];
-        this.accountFlags = json.accountFlags || new Set();
-        this.visibilityFlags = json.visibilityFlags || new Set();
-        this.featureFlags = json.featureFlags || new Set();
-        this.companySectors = json.companySectors || new Set();
+        this.accountFlags = json.accountFlags || [];
+        this.visibilityFlags = json.visibilityFlags || [];
+        this.featureFlags = json.featureFlags || [];
+        this.companySectors = json.companySectors || [];
         this.companySize = json.companySize;
         this.availablePromotionsCount = json.availablePromotionsCount || 0;
         this.activePromotionsCount = json.activePromotionsCount || 0;
@@ -148,39 +147,37 @@ export class Profile {
     }
 
     removeFlaggedData(): void {
-        const visibilityFlags = Array.from(this.visibilityFlags);
         const isIncognito = this.isIncognito();
+        const currentVisibilityFlagsSet = Array.from(this.visibilityFlags);
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagName)) {
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagName)) {
             this.name = '';
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagBirthday)) {
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagBirthday)) {
             this.birthday = '';
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagInterests)) {
-            this.interests = new Set();
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagInterests)) {
+            this.interests = [];
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagGenders)) {
-            this.genders = new Set();
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagGenders)) {
+            this.genders = [];
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagLocation)) {
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagLocation)) {
             this.place = undefined;
             this.placeSkipped = false;
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagHivStatus)) {
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagHivStatus)) {
             this.hivStatus = '';
         }
 
-        if (isIncognito || !visibilityFlags.includes(visibilityFlagCompanySectors)) {
-            this.companySectors = new Set();
+        if (isIncognito || !currentVisibilityFlagsSet.includes(visibilityFlagCompanySectors)) {
+            this.companySectors = [];
         }
-
-        this.visibilityFlags = new Set();
 
         if (isIncognito) {
             this.locale = '';

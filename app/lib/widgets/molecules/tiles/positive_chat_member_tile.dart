@@ -56,10 +56,14 @@ class PositiveChatMemberTile extends ConsumerWidget {
     final Color complementaryColor = accentColor.complimentTextColor;
 
     bool isSourceBlocked = false;
+    bool isTargetBlocked = false;
     if (relationship != null && currentProfileId.isNotEmpty) {
       final Set<RelationshipState> relationshipStates = relationship!.relationshipStatesForEntity(currentProfileId);
       isSourceBlocked = relationshipStates.contains(RelationshipState.sourceBlocked);
+      isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
     }
+
+    final Profile? actualProfile = isTargetBlocked ? null : profile;
 
     return PositiveTapBehaviour(
       onTap: onTap,
@@ -75,7 +79,7 @@ class PositiveChatMemberTile extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             PositiveProfileCircularIndicator(
-              profile: profile,
+              profile: actualProfile,
               ringColorOverride: isSourceBlocked ? Colors.black : null,
             ),
             const SizedBox(width: kPaddingSmall),
@@ -83,9 +87,12 @@ class PositiveChatMemberTile extends ConsumerWidget {
               child: Row(
                 children: <Widget>[
                   Flexible(
-                    child: Text(profile.displayName.asHandle, style: typography.styleTitle),
+                    child: Text(
+                      isTargetBlocked ? localizations.shared_placeholders_empty_display_name : profile.displayName.asHandle,
+                      style: typography.styleTitle,
+                    ),
                   ),
-                  if (profile.isVerified) ...<Widget>[
+                  if (actualProfile?.isVerified == true) ...<Widget>[
                     const SizedBox(width: kPaddingSmall),
                     PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
                   ],

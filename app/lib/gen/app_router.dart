@@ -14,8 +14,8 @@ import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';
-import 'package:app/widgets/organisms/account/account_update_name_page.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
+import 'package:app/widgets/organisms/account/account_update_name_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
 import 'package:app/widgets/organisms/chat/chat_create_page.dart';
 import 'package:app/widgets/organisms/chat/chat_members_page.dart';
@@ -161,7 +161,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),
         //* Profile and Profile Configuration
-        AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [signedInGuard, profileDisplayGuard]),
+        AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [profileDisplayGuard]),
         AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue', guards: [signedInGuard]),
         AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [signedInGuard]),
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),

@@ -88,26 +88,29 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     }
   }
 
-  Future<void> onRefresh() async {
+  Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
     final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    if (profileController.currentProfileId == null) {
-      logger.d('onRefresh() - profileController.currentProfileId is null');
-      return;
-    }
 
     try {
       logger.d('onRefresh()');
       state = state.copyWith(isRefreshing: true);
-      final String cacheId = 'feeds:timeline-${profileController.currentProfileId}';
-      final PositiveFeedState? feedState = cacheController.get<PositiveFeedState>(cacheId);
+      cacheController.remove(cacheKey);
+      feedState.pagingController.refresh();
 
-      // Check if the feed is already loaded
-      if (feedState != null && (feedState.pagingController.itemList?.isNotEmpty ?? false)) {
-        feedState.pagingController.refresh();
+      // Wait until the first page is loaded
+      int counter = 0;
+      while (feedState.pagingController.itemList == null && counter < 10) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        counter++;
+
+        // Check for an error
+        if (feedState.pagingController.error != null) {
+          throw feedState.pagingController.error!;
+        }
       }
+
+      cacheController.add(key: cacheKey, value: feedState);
     } finally {
       state = state.copyWith(isRefreshing: false);
     }

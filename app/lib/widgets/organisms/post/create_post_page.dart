@@ -61,7 +61,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     if (widget.isEditPage || widget.activityData != null) {
       await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
-      await ref.read(createPostViewModelProvider.notifier).initCamera();
+      ref.read(createPostViewModelProvider.notifier).displayCamera(PostType.image);
     }
   }
 
@@ -106,7 +106,12 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
-      onWillPop: state.isBusy ? (() async => false) : () => viewModel.onWillPopScope(),
+      onWillPop: state.isBusy
+          ? (() async => false)
+          : () async {
+              await viewModel.goBack();
+              return false;
+            },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: buildSystemUiOverlayStyle(appBarColor: colours.black, backgroundColor: colours.black),
         child: Scaffold(
@@ -125,9 +130,9 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       key: state.cameraWidgetKey,
                       //? On Tap section
                       onCameraImageTaken: (image) => viewModel.onImageTaken(image),
-                      onCameraVideoTaken: (video) => viewModel.onVideoTaken(video),
+                      onCameraVideoTaken: (file) => viewModel.onVideoEditRequest(file),
                       onTapClose: (_) => appRouter.pop(),
-                      onTapForceClose: (_) => viewModel.onForceClosePage(),
+                      onTapForceClose: (_) => viewModel.goBack(shouldForceClose: true),
                       onTapAddImage: (context) => viewModel.onMultiMediaPicker(),
                       //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                       cameraNavigation: (_) {
@@ -236,7 +241,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                     galleryEntry: state.editingGalleryEntry,
                     currentFilter: state.currentFilter,
                     onFilterSelected: viewModel.onFilterSelected,
-                    onBackButtonPressed: () => viewModel.onWillPopScope(),
+                    onBackButtonPressed: () => viewModel.goBack(),
                   ),
                 ],
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -280,7 +285,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       onUpdateAllowSharing: (_) => viewModel.onUpdateAllowSharing(),
                       onUpdateAllowComments: viewModel.onUpdateAllowComments,
                       onUpdatePromotedPost: (ctx) => viewModel.onUpdatePromotePost(currentProfileId),
-                      onUpdateSaveToGallery: state.isEditing ? null : (_) => viewModel.onUpdateSaveToGallery(),
+                      onUpdateSaveToGallery: state.isEditingPost ? null : (_) => viewModel.onUpdateSaveToGallery(),
                       onUpdateVisibleTo: viewModel.onUpdateVisibleTo,
                       valueAllowSharing: state.allowSharing,
                       valueSaveToGallery: state.saveToGallery,
@@ -299,7 +304,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                   Positioned.fill(
                     child: PositiveClipEditor(
                       onTapClose: (_) => appRouter.pop(),
-                      onTapFullClose: (_) => viewModel.onForceClosePage(),
+                      onTapFullClose: (_) => appRouter.pop(),
                       controller: viewModel.videoEditorController,
                       // targetVideoAspectRatio: kClipAspectRatio,
                       bottomNavigationSize: kCreatePostNavigationHeight + kPaddingMedium + kPaddingSmall,
@@ -362,7 +367,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                             if (state.isUploadingMedia) ...<Widget>[
                               const SizedBox(height: kPaddingSmall),
                               Text(
-                                state.isEditing
+                                state.isEditingPost
                                     ? localisations.page_edit_post_uploading(
                                         postTypeToLocalization(state.currentPostType, localisations),
                                       )
@@ -465,7 +470,7 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
             isShared: true,
           ),
         ),
-        const SizedBox(height: kPaddingAppBarBreak),
+        const SizedBox(height: kPaddingMassive),
       ],
     );
   }

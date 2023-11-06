@@ -110,14 +110,28 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   void appendActivityPageToState(Map<String, dynamic> data, String? next) {
     final Logger logger = providerContainer.read(loggerProvider);
 
-    final List<dynamic> activities = data['activities'] as List<dynamic>;
-    final List<Activity> activityList = activities.map((dynamic activity) {
-      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
-      return Activity.fromJson(activityMap);
-    }).toList();
+    final List<dynamic> activityData = data['activities'] as List<dynamic>;
+    final List<Activity> activities = [];
 
-    logger.d('appendActivityPageToState() - activityList.length: ${activityList.length}');
-    feedState.pagingController.appendPage(activityList, next);
+    for (final dynamic activity in activityData) {
+      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
+      final Activity activityObject = Activity.fromJson(activityMap);
+      final String activityId = activityObject.flMeta?.id ?? '';
+
+      if (activityId.isEmpty) {
+        continue;
+      }
+
+      if (feedState.knownActivities.contains(activityId)) {
+        continue;
+      }
+
+      feedState.knownActivities.add(activityId);
+      activities.add(activityObject);
+    }
+
+    logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
+    feedState.pagingController.appendPage(activities, next);
   }
 
   void saveActivitiesState() {
@@ -146,8 +160,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   bool checkShouldDisplayNoPosts({
     Profile? currentProfile,
-    Relationship? relationship,
   }) {
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final bool requestedFirstWindow = feedState.hasPerformedInitialLoad;
     if (!requestedFirstWindow) {
       return false;
@@ -157,6 +171,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Iterable<Activity>? activities = feedState.pagingController.itemList;
     final bool canDisplayAny = activities?.any((element) {
           final String publisherId = element.publisherInformation?.publisherId ?? '';
+          if (currentProfileId.isNotEmpty && publisherId == currentProfileId) {
+            return true;
+          }
+
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
           return element.canDisplayOnFeed(currentProfile, relationship);
@@ -176,7 +194,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       listener: requestNextPage,
     );
 
-    final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts();
+    final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);
+
     final Widget defaultNoPostsSliverWidget = SliverNoPostsPlaceholder(
       typography: typography,
       colors: colors,
