@@ -100,6 +100,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   VideoEditorController? videoEditorController;
   io.File? uneditedVideoFile;
 
+  List<XFile> listOfClipSegments = [];
+
   PositiveCameraState? get currentPositiveCameraState {
     return state.cameraWidgetKey.currentState is PositiveCameraState ? state.cameraWidgetKey.currentState as PositiveCameraState : null;
   }
@@ -952,10 +954,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> stopClipRecordingAndProcessResult() async {
-    //? temp removed due to ios issue
-    // await currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
-    // await currentPositiveCameraState?.stopClipRecording();
-    await currentPositiveCameraState?.attemptProcessVideoResult();
+    await currentPositiveCameraState?.stopClipRecording();
+    onVideoEditRequest(listOfClipSegments.first);
+  }
+
+  void addClipSegmentToList(XFile file) {
+    listOfClipSegments.add(file);
   }
 
   void onGalleryEntrySelected(GalleryEntry entry) {

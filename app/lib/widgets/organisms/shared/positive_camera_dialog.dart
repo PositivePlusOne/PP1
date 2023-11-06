@@ -41,6 +41,7 @@ class PositiveCameraDialog extends ConsumerWidget {
         onFaceDetected: onFaceDetected,
         takePictureCaption: takePictureCaption,
         displayCameraShade: displayCameraShade,
+        onClipPause: (_) {},
         onCameraImageTaken: onCameraImageTaken ?? (path) async => Navigator.pop(context, path),
         isBusy: isBusy,
         onDelayTimerChanged: (_) {},

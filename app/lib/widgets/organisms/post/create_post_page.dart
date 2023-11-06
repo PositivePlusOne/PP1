@@ -142,6 +142,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       onTapClose: (_) => appRouter.pop(),
                       onTapForceClose: (_) => viewModel.goBack(shouldForceClose: true),
                       onTapAddImage: (context) => viewModel.onMultiMediaPicker(),
+                      onClipPause: (file) => viewModel.addClipSegmentToList(file),
                       //? Padding at the bottom of the screen to move the camera button above the bottom navigation
                       cameraNavigation: (_) {
                         return const SizedBox(

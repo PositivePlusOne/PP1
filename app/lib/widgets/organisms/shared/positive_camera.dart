@@ -75,6 +75,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.onClipStateChange,
     //* -=-=-=-=-  Delay Timer Variables -=-=-=-=- *\\
     required this.onDelayTimerChanged,
+    required this.onClipPause,
     this.isDelayTimerEnabled = false,
     this.maxDelay = 0,
     this.delayTimerSelection = -1,
@@ -110,6 +111,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final void Function(BuildContext context)? onTapClose;
   final void Function(BuildContext context)? onTapForceClose;
   final void Function(BuildContext context)? onTapAddImage;
+  final void Function(XFile clipSegment) onClipPause;
   final bool enableFlashControls;
 
   final bool isBusy;
@@ -559,33 +561,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
   }
 
-  Future<void> attemptProcessVideoResult() async {
-    if (!mounted) {
-      return;
-    }
-
-    final Logger logger = ref.read(loggerProvider);
-    if (videoCaptureRequest == null) {
-      logger.e("Attempted to stop clip recording when no capture was available");
-      return;
-    }
-
-    final XFile? file = await videoCaptureRequest?.when(
-      single: (single) => single.file,
-    );
-
-    final int length = await file?.length() ?? 0;
-    if (length <= 0) {
-      logger.w("Attempted to stop clip recording when no file was available");
-      return;
-    }
-
-    //? we do not need to call the stateChange callback here as it is implicitly called by the callback below
-    clipRecordingState = ClipRecordingState.finishedRecording;
-    widget.onClipStateChange?.call(clipRecordingState);
-    await widget.onCameraVideoTaken?.call(file!);
-  }
-
   ///? Attempt to stop the clip recording, does not capture the resulting video
   Future<void> stopClipRecording() async {
     if (!mounted) {
@@ -621,6 +596,34 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
   }
 
+  Future<XFile?> attemptProcessVideoResult() async {
+    if (!mounted) {
+      return null;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    if (videoCaptureRequest == null) {
+      logger.e("Attempted to stop clip recording when no capture was available");
+      return null;
+    }
+
+    final XFile? file = await videoCaptureRequest?.when(
+      single: (single) => single.file,
+    );
+
+    final int length = await file?.length() ?? 0;
+    if (length <= 0) {
+      logger.w("Attempted to stop clip recording when no file was available");
+      return null;
+    }
+
+    //? we do not need to call the stateChange callback here as it is implicitly called by the callback below
+    clipRecordingState = ClipRecordingState.finishedRecording;
+    widget.onClipStateChange?.call(clipRecordingState);
+    return file;
+    // await widget.onCameraVideoTaken?.call(file!);
+  }
+
   ///? if forcePause is given as true always try to pause the clip.
   ///
   ///? if forcePause is given as false always try to resume the clip.
@@ -654,28 +657,25 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     bool pause = true;
 
     if (forcePause == null) {
-      if (videoRecordingCameraState.captureState!.videoState == VideoState.paused) {
-        pause = false;
-      } else {
-        pause = true;
-      }
+      pause = clipRecordingState.isRecording;
     } else {
       pause = forcePause;
     }
 
     if (!pause) {
-      // await videoRecordingCameraState.resumeRecording(currentCapture);
-      // startRecordingTimer();
-      // setStateIfMounted(callback: () {
-      //   clipRecordingState = ClipRecordingState.recording;
-      //   widget.onClipStateChange?.call(clipRecordingState);
-      // });
-      // return;
+      await onVideoRecordingStart(videoRecordingCameraState);
+      setStateIfMounted(callback: () {
+        clipRecordingState = ClipRecordingState.recording;
+        widget.onClipStateChange?.call(clipRecordingState);
+      });
+      return;
     }
 
     if (pause) {
-      if (clipRecordingState.isRecording) {
-        await videoRecordingCameraState.stopRecording();
+      await videoRecordingCameraState.stopRecording();
+      XFile? newSegment = await attemptProcessVideoResult();
+      if (newSegment != null) {
+        widget.onClipPause(newSegment);
       }
       clipTimer?.cancel();
       clipRecordingState = ClipRecordingState.paused;
