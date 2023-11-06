@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -126,7 +128,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     final CameraState? currentState = await currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.first;
     final bool isHandlingVideo = currentState != null && (currentState is VideoRecordingCameraState || currentState is VideoCameraState);
-    final bool isRecordingVideo = isHandlingVideo && currentState.captureState?.isRecordingVideo == true;
+    final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
     final bool isPrerecordingVideo = isHandlingVideo && currentPositiveCameraState?.clipRecordingState == ClipRecordingState.preRecording;
 
     // Quickly back out if in the countdown
@@ -136,7 +138,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    if (isRecordingVideo) {
+    if (isRecordingVideo || state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
+      // await currentPositiveCameraState?.stopClipRecording();
       await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
       shouldDisplayDialog = true;
     }
@@ -154,18 +157,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       await currentPositiveCameraState?.stopClipRecording();
-
-      // Close the video and remove the page
-      // TODO(ryan): Add iOS check
-      final bool isIOS = UniversalPlatform.isIOS;
-      if (shouldForceClose || (isIOS && isHandlingVideo)) {
-        router.removeLast();
-        return;
-      }
     }
-
-    //! If we are on an ios device during clip recording, return to the hub page
-    //! This is a workaround due to an error in the camera software state
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
@@ -219,7 +211,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final bool isCurrentlyRecording = currentPositiveCameraState?.clipRecordingState.isRecording == true;
     if (isCurrentlyRecording) {
       await currentPositiveCameraState?.stopClipRecording();
+
       displayCamera(PostType.clip);
+      return;
+    }
+
+    if (!(currentPositiveCameraState?.clipRecordingState.isInactive ?? true)) {
+      currentPositiveCameraState?.onClipResetState();
       return;
     }
 
@@ -276,6 +274,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
       currentPostType: postType,
+      isBottomNavigationEnabled: true,
       activeButton: switch (postType) {
         PostType.clip => PositivePostNavigationActiveButton.clip,
         PostType.event => PositivePostNavigationActiveButton.event,
@@ -909,7 +908,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> stopClipRecordingAndProcessResult() async {
-    await currentPositiveCameraState?.stopClipRecording();
+    //? temp removed due to ios issue
+    // await currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
+    // await currentPositiveCameraState?.stopClipRecording();
     await currentPositiveCameraState?.attemptProcessVideoResult();
   }
 
