@@ -909,7 +909,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> stopClipRecordingAndProcessResult() async {
-    currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
+    await currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
     await currentPositiveCameraState?.stopClipRecording();
     await currentPositiveCameraState?.attemptProcessVideoResult();
   }
