@@ -74,6 +74,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
 
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
+      isBusy: state.isBusy,
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
