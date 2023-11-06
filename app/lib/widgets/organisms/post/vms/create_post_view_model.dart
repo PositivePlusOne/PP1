@@ -139,7 +139,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (isRecordingVideo) {
-      await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
+      await currentPositiveCameraState?.stopClipRecording();
+      // await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
       shouldDisplayDialog = true;
     }
 
@@ -909,8 +910,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> stopClipRecordingAndProcessResult() async {
-    await currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
-    await currentPositiveCameraState?.stopClipRecording();
+    //? temp removed due to ios issue
+    // await currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
+    // await currentPositiveCameraState?.stopClipRecording();
     await currentPositiveCameraState?.attemptProcessVideoResult();
   }
 

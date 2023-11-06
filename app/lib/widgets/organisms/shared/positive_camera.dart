@@ -662,17 +662,17 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
 
     if (!pause) {
-      await videoRecordingCameraState.resumeRecording(currentCapture);
-      startRecordingTimer();
-      setStateIfMounted(callback: () {
-        clipRecordingState = ClipRecordingState.recording;
-        widget.onClipStateChange?.call(clipRecordingState);
-      });
-      return;
+      // await videoRecordingCameraState.resumeRecording(currentCapture);
+      // startRecordingTimer();
+      // setStateIfMounted(callback: () {
+      //   clipRecordingState = ClipRecordingState.recording;
+      //   widget.onClipStateChange?.call(clipRecordingState);
+      // });
+      // return;
     }
 
     if (pause) {
-      await videoRecordingCameraState.pauseRecording(currentCapture);
+      await videoRecordingCameraState.stopRecording();
       clipTimer?.cancel();
       clipRecordingState = ClipRecordingState.paused;
       widget.onClipStateChange?.call(clipRecordingState);
@@ -1177,14 +1177,15 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       return;
     }
 
-    final bool isRecording = clipRecordingState.isRecording;
-    if (isRecording) {
+    if (clipRecordingState.isRecording) {
       logger.d("Stopping video recording");
       await onPauseResumeClip();
       return;
     } else {
-      logger.d("Starting video recording");
-      await onVideoRecordingRequestStart(state);
+      if (!clipRecordingState.isFinishedRecording) {
+        logger.d("Starting video recording");
+        await onVideoRecordingRequestStart(state);
+      }
     }
 
     // state.when(
@@ -1347,4 +1348,7 @@ enum ClipRecordingState {
 
   ///Is the clip recording or in the pre-recording countdown stage.
   bool get isRecordingOrPrerecording => (this == recording) || (this == preRecording);
+
+  /// Has recording finished
+  bool get isFinishedRecording => (this == finishedRecording);
 }
