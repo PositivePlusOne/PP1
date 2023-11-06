@@ -138,7 +138,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    if (isRecordingVideo) {
+    if (isRecordingVideo || state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
       // await currentPositiveCameraState?.stopClipRecording();
       await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
       shouldDisplayDialog = true;
@@ -157,18 +157,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       await currentPositiveCameraState?.stopClipRecording();
-
-      // Close the video and remove the page
-      // TODO(ryan): Add iOS check
-      // final bool isIOS = UniversalPlatform.isIOS;
-      // if (shouldForceClose || (isIOS && isHandlingVideo)) {
-      //   router.removeLast();
-      //   return;
-      // }
     }
-
-    //! If we are on an ios device during clip recording, return to the hub page
-    //! This is a workaround due to an error in the camera software state
 
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
