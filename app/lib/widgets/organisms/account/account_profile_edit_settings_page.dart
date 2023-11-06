@@ -6,6 +6,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
@@ -195,19 +197,12 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                         //? empty onTap, users may not update date of birth in app
                         onTap: (_) {},
                       ),
-                      RichText(
-                        text: TextSpan(
-                          text: localizations.page_profile_edit_change_details,
-                          style: typography.styleSubtitle.copyWith(color: colors.colorGray1.complimentTextColor),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: localizations.page_profile_edit_change_details_link,
-                              style: typography.styleBold.copyWith(
-                                color: colors.linkBlue,
-                              ),
-                            )
-                          ],
-                        ),
+                      // this text contains a 'mailto' link so we use Linkify to show that in blue and send them to the
+                      // email client when they click on it
+                      Linkify(
+                        onOpen: (link) => launchUrl(Uri.parse(link.url)),
+                        text: localizations.page_profile_edit_change_details_email,
+                        style: typography.styleSubtitle.copyWith(color: colors.colorGray1.complimentTextColor),
                       ),
                       PositiveVisibilityHint(
                         toggleState: viewModelState.toggleStateDateOfBirth,
