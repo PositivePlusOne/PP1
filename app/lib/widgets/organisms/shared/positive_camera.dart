@@ -270,9 +270,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   @override
   void deactivate() {
-    stopClipRecording();
+    if (!clipRecordingState.isInactive) {
+      stopClipRecording();
+      clipRecordingState = ClipRecordingState.notRecording;
+    }
 
-    clipRecordingState = ClipRecordingState.notRecording;
     faceDetector.close();
     super.deactivate();
   }
