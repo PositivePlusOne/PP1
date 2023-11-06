@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -94,7 +95,7 @@ class HomePage extends HookConsumerWidget {
         !isLoggedOut ? feedState : everyoneFeedState,
         !isLoggedOut ? expectedFeedStateKey : everyoneFeedStateKey,
       ),
-      appBarColor: colors.pink,
+      appBarColor: colors.colorGray1,
       controller: controller,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
@@ -109,9 +110,8 @@ class HomePage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           foregroundColor: colors.black,
-          backgroundColor: colors.pink,
+          backgroundColor: colors.colorGray1,
           appBarTrailing: actions,
-          appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: HubAppBarContent(shouldDisplayActivateAccountBanner: isLoggedOut),
           appBarSpacing: kPaddingNone,
           horizontalPadding: kPaddingNone,
