@@ -128,7 +128,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     final CameraState? currentState = await currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.first;
     final bool isHandlingVideo = currentState != null && (currentState is VideoRecordingCameraState || currentState is VideoCameraState);
-    final bool isRecordingVideo = isHandlingVideo && currentState.captureState?.isRecordingVideo == true;
+    final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
     final bool isPrerecordingVideo = isHandlingVideo && currentPositiveCameraState?.clipRecordingState == ClipRecordingState.preRecording;
 
     // Quickly back out if in the countdown
@@ -139,8 +139,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (isRecordingVideo) {
-      await currentPositiveCameraState?.stopClipRecording();
-      // await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
+      // await currentPositiveCameraState?.stopClipRecording();
+      await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
       shouldDisplayDialog = true;
     }
 
@@ -160,11 +160,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       // Close the video and remove the page
       // TODO(ryan): Add iOS check
-      final bool isIOS = UniversalPlatform.isIOS;
-      if (shouldForceClose || (isIOS && isHandlingVideo)) {
-        router.removeLast();
-        return;
-      }
+      // final bool isIOS = UniversalPlatform.isIOS;
+      // if (shouldForceClose || (isIOS && isHandlingVideo)) {
+      //   router.removeLast();
+      //   return;
+      // }
     }
 
     //! If we are on an ios device during clip recording, return to the hub page
@@ -222,7 +222,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final bool isCurrentlyRecording = currentPositiveCameraState?.clipRecordingState.isRecording == true;
     if (isCurrentlyRecording) {
       await currentPositiveCameraState?.stopClipRecording();
+
       displayCamera(PostType.clip);
+      return;
+    }
+
+    if (!(currentPositiveCameraState?.clipRecordingState.isInactive ?? true)) {
+      currentPositiveCameraState?.onClipResetState();
       return;
     }
 
@@ -279,6 +285,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
       currentPostType: postType,
+      isBottomNavigationEnabled: true,
       activeButton: switch (postType) {
         PostType.clip => PositivePostNavigationActiveButton.clip,
         PostType.event => PositivePostNavigationActiveButton.event,

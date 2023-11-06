@@ -612,7 +612,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       clipTimer?.cancel();
       clipTimer = null;
 
-      clipRecordingState = ClipRecordingState.notRecording;
+      clipRecordingState = ClipRecordingState.finishedRecording;
       widget.onClipStateChange?.call(clipRecordingState);
     } catch (e) {
       logger.e("Error stopping video recording: $e");
@@ -678,6 +678,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       widget.onClipStateChange?.call(clipRecordingState);
       setStateIfMounted();
     }
+  }
+
+  void onClipResetState() {
+    clipRecordingState = ClipRecordingState.notRecording;
+    widget.onClipStateChange?.call(clipRecordingState);
   }
 
   Future<void> onImageTaken(PhotoCameraState cameraState) async {
@@ -1182,7 +1187,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       await onPauseResumeClip();
       return;
     } else {
-      if (!clipRecordingState.isFinishedRecording) {
+      if (clipRecordingState.isInactive) {
         logger.d("Starting video recording");
         await onVideoRecordingRequestStart(state);
       }
@@ -1324,11 +1329,11 @@ enum ClipRecordingState {
   ///Has the user begun the recording process. That is: prerecording, recording or paused the recording
   bool get isActive => (this == preRecording || this == recording || this == paused);
 
-  ///Has the recording begun but is paused
-  bool get isRecordingOrPaused => (this == recording || this == paused);
-
   ///Has the user begun the recording process but is not currently paused
   bool get isActiveUnpaused => (this == recording || this != paused);
+
+  ///Has the recording begun but is paused
+  bool get isRecordingOrPaused => (this == recording || this == paused);
 
   ///Has the user paused the current recording process or is not currently recording
   bool get isNotRecordingOrPaused => (this == notRecording || this == paused);
