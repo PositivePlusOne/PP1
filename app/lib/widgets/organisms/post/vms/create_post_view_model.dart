@@ -152,14 +152,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
 
       await currentPositiveCameraState?.stopClipRecording();
-
-      // Close the video and remove the page
-      // TODO(ryan): Add iOS check
-      final bool isIOS = UniversalPlatform.isIOS;
-      if (shouldForceClose || (isIOS && isHandlingVideo)) {
-        router.removeLast();
-        return;
-      }
     } else {
       // we actually always want to show a basic dialog telling them that quitting the dialog
       // will discard their post
