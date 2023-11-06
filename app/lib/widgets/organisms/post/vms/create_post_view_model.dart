@@ -36,6 +36,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
+import 'package:app/widgets/organisms/post/component/positive_discard_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
@@ -122,8 +123,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final logger = ref.read(loggerProvider);
 
-    bool shouldDisplayDialog = false;
-
     final CameraState? currentState = await currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.first;
     final bool isHandlingVideo = currentState != null && (currentState is VideoRecordingCameraState || currentState is VideoCameraState);
     final bool isRecordingVideo = isHandlingVideo && currentState.captureState?.isRecordingVideo == true;
@@ -137,11 +136,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (isRecordingVideo) {
+      // we are recording video - stop
       await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
-      shouldDisplayDialog = true;
-    }
-
-    if (shouldDisplayDialog) {
+      // we were recording a video - this has a special dialog to show the user
       final bool hasAcceptedDiscardDialog = await positiveDiscardClipDialogue(
         context: context,
         colors: colors,
@@ -161,6 +158,51 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       if (shouldForceClose || (isIOS && isHandlingVideo)) {
         router.removeLast();
         return;
+      }
+    } else {
+      // we actually always want to show a basic dialog telling them that quitting the dialog
+      // will discard their post
+      bool isCancelDialogRequired = false;
+      switch (state.currentCreatePostPage) {
+        case CreatePostCurrentPage.entry:
+        case CreatePostCurrentPage.repostPreview:
+        case CreatePostCurrentPage.camera:
+          // going back from the initial page shows the cancel dialog
+          isCancelDialogRequired = true;
+          break;
+        case CreatePostCurrentPage.createPostText:
+          // going back from entering text requires a cancel dialog
+          isCancelDialogRequired = true;
+          break;
+        case CreatePostCurrentPage.createPostImage:
+          // going back from the initial page shows the cancel dialog
+          isCancelDialogRequired = true;
+          break;
+        case CreatePostCurrentPage.editPhoto:
+          // eding the photo (filters) doesn't require a cancel dialog
+          isCancelDialogRequired = false;
+          break;
+        case CreatePostCurrentPage.createPostMultiImage:
+          isCancelDialogRequired = false;
+          break;
+        case CreatePostCurrentPage.createPostEditClip:
+          isCancelDialogRequired = false;
+          break;
+        case CreatePostCurrentPage.createPostClip:
+          isCancelDialogRequired = false;
+          break;
+      }
+      if (isCancelDialogRequired) {
+        final bool hasAcceptedDiscardDialog = await positiveDiscardPostDialogue(
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+
+        if (!hasAcceptedDiscardDialog) {
+          logger.d("User has not accepted discard dialog, do not close page");
+          return;
+        }
       }
     }
 

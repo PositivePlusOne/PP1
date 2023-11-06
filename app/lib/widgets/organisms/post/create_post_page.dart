@@ -85,6 +85,19 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     }
   }
 
+  Future<bool> _handleBackButton(CreatePostViewModelState state, CreatePostViewModel viewModel) async {
+    // we will let them go back out of this page if there's nothing going on...
+    if (state.isBusy) {
+      // don't let them quit
+      return false;
+    } else {
+      // let the view model decide where to go back
+      await viewModel.goBack();
+      // and not the base back action
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -106,12 +119,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
-      onWillPop: state.isBusy
-          ? (() async => false)
-          : () async {
-              await viewModel.goBack();
-              return false;
-            },
+      onWillPop: () => _handleBackButton(state, viewModel),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: buildSystemUiOverlayStyle(appBarColor: colours.black, backgroundColor: colours.black),
         child: Scaffold(

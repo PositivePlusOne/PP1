@@ -565,6 +565,10 @@
     "page_create_post_cancel_clip_caption": "Heads up! Your clip won't be saved if you leave now.",
     "page_create_post_discard_clip": "Discard Clip",
 
+    "page_create_post_discard_post_title": "Discard Post",
+    "page_create_post_discard_post_caption": "Heads up! Your post won't be saved if you leave now.",
+    "page_create_post_discard_post_button": "Discard Post",
+
     "post_comments_public_header": "Be the first to leave a comment",
     "post_comments_followers_connections_header": "You must be following to comment",
     "post_comments_connections_header": "You must be connected to comment",
