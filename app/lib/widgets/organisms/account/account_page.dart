@@ -89,13 +89,16 @@ class AccountPage extends HookConsumerWidget {
     final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
 
     final Profile? currentProfile = profileState.currentProfile;
+    final Color accentColor = profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.colorGray1;
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      backgroundColor: colors.colorGray1,
+      appBarColor: accentColor,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           foregroundColor: foregroundColor,
-          backgroundColor: profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow,
+          backgroundColor: accentColor,
           appBarTrailing: actions,
           appBarTrailType: PositiveAppBarTrailType.convex,
           appBarBottom: PreferredSize(
