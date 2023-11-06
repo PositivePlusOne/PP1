@@ -280,7 +280,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               forceBorder: true,
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_comments,
-                values: ActivitySecurityConfigurationMode.orderedCommentModes,
+                values: ActivitySecurityConfigurationMode.getOrderedCommentModes(isEvent: false),
                 initialValue: initialValueAllowComments,
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
@@ -444,7 +444,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                     forceBorder: true,
                     child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                       labelText: localisations.page_create_post_comments,
-                      values: ActivitySecurityConfigurationMode.orderedCommentModes,
+                      values: ActivitySecurityConfigurationMode.getOrderedCommentModes(isEvent: true),
                       initialValue: initialValueAllowComments,
                       valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),
                       placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toCommentLocale(value, localisations),

@@ -180,9 +180,10 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
     );
   }
 
-  static List<ActivitySecurityConfigurationMode> get orderedCommentModes {
+  static List<ActivitySecurityConfigurationMode> getOrderedCommentModes({bool isEvent = false}) {
     return <ActivitySecurityConfigurationMode>[
-      const ActivitySecurityConfigurationMode.public(),
+      // PP1-1177 'everyone' not valid commenting mode for posts but will leave in there for events (Everyone there in lots of design (figma))
+      ...isEvent ? [const ActivitySecurityConfigurationMode.public()] : [],
       const ActivitySecurityConfigurationMode.signedIn(),
       const ActivitySecurityConfigurationMode.connections(),
       const ActivitySecurityConfigurationMode.followersAndConnections(),
