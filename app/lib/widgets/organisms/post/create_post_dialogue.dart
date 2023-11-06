@@ -639,18 +639,32 @@ class CreatePostTagsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Tag> safeTags = TagHelpers.filterReservedTags(tags.map((String tag) => Tag(key: tag, fallback: tag, promoted: false)).toList());
-    final Iterable<Tag> takenTags = safeTags.take(3);
+    final List<Widget> tagsList = <Widget>[];
+    final bool tagsAllow = (tags.length >= 2 && tags.first.length <= 15) && (tags[1].length <= 15);
 
-    final List<Widget> tagsList = [
-      ...takenTags.map(
-        (e) => CreatePostTagPill(
-          tagName: e.toLocale,
+    if (tags.length == 2 && tagsAllow) {
+      tagsList.add(const SizedBox(width: kPaddingExtraSmall));
+
+      tagsList.add(
+        CreatePostTagPill(
+          tagName: tags[1],
           typography: typography,
           colours: colours,
         ),
-      ),
-    ].spaceWithHorizontal(kPaddingExtraSmall);
+      );
+    }
+
+    if (tags.length > 2 || (tags.length == 2 && !tagsAllow)) {
+      tagsList.add(const SizedBox(width: kPaddingExtraSmall));
+
+      tagsList.add(
+        CreatePostTagPill(
+          tagName: localisations.page_create_post_additional_tags((tags.length - 1).toString()),
+          typography: typography,
+          colours: colours,
+        ),
+      );
+    }
 
     return PositiveTapBehaviour(
       onTap: onTap,

@@ -114,7 +114,7 @@ class TagHelpers {
   static List<Tag> filterReservedTags(List<Tag> tags) => tags.whereNot((element) => isReserved(element.key)).toList();
 
   /// helper to filter out (remove) all the tag strings that are special reserved strings (ie 'promoted*')
-  static List<String> filterReservedTagStrings(List<String> tags) => tags.whereNot((element) => isPromoted(element)).toList();
+  static List<String> filterReservedTagStrings(List<String> tags) => tags.whereNot((element) => isReserved(element)).toList();
 
   static String getTagLocalizedName(Tag tag, Locale locale) {
     if (tag.localizations.any((TagLocalization localization) => localization.locale == locale.languageCode)) {
