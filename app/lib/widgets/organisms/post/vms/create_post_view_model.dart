@@ -295,6 +295,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     try {
       late final CreatePostCurrentPage currentPage;
       late final PostType currentPostType;
+      String flexText = localisations.page_create_post_create;
 
       switch (activityData.postType) {
         case PostType.image:
@@ -308,6 +309,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         case PostType.repost:
           currentPage = CreatePostCurrentPage.repostPreview;
           currentPostType = PostType.repost;
+          flexText = localisations.shared_actions_next;
           break;
         case PostType.event:
         case PostType.clip:
@@ -324,7 +326,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           currentPostType: currentPostType,
           reposterActivityID: activityData.reposterActivityID,
           activeButton: PositivePostNavigationActiveButton.flex,
-          activeButtonFlexText: localisations.page_create_post_create,
+          activeButtonFlexText: flexText,
           previousActivity: activityData,
         );
 

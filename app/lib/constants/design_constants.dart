@@ -52,6 +52,7 @@ const double kPaddingMassive = 50.0;
 const double kPaddingInformationBreak = 100.0;
 const double kPaddingBottomShader = 100.0;
 const double kPaddingSplashTextBreak = 200.0;
+const double kPaddingGiiiiiiirthy = 85.0;
 
 // Radia
 const double kBorderRadiusNone = 0.0;
