@@ -36,7 +36,6 @@ dependencies:
   infinite_scroll_pagination: ^4.0.0
   flutter_secure_storage: ^9.0.0
   cron: ^0.5.1
-  flutter_linkify: ^6.0.0
 
   # Backend
   firebase_core: ^2.21.0
@@ -112,6 +111,7 @@ dependencies:
   url_launcher: ^6.1.12
   android_intent_plus: ^4.0.3
   visibility_detector: ^0.4.0+2
+  flutter_linkify: ^6.0.0
 
 dev_dependencies:
   flutter_test:
