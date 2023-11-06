@@ -1,3 +1,5 @@
+import * as functions from "firebase-functions";
+
 import { NotificationAction } from "../../../../constants/notification_actions";
 import { NotificationTopic } from "../../../../constants/notification_topics";
 import { ProfileJSON } from "../../../../dto/profile";
@@ -29,11 +31,13 @@ export namespace ChatConnectionSentNotification {
     }
     
     const id = FlamelinkHelpers.generateIdentifier();
-    const foreignKey = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
+    const groupId = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
+    
+    functions.logger.log("Sending connection sent notification", { id, groupId, senderId, receiverId, title, body });
 
     const payload = new NotificationPayload({
       id,
-      foreign_id: foreignKey,
+      group_id: groupId,
       sender: senderId,
       user_id: receiverId,
       title,

@@ -9,6 +9,8 @@ import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
 
 export namespace ReactionInduividualCommentNotification {
+  export const TAG = "ReactionInduividualCommentNotification";
+
   /**
    * Sends a notification to the user that a connection request has been accepted.
    * @param {any} userProfile the user profile of the current user.
@@ -37,9 +39,16 @@ export namespace ReactionInduividualCommentNotification {
         throw new Error("Unable to generate notification payload");
     }
 
+    const identifierParts = [
+      NotificationAction.POST_COMMENTED_GROUP, receiverId, activityId, senderId,
+    ];
+
     const id = FlamelinkHelpers.generateIdentifier();
+    const groupId = FlamelinkHelpers.generateIdentifierFromStrings(identifierParts);
+
     const payload = new NotificationPayload({
       id,
+      group_id: groupId,
       sender: senderId,
       user_id: receiverId,
       title,

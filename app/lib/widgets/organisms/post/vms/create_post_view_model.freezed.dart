@@ -20,10 +20,10 @@ mixin _$CreatePostViewModelState {
   bool get isProcessingMedia => throw _privateConstructorUsedError;
   bool get isUploadingMedia => throw _privateConstructorUsedError;
   bool get isCreatingPost => throw _privateConstructorUsedError;
+  bool get isEditingPost => throw _privateConstructorUsedError;
   PostType get currentPostType => throw _privateConstructorUsedError;
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
-  bool get isEditingPost => throw _privateConstructorUsedError;
   String get currentActivityID => throw _privateConstructorUsedError;
   List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
   GalleryEntry? get editingGalleryEntry => throw _privateConstructorUsedError;
@@ -77,9 +77,9 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       bool isProcessingMedia,
       bool isUploadingMedia,
       bool isCreatingPost,
+      bool isEditingPost,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
-      bool isEditingPost,
       String currentActivityID,
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
@@ -131,9 +131,9 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? isProcessingMedia = null,
     Object? isUploadingMedia = null,
     Object? isCreatingPost = null,
+    Object? isEditingPost = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
-    Object? isEditingPost = null,
     Object? currentActivityID = null,
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
@@ -174,6 +174,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.isCreatingPost
           : isCreatingPost // ignore: cast_nullable_to_non_nullable
               as bool,
+      isEditingPost: null == isEditingPost
+          ? _value.isEditingPost
+          : isEditingPost // ignore: cast_nullable_to_non_nullable
+              as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
           : currentPostType // ignore: cast_nullable_to_non_nullable
@@ -182,10 +186,6 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.currentCreatePostPage
           : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
               as CreatePostCurrentPage,
-      isEditingPost: null == isEditingPost
-          ? _value.isEditingPost
-          : isEditingPost // ignore: cast_nullable_to_non_nullable
-              as bool,
       currentActivityID: null == currentActivityID
           ? _value.currentActivityID
           : currentActivityID // ignore: cast_nullable_to_non_nullable
@@ -310,9 +310,9 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       bool isProcessingMedia,
       bool isUploadingMedia,
       bool isCreatingPost,
+      bool isEditingPost,
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
-      bool isEditingPost,
       String currentActivityID,
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
@@ -365,9 +365,9 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? isProcessingMedia = null,
     Object? isUploadingMedia = null,
     Object? isCreatingPost = null,
+    Object? isEditingPost = null,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
-    Object? isEditingPost = null,
     Object? currentActivityID = null,
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
@@ -408,6 +408,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.isCreatingPost
           : isCreatingPost // ignore: cast_nullable_to_non_nullable
               as bool,
+      isEditingPost: null == isEditingPost
+          ? _value.isEditingPost
+          : isEditingPost // ignore: cast_nullable_to_non_nullable
+              as bool,
       currentPostType: null == currentPostType
           ? _value.currentPostType
           : currentPostType // ignore: cast_nullable_to_non_nullable
@@ -416,10 +420,6 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.currentCreatePostPage
           : currentCreatePostPage // ignore: cast_nullable_to_non_nullable
               as CreatePostCurrentPage,
-      isEditingPost: null == isEditingPost
-          ? _value.isEditingPost
-          : isEditingPost // ignore: cast_nullable_to_non_nullable
-              as bool,
       currentActivityID: null == currentActivityID
           ? _value.currentActivityID
           : currentActivityID // ignore: cast_nullable_to_non_nullable
@@ -522,9 +522,9 @@ class _$CreatePostViewModelStateImpl
       this.isProcessingMedia = false,
       this.isUploadingMedia = false,
       this.isCreatingPost = false,
+      this.isEditingPost = false,
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
-      this.isEditingPost = false,
       this.currentActivityID = '',
       final List<GalleryEntry> galleryEntries = const [],
       this.editingGalleryEntry,
@@ -570,13 +570,13 @@ class _$CreatePostViewModelStateImpl
   final bool isCreatingPost;
   @override
   @JsonKey()
+  final bool isEditingPost;
+  @override
+  @JsonKey()
   final PostType currentPostType;
   @override
   @JsonKey()
   final CreatePostCurrentPage currentCreatePostPage;
-  @override
-  @JsonKey()
-  final bool isEditingPost;
   @override
   @JsonKey()
   final String currentActivityID;
@@ -661,7 +661,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, isEditingPost: $isEditingPost, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -673,9 +673,9 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('isProcessingMedia', isProcessingMedia))
       ..add(DiagnosticsProperty('isUploadingMedia', isUploadingMedia))
       ..add(DiagnosticsProperty('isCreatingPost', isCreatingPost))
+      ..add(DiagnosticsProperty('isEditingPost', isEditingPost))
       ..add(DiagnosticsProperty('currentPostType', currentPostType))
       ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
-      ..add(DiagnosticsProperty('isEditingPost', isEditingPost))
       ..add(DiagnosticsProperty('currentActivityID', currentActivityID))
       ..add(DiagnosticsProperty('galleryEntries', galleryEntries))
       ..add(DiagnosticsProperty('editingGalleryEntry', editingGalleryEntry))
@@ -716,12 +716,12 @@ class _$CreatePostViewModelStateImpl
                 other.isUploadingMedia == isUploadingMedia) &&
             (identical(other.isCreatingPost, isCreatingPost) ||
                 other.isCreatingPost == isCreatingPost) &&
+            (identical(other.isEditingPost, isEditingPost) ||
+                other.isEditingPost == isEditingPost) &&
             (identical(other.currentPostType, currentPostType) ||
                 other.currentPostType == currentPostType) &&
             (identical(other.currentCreatePostPage, currentCreatePostPage) ||
                 other.currentCreatePostPage == currentCreatePostPage) &&
-            (identical(other.isEditingPost, isEditingPost) ||
-                other.isEditingPost == isEditingPost) &&
             (identical(other.currentActivityID, currentActivityID) ||
                 other.currentActivityID == currentActivityID) &&
             const DeepCollectionEquality()
@@ -779,9 +779,9 @@ class _$CreatePostViewModelStateImpl
         isProcessingMedia,
         isUploadingMedia,
         isCreatingPost,
+        isEditingPost,
         currentPostType,
         currentCreatePostPage,
-        isEditingPost,
         currentActivityID,
         const DeepCollectionEquality().hash(_galleryEntries),
         editingGalleryEntry,
@@ -820,9 +820,9 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final bool isProcessingMedia,
           final bool isUploadingMedia,
           final bool isCreatingPost,
+          final bool isEditingPost,
           final PostType currentPostType,
           final CreatePostCurrentPage currentCreatePostPage,
-          final bool isEditingPost,
           final String currentActivityID,
           final List<GalleryEntry> galleryEntries,
           final GalleryEntry? editingGalleryEntry,
@@ -862,11 +862,11 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   @override
   bool get isCreatingPost;
   @override
+  bool get isEditingPost;
+  @override
   PostType get currentPostType;
   @override
   CreatePostCurrentPage get currentCreatePostPage;
-  @override
-  bool get isEditingPost;
   @override
   String get currentActivityID;
   @override

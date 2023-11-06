@@ -25,7 +25,7 @@ export class NotificationPayloadResponse {
  */
 export class NotificationPayload {
     public id = '';
-    public foreign_id = '';
+    public group_id = '';
     public user_id = '';
     public sender = '';
     public title = '';
@@ -46,7 +46,7 @@ export class NotificationPayload {
     constructor(payload?: Partial<NotificationPayload>) {
         if (payload) {
             this.id = payload.id || '';
-            this.foreign_id = payload.foreign_id || '';
+            this.group_id = payload.group_id || '';
             this.user_id = payload.user_id || '';
             this.sender = payload.sender || '';
             this.title = payload.title || '';
