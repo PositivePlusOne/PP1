@@ -658,11 +658,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         pause = true;
       }
     } else {
-      if (videoRecordingCameraState.captureState!.isRecordingVideo) {
-        pause = true;
-      } else {
-        pause = false;
-      }
+      pause = forcePause;
     }
 
     if (!pause) {

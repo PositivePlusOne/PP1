@@ -9,9 +9,11 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unicons/unicons.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -907,6 +909,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   Future<void> stopClipRecordingAndProcessResult() async {
+    currentPositiveCameraState?.onPauseResumeClip(forcePause: false);
     await currentPositiveCameraState?.stopClipRecording();
     await currentPositiveCameraState?.attemptProcessVideoResult();
   }
