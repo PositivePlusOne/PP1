@@ -338,8 +338,8 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid birthday");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateBirthday(uid, birthday);
+    let newProfile = await ProfileService.updateBirthday(uid, birthday);
+    newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
 
     functions.logger.info("Profile birthday updated", {
       uid,

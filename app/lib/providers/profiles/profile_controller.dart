@@ -341,14 +341,7 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> updateName(String name, Set<String> visibilityFlags) async {
-    final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
-
-    if (state.currentProfile == null) {
-      logger.w('[Profile Service] - Cannot update name without profile');
-      return;
-    }
-
     await profileApiService.updateName(
       name: name,
       visibilityFlags: visibilityFlags,
@@ -374,18 +367,6 @@ class ProfileController extends _$ProfileController {
 
   Future<void> updateBirthday(String birthday, Set<String> visibilityFlags) async {
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
-    final Logger logger = ref.read(loggerProvider);
-
-    if (state.currentProfile == null) {
-      logger.w('[Profile Service] - Cannot update birthday without profile');
-      return;
-    }
-
-    if (state.currentProfile?.birthday == birthday && state.currentProfile?.visibilityFlags == visibilityFlags) {
-      logger.i('[Profile Service] - Birthday up to date');
-      return;
-    }
-
     await profileApiService.updateBirthday(
       birthday: birthday,
       visibilityFlags: visibilityFlags,

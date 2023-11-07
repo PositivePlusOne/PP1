@@ -73,7 +73,7 @@ class NewAccountValidator extends AbstractValidator<AccountFormState> {
     this.currentEmailAddress = '',
     this.currentPhoneNumber = '',
   }) {
-    ruleFor((e) => e.name, key: 'name').isNameLength().isValidDisplayNameOrGivenName();
+    ruleFor((e) => e.name, key: 'name').isNameLength().isValidName();
     ruleFor((e) => e.emailAddress, key: 'email').isFormattedEmailAddress();
     ruleFor((e) => e.password, key: 'password').meetsPasswordComplexity();
     ruleFor((e) => e.country, key: 'phone-prefix').notNull();

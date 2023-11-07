@@ -88,8 +88,8 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
   static const String under13ValidationCode = "birthday-under13";
 
   ProfileValidator() {
-    ruleFor((e) => e.name, key: 'name').isNameLength().isValidDisplayNameOrGivenName();
-    ruleFor((e) => e.displayName, key: 'display_name').isDisplayNameLength().isValidDisplayNameOrGivenName();
+    ruleFor((e) => e.name, key: 'name').isNameLength().isValidName();
+    ruleFor((e) => e.displayName, key: 'display_name').isDisplayNameLength().isValidDisplayName();
     ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode).must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode);
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
     ruleFor((e) => e.biography, key: 'biography').maxLength(200);
@@ -410,29 +410,26 @@ class ProfileFormController extends _$ProfileFormController {
     final DateTime today = DateTime.now();
     final DateTime thirteenYearsAgo = DateTime(today.year - kAgeRequirement13, today.month, today.day);
 
+    if (!isBirthdayValid) {
+      return;
+    }
+
     if (birthday.isAfter(thirteenYearsAgo)) {
       logger.e('User is not 13 years old, navigating to age requirement screen');
       await appRouter.push(const BirthdayDeleteAccountRoute());
       return;
     }
 
-    if (!isBirthdayValid) {
-      return;
-    }
-
-    state = state.copyWith(isBusy: true);
-    logger.i('Saving birthday: ${state.birthday}');
-
     try {
+      state = state.copyWith(isBusy: true);
+      logger.i('Saving birthday: ${state.birthday}');
       final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateBirthday(state.birthday, visibilityFlags);
       logger.i('Successfully saved birthday: ${state.birthday}');
-      state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.pop();

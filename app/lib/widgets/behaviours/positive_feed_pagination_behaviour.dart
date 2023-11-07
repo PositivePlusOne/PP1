@@ -233,14 +233,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     // Keep it classy. :D
     final Widget separator = Padding(
-      padding: const EdgeInsets.symmetric(vertical: kPaddingMedium),
-      child: ButtCheek(
-        height: 2.0,
-        child: Container(
-          height: 2.0,
-          decoration: BoxDecoration(
-            color: colors.white,
-          ),
+      padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
+      child: Container(
+        height: kPaddingExtraSmall,
+        decoration: BoxDecoration(
+          color: colors.white,
         ),
       ),
     );
