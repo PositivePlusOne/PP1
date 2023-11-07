@@ -64,9 +64,6 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
-    final Color accentColor = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
-    final Color complementaryColor = accentColor.complimentTextColor;
-
     String displayName = localisations.shared_placeholders_empty_display_name;
     String postDateTooltip = "";
 
@@ -118,13 +115,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       Flexible(
                         child: Text(
                           isBlocked ? localisations.shared_placeholders_empty_display_name : displayName,
-                          style: typeography.styleTitle,
+                          style: typeography.styleTitle.copyWith(color: colours.colorGray7),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (isVerified) ...<Widget>[
                         const SizedBox(width: kPaddingSmall),
-                        PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
+                        PositiveVerifiedBadge(accentColor: colours.teal, complementaryColor: colours.colorGray7),
                       ],
                     ],
                   ),
