@@ -352,8 +352,8 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       targetActivity?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
     );
 
-    if (!widget.isFullscreen && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = parsedMarkdown.replaceAll(RegExp('[\r\n\t]'), '');
+    if (!widget.isFullscreen) {
+      parsedMarkdown = parsedMarkdown.replaceAll(RegExp('[\r\n\t]'), ' ');
     }
 
     parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
