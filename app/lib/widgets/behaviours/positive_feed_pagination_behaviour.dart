@@ -7,12 +7,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:clippy_flutter/buttcheek.dart';
 import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-import 'package:clippy_flutter/buttcheek.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -228,7 +228,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return reposterId.isNotEmpty ? reposterId : publisherId;
   }
 
-  Widget buildVisualSeparator(BuildContext context) {
+  static Widget buildVisualSeparator(BuildContext context) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     // Keep it classy. :D
@@ -285,6 +285,35 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     if (promotedActivity == null || promotion == null) {
       return buildVisualSeparator(context);
     }
+
+    // Check promotion is valid for rare feed states
+    final bool isClipFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'clip';
+    final bool isPostFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'post';
+    final ActivityGeneralConfigurationType? type = promotedActivity.generalConfiguration?.type;
+
+    // Check if is a clip and we're not on the clip feed
+    if (isClipFeed && type != const ActivityGeneralConfigurationType.clip()) {
+      return buildVisualSeparator(context);
+    }
+
+    // Check if is a post and we're not on the post feed
+    if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
+      return buildVisualSeparator(context);
+    }
+
+    promotedActivity.generalConfiguration?.type.when(
+      clip: () {
+        if (!isClipFeed) {
+          return buildVisualSeparator(context);
+        }
+      },
+      post: () {
+        if (!isPostFeed) {
+          return buildVisualSeparator(context);
+        }
+      },
+      event: () {},
+    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,

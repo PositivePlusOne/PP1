@@ -140,8 +140,15 @@ export namespace PostEndpoints {
     const promotionKey = request.data.promotionKey || "" as string;
 
     const feed = request.data.feed || FeedName.User;
-    const type = request.data.type;
+    let type = request.data.type || TagsService.PostTypeTag.post;
     const style = request.data.style;
+
+    // Check the type is a valid PostTypeTag
+    const validPostTypeTags = Object.values(TagsService.PostTypeTag);
+    const isValidPostTypeTag = validPostTypeTags.includes(type);
+    if (!isValidPostTypeTag) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid post type");
+    }
 
     const allowSharing = request.data.allowSharing ? "public" : "private" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
@@ -199,8 +206,9 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "No promotions available");
     }
 
+
     let validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
-    validatedTags = TagsService.appendActivityTagsToTags(visibleTo, validatedTags);
+    validatedTags = TagsService.appendActivityTagsToTags(visibleTo, validatedTags, type);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });
@@ -374,10 +382,12 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
     }
 
+    const type = TagsService.postTypeFromActivityGeneralConfigurationJSON(activity.generalConfiguration?.type || "post");
+
     // validate updated set of tags and replace activity tags
     // Validated tags are the new tags provided by the user, minus any restricted tags
     let validatedTags = TagsService.removeRestrictedTagsFromStringArray(userTags, promotionKey.length > 0);
-    validatedTags = TagsService.appendActivityTagsToTags(visibleTo, validatedTags);
+    validatedTags = TagsService.appendActivityTagsToTags(visibleTo, validatedTags, type);
     const tagObjects = await TagsService.getOrCreateTags(validatedTags);
 
     functions.logger.info(`Got validated tags`, { validatedTags });

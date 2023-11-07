@@ -15,7 +15,6 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';

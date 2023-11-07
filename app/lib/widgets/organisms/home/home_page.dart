@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -28,7 +27,6 @@ import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
-import '../../molecules/navigation/positive_app_bar.dart';
 import 'components/hub_app_bar_content.dart';
 import 'components/positive_hub_floating_bar.dart';
 
@@ -84,10 +82,37 @@ class HomePage extends HookConsumerWidget {
       isSliver: true,
     );
 
+    final String postFeedStateKey = PositiveFeedState.buildFeedCacheKey(TargetFeed.fromTag('post'));
+    final PositiveFeedState postFeedState = cacheController.get(postFeedStateKey) ?? PositiveFeedState.buildNewState(feed: TargetFeed.fromTag('post'), currentProfileId: currentProfileId);
+    final Widget postFeedWidget = PositiveFeedPaginationBehaviour(
+      currentProfile: null,
+      feedState: postFeedState,
+      feed: TargetFeed.fromTag('post'),
+      isSliver: true,
+    );
+
+    final String clipFeedStateKey = PositiveFeedState.buildFeedCacheKey(TargetFeed.fromTag('clip'));
+    final PositiveFeedState clipFeedState = cacheController.get(clipFeedStateKey) ?? PositiveFeedState.buildNewState(feed: TargetFeed.fromTag('clip'), currentProfileId: currentProfileId);
+    final Widget clipFeedWidget = PositiveFeedPaginationBehaviour(
+      currentProfile: null,
+      feedState: clipFeedState,
+      feed: TargetFeed.fromTag('clip'),
+      isSliver: true,
+    );
+
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [targetFeed]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
     final ScrollController controller = useScrollController();
+
+    final Widget allFeedWidget = !isLoggedOut
+        ? PositiveFeedPaginationBehaviour(
+            currentProfile: currentProfile,
+            feedState: feedState,
+            feed: targetFeed,
+            isSliver: true,
+          )
+        : everyoneFeedWidget;
 
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
@@ -131,24 +156,21 @@ class HomePage extends HookConsumerWidget {
               ],
               tabs: const <String>[
                 'All',
-                // 'Clips',
-                'Events',
                 'Posts',
+                'Clips',
               ],
             ),
           ],
         ),
-        if (!isLoggedOut) ...<Widget>[
-          PositiveFeedPaginationBehaviour(
-            currentProfile: currentProfile,
-            feedState: feedState,
-            feed: targetFeed,
-            isSliver: true,
-            noPostsWidget: everyoneFeedWidget,
-          ),
-        ] else ...<Widget>[
-          everyoneFeedWidget,
-        ],
+        if (state.currentTabIndex == 0) ...{
+          allFeedWidget,
+        },
+        if (state.currentTabIndex == 1) ...{
+          postFeedWidget,
+        },
+        if (state.currentTabIndex == 2) ...{
+          clipFeedWidget,
+        },
       ],
     );
   }
