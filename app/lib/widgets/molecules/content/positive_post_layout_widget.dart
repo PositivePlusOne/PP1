@@ -151,9 +151,6 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             },
           ),
 
-          //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-
           //* -=-=-=- Post Title -=-=-=- *\\
           _postTitle(),
 
@@ -162,6 +159,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             const SizedBox(height: kPaddingSmall),
             _location(),
           ],
+
+          //* -=-=-=- Post Actions -=-=-=- *\\
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         ],
       ],
     );
@@ -205,10 +205,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             if (_isPromoted) _promotionBanner(isOnCarousel: isCarousel),
           ],
         ),
-        //* -=-=-=- Post Actions -=-=-=- *\\
-        _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
         markdownWidget,
+        //* -=-=-=- Post Actions -=-=-=- *\\
+        _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
       ],
     );
   }
@@ -240,10 +240,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             const SizedBox(height: kPaddingSmall),
             _promotionBanner(),
           ],
-          //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
           markdownWidget,
+          //* -=-=-=- Post Actions -=-=-=- *\\
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         ],
       ),
     );
