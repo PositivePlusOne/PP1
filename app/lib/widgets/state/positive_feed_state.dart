@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -58,28 +59,37 @@ class PositiveFeedState with PositivePaginationControllerState {
     );
   }
 
-  Future<void> requestRefresh(String cacheKey) async {
-    final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+  Future<void> onRefresh() => runWithMutex(
+        () async {
+          final Logger logger = providerContainer.read(loggerProvider);
+          final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+          logger.d('onRefresh()');
+          cacheController.remove(buildCacheKey());
 
-    logger.d('onRefresh()');
-    cacheController.remove(cacheKey);
-    pagingController.refresh();
+          // Wait until the first page is loaded
+          int counter = 0;
+          bool isSuccessful = false;
+          while (counter < 10) {
+            await Future.delayed(const Duration(milliseconds: 500));
+            counter++;
 
-    // Wait until the first page is loaded
-    int counter = 0;
-    while (pagingController.itemList == null && counter < 10) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      counter++;
+            final PositiveFeedState? feedState = cacheController.get(buildCacheKey());
+            if (feedState?.pagingController.itemList?.isNotEmpty == true) {
+              isSuccessful = true;
+              break;
+            }
 
-      // Check for an error
-      if (pagingController.error != null) {
-        throw pagingController.error!;
-      }
-    }
+            // Check for an error
+            if (feedState?.pagingController.error != null) {
+              throw feedState?.pagingController.error!;
+            }
+          }
 
-    cacheController.add(key: cacheKey, value: this);
-  }
+          if (!isSuccessful) {
+            throw Exception('Failed to refresh feed');
+          }
+        },
+      );
 
   static String buildFeedCacheKey(TargetFeed feed) {
     return 'feed:paging:${feed.targetSlug}:${feed.targetUserId}';

@@ -264,7 +264,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     if (activityId.isEmpty || currentProfileId.isEmpty || targetProfileId.isEmpty) {
       return buildVisualSeparator(context);
-      // return const SizedBox(height: kPaddingLarge);
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -274,7 +273,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     // Remove the separator if we can't display the activity
     final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
-      return const SizedBox.shrink();
+      return buildVisualSeparator(context);
     }
 
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);

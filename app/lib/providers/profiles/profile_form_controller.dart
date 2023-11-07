@@ -301,15 +301,6 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(displayName: value.trim());
   }
 
-  Future<void> onDisplayNameHelpRequested(BuildContext context) async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    logger.i('Requesting display name help');
-
-    final HintDialogRoute hint = buildProfileDisplayNameHint(context);
-    await appRouter.push(hint);
-  }
-
   Future<void> onDisplayNameConfirmed(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);

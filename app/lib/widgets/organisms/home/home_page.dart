@@ -76,7 +76,7 @@ class HomePage extends HookConsumerWidget {
     final String everyoneFeedStateKey = PositiveFeedState.buildFeedCacheKey(everyoneTargetFeed);
     final PositiveFeedState everyoneFeedState = cacheController.get(everyoneFeedStateKey) ?? PositiveFeedState.buildNewState(feed: everyoneTargetFeed, currentProfileId: currentProfileId);
     final Widget everyoneFeedWidget = PositiveFeedPaginationBehaviour(
-      currentProfile: null,
+      currentProfile: currentProfile,
       feedState: everyoneFeedState,
       feed: everyoneTargetFeed,
       isSliver: true,
@@ -85,7 +85,7 @@ class HomePage extends HookConsumerWidget {
     final String postFeedStateKey = PositiveFeedState.buildFeedCacheKey(TargetFeed.fromTag('post'));
     final PositiveFeedState postFeedState = cacheController.get(postFeedStateKey) ?? PositiveFeedState.buildNewState(feed: TargetFeed.fromTag('post'), currentProfileId: currentProfileId);
     final Widget postFeedWidget = PositiveFeedPaginationBehaviour(
-      currentProfile: null,
+      currentProfile: currentProfile,
       feedState: postFeedState,
       feed: TargetFeed.fromTag('post'),
       isSliver: true,
@@ -94,7 +94,7 @@ class HomePage extends HookConsumerWidget {
     final String clipFeedStateKey = PositiveFeedState.buildFeedCacheKey(TargetFeed.fromTag('clip'));
     final PositiveFeedState clipFeedState = cacheController.get(clipFeedStateKey) ?? PositiveFeedState.buildNewState(feed: TargetFeed.fromTag('clip'), currentProfileId: currentProfileId);
     final Widget clipFeedWidget = PositiveFeedPaginationBehaviour(
-      currentProfile: null,
+      currentProfile: currentProfile,
       feedState: clipFeedState,
       feed: TargetFeed.fromTag('clip'),
       isSliver: true,
@@ -114,12 +114,22 @@ class HomePage extends HookConsumerWidget {
           )
         : everyoneFeedWidget;
 
+    final currentFeedWidget = switch (state.currentTabIndex) {
+      0 => allFeedWidget,
+      1 => postFeedWidget,
+      2 => clipFeedWidget,
+      (_) => const SizedBox.shrink(),
+    };
+
+    final PositiveFeedState currentFeedState = switch (state.currentTabIndex) {
+      1 => postFeedState,
+      2 => clipFeedState,
+      (_) => feedState,
+    };
+
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
-      onRefresh: () => viewModel.onRefresh(
-        !isLoggedOut ? feedState : everyoneFeedState,
-        !isLoggedOut ? expectedFeedStateKey : everyoneFeedStateKey,
-      ),
+      onRefresh: () => currentFeedState.onRefresh(),
       appBarColor: colors.colorGray1,
       controller: controller,
       visibleComponents: const {
@@ -162,15 +172,7 @@ class HomePage extends HookConsumerWidget {
             ),
           ],
         ),
-        if (state.currentTabIndex == 0) ...{
-          allFeedWidget,
-        },
-        if (state.currentTabIndex == 1) ...{
-          postFeedWidget,
-        },
-        if (state.currentTabIndex == 2) ...{
-          clipFeedWidget,
-        },
+        currentFeedWidget,
       ],
     );
   }

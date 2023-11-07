@@ -80,14 +80,12 @@
     
     "page_onboarding_terms_identity_how_we_use": "WHY YOUR IDENTITY IS IMPORTANT",
     "page_onboarding_terms_identity_one": "We want to celebrate who you are! Letting us know how you identify helps us create an inclusive and accepting community.",
-    "page_onboarding_terms_identity_two": "Finding like-minded folks is easier when we understand your identity. It helps us match you with awesome people who get you.",
-    "page_onboarding_terms_identity_three": "Your identity shapes your Positive+1 journey. We'll personalize the app just for you, making it a perfect fit for your unique self.",
+    "page_onboarding_terms_identity_two": "Your identity shapes your Positive+1 journey. We'll personalize the app just for you, making it a perfect fit for your unique self.",
 
-    "page_onboarding_terms_hiv_how_we_use": "WHY YOUR IDENTITY IS IMPORTANT",
+    "page_onboarding_terms_hiv_how_we_use": "Your Connection to HIV",
     "page_onboarding_terms_hiv_one": "This community is for individuals living with, working in, and affected by HIV. To foster a safe and open environment, we encourage users to share their HIV status with one another.",
     "page_onboarding_terms_hiv_two": "Not comfortable doing that? Totally okay. You can choose not display your HIV status if you prefer. Whatever makes you feel most comfortable.",
     "page_onboarding_terms_hiv_three": "Rest assured that Positive Plus One respects your privacy. Your HIV status will never be shared outside of the platform.",
-    "page_onboarding_terms_hiv_four": "Should you need to change your HIV status in the future, you can easily do so by accessing your Profile settings. Your control over your information is important to us",
 
     "page_onboarding_terms_company_sectors_how_we_use": "WHY YOUR COMPANY SECTOR IS IMPORTANT",
     "page_onboarding_terms_company_sectors_one": "We want people to know who you are! What your company does is important to the people reading about you.",
@@ -96,7 +94,6 @@
 
     "page_onboarding_terms_interests_how_we_use": "YOUR INTERESTS",
     "page_onboarding_terms_interests_one": "Your interests help us customise the Positive+1 experience just for you.",
-    "page_onboarding_terms_interests_two": "We're better at matchmaking when we understand your interests. It lets us connect you with like-minded individuals.",
     
     "page_onboarding_terms_location_how_we_use": "YOUR LOCATION",
     "page_onboarding_terms_location_one": "Let us know where you are, and we'll find some fab folks nearby who just might be your kind of crowd.",
@@ -192,7 +189,7 @@
     "page_profile_interests_title": "Your Interests",
     "page_profile_interests_description": "Why do you want to join Positive+1?",
 
-    "page_registration_hiv_status_title": "HIV and you",
+    "page_registration_hiv_status_title": "HIV Connection",
     "page_registration_hiv_status_subtitle": "What is your connection to HIV?",
     "page_registration_hiv_status_option_title": "How would you describe your HIV status?",
 
@@ -214,7 +211,7 @@
     "page_registration_forgotten_password_recovery_button": "Open Email Account",
     "page_registration_forgotten_password_recovery_noemailclient": "Open your email client to reset your password",
 
-    "page_profile_interest_title": "Your interests",
+    "page_profile_interest_title": "What do you want from Positive+1?",
     "page_profile_interest_subtitle": "Why do you want to join Positive+1?",
 
     "page_profile_image_welcome_title": "Selfie Time!",
@@ -227,7 +224,7 @@
     "page_profile_location_title": "Where are you?",
     "page_profile_location_subtitle": "Where in the world are you? Search your location or kick back and let us find you.",
     "page_profile_location_action_find": "Find Me",
-    "page_profile_location_instruction": "Where in the world are you? Search your location or kick back and let us find you.",
+    "page_profile_location_instruction": "Search for your location, or press the Find Me button",
     "page_profile_location_not_set": "Location not provided",
     "page_profile_location_dialog_title": "Results",
     "page_profile_location_errors_search_failed": "We couldn’t find that location. Please try again or use the Find Me button above.",

@@ -21,7 +21,6 @@ HintDialogRoute buildProfileInterestsHint(BuildContext context) {
     localizations.page_onboarding_terms_interests_how_we_use,
     [
       localizations.page_onboarding_terms_interests_one,
-      localizations.page_onboarding_terms_interests_two,
     ],
   );
 }
@@ -33,7 +32,6 @@ HintDialogRoute buildProfileGenderHint(BuildContext context) {
     [
       localisations.page_onboarding_terms_identity_one,
       localisations.page_onboarding_terms_identity_two,
-      localisations.page_onboarding_terms_identity_three,
     ],
   );
 }
@@ -42,7 +40,7 @@ HintDialogRoute buildProfileLocationHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 
   return fromTitleAndBulletPoints(
-    localizations.page_onboarding_terms_interests_how_we_use,
+    localizations.page_onboarding_terms_location_how_we_use,
     [
       localizations.page_onboarding_terms_location_one,
       localizations.page_onboarding_terms_location_two,
@@ -58,7 +56,6 @@ HintDialogRoute buildProfileHivStatusHint(BuildContext context) {
       localisations.page_onboarding_terms_hiv_one,
       localisations.page_onboarding_terms_hiv_two,
       localisations.page_onboarding_terms_hiv_three,
-      localisations.page_onboarding_terms_hiv_four,
     ],
   );
 }
@@ -86,27 +83,6 @@ HintDialogRoute buildProfileBirthdayHint(BuildContext context) {
       localisations.page_onboarding_terms_birthday_four,
       localisations.page_onboarding_terms_birthday_five,
     ],
-  );
-}
-
-HintDialogRoute buildProfileDisplayNameHint(BuildContext context) {
-  final AppLocalizations localisations = AppLocalizations.of(context)!;
-  return fromTitleAndBulletPoints(
-    "What is your display name",
-    [
-      "Your display name is how you are identified to us and other people across Positive+1",
-      "It keeps you unique and can be anything you like (within reason)",
-      "We have some small rules: No profanity or at risk terms",
-    ],
-  );
-}
-
-HintDialogRoute buildReferencePhotoHint(BuildContext context) {
-  final AppLocalizations localisations = AppLocalizations.of(context)!;
-
-  return fromTitleAndBulletPoints(
-    "copy goes here",
-    [""],
   );
 }
 
@@ -144,7 +120,7 @@ HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints
     widgets: <Widget>[
       Text(
         title,
-        style: typography.styleHero.copyWith(color: colors.red),
+        style: typography.styleHero.copyWith(color: colors.white),
       ),
       const SizedBox(height: kPaddingMedium),
       ...bulletPoints

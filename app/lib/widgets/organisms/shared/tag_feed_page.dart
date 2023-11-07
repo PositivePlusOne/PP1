@@ -71,7 +71,7 @@ class _TagFeedPageState extends ConsumerState<TagFeedPage> {
 
     return PositiveScaffold(
       onWillPopScope: onWillPopScope,
-      onRefresh: () => feedState.requestRefresh(feedStateKey),
+      onRefresh: () => feedState.onRefresh(),
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
