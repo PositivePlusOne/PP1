@@ -129,7 +129,7 @@ export namespace PromoteActivityAction {
         });
 
         // Update the relevent information in the promotion and mark it as active
-        targetPromotionData.activityId = targetActivityActualId
+        targetPromotionData.activityId = targetActivityActualId;
         targetPromotionData.ownerId = publisherId;
         targetPromotionData.isActive = true;
         
