@@ -101,18 +101,6 @@ HintDialogRoute buildProfileDisplayNameHint(BuildContext context) {
   );
 }
 
-HintDialogRoute buildProfileNameHint(BuildContext context) {
-  final AppLocalizations localisations = AppLocalizations.of(context)!;
-  return fromTitleAndBulletPoints(
-    "What your name is used for",
-    [
-      "Your name is stored against your account for security purposes",
-      "You can choose to display your name within the app to other people",
-      "You can change this setting at any time based on your personal preferences",
-    ],
-  );
-}
-
 HintDialogRoute buildReferencePhotoHint(BuildContext context) {
   final AppLocalizations localisations = AppLocalizations.of(context)!;
 

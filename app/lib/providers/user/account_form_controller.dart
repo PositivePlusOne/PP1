@@ -372,15 +372,6 @@ class AccountFormController extends _$AccountFormController {
     }
   }
 
-  Future<void> onNameHelpRequested(BuildContext context) async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    logger.i('Requesting name help');
-
-    final HintDialogRoute hint = buildProfileNameHint(context);
-    await appRouter.push(hint);
-  }
-
   Future<void> onEmailAddressConfirmed() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
