@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
+import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_256 } from "../constants/domain";
 import { UserService } from "../services/user_service";
 import { ProfileService } from "../services/profile_service";
 import { NotificationsService } from "../services/notifications_service";
@@ -39,7 +39,7 @@ export namespace HealthEndpoints {
         await NotificationsService.postNotificationPayloadToUserFeed(uid, preparedNotification);
     });
 
-    export const updateLocalCache = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    export const updateLocalCache = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
         functions.logger.info("Updating local cache", { request, context });
 
         const data = request.data = request.data || {};
