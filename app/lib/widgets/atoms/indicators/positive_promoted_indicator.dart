@@ -13,7 +13,12 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 
 class PositivePromotedIndicator extends ConsumerWidget {
-  const PositivePromotedIndicator({super.key});
+  const PositivePromotedIndicator({
+    required this.invertColour,
+    super.key,
+  });
+
+  final bool invertColour;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,21 +28,21 @@ class PositivePromotedIndicator extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: kPaddingVerySmall,
-        vertical: kPaddingSuperSmall,
+        horizontal: kPaddingSmall,
+        vertical: kPaddingExtraSmall,
       ),
       decoration: BoxDecoration(
-        color: colours.white,
+        color: invertColour ? colours.colorGray1 : colours.white,
         borderRadius: BorderRadius.circular(kBorderRadiusLarge),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(UniconsLine.external_link_alt, size: kIconExtraSmall, color: colours.black),
+          Icon(UniconsLine.external_link_alt, size: kIconExtraSmall, color: colours.colorGray7),
           const SizedBox(width: kPaddingExtraSmall),
           Text(
             localisations.post_promoted_label,
-            style: typography.styleSubtextBold.copyWith(color: colours.black),
+            style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
           ),
         ],
       ),

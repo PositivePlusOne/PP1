@@ -200,6 +200,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isShared: widget.isShared,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
+              isRepost: isRepost,
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
                 targetProfile: widget.targetProfile,
