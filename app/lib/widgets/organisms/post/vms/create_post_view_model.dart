@@ -36,6 +36,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';
+import 'package:app/widgets/organisms/post/component/positive_discard_post_dialogue.dart';
 import 'package:app/widgets/organisms/post/create_post_tag_dialogue.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
 import 'package:app/widgets/organisms/shared/positive_camera.dart';
@@ -122,8 +123,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final logger = ref.read(loggerProvider);
 
-    bool shouldDisplayDialog = false;
-
     final CameraState? currentState = await currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.first;
     final bool isHandlingVideo = currentState != null && (currentState is VideoRecordingCameraState || currentState is VideoCameraState);
     final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
@@ -137,12 +136,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (isRecordingVideo || state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
-      // await currentPositiveCameraState?.stopClipRecording();
       await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
-      shouldDisplayDialog = true;
-    }
-
-    if (shouldDisplayDialog) {
+      // we were recording a video - this has a special dialog to show the user
       final bool hasAcceptedDiscardDialog = await positiveDiscardClipDialogue(
         context: context,
         colors: colors,
@@ -153,8 +148,50 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         logger.d("User has not accepted discard dialog, do not close page");
         return;
       }
-
       await currentPositiveCameraState?.stopClipRecording();
+
+      // Close the video and remove the page
+      if (shouldForceClose) {
+        router.removeLast();
+        return;
+      }
+    } else {
+      // we actually always want to show a basic dialog telling them that quitting the dialog
+      // will discard their post
+      bool isCancelDialogRequired = false;
+      switch (state.currentCreatePostPage) {
+        //? All create pages should request a dialog
+        case CreatePostCurrentPage.createPostText:
+        case CreatePostCurrentPage.createPostMultiImage:
+        case CreatePostCurrentPage.createPostImage:
+        case CreatePostCurrentPage.createPostClip:
+        //? As edit photo is equivalent of edit clip, and does not have criteria, assume dialog functionality should match.
+        case CreatePostCurrentPage.editPhoto:
+          isCancelDialogRequired = true;
+
+        //? PP1-615, back button on repost preview returns to last page
+        case CreatePostCurrentPage.repostPreview:
+        //? according to PP1-284 camera page should direct back to hub without dialog, unless a clip is being recorded
+        case CreatePostCurrentPage.camera:
+        //? Assuming entry page (called while camera initialises), should have the same logic as camera above
+        case CreatePostCurrentPage.entry:
+        //? Edit Clip page has its own dialog above
+        case CreatePostCurrentPage.createPostEditClip:
+        default:
+          isCancelDialogRequired = false;
+      }
+      if (isCancelDialogRequired) {
+        final bool hasAcceptedDiscardDialog = await positiveDiscardPostDialogue(
+          context: context,
+          colors: colors,
+          typography: typography,
+        );
+
+        if (!hasAcceptedDiscardDialog) {
+          logger.d("User has not accepted discard dialog, do not close page");
+          return;
+        }
+      }
     }
 
     switch (state.currentCreatePostPage) {
