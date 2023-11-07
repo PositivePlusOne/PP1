@@ -120,6 +120,7 @@ const double kClipAspectRatio = 9 / 16;
 
 // Text and Formatting
 const int kMaxLengthTruncatedPost = 75;
+const int kMaximumNumberOfReturnsInFeedItem = 10;
 const int kMaxLengthCaption = 320;
 const int kMaxLengthAltText = 120;
 
