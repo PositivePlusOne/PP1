@@ -150,8 +150,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         logger.d("User has not accepted discard dialog, do not close page");
         return;
       }
-
       await currentPositiveCameraState?.stopClipRecording();
+
+      // Close the video and remove the page
+      if (shouldForceClose) {
+        router.removeLast();
+        return;
+      }
     } else {
       // we actually always want to show a basic dialog telling them that quitting the dialog
       // will discard their post
