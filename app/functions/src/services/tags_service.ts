@@ -5,7 +5,7 @@ import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
 import { FeedService } from "./feed_service";
 import { ActivitiesService } from "./activities_service";
-import { ActivityJSON, ActivitySecurityConfigurationMode } from "../dto/activities";
+import { ActivityGeneralConfigurationJSON, ActivityGeneralConfigurationType, ActivityJSON, ActivitySecurityConfigurationMode } from "../dto/activities";
 
 export namespace TagsService {
   /**
@@ -26,6 +26,26 @@ export namespace TagsService {
     trending = "trending",
     events = "events",
     sponsored = "sponsored",
+    clip = "clip",
+    post = "post",
+    event = "event",
+  }
+
+  export enum PostTypeTag {
+    clip = "clip",
+    post = "post",
+    event = "event",
+  }
+
+  export function postTypeFromActivityGeneralConfigurationJSON(type: ActivityGeneralConfigurationType): PostTypeTag {
+    switch (type) {
+      case "clip":
+        return PostTypeTag.clip;
+      case "post":
+        return PostTypeTag.post;
+      case "event":
+        return PostTypeTag.event;
+    }
   }
 
   /**
@@ -282,7 +302,7 @@ export namespace TagsService {
    * @param {ActivitySecurityConfigurationMode} securityMode the security mode.
    * @param {string[]} tags the tags.
    */
-  export function appendActivityTagsToTags(securityMode: ActivitySecurityConfigurationMode, tags: string[]): string[] {
+  export function appendActivityTagsToTags(securityMode: ActivitySecurityConfigurationMode, tags: string[], type: PostTypeTag): string[] {
     switch (securityMode) {
       case "public":
         tags.push(RestrictedTagKey.everyone);
@@ -291,6 +311,9 @@ export namespace TagsService {
         tags.push(RestrictedTagKey.signed_in_users);
         break;
     }
+
+    // Add the type tag
+    tags.push(type);
 
     return tags;
   }
