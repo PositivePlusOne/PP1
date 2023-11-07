@@ -256,6 +256,11 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
+    const isValid = name.length > 3 && name.length < 30 && StringHelpers.isAlphanumericWithSpecialChars(name);
+    if (!isValid) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
+    }
+
     let profile = await ProfileService.getProfile(uid);
     if (!profile) {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
@@ -292,6 +297,11 @@ export namespace ProfileEndpoints {
 
     const isFirebaseUIDFormat = StringHelpers.isFirebaseUID(displayName);
     if (isFirebaseUIDFormat) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
+    }
+
+    const isValid = displayName.length > 3 && displayName.length < 15 && StringHelpers.isAlphanumericWithSpecialChars(displayName);
+    if (!isValid) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
     }
 

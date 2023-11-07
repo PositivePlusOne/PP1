@@ -35,6 +35,11 @@ export namespace StringHelpers {
     return crypto.createHmac("sha256", key);
   }
 
+  export function isAlphanumericWithSpecialChars(input: string): boolean {
+    const pattern = /^[a-zA-Z0-9-_']+$/;
+    return pattern.test(input);
+  }
+
   export function isFirebaseUID(uid: string): boolean {
     const expectedLength = 28;
     return uid.length === expectedLength && /^[A-Za-z0-9]+$/.test(uid);
