@@ -17,7 +17,6 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -42,6 +41,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     this.promotion,
     this.tags = const [],
     this.isShared = false,
+    this.isRepost = false,
     super.key,
   });
 
@@ -58,14 +58,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   final FutureOr<void> Function() onOptions;
   final bool isShared;
 
+  final bool isRepost;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typeography = ref.watch(designControllerProvider.select((value) => value.typography));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
-
-    final Color accentColor = publisher?.accentColor.toSafeColorFromHex(defaultColor: colours.teal) ?? colours.teal;
-    final Color complementaryColor = accentColor.complimentTextColor;
 
     String displayName = localisations.shared_placeholders_empty_display_name;
     String postDateTooltip = "";
@@ -118,13 +117,13 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                       Flexible(
                         child: Text(
                           isBlocked ? localisations.shared_placeholders_empty_display_name : displayName,
-                          style: typeography.styleTitle,
+                          style: typeography.styleTitle.copyWith(color: colours.colorGray7),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (isVerified) ...<Widget>[
                         const SizedBox(width: kPaddingSmall),
-                        PositiveVerifiedBadge(accentColor: accentColor, complementaryColor: complementaryColor),
+                        PositiveVerifiedBadge(accentColor: colours.teal, complementaryColor: colours.colorGray7),
                       ],
                     ],
                   ),
@@ -136,8 +135,10 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                     ),
                   ],
                   if (isPromotion) ...<Widget>[
-                    const SizedBox(height: kPaddingSuperSmall),
-                    const PositivePromotedIndicator(),
+                    const SizedBox(height: kPaddingExtraSmall),
+                    PositivePromotedIndicator(
+                      invertColour: isRepost,
+                    ),
                   ],
                 ],
               ),

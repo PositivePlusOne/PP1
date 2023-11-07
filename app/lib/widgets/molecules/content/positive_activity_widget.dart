@@ -200,6 +200,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isShared: widget.isShared,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
+              isRepost: isRepost,
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
                 targetProfile: widget.targetProfile,
@@ -234,12 +235,13 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               isShared: true,
             ),
           ),
+          buildMarkdownBodyWidget(targetActivity: widget.activity),
           PositivePostActions(
             bookmarkEnabled: false,
             bookmarked: false,
             comments: totalParentActivityComments,
             commentsEnabled: true,
-            padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingSmall),
+            padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingExtraSmall),
             isLiked: isParentActivityLiked,
             likes: totalParentActivityLikes,
             likesEnabled: !isLiking && !isPublisher,
@@ -252,7 +254,6 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             shareEnabled: canActShare,
             onShare: (context) => widget.activity?.share(context, widget.currentProfile),
           ),
-          buildMarkdownBodyWidget(targetActivity: widget.activity),
         ],
       );
     }
@@ -352,9 +353,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     );
 
     if (!widget.isFullscreen && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
-      parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
+      parsedMarkdown = parsedMarkdown.replaceAll(RegExp('[\r\n\t]'), '');
     }
+
+    parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     final List<Tag> tags = tagsController.resolveTags(targetActivity?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
@@ -363,7 +365,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
+        child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
       ),
     );
   }
