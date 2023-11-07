@@ -266,6 +266,30 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     router.removeLast();
   }
 
+  Future<void> onPostPressed() async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.post,
+      lastActiveButton: PositivePostNavigationActiveButton.post,
+      currentPostType: PostType.image,
+    );
+  }
+
+  Future<void> onClipPressed() async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.clip,
+      lastActiveButton: PositivePostNavigationActiveButton.clip,
+      currentPostType: PostType.clip,
+    );
+  }
+
+  Future<void> onEventPressed() async {
+    state = state.copyWith(
+      activeButton: PositivePostNavigationActiveButton.event,
+      lastActiveButton: PositivePostNavigationActiveButton.event,
+      currentPostType: PostType.event,
+    );
+  }
+
   Future<void> onFlexButtonPressed() async {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
@@ -308,15 +332,18 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   }
 
   void displayCamera(PostType postType) {
+    final PositivePostNavigationActiveButton activeButton = switch (postType) {
+      PostType.clip => PositivePostNavigationActiveButton.clip,
+      PostType.event => PositivePostNavigationActiveButton.event,
+      (_) => PositivePostNavigationActiveButton.post,
+    };
+
     state = state.copyWith(
       currentCreatePostPage: CreatePostCurrentPage.camera,
       currentPostType: postType,
       isBottomNavigationEnabled: true,
-      activeButton: switch (postType) {
-        PostType.clip => PositivePostNavigationActiveButton.clip,
-        PostType.event => PositivePostNavigationActiveButton.event,
-        (_) => PositivePostNavigationActiveButton.post,
-      },
+      lastActiveButton: activeButton,
+      activeButton: activeButton,
     );
   }
 
@@ -918,30 +945,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   void onFilterSelected(AwesomeFilter filter) {
     state = state.copyWith(currentFilter: filter);
-  }
-
-  Future<void> onPostPressed() async {
-    state = state.copyWith(
-      activeButton: PositivePostNavigationActiveButton.post,
-      lastActiveButton: PositivePostNavigationActiveButton.post,
-      currentPostType: PostType.image,
-    );
-  }
-
-  Future<void> onClipPressed() async {
-    state = state.copyWith(
-      activeButton: PositivePostNavigationActiveButton.clip,
-      lastActiveButton: PositivePostNavigationActiveButton.clip,
-      currentPostType: PostType.clip,
-    );
-  }
-
-  Future<void> onEventPressed() async {
-    state = state.copyWith(
-      activeButton: PositivePostNavigationActiveButton.event,
-      lastActiveButton: PositivePostNavigationActiveButton.event,
-      currentPostType: PostType.event,
-    );
   }
 
   Future<void> stopClipRecordingAndProcessResult() async {

@@ -201,8 +201,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   int clipCurrentTime = 0;
   Timer? clipTimer;
 
-  bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
-  bool get hasLibraryPermission => (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
+  bool get hasCameraPermission =>
+      (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
+  bool get hasLibraryPermission =>
+      (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
 
@@ -721,7 +723,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       ),
       sensorConfig: config,
       enablePhysicalButton: true,
-      topActionsBuilder: (state) => topOverlay(state),
+      // topActionsBuilder: (state) => topOverlay(state),
+      topActionsBuilder: (_) => const SizedBox.shrink(),
       middleContentBuilder: (state) => cameraOverlay(state),
       bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
       previewDecoratorBuilder: buildPreviewDecoratorWidgets,
@@ -851,53 +854,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     );
   }
 
-  Widget topOverlay(CameraState state) {
-    //? capture the camera state for future use
-    cachedCameraState ??= state;
-
-    if (!hasStartedCamera) {
-      hasStartedCamera = true;
-      widget.onCameraStarted?.call();
-    }
-
-    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: kPaddingMedium,
-        vertical: kPaddingSmall,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren(state),
-          ),
-          const SizedBox(height: kPaddingLarge),
-          if (clipRecordingState.isRecordingOrPaused)
-            SizedBox(
-              width: kPaddingMedium,
-              height: kPaddingMedium,
-              child: Align(
-                child: AnimatedContainer(
-                  duration: kAnimationDurationFast,
-                  width: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
-                  height: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
-                  decoration: BoxDecoration(
-                    color: colours.red,
-                    borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
-                  ),
-                ),
-              ),
-            ),
-          if (widget.topAdditionalActions != null && widget.isVideoMode && clipRecordingState.isInactive) ...widget.topAdditionalActions!,
-        ],
-      ),
-    );
-  }
-
   List<Widget> getPositiveCameraGenericTopChildren(CameraState state) {
     if (clipRecordingState.isRecordingOrPaused) {
       return [
@@ -917,7 +873,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           onTap: onFlashToggleRequest,
         ),
       const SizedBox(width: kPaddingSmall),
-      if (widget.onTapAddImage != null && clipRecordingState.isInactive) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
+      if (!clipRecordingState.isFinishedRecording) widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
     ];
   }
 
@@ -1016,17 +972,62 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
+    //? capture the camera state for future use
+    cachedCameraState ??= state;
+
+    if (!hasStartedCamera) {
+      hasStartedCamera = true;
+      widget.onCameraStarted?.call();
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        setStateIfMounted();
+      });
+    }
+
     return Padding(
       padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: kPaddingMedium,
+              left: kPaddingMedium,
+              top: kPaddingSmall,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: getPositiveCameraGenericTopChildren(state),
+            ),
+          ),
+          const SizedBox(height: kPaddingMedium),
+          if (clipRecordingState.isRecordingOrPaused)
+            Padding(
+              padding: const EdgeInsets.only(right: kPaddingMedium),
+              child: SizedBox(
+                width: kPaddingMedium,
+                height: kPaddingMedium,
+                child: Align(
+                  child: AnimatedContainer(
+                    duration: kAnimationDurationFast,
+                    width: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
+                    height: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
+                    decoration: BoxDecoration(
+                      color: colours.red,
+                      borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (widget.topAdditionalActions != null && widget.isVideoMode && clipRecordingState.isInactive) ...widget.topAdditionalActions!,
+          const Spacer(),
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=- Caption above camera button, used during onboarding  -=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           if (widget.takePictureCaption != null)
             Text(
-              widget.takePictureCaption!,
+              widget.takePictureCaption ?? "",
               textAlign: TextAlign.center,
               style: typography.styleTitle.copyWith(color: colours.white),
               overflow: TextOverflow.clip,
@@ -1078,7 +1079,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
+              if (widget.onTapAddImage != null && clipRecordingState.isInactive) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -1338,7 +1339,7 @@ enum ClipRecordingState {
   bool get isRecordingOrPaused => (this == recording || this == paused);
 
   ///Has the user paused the current recording process or is not currently recording
-  bool get isNotRecordingOrPaused => (this == notRecording || this == paused);
+  bool get isNotRecordingOrPaused => (this != recording || this == paused);
 
   /// Returns true if the user is currently not in the process of recording a clip
   /// Finished recording is treated as an active state, as the page is currently in the process of transitioning.
