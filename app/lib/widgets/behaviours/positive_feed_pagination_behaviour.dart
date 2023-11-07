@@ -12,6 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
+import 'package:clippy_flutter/buttcheek.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -227,6 +228,32 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return reposterId.isNotEmpty ? reposterId : publisherId;
   }
 
+  Widget buildVisualSeparator(BuildContext context) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    // Keep it classy. :D
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: kPaddingMedium),
+      child: ButtCheek(
+        height: 2.0,
+        child: Container(
+          height: 2.0,
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              focalRadius: 0.0,
+              radius: kPaddingGiiiiiiirthy,
+              center: Alignment.center,
+              colors: <Color>[
+                colors.colorGray1,
+                colors.colorGray2,
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget buildSeparator(BuildContext context, int index) {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
     final String activityId = activity?.flMeta?.id ?? '';
@@ -234,7 +261,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String targetProfileId = getCorrectPublisherId(activity);
 
     if (activityId.isEmpty || currentProfileId.isEmpty || targetProfileId.isEmpty) {
-      return const SizedBox(height: kPaddingLarge);
+      return buildVisualSeparator(context);
+      // return const SizedBox(height: kPaddingLarge);
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -255,17 +283,21 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Activity? promotedActivity = cacheController.get(promotedActivityId);
 
     if (promotedActivity == null || promotion == null) {
-      return const SizedBox(height: kPaddingLarge);
+      return buildVisualSeparator(context);
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: kPaddingLarge / 2),
-      child: buildItem(
-        context: context,
-        item: promotedActivity,
-        index: index,
-        promotion: promotion,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        buildVisualSeparator(context),
+        buildItem(
+          context: context,
+          item: promotedActivity,
+          index: index,
+          promotion: promotion,
+        ),
+        buildVisualSeparator(context),
+      ],
     );
   }
 

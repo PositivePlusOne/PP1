@@ -137,6 +137,7 @@ dev_dependencies:
   # UI
   flutter_native_splash: ^2.2.19
   flutter_launcher_icons: ^0.13.1
+  clippy_flutter: ^2.0.0-nullsafety.1
 
 flutter_native_splash:
   background_image: "assets/icons/launcher_bg.png"
