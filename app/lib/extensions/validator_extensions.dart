@@ -51,6 +51,12 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
     return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
   }
 
+  //* Checks that the string is alphanumeric, and contains only a specific set of special characters, dashes, and underscores, and apostrophes
+  AbstractRuleBuilder isValidDisplayNameOrGivenName({String? message}) {
+    final RegExp pattern = RegExp(r"^[a-zA-Z0-9-_']+$");
+    return must((dynamic dyn) => dyn is String && pattern.hasMatch(dyn), message ?? "Must be alphanumeric, and contain only dashes, underscores, and apostrophes", code: "displayName");
+  }
+
   AbstractRuleBuilder isAlphaNumericWithSpaces({String? message}) {
     return must((dynamic dyn) => dyn is String && RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(dyn), message ?? "Must be alphanumeric", code: "alphaNumeric");
   }
@@ -62,6 +68,10 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
   //* Checks if the object is valid display name length
   AbstractRuleBuilder isDisplayNameLength({String? message}) {
     return must((dynamic dyn) => dyn is String && dyn.length >= 3 && dyn.length <= 15, message ?? "Must be between 3 and 15 characters long", code: "displayNameLength");
+  }
+
+  AbstractRuleBuilder isNameLength({String? message}) {
+    return must((dynamic dyn) => dyn is String && dyn.length >= 3 && dyn.length <= 30, message ?? "Must be between 3 and 30 characters long", code: "nameLength");
   }
 
   AbstractRuleBuilder isMinimumInterestsLength({String? message}) {

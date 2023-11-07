@@ -88,8 +88,8 @@ class ProfileValidator extends AbstractValidator<ProfileFormState> {
   static const String under13ValidationCode = "birthday-under13";
 
   ProfileValidator() {
-    ruleFor((e) => e.name, key: 'name').notEmpty().isAlphaNumericWithSpaces();
-    ruleFor((e) => e.displayName, key: 'display_name').isDisplayNameLength().isAlphaNumericWithSpaces().isProfane();
+    ruleFor((e) => e.name, key: 'name').isNameLength().isValidDisplayNameOrGivenName();
+    ruleFor((e) => e.displayName, key: 'display_name').isDisplayNameLength().isValidDisplayNameOrGivenName();
     ruleFor((e) => e.birthday, key: 'birthday').isValidISO8601Date().must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode).must((date) => validateAge(date, kAgeRequirement13), null, code: ProfileValidator.under13ValidationCode);
     ruleFor((e) => e.interests, key: 'interests').isMinimumInterestsLength();
     ruleFor((e) => e.biography, key: 'biography').maxLength(200);
