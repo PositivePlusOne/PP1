@@ -234,6 +234,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               isShared: true,
             ),
           ),
+          buildMarkdownBodyWidget(targetActivity: widget.activity),
           PositivePostActions(
             bookmarkEnabled: false,
             bookmarked: false,
@@ -252,7 +253,6 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             shareEnabled: canActShare,
             onShare: (context) => widget.activity?.share(context, widget.currentProfile),
           ),
-          buildMarkdownBodyWidget(targetActivity: widget.activity),
         ],
       );
     }
