@@ -201,10 +201,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   int clipCurrentTime = 0;
   Timer? clipTimer;
 
-  bool get hasCameraPermission =>
-      (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
-  bool get hasLibraryPermission =>
-      (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
+  bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
+  bool get hasLibraryPermission => (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
 
@@ -676,7 +674,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
 
     if (pause) {
-      await videoRecordingCameraState.stopRecording();
+      if (clipRecordingState.isRecording) {
+        await videoRecordingCameraState.stopRecording();
+      }
       clipTimer?.cancel();
       clipRecordingState = ClipRecordingState.paused;
       widget.onClipStateChange?.call(clipRecordingState);
