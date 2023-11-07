@@ -352,9 +352,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     );
 
     if (!widget.isFullscreen && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = parsedMarkdown.substring(0, kMaxLengthTruncatedPost);
       parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
     }
+
+    parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     final List<Tag> tags = tagsController.resolveTags(targetActivity?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
@@ -363,7 +364,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown.replaceAll(":Carriage Return:", "\n"), tags: tags),
+        child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
       ),
     );
   }
