@@ -197,11 +197,10 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                               height: kIconLarge + kPaddingExtraSmall,
                               width: kIconLarge + kPaddingVerySmall,
                               child: Stack(
-                                alignment: Alignment.topRight,
                                 children: [
                                   Positioned(
                                     bottom: kPaddingNone,
-                                    left: kPaddingNone,
+                                    right: kPaddingExtraSmall,
                                     width: kIconLarge,
                                     height: kIconLarge,
                                     child: CameraFloatingButton.timer(
@@ -213,6 +212,8 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                                     ),
                                   ),
                                   Positioned(
+                                    right: 0,
+                                    top: 0,
                                     child: IgnorePointer(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -235,6 +236,10 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                                 ],
                               ),
                             ),
+                            //? Padding for ui timer
+                            const SizedBox(
+                              width: kPaddingMedium - kPaddingExtraSmall,
+                            )
                           ],
                         ),
                       ],
