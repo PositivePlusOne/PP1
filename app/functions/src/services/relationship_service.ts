@@ -596,7 +596,6 @@ export namespace RelationshipService {
       throw new Error("Relationship does not have a flamelink id");
     }
 
-    let isRelationshipConnectedAfterBlock = false;
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId === "string" && member.memberId === sender) {
@@ -604,14 +603,14 @@ export namespace RelationshipService {
           member.hasConnected = false;
         }
 
-        if (member.hasConnected) {
-          isRelationshipConnectedAfterBlock = true;
+        if (typeof member.memberId === "string" && member.memberId !== sender) {
+          member.hasConnected = false;
         }
       }
     }
 
     relationship.blocked = true;
-    relationship.connected = isRelationshipConnectedAfterBlock;
+    relationship.connected = false;
     relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     await resetRelationshipPaginationCache(relationship);
 
