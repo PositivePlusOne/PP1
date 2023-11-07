@@ -241,7 +241,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             bookmarked: false,
             comments: totalParentActivityComments,
             commentsEnabled: true,
-            padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingSmall),
+            padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingExtraSmall),
             isLiked: isParentActivityLiked,
             likes: totalParentActivityLikes,
             likesEnabled: !isLiking && !isPublisher,
