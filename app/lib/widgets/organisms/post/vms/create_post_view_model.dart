@@ -136,7 +136,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     }
 
     if (isRecordingVideo || state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
-      await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
+      // await currentPositiveCameraState?.onPauseResumeClip(forcePause: true);
+      await currentPositiveCameraState?.stopClipRecording();
       // we were recording a video - this has a special dialog to show the user
       final bool hasAcceptedDiscardDialog = await positiveDiscardClipDialogue(
         context: context,
@@ -148,7 +149,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         logger.d("User has not accepted discard dialog, do not close page");
         return;
       }
-      await currentPositiveCameraState?.stopClipRecording();
 
       // Close the video and remove the page
       if (shouldForceClose) {
