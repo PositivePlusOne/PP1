@@ -31,7 +31,6 @@ import 'package:app/providers/system/handlers/notifications/default_notification
 import 'package:app/providers/system/handlers/notifications/new_message_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
-import 'package:app/providers/system/handlers/notifications/test_notification_handler.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../../constants/key_constants.dart';
@@ -69,7 +68,6 @@ class NotificationsController extends _$NotificationsController {
     RelationshipNotificationHandler(),
     NewMessageNotificationHandler(),
     ActivityNotificationHandler(),
-    TestNotificationHandler(),
   ];
 
   @override

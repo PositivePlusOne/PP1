@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -134,6 +135,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final bool displayActivityIds = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
 
     final bool isRepost = widget.activity?.repostConfiguration?.targetActivityPublisherId.isNotEmpty ?? false;
 
@@ -334,6 +336,22 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               child: Text(
                 'The author of this post has limited it\'s visibility. Why not explore some of their other content?',
                 style: typography.styleBody.copyWith(color: colors.black),
+              ),
+            ),
+          ],
+          if (displayActivityIds) ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                left: kPaddingLarge,
+                right: kPaddingLarge,
+                top: kPaddingSmall,
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SelectableText(
+                  widget.activity?.flMeta?.id ?? '',
+                  style: typography.styleSubtext.copyWith(color: colors.black, fontSize: 8.0),
+                ),
               ),
             ),
           ],

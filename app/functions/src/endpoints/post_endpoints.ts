@@ -140,7 +140,7 @@ export namespace PostEndpoints {
     const promotionKey = request.data.promotionKey || "" as string;
 
     const feed = request.data.feed || FeedName.User;
-    let type = request.data.type || TagsService.PostTypeTag.post;
+    const type = request.data.type || TagsService.PostTypeTag.post;
     const style = request.data.style;
 
     // Check the type is a valid PostTypeTag

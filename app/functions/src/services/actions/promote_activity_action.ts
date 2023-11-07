@@ -7,7 +7,7 @@ import { ActivitiesService } from '../activities_service';
 import { DataService } from '../data_service';
 import { ProfileService } from '../profile_service';
 import { ActivityJSON } from '../../dto/activities';
-import { PromotedActivityJSON, PromotionJSON, PromotionOwnerJSON } from '../../dto/promotions';
+import { PromotionJSON } from '../../dto/promotions';
 import { ProfileJSON } from '../../dto/profile';
 
 export namespace PromoteActivityAction {
@@ -129,17 +129,8 @@ export namespace PromoteActivityAction {
         });
 
         // Update the relevent information in the promotion and mark it as active
-        const newPromotionActivity = {
-            activityId: targetActivityActualId,
-        } as PromotedActivityJSON;
-
-        const newPromotionOwner = {
-            profileId: publisherId,
-            role: 'publisher',
-        } as PromotionOwnerJSON;
-
-        targetPromotionData.activities = [newPromotionActivity];
-        targetPromotionData.owners = [newPromotionOwner];
+        targetPromotionData.activityId = targetActivityActualId
+        targetPromotionData.ownerId = publisherId;
         targetPromotionData.isActive = true;
         
         AdminQuickActionService.appendOutput(action, `Activity ${targetActivityActualId} promoted with promotion ${targetPromotionActualId}`);

@@ -228,11 +228,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return reposterId.isNotEmpty ? reposterId : publisherId;
   }
 
-  static Widget buildVisualSeparator(BuildContext context) {
+  static Widget buildVisualSeparator(BuildContext context, {Widget? parent}) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     // Keep it classy. :D
-    return Padding(
+    final Widget separator = Padding(
       padding: const EdgeInsets.symmetric(vertical: kPaddingMedium),
       child: ButtCheek(
         height: 2.0,
@@ -252,6 +252,19 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         ),
       ),
     );
+
+    if (parent != null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          parent,
+          const SizedBox(height: kPaddingExtraSmall),
+          separator,
+        ],
+      );
+    }
+
+    return separator;
   }
 
   Widget buildSeparator(BuildContext context, int index) {
