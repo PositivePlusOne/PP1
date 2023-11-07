@@ -292,7 +292,6 @@ class ProfileFormController extends _$ProfileFormController {
       final Set<String> visibilityFlags = buildVisibilityFlags();
       await profileController.updateName(state.name, visibilityFlags);
       logger.i('Successfully saved name: ${state.name}');
-      state = state.copyWith(isBusy: false);
 
       switch (state.formMode) {
         case FormMode.create:

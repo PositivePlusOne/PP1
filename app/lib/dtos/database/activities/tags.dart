@@ -94,7 +94,7 @@ class TagHelpers {
   static bool isPromoted(String tag) => tag.startsWith(_kPromotedKey);
 
   // These feeds are subscribed to by signed in users, and can also when set to everyone be displayed by signed out users.
-  static bool isDefaultFeedTag(String tag) => tag == 'signed_in_users' || tag == 'everyone';
+  static bool isDefaultFeedTag(String tag) => tag == 'signed_in_users' || tag == 'everyone' || tag == 'post' || tag == 'clip' || tag == 'event';
 
   static bool isReserved(String tag) {
     final bool isPromotedTag = isPromoted(tag);

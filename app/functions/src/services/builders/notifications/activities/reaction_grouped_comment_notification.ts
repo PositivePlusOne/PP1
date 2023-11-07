@@ -48,10 +48,10 @@ export namespace ReactionGroupedCommentNotification {
 
 
     const id = FlamelinkHelpers.generateIdentifier();
-    const foreignKey = FlamelinkHelpers.generateIdentifierFromStrings(identifierParts);
+    const groupId = FlamelinkHelpers.generateIdentifierFromStrings(identifierParts);
     const payload = new NotificationPayload({
       id,
-      foreign_id: foreignKey,
+      group_id: groupId,
       sender: receiverId,
       user_id: receiverId,
       title,

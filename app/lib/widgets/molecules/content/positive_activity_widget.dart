@@ -21,6 +21,7 @@ import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/content/activity_post_heading_widget.dart';
 import 'package:app/widgets/molecules/content/positive_post_actions.dart';
 import 'package:app/widgets/molecules/content/positive_post_layout_widget.dart';
+import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_colors_model.dart';
 import '../../../providers/system/design_controller.dart';
@@ -134,6 +135,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final bool displayActivityIds = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
 
     final bool isRepost = widget.activity?.repostConfiguration?.targetActivityPublisherId.isNotEmpty ?? false;
 
@@ -334,6 +336,22 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               child: Text(
                 'The author of this post has limited it\'s visibility. Why not explore some of their other content?',
                 style: typography.styleBody.copyWith(color: colors.black),
+              ),
+            ),
+          ],
+          if (displayActivityIds) ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                left: kPaddingLarge,
+                right: kPaddingLarge,
+                top: kPaddingSmall,
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SelectableText(
+                  widget.activity?.flMeta?.id ?? '',
+                  style: typography.styleSubtext.copyWith(color: colors.black, fontSize: 8.0),
+                ),
               ),
             ),
           ],

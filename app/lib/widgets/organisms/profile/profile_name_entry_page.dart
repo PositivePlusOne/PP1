@@ -84,6 +84,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileNameEntryRoute),
       backgroundColor: colors.colorGray1,
+      isBusy: state.isBusy,
       trailingWidgets: <Widget>[
         PositiveVisibilityHint(
           toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagName] ?? false),

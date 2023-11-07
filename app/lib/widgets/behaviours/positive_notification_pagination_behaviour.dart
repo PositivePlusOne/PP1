@@ -187,14 +187,14 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
         }
 
         // Prevent grouped notifications (for example 2 likes vs 3 likes)
-        final String foreignKey = newNotification.foreignKey;
-        if (foreignKey.isNotEmpty) {
-          if (notificationsState.knownGroups.contains(foreignKey)) {
+        final String groupId = newNotification.groupId;
+        if (groupId.isNotEmpty) {
+          if (notificationsState.knownGroups.contains(groupId)) {
             logger.d('requestNextTimelinePage() - Skipping duplicate notification: $notification');
             continue;
           }
 
-          notificationsState.knownGroups.add(foreignKey);
+          notificationsState.knownGroups.add(groupId);
         }
 
         newNotifications.add(newNotification);

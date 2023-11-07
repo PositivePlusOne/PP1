@@ -71,6 +71,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       backgroundColor: colors.colorGray1,
       onWillPopScope: () async => controller.onBackSelected(ProfileBirthdayEntryRoute),
+      isBusy: state.isBusy,
       trailingWidgets: <Widget>[
         PositiveVisibilityHint(
           toggleState: PositiveTogglableState.fromBool(state.visibilityFlags[kVisibilityFlagBirthday] ?? false),

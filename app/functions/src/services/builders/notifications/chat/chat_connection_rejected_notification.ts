@@ -28,11 +28,11 @@ export namespace ChatConnectionRejectedNotification {
     }
     
     const id = FlamelinkHelpers.generateIdentifier();
-    const foreignKey = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
+    const groupId = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
     
     const payload = new NotificationPayload({
       id,
-      foreign_id: foreignKey,
+      group_id: groupId,
       sender: senderId,
       user_id: receiverId,
       title,

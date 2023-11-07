@@ -4,33 +4,6 @@ import { FlMeta, FlMetaJSON } from "./meta";
 export const promotionsSchemaKey = "promotions";
 export const promotionsStatisticsSchemaKey = "promotionsStatistics";
 
-export interface PromotionOwnerJSON {
-    profileId?: string;
-    role?: string;
-}
-
-export class PromotionOwner {
-    profileId?: string;
-    role?: string;
-
-    constructor(json: PromotionOwnerJSON) {
-        this.profileId = json.profileId;
-        this.role = json.role;
-    }
-}
-
-export interface PromotedActivityJSON {
-    activityId?: string;
-}
-
-export class PromotedActivity {
-    activityId?: string;
-
-    constructor(json: PromotedActivityJSON) {
-        this.activityId = json.activityId;
-    }
-}
-
 export interface PromotionStatisticsJSON {
     _fl_meta_?: FlMetaJSON;
     promotionId?: string;
@@ -58,8 +31,8 @@ export interface PromotionJSON {
     description?: string;
     link?: string;
     linkText?: string;
-    owners?: PromotionOwnerJSON[];
-    activities?: PromotedActivityJSON[];
+    ownerId?: string;
+    activityId?: string;
     isActive?: boolean;
     seed?: number;
     totalViewsSinceLastUpdate?: number;
@@ -74,8 +47,8 @@ export class Promotion {
     description?: string;
     link?: string;
     linkText?: string;
-    owners?: PromotionOwner[];
-    activities?: PromotedActivity[];
+    ownerId?: string;
+    activityId?: string;
     isActive?: boolean;
     seed?: number;
     totalViewsSinceLastUpdate?: number;
@@ -89,8 +62,8 @@ export class Promotion {
         this.description = json.description;
         this.link = json.link;
         this.linkText = json.linkText;
-        this.owners = json.owners && json.owners.map((owner) => new PromotionOwner(owner));
-        this.activities = json.activities && json.activities.map((activity) => new PromotedActivity(activity));
+        this.ownerId = json.ownerId;
+        this.activityId = json.activityId;
         this.isActive = json.isActive;
         this.seed = json.seed;
         this.totalViewsSinceLastUpdate = json.totalViewsSinceLastUpdate;

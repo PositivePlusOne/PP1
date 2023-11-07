@@ -12,6 +12,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../providers/system/design_controller.dart';
 
@@ -71,6 +72,8 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
       children.add(child);
     }
 
+    final bool shouldDisplayProfileId = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
+
     return Container(
       height: preferredSize.height,
       width: double.infinity,
@@ -92,11 +95,23 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
               ),
               const SizedBox(width: kPaddingMedium),
               Expanded(
-                child: Text(
-                  profile.name.isNotEmpty ? profile.name : profile.displayName.asHandle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: typography.styleHeroMedium.copyWith(color: textColor),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      profile.name.isNotEmpty ? profile.name : profile.displayName.asHandle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: typography.styleHeroMedium.copyWith(color: textColor),
+                    ),
+                    if (shouldDisplayProfileId) ...<Widget>[
+                      SelectableText(
+                        profile.flMeta?.id ?? '',
+                        style: typography.styleSubtext.copyWith(color: textColor.withOpacity(metadataOpacity)),
+                      ),
+                    ]
+                  ],
                 ),
               ),
             ],

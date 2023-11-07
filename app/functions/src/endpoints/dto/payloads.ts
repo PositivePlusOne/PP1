@@ -237,18 +237,16 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 break;
             case promotionsSchemaKey:
                 const promotion = obj as PromotionJSON;
-                for (const activity of promotion.activities ?? []) {
-                    const activityId = activity.activityId || "";
-                    if (activityId) {
-                        joinedDataRecords.get(activitySchemaKey)?.add(activityId);
+                if (promotion.ownerId && promotion.ownerId !== sender) {
+                    joinedDataRecords.get(profileSchemaKey)?.add(promotion.ownerId);
+
+                    if (sender && promotion.ownerId !== sender) {
+                        const flid = StringHelpers.generateDocumentNameFromGuids([sender, promotion.ownerId]);
+                        joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     }
                 }
-
-                for (const owner of promotion.owners ?? []) {
-                    const ownerId = owner.profileId || "";
-                    if (ownerId) {
-                        joinedDataRecords.get(profileSchemaKey)?.add(ownerId);
-                    }
+                if (promotion.activityId) {
+                    joinedDataRecords.get(activitySchemaKey)?.add(promotion.activityId);
                 }
                 break;
             default:

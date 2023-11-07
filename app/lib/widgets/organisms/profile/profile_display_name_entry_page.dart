@@ -85,6 +85,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
     return PositiveScaffold(
       onWillPopScope: () async => controller.onBackSelected(ProfileDisplayNameEntryRoute),
       backgroundColor: colors.colorGray1,
+      isBusy: state.isBusy,
       trailingWidgets: <Widget>[
         getHint(context, controller, colors),
         const SizedBox(height: kPaddingMedium),

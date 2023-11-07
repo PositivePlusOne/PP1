@@ -10,7 +10,7 @@ _$NotificationPayloadImpl _$$NotificationPayloadImplFromJson(
         Map<String, dynamic> json) =>
     _$NotificationPayloadImpl(
       id: json['id'] as String? ?? '',
-      foreignKey: json['foreign_id'] as String? ?? '',
+      groupId: json['group_id'] as String? ?? '',
       userId: json['user_id'] as String? ?? '',
       sender: json['sender'] as String? ?? '',
       title: json['title'] as String? ?? '',
@@ -34,7 +34,7 @@ Map<String, dynamic> _$$NotificationPayloadImplToJson(
         _$NotificationPayloadImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'foreign_id': instance.foreignKey,
+      'group_id': instance.groupId,
       'user_id': instance.userId,
       'sender': instance.sender,
       'title': instance.title,

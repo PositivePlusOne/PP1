@@ -9,6 +9,7 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/widgets/molecules/content/positive_recommended_topics.dart';
+import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 
 class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveHubFloatingBar({
@@ -67,12 +68,12 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
           ),
         },
         const SizedBox(height: kPaddingMedium),
-        // PositiveTabBar(
-        //   index: index,
-        //   onTapped: onTapped,
-        //   tabColours: tabColours,
-        //   tabs: tabs,
-        // ),
+        PositiveTabBar(
+          index: index,
+          onTapped: onTapped,
+          tabColours: tabColours,
+          tabs: tabs,
+        ),
       ],
     );
   }

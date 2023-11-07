@@ -16,11 +16,6 @@ export namespace NotificationsService {
       functions.logger.info(`Setting id for notification to: ${notification.id}`);
     }
 
-    if (!notification.foreign_id || notification.foreign_id.length === 0) {
-      notification.foreign_id = FlamelinkHelpers.generateIdentifier();
-      functions.logger.info(`Setting foreign_id for notification to: ${notification.foreign_id}`);
-    }
-
     // if created_at is not set, set it to now
     if (!notification.created_at) {
       notification.created_at = StreamHelpers.getCurrentTimestamp();
