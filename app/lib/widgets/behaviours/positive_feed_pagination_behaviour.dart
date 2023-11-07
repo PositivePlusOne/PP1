@@ -239,15 +239,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         child: Container(
           height: 2.0,
           decoration: BoxDecoration(
-            gradient: RadialGradient(
-              focalRadius: 0.0,
-              radius: kPaddingGiiiiiiirthy,
-              center: Alignment.center,
-              colors: <Color>[
-                colors.colorGray1,
-                colors.colorGray2,
-              ],
-            ),
+            color: colors.white,
           ),
         ),
       ),

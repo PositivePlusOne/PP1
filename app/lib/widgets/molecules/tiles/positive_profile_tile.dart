@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +12,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
+import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../providers/system/design_controller.dart';
 
