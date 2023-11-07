@@ -313,7 +313,9 @@ export namespace TagsService {
     }
 
     // Add the type tag
-    tags.push(type);
+    const typeStr = type as string;
+    functions.logger.info("Appending type tag", { typeStr });
+    tags.push(typeStr);
 
     return tags;
   }

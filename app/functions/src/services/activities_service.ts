@@ -218,9 +218,11 @@ export namespace ActivitiesService {
 
     // Get a list of all the tags the activity should be posted to
     const isPublic = activity.securityConfiguration?.viewMode === "public";
+    const isSignedIn = activity.securityConfiguration?.viewMode === "signed_in";
+    const canExternallyTag = isPublic || isSignedIn;
 
     // Convert to set
-    const expectedTags = new Set<string>(isPublic ? activity.enrichmentConfiguration?.tags ?? [] : []);
+    const expectedTags = new Set<string>(canExternallyTag ? activity.enrichmentConfiguration?.tags ?? [] : []);
 
     // Get a list of all the tags the activity is currently posted to
     const currentTags = [];
