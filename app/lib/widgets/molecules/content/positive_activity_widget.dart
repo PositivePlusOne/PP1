@@ -353,7 +353,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     );
 
     if (!widget.isFullscreen && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = '${parsedMarkdown.substring(0, parsedMarkdown.lastIndexOf(" ")).replaceAll(RegExp('[\r\n\t]'), '')}...';
+      parsedMarkdown = parsedMarkdown.replaceAll(RegExp('[\r\n\t]'), '');
     }
 
     parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
