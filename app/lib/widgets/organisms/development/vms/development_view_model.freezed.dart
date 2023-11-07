@@ -16,6 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DevelopmentViewModelState {
+  bool get displaySelectablePostIDs => throw _privateConstructorUsedError;
+  bool get darkMode => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -29,7 +31,7 @@ abstract class $DevelopmentViewModelStateCopyWith<$Res> {
           $Res Function(DevelopmentViewModelState) then) =
       _$DevelopmentViewModelStateCopyWithImpl<$Res, DevelopmentViewModelState>;
   @useResult
-  $Res call({String status});
+  $Res call({bool displaySelectablePostIDs, bool darkMode, String status});
 }
 
 /// @nodoc
@@ -46,9 +48,19 @@ class _$DevelopmentViewModelStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? displaySelectablePostIDs = null,
+    Object? darkMode = null,
     Object? status = null,
   }) {
     return _then(_value.copyWith(
+      displaySelectablePostIDs: null == displaySelectablePostIDs
+          ? _value.displaySelectablePostIDs
+          : displaySelectablePostIDs // ignore: cast_nullable_to_non_nullable
+              as bool,
+      darkMode: null == darkMode
+          ? _value.darkMode
+          : darkMode // ignore: cast_nullable_to_non_nullable
+              as bool,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -66,7 +78,7 @@ abstract class _$$DevelopmentViewModelStateImplCopyWith<$Res>
       __$$DevelopmentViewModelStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String status});
+  $Res call({bool displaySelectablePostIDs, bool darkMode, String status});
 }
 
 /// @nodoc
@@ -82,9 +94,19 @@ class __$$DevelopmentViewModelStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? displaySelectablePostIDs = null,
+    Object? darkMode = null,
     Object? status = null,
   }) {
     return _then(_$DevelopmentViewModelStateImpl(
+      displaySelectablePostIDs: null == displaySelectablePostIDs
+          ? _value.displaySelectablePostIDs
+          : displaySelectablePostIDs // ignore: cast_nullable_to_non_nullable
+              as bool,
+      darkMode: null == darkMode
+          ? _value.darkMode
+          : darkMode // ignore: cast_nullable_to_non_nullable
+              as bool,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -96,15 +118,24 @@ class __$$DevelopmentViewModelStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DevelopmentViewModelStateImpl implements _DevelopmentViewModelState {
-  const _$DevelopmentViewModelStateImpl({this.status = 'Pending...'});
+  const _$DevelopmentViewModelStateImpl(
+      {this.displaySelectablePostIDs = false,
+      this.darkMode = false,
+      this.status = 'Pending...'});
 
+  @override
+  @JsonKey()
+  final bool displaySelectablePostIDs;
+  @override
+  @JsonKey()
+  final bool darkMode;
   @override
   @JsonKey()
   final String status;
 
   @override
   String toString() {
-    return 'DevelopmentViewModelState(status: $status)';
+    return 'DevelopmentViewModelState(displaySelectablePostIDs: $displaySelectablePostIDs, darkMode: $darkMode, status: $status)';
   }
 
   @override
@@ -112,11 +143,17 @@ class _$DevelopmentViewModelStateImpl implements _DevelopmentViewModelState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DevelopmentViewModelStateImpl &&
+            (identical(
+                    other.displaySelectablePostIDs, displaySelectablePostIDs) ||
+                other.displaySelectablePostIDs == displaySelectablePostIDs) &&
+            (identical(other.darkMode, darkMode) ||
+                other.darkMode == darkMode) &&
             (identical(other.status, status) || other.status == status));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, status);
+  int get hashCode =>
+      Object.hash(runtimeType, displaySelectablePostIDs, darkMode, status);
 
   @JsonKey(ignore: true)
   @override
@@ -127,9 +164,15 @@ class _$DevelopmentViewModelStateImpl implements _DevelopmentViewModelState {
 }
 
 abstract class _DevelopmentViewModelState implements DevelopmentViewModelState {
-  const factory _DevelopmentViewModelState({final String status}) =
-      _$DevelopmentViewModelStateImpl;
+  const factory _DevelopmentViewModelState(
+      {final bool displaySelectablePostIDs,
+      final bool darkMode,
+      final String status}) = _$DevelopmentViewModelStateImpl;
 
+  @override
+  bool get displaySelectablePostIDs;
+  @override
+  bool get darkMode;
   @override
   String get status;
   @override

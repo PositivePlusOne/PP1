@@ -65,7 +65,7 @@ export namespace SystemEndpoints {
       cursor: request.data.cursor || "",
     } as Pagination;
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors, promotions] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors, promotions, ownedPromotions] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -78,6 +78,7 @@ export namespace SystemEndpoints {
       uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({ data: [], pagination: {} }),
       LocalizationsService.getDefaultCompanySectors(locale),
       PromotionsService.getActivePromotionWindow("", 30),
+      PromotionsService.getOwnedPromotions(uid),
     ]);
 
     const joinRecords = [] as string[];
@@ -139,7 +140,7 @@ export namespace SystemEndpoints {
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [profile, ...supportedProfiles, ...promotions],
+      data: [profile, ...supportedProfiles, ...promotions, ...ownedPromotions],
       joins: joinRecords,
       seedData: {
         genders,

@@ -58,17 +58,17 @@ export namespace UpdatePromotionMixpanelAnalyticsAction {
 
         AdminQuickActionService.appendOutput(action, `Fetching data from Mixpanel for promotion ${promotion._fl_meta_.fl_id}`);
 
-        for (const promotedActivity of promotion.activities ?? []) {
-            const activityId = promotedActivity.activityId;
-            if (!activityId) {
-                continue;
-            }
+        // for (const promotedActivity of promotion.a ?? []) {
+        //     const activityId = promotedActivity.activityId;
+        //     if (!activityId) {
+        //         continue;
+        //     }
 
             // TODO: Fetch from Mixpanel.
             // const segmentation = await MixpanelService.fetchMixpanelData('Post Viewed', startDate, endDate, {
             //     'activityId': activityId,
             // });
-        }
+        // }
 
         // Update the counts for the promotion and update the "lastFetchedFromMixpanel" timestamp.
         counts.total_views = totalViews;

@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_switch.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,7 +17,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/development/vms/development_view_model.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
@@ -41,192 +43,122 @@ class DevelopmentPage extends ConsumerWidget {
       appBar: PositiveAppBar(
         applyLeadingandTrailingPadding: true,
         safeAreaQueryData: mediaQueryData,
-        backgroundColor: colors.teal,
-        foregroundColor: colors.black,
+        backgroundColor: colors.black,
+        foregroundColor: colors.white,
         trailing: <Widget>[
           PositiveButton.appBarIcon(
             colors: colors,
+            foregroundColor: colors.white,
             icon: UniconsLine.multiply,
             onTapped: () => appRouter.removeLast(),
           ),
         ],
       ),
+      backgroundColor: colors.black,
+      appBarColor: colors.black,
       headingWidgets: <Widget>[
         SliverList(
           delegate: SliverChildListDelegate(
             <Widget>[
-              ListTile(
+              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+              CupertinoListTile(
+                title: Text(
+                  'Welcome to our "secret" development page!',
+                  style: typography.styleNotification.copyWith(color: colors.white),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SelectableText(
+                      developmentViewModelState.status,
+                      maxLines: 3,
+                      style: typography.styleSubtext.copyWith(color: colors.white),
+                    ),
+                    const SizedBox(height: kPaddingExtraSmall),
+                    Text(
+                      'Version: ${systemControllerState.version}',
+                      style: typography.styleSubtextBold.copyWith(color: colors.white),
+                    ),
+                  ],
+                ),
+              ),
+              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+              CupertinoListTile(
+                title: Text(
+                  'Design and UI',
+                  style: typography.styleSubtextBold.copyWith(color: colors.white),
+                ),
+              ),
+              CupertinoListTile.notched(
+                onTap: developmentViewModel.displayAuthClaims,
+                title: Text(
+                  'Dark mode',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'This is a work in progress, so please bare with us!',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+                additionalInfo: Transform.scale(
+                  scale: 0.7,
+                  child: PositiveSwitch(
+                    activeColour: colors.white,
+                    inactiveColour: colors.colorGray7,
+                    ignoring: false,
+                    value: developmentViewModelState.darkMode,
+                    onTapped: (_) => developmentViewModel.toggleDarkMode(),
+                  ),
+                ),
+              ),
+              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+              CupertinoListTile(
+                title: Text(
+                  'General',
+                  style: typography.styleSubtextBold.copyWith(color: colors.white),
+                ),
+              ),
+              CupertinoListTile.notched(
                 onTap: developmentViewModel.restartApp,
-                dense: true,
                 title: Text(
                   'Restart app',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
                 ),
                 subtitle: Text(
-                  'Mimics restarting the app by going back to the splash page',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
+                  'Force restart the application.',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
               ),
-              ListTile(
-                onTap: developmentViewModel.viewSharedPreferences,
-                dense: true,
-                title: Text(
-                  'View shared preferences',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Prints all shared preferences to the status bar',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: () => developmentViewModel.testSnackBar(context),
-                dense: true,
-                title: Text(
-                  'Test snackbar',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Displays a test snackbar',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.resetSharedPreferences,
-                dense: true,
-                title: Text(
-                  'Reset shared preferences',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Reset all shared preferences',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.resetAccount,
-                dense: true,
-                title: Text(
-                  'Reset account',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Deletes your account from the system. Note that the profile will still exist.',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.deleteProfile,
-                dense: true,
-                title: Text(
-                  'Delete profile',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Deletes the users profile (not the account) from the database.',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.toggleSemanticsDebugger,
-                dense: true,
-                title: Text(
-                  'Toggle semantics layout',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Displays the app as is for a user with visual impairments',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.toggleDebugMessages,
-                dense: true,
-                title: Text(
-                  'Toggle debug messages',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Display error messages raw in app without translation',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-                trailing: systemControllerState.showingDebugMessages
-                    ? PositiveTextFieldIcon.success(backgroundColor: colors.green)
-                    : PositiveTextFieldIcon.error(
-                        backgroundColor: colors.red,
-                      ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.sentTestNotification,
-                dense: true,
-                title: Text(
-                  'Send test notification',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'If you are logged in with a valid FCM token, then this will send a push notification to you.',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.resetCache,
-                dense: true,
-                title: Text(
-                  'Clear local cache',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Clears the local cache data of the app',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.resetLocalImageCache,
-                dense: true,
-                title: Text(
-                  'Clear local image cache',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Clears the local image cache data of the app',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
-                onTap: developmentViewModel.resetServerCache,
-                dense: true,
-                title: Text(
-                  'Clear server cache',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
-                ),
-                subtitle: Text(
-                  'Clears the server cache data',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
-                ),
-              ),
-              ListTile(
+              CupertinoListTile.notched(
                 onTap: developmentViewModel.displayAuthClaims,
-                dense: true,
                 title: Text(
                   'Request auth claims',
-                  style: typography.styleButtonRegular.copyWith(color: colors.black),
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
                 ),
                 subtitle: Text(
                   'Displays the logged in users auth claims in the status bar',
-                  style: typography.styleSubtext.copyWith(color: colors.black),
+                  style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
               ),
-              const SizedBox(height: kPaddingMedium),
-              SelectableText(
-                developmentViewModelState.status,
-                textAlign: TextAlign.center,
-                style: typography.styleSubtext.copyWith(color: colors.red),
-              ),
-              const SizedBox(height: kPaddingMedium),
-              Text(
-                'Version: ${systemControllerState.version}',
-                textAlign: TextAlign.center,
-                style: typography.styleSubtext.copyWith(color: colors.black),
+              CupertinoListTile.notched(
+                onTap: developmentViewModel.displayAuthClaims,
+                title: Text(
+                  'Toggle ID display',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'Displays the IDs of posts and users where applicable.',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+                additionalInfo: Transform.scale(
+                  scale: 0.7,
+                  child: PositiveSwitch(
+                    activeColour: colors.white,
+                    inactiveColour: colors.colorGray7,
+                    ignoring: false,
+                    value: developmentViewModelState.displaySelectablePostIDs,
+                    onTapped: (_) => developmentViewModel.toggleSelectablePostIDs(),
+                  ),
+                ),
               ),
             ],
           ),

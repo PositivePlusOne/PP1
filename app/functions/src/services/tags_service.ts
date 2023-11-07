@@ -5,7 +5,7 @@ import { DataService } from "./data_service";
 import { CacheService } from "./cache_service";
 import { FeedService } from "./feed_service";
 import { ActivitiesService } from "./activities_service";
-import { ActivityGeneralConfigurationJSON, ActivityGeneralConfigurationType, ActivityJSON, ActivitySecurityConfigurationMode } from "../dto/activities";
+import { ActivityGeneralConfigurationType, ActivityJSON, ActivitySecurityConfigurationMode } from "../dto/activities";
 
 export namespace TagsService {
   /**
