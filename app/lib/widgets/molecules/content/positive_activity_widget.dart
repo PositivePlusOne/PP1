@@ -384,9 +384,9 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       for (var i = 0; i < kMaximumNumberOfReturnsInFeedItem; i++) {
         lastIndex = parsedMarkdown.indexOf(RegExp('[\r\n\t]'), lastIndex + 1);
         if (lastIndex < 0) {
-          break;
+          continue;
         } else {
-          removeFromCharacter = lastIndex;
+          removeFromCharacter = lastIndex.clamp(0, parsedMarkdown.length - 1);
         }
       }
       //?  replace all carriage returns after the the removeFromCharacter point
