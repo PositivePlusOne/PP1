@@ -264,7 +264,7 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
-    const isValid = name.length > 3 && name.length < 30 && StringHelpers.isAlphanumericWithSpecialChars(name);
+    const isValid = name.length > 3 && name.length < 30 && StringHelpers.isValidRealName(name);
     if (!isValid) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
