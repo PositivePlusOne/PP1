@@ -39,9 +39,12 @@ class _PositiveRefreshIndicatorState extends ConsumerState<PositiveRefreshIndica
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final double edgeOffset = mediaQueryData.padding.top + kPaddingSmall;
 
     return CustomMaterialIndicator(
       onRefresh: widget.onRefresh,
+      edgeOffset: edgeOffset,
       durations: const RefreshIndicatorDurations(
         completeDuration: Duration(seconds: 1),
       ),
