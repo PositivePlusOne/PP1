@@ -87,6 +87,8 @@ class ChatMembersPage extends HookConsumerWidget {
     final List<Relationship> blockedRelationships = chatViewModel.getCachedSourceBlockedMemberRelationships(relationships);
     final bool hasSourceBlockedMembers = blockedRelationships.isNotEmpty;
 
+    final bool shouldToggleMembers = !isOneOnOneConversation && canUpdateMembers;
+
     return PositiveScaffold(
       headingWidgets: <Widget>[
         SliverPadding(
@@ -116,10 +118,9 @@ class ChatMembersPage extends HookConsumerWidget {
                         profile: keyval.value,
                         currentProfileId: currentProfileId ?? '',
                         relationship: ChatViewModel.getRelationshipForProfile(relationships, keyval.value),
-                        onTap: (_) => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!),
+                        onTap: shouldToggleMembers ? (_) => chatViewModel.onCurrentChannelMemberSelected(keyval.value.flMeta!.id!) : (_) => keyval.value.navigateToProfile(),
                         isSelected: chatViewModelState.selectedMembers.contains(keyval.value.flMeta!.id!),
-                        displaySelectToggle: !isOneOnOneConversation && canUpdateMembers,
-                        isEnabled: !isOneOnOneConversation && canUpdateMembers,
+                        displaySelectToggle: shouldToggleMembers,
                       ),
                       kPaddingSmall.asVerticalBox,
                     ],

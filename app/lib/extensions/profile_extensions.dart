@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -300,14 +303,27 @@ extension ProfileExtensions on Profile {
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
-    final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
-    final String currentProfileId = flMeta?.id ?? '';
-    if (currentProfileId.isEmpty) {
+    final String targetProfileId = flMeta?.id ?? '';
+    if (targetProfileId.isEmpty) {
       logger.e('onViewProfileButtonSelected: currentProfileId is empty');
       return;
     }
 
-    await profileViewModel.preloadUserProfile(currentProfileId);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isNotEmpty) {
+      final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+      final Relationship? relationship = cacheController.get([currentProfileId, targetProfileId].asGUID);
+      final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+      final bool isBlockedByTarget = relationshipStates.contains(RelationshipState.targetBlocked);
+      if (isBlockedByTarget) {
+        logger.e('onViewProfileButtonSelected: target profile is blocked');
+        return;
+      }
+    }
+
+    final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
+    await profileViewModel.preloadUserProfile(targetProfileId);
 
     appRouter.push(const ProfileRoute());
   }
