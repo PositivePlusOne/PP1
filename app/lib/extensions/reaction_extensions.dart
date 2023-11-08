@@ -18,7 +18,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:app/widgets/molecules/content/post_options_dialog.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:unicons/unicons.dart';
 
@@ -39,7 +38,7 @@ extension ReactionExt on Reaction {
         context: context,
         barrierDismissible: true,
         child: CommentOptionsDialog(
-          onDeleteCommentSelected: () => onPostDeleted(
+          onDeleteCommentSelected: () => onCommentDeleted(
             context: context,
             currentProfile: currentProfile,
             reactionFeedState: reactionFeedState,
@@ -66,7 +65,7 @@ extension ReactionExt on Reaction {
     );
   }
 
-  Future<void> onPostDeleted({
+  Future<void> onCommentDeleted({
     required BuildContext context,
     required Profile? currentProfile,
     required PositiveReactionsState reactionFeedState,
@@ -76,11 +75,11 @@ extension ReactionExt on Reaction {
 
     await router.pop();
     await PositiveDialog.show(
-      title: localisations.post_dialogue_delete_post,
+      title: localisations.comment_dialogue_delete_comment,
       context: context,
       barrierDismissible: true,
-      child: PostDeleteConfirmDialog(
-        onDeletePostConfirmed: () => onPostDeleteConfirmed(
+      child: CommentDeleteConfirmDialog(
+        onDeleteCommentConfirmed: () => onCommentDeleteConfirmed(
           context: context,
           currentProfile: currentProfile,
           reactionFeedState: reactionFeedState,
@@ -89,7 +88,7 @@ extension ReactionExt on Reaction {
     );
   }
 
-  Future<void> onPostDeleteConfirmed({
+  Future<void> onCommentDeleteConfirmed({
     required BuildContext context,
     required Profile? currentProfile,
     required PositiveReactionsState reactionFeedState,
@@ -110,7 +109,7 @@ extension ReactionExt on Reaction {
       logger.e("Error deleting comment: $e");
 
       final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-        title: localisations.post_dialogue_delete_post_fail,
+        title: localisations.comment_dialogue_delete_comment_fail,
         icon: UniconsLine.plus_circle,
         backgroundColour: colours.black,
       );
@@ -124,7 +123,7 @@ extension ReactionExt on Reaction {
     }
 
     final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: localisations.post_dialogue_delete_post_success,
+      title: localisations.comment_dialogue_delete_comment_success,
       icon: UniconsLine.file_times_alt,
       backgroundColour: colours.black,
     );
