@@ -80,6 +80,28 @@ export namespace SystemService {
     await admin.auth().setCustomUserClaims(accessId, customClaims);
   }
 
+  export async function validateUsingRedisUserThrottle(context: functions.https.CallableContext): Promise<boolean> {
+    // const endpoint = context.rawRequest.originalUrl;
+    // const ipAddr = context.rawRequest.ip;
+
+    // // Limit to 10 times in one minute.
+    // const throttleKey = `throttle_${endpoint}_${ipAddr}`;
+    // let throttleValue = await CacheService.get(throttleKey);
+    // if (!throttleValue) {
+    //   throttleValue = 0;
+    // }
+
+    // throttleValue++;
+    // await CacheService.setInCache(throttleKey, throttleValue, 60);
+
+    // if (throttleValue > 10) {
+    //   functions.logger.warn(`Throttling ${endpoint} for ${ipAddr}`);
+    //   throw new functions.https.HttpsError("failed-precondition", "Too many requests.");
+    // }
+
+    return true;
+  }
+
   /**
    * Submits feedback from the user to the database.
    * @param {string} profile The user ID of the user submitting the feedback.

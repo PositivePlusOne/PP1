@@ -99,11 +99,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       }
 
       appendActivityPageToState(data, next);
+      saveActivitiesState();
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       activitiesController.notifyPageError(profileId: profileId, feed: feed, error: ex);
-    } finally {
-      saveActivitiesState();
     }
   }
 
@@ -128,6 +127,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
       feedState.knownActivities.add(activityId);
       activities.add(activityObject);
+    }
+
+    if (activities.isEmpty) {
+      logger.d('appendActivityPageToState() - No activities to append');
+      feedState.pagingController.appendLastPage([]);
+      return;
     }
 
     logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
@@ -262,7 +267,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String targetProfileId = getCorrectPublisherId(activity);
 
     if (activityId.isEmpty || currentProfileId.isEmpty || targetProfileId.isEmpty) {
-      return buildVisualSeparator(context);
+      return const SizedBox.shrink();
     }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -272,7 +277,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     // Remove the separator if we can't display the activity
     final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
-      return buildVisualSeparator(context);
+      return const SizedBox.shrink();
     }
 
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
@@ -300,20 +305,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
       return buildVisualSeparator(context);
     }
-
-    promotedActivity.generalConfiguration?.type.when(
-      clip: () {
-        if (!isClipFeed) {
-          return buildVisualSeparator(context);
-        }
-      },
-      post: () {
-        if (!isPostFeed) {
-          return buildVisualSeparator(context);
-        }
-      },
-      event: () {},
-    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -392,13 +383,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
-    }
-
-    if (reposterRelationship != null) {
-      final bool canDisplayRepost = activity?.canDisplayOnFeed(reposterProfile, reposterRelationship) ?? false;
-      if (!canDisplayRepost) {
-        return const SizedBox.shrink();
-      }
     }
 
     final String activityReactionStatisticsCacheKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);

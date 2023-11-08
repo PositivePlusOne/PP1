@@ -7,9 +7,11 @@ import { NotificationsService } from "../services/notifications_service";
 import { FIREBASE_FUNCTION_INSTANCE_DATA } from "../constants/domain";
 import { FeedService } from "../services/feed_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
+import { SystemService } from "../services/system_service";
 
 export namespace NotificationEndpoints {
   export const listNotifications = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 

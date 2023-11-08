@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_1G } from "../constants/domain";
+import { FIREBASE_FUNCTION_INSTANCE_DATA, FIREBASE_FUNCTION_INSTANCE_DATA_1G, FIREBASE_FUNCTION_INSTANCE_DATA_256 } from "../constants/domain";
 
 import { DataService } from "../services/data_service";
 
@@ -23,9 +23,11 @@ import { SecurityHelpers } from "../helpers/security_helpers";
 import { ProfileStatisticsService } from "../services/profile_statistics_service";
 import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
+import { SystemService } from "../services/system_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
         const uid = context.auth?.uid || "";
 
         const targetUserId = request.data.targetUserId || "";
@@ -69,6 +71,7 @@ export namespace PostEndpoints {
       });
       
   export const getActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const entry = request.data.entry || "";
     if (!entry) {
       throw new functions.https.HttpsError("invalid-argument", "Missing entry");
@@ -87,6 +90,7 @@ export namespace PostEndpoints {
   });
 
   export const shareActivityToConversations = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info(`Sharing activity`, { request });
     
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -130,7 +134,8 @@ export namespace PostEndpoints {
     });
   });
 
-  export const postActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const postActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info(`Posting activity`, { request });
 
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -268,6 +273,7 @@ export namespace PostEndpoints {
   });
 
   export const deleteActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
 
@@ -329,7 +335,8 @@ export namespace PostEndpoints {
     });
   });
 
-  export const updateActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+  export const updateActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info(`Updating activity`, { request });
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 

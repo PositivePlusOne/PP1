@@ -6,9 +6,11 @@ import { UserService } from "../services/user_service";
 import safeJsonStringify from "safe-json-stringify";
 import { ProfileService } from "../services/profile_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
+import { SystemService } from "../services/system_service";
 
 export namespace ConversationEndpoints {
   export const createConversation = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: CreateConversationRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     await UserService.verifyAuthenticated(context);
     const streamChatClient = ConversationService.getStreamChatInstance();
     const uid = context.auth!.uid;
@@ -25,6 +27,7 @@ export namespace ConversationEndpoints {
    * Sends an event message to a channel such as "_ has left the conversation"
    */
   export const sendEventMessage = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: SendEventMessage, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
@@ -35,6 +38,7 @@ export namespace ConversationEndpoints {
    * Archives members from a channel
    */
   export const archiveMembers = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
@@ -103,6 +107,7 @@ export namespace ConversationEndpoints {
    * Freezes a channel
    */
   export const freezeChannel = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: FreezeChannelRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
@@ -113,6 +118,7 @@ export namespace ConversationEndpoints {
    * Unfreezes a channel
    */
   export const unfreezeChannel = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: UnfreezeChannelRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 

@@ -11,9 +11,11 @@ import { DataService } from "../services/data_service";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
 import { PromotionsService } from "../services/promotions_service";
 import { Promotion } from "../dto/promotions";
+import { SystemService } from "../services/system_service";
 
 export namespace EnrichmentEndpoints {
   export const followTags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info(`Getting notifications for current user: ${uid}`);
 
@@ -65,6 +67,7 @@ export namespace EnrichmentEndpoints {
   });
 
   export const getPromotionWindow = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info(`Getting a promotion window`);
 
     const cursor = request.cursor || null;
