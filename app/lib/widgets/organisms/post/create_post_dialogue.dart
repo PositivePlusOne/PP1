@@ -638,14 +638,18 @@ class CreatePostTagsContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> tagsList = <Widget>[
-      CreatePostTagPill(
-        tagName: tags[0],
-        typography: typography,
-        colours: colours,
-      ),
-    ];
+    final List<Widget> tagsList = <Widget>[];
     final bool tagsAllow = (tags.length >= 2 && tags.first.length <= 15) && (tags[1].length <= 15);
+
+    if (tags.isNotEmpty) {
+      tagsList.add(
+        CreatePostTagPill(
+          tagName: tags[0],
+          typography: typography,
+          colours: colours,
+        ),
+      );
+    }
 
     if (tags.length == 2 && tagsAllow) {
       tagsList.add(const SizedBox(width: kPaddingExtraSmall));
