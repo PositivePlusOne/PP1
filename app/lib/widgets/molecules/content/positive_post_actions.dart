@@ -30,7 +30,7 @@ class PositivePostActions extends HookConsumerWidget {
       left: kPaddingMedium,
       right: kPaddingMedium,
       top: kPaddingSmall,
-      bottom: kPaddingExtraSmall,
+      bottom: kPaddingSmall,
     ),
     super.key,
   });
