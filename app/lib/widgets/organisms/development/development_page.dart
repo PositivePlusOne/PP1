@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
@@ -14,6 +15,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/resources/resources.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_switch.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
@@ -38,6 +40,8 @@ class DevelopmentPage extends ConsumerWidget {
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final bool isNonProduction = systemControllerState.environment != SystemEnvironment.production;
+    final bool isShowingDebugMessages = systemControllerState.showingDebugMessages;
 
     return PositiveScaffold(
       appBar: PositiveAppBar(
@@ -60,7 +64,6 @@ class DevelopmentPage extends ConsumerWidget {
         SliverList(
           delegate: SliverChildListDelegate(
             <Widget>[
-              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               CupertinoListTile(
                 title: Text(
                   'Welcome to our "secret" development page!',
@@ -82,6 +85,36 @@ class DevelopmentPage extends ConsumerWidget {
                   ],
                 ),
               ),
+              if (isNonProduction) ...<Widget>[
+                PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+                CupertinoListTile(
+                  title: Text(
+                    'Internal',
+                    style: typography.styleSubtextBold.copyWith(color: colors.white),
+                  ),
+                ),
+                CupertinoListTile.notched(
+                  onTap: developmentViewModel.displayAuthClaims,
+                  title: Text(
+                    'Toggle informative debug messaging',
+                    style: typography.styleButtonRegular.copyWith(color: colors.white),
+                  ),
+                  subtitle: Text(
+                    'Where possible, popups which are a result of errors will include their stack traces.',
+                    style: typography.styleSubtext.copyWith(color: colors.white),
+                  ),
+                  additionalInfo: Transform.scale(
+                    scale: 0.7,
+                    child: PositiveSwitch(
+                      activeColour: colors.white,
+                      inactiveColour: colors.colorGray7,
+                      ignoring: false,
+                      value: isShowingDebugMessages,
+                      onTapped: (_) => ref.read(systemControllerProvider.notifier).toggleDebugMessages(),
+                    ),
+                  ),
+                ),
+              ],
               PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               CupertinoListTile(
                 title: Text(
@@ -158,6 +191,27 @@ class DevelopmentPage extends ConsumerWidget {
                     value: developmentViewModelState.displaySelectablePostIDs,
                     onTapped: (_) => developmentViewModel.toggleSelectablePostIDs(),
                   ),
+                ),
+              ),
+              CupertinoListTile.notched(
+                onTap: () => showLicensePage(
+                  context: context,
+                  applicationVersion: systemControllerState.version,
+                  applicationIcon: Padding(
+                    padding: const EdgeInsets.only(bottom: kPaddingSmall),
+                    child: SvgPicture.asset(
+                      SvgImages.logosFooter,
+                      width: kLogoMaximumWidth,
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'View OSS Licenses',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'Cool code we used to build Positive+1',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
               ),
             ],
