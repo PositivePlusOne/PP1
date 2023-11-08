@@ -276,6 +276,23 @@ final firebasePerformanceProvider = Provider<FirebasePerformance>.internal(
 );
 
 typedef FirebasePerformanceRef = ProviderRef<FirebasePerformance>;
+String _$firebaseRemoteConfigHash() =>
+    r'4a9992cebd64786d5f859237121350f8da61dc5a';
+
+/// See also [firebaseRemoteConfig].
+@ProviderFor(firebaseRemoteConfig)
+final firebaseRemoteConfigProvider =
+    FutureProvider<FirebaseRemoteConfig>.internal(
+  firebaseRemoteConfig,
+  name: r'firebaseRemoteConfigProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$firebaseRemoteConfigHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FirebaseRemoteConfigRef = FutureProviderRef<FirebaseRemoteConfig>;
 String _$flutterLocalNotificationsPluginHash() =>
     r'43f8e5d9a032d4b799691464b1c63b9683bc3996';
 
