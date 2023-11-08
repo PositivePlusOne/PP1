@@ -178,7 +178,12 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       publisherRelationship: actualRelationship,
     );
 
+    // Reposts are always shareable as they share a copy of the original post
     ActivitySecurityConfigurationMode shareMode = widget.activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    if (widget.reposterActivity != null) {
+      shareMode = widget.reposterActivity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    }
+
     final bool canActShare = shareMode.canActOnActivity(
       activity: widget.reposterActivity ?? widget.activity,
       currentProfile: widget.currentProfile,
@@ -254,7 +259,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
             onLike: (context) => _onInternalLikeRequested(context: context),
             shareEnabled: canActShare,
-            onShare: (context) => widget.activity?.share(context, widget.currentProfile),
+            onShare: (context) => widget.reposterActivity?.share(context, widget.currentProfile) ?? widget.activity?.share(context, widget.currentProfile),
           ),
         ],
       );
@@ -289,6 +294,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
           if (canView) ...<Widget>[
             PositivePostLayoutWidget(
               postContent: widget.activity,
+              repostContent: widget.reposterActivity,
               markdownWidget: buildMarkdownBodyWidget(targetActivity: widget.activity),
               currentProfile: widget.currentProfile,
               publisherProfile: widget.targetProfile,

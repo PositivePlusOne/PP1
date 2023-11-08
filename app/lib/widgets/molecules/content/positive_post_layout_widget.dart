@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -38,6 +39,7 @@ import '../../atoms/indicators/positive_loading_indicator.dart';
 class PositivePostLayoutWidget extends HookConsumerWidget {
   const PositivePostLayoutWidget({
     required this.postContent,
+    required this.repostContent,
     required this.currentProfile,
     required this.publisherProfile,
     required this.publisherRelationship,
@@ -64,6 +66,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   });
 
   final Activity? postContent;
+  final Activity? repostContent;
+
   final Profile? currentProfile;
   final Profile? publisherProfile;
   final Relationship? publisherRelationship;
@@ -496,7 +500,12 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final String currentProfileId = ref.read(profileControllerProvider.notifier.select((value) => value.currentProfileId)) ?? '';
     final String publisherId = postContent?.publisherInformation?.publisherId ?? '';
 
-    final ActivitySecurityConfigurationMode shareMode = postContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    // If the post contains a repost, then we can check the repost's share mode over the original post
+    ActivitySecurityConfigurationMode shareMode = postContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    if (repostContent != null) {
+      shareMode = repostContent?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
+    }
+
     final bool canActShare = shareMode.canActOnActivity(
       activity: postContent,
       currentProfile: currentProfile,
