@@ -49,15 +49,13 @@ class PromotionsController extends _$PromotionsController {
       return;
     }
 
-    logger.i('Loaded ${promotionIds.length} initial promotions');
-    final List<String> newPromotionIds = [...state.promotionIds];
-    for (final String promotionId in promotionIds) {
-      if (!newPromotionIds.contains(promotionId)) {
-        newPromotionIds.add(promotionId);
-      }
-    }
-
-    state = state.copyWith(promotionIds: newPromotionIds);
+    logger.i('Loaded ${promotionIds.length} initial or owned promotions');
+    state = state.copyWith(
+      promotionIds: {
+        ...state.promotionIds,
+        ...promotionIds,
+      },
+    );
   }
 
   Promotion? getPromotionFromIndex(int index) {
@@ -69,7 +67,7 @@ class PromotionsController extends _$PromotionsController {
 
     // Work out the real index from the modulo
     final int realIndex = index % state.promotionIds.length;
-    final String promotionId = state.promotionIds[realIndex];
+    final String promotionId = state.promotionIds.elementAt(realIndex);
 
     final Promotion? promotion = cacheController.get(promotionId);
     if (promotion == null) {
@@ -103,7 +101,10 @@ class PromotionsController extends _$PromotionsController {
         state = state.copyWith(
           cursor: cursor,
           isExhausted: promotions.length < limit || cursor.isEmpty,
-          promotionIds: [...state.promotionIds, ...promotionIds],
+          promotionIds: {
+            ...state.promotionIds,
+            ...promotionIds,
+          },
         );
 
         logger.i('Loaded ${promotionIds.length} promotions');
