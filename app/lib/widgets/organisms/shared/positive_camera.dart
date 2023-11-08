@@ -63,7 +63,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     this.takePictureCaption,
     this.useFaceDetection = false,
     this.isBusy = false,
-    this.leftActionWidget,
+    this.textPostActionWidget,
     this.onTapClose,
     this.onTapForceClose,
     this.onTapAddImage,
@@ -104,7 +104,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   final List<Widget>? topChildren;
   final List<Widget>? topAdditionalActions;
   final List<Widget> overlayWidgets;
-  final Widget? leftActionWidget;
+  final Widget? textPostActionWidget;
   final String? takePictureCaption;
 
   final void Function(BuildContext context)? onTapClose;
@@ -201,10 +201,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   int clipCurrentTime = 0;
   Timer? clipTimer;
 
-  bool get hasCameraPermission =>
-      (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
-  bool get hasLibraryPermission =>
-      (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
+  bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
+  bool get hasLibraryPermission => (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
 
@@ -758,11 +756,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               )
             : const SizedBox.shrink(),
         actions: <Widget>[
-          if (viewMode != PositiveCameraViewMode.camera && widget.leftActionWidget != null) ...<Widget>[
+          if (viewMode != PositiveCameraViewMode.camera && widget.textPostActionWidget != null) ...<Widget>[
             Container(
               padding: const EdgeInsets.only(right: kPaddingMedium),
               alignment: Alignment.centerRight,
-              child: widget.leftActionWidget!,
+              child: widget.textPostActionWidget!,
             ),
           ],
           if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) ...<Widget>[
@@ -873,7 +871,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           onTap: onFlashToggleRequest,
         ),
       const SizedBox(width: kPaddingSmall),
-      if (!clipRecordingState.isFinishedRecording) widget.leftActionWidget ?? const SizedBox(width: kIconLarge),
+      if (!clipRecordingState.isFinishedRecording) widget.textPostActionWidget ?? const SizedBox(width: kIconLarge),
     ];
   }
 
@@ -987,7 +985,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
             padding: const EdgeInsets.only(
@@ -1002,19 +1000,22 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           ),
           const SizedBox(height: kPaddingMedium),
           if (clipRecordingState.isRecordingOrPaused)
-            Padding(
-              padding: const EdgeInsets.only(right: kPaddingMedium),
-              child: SizedBox(
-                width: kPaddingMedium,
-                height: kPaddingMedium,
-                child: Align(
-                  child: AnimatedContainer(
-                    duration: kAnimationDurationFast,
-                    width: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
-                    height: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
-                    decoration: BoxDecoration(
-                      color: colours.red,
-                      borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: kPaddingMedium),
+                child: SizedBox(
+                  width: kPaddingMedium,
+                  height: kPaddingMedium,
+                  child: Align(
+                    child: AnimatedContainer(
+                      duration: kAnimationDurationFast,
+                      width: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
+                      height: clipRecordingState.isRecording ? kPaddingMedium : kPaddingNone,
+                      decoration: BoxDecoration(
+                        color: colours.red,
+                        borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
+                      ),
                     ),
                   ),
                 ),
@@ -1079,7 +1080,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              if (widget.onTapAddImage != null && clipRecordingState.isInactive) CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap),
+              (widget.onTapAddImage != null && clipRecordingState.isInactive)
+                  ? CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap)
+                  : Container(
+                      width: kIconLarge,
+                      height: kIconLarge,
+                      color: Colors.red,
+                    ),
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
@@ -1115,6 +1122,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                   active: canTakePictureOrVideo,
                   onTap: (context) => onChangeCameraRequest(context, state),
                 ),
+              if (clipRecordingState.isFinishedRecording) const SizedBox(width: kIconLarge),
             ],
           ),
         ],

@@ -150,7 +150,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                         );
                       },
                       //? Widget found near the bottom of the screen to the left of the take photo button
-                      leftActionWidget: state.currentPostType == PostType.image
+                      textPostActionWidget: (state.currentPostType == PostType.image || state.currentPostType == PostType.clip)
                           ? CameraFloatingButton.postWithoutImage(
                               active: true,
                               onTap: (context) => viewModel.showCreateTextPost(),
