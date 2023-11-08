@@ -309,7 +309,7 @@ final streamChatClientProvider = Provider<StreamChatClient>.internal(
 );
 
 typedef StreamChatClientRef = ProviderRef<StreamChatClient>;
-String _$algoliaHash() => r'20e698f5aa52b6ad609689d3020ebf09d4da573f';
+String _$algoliaHash() => r'e2c52e9d82bc99f8bce566de2e2b16b7608e1130';
 
 /// See also [algolia].
 @ProviderFor(algolia)

@@ -23,7 +23,7 @@ part 'promotions_controller.g.dart';
 class PromotionsControllerState with _$PromotionsControllerState {
   const factory PromotionsControllerState({
     @Default('') String cursor,
-    @Default([]) List<String> promotionIds,
+    @Default({}) Set<String> promotionIds,
     @Default(false) bool isExhausted,
   }) = _PromotionsControllerState;
   factory PromotionsControllerState.initialState() => const PromotionsControllerState();
@@ -50,7 +50,14 @@ class PromotionsController extends _$PromotionsController {
     }
 
     logger.i('Loaded ${promotionIds.length} initial promotions');
-    state = state.copyWith(promotionIds: [...state.promotionIds, ...promotionIds]);
+    final List<String> newPromotionIds = [...state.promotionIds];
+    for (final String promotionId in promotionIds) {
+      if (!newPromotionIds.contains(promotionId)) {
+        newPromotionIds.add(promotionId);
+      }
+    }
+
+    state = state.copyWith(promotionIds: newPromotionIds);
   }
 
   Promotion? getPromotionFromIndex(int index) {

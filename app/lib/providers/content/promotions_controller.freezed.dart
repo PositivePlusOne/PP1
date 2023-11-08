@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$PromotionsControllerState {
   String get cursor => throw _privateConstructorUsedError;
-  List<String> get promotionIds => throw _privateConstructorUsedError;
+  Set<String> get promotionIds => throw _privateConstructorUsedError;
   bool get isExhausted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -31,7 +31,7 @@ abstract class $PromotionsControllerStateCopyWith<$Res> {
           $Res Function(PromotionsControllerState) then) =
       _$PromotionsControllerStateCopyWithImpl<$Res, PromotionsControllerState>;
   @useResult
-  $Res call({String cursor, List<String> promotionIds, bool isExhausted});
+  $Res call({String cursor, Set<String> promotionIds, bool isExhausted});
 }
 
 /// @nodoc
@@ -60,7 +60,7 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
       promotionIds: null == promotionIds
           ? _value.promotionIds
           : promotionIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       isExhausted: null == isExhausted
           ? _value.isExhausted
           : isExhausted // ignore: cast_nullable_to_non_nullable
@@ -78,7 +78,7 @@ abstract class _$$PromotionsControllerStateImplCopyWith<$Res>
       __$$PromotionsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String cursor, List<String> promotionIds, bool isExhausted});
+  $Res call({String cursor, Set<String> promotionIds, bool isExhausted});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
       promotionIds: null == promotionIds
           ? _value._promotionIds
           : promotionIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as Set<String>,
       isExhausted: null == isExhausted
           ? _value.isExhausted
           : isExhausted // ignore: cast_nullable_to_non_nullable
@@ -120,20 +120,20 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
 class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   const _$PromotionsControllerStateImpl(
       {this.cursor = '',
-      final List<String> promotionIds = const [],
+      final Set<String> promotionIds = const {},
       this.isExhausted = false})
       : _promotionIds = promotionIds;
 
   @override
   @JsonKey()
   final String cursor;
-  final List<String> _promotionIds;
+  final Set<String> _promotionIds;
   @override
   @JsonKey()
-  List<String> get promotionIds {
-    if (_promotionIds is EqualUnmodifiableListView) return _promotionIds;
+  Set<String> get promotionIds {
+    if (_promotionIds is EqualUnmodifiableSetView) return _promotionIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_promotionIds);
+    return EqualUnmodifiableSetView(_promotionIds);
   }
 
   @override
@@ -172,13 +172,13 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 abstract class _PromotionsControllerState implements PromotionsControllerState {
   const factory _PromotionsControllerState(
       {final String cursor,
-      final List<String> promotionIds,
+      final Set<String> promotionIds,
       final bool isExhausted}) = _$PromotionsControllerStateImpl;
 
   @override
   String get cursor;
   @override
-  List<String> get promotionIds;
+  Set<String> get promotionIds;
   @override
   bool get isExhausted;
   @override
