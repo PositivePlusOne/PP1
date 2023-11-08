@@ -65,7 +65,7 @@ export namespace SystemEndpoints {
       cursor: request.data.cursor || "",
     } as Pagination;
 
-    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors, promotions, ownedPromotions] = await Promise.all([
+    const [genders, interests, hivStatuses, popularTags, topicTags, recentTags, managingRelationships, companySectors, promotions] = await Promise.all([
       LocalizationsService.getDefaultGenders(locale),
       LocalizationsService.getDefaultInterests(locale),
       LocalizationsService.getDefaultHivStatuses(locale),
@@ -78,7 +78,6 @@ export namespace SystemEndpoints {
       uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({ data: [], pagination: {} }),
       LocalizationsService.getDefaultCompanySectors(locale),
       PromotionsService.getActivePromotionWindow("", 30),
-      PromotionsService.getOwnedPromotions(uid),
     ]);
 
     const joinRecords = [] as string[];
@@ -125,8 +124,6 @@ export namespace SystemEndpoints {
       }
     }
 
-    functions.logger.info("Prefetching managed IDs", { supportedProfileIds });
-
     const managingProfiles = await Promise.all(managingProfileFetchPromises);
     for (const managingProfile of managingProfiles) {
       if (!managingProfile) {
@@ -136,8 +133,7 @@ export namespace SystemEndpoints {
       supportedProfiles.push(managingProfile as ProfileJSON);
     }
 
-    functions.logger.info("Fetched managing profiles", { supportedProfiles });
-
+    const ownedPromotions = await PromotionsService.getOwnedPromotionsForManagedAccounts(supportedProfileIds);
     return buildEndpointResponse(context, {
       sender: uid,
       data: [profile, ...supportedProfiles, ...promotions, ...ownedPromotions],
