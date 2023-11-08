@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'dart:async';
+
+import 'package:app/extensions/reaction_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -20,6 +23,7 @@ class PositiveComment extends ConsumerWidget {
   const PositiveComment({
     required this.currentProfile,
     required this.comment,
+    required this.onOptionSelected,
     this.isFirst = false,
     super.key,
   });
@@ -27,6 +31,7 @@ class PositiveComment extends ConsumerWidget {
   final Profile? currentProfile;
   final Reaction comment;
   final bool isFirst;
+  final FutureOr<void> Function(Reaction comment, Profile? publisherProfile) onOptionSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,35 +47,32 @@ class PositiveComment extends ConsumerWidget {
     final String expectedRelationshipId = [currentProfileKey, publisherKey].asGUID;
     final Relationship? relationship = cacheController.get(expectedRelationshipId);
 
-    return IgnorePointer(
-      // ignoring: !widget.isEnabled,
-      child: Container(
-        padding: EdgeInsets.only(
-          top: isFirst ? kPaddingNone : kPaddingMedium,
-          bottom: kPaddingMedium,
-        ),
-        decoration: BoxDecoration(color: colours.white),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ActivityPostHeadingWidget(
-              flMetaData: comment.flMeta,
-              currentProfile: currentProfile,
-              publisher: publisherProfile,
-              publisherRelationship: relationship,
-              onOptions: () {},
+    return Container(
+      padding: EdgeInsets.only(
+        top: isFirst ? kPaddingNone : kPaddingMedium,
+        bottom: kPaddingMedium,
+      ),
+      decoration: BoxDecoration(color: colours.white),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ActivityPostHeadingWidget(
+            flMetaData: comment.flMeta,
+            currentProfile: currentProfile,
+            publisher: publisherProfile,
+            publisherRelationship: relationship,
+            onOptions: () => onOptionSelected(comment, publisherProfile),
+          ),
+          const SizedBox(height: kPaddingSmall),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+            child: Text(
+              comment.text,
+              textAlign: TextAlign.left,
+              style: typography.styleBody,
             ),
-            const SizedBox(height: kPaddingSmall),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              child: Text(
-                comment.text,
-                textAlign: TextAlign.left,
-                style: typography.styleBody,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

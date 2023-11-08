@@ -135,6 +135,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
     final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final String targetDisplayNameHandle = targetProfile.displayName.asHandle;
 
@@ -175,14 +176,18 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
           } else {
             await relationshipController.unblockRelationship(targetProfileId);
             await appRouter.pop();
-            ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} $targetDisplayNameHandle'));
+            ScaffoldMessenger.of(context).showSnackBar(
+              PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? localisations.shared_profile_modal_action_have_blocked : localisations.shared_profile_modal_action_have_unblocked} $targetDisplayNameHandle'),
+            );
             await activitiesController.resetProfileFeeds(profileId: currentProfileId);
           }
           break;
         case ProfileModalDialogOptionType.mute:
           relationshipStates.contains(RelationshipState.sourceMuted) ? await relationshipController.unmuteRelationship(targetProfileId) : await relationshipController.muteRelationship(targetProfileId);
           await appRouter.pop();
-          ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? 'You have unmuted' : 'You have muted'} $targetDisplayNameHandle'));
+          ScaffoldMessenger.of(context).showSnackBar(
+            PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceMuted) ? localisations.shared_profile_modal_action_have_unmuted : localisations.shared_profile_modal_action_have_muted} $targetDisplayNameHandle'),
+          );
           break;
         case ProfileModalDialogOptionType.hidePosts:
           if (!relationshipStates.contains(RelationshipState.sourceHidden)) {

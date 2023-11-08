@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/extensions/reaction_extensions.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -217,6 +219,13 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
                 currentProfile: currentProfile,
                 comment: reaction,
                 isFirst: index == 0,
+                onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(
+                  context: context,
+                  targetProfile: publisherProfile,
+                  currentProfile: currentProfile,
+                  reactionID: comment.flMeta?.id ?? "",
+                  reactionFeedState: reactionsState,
+                ),
               ),
               firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
