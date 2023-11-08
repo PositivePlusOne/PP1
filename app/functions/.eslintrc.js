@@ -36,5 +36,6 @@ module.exports = {
     "spaced-comment":"off",
     "camelcase":"off",
     "space-before-function-paren":"off",
+    "@typescript-eslint/no-unused-vars": "off",
   },
 };
