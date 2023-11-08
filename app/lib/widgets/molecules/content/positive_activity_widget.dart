@@ -382,11 +382,11 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       int removeFromCharacter = 0;
       //? Find the first few instances of carriage returns, new lines, or tabs, and record the position of the last one
       for (var i = 0; i < kMaximumNumberOfReturnsInFeedItem; i++) {
-        lastIndex = parsedMarkdown.indexOf(RegExp('[\r\n\t]'), lastIndex + 1);
+        lastIndex = parsedMarkdown.indexOf(RegExp('[\r\n\t]'), removeFromCharacter);
         if (lastIndex < 0) {
           break;
         } else {
-          removeFromCharacter = lastIndex;
+          removeFromCharacter = (lastIndex + 1).clamp(0, parsedMarkdown.length - 1);
         }
       }
       //?  replace all carriage returns after the the removeFromCharacter point

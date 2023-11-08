@@ -8,5 +8,5 @@ FilteringTextInputFormatter removeDuplicateWhitespaceFormatter() {
 
 //? Universal input formatter to remove numbers
 FilteringTextInputFormatter removeNumbersFormatter() {
-  return FilteringTextInputFormatter.deny(RegExp(r'[1-9]'));
+  return FilteringTextInputFormatter.deny(RegExp(r'[0-9]'));
 }
