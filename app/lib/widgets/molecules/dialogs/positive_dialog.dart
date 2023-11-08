@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -284,38 +285,42 @@ class PositiveOverlayDialogContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(kBorderRadius),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: kSigmaBlur, sigmaY: kSigmaBlur),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(PositiveDialog.kPadding),
-                decoration: BoxDecoration(
-                  color: colors.colorGray3.withOpacity(backgroundOpacity),
-                  borderRadius: BorderRadius.circular(kBorderRadius),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: typography.styleTitle.copyWith(color: colors.white),
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {},
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(PositiveDialog.kPadding),
+                  decoration: BoxDecoration(
+                    color: colors.colorGray3.withOpacity(backgroundOpacity),
+                    borderRadius: BorderRadius.circular(kBorderRadius),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: typography.styleTitle.copyWith(color: colors.white),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: kPaddingMedium),
-                        PositiveButton.appBarIcon(
-                          colors: colors,
-                          icon: UniconsLine.multiply,
-                          primaryColor: title.isNotEmpty ? colors.white : colors.black,
-                          size: PositiveButtonSize.small,
-                          style: PositiveButtonStyle.text,
-                          isDisabled: isDisabled,
-                          onTapped: () => Navigator.of(context).pop(),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: kPaddingMedium),
-                    child,
-                  ],
+                          const SizedBox(width: kPaddingMedium),
+                          PositiveButton.appBarIcon(
+                            colors: colors,
+                            icon: UniconsLine.multiply,
+                            primaryColor: title.isNotEmpty ? colors.white : colors.black,
+                            size: PositiveButtonSize.small,
+                            style: PositiveButtonStyle.text,
+                            isDisabled: isDisabled,
+                            onTapped: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: kPaddingMedium),
+                      child,
+                    ],
+                  ),
                 ),
               ),
             ),
