@@ -287,22 +287,43 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String promotedActivityId = promotedActivityRecord?.activityId ?? '';
     final Activity? promotedActivity = cacheController.get(promotedActivityId);
 
-    if (promotedActivity == null || promotion == null) {
-      return buildVisualSeparator(context);
-    }
-
     // Check promotion is valid for rare feed states
     final bool isClipFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'clip';
     final bool isPostFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'post';
-    final ActivityGeneralConfigurationType? type = promotedActivity.generalConfiguration?.type;
+    final ActivityGeneralConfigurationType? type = activity?.generalConfiguration?.type;
 
     // Check if is a clip and we're not on the clip feed
     if (isClipFeed && type != const ActivityGeneralConfigurationType.clip()) {
-      return buildVisualSeparator(context);
+      return const SizedBox.shrink();
     }
 
     // Check if is a post and we're not on the post feed
     if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
+      return const SizedBox.shrink();
+    }
+
+    // Check block states
+    final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+    final bool isBlocked = states.contains(RelationshipState.targetBlocked);
+    final bool isHidden = states.contains(RelationshipState.sourceHidden);
+    if (isBlocked || isHidden) {
+      return const SizedBox.shrink();
+    }
+
+    final viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.private();
+    final bool canAct = viewMode.canActOnActivity(
+      activity: activity,
+      currentProfile: currentProfile,
+      publisherRelationship: relationship,
+    );
+
+    // If we can't act on the activity, then we can't display the separator or a promoted activity
+    if (!canAct) {
+      return const SizedBox.shrink();
+    }
+
+    // We have not been able to get a promoted activity, so just use a normal separator
+    if (promotedActivity == null || promotion == null) {
       return buildVisualSeparator(context);
     }
 
@@ -333,6 +354,21 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
 
     if (activityId.isEmpty || publisherId.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // Check promotion is valid for rare feed states
+    final bool isClipFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'clip';
+    final bool isPostFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'post';
+    final ActivityGeneralConfigurationType? type = item.generalConfiguration?.type;
+
+    // Check if is a clip and we're not on the clip feed
+    if (isClipFeed && type != const ActivityGeneralConfigurationType.clip()) {
+      return const SizedBox.shrink();
+    }
+
+    // Check if is a post and we're not on the post feed
+    if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
       return const SizedBox.shrink();
     }
 

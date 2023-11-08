@@ -702,6 +702,11 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final Set<RelationshipState> relationshipStates = publisherRelationship.relationshipStatesForEntity(currentProfileId);
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
+    final bool isBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+
+    if (isBlocked) {
+      return false;
+    }
 
     if (this == const ActivitySecurityConfigurationMode.connections()) {
       return isConnected;
