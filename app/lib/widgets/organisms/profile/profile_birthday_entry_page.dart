@@ -93,7 +93,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
         PositiveBasicSliverList(
           children: <Widget>[
             Row(
-              children: [
+              children: <Widget>[
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.black,
@@ -135,7 +135,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: kPaddingLarge),
+            const SizedBox(height: kPaddingMedium),
             Column(
               children: [
                 PositiveTapBehaviour(

@@ -1,316 +1,89 @@
 // Dart imports:
-import 'dart:math';
+import 'dart:async';
 
 // Flutter imports:
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-/// This allows a value of type T or T?
-/// to be treated as a value of type T?.
-///
-/// We use this so that APIs that have become
-/// non-nullable can still be used with `!` and `?`
-/// to support older versions of the API as well.
-T? _ambiguate<T>(T? value) => value;
+// Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/resources/resources.dart';
 
-enum WarpAnimationState {
-  stopped,
-  playing,
-}
-
-typedef StarColorGetter = Color Function(int index);
-
-class WarpIndicator extends StatefulWidget {
-  final Widget child;
-  final int starsCount;
-  final AsyncCallback onRefresh;
-  final IndicatorController? controller;
-  final Color skyColor;
-  final StarColorGetter starColorGetter;
-  final Key? indicatorKey;
-
-  const WarpIndicator({
-    Key? key,
-    this.indicatorKey,
-    this.controller,
-    required this.onRefresh,
+class PositiveRefreshIndicator extends StatefulHookConsumerWidget {
+  const PositiveRefreshIndicator({
+    required this.controller,
     required this.child,
-    this.starsCount = 30,
-    this.skyColor = Colors.black,
-    this.starColorGetter = _defaultStarColorGetter,
-  }) : super(key: key);
+    required this.onRefresh,
+    super.key,
+  });
 
-  static Color _defaultStarColorGetter(int index) => HSLColor.fromAHSL(1, Random().nextDouble() * 360, 1, 0.98).toColor();
+  final Widget child;
+  final Future<void> Function() onRefresh;
+  final IndicatorController controller;
 
   @override
-  _WarpIndicatorState createState() => _WarpIndicatorState();
+  ConsumerState<PositiveRefreshIndicator> createState() => _PositiveRefreshIndicatorState();
 }
 
-class _WarpIndicatorState extends State<WarpIndicator> with SingleTickerProviderStateMixin {
-  static const _indicatorSize = 150.0;
-  final _random = Random();
-  WarpAnimationState _state = WarpAnimationState.stopped;
-
-  List<Star> stars = [];
-  final _offsetTween = Tween<Offset>(
-    begin: Offset.zero,
-    end: Offset.zero,
-  );
-  final _angleTween = Tween<double>(
-    begin: 0,
-    end: 0,
-  );
-
-  late AnimationController shakeController;
-
-  static final _scaleTween = Tween(begin: 1.0, end: 0.75);
-  static final _radiusTween = Tween(begin: 0.0, end: 16.0);
-
-  @override
-  void initState() {
-    shakeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    super.initState();
-  }
-
-  Offset _getRandomOffset() => Offset(
-        _random.nextInt(10) - 5,
-        _random.nextInt(10) - 5,
-      );
-
-  double _getRandomAngle() {
-    final degrees = ((_random.nextDouble() * 2) - 1);
-    final radians = degrees == 0 ? 0.0 : degrees / 360.0;
-    return radians;
-  }
-
-  void _shiftAndGenerateRandomShakeTransform() {
-    _offsetTween.begin = _offsetTween.end;
-    _offsetTween.end = _getRandomOffset();
-
-    _angleTween.begin = _angleTween.end;
-    _angleTween.end = _getRandomAngle();
-  }
-
-  void _startShakeAnimation() {
-    _shiftAndGenerateRandomShakeTransform();
-    shakeController.animateTo(1.0);
-    _state = WarpAnimationState.playing;
-    stars = List.generate(
-      widget.starsCount,
-      (index) => Star(initialColor: widget.starColorGetter(index)),
-    );
-  }
-
-  void _resetShakeAnimation() {
-    _shiftAndGenerateRandomShakeTransform();
-    shakeController.value = 0.0;
-    shakeController.animateTo(1.0);
-  }
-
-  void _stopShakeAnimation() {
-    _offsetTween.end = Offset.zero;
-    _angleTween.end = 0.0;
-    _state = WarpAnimationState.stopped;
-    _shiftAndGenerateRandomShakeTransform();
-    shakeController.stop();
-    shakeController.value = 0.0;
-    stars = [];
-  }
+class _PositiveRefreshIndicatorState extends ConsumerState<PositiveRefreshIndicator> {
+  ScrollDirection prevScrollDirection = ScrollDirection.idle;
 
   @override
   Widget build(BuildContext context) {
-    return CustomRefreshIndicator(
-      key: widget.indicatorKey,
-      controller: widget.controller,
-      offsetToArmed: _indicatorSize,
-      leadingScrollIndicatorVisible: false,
-      trailingScrollIndicatorVisible: false,
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    return CustomMaterialIndicator(
       onRefresh: widget.onRefresh,
-      autoRebuild: false,
-      onStateChanged: (change) {
-        if (change.didChange(to: IndicatorState.loading)) {
-          _startShakeAnimation();
-        } else if (change.didChange(to: IndicatorState.idle)) {
-          _stopShakeAnimation();
-        }
-      },
-      child: widget.child,
-      builder: (
-        BuildContext context,
-        Widget child,
-        IndicatorController controller,
-      ) {
-        final animation = Listenable.merge([controller, shakeController]);
-        return Stack(
-          children: <Widget>[
-            AnimatedBuilder(
-                animation: shakeController,
-                builder: (_, __) {
-                  return LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints) {
-                      return CustomPaint(
-                        painter: Sky(
-                          stars: stars,
-                          color: widget.skyColor,
-                        ),
-                        child: const SizedBox.expand(),
-                      );
-                    },
-                  );
-                }),
-            AnimatedBuilder(
-              animation: animation,
-              builder: (context, _) {
-                return Transform.scale(
-                  scale: _scaleTween.transform(controller.value),
-                  child: Builder(builder: (context) {
-                    if (shakeController.value == 1.0 && _state == WarpAnimationState.playing) {
-                      _ambiguate(SchedulerBinding.instance)!.addPostFrameCallback((_) => _resetShakeAnimation());
-                    }
-                    return Transform.rotate(
-                      angle: _angleTween.transform(shakeController.value),
-                      child: Transform.translate(
-                        offset: _offsetTween.transform(shakeController.value),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                            _radiusTween.transform(controller.value),
-                          ),
-                          child: child,
-                        ),
-                      ),
-                    );
-                  }),
-                );
-              },
-            ),
-          ],
+      durations: const RefreshIndicatorDurations(
+        completeDuration: Duration(seconds: 1),
+      ),
+      indicatorBuilder: (BuildContext context, IndicatorController controller) {
+        final Container svg = Container(
+          height: 24,
+          width: 24,
+          decoration: BoxDecoration(
+            color: colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: SvgPicture.asset(
+            SvgImages.logosCircular,
+            height: 24,
+            width: 24,
+            color: colors.black,
+          ),
+        );
+
+        return AnimatedContainer(
+          duration: kAnimationDurationEntry,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 150),
+            child: controller.state == IndicatorState.finalizing || controller.state == IndicatorState.complete
+                ? svg
+                : SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(colors.black),
+                    ),
+                  ),
+          ),
         );
       },
+      child: widget.child,
     );
   }
-
-  @override
-  void dispose() {
-    shakeController.dispose();
-    super.dispose();
-  }
-}
-
-class Star {
-  Offset? position;
-  Color? color;
-  double value;
-  late Offset speed;
-  final Color initialColor;
-  late double angle;
-
-  Star({
-    required this.initialColor,
-  }) : value = 0.0;
-
-  static const _minOpacity = 0.1;
-  static const _maxOpacity = 1.0;
-
-  void _init(Rect rect) {
-    position = rect.center;
-    value = 0.0;
-    final random = Random();
-    angle = random.nextDouble() * pi * 3;
-    speed = Offset(cos(angle), sin(angle));
-    const minSpeedScale = 20;
-    const maxSpeedScale = 35;
-    final speedScale = minSpeedScale + random.nextInt(maxSpeedScale - minSpeedScale).toDouble();
-    speed = speed.scale(
-      speedScale,
-      speedScale,
-    );
-    final t = speedScale / maxSpeedScale;
-    final opacity = _minOpacity + (_maxOpacity - _minOpacity) * t;
-    color = initialColor.withOpacity(opacity);
-  }
-
-  draw(Canvas canvas, Rect rect) {
-    if (position == null) {
-      _init(rect);
-    }
-
-    value++;
-    final startPosition = Offset(position!.dx, position!.dy);
-    final endPosition = position! + (speed * (value * 0.3));
-    position = speed + position!;
-    final paint = Paint()..color = color!;
-
-    final startShiftAngle = angle + (pi / 2);
-    final startShift = Offset(cos(startShiftAngle), sin(startShiftAngle));
-    final shiftedStartPosition = startPosition + (startShift * (0.75 + value * 0.01));
-
-    final endShiftAngle = angle + (pi / 2);
-    final endShift = Offset(cos(endShiftAngle), sin(endShiftAngle));
-    final shiftedEndPosition = endPosition + (endShift * (1.5 + value * 0.01));
-
-    final path = Path()
-      ..moveTo(startPosition.dx, startPosition.dy)
-      ..lineTo(startPosition.dx, startPosition.dy)
-      ..lineTo(shiftedStartPosition.dx, shiftedStartPosition.dy)
-      ..lineTo(shiftedEndPosition.dx, shiftedEndPosition.dy)
-      ..lineTo(endPosition.dx, endPosition.dy);
-
-    if (!rect.contains(startPosition)) {
-      _init(rect);
-    }
-
-    canvas.drawPath(path, paint);
-  }
-}
-
-class Sky extends CustomPainter {
-  final List<Star> stars;
-  final Color color;
-
-  Sky({
-    required this.stars,
-    required this.color,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var rect = Offset.zero & size;
-
-    canvas.drawRect(rect, Paint()..color = color);
-
-    for (final star in stars) {
-      star.draw(canvas, rect);
-    }
-  }
-
-  @override
-  SemanticsBuilderCallback get semanticsBuilder {
-    return (Size size) {
-      var rect = Offset.zero & size;
-
-      return [
-        CustomPainterSemantics(
-          rect: rect,
-          properties: const SemanticsProperties(
-            label: 'Lightspeed animation.',
-            textDirection: TextDirection.ltr,
-          ),
-        ),
-      ];
-    };
-  }
-
-  @override
-  bool shouldRepaint(Sky oldDelegate) => true;
-
-  @override
-  bool shouldRebuildSemantics(Sky oldDelegate) => false;
 }

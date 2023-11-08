@@ -10,8 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/brand_helpers.dart';
@@ -52,20 +50,6 @@ class ProfileReferenceImageSuccessPage extends ConsumerWidget {
             Text(
               localizations.page_profile_image_completion_body,
               style: typography.styleBody.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingMedium),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  label: localizations.shared_form_information_display,
-                  size: PositiveButtonSize.small,
-                  style: PositiveButtonStyle.text,
-                  onTapped: () => viewModel.onHelpPressed(context),
-                ),
-              ),
             ),
             const SizedBox(height: kPaddingMedium),
           ],

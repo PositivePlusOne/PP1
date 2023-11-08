@@ -128,6 +128,12 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
     final bool isPrerecordingVideo = isHandlingVideo && currentPositiveCameraState?.clipRecordingState == ClipRecordingState.preRecording;
 
+    // Quickly back out if we're editing any post
+    if (state.isEditingPost && state.currentCreatePostPage.isCreationDialog) {
+      router.removeLast();
+      return;
+    }
+
     // Quickly back out if in the countdown
     if (isPrerecordingVideo) {
       await currentPositiveCameraState?.stopClipRecording();

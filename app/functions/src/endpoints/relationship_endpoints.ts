@@ -17,9 +17,11 @@ import { FeedRequestJSON } from "../dto/feed_dtos";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { RelationshipJSON } from "../dto/relationships";
 import { ProfileStatisticsService } from "../services/profile_statistics_service";
+import { SystemService } from "../services/system_service";
 
 export namespace RelationshipEndpoints {
   export const getRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const members = request.data.members || [];
 
@@ -45,6 +47,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const blockRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Blocking user", { uid, targetUid });
@@ -86,6 +89,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unblockRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unblocking user", { uid, targetUid });
@@ -127,6 +131,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const muteRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Muting user", { uid, targetUid });
@@ -159,6 +164,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unmuteRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unmuting user", { uid, targetUid });
@@ -185,6 +191,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const connectRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Connecting user", { uid, targetUid });
@@ -236,6 +243,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const disconnectRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Disconnecting user", { uid, targetUid });
@@ -279,6 +287,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const followRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Following relationship", { uid, targetUid });
@@ -329,6 +338,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unfollowRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unfollowing relationship", { uid, targetUid });
@@ -373,6 +383,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const hideRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Hiding relationship", { uid, targetUid });
@@ -399,6 +410,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const unhideRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const targetUid = request.data.target || "";
     functions.logger.info("Unhiding relationship", { uid, targetUid });
@@ -425,6 +437,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listConnectedRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
@@ -454,6 +467,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listFollowRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
@@ -483,6 +497,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listFollowingRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
@@ -512,6 +527,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listBlockedRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";
@@ -541,6 +557,7 @@ export namespace RelationshipEndpoints {
   });
 
   export const listManagedRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const cursor = request.cursor || "";

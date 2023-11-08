@@ -10,6 +10,7 @@ import { ProfileJSON } from "../dto/profile";
 import { DataService } from "../services/data_service";
 import { EmailHelpers } from "../helpers/email_helpers";
 import { StringHelpers } from "../helpers/string_helpers";
+import { SystemService } from "../services/system_service";
 
 export namespace ProfileEndpoints {
 
@@ -58,6 +59,7 @@ export namespace ProfileEndpoints {
   }
 
   export const getProfiles = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info("Getting user profiles", { structuredData: true });
     const uid = request.sender || context.auth?.uid || "";
 
@@ -92,6 +94,7 @@ export namespace ProfileEndpoints {
   });
 
   export const getProfile = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info("Getting user profile", { structuredData: true });
 
     const uid = request.sender || context.auth?.uid || "";
@@ -112,6 +115,7 @@ export namespace ProfileEndpoints {
   });
 
   export const toggleProfileDeletion = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Deleting user profile", { structuredData: true });
 
@@ -155,6 +159,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateFcmToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const fcmToken = request.data.fcmToken || "";
 
@@ -180,6 +185,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateEmailAddress = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const emailAddress = request.data.emailAddress || "";
 
@@ -215,6 +221,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updatePhoneNumber = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const phoneNumber = request.data.phoneNumber || "";
@@ -243,6 +250,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const name = request.data.name || "";
@@ -253,6 +261,11 @@ export namespace ProfileEndpoints {
     });
 
     if (!(typeof name === "string") || name.length < 1) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
+    }
+
+    const isValid = name.length > 3 && name.length < 30 && StringHelpers.isAlphanumericWithSpecialChars(name);
+    if (!isValid) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid name");
     }
 
@@ -279,6 +292,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateDisplayName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const displayName = request.data.displayName || "";
     functions.logger.info("Updating profile display name", {
@@ -292,6 +306,11 @@ export namespace ProfileEndpoints {
 
     const isFirebaseUIDFormat = StringHelpers.isFirebaseUID(displayName);
     if (isFirebaseUIDFormat) {
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
+    }
+
+    const isValid = displayName.length > 3 && displayName.length < 15 && StringHelpers.isAlphanumericWithSpecialChars(displayName);
+    if (!isValid) {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
     }
 
@@ -315,6 +334,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateBirthday = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const birthday = request.data.birthday || "";
@@ -328,8 +348,8 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid birthday");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateBirthday(uid, birthday);
+    let newProfile = await ProfileService.updateBirthday(uid, birthday);
+    newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
 
     functions.logger.info("Profile birthday updated", {
       uid,
@@ -346,6 +366,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateInterests = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const interests = request.data.interests || [];
@@ -376,6 +397,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateGenders = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const genders = request.data.genders || [];
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -406,6 +428,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateCompanySectors = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     //TODO! @Ryan - need to check your new auth for users who are allowed to edit company data
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const companySectors = request.data.companySectors || [];
@@ -437,6 +460,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updatePlace = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const description = request.data?.description || "";
@@ -469,6 +493,7 @@ export namespace ProfileEndpoints {
   });
   
   export const updateHivStatus = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const status = request.data.status;
     const visibilityFlags = request.data.visibilityFlags || [];
@@ -499,6 +524,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateBiography = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const biography = request.data.biography || "";
 
@@ -520,6 +546,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateAccentColor = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const accentColor = request.data.accentColor || "";
 
@@ -581,6 +608,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateFeatureFlags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const featureFlags = request.data.featureFlags || [];
     functions.logger.info("Updating profile feature flags", {
@@ -608,6 +636,7 @@ export namespace ProfileEndpoints {
   });
 
   export const updateVisibilityFlags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const visibilityFlags = request.data.visibilityFlags || [];
     functions.logger.info("Updating profile visibility flags", {
@@ -635,6 +664,7 @@ export namespace ProfileEndpoints {
   });
 
   export const addMedia = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const media = (request.data.media || []) as MediaJSON[];
 
@@ -659,6 +689,7 @@ export namespace ProfileEndpoints {
   });
 
   export const removeMedia = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
 
     const mediaId = request.data.mediaId || "";

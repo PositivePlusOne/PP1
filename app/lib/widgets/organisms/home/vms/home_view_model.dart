@@ -20,7 +20,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
-import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../../../services/third_party.dart';
 
 part 'home_view_model.freezed.dart';
@@ -85,34 +84,6 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
       profileController.updateFirebaseMessagingToken().then((value) => notificationsController.setupPushNotificationListeners()).ignore();
     } finally {
       state = state.copyWith(hasDoneInitialChecks: true);
-    }
-  }
-
-  Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    try {
-      logger.d('onRefresh()');
-      state = state.copyWith(isRefreshing: true);
-      cacheController.remove(cacheKey);
-      feedState.pagingController.refresh();
-
-      // Wait until the first page is loaded
-      int counter = 0;
-      while (feedState.pagingController.itemList == null && counter < 10) {
-        await Future.delayed(const Duration(milliseconds: 500));
-        counter++;
-
-        // Check for an error
-        if (feedState.pagingController.error != null) {
-          throw feedState.pagingController.error!;
-        }
-      }
-
-      cacheController.add(key: cacheKey, value: feedState);
-    } finally {
-      state = state.copyWith(isRefreshing: false);
     }
   }
 

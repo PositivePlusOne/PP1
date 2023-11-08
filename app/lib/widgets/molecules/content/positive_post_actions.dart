@@ -29,8 +29,8 @@ class PositivePostActions extends HookConsumerWidget {
     this.padding = const EdgeInsets.only(
       left: kPaddingMedium,
       right: kPaddingMedium,
-      top: kPaddingSmallMedium,
-      bottom: kPaddingSmallMedium,
+      top: kPaddingSmall,
+      bottom: kPaddingSmall,
     ),
     super.key,
   });

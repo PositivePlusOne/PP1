@@ -138,23 +138,9 @@ class PositiveScaffold extends ConsumerWidget {
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: MediaQuery(
             data: buildMediaQuery(mediaQueryData),
-            child: WarpIndicator(
+            child: PositiveRefreshIndicator(
               onRefresh: () async => onRefresh?.call(),
               controller: IndicatorController(refreshEnabled: onRefresh != null),
-              skyColor: colors.black,
-              starsCount: 42,
-              starColorGetter: (int index) {
-                final List<Color> selectableColors = [
-                  colors.green,
-                  colors.pink,
-                  colors.yellow,
-                  colors.purple,
-                  colors.teal,
-                ];
-
-                // Pick a random color
-                return selectableColors[index % selectableColors.length];
-              },
               child: Stack(
                 children: [
                   Positioned.fill(

@@ -15,7 +15,6 @@ import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
-import '../../../../helpers/dialog_hint_helpers.dart';
 
 // Project imports:
 part 'profile_reference_image_view_model.freezed.dart';
@@ -48,12 +47,6 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
       isBusy: false,
       faceDetectionModel: null,
     );
-  }
-
-  Future<void> onHelpPressed(BuildContext context) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final HintDialogRoute route = buildReferencePhotoHint(context);
-    await appRouter.push(route);
   }
 
   Future<void> onRequestCamera(BuildContext context) async {

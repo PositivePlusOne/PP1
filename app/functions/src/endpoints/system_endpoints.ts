@@ -10,7 +10,6 @@ import { DataHandlerRegistry } from "../handlers/data_change_handler";
 import { LocalizationsService } from "../services/localizations_service";
 import { ProfileService } from "../services/profile_service";
 
-import { CacheService } from "../services/cache_service";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { ConversationService } from "../services/conversation_service";
 import { FeedService } from "../services/feed_service";
@@ -57,6 +56,7 @@ export namespace SystemEndpoints {
     });
 
   export const getSystemConfiguration = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const locale = request.data.locale || "en";
     const uid = context.auth?.uid || "";
 
@@ -158,6 +158,7 @@ export namespace SystemEndpoints {
   });
 
   export const submitFeedback = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     await UserService.verifyAuthenticated(context, request.sender);
 
     const uid = context.auth?.uid || "";
@@ -174,6 +175,7 @@ export namespace SystemEndpoints {
   });
 
   export const getStreamToken = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     functions.logger.info("Getting chat token", { uid });
 
@@ -194,62 +196,4 @@ export namespace SystemEndpoints {
       },
     });
   });
-
-  export const clearEntireCache = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
-    await UserService.verifyAuthenticated(context);
-
-    functions.logger.info("Clearing entire cache");
-    await CacheService.deleteAllFromCache();
-
-    return JSON.stringify({ success: true });
-  });
-
-  // This is a dangerous endpoint and should only be used in development.
-  // export const clearGetStreamContentFromSystem = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async () => {
-  //   const firestore = adminApp.firestore();
-  //   const storage = adminApp.storage();
-
-  //   // Get the firebase application name
-  //   const appName = process.env.GCLOUD_PROJECT || "";
-
-  //   // Verify the app name if not positiveplusone-production
-  //   if (appName === "positiveplusone-production") {
-  //     throw new Error("Nice try.");
-  //   }
-
-  //   // Within the fl_content collection, delete all documents with the _fl_meta_.schema property set to the value of the schema parameter.
-  //   const targetSchemas = [
-  //     "activities",
-  //     "reactions",
-  //     "reactionStatistics",
-  //     "tags",
-  //   ];
-
-  //   for (const schema of targetSchemas) {
-  //     const query = firestore.collection("fl_content").where("_fl_meta_.schema", "==", schema);
-  //     const querySnapshot = await query.get();
-
-  //     for (const doc of querySnapshot.docs) {
-  //       const docId = doc.id;
-  //       const docData = doc.data();
-
-  //       functions.logger.info("Deleting document", { docId, docData });
-
-  //       await doc.ref.delete();
-  //     }
-  //   }
-
-  //   // Delete the /users folder in storage.
-  //   const usersFolder = storage.bucket().file("users");
-  //   const usersFolderExists = await usersFolder.exists();
-
-  //   if (usersFolderExists[0]) {
-  //     functions.logger.info("Deleting users folder");
-  //     await usersFolder.delete();
-  //   }
-
-  //   // Clearing feed data has to be manual :(
-
-  //   return JSON.stringify({ success: true });
-  // });
 }

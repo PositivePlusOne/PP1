@@ -9,9 +9,11 @@ import { ReactionJSON } from "../dto/reactions";
 import { FeedService } from "../services/feed_service";
 import { CommentHelpers } from "../helpers/comment_helpers";
 import { RelationshipService } from "../services/relationship_service";
+import { SystemService } from "../services/system_service";
 
 export namespace ReactionEndpoints {
     export const postReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
+        await SystemService.validateUsingRedisUserThrottle(context);
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
@@ -76,6 +78,7 @@ export namespace ReactionEndpoints {
     });
 
     export const updateReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+        await SystemService.validateUsingRedisUserThrottle(context);
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const reactionId = request.data.reactionId;
         const text = request.data.text || "";
@@ -108,6 +111,7 @@ export namespace ReactionEndpoints {
 
     // Delete Reaction
     export const deleteReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+        await SystemService.validateUsingRedisUserThrottle(context);
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const reactionId = request.data.reactionId;
 
@@ -137,6 +141,7 @@ export namespace ReactionEndpoints {
     });
 
     export const listReactionsForActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+        await SystemService.validateUsingRedisUserThrottle(context);
         const uid = context.auth?.uid || "";
         const activityId = request.data.activityId;
         const kind = request.data.kind;

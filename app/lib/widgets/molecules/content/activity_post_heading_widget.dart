@@ -143,7 +143,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                 ],
               ),
             ),
-            if (!isShared) ...<Widget>[
+            if (!isShared && currentProfile != null) ...<Widget>[
               PositiveButton.appBarIcon(
                 colors: colours,
                 icon: UniconsLine.ellipsis_h,

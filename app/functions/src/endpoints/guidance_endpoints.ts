@@ -7,9 +7,11 @@ import safeJsonStringify from "safe-json-stringify";
 import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { DataService } from "../services/data_service";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
+import { SystemService } from "../services/system_service";
 
 export namespace GuidanceEndpoints {
-  export const getGuidanceCategories = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data) => {
+  export const getGuidanceCategories = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info("Getting guidance categories", { structuredData: true });
     const locale = data.locale ?? "en";
     const parent = data.parent ?? null;
@@ -47,7 +49,8 @@ export namespace GuidanceEndpoints {
   export const getGuidanceArticles = functions
     .region('europe-west3')
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .https.onCall(async (data: any) => {
+    .https.onCall(async (data: any, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
       functions.logger.info("Getting guidance articles", { structuredData: true });
       const locale = data.locale || "en";
       const firestore = adminApp.firestore();
@@ -90,6 +93,7 @@ export namespace GuidanceEndpoints {
 
   // TODO: Update this to paginate later
   export const getGuidanceDirectoryEntries = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info("Getting directory entires", { structuredData: true });
 
     const cursor = data.cursor || "";

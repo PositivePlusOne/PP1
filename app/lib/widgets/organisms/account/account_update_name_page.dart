@@ -16,8 +16,6 @@ import 'package:app/providers/enumerations/positive_togglable_state.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
@@ -105,20 +103,6 @@ class AccountUpdateNamePage extends ConsumerWidget {
             Text(
               localisations.page_account_actions_change_name_body,
               style: typography.styleBody.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingSmall),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  label: localizations.shared_form_information_display,
-                  size: PositiveButtonSize.small,
-                  style: PositiveButtonStyle.text,
-                  onTapped: () => controller.onNameHelpRequested(context),
-                ),
-              ),
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTextField(

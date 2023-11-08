@@ -21,7 +21,6 @@ import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -157,15 +156,11 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       notificationsState.pagingController.error = ex;
-    } finally {
-      saveNotificationsState();
     }
   }
 
   void appendNotificationsPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != notificationsState.currentPaginationKey;
 
@@ -212,7 +207,6 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     }
 
     notificationsState.hasFirstLoad = true;
-
     saveNotificationsState();
   }
 

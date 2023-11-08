@@ -142,21 +142,7 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               localizations.page_profile_display_name_entry_description,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingSmall),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  label: localizations.shared_form_information_display,
-                  size: PositiveButtonSize.small,
-                  style: PositiveButtonStyle.text,
-                  onTapped: () => controller.onDisplayNameHelpRequested(context),
-                ),
-              ),
-            ),
-            const SizedBox(height: kPaddingLarge),
+            const SizedBox(height: kPaddingMedium),
             PositiveTextField(
               labelText: localizations.shared_profile_display_name,
               initialText: state.displayName,

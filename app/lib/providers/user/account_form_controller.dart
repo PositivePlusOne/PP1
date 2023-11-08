@@ -73,7 +73,7 @@ class NewAccountValidator extends AbstractValidator<AccountFormState> {
     this.currentEmailAddress = '',
     this.currentPhoneNumber = '',
   }) {
-    ruleFor((e) => e.name, key: 'name').notEmpty().isAlphaNumericWithSpaces();
+    ruleFor((e) => e.name, key: 'name').isNameLength().isValidName();
     ruleFor((e) => e.emailAddress, key: 'email').isFormattedEmailAddress();
     ruleFor((e) => e.password, key: 'password').meetsPasswordComplexity();
     ruleFor((e) => e.country, key: 'phone-prefix').notNull();
@@ -370,15 +370,6 @@ class AccountFormController extends _$AccountFormController {
       logger.e('Error updating name. $ex');
       state = state.copyWith(isBusy: false);
     }
-  }
-
-  Future<void> onNameHelpRequested(BuildContext context) async {
-    final Logger logger = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    logger.i('Requesting name help');
-
-    final HintDialogRoute hint = buildProfileNameHint(context);
-    await appRouter.push(hint);
   }
 
   Future<void> onEmailAddressConfirmed() async {

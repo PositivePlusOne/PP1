@@ -115,17 +115,6 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                         currentPage: 5,
                       ),
                     ],
-                    const Spacer(),
-                    PositiveButton(
-                      colors: colors,
-                      primaryColor: colors.black,
-                      label: localizations.shared_actions_skip,
-                      onTapped: () => ref.read(profileFormControllerProvider.notifier).onLocationSkipped(removeLocation: false),
-                      isDisabled: ref.watch(profileFormControllerProvider.select((value) => value.isBusy)),
-                      style: PositiveButtonStyle.text,
-                      layout: PositiveButtonLayout.textOnly,
-                      size: PositiveButtonSize.small,
-                    ),
                   ],
                 );
               },
@@ -186,7 +175,7 @@ class _ProfileLocationPageState extends ConsumerState<ProfileLocationPage> {
                     ),
                   ),
                 ),
-                const SizedBox(width: kPaddingSmall),
+                const SizedBox(width: kPaddingMedium),
                 Align(
                   alignment: Alignment.centerRight,
                   child: PositiveButton(
@@ -441,7 +430,7 @@ class _ProfileLocationProfilePendingShade extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: kPaddingSmall, left: kPaddingMedium, right: kPaddingMedium),
                     child: Text(
-                      localizations.page_profile_location_subtitle,
+                      localizations.page_profile_location_instruction,
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

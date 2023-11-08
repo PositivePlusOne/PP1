@@ -1,6 +1,6 @@
 export const enTranslations = {
   interests: {
-    attendingEvents: "Attending Events",
+    attendingEvents: "Attend Events",
     meetNewPeople: "Meet New People",
     getAdvice: "Get Advice",
     joinACommunity: "Join a Community",

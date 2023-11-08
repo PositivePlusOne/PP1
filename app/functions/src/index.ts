@@ -1,7 +1,6 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
-import { AdminEndpoints } from "./endpoints/admin_endpoints";
 import { ProfileEndpoints } from "./endpoints/profile_endpoints";
 import { SearchEndpoints } from "./endpoints/search_endpoints";
 import { SystemEndpoints } from "./endpoints/system_endpoints";
@@ -31,7 +30,6 @@ CacheHandler.register();
 QuickActionHandler.register();
 
 //* System endpoints
-exports.admin = AdminEndpoints;
 exports.health = HealthEndpoints;
 exports.system = SystemEndpoints;
 
