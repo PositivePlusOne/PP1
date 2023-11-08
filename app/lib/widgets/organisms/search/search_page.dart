@@ -173,7 +173,7 @@ class SearchPage extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                 child: StaggeredGrid.count(
-                  crossAxisCount: 2,
+                  crossAxisCount: 1,
                   crossAxisSpacing: kPaddingSmall,
                   mainAxisSpacing: kPaddingSmall,
                   axisDirection: AxisDirection.down,
@@ -183,6 +183,7 @@ class SearchPage extends ConsumerWidget {
                         colors: colours,
                         typography: typography,
                         tag: tag,
+                        isDense: true,
                         onTap: (context) => viewModel.onTopicSelected(context, tag),
                       ),
                     ],

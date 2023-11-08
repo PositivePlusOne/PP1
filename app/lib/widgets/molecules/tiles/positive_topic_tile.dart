@@ -16,15 +16,57 @@ class PositiveTopicTile extends StatelessWidget {
     required this.typography,
     required this.tag,
     required this.onTap,
+    this.isDense = false,
   });
 
   final DesignColorsModel colors;
   final DesignTypographyModel typography;
   final Tag tag;
+
   final void Function(BuildContext context) onTap;
+  final bool isDense;
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> nonDenseChildren = <Widget>[
+      Text(
+        '#',
+        style: typography.styleTopic.copyWith(
+          color: colors.white.complimentTextColor.withOpacity(0.15),
+        ),
+      ),
+      const SizedBox(height: kPaddingSmall),
+      Text(
+        tag.topic == null || tag.topic?.fallback.isEmpty == true ? tag.fallback : tag.topic!.fallback,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 4,
+        style: typography.styleTopic.copyWith(color: colors.white.complimentTextColor),
+      ),
+    ];
+
+    final List<Widget> denseChildren = <Widget>[
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            '#',
+            style: typography.styleTopic.copyWith(
+              color: colors.white.complimentTextColor,
+            ),
+          ),
+          const SizedBox(width: kPaddingExtraSmall),
+          Expanded(
+            child: Text(
+              tag.topic == null || tag.topic?.fallback.isEmpty == true ? tag.fallback : tag.topic!.fallback,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+              style: typography.styleTopic.copyWith(color: colors.white.complimentTextColor),
+            ),
+          ),
+        ],
+      ),
+    ];
+
     return PositiveTapBehaviour(
       onTap: onTap,
       child: Container(
@@ -33,24 +75,10 @@ class PositiveTopicTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           color: colors.white,
         ),
-        padding: const EdgeInsets.all(kPaddingMedium),
+        padding: EdgeInsets.all(isDense ? kPaddingSmall : kPaddingMedium),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              '#',
-              style: typography.styleTopic.copyWith(
-                color: colors.white.complimentTextColor.withOpacity(0.15),
-              ),
-            ),
-            const SizedBox(height: kPaddingSmall),
-            Text(
-              tag.topic == null || tag.topic?.fallback.isEmpty == true ? tag.fallback : tag.topic!.fallback,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 4,
-              style: typography.styleTopic.copyWith(color: colors.white.complimentTextColor),
-            ),
-          ],
+          children: isDense ? denseChildren : nonDenseChildren,
         ),
       ),
     );
