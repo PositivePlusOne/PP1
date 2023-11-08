@@ -184,7 +184,7 @@ class ProfilePage extends HookConsumerWidget {
               // ),
               //const SizedBox(height: kPaddingSmall),
               if (targetProfile?.biography.isNotEmpty == true) ...<Widget>[
-                Padding(
+                Container(
                   padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
                   child: ProfileBiographyTile(profile: targetProfile!),
                 ),

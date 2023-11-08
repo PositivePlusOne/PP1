@@ -142,7 +142,7 @@ class PositiveScaffold extends ConsumerWidget {
               onRefresh: () async => onRefresh?.call(),
               controller: IndicatorController(refreshEnabled: onRefresh != null),
               child: Stack(
-                children: [
+                children: <Widget>[
                   Positioned.fill(
                     child: Scaffold(
                       backgroundColor: actualBackgroundColor,
