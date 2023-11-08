@@ -674,7 +674,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
 
     if (pause) {
-      await videoRecordingCameraState.stopRecording();
+      if (clipRecordingState.isRecording) {
+        await videoRecordingCameraState.stopRecording();
+      }
       clipTimer?.cancel();
       clipRecordingState = ClipRecordingState.paused;
       widget.onClipStateChange?.call(clipRecordingState);
