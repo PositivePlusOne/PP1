@@ -302,6 +302,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     }
   }
 
+  //TODO(S): update name to include other types of feedback
   Future<void> onPostFeedbackSubmitted({
     required Profile? reporter,
     required Profile reportee,
@@ -309,7 +310,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
   }) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
-    final FirebaseFunctions functions = ref.read(firebaseFunctionsProvider);
     final FirebaseAuth auth = ref.read(firebaseAuthProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.d('onPostFeedbackSubmitted');
@@ -340,12 +340,12 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         return;
       }
 
-      final HttpsCallable callable = functions.httpsCallable('system-submitFeedback');
-      await callable.call(<String, dynamic>{
-        'content': template,
-        'feedbackType': FeedbackType.toJson(state.feedback.feedbackType),
-        'reportType': ReportType.toJson(state.feedback.reportType),
-      });
+      final SystemApiService apiService = await ref.read(systemApiServiceProvider.future);
+      await apiService.submitFeedback(
+        content: template,
+        feedbackType: state.feedback.feedbackType,
+        reportType: state.feedback.reportType,
+      );
 
       await appRouter.pop();
       feedbackType.when(

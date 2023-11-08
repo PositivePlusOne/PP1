@@ -524,6 +524,15 @@
     "post_dialogue_update_post": "Confirm Changes",
     "post_dialogue_delete_post_confirm": "The post will be removed from your feed, along with any comments.\n\nAny media associated with this post will also be deleted from your gallery.",
     "post_dialog_no_posts_to_display": "No Posts to Display",
+    
+    "comment_dialogue_edit_comment": "Edit Comment",
+    "comment_dialogue_edit_comment_fail": "Unable to update Comment",
+    "comment_dialogue_edit_comment_success": "Comment Saved",
+    "comment_dialogue_delete_comment": "Delete Comment",
+    "comment_dialogue_delete_comment_fail": "Comment could not be deleted",
+    "comment_dialogue_delete_comment_success": "Comment Deleted",
+    "comment_dialogue_update_comment": "Confirm Changes",
+    "comment_dialogue_delete_comment_confirm": "The comment will be removed from your feed, along with any comments.\n\nAny media associated with this comment will also be deleted from your gallery.",
 
     "profile_disconnect_dialog_remove_confirmation": "'Removing {displayName} as a connection will mean you can no longer message each other.'",
 
@@ -581,6 +590,9 @@
 
     "post_report_dialog_title": "Report Post",
     "post_report_dialog_body": "If you believe this post is breaking the Positive +1 rules, please complete a report and we will investigate.",
+
+    "comment_report_dialog_title": "Report Comment",
+    "comment_report_dialog_body": "If you believe this comment is breaking the Positive +1 rules, please complete a report and we will investigate.",
 
     "post_share_message_title": "Psst!",
     "post_share_message_content": "Check out this post from {authorName}.\n{externalLink}",
@@ -678,8 +690,13 @@
     "shared_profile_modal_action_block": "Block {displayName}",
     "shared_profile_modal_action_block_report": "Block and Report {displayName}",
     "shared_profile_modal_action_unblock": "{displayName} Blocked",
+    "shared_profile_modal_action_have_blocked": "You have blocked : ",
+    "shared_profile_modal_action_have_unblocked": "You have unblocked : ",
+    "shared_profile_modal_action_have_muted": "You have muted : ",
+    "shared_profile_modal_action_have_unmuted": "You have unmuted : ",
     "shared_profile_modal_action_report": "Report {displayName}",
     "shared_profile_modal_action_report_post": "Report Post",
+    "shared_profile_modal_action_report_comment": "Report Comment",
     "shared_profile_modal_action_mute": "Mute {displayName}",
     "shared_profile_modal_action_unmute": "Unmute {displayName}",
     "shared_profile_modal_action_hide_posts": "Hide Posts from {displayName}",

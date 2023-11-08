@@ -233,4 +233,24 @@ class ReactionsController extends _$ReactionsController {
 
     logger.i('CommunitiesController - unlikeActivity - Removed like from activity: $activity');
   }
+
+  Future<void> deleteComment({required Reaction comment, required Profile? currentProfile, required PositiveReactionsState feedState}) async {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i('CommunitiesController - unlikeComment - Removing like from comment: $comment');
+    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    final String reactionId = comment.flMeta?.id ?? '';
+    if (reactionId.isEmpty) {
+      throw Exception('No reaction id found for comment: $comment');
+    }
+
+    await reactionApiService.deleteReaction(reactionId: reactionId);
+    cacheController.remove(reactionId);
+    feedState.pagingController.itemList?.removeWhere((element) => element.flMeta?.id == reactionId);
+    feedState.pagingController.notifyListeners();
+
+    logger.i('CommunitiesController - unlikeComment - Removed like from comment: $comment');
+  }
 }
