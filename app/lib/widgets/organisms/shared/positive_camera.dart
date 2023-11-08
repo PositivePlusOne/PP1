@@ -1082,13 +1082,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              (widget.onTapAddImage != null && clipRecordingState.isInactive)
-                  ? CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap)
-                  : Container(
-                      width: kIconLarge,
-                      height: kIconLarge,
-                      color: Colors.red,
-                    ),
+              (widget.onTapAddImage != null && clipRecordingState.isInactive) ? CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap) : const SizedBox(width: kIconLarge, height: kIconLarge),
 
               const SizedBox(width: kPaddingSmall),
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
