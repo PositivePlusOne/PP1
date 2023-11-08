@@ -375,12 +375,23 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     String parsedMarkdown = html2md.convert(
       targetActivity?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
     );
-
-    if (!widget.isFullscreen && parsedMarkdown.length > kMaxLengthTruncatedPost) {
-      parsedMarkdown = parsedMarkdown.replaceAll(RegExp('[\r\n\t]'), '');
-    }
-
     parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
+
+    if (!widget.isFullscreen) {
+      int lastIndex = 0;
+      int removeFromCharacter = 0;
+      //? Find the first few instances of carriage returns, new lines, or tabs, and record the position of the last one
+      for (var i = 0; i < kMaximumNumberOfReturnsInFeedItem; i++) {
+        lastIndex = parsedMarkdown.indexOf(RegExp('[\r\n\t]'), lastIndex + 1);
+        if (lastIndex < 0) {
+          break;
+        } else {
+          removeFromCharacter = lastIndex;
+        }
+      }
+      //?  replace all carriage returns after the the removeFromCharacter point
+      parsedMarkdown = parsedMarkdown.substring(0, removeFromCharacter) + parsedMarkdown.substring(removeFromCharacter).replaceAll(RegExp('[\r\n\t]'), ' ');
+    }
 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     final List<Tag> tags = tagsController.resolveTags(targetActivity?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
