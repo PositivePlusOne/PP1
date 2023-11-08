@@ -80,7 +80,7 @@ export namespace SystemService {
     await admin.auth().setCustomUserClaims(accessId, customClaims);
   }
 
-  export async function validateUsingRedisUserThrottle(context: functions.https.CallableContext): Promise<boolean> {
+  export async function validateUsingRedisUserThrottle(_: functions.https.CallableContext): Promise<boolean> {
     // const endpoint = context.rawRequest.originalUrl;
     // const ipAddr = context.rawRequest.ip;
 

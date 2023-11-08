@@ -204,15 +204,6 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
 }
 
 @Riverpod(keepAlive: true)
-FutureOr<Algolia> algolia(AlgoliaRef ref) async {
-  final Logger logger = ref.read(loggerProvider);
-  logger.i('Initializing Algolia');
-
-  // TODO(ryan): Make these environmental
-  return const Algolia.init(applicationId: 'N7Q08JSQY0', apiKey: '0011036dc6c06fc2211c001146162eda');
-}
-
-@Riverpod(keepAlive: true)
 GoogleMapsGeocoding googleMapsGeocoding(GoogleMapsGeocodingRef ref) {
   const String apiKey = String.fromEnvironment("MAPS_KEY");
   final GoogleMapsGeocoding googleMapsGeocoding = GoogleMapsGeocoding(apiKey: apiKey);
