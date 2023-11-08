@@ -157,15 +157,11 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     } catch (ex) {
       logger.e('requestNextTimelinePage() - ex: $ex');
       notificationsState.pagingController.error = ex;
-    } finally {
-      saveNotificationsState();
     }
   }
 
   void appendNotificationsPage(Map<String, dynamic> data, String nextPageKey) {
     final Logger logger = providerContainer.read(loggerProvider);
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
 
     final bool hasNext = nextPageKey.isNotEmpty && nextPageKey != notificationsState.currentPaginationKey;
 
@@ -212,7 +208,6 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     }
 
     notificationsState.hasFirstLoad = true;
-
     saveNotificationsState();
   }
 

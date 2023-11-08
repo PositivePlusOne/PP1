@@ -36,13 +36,13 @@ class NotificationTopic with _$NotificationTopic {
   const factory NotificationTopic.sharedEvent() = SharedEvent;
 
   static Set<NotificationTopic> get allTopics => {
-        const NotificationTopic.other(),
         const NotificationTopic.postLikes(),
         const NotificationTopic.newFollower(),
         const NotificationTopic.connectionRequest(),
         const NotificationTopic.newComment(),
         const NotificationTopic.newMessage(),
         const NotificationTopic.postShared(),
+        const NotificationTopic.other(),
         //! PP1-984
         // const NotificationTopic.sharedEvent(),
       };

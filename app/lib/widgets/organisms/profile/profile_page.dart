@@ -74,6 +74,7 @@ class ProfilePage extends HookConsumerWidget {
 
     final Profile? currentProfile = controllerState.currentProfile;
     final Profile? targetProfile = cacheController.get(state.targetProfileId ?? '');
+    final bool isTargetProfile = currentProfile?.flMeta?.id == targetProfile?.flMeta?.id;
     final String targetProfileId = targetProfile?.flMeta?.id ?? '';
 
     final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
@@ -109,6 +110,10 @@ class ProfilePage extends HookConsumerWidget {
     final Color appBarColor = targetProfile?.accentColor.toSafeColorFromHex() ?? colors.yellow;
     final Color appBarTextColor = appBarColor.complimentTextColor;
 
+    // Check for if you're currently a managed profile viewing themselves
+    // If so, we can remove the actions list
+    final bool isCurrentlyViewingSelfAsManaged = isTargetProfile && profileController.isCurrentlyManagedProfile;
+
     PreferredSizeWidget? appBarBottomWidget;
     if (targetProfile != null) {
       appBarBottomWidget = ProfileAppBarHeader(
@@ -120,11 +125,13 @@ class ProfilePage extends HookConsumerWidget {
             enableProfileImageFullscreen: true,
             metadata: profileStatisticsData,
           ),
-          PositiveProfileActionsList(
-            currentProfile: currentProfile,
-            targetProfile: targetProfile,
-            relationship: relationship,
-          ),
+          if (!isCurrentlyViewingSelfAsManaged) ...<PreferredSizeWidget>[
+            PositiveProfileActionsList(
+              currentProfile: currentProfile,
+              targetProfile: targetProfile,
+              relationship: relationship,
+            ),
+          ],
         ],
       );
     }
