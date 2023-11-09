@@ -31,9 +31,11 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/hooks/event_hook.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/events/request_refresh_event.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -197,6 +199,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     usePagingController(
       controller: feedState.pagingController,
       listener: requestNextPage,
+    );
+
+    useEventHook<RequestRefreshEvent>(
+      onEvent: (_) => feedState.onRefresh(),
     );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);

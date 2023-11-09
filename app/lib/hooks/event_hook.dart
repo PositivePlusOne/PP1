@@ -13,7 +13,7 @@ import 'package:app/main.dart';
 import '../services/third_party.dart';
 
 void useEventHook<T>({
-  required void Function<T>(T event) onEvent,
+  required void Function(dynamic event) onEvent,
 }) {
   return use(EventHook<T>(
     onEvent: onEvent,
@@ -25,16 +25,16 @@ class EventHook<T> extends Hook<void> {
     required this.onEvent,
   });
 
-  final FutureOr<void> Function(T event) onEvent;
+  final void Function(dynamic event) onEvent;
 
   @override
   HookState<void, Hook<void>> createState() {
-    return EventHookState();
+    return EventHookState<T>();
   }
 }
 
 class EventHookState<T> extends HookState<void, EventHook> {
-  late final StreamSubscription<T?> _eventSubscriptionSubscription;
+  late final StreamSubscription<T> _eventSubscriptionSubscription;
 
   @override
   void initHook() {

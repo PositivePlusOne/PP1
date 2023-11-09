@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -19,6 +20,7 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/events/request_refresh_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
@@ -82,6 +84,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
     final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Follow tapped');
 
@@ -96,7 +99,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.followRelationship(targetUserId);
-      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+      eventBus.fire(RequestRefreshEvent());
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You are now following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to follow user. Error: $e');
@@ -115,7 +118,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Unblock tapped');
 
@@ -130,7 +133,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.unblockRelationship(targetUserId);
-      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+      eventBus.fire(RequestRefreshEvent());
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have unblocked ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to unblock user. Error: $e');
@@ -149,7 +152,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Unfollow tapped');
 
@@ -164,7 +167,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
 
     try {
       await relationshipController.unfollowRelationship(targetUserId);
-      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+      eventBus.fire(RequestRefreshEvent());
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have stopped following ${widget.targetProfile.displayName.asHandle}'));
     } catch (e) {
       logger.e('Failed to unfollow user. Error: $e');
