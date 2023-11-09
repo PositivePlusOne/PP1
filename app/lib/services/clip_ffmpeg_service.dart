@@ -124,10 +124,6 @@ class CreateClipExportService {
       (session) {
         isComplete = true;
       },
-      (session) {
-        final String string = session.toString();
-        print(string);
-      },
     );
 
     int i = 0;
