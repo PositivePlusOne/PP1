@@ -152,6 +152,9 @@
     "page_community_supported_empty_title": "You Aren't Supported by Anyone",
     "page_community_supported_empty_body": "Get some more support in the community to help your organisation grow and thrive.",
 
+    "page_confirm_password_enter": "Enter your password",
+    "page_confirm_password_delete_body": "Please confirm your password, then we'll begin the process of deleting your account.",
+    "page_confirm_password_delete_button": "Delete My Account",
 
     "page_login_password_enter": "Enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",

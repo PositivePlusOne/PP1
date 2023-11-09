@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:app/helpers/dialog_hint_helpers.dart';
+import 'package:app/widgets/organisms/account/account_confirm_password_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -36,33 +37,11 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
   }
 
   Future<void> onContinueSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
-    isDeleting = true;
 
-    try {
-      logger.i('Deleting profile');
-      final AppRouter appRouter = ref.read(appRouterProvider);
-      final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
-      final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-      final Profile? profile = profileController.currentProfile;
-      final String profileId = profile?.flMeta?.id ?? '';
-      if (profileId.isEmpty || profile == null) {
-        logger.e('No profile found');
-        return;
-      }
-
-      final Set<String> accountFlags = profile.accountFlags;
-      if (accountFlags.contains(kFeatureFlagPendingDeletion)) {
-        logger.i('Profile already pending deletion');
-        return;
-      }
-
-      await profileApiService.toggleProfileDeletion(uid: profileId);
-      appRouter.popUntil((route) => route.settings.name == AccountDetailsRoute.name);
-    } finally {
-      isDeleting = false;
-    }
+    logger.d('onDeleteProfilePageConfirm');
+    await appRouter.push(AccountConfirmPasswordRoute(pageType: AccountConfirmPageType.delete));
   }
 
   Future<void> onHelpRequested() async {
@@ -94,6 +73,7 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
       body: localizations.page_account_actions_change_delete_account_splash_body,
       buttonText: localizations.page_account_actions_change_delete_account_continue,
       isBusy: isDeleting,
+      canBack: true,
       onHelpSelected: onHelpRequested,
       onContinueSelected: onContinueSelected,
     );

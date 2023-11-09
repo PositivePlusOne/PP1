@@ -481,6 +481,27 @@ class AccountFormController extends _$AccountFormController {
     }
   }
 
+  Future<bool> onConfirmPasswordRequested() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d('Confirming password');
+    if (!isPasswordValid) {
+      logger.e('Password is not valid');
+      return false;
+    }
+
+    state = state.copyWith(isBusy: true);
+    bool isPasswordConfirmed = false;
+    try {
+      final UserController userController = ref.read(userControllerProvider.notifier);
+      isPasswordConfirmed = await userController.confirmPassword(state.password);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+    // returning the result
+    return isPasswordConfirmed;
+  }
+
   Future<void> onChangePhoneNumberRequested() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);

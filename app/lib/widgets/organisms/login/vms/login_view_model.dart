@@ -3,6 +3,10 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -268,6 +272,39 @@ class LoginViewModel extends _$LoginViewModel {
     }
 
     await appRouter.push(const RegistrationAccountRoute());
+  }
+
+  Future<void> onAccountDeleteOptionSelected() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    logger.d('onAccountDeleteSelected');
+
+    state = state.copyWith(isBusy: true);
+
+    try {
+      logger.i('Deleting profile');
+
+      final Profile? profile = profileController.currentProfile;
+      final String profileId = profile?.flMeta?.id ?? '';
+      if (profileId.isEmpty || profile == null) {
+        logger.e('No profile found');
+        return;
+      }
+
+      final Set<String> accountFlags = profile.accountFlags;
+      if (accountFlags.contains(kFeatureFlagPendingDeletion)) {
+        logger.i('Profile already pending deletion');
+        return;
+      }
+
+      await profileApiService.toggleProfileDeletion(uid: profileId);
+      appRouter.popUntil((route) => route.settings.name == AccountDetailsRoute.name);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> onPasswordResetOptionSelected() async {
