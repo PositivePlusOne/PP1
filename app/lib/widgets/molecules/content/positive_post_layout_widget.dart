@@ -513,22 +513,20 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
 
     final bool isPublisher = currentProfileId == publisherId;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: sidePadding),
-      child: PositivePostActions(
-        isLiked: isLiked,
-        likes: totalLikes,
-        likesEnabled: !isBusy && !isPublisher && likesEnabled,
-        onLike: onLike,
-        shareEnabled: !isBusy && canActShare,
-        onShare: onShare,
-        comments: totalComments,
-        commentsEnabled: !isBusy,
-        onComment: onComment,
-        bookmarkEnabled: !isBusy && bookmarkEnabled,
-        bookmarked: isBookmarked,
-        onBookmark: onBookmark,
-      ),
+    return PositivePostActions(
+      padding: EdgeInsets.symmetric(horizontal: sidePadding + kPaddingSmallMedium, vertical: kPaddingSmall),
+      isLiked: isLiked,
+      likes: totalLikes,
+      likesEnabled: !isBusy && !isPublisher && likesEnabled,
+      onLike: onLike,
+      shareEnabled: !isBusy && canActShare,
+      onShare: onShare,
+      comments: totalComments,
+      commentsEnabled: !isBusy,
+      onComment: onComment,
+      bookmarkEnabled: !isBusy && bookmarkEnabled,
+      bookmarked: isBookmarked,
+      onBookmark: onBookmark,
     );
   }
 

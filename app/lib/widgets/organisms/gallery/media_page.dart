@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
+import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,15 +28,13 @@ class MediaPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppRouter appRouter = ref.read(appRouterProvider);
 
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final double topPadding = mediaQuery.padding.top;
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
         backgroundColor: colors.black,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: colors.white,
-          onPressed: () => appRouter.pop(),
-          child: Icon(UniconsLine.multiply, color: colors.black),
-        ),
         body: Stack(
           children: <Widget>[
             if (media.type.isImage) ...<Widget>[
@@ -49,6 +50,11 @@ class MediaPage extends ConsumerWidget {
                 ),
               ),
             ],
+            Positioned(
+              top: topPadding + kPaddingMedium,
+              right: kPaddingMedium,
+              child: const PositiveCloseButton(brightness: Brightness.dark),
+            ),
           ],
         ),
       ),

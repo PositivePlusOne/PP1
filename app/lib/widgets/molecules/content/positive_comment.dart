@@ -1,7 +1,5 @@
 // Flutter imports:
 import 'dart:async';
-
-import 'package:app/extensions/reaction_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

@@ -61,7 +61,8 @@ class PositivePostActions extends HookConsumerWidget {
     return Padding(
       padding: padding,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           PositiveTapBehaviour(
             onTap: onLike,

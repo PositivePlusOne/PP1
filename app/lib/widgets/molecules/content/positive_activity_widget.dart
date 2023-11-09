@@ -93,7 +93,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     setStateIfMounted();
   }
 
-  double get sidePadding => widget.isShared ? kPaddingExtraSmall : kPaddingSmall;
+  double get sidePadding => widget.isFullscreen ? 0.0 : (widget.isShared || widget.isFullscreen ? kPaddingExtraSmall : kPaddingSmall);
 
   Future<void> _onInternalLikeRequested({
     required BuildContext context,
@@ -248,7 +248,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             bookmarked: false,
             comments: totalParentActivityComments,
             commentsEnabled: true,
-            padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding, vertical: kPaddingExtraSmall),
+            padding: EdgeInsets.symmetric(
+              horizontal: kPaddingMedium + sidePadding,
+              vertical: kPaddingExtraSmall,
+            ),
             isLiked: isParentActivityLiked,
             likes: totalParentActivityLikes,
             likesEnabled: !isLiking && !isPublisher,
@@ -396,10 +399,11 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     final List<Tag> tags = tagsController.resolveTags(targetActivity?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
 
+    final double padding = kPaddingSmallMedium + sidePadding;
     return PositiveTapBehaviour(
       onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: kPaddingMedium + sidePadding),
+        padding: EdgeInsets.symmetric(horizontal: padding),
         child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
       ),
     );

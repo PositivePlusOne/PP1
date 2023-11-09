@@ -246,21 +246,26 @@ class PostPage extends HookConsumerWidget {
                 pushPinnedChildren: true,
                 children: <Widget>[
                   SliverToBoxAdapter(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: colors.white,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(kBorderRadiusMassive),
+                    child: ColoredBox(
+                      color: colors.colorGray1,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: colors.white,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(kBorderRadiusMassive),
+                            ),
                           ),
+                          width: kPaddingMassive,
+                          height: kPaddingExtraSmall,
                         ),
-                        width: kPaddingMassive,
-                        height: kPaddingExtraSmall,
                       ),
                     ),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: kPaddingExtraSmall)),
+                  SliverToBoxAdapter(
+                    child: Container(height: kPaddingExtraSmall, color: colors.colorGray1),
+                  ),
                   PositiveReactionPaginationBehaviour(
                     kind: 'comment',
                     activity: activity,
