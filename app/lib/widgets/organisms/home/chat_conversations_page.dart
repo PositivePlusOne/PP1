@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
@@ -167,16 +166,17 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
   Widget? buildSeparator(BuildContext context, int index) {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final Promotion? promotion = promotionsController.getPromotionFromIndex(index);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(index, PromotionType.chat);
     if (promotion == null) {
       return const SizedBox(height: kPaddingSmall);
     }
 
-    final PromotedActivity? promotedActivity = promotion.activities.firstWhereOrNull((element) => element.activityId.isNotEmpty);
-    final String activityId = promotedActivity?.activityId ?? '';
+    final String activityId = promotion.activityId;
+    final String profileId = promotion.ownerId;
 
-    final PromotionOwner? promotionOwner = promotion.owners.firstWhereOrNull((element) => element.profileId.isNotEmpty);
-    final String profileId = promotionOwner?.profileId ?? '';
+    if (activityId.isEmpty && profileId.isEmpty) {
+      return const SizedBox(height: kPaddingSmall);
+    }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final Profile? promotionProfile = cacheController.get(profileId);

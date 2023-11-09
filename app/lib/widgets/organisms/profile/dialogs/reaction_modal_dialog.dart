@@ -1,18 +1,19 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
-import 'package:app/widgets/organisms/profile/dialogs/reaction_report_dialog.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:unicons/unicons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import '../../../../../providers/system/design_controller.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -26,12 +27,11 @@ import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_block_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/reaction_report_dialog.dart';
+import '../../../../../providers/system/design_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../atoms/indicators/positive_snackbar.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
-
-// Dart imports:
-import 'dart:async';
 
 // Project imports:
 

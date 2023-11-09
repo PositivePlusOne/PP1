@@ -26,8 +26,8 @@ mixin _$Promotion {
   String get description => throw _privateConstructorUsedError;
   String get link => throw _privateConstructorUsedError;
   String get linkText => throw _privateConstructorUsedError;
-  List<PromotionOwner> get owners => throw _privateConstructorUsedError;
-  List<PromotedActivity> get activities => throw _privateConstructorUsedError;
+  String get ownerId => throw _privateConstructorUsedError;
+  String get activityId => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   int get totalViewsSinceLastUpdate => throw _privateConstructorUsedError;
   int get totalViewsAllotment => throw _privateConstructorUsedError;
@@ -53,8 +53,8 @@ abstract class $PromotionCopyWith<$Res> {
       String description,
       String link,
       String linkText,
-      List<PromotionOwner> owners,
-      List<PromotedActivity> activities,
+      String ownerId,
+      String activityId,
       bool isActive,
       int totalViewsSinceLastUpdate,
       int totalViewsAllotment,
@@ -82,8 +82,8 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
     Object? description = null,
     Object? link = null,
     Object? linkText = null,
-    Object? owners = null,
-    Object? activities = null,
+    Object? ownerId = null,
+    Object? activityId = null,
     Object? isActive = null,
     Object? totalViewsSinceLastUpdate = null,
     Object? totalViewsAllotment = null,
@@ -111,14 +111,14 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
           ? _value.linkText
           : linkText // ignore: cast_nullable_to_non_nullable
               as String,
-      owners: null == owners
-          ? _value.owners
-          : owners // ignore: cast_nullable_to_non_nullable
-              as List<PromotionOwner>,
-      activities: null == activities
-          ? _value.activities
-          : activities // ignore: cast_nullable_to_non_nullable
-              as List<PromotedActivity>,
+      ownerId: null == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -169,8 +169,8 @@ abstract class _$$PromotionImplCopyWith<$Res>
       String description,
       String link,
       String linkText,
-      List<PromotionOwner> owners,
-      List<PromotedActivity> activities,
+      String ownerId,
+      String activityId,
       bool isActive,
       int totalViewsSinceLastUpdate,
       int totalViewsAllotment,
@@ -197,8 +197,8 @@ class __$$PromotionImplCopyWithImpl<$Res>
     Object? description = null,
     Object? link = null,
     Object? linkText = null,
-    Object? owners = null,
-    Object? activities = null,
+    Object? ownerId = null,
+    Object? activityId = null,
     Object? isActive = null,
     Object? totalViewsSinceLastUpdate = null,
     Object? totalViewsAllotment = null,
@@ -226,14 +226,14 @@ class __$$PromotionImplCopyWithImpl<$Res>
           ? _value.linkText
           : linkText // ignore: cast_nullable_to_non_nullable
               as String,
-      owners: null == owners
-          ? _value._owners
-          : owners // ignore: cast_nullable_to_non_nullable
-              as List<PromotionOwner>,
-      activities: null == activities
-          ? _value._activities
-          : activities // ignore: cast_nullable_to_non_nullable
-              as List<PromotedActivity>,
+      ownerId: null == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      activityId: null == activityId
+          ? _value.activityId
+          : activityId // ignore: cast_nullable_to_non_nullable
+              as String,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -267,15 +267,13 @@ class _$PromotionImpl implements _Promotion {
       this.description = '',
       this.link = '',
       this.linkText = '',
-      final List<PromotionOwner> owners = const [],
-      final List<PromotedActivity> activities = const [],
+      this.ownerId = '',
+      this.activityId = '',
       this.isActive = false,
       this.totalViewsSinceLastUpdate = 0,
       this.totalViewsAllotment = 0,
       @JsonKey(fromJson: dateFromUnknown) this.startDate,
-      @JsonKey(fromJson: dateFromUnknown) this.endDate})
-      : _owners = owners,
-        _activities = activities;
+      @JsonKey(fromJson: dateFromUnknown) this.endDate});
 
   factory _$PromotionImpl.fromJson(Map<String, dynamic> json) =>
       _$$PromotionImplFromJson(json);
@@ -295,24 +293,12 @@ class _$PromotionImpl implements _Promotion {
   @override
   @JsonKey()
   final String linkText;
-  final List<PromotionOwner> _owners;
   @override
   @JsonKey()
-  List<PromotionOwner> get owners {
-    if (_owners is EqualUnmodifiableListView) return _owners;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_owners);
-  }
-
-  final List<PromotedActivity> _activities;
+  final String ownerId;
   @override
   @JsonKey()
-  List<PromotedActivity> get activities {
-    if (_activities is EqualUnmodifiableListView) return _activities;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_activities);
-  }
-
+  final String activityId;
   @override
   @JsonKey()
   final bool isActive;
@@ -331,7 +317,7 @@ class _$PromotionImpl implements _Promotion {
 
   @override
   String toString() {
-    return 'Promotion(flMeta: $flMeta, title: $title, description: $description, link: $link, linkText: $linkText, owners: $owners, activities: $activities, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment, startDate: $startDate, endDate: $endDate)';
+    return 'Promotion(flMeta: $flMeta, title: $title, description: $description, link: $link, linkText: $linkText, ownerId: $ownerId, activityId: $activityId, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment, startDate: $startDate, endDate: $endDate)';
   }
 
   @override
@@ -346,9 +332,9 @@ class _$PromotionImpl implements _Promotion {
             (identical(other.link, link) || other.link == link) &&
             (identical(other.linkText, linkText) ||
                 other.linkText == linkText) &&
-            const DeepCollectionEquality().equals(other._owners, _owners) &&
-            const DeepCollectionEquality()
-                .equals(other._activities, _activities) &&
+            (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
+            (identical(other.activityId, activityId) ||
+                other.activityId == activityId) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.totalViewsSinceLastUpdate,
@@ -370,8 +356,8 @@ class _$PromotionImpl implements _Promotion {
       description,
       link,
       linkText,
-      const DeepCollectionEquality().hash(_owners),
-      const DeepCollectionEquality().hash(_activities),
+      ownerId,
+      activityId,
       isActive,
       totalViewsSinceLastUpdate,
       totalViewsAllotment,
@@ -399,8 +385,8 @@ abstract class _Promotion implements Promotion {
           final String description,
           final String link,
           final String linkText,
-          final List<PromotionOwner> owners,
-          final List<PromotedActivity> activities,
+          final String ownerId,
+          final String activityId,
           final bool isActive,
           final int totalViewsSinceLastUpdate,
           final int totalViewsAllotment,
@@ -423,9 +409,9 @@ abstract class _Promotion implements Promotion {
   @override
   String get linkText;
   @override
-  List<PromotionOwner> get owners;
+  String get ownerId;
   @override
-  List<PromotedActivity> get activities;
+  String get activityId;
   @override
   bool get isActive;
   @override

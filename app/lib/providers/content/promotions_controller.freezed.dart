@@ -16,8 +16,13 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PromotionsControllerState {
+  Set<String> get validFeedPromotionIds => throw _privateConstructorUsedError;
+  Set<String> get validChatPromotionIds => throw _privateConstructorUsedError;
+  Map<String, Set<String>> get profilePromotionIds =>
+      throw _privateConstructorUsedError;
+  int get feedPromotionFrequency => throw _privateConstructorUsedError;
+  int get chatPromotionFrequency => throw _privateConstructorUsedError;
   String get cursor => throw _privateConstructorUsedError;
-  Set<String> get promotionIds => throw _privateConstructorUsedError;
   bool get isExhausted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -31,7 +36,14 @@ abstract class $PromotionsControllerStateCopyWith<$Res> {
           $Res Function(PromotionsControllerState) then) =
       _$PromotionsControllerStateCopyWithImpl<$Res, PromotionsControllerState>;
   @useResult
-  $Res call({String cursor, Set<String> promotionIds, bool isExhausted});
+  $Res call(
+      {Set<String> validFeedPromotionIds,
+      Set<String> validChatPromotionIds,
+      Map<String, Set<String>> profilePromotionIds,
+      int feedPromotionFrequency,
+      int chatPromotionFrequency,
+      String cursor,
+      bool isExhausted});
 }
 
 /// @nodoc
@@ -48,19 +60,39 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? validFeedPromotionIds = null,
+    Object? validChatPromotionIds = null,
+    Object? profilePromotionIds = null,
+    Object? feedPromotionFrequency = null,
+    Object? chatPromotionFrequency = null,
     Object? cursor = null,
-    Object? promotionIds = null,
     Object? isExhausted = null,
   }) {
     return _then(_value.copyWith(
+      validFeedPromotionIds: null == validFeedPromotionIds
+          ? _value.validFeedPromotionIds
+          : validFeedPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      validChatPromotionIds: null == validChatPromotionIds
+          ? _value.validChatPromotionIds
+          : validChatPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      profilePromotionIds: null == profilePromotionIds
+          ? _value.profilePromotionIds
+          : profilePromotionIds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Set<String>>,
+      feedPromotionFrequency: null == feedPromotionFrequency
+          ? _value.feedPromotionFrequency
+          : feedPromotionFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
+      chatPromotionFrequency: null == chatPromotionFrequency
+          ? _value.chatPromotionFrequency
+          : chatPromotionFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
       cursor: null == cursor
           ? _value.cursor
           : cursor // ignore: cast_nullable_to_non_nullable
               as String,
-      promotionIds: null == promotionIds
-          ? _value.promotionIds
-          : promotionIds // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
       isExhausted: null == isExhausted
           ? _value.isExhausted
           : isExhausted // ignore: cast_nullable_to_non_nullable
@@ -78,7 +110,14 @@ abstract class _$$PromotionsControllerStateImplCopyWith<$Res>
       __$$PromotionsControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String cursor, Set<String> promotionIds, bool isExhausted});
+  $Res call(
+      {Set<String> validFeedPromotionIds,
+      Set<String> validChatPromotionIds,
+      Map<String, Set<String>> profilePromotionIds,
+      int feedPromotionFrequency,
+      int chatPromotionFrequency,
+      String cursor,
+      bool isExhausted});
 }
 
 /// @nodoc
@@ -94,19 +133,39 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? validFeedPromotionIds = null,
+    Object? validChatPromotionIds = null,
+    Object? profilePromotionIds = null,
+    Object? feedPromotionFrequency = null,
+    Object? chatPromotionFrequency = null,
     Object? cursor = null,
-    Object? promotionIds = null,
     Object? isExhausted = null,
   }) {
     return _then(_$PromotionsControllerStateImpl(
+      validFeedPromotionIds: null == validFeedPromotionIds
+          ? _value._validFeedPromotionIds
+          : validFeedPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      validChatPromotionIds: null == validChatPromotionIds
+          ? _value._validChatPromotionIds
+          : validChatPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
+      profilePromotionIds: null == profilePromotionIds
+          ? _value._profilePromotionIds
+          : profilePromotionIds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Set<String>>,
+      feedPromotionFrequency: null == feedPromotionFrequency
+          ? _value.feedPromotionFrequency
+          : feedPromotionFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
+      chatPromotionFrequency: null == chatPromotionFrequency
+          ? _value.chatPromotionFrequency
+          : chatPromotionFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
       cursor: null == cursor
           ? _value.cursor
           : cursor // ignore: cast_nullable_to_non_nullable
               as String,
-      promotionIds: null == promotionIds
-          ? _value._promotionIds
-          : promotionIds // ignore: cast_nullable_to_non_nullable
-              as Set<String>,
       isExhausted: null == isExhausted
           ? _value.isExhausted
           : isExhausted // ignore: cast_nullable_to_non_nullable
@@ -119,30 +178,63 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
 
 class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   const _$PromotionsControllerStateImpl(
-      {this.cursor = '',
-      final Set<String> promotionIds = const {},
+      {final Set<String> validFeedPromotionIds = const {},
+      final Set<String> validChatPromotionIds = const {},
+      final Map<String, Set<String>> profilePromotionIds = const {},
+      this.feedPromotionFrequency = 4,
+      this.chatPromotionFrequency = 4,
+      this.cursor = '',
       this.isExhausted = false})
-      : _promotionIds = promotionIds;
+      : _validFeedPromotionIds = validFeedPromotionIds,
+        _validChatPromotionIds = validChatPromotionIds,
+        _profilePromotionIds = profilePromotionIds;
 
+  final Set<String> _validFeedPromotionIds;
+  @override
+  @JsonKey()
+  Set<String> get validFeedPromotionIds {
+    if (_validFeedPromotionIds is EqualUnmodifiableSetView)
+      return _validFeedPromotionIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_validFeedPromotionIds);
+  }
+
+  final Set<String> _validChatPromotionIds;
+  @override
+  @JsonKey()
+  Set<String> get validChatPromotionIds {
+    if (_validChatPromotionIds is EqualUnmodifiableSetView)
+      return _validChatPromotionIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_validChatPromotionIds);
+  }
+
+  final Map<String, Set<String>> _profilePromotionIds;
+  @override
+  @JsonKey()
+  Map<String, Set<String>> get profilePromotionIds {
+    if (_profilePromotionIds is EqualUnmodifiableMapView)
+      return _profilePromotionIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_profilePromotionIds);
+  }
+
+  @override
+  @JsonKey()
+  final int feedPromotionFrequency;
+  @override
+  @JsonKey()
+  final int chatPromotionFrequency;
   @override
   @JsonKey()
   final String cursor;
-  final Set<String> _promotionIds;
-  @override
-  @JsonKey()
-  Set<String> get promotionIds {
-    if (_promotionIds is EqualUnmodifiableSetView) return _promotionIds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_promotionIds);
-  }
-
   @override
   @JsonKey()
   final bool isExhausted;
 
   @override
   String toString() {
-    return 'PromotionsControllerState(cursor: $cursor, promotionIds: $promotionIds, isExhausted: $isExhausted)';
+    return 'PromotionsControllerState(validFeedPromotionIds: $validFeedPromotionIds, validChatPromotionIds: $validChatPromotionIds, profilePromotionIds: $profilePromotionIds, feedPromotionFrequency: $feedPromotionFrequency, chatPromotionFrequency: $chatPromotionFrequency, cursor: $cursor, isExhausted: $isExhausted)';
   }
 
   @override
@@ -150,16 +242,31 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PromotionsControllerStateImpl &&
-            (identical(other.cursor, cursor) || other.cursor == cursor) &&
             const DeepCollectionEquality()
-                .equals(other._promotionIds, _promotionIds) &&
+                .equals(other._validFeedPromotionIds, _validFeedPromotionIds) &&
+            const DeepCollectionEquality()
+                .equals(other._validChatPromotionIds, _validChatPromotionIds) &&
+            const DeepCollectionEquality()
+                .equals(other._profilePromotionIds, _profilePromotionIds) &&
+            (identical(other.feedPromotionFrequency, feedPromotionFrequency) ||
+                other.feedPromotionFrequency == feedPromotionFrequency) &&
+            (identical(other.chatPromotionFrequency, chatPromotionFrequency) ||
+                other.chatPromotionFrequency == chatPromotionFrequency) &&
+            (identical(other.cursor, cursor) || other.cursor == cursor) &&
             (identical(other.isExhausted, isExhausted) ||
                 other.isExhausted == isExhausted));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, cursor,
-      const DeepCollectionEquality().hash(_promotionIds), isExhausted);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_validFeedPromotionIds),
+      const DeepCollectionEquality().hash(_validChatPromotionIds),
+      const DeepCollectionEquality().hash(_profilePromotionIds),
+      feedPromotionFrequency,
+      chatPromotionFrequency,
+      cursor,
+      isExhausted);
 
   @JsonKey(ignore: true)
   @override
@@ -171,14 +278,26 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 
 abstract class _PromotionsControllerState implements PromotionsControllerState {
   const factory _PromotionsControllerState(
-      {final String cursor,
-      final Set<String> promotionIds,
+      {final Set<String> validFeedPromotionIds,
+      final Set<String> validChatPromotionIds,
+      final Map<String, Set<String>> profilePromotionIds,
+      final int feedPromotionFrequency,
+      final int chatPromotionFrequency,
+      final String cursor,
       final bool isExhausted}) = _$PromotionsControllerStateImpl;
 
   @override
-  String get cursor;
+  Set<String> get validFeedPromotionIds;
   @override
-  Set<String> get promotionIds;
+  Set<String> get validChatPromotionIds;
+  @override
+  Map<String, Set<String>> get profilePromotionIds;
+  @override
+  int get feedPromotionFrequency;
+  @override
+  int get chatPromotionFrequency;
+  @override
+  String get cursor;
   @override
   bool get isExhausted;
   @override

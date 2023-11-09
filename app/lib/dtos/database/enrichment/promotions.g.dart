@@ -15,14 +15,8 @@ _$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String? ?? '',
       link: json['link'] as String? ?? '',
       linkText: json['linkText'] as String? ?? '',
-      owners: (json['owners'] as List<dynamic>?)
-              ?.map((e) => PromotionOwner.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      activities: (json['activities'] as List<dynamic>?)
-              ?.map((e) => PromotedActivity.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      ownerId: json['ownerId'] as String? ?? '',
+      activityId: json['activityId'] as String? ?? '',
       isActive: json['isActive'] as bool? ?? false,
       totalViewsSinceLastUpdate: json['totalViewsSinceLastUpdate'] as int? ?? 0,
       totalViewsAllotment: json['totalViewsAllotment'] as int? ?? 0,
@@ -37,8 +31,8 @@ Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
       'description': instance.description,
       'link': instance.link,
       'linkText': instance.linkText,
-      'owners': instance.owners.map((e) => e.toJson()).toList(),
-      'activities': instance.activities.map((e) => e.toJson()).toList(),
+      'ownerId': instance.ownerId,
+      'activityId': instance.activityId,
       'isActive': instance.isActive,
       'totalViewsSinceLastUpdate': instance.totalViewsSinceLastUpdate,
       'totalViewsAllotment': instance.totalViewsAllotment,

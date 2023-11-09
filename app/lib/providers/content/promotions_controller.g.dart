@@ -7,7 +7,7 @@ part of 'promotions_controller.dart';
 // **************************************************************************
 
 String _$promotionsControllerHash() =>
-    r'6d0392daa8181a399d23b50f6c91e0149cdd6b09';
+    r'b213df941ddb246a326f9d0f8b328c3b9ee4ec97';
 
 /// See also [PromotionsController].
 @ProviderFor(PromotionsController)
