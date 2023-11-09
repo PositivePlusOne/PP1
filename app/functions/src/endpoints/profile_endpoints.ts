@@ -217,9 +217,13 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    profile = await ProfileService.updateName(uid, name);
-    profile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     profile = await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
+    await CacheService.setInCache(profile._fl_meta_.fl_id, profile);
+
+    profile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(profile._fl_meta_.fl_id, profile);
+
+    profile = await ProfileService.updateName(uid, name);
 
     functions.logger.info("Profile name updated", {
       profile,
