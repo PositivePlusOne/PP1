@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/helpers/dialog_hint_helpers.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -63,13 +65,36 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
     }
   }
 
+  Future<void> onHelpRequested() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+    logger.i('Requesting delete profile help');
+    final hint = fromTitleAndBulletPoints(
+      localisations.page_account_actions_change_delete_account_body,
+      [
+        localisations.page_account_actions_change_delete_account_body_one,
+        localisations.page_account_actions_change_delete_account_body_two,
+        localisations.page_account_actions_change_delete_account_body_three,
+        localisations.page_account_actions_change_delete_account_body_four,
+        localisations.page_account_actions_change_delete_account_body_five,
+        localisations.page_account_actions_change_delete_account_body_six,
+        localisations.page_account_actions_change_delete_account_body_seven,
+      ],
+      boldFootnote: localisations.page_account_actions_change_delete_account_body_eight,
+    );
+    await appRouter.push(hint);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     return PositiveGenericPage(
-      title: 'We are sorry to see you go',
-      body: 'but we under why. We ask you to verify some of your details just to be sure it\'s you trying to delete your account.',
-      buttonText: 'Get Started',
+      title: localizations.page_account_actions_change_delete_account_splash_title,
+      body: localizations.page_account_actions_change_delete_account_splash_body,
+      buttonText: localizations.page_account_actions_change_delete_account_continue,
       isBusy: isDeleting,
+      onHelpSelected: onHelpRequested,
       onContinueSelected: onContinueSelected,
     );
   }

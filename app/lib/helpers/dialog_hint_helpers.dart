@@ -112,7 +112,7 @@ HintDialogRoute buildAccountPhoneHint(BuildContext context) {
   );
 }
 
-HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints, {String? trailingText}) {
+HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints, {String? trailingText, String? boldFootnote}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
@@ -131,6 +131,13 @@ HintDialogRoute fromTitleAndBulletPoints(String title, List<String> bulletPoints
           )
           .toList()
           .spaceWithVertical(kPaddingSmall),
+      if (boldFootnote != null) ...[
+        const SizedBox(height: kPaddingMedium),
+        Text(
+          boldFootnote,
+          style: typography.styleSubtitle.copyWith(color: colors.white, fontWeight: FontWeight.bold),
+        ),
+      ],
       if (trailingText != null) ...[
         const SizedBox(height: kPaddingMedium),
         Text(
