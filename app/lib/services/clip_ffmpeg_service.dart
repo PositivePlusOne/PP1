@@ -74,6 +74,7 @@ class CreateClipExportService {
     final Logger logger = providerContainer.read(loggerProvider);
 
     logger.d('Clamping video to 720p mp4');
+    //TODO, currently making our own args list instead of using the generator, possible to remove this later/create our own
     final config = VideoFFmpegVideoEditorConfig(controller, format: VideoExportFormat.mp4);
 
     // Split '-y -i $videoPath -vf scale=-2:720 -c:v libx264 -preset medium -c:a aac -b:a 128k $outputPath' in to a list of arguments
@@ -84,28 +85,50 @@ class CreateClipExportService {
     );
 
     final List<String> args = <String>[
+      //? overwrite duplicates
       '-y',
+      //? input
       '-i',
       videoPath,
+      //? Trim from point in time
+      "-ss",
+      controller.startTrim.toString(),
+      //? Trim to point in time
+      "-to",
+      controller.endTrim.toString(),
+      //? Set output format to libx264
       "-c:v",
       "libx264",
+      //? Use fast processor
       "-preset",
       "ultrafast",
+      //? Filter to downscale
       "-vf",
       "scale=-2:720",
+      //! Cannot find documentation on -crf?
       "-crf",
       "32",
+      //? copy audio stream and reencode to aac codec
       "-c:a",
       "aac",
+      //? sample bitrate down to 44,100
       "-b:a",
       "44100",
+      //? Output path
       outputPath,
     ];
 
     bool isComplete = false;
-    final FFmpegSession session = await FFmpegKit.executeWithArgumentsAsync(args, (session) {
-      isComplete = true;
-    });
+    final FFmpegSession session = await FFmpegKit.executeWithArgumentsAsync(
+      args,
+      (session) {
+        isComplete = true;
+      },
+      (session) {
+        final String string = session.toString();
+        print(string);
+      },
+    );
 
     int i = 0;
     while (!isComplete) {
