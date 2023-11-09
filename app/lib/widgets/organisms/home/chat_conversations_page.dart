@@ -1,5 +1,7 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
@@ -51,6 +53,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
 
     useLifecycleHook(chatViewModel);
@@ -123,6 +126,18 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
           ),
         ),
         if (validChannels.isNotEmpty) ...<Widget>[
+          if (profileController.isCurrentlyManagedProfile) ...<Widget>[
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: kPaddingMedium, left: kPaddingMedium, right: kPaddingMedium),
+                child: PositiveHint(
+                  icon: UniconsLine.exclamation_triangle,
+                  iconColor: colors.purple,
+                  label: localizations.shared_hints_organisation_chat_restrictions,
+                ),
+              ),
+            ),
+          ],
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
             sliver: SliverList.separated(
