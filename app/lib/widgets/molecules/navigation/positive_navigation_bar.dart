@@ -73,10 +73,17 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
             left: kBottomNavigationBarHorizontalMargin,
             right: kBottomNavigationBarHorizontalMargin,
             bottom: PositiveNavigationBar.kBottomNavigationBarVerticalMargin + mediaQuery.padding.bottom,
-            child: PositiveNavigationBarContent(
-              index: index,
-              isDisabled: isDisabled,
-              scrollController: scrollController,
+            child: Hero(
+              placeholderBuilder: (BuildContext context, Size heroSize, Widget? child) => SizedBox(
+                height: heroSize.height,
+                width: heroSize.width,
+              ),
+              tag: PositiveNavigationBar.kHeroTag,
+              child: PositiveNavigationBarContent(
+                index: index,
+                isDisabled: isDisabled,
+                scrollController: scrollController,
+              ),
             ),
           ),
         ],
