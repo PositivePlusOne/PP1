@@ -6,6 +6,7 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { ActivitiesService } from '../activities_service';
 import { ProfileJSON } from '../../dto/profile';
 import { DataService } from '../data_service';
+import { EmailHelpers } from '../../helpers/email_helpers';
 
 export namespace DeleteMemberAction {
     export async function deleteMember(action: AdminQuickActionJSON): Promise<void> {
@@ -66,6 +67,20 @@ export namespace DeleteMemberAction {
             schemaKey: 'users',
             entryId: sourceProfileId,
         });
+
+        // and send an email informing them they have requested a deleted profile
+        const emailAddress = sourceProfile.email;
+        if (emailAddress) {
+            // not suppressing email, send one informing the user they have deleted their profile
+            await EmailHelpers.sendEmail(
+                emailAddress,
+                "Positive+1 Account Deleted",
+                "Account Deleted",
+                "We're sorry to see you go, but we've deleted your account as requested.",
+                "",
+                "Return to Positive+1",
+                "https://www.positiveplusone.com");
+        }
 
         AdminQuickActionService.appendOutput(action, `Successfully deleted profile ${sourceProfileId}`);
         AdminQuickActionService.updateStatus(action, 'success');
