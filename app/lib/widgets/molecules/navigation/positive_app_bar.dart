@@ -111,10 +111,9 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     tileMode: TileMode.clamp,
-                    stops: const <double>[0.0, 0.8, 1.0],
+                    stops: const <double>[0.0, 0.8],
                     colors: <Color>[
-                      Colors.transparent,
-                      backgroundColor,
+                      backgroundColor.withOpacity(0.2),
                       backgroundColor,
                     ],
                   ).createShader(bounds);
@@ -128,8 +127,8 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
             //* Use the background color as a darkening overlay
             //! TODO(ryan): Chat to Chris about how this needs to appear. (Color burns, requirements, etc).
             Positioned.fill(
-              child: Container(
-                color: backgroundColor.withOpacity(kOpacityVignette),
+              child: ColoredBox(
+                color: backgroundColor.withOpacity(kOpacityQuarter),
               ),
             ),
           ],
@@ -313,35 +312,38 @@ class _PositiveAppBarTrailConcave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: PositiveAppBar.kPositiveAppBarRadius * 2,
-      width: double.infinity,
-      color: backgroundColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          AnimatedContainer(
-            duration: kAnimationDurationRegular,
-            height: kPositiveConcavePillHeight,
-            width: kPositiveConcavePillWidth,
-            decoration: BoxDecoration(
-              color: decorationColor,
-              borderRadius: BorderRadius.circular(kPositiveConcavePillRadius),
-            ),
-          ),
-          const SizedBox(height: kPaddingExtraSmall),
-          AnimatedContainer(
-            duration: kAnimationDurationRegular,
-            height: PositiveAppBar.kPositiveAppBarRadius,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: decorationColor,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(PositiveAppBar.kPositiveAppBarRadius * 2),
+    return Transform.translate(
+      offset: const Offset(0, -2.0), // Fixes a known bug with multiple SliverToBoxAdapters (https://github.com/flutter/flutter/issues/37578)
+      child: Container(
+        height: PositiveAppBar.kPositiveAppBarRadius * 2,
+        width: double.infinity,
+        decoration: BoxDecoration(color: backgroundColor),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            AnimatedContainer(
+              duration: kAnimationDurationRegular,
+              height: kPositiveConcavePillHeight,
+              width: kPositiveConcavePillWidth,
+              decoration: BoxDecoration(
+                color: decorationColor,
+                borderRadius: BorderRadius.circular(kPositiveConcavePillRadius),
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: kPaddingExtraSmall),
+            AnimatedContainer(
+              duration: kAnimationDurationRegular,
+              height: PositiveAppBar.kPositiveAppBarRadius,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: decorationColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(PositiveAppBar.kPositiveAppBarRadius * 2),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
