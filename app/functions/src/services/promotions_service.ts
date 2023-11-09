@@ -36,11 +36,11 @@ export namespace PromotionsService {
         });
     }
 
-    export async function getOwnedPromotions(userId: string): Promise<any[]> {
+    export async function getOwnedPromotionsForManagedAccounts(members: string[]): Promise<any[]> {
         return DataService.getDocumentWindowRaw({
             schemaKey: 'promotions',
             where: [
-                { fieldPath: 'ownerId', op: '==', value: userId },
+                { fieldPath: 'ownerId', op: 'in', value: members },
             ],
         });
     }

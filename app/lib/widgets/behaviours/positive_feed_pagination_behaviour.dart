@@ -281,10 +281,9 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
 
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final Promotion? promotion = promotionsController.getPromotionFromIndex(index);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(index, PromotionType.feed);
 
-    final PromotedActivity? promotedActivityRecord = promotion?.activities.firstWhereOrNull((element) => element.activityId.isNotEmpty);
-    final String promotedActivityId = promotedActivityRecord?.activityId ?? '';
+    final String promotedActivityId = promotion?.activityId ?? '';
     final Activity? promotedActivity = cacheController.get(promotedActivityId);
 
     // Check promotion is valid for rare feed states
@@ -332,6 +331,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       children: <Widget>[
         buildVisualSeparator(context),
         buildItem(
+          currentProfile: currentProfile,
+          feed: feed,
           context: context,
           item: promotedActivity,
           index: index,
@@ -342,7 +343,9 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
   }
 
-  Widget buildItem({
+  static Widget buildItem({
+    required Profile? currentProfile,
+    required TargetFeed? feed,
     required BuildContext context,
     required Activity item,
     required int index,
@@ -358,8 +361,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
 
     // Check promotion is valid for rare feed states
-    final bool isClipFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'clip';
-    final bool isPostFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'post';
+    final bool isClipFeed = feed?.targetSlug == 'tags' && feed?.targetUserId == 'clip';
+    final bool isPostFeed = feed?.targetSlug == 'tags' && feed?.targetUserId == 'post';
     final ActivityGeneralConfigurationType? type = item.generalConfiguration?.type;
 
     // Check if is a clip and we're not on the clip feed
@@ -383,7 +386,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       onBuild: (context) => buildWidgetForFeed(
         activityId: activityId,
         currentProfileId: currentProfileId,
-        feed: feed,
+        feed: feed ?? const TargetFeed(),
         item: item,
         index: index,
         relationshipId: relationshipId,
@@ -492,7 +495,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
         noItemsFoundIndicatorBuilder: (context) => noPostsWidget,
-        itemBuilder: (_, item, index) => buildItem(context: context, item: item, index: index),
+        itemBuilder: (_, item, index) => buildItem(
+          currentProfile: currentProfile,
+          feed: feed,
+          context: context,
+          item: item,
+          index: index,
+        ),
       ),
     );
   }
@@ -513,7 +522,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         transitionDuration: kAnimationDurationRegular,
         firstPageProgressIndicatorBuilder: (context) => loadingIndicator,
         newPageProgressIndicatorBuilder: (context) => loadingIndicator,
-        itemBuilder: (_, item, index) => buildItem(context: context, item: item, index: index),
+        itemBuilder: (_, item, index) => buildItem(
+          context: context,
+          item: item,
+          index: index,
+          currentProfile: currentProfile,
+          feed: feed,
+        ),
       ),
     );
   }

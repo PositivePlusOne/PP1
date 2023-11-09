@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_result.dart';

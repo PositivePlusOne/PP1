@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -153,6 +154,19 @@ FirebaseStorage firebaseStorage(FirebaseStorageRef ref) {
 @Riverpod(keepAlive: true)
 FirebasePerformance firebasePerformance(FirebasePerformanceRef ref) {
   return FirebasePerformance.instance;
+}
+
+@Riverpod(keepAlive: true)
+Future<FirebaseRemoteConfig> firebaseRemoteConfig(FirebaseRemoteConfigRef ref) async {
+  final FirebaseRemoteConfig instance = FirebaseRemoteConfig.instance;
+
+  // Add default values
+  await instance.setDefaults(<String, dynamic>{
+    SystemController.kFirebaseRemoteConfigFeedPromotionFrequencyKey: 4,
+    SystemController.kFirebaseRemoteConfigChatPromotionFrequencyKey: 4,
+  });
+
+  return instance;
 }
 
 @Riverpod(keepAlive: true)

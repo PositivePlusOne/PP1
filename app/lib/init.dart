@@ -16,6 +16,7 @@ import 'package:media_kit/media_kit.dart';
 // Project imports:
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/gallery_controller.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -53,6 +54,7 @@ Future<void> setupApplication() async {
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+  final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -107,6 +109,7 @@ Future<void> setupApplication() async {
   await cacheController.setupListeners();
 
   await systemController.preloadPackageInformation();
+  await promotionsController.updatePromotionFrequenciesFromRemoteConfig();
 
   await notificationsController.requestPushNotificationPermissions();
   await notificationsController.setupPushNotificationListeners();

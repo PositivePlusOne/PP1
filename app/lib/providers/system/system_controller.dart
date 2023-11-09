@@ -69,6 +69,9 @@ class SystemController extends _$SystemController {
   static const String kFirebaseStorageEndpointSystemKey = 'FB_STORAGE_ENDPOINT';
   static const String kFirebaseFunctionsEndpointSystemKey = 'FB_FUNCTIONS_ENDPOINT';
 
+  static const String kFirebaseRemoteConfigFeedPromotionFrequencyKey = 'feed_promotion_injection_frequency';
+  static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
+
   SystemEnvironment get environment {
     const String environmentValue = String.fromEnvironment(kEnvironmentSystemKey, defaultValue: 'develop');
     switch (environmentValue) {

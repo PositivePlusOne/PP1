@@ -1,7 +1,4 @@
 // Flutter imports:
-import 'package:app/extensions/relationship_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,11 +11,14 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
 import 'package:app/extensions/dart_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';

@@ -10,26 +10,34 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/organisms/chat/components/positive_promoted_channel_list_tile.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 
@@ -82,7 +90,7 @@ enum AccountPromotedPostsType {
   chat,
 }
 
-class AccountPromotedPostsFeeds extends StatefulWidget {
+class AccountPromotedPostsFeeds extends StatefulHookConsumerWidget {
   const AccountPromotedPostsFeeds({
     required this.colors,
     required this.typography,
@@ -105,10 +113,10 @@ class AccountPromotedPostsFeeds extends StatefulWidget {
   final Profile? currentProfile;
 
   @override
-  State<AccountPromotedPostsFeeds> createState() => _AccountPromotedPostsFeedsState();
+  ConsumerState<AccountPromotedPostsFeeds> createState() => _AccountPromotedPostsFeedsState();
 }
 
-class _AccountPromotedPostsFeedsState extends State<AccountPromotedPostsFeeds> {
+class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPostsFeeds> {
   AccountPromotedPostsType _type = AccountPromotedPostsType.hub;
   AccountPromotedPostsType get type => _type;
   set type(AccountPromotedPostsType value) {
@@ -122,6 +130,11 @@ class _AccountPromotedPostsFeedsState extends State<AccountPromotedPostsFeeds> {
 
   @override
   Widget build(BuildContext context) {
+    final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
+    final PromotionsControllerState promotionsControllerState = ref.watch(promotionsControllerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
     final List<Widget> actions = [];
 
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
@@ -134,6 +147,71 @@ class _AccountPromotedPostsFeedsState extends State<AccountPromotedPostsFeeds> {
     final int remainingPromotions = (widget.availablePromotionsCount - widget.activePromotionsCount).clamp(0, widget.availablePromotionsCount);
     final int promotionKindIndex = type == AccountPromotedPostsType.hub ? 0 : 1;
 
+    final Set<String> allPromotions = promotionsControllerState.profilePromotionIds[currentProfileId] ?? {};
+    final List<Promotion> allPromotionsList = allPromotions.map((e) => cacheController.get(e)).whereType<Promotion>().toList();
+    final List<Promotion> chatPromotions = [];
+    final List<Promotion> feedPromotions = [];
+
+    for (final Promotion promotion in allPromotionsList) {
+      final bool hasPostId = promotion.activityId.isNotEmpty;
+      final bool hasLinkAndOwnerId = promotion.link.isNotEmpty && promotion.ownerId.isNotEmpty;
+
+      if (hasPostId) {
+        feedPromotions.add(promotion);
+      }
+
+      if (hasLinkAndOwnerId) {
+        chatPromotions.add(promotion);
+      }
+    }
+
+    Widget child = const SizedBox.shrink();
+    switch (type) {
+      case AccountPromotedPostsType.hub:
+        child = ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          separatorBuilder: (context, index) => PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+          itemCount: feedPromotions.length,
+          itemBuilder: (context, index) {
+            final Activity? activity = cacheController.get(feedPromotions[index].activityId);
+            if (activity == null) {
+              return const SizedBox.shrink();
+            }
+
+            return PositiveFeedPaginationBehaviour.buildItem(
+              currentProfile: widget.currentProfile,
+              promotion: feedPromotions[index],
+              feed: const TargetFeed(),
+              context: context,
+              item: activity,
+              index: index,
+            );
+          },
+        );
+        break;
+      case AccountPromotedPostsType.chat:
+        child = ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          separatorBuilder: (context, index) => PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+          itemCount: chatPromotions.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              child: PositivePromotedChannelListTile(
+                promotion: chatPromotions[index],
+                promotedActivity: cacheController.get(chatPromotions[index].activityId),
+                owner: cacheController.get(chatPromotions[index].ownerId),
+              ),
+            );
+          },
+        );
+        break;
+    }
+
     return PositiveScaffold(
       visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
       bottomNavigationBar: PositiveNavigationBar(
@@ -144,9 +222,11 @@ class _AccountPromotedPostsFeedsState extends State<AccountPromotedPostsFeeds> {
         PositiveBasicSliverList(
           appBarTrailing: actions,
           appBarSpacing: kPaddingNone,
+          horizontalPadding: 0.0,
           children: <Widget>[
             Container(
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmallMedium),
+              margin: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(kBorderRadiusInfinite),
                 color: widget.colors.colorGray2,
@@ -167,20 +247,26 @@ class _AccountPromotedPostsFeedsState extends State<AccountPromotedPostsFeeds> {
               ),
             ),
             const SizedBox(height: kPaddingSmall),
-            PositiveTabBar(
-              index: promotionKindIndex,
-              onTapped: (index) => type = index == 0 ? AccountPromotedPostsType.hub : AccountPromotedPostsType.chat,
-              margin: EdgeInsets.zero,
-              tabColours: <Color>[
-                widget.colors.green,
-                widget.colors.yellow,
-              ],
-              tabs: <String>[
-                widget.localisations.shared_promotion_type_hub,
-                widget.localisations.shared_promotion_type_chat,
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+              child: PositiveTabBar(
+                index: promotionKindIndex,
+                onTapped: (index) => type = index == 0 ? AccountPromotedPostsType.hub : AccountPromotedPostsType.chat,
+                margin: EdgeInsets.zero,
+                tabColours: <Color>[
+                  widget.colors.green,
+                  widget.colors.yellow,
+                ],
+                tabs: <String>[
+                  widget.localisations.shared_promotion_type_hub,
+                  widget.localisations.shared_promotion_type_chat,
+                ],
+              ),
             ),
             const SizedBox(height: kPaddingSmall),
+            child,
+            const SizedBox(height: kPaddingMedium),
+            PositiveNavigationBar.calculateHeight(mediaQueryData).asVerticalBox,
           ],
         ),
       ],
