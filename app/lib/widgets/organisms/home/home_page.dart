@@ -169,9 +169,8 @@ class HomePage extends HookConsumerWidget {
               onSeeMoreTopicsSelected: viewModel.onSeeMoreTopicsSelected,
               tabColours: <Color>[
                 colors.green,
-                // colors.yellow,
-                colors.teal,
                 colors.purple,
+                colors.yellow,
               ],
               tabs: const <String>[
                 'All',
