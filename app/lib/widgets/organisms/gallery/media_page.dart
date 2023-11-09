@@ -6,15 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 
@@ -26,7 +23,6 @@ class MediaPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
-    final AppRouter appRouter = ref.read(appRouterProvider);
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final double topPadding = mediaQuery.padding.top;

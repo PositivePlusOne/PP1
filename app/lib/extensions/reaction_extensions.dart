@@ -9,10 +9,14 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/reactions_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
@@ -31,6 +35,12 @@ extension ReactionExt on Reaction {
   }) async {
     final String targetProfileId = targetProfile?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final String expectedRelationshipId = [targetProfileId, currentProfileId].asGUID;
+    final Relationship? relationship = cacheController.get(expectedRelationshipId);
+    final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+    final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
 
     if (currentProfileId.isNotEmpty && currentProfileId == targetProfileId) {
       await PositiveDialog.show(
@@ -57,8 +67,10 @@ extension ReactionExt on Reaction {
         currentProfileId: currentProfileId,
         reactionID: reactionID,
         types: {
-          ReactionModalDialogOptionType.message,
-          ReactionModalDialogOptionType.block,
+          if (!isTargetBlocked) ...<ReactionModalDialogOptionType>[
+            ReactionModalDialogOptionType.message,
+            ReactionModalDialogOptionType.block,
+          ],
           if (reactionID.isNotEmpty) ReactionModalDialogOptionType.reportReaction,
         },
       ),

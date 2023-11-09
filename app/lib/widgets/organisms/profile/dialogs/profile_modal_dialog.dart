@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
@@ -21,16 +22,18 @@ import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
-import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/events/request_refresh_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/post_report_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_block_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_hide_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_report_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_unblock_dialog.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/system/design_controller.dart';
 import '../../../atoms/indicators/positive_snackbar.dart';
@@ -131,8 +134,8 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       isBusy = true;
     });
 
+    final EventBus eventBus = ref.read(eventBusProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfileId) ?? {};
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -148,14 +151,14 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
         case ProfileModalDialogOptionType.follow:
           var following = relationshipStates.contains(RelationshipState.sourceFollowed);
           following ? await relationshipController.unfollowRelationship(targetProfileId) : await relationshipController.followRelationship(targetProfileId);
-          await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+          eventBus.fire(RequestRefreshEvent());
           await appRouter.pop();
           ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${!following ? 'You are now' : 'You have stopped'} following $targetDisplayNameHandle'));
           break;
         case ProfileModalDialogOptionType.connect:
           relationshipStates.contains(RelationshipState.sourceConnected) ? await relationshipController.disconnectRelationship(targetProfileId) : await relationshipController.connectRelationship(targetProfileId);
           await appRouter.pop();
-          await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+          eventBus.fire(RequestRefreshEvent());
           break;
         case ProfileModalDialogOptionType.message:
           await getStreamController.createConversation([targetProfileId], shouldPopDialog: true);
@@ -174,12 +177,16 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
               ),
             );
           } else {
-            await relationshipController.unblockRelationship(targetProfileId);
             await appRouter.pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? localisations.shared_profile_modal_action_have_blocked : localisations.shared_profile_modal_action_have_unblocked} $targetDisplayNameHandle'),
+            await PositiveDialog.show(
+              context: context,
+              useSafeArea: false,
+              title: localizations.shared_profile_unblock_modal_title(targetDisplayNameHandle),
+              child: ProfileUnblockDialog(
+                targetProfileId: targetProfileId,
+                currentProfileId: currentProfileId,
+              ),
             );
-            await activitiesController.resetProfileFeeds(profileId: currentProfileId);
           }
           break;
         case ProfileModalDialogOptionType.mute:
@@ -271,9 +278,11 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
 
     switch (option) {
       case ProfileModalDialogOptionType.connect:
-        return !relationshipContainsOrganisation;
+        return !isTargetBlocked && !relationshipContainsOrganisation;
       case ProfileModalDialogOptionType.follow:
+        return !isTargetBlocked;
       case ProfileModalDialogOptionType.mute:
+        return !isTargetBlocked;
       case ProfileModalDialogOptionType.viewProfile:
         return !isBlocked;
       case ProfileModalDialogOptionType.message:

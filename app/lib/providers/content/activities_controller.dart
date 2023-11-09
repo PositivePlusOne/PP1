@@ -105,43 +105,6 @@ class ActivitiesController extends _$ActivitiesController {
     return activity;
   }
 
-  Future<void> resetProfileFeeds({
-    required String profileId,
-  }) async {
-    final Logger logger = ref.read(loggerProvider);
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-
-    if (profileId.isEmpty) {
-      logger.e('[Activities Service] - Profile ID is empty - cannot reset feeds');
-      return;
-    }
-
-    logger.i('[Activities Service] - Resetting profile feeds: $profileId');
-    final List<TargetFeed> feeds = [
-      TargetFeed(targetSlug: 'user', targetUserId: profileId),
-      TargetFeed(targetSlug: 'timeline', targetUserId: profileId),
-    ];
-
-    for (final TargetFeed feed in feeds) {
-      final String cacheKey = PositiveFeedState.buildFeedCacheKey(feed);
-      final PositiveFeedState? cachedFeedState = cacheController.get(cacheKey);
-      if (cachedFeedState == null) {
-        continue;
-      }
-
-      if (cachedFeedState.profileId != profileId) {
-        continue;
-      }
-
-      final PagingController<String, Activity> pagingController = cachedFeedState.pagingController;
-      pagingController.itemList = <Activity>[];
-      pagingController.refresh();
-      cacheController.add(key: cacheKey, value: cachedFeedState);
-    }
-
-    logger.i('[Activities Service] - Profile feeds reset: $profileId');
-  }
-
   Future<Activity> postActivity({
     required ActivityData activityData,
     required Profile? currentProfile,

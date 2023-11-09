@@ -709,6 +709,10 @@
     "shared_profile_report_modal_tooltip": "Comment",
     "shared_profile_report_modal_action": "Report {displayName}",
 
+    "shared_profile_unblock_modal_title": "Unblock {displayName}",
+    "shared_profile_unblock_modal_subtitle": "Unblocking {displayname} will allow them to view your posts, follow, connect with, and message you.",
+    "shared_profile_unblock_modal_action": "Unblock {displayName}",
+
     "shared_profile_block_modal_body": "Blocking this user will mean they are unable to view your posts, follow, connect with, or message you. If you need to report this user you can also do this below.",
 
     "shared_profile_hide_modal_title": "Hide Posts From {displayName}",

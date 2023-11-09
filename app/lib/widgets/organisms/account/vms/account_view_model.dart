@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluent_validation/factories/abstract_validator.dart';
 import 'package:fluent_validation/models/validation_result.dart';
@@ -20,7 +21,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
-import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/events/request_refresh_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
@@ -254,7 +255,6 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
     logger.d('onBlockUserRequested');
 
@@ -269,8 +269,40 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
       state = state.copyWith(isBusy: true);
       await relationshipController.blockRelationship(targetProfileId);
       await appRouter.pop();
-      await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+
+      final EventBus eventBus = ref.read(eventBusProvider);
+      eventBus.fire(RequestRefreshEvent());
       ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have blocked ${targetProfile?.displayName.asHandle}'));
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
+  Future<void> onUnblockUserRequested({
+    required Profile? currentProfile,
+    required Profile? targetProfile,
+  }) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('onUnblockUserRequested');
+
+    final String targetProfileId = targetProfile?.flMeta?.id ?? '';
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    if (targetProfileId.isEmpty || currentProfileId.isEmpty) {
+      logger.e('onUnblockUserRequested: targetProfileId or currentProfileId empty.');
+      return;
+    }
+
+    try {
+      state = state.copyWith(isBusy: true);
+      await relationshipController.unblockRelationship(targetProfileId);
+      await appRouter.pop();
+
+      final EventBus eventBus = ref.read(eventBusProvider);
+      eventBus.fire(RequestRefreshEvent());
+      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have unblocked ${targetProfile?.displayName.asHandle}'));
     } finally {
       state = state.copyWith(isBusy: false);
     }

@@ -20,17 +20,15 @@ import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
-import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_block_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_unblock_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/reaction_report_dialog.dart';
 import '../../../../../providers/system/design_controller.dart';
 import '../../../../gen/app_router.dart';
-import '../../../atoms/indicators/positive_snackbar.dart';
 import '../../../molecules/dialogs/positive_dialog.dart';
 
 // Project imports:
@@ -105,8 +103,6 @@ class _ReactionModalDialogState extends ConsumerState<ReactionModalDialog> {
       isBusy = true;
     });
 
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final Set<RelationshipState> relationshipStates = targetRelationship?.relationshipStatesForEntity(currentProfileId) ?? {};
 
@@ -131,10 +127,16 @@ class _ReactionModalDialogState extends ConsumerState<ReactionModalDialog> {
               ),
             );
           } else {
-            await relationshipController.unblockRelationship(targetProfileId);
             await appRouter.pop();
-            ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: '${relationshipStates.contains(RelationshipState.sourceBlocked) ? 'You have unblocked' : 'You have blocked'} $targetDisplayNameHandle'));
-            await activitiesController.resetProfileFeeds(profileId: currentProfileId);
+            await PositiveDialog.show(
+              context: context,
+              useSafeArea: false,
+              title: localizations.shared_profile_modal_action_block(targetDisplayNameHandle),
+              child: ProfileUnblockDialog(
+                targetProfileId: targetProfileId,
+                currentProfileId: currentProfileId,
+              ),
+            );
           }
           break;
         case ReactionModalDialogOptionType.reportReaction:
