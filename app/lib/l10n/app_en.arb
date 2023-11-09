@@ -673,6 +673,8 @@
     "shared_actions_more": "More",
     "shared_actions_view_more": "View More",
 
+    "shared_hints_organisation_chat_restrictions": "You can only message followers, or users who have started a conversation with your company.",
+
     "shared_profile_tagline": "Positive+1 Member",
     "shared_profile_unknown_location": "Location not shared",
     "shared_profile_display_name": "Display Name",
