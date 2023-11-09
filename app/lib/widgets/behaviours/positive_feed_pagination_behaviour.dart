@@ -232,7 +232,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return reposterId.isNotEmpty ? reposterId : publisherId;
   }
 
-  static Widget buildVisualSeparator(BuildContext context, {Widget? parent}) {
+  static Widget buildVisualSeparator(BuildContext context, {Widget? parent, Color? color}) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     // Keep it classy. :D
@@ -241,7 +241,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       child: Container(
         height: 2.0,
         decoration: BoxDecoration(
-          color: colors.white,
+          color: color ?? colors.white,
         ),
       ),
     );

@@ -5,6 +5,7 @@ import 'dart:convert';
 // Flutter imports:
 import 'package:app/extensions/reaction_extensions.dart';
 import 'package:app/hooks/cache_hook.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -184,24 +185,29 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     return MultiSliver(
       children: <Widget>[
         SliverToBoxAdapter(
-          child: Container(
-            decoration: BoxDecoration(
-              color: colours.white,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
-            ),
-            padding: const EdgeInsets.all(kPaddingMedium),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  localizations.shared_comments_heading,
-                  style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
+          child: Stack(
+            children: <Widget>[
+              Positioned.fill(child: ColoredBox(color: colours.colorGray1)),
+              Container(
+                decoration: BoxDecoration(
+                  color: colours.white,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(kBorderRadiusLarge)),
                 ),
-                if (reactionMode != null) ...<Widget>[
-                  SecurityModePill(reactionMode: reactionMode!),
-                ],
-              ],
-            ),
+                padding: const EdgeInsets.all(kPaddingMedium),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      localizations.shared_comments_heading,
+                      style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
+                    ),
+                    if (reactionMode != null) ...<Widget>[
+                      SecurityModePill(reactionMode: reactionMode!),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         if (commentsDisabled) ...<Widget>[
@@ -211,7 +217,10 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
             pagingController: reactionsState.pagingController,
-            separatorBuilder: (_, __) => const SizedBox(height: kBorderThicknessMedium),
+            separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
+              context,
+              color: colours.colorGray1,
+            ),
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
               transitionDuration: kAnimationDurationRegular,
