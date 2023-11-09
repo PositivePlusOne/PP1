@@ -672,7 +672,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     }
 
     if (pause) {
-      await videoRecordingCameraState.stopRecording();
+      if (clipRecordingState.isRecording) {
+        await videoRecordingCameraState.stopRecording();
+      }
       XFile? newSegment = await attemptProcessVideoResult();
       if (newSegment != null) {
         widget.onClipPause(newSegment);
@@ -873,6 +875,9 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
           onTap: onFlashToggleRequest,
         ),
       const SizedBox(width: kPaddingSmall),
+      //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+      //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
+      //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
       if (!clipRecordingState.isFinishedRecording) widget.textPostActionWidget ?? const SizedBox(width: kIconLarge),
     ];
   }
@@ -1080,7 +1085,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              //* -=-=-=-=-=-        Create Post without Image Attached        -=-=-=-=-=- *\\
+              //* -=-=-=-=-=-        Create Post with multiple Images Attached        -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               (widget.onTapAddImage != null && clipRecordingState.isInactive) ? CameraFloatingButton.addImage(active: true, onTap: onInternalAddImageTap) : const SizedBox(width: kIconLarge, height: kIconLarge),
 
