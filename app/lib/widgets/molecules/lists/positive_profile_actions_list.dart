@@ -28,6 +28,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/profile/dialogs/profile_disconnect_dialog.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_unblock_dialog.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/database/profile/profile.dart';
 import '../../../dtos/system/design_colors_model.dart';
@@ -115,33 +116,29 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
+    final AppRouter appRouter = ref.read(appRouterProvider);
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
-    final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final EventBus eventBus = ref.read(eventBusProvider);
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Unblock tapped');
+
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     if (targetUserId.isEmpty || currentProfileId.isEmpty) {
       logger.e('Failed to unblock user: targetUserId is empty');
       return;
     }
 
-    setState(() {
-      isBusy = true;
-    });
-
-    try {
-      await relationshipController.unblockRelationship(targetUserId);
-      eventBus.fire(RequestRefreshEvent());
-      ScaffoldMessenger.of(context).showSnackBar(PositiveFollowSnackBar(text: 'You have unblocked ${widget.targetProfile.displayName.asHandle}'));
-    } catch (e) {
-      logger.e('Failed to unblock user. Error: $e');
-    } finally {
-      setState(() {
-        isBusy = false;
-      });
-    }
+    final String targetDisplayNameHandle = widget.targetProfile.displayName.asHandle;
+    await PositiveDialog.show(
+      context: context,
+      useSafeArea: false,
+      title: localizations.shared_profile_modal_action_block(targetDisplayNameHandle),
+      child: ProfileUnblockDialog(
+        targetProfileId: targetUserId,
+        currentProfileId: currentProfileId,
+      ),
+    );
   }
 
   Future<void> onUnfollowTapped() async {
