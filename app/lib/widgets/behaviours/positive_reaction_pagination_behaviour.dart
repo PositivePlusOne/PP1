@@ -3,9 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/extensions/reaction_extensions.dart';
-import 'package:app/hooks/cache_hook.dart';
-import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -26,8 +23,10 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/reaction_extensions.dart';
+import 'package:app/extensions/reaction_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -38,6 +37,7 @@ import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/pills/security_mode_pill.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_comment.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';

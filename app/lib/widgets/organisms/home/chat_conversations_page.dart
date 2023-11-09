@@ -1,10 +1,9 @@
 // Flutter imports:
-import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:unicons/unicons.dart';
@@ -30,6 +29,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/input/positive_search_field.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/chat/components/positive_channel_list_tile.dart';
 import 'package:app/widgets/organisms/chat/components/positive_promoted_channel_list_tile.dart';
