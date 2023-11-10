@@ -39,6 +39,8 @@ class Profile with _$Profile {
     @Default(ProfileCompanySize.unknown()) @JsonKey(fromJson: ProfileCompanySize.fromJson, toJson: ProfileCompanySize.toJson, name: 'companySize') ProfileCompanySize companySize,
     @Default(0) int availablePromotionsCount,
     @Default(0) int activePromotionsCount,
+    @Default(false) bool isBanned,
+    @Default('') String banReason,
   }) = _Profile;
 
   factory Profile.empty() => const Profile();

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,10 +23,15 @@ import '../../atoms/buttons/enumerations/positive_button_style.dart';
 class ErrorPage extends ConsumerWidget {
   const ErrorPage({
     required this.errorMessage,
+    this.errorExplanation = '',
+    this.shouldSignOutOnContinue = false,
     super.key,
   });
 
   final String errorMessage;
+  final String errorExplanation;
+
+  final bool shouldSignOutOnContinue;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +48,7 @@ class ErrorPage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           primaryColor: colors.black,
-          onTapped: viewModel.onContinueSelected,
+          onTapped: () => viewModel.onContinueSelected(signOut: shouldSignOutOnContinue),
           label: localizations.shared_actions_continue,
           style: PositiveButtonStyle.primary,
           isDisabled: state.isBusy,
@@ -61,6 +67,10 @@ class ErrorPage extends ConsumerWidget {
               errorMessage,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
+            if (errorExplanation.isNotEmpty) ...<Widget>[
+              const SizedBox(height: kPaddingMedium),
+              PositiveHint.fromInfo(errorExplanation, colors.red),
+            ],
           ],
         ),
       ],

@@ -55,6 +55,8 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
           : ProfileCompanySize.fromJson(json['companySize'] as String),
       availablePromotionsCount: json['availablePromotionsCount'] as int? ?? 0,
       activePromotionsCount: json['activePromotionsCount'] as int? ?? 0,
+      isBanned: json['isBanned'] as bool? ?? false,
+      banReason: json['banReason'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
@@ -84,6 +86,8 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'companySize': ProfileCompanySize.toJson(instance.companySize),
       'availablePromotionsCount': instance.availablePromotionsCount,
       'activePromotionsCount': instance.activePromotionsCount,
+      'isBanned': instance.isBanned,
+      'banReason': instance.banReason,
     };
 
 _$ProfileStatisticsImpl _$$ProfileStatisticsImplFromJson(

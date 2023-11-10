@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/user/user_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -26,14 +27,19 @@ class ErrorViewModel extends _$ErrorViewModel with LifecycleMixin {
     return ErrorViewModelState.initialState();
   }
 
-  Future<void> onContinueSelected() async {
+  Future<void> onContinueSelected({
+    bool signOut = false,
+  }) async {
     state = state.copyWith(isBusy: true);
 
     try {
+      if (signOut) {
+        final UserController userController = ref.read(userControllerProvider.notifier);
+        await userController.signOut(shouldNavigate: false);
+      }
+
       final AppRouter appRouter = ref.read(appRouterProvider);
-      appRouter.removeWhere((route) => false);
-      //TODO (ryan): Check for white screen (restart providerContainer)
-      await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
+      appRouter.replaceAll([SplashRoute(style: SplashStyle.tomorrowStartsNow)]);
     } finally {
       state = state.copyWith(isBusy: false);
     }

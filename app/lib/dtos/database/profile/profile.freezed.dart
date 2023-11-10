@@ -57,6 +57,8 @@ mixin _$Profile {
   ProfileCompanySize get companySize => throw _privateConstructorUsedError;
   int get availablePromotionsCount => throw _privateConstructorUsedError;
   int get activePromotionsCount => throw _privateConstructorUsedError;
+  bool get isBanned => throw _privateConstructorUsedError;
+  String get banReason => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -97,7 +99,9 @@ abstract class $ProfileCopyWith<$Res> {
           name: 'companySize')
       ProfileCompanySize companySize,
       int availablePromotionsCount,
-      int activePromotionsCount});
+      int activePromotionsCount,
+      bool isBanned,
+      String banReason});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $PositivePlaceCopyWith<$Res>? get place;
@@ -142,6 +146,8 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
     Object? companySize = null,
     Object? availablePromotionsCount = null,
     Object? activePromotionsCount = null,
+    Object? isBanned = null,
+    Object? banReason = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -244,6 +250,14 @@ class _$ProfileCopyWithImpl<$Res, $Val extends Profile>
           ? _value.activePromotionsCount
           : activePromotionsCount // ignore: cast_nullable_to_non_nullable
               as int,
+      isBanned: null == isBanned
+          ? _value.isBanned
+          : isBanned // ignore: cast_nullable_to_non_nullable
+              as bool,
+      banReason: null == banReason
+          ? _value.banReason
+          : banReason // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -316,7 +330,9 @@ abstract class _$$ProfileImplCopyWith<$Res> implements $ProfileCopyWith<$Res> {
           name: 'companySize')
       ProfileCompanySize companySize,
       int availablePromotionsCount,
-      int activePromotionsCount});
+      int activePromotionsCount,
+      bool isBanned,
+      String banReason});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -362,6 +378,8 @@ class __$$ProfileImplCopyWithImpl<$Res>
     Object? companySize = null,
     Object? availablePromotionsCount = null,
     Object? activePromotionsCount = null,
+    Object? isBanned = null,
+    Object? banReason = null,
   }) {
     return _then(_$ProfileImpl(
       flMeta: freezed == flMeta
@@ -464,6 +482,14 @@ class __$$ProfileImplCopyWithImpl<$Res>
           ? _value.activePromotionsCount
           : activePromotionsCount // ignore: cast_nullable_to_non_nullable
               as int,
+      isBanned: null == isBanned
+          ? _value.isBanned
+          : isBanned // ignore: cast_nullable_to_non_nullable
+              as bool,
+      banReason: null == banReason
+          ? _value.banReason
+          : banReason // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -506,7 +532,9 @@ class _$ProfileImpl implements _Profile {
           name: 'companySize')
       this.companySize = const ProfileCompanySize.unknown(),
       this.availablePromotionsCount = 0,
-      this.activePromotionsCount = 0})
+      this.activePromotionsCount = 0,
+      this.isBanned = false,
+      this.banReason = ''})
       : _genders = genders,
         _interests = interests,
         _tags = tags,
@@ -644,10 +672,16 @@ class _$ProfileImpl implements _Profile {
   @override
   @JsonKey()
   final int activePromotionsCount;
+  @override
+  @JsonKey()
+  final bool isBanned;
+  @override
+  @JsonKey()
+  final String banReason;
 
   @override
   String toString() {
-    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, placeSkipped: $placeSkipped, suppressEmailNotifications: $suppressEmailNotifications, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, companySectors: $companySectors, companySize: $companySize, availablePromotionsCount: $availablePromotionsCount, activePromotionsCount: $activePromotionsCount)';
+    return 'Profile(flMeta: $flMeta, email: $email, phoneNumber: $phoneNumber, locale: $locale, fcmToken: $fcmToken, name: $name, displayName: $displayName, birthday: $birthday, accentColor: $accentColor, hivStatus: $hivStatus, genders: $genders, interests: $interests, tags: $tags, placeSkipped: $placeSkipped, suppressEmailNotifications: $suppressEmailNotifications, place: $place, biography: $biography, media: $media, accountFlags: $accountFlags, visibilityFlags: $visibilityFlags, featureFlags: $featureFlags, companySectors: $companySectors, companySize: $companySize, availablePromotionsCount: $availablePromotionsCount, activePromotionsCount: $activePromotionsCount, isBanned: $isBanned, banReason: $banReason)';
   }
 
   @override
@@ -699,7 +733,11 @@ class _$ProfileImpl implements _Profile {
                     other.availablePromotionsCount, availablePromotionsCount) ||
                 other.availablePromotionsCount == availablePromotionsCount) &&
             (identical(other.activePromotionsCount, activePromotionsCount) ||
-                other.activePromotionsCount == activePromotionsCount));
+                other.activePromotionsCount == activePromotionsCount) &&
+            (identical(other.isBanned, isBanned) ||
+                other.isBanned == isBanned) &&
+            (identical(other.banReason, banReason) ||
+                other.banReason == banReason));
   }
 
   @JsonKey(ignore: true)
@@ -730,7 +768,9 @@ class _$ProfileImpl implements _Profile {
         const DeepCollectionEquality().hash(_companySectors),
         companySize,
         availablePromotionsCount,
-        activePromotionsCount
+        activePromotionsCount,
+        isBanned,
+        banReason
       ]);
 
   @JsonKey(ignore: true)
@@ -777,7 +817,9 @@ abstract class _Profile implements Profile {
           name: 'companySize')
       final ProfileCompanySize companySize,
       final int availablePromotionsCount,
-      final int activePromotionsCount}) = _$ProfileImpl;
+      final int activePromotionsCount,
+      final bool isBanned,
+      final String banReason}) = _$ProfileImpl;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$ProfileImpl.fromJson;
 
@@ -843,6 +885,10 @@ abstract class _Profile implements Profile {
   int get availablePromotionsCount;
   @override
   int get activePromotionsCount;
+  @override
+  bool get isBanned;
+  @override
+  String get banReason;
   @override
   @JsonKey(ignore: true)
   _$$ProfileImplCopyWith<_$ProfileImpl> get copyWith =>
