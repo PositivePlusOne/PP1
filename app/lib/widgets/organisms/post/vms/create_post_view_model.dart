@@ -123,8 +123,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final logger = ref.read(loggerProvider);
 
-    final CameraState? currentState = await currentPositiveCameraState?.cachedCameraState?.cameraContext.stateController.first;
-    final bool isHandlingVideo = currentState != null && (currentState is VideoRecordingCameraState || currentState is VideoCameraState);
+    final bool isHandlingVideo = state.currentCreatePostPage == CreatePostCurrentPage.camera && state.currentPostType == PostType.clip;
     final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
     final bool isPrerecordingVideo = isHandlingVideo && currentPositiveCameraState?.clipRecordingState == ClipRecordingState.preRecording;
 
@@ -137,6 +136,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     // Quickly back out if in the countdown
     if (isPrerecordingVideo) {
       await currentPositiveCameraState?.stopClipRecording();
+      currentPositiveCameraState?.onClipResetState();
       displayCamera(PostType.clip);
       return;
     }
@@ -156,11 +156,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         return;
       }
 
+      currentPositiveCameraState?.onClipResetState();
+
       // Close the video and remove the page
       if (shouldForceClose) {
         router.removeLast();
-        return;
       }
+      return;
     } else {
       // we actually always want to show a basic dialog telling them that quitting the dialog
       // will discard their post
@@ -240,33 +242,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> goBackFromCamera() async {
     final AppRouter router = ref.read(appRouterProvider);
-    final logger = ref.read(loggerProvider);
-
-    if (currentCameraState == null) {
-      logger.w("Camera state is null, cannot go back");
-      router.removeLast();
-      return;
-    }
-
-    final bool isRecordingMode = currentCameraState is VideoRecordingCameraState;
-    final bool isCurrentlyRecording = currentPositiveCameraState?.clipRecordingState.isRecording == true;
-    if (isCurrentlyRecording) {
-      await currentPositiveCameraState?.stopClipRecording();
-
-      displayCamera(PostType.clip);
-      return;
-    }
-
-    if (!(currentPositiveCameraState?.clipRecordingState.isInactive ?? true)) {
-      currentPositiveCameraState?.onClipResetState();
-      return;
-    }
-
-    if (isRecordingMode) {
-      displayCamera(PostType.clip);
-      return;
-    }
-
     router.removeLast();
   }
 
