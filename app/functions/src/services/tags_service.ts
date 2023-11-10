@@ -288,7 +288,7 @@ export namespace TagsService {
       return formatTag(tag);
     });
     
-    returnTags = returnTags.slice(0, 4);
+    returnTags = returnTags.slice(0, 5);
     if (isPromotion && promotedTags.length > 1) {
       returnTags = [...promotedTags, ...returnTags];
     }
