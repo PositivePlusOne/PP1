@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:flutter/material.dart';
 
@@ -230,9 +231,11 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
                   top: kPaddingMedium,
                   right: kPaddingMedium,
                   child: PositiveButton.appBarIcon(
+                    style: PositiveButtonStyle.primary,
                     colors: colours,
                     icon: isMuted ? UniconsLine.volume_mute : UniconsLine.volume,
-                    primaryColor: colours.white,
+                    foregroundColor: colours.white,
+                    primaryColor: colours.white.withOpacity(0.1),
                     onTapped: () => onToggleMute(),
                   ),
                 ),
