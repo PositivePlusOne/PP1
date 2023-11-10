@@ -68,23 +68,7 @@ enum AnalyticEvents {
   search, // A user has performed a search on the platform
   openLinkTerms, // A user has been presented with the terms and conditions
   openLinkTickets, // A user has requested to view an events tickets
-  securityDebuggerDetected,
-  securityHookDetected,
-  securityRootDetected,
-  securityTamperDetected,
-  securityUntrustedInstallationDetected,
-  securityEmulatorDetected,
-  securityDeviceBindingDetected,
-  securityUnofficialStoreDetected,
-  securitySimulatorDetected,
-  securitySignatureDetected,
-  securityRuntimeManipulationDetected,
-  securityPasscodeDetected,
-  securityMissingSecureEnclaveDetected,
-  securityJailbreakDetected,
-  securityDeviceIdDetected,
-  securityDeviceChangeDetected,
-
+  securityAlert, // A security related event
   // Custom conversion events
   conversionRegisterFromInterestRegistration,
   conversionRegisterFromPostComments;
