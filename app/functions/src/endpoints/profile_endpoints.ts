@@ -217,9 +217,13 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
 
-    profile = await ProfileService.updateName(uid, name);
-    profile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     profile = await ProfileService.removeAccountFlags(profile, ["name_offensive"]);
+    await CacheService.setInCache(profile._fl_meta_.fl_id, profile);
+
+    profile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(profile._fl_meta_.fl_id, profile);
+
+    profile = await ProfileService.updateName(uid, name);
 
     functions.logger.info("Profile name updated", {
       profile,
@@ -291,8 +295,10 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid birthday");
     }
 
-    let newProfile = await ProfileService.updateBirthday(uid, birthday);
-    newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
+
+    newProfile = await ProfileService.updateBirthday(uid, birthday);
 
     functions.logger.info("Profile birthday updated", {
       uid,
@@ -353,8 +359,10 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of genders");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateGenders(uid, genders);
+    let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
+
+    newProfile = await ProfileService.updateGenders(uid, genders);
 
     functions.logger.info("Profile genders updated", {
       uid,
@@ -385,8 +393,10 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid list of company sectors");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateCompanySectors(uid, companySectors);
+    let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
+
+    newProfile = await ProfileService.updateCompanySectors(uid, companySectors);
 
     functions.logger.info("Profile company sectors updated", {
       uid,
@@ -418,8 +428,10 @@ export namespace ProfileEndpoints {
       placeId,
     });
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
+    let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
+
+    newProfile = await ProfileService.updatePlace(uid, description, placeId, optOut, latitude, longitude);
 
     functions.logger.info("Profile place updated", {
       uid,
@@ -449,8 +461,10 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "You must provide a valid status");
     }
 
-    await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
-    const newProfile = await ProfileService.updateHivStatus(uid, status);
+    let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
+    await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
+    
+    newProfile = await ProfileService.updateHivStatus(uid, status);
 
     functions.logger.info("Profile hiv status updated", {
       uid,
