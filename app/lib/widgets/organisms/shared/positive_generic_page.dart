@@ -2,6 +2,9 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -40,6 +43,7 @@ class PositiveGenericPage extends ConsumerWidget {
     this.isBusy = false,
     this.currentStepIndex = 0,
     this.totalSteps = 0,
+    this.onHelpSelected,
     super.key,
   });
 
@@ -48,6 +52,7 @@ class PositiveGenericPage extends ConsumerWidget {
   final String buttonText;
   final PositiveGenericPageStyle style;
 
+  final Future<void> Function()? onHelpSelected;
   final Future<void> Function() onContinueSelected;
   final bool isBusy;
   final bool canBack;
@@ -129,6 +134,22 @@ class PositiveGenericPage extends ConsumerWidget {
               body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
+            if (onHelpSelected != null) ...[
+              const SizedBox(height: kPaddingSmall),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: IntrinsicWidth(
+                  child: PositiveButton(
+                    colors: colors,
+                    primaryColor: colors.black,
+                    label: appLocalizations.shared_form_information_display,
+                    size: PositiveButtonSize.small,
+                    style: PositiveButtonStyle.text,
+                    onTapped: () => onHelpSelected!(),
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: kPaddingMassive),
           ],
         ),

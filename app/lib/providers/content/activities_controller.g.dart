@@ -7,7 +7,7 @@ part of 'activities_controller.dart';
 // **************************************************************************
 
 String _$activitiesControllerHash() =>
-    r'c974f35f66a7e2074341be143d40c5c3062202f1';
+    r'99384208dc126ac343628b68cdbe4710f19e99a4';
 
 /// See also [ActivitiesController].
 @ProviderFor(ActivitiesController)

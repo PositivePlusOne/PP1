@@ -65,6 +65,7 @@ import '../widgets/organisms/account/account_page.dart';
 import '../widgets/organisms/account/account_preferences_page.dart';
 import '../widgets/organisms/account/account_profile_edit_settings_page.dart';
 import '../widgets/organisms/account/account_update_password_page.dart';
+import '../widgets/organisms/account/account_confirm_password_page.dart';
 import '../widgets/organisms/account/account_update_phone_number_page.dart';
 import '../widgets/organisms/account/account_updated_page.dart';
 import '../widgets/organisms/development/development_page.dart';
@@ -197,6 +198,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountUpdateEmailAddressRoute.page, path: '/account/update/email', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: kCommonGuards),
+        AutoRoute(page: AccountConfirmPasswordRoute.page, path: '/account/confirm/password', guards: kCommonGuards),
         AutoRoute(page: AccountDeleteProfileRoute.page, path: '/account/delete', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete', guards: kCommonGuards),
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),

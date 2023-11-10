@@ -132,7 +132,7 @@ class UserController extends _$UserController {
     await analyticsController.trackEvent(AnalyticEvents.accountPasswordForgotten);
   }
 
-  Future<void> confirmPassword(String password) async {
+  Future<bool> confirmPassword(String password) async {
     final Logger log = ref.read(loggerProvider);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
@@ -140,7 +140,7 @@ class UserController extends _$UserController {
     log.d('[UserController] confirmPassword()');
     if (!isUserLoggedIn) {
       log.d('[UserController] confirmPassword() user is not logged in');
-      return;
+      return false;
     }
 
     final User user = firebaseAuth.currentUser!;
@@ -152,6 +152,8 @@ class UserController extends _$UserController {
     log.i('[UserController] confirmPassword() reauthenticateWithCredential');
     await user.reauthenticateWithCredential(emailAuthCredential);
     await analyticsController.trackEvent(AnalyticEvents.account2FASuccess);
+    // this throws an exception when it doesn't work - so this is good here
+    return true;
   }
 
   Future<void> linkEmailPasswordProvider(String email, String password) async {
