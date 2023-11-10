@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/guards/security_guard.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -12,6 +11,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
+import 'package:app/guards/security_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';

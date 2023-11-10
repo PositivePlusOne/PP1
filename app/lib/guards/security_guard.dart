@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/widgets.dart';
+
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,7 +9,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:flutter/widgets.dart';
 import '../gen/app_router.dart';
 
 class SecurityGuard extends AutoRouteGuard {
