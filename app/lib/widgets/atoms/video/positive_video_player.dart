@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -45,6 +46,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
   String? url;
   VideoController? videoController;
   bool isLoadingVideoPlayer = false;
+  bool isMuted = false;
 
   @override
   void dispose() {
@@ -136,9 +138,24 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     }
   }
 
+  Future<void> onToggleMute() async {
+    if (player == null) {
+      return;
+    }
+
+    if (isMuted) {
+      await player!.setVolume(100.0);
+    } else {
+      await player!.setVolume(0.0);
+    }
+    setState(() {
+      isMuted = !isMuted;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     // final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -162,7 +179,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       child: ClipRRect(
         borderRadius: widget.borderRadius ?? BorderRadius.zero,
         child: Container(
-          color: colors.black,
+          color: colours.black,
           constraints: BoxConstraints(
             minWidth: screenWidth,
             maxWidth: screenWidth,
@@ -177,7 +194,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
                   opacity: kOpacityFaint,
                   child: SvgPicture.asset(
                     SvgImages.logosCircular,
-                    color: colors.colorGray8,
+                    color: colours.colorGray8,
                     height: screenHeight * 0.5,
                     width: screenHeight * 0.5,
                   ),
@@ -201,13 +218,24 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
                           child: Center(
                             child: Icon(
                               UniconsLine.play,
-                              color: colors.white,
+                              color: colours.white,
                               size: kIconMedium,
                             ),
                           ),
                         ),
                 ),
               ),
+              if (videoController != null)
+                Positioned(
+                  top: kPaddingMedium,
+                  right: kPaddingMedium,
+                  child: PositiveButton.appBarIcon(
+                    colors: colours,
+                    icon: isMuted ? UniconsLine.volume_mute : UniconsLine.volume,
+                    primaryColor: colours.white,
+                    onTapped: () => onToggleMute(),
+                  ),
+                ),
             ],
           ),
         ),
