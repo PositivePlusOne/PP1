@@ -89,10 +89,11 @@ class ProfileBlockDialog extends HookConsumerWidget {
             await PositiveDialog.show(
               context: context,
               useSafeArea: false,
-              title: localizations.shared_profile_report_modal_title(targetDisplayName),
+              title: localizations.shared_profile_modal_action_block_report(targetDisplayName),
               child: ProfileReportDialog(
                 currentProfileId: currentProfileId,
                 targetProfileId: targetProfileId,
+                blockAndReport: true,
               ),
             );
           },
