@@ -175,7 +175,7 @@ class _ReactionModalDialogState extends ConsumerState<ReactionModalDialog> {
   }) {
     final String targetProfileId = targetProfile.flMeta?.id ?? '';
     final String targetProfileDisplayNameHandle = targetProfile.displayName.asHandle;
-    if (targetProfileId.isEmpty) {
+    if (targetProfileId.isEmpty && type != ReactionModalDialogOptionType.reportReaction) {
       return const SizedBox.shrink();
     }
 
@@ -258,15 +258,11 @@ class _ReactionModalDialogState extends ConsumerState<ReactionModalDialog> {
     optionTypes.sort((a, b) => a.order.compareTo(b.order));
 
     for (final ReactionModalDialogOptionType optionType in optionTypes) {
-      if (targetProfile == null) {
-        continue;
-      }
-
       final option = buildOption(
         colors: colors,
         currentProfile: currentProfile,
         localizations: localizations,
-        targetProfile: targetProfile,
+        targetProfile: targetProfile ?? Profile.empty(),
         targetRelationship: targetRelationship,
         type: optionType,
       );

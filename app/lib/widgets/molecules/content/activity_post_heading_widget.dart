@@ -40,7 +40,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     this.flMetaData,
     this.promotion,
     this.tags = const [],
-    this.isShared = false,
+    this.isOptionsHidden = false,
     this.isRepost = false,
     super.key,
   });
@@ -56,7 +56,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   final List<String> tags;
 
   final FutureOr<void> Function() onOptions;
-  final bool isShared;
+  final bool isOptionsHidden;
 
   final bool isRepost;
 
@@ -143,7 +143,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                 ],
               ),
             ),
-            if (!isShared && currentProfile != null) ...<Widget>[
+            if (!isOptionsHidden && currentProfile != null) ...<Widget>[
               PositiveButton.appBarIcon(
                 colors: colours,
                 icon: UniconsLine.ellipsis_h,
