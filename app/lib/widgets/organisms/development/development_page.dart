@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +44,9 @@ class DevelopmentPage extends ConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final bool isNonProduction = systemControllerState.environment != SystemEnvironment.production;
     final bool isShowingDebugMessages = systemControllerState.showingDebugMessages;
+
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final String currentFCMToken = currentProfile?.fcmToken ?? 'No FCM token found';
 
     return PositiveScaffold(
       appBar: PositiveAppBar(
@@ -164,17 +169,6 @@ class DevelopmentPage extends ConsumerWidget {
               CupertinoListTile.notched(
                 onTap: developmentViewModel.displayAuthClaims,
                 title: Text(
-                  'Request auth claims',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Displays the logged in users auth claims in the status bar',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: developmentViewModel.displayAuthClaims,
-                title: Text(
                   'Toggle ID display',
                   style: typography.styleButtonRegular.copyWith(color: colors.white),
                 ),
@@ -211,6 +205,35 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
                 subtitle: Text(
                   'Cool code we used to build Positive+1',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+              ),
+              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+              CupertinoListTile(
+                title: Text(
+                  'Troubleshooting and Support',
+                  style: typography.styleSubtextBold.copyWith(color: colors.white),
+                ),
+              ),
+              CupertinoListTile.notched(
+                onTap: developmentViewModel.displayAuthClaims,
+                title: Text(
+                  'Display auth claims',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'Displays the logged in users auth claims.',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+              ),
+              CupertinoListTile.notched(
+                onTap: developmentViewModel.displayAuthClaims,
+                title: Text(
+                  'Current Push Token',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  currentFCMToken,
                   style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
               ),
