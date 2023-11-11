@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
@@ -26,14 +27,19 @@ class ErrorViewModel extends _$ErrorViewModel with LifecycleMixin {
     return ErrorViewModelState.initialState();
   }
 
-  Future<void> onContinueSelected() async {
+  Future<void> onContinueSelected({
+    bool signOut = false,
+  }) async {
     state = state.copyWith(isBusy: true);
 
     try {
+      if (signOut) {
+        final UserController userController = ref.read(userControllerProvider.notifier);
+        await userController.signOut(shouldNavigate: false);
+      }
+
       final AppRouter appRouter = ref.read(appRouterProvider);
-      appRouter.removeWhere((route) => false);
-      //TODO (ryan): Check for white screen (restart providerContainer)
-      await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
+      appRouter.replaceAll([SplashRoute(style: SplashStyle.tomorrowStartsNow)]);
     } finally {
       state = state.copyWith(isBusy: false);
     }

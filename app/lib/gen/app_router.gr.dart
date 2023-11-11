@@ -181,6 +181,8 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ErrorPage(
           errorMessage: args.errorMessage,
+          errorExplanation: args.errorExplanation,
+          shouldSignOutOnContinue: args.shouldSignOutOnContinue,
           key: args.key,
         ),
       );
@@ -1004,12 +1006,16 @@ class DevelopmentRoute extends PageRouteInfo<void> {
 class ErrorRoute extends PageRouteInfo<ErrorRouteArgs> {
   ErrorRoute({
     required String errorMessage,
+    String errorExplanation = '',
+    bool shouldSignOutOnContinue = false,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ErrorRoute.name,
           args: ErrorRouteArgs(
             errorMessage: errorMessage,
+            errorExplanation: errorExplanation,
+            shouldSignOutOnContinue: shouldSignOutOnContinue,
             key: key,
           ),
           initialChildren: children,
@@ -1023,16 +1029,22 @@ class ErrorRoute extends PageRouteInfo<ErrorRouteArgs> {
 class ErrorRouteArgs {
   const ErrorRouteArgs({
     required this.errorMessage,
+    this.errorExplanation = '',
+    this.shouldSignOutOnContinue = false,
     this.key,
   });
 
   final String errorMessage;
 
+  final String errorExplanation;
+
+  final bool shouldSignOutOnContinue;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'ErrorRouteArgs{errorMessage: $errorMessage, key: $key}';
+    return 'ErrorRouteArgs{errorMessage: $errorMessage, errorExplanation: $errorExplanation, shouldSignOutOnContinue: $shouldSignOutOnContinue, key: $key}';
   }
 }
 

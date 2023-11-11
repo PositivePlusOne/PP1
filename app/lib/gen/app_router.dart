@@ -11,6 +11,7 @@ import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
+import 'package:app/guards/security_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';
@@ -123,12 +124,14 @@ class AppRouter extends _$AppRouter {
   final ProfileDisplayGuard profileDisplayGuard = ProfileDisplayGuard();
   final SplashGuard splashGuard = SplashGuard();
   final DevelopmentGuard developmentGuard = DevelopmentGuard();
+  final SecurityGuard securityGuard = SecurityGuard();
 
   List<AutoRouteGuard> get kCommonGuards => [
         pledgeGuard,
         authSetupGuard,
         notificationGuard,
         biometricsGuard,
+        securityGuard,
       ];
 
   @override
@@ -182,7 +185,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
         AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         //* Home and direct affiliates
-        AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, notificationGuard, biometricsGuard]),
+        AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, notificationGuard, biometricsGuard, securityGuard]),
         AutoRoute(page: HomeLoginPromptRoute.page, path: '/home/login', guards: [...kCommonGuards]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
         AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),

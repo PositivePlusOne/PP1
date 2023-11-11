@@ -79,6 +79,8 @@ export interface ProfileJSON {
     companySize?: string;
     availablePromotionsCount?: number;
     activePromotionsCount?: number;
+    isBanned?: boolean;
+    banReason?: string;
 }
 
 export class Profile {
@@ -107,6 +109,8 @@ export class Profile {
     companySize?: string;
     availablePromotionsCount: number;
     activePromotionsCount: number;
+    isBanned?: boolean;
+    banReason?: string;
 
     constructor(json: ProfileJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -134,6 +138,8 @@ export class Profile {
         this.companySize = json.companySize;
         this.availablePromotionsCount = json.availablePromotionsCount || 0;
         this.activePromotionsCount = json.activePromotionsCount || 0;
+        this.isBanned = json.isBanned;
+        this.banReason = json.banReason;
     }
 
     isIncognito(): boolean {
