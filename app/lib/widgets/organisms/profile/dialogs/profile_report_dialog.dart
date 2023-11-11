@@ -31,11 +31,13 @@ class ProfileReportDialog extends HookConsumerWidget {
   const ProfileReportDialog({
     required this.targetProfileId,
     required this.currentProfileId,
+    this.blockAndReport = false,
     super.key,
   });
 
   final String targetProfileId;
   final String currentProfileId;
+  final bool blockAndReport;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +60,9 @@ class ProfileReportDialog extends HookConsumerWidget {
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysForProfile(currentProfile, targetProfile ?? Profile.empty());
     useCacheHook(keys: expectedCacheKeys);
+
+    final String profileDisplayName = targetProfile?.displayName.asHandle ?? '';
+    final String continueButtonText = blockAndReport ? localizations.shared_profile_modal_action_block_report(profileDisplayName) : localizations.shared_profile_report_modal_title(profileDisplayName);
 
     return Column(
       children: <Widget>[
@@ -102,7 +107,8 @@ class ProfileReportDialog extends HookConsumerWidget {
             reporter: currentProfile,
           ),
           icon: UniconsLine.exclamation_octagon,
-          label: localizations.shared_profile_report_modal_title(targetProfile?.displayName.asHandle ?? ''),
+          label: continueButtonText,
+          forceIconPadding: (continueButtonText.length >= 25) ? true : false,
           primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
           isDisabled: !isValid || state.isBusy,
