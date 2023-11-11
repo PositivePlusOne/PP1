@@ -205,7 +205,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               currentProfile: widget.currentProfile,
               flMetaData: widget.activity?.flMeta,
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
-              isShared: widget.isShared,
+              isOptionsHidden: widget.isShared,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               isRepost: isRepost,
               onOptions: () => widget.activity?.onPostOptionsSelected(
@@ -291,7 +291,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
                 targetProfile: widget.targetProfile,
                 currentProfile: widget.currentProfile,
               ),
-              isShared: widget.isShared,
+              isOptionsHidden: widget.isShared,
             ),
           ),
           if (canView) ...<Widget>[

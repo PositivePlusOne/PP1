@@ -59,7 +59,7 @@ class PositiveComment extends ConsumerWidget {
           ActivityPostHeadingWidget(
             flMetaData: comment.flMeta,
             currentProfile: currentProfile,
-            publisher: publisherProfile,
+            publisher: publisherProfile ?? Profile.empty(),
             publisherRelationship: relationship,
             onOptions: () => onOptionSelected(comment, publisherProfile),
           ),

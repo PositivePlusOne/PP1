@@ -542,7 +542,7 @@
     "comment_dialogue_delete_comment_fail": "Comment could not be deleted",
     "comment_dialogue_delete_comment_success": "Comment Deleted",
     "comment_dialogue_update_comment": "Confirm Changes",
-    "comment_dialogue_delete_comment_confirm": "The comment will be removed from your feed, along with any comments.\n\nAny media associated with this comment will also be deleted from your gallery.",
+    "comment_dialogue_delete_comment_confirm": "Your comment will be removed from this post.",
 
     "profile_disconnect_dialog_remove_confirmation": "'Removing {displayName} as a connection will mean you can no longer message each other.'",
 

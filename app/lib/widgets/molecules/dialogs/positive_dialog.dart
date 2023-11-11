@@ -316,7 +316,7 @@ class PositiveOverlayDialogContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: kPaddingMedium),
+                      if (title.isNotEmpty) const SizedBox(height: kPaddingMedium),
                       child,
                     ],
                   ),
