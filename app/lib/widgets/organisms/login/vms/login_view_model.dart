@@ -3,10 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/api.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,9 +19,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../providers/user/user_controller.dart';
