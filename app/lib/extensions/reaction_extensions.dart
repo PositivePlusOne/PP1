@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -42,6 +43,7 @@ extension ReactionExt on Reaction {
     final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
     final bool isTargetConnected = relationshipStates.contains(RelationshipState.fullyConnected);
+    final bool isOrganisationProfile = targetProfile?.featureFlags.contains(kFeatureFlagOrganisation) ?? false;
 
     if (currentProfileId.isNotEmpty && currentProfileId == targetProfileId) {
       await PositiveDialog.show(
@@ -69,7 +71,7 @@ extension ReactionExt on Reaction {
         reactionID: reactionID,
         types: {
           if (!isTargetBlocked) ...<ReactionModalDialogOptionType>[
-            if (isTargetConnected) ReactionModalDialogOptionType.message,
+            if (isTargetConnected || isOrganisationProfile) ReactionModalDialogOptionType.message,
             ReactionModalDialogOptionType.block,
           ],
           if (reactionID.isNotEmpty) ReactionModalDialogOptionType.reportReaction,
