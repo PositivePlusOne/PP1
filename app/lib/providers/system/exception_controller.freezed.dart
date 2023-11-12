@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ExceptionControllerState {
-  bool get isCrashlyticsListening => throw _privateConstructorUsedError;
   Object? get currentException => throw _privateConstructorUsedError;
   String? get currentExceptionRoute => throw _privateConstructorUsedError;
 
@@ -31,10 +30,7 @@ abstract class $ExceptionControllerStateCopyWith<$Res> {
           $Res Function(ExceptionControllerState) then) =
       _$ExceptionControllerStateCopyWithImpl<$Res, ExceptionControllerState>;
   @useResult
-  $Res call(
-      {bool isCrashlyticsListening,
-      Object? currentException,
-      String? currentExceptionRoute});
+  $Res call({Object? currentException, String? currentExceptionRoute});
 }
 
 /// @nodoc
@@ -51,15 +47,10 @@ class _$ExceptionControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isCrashlyticsListening = null,
     Object? currentException = freezed,
     Object? currentExceptionRoute = freezed,
   }) {
     return _then(_value.copyWith(
-      isCrashlyticsListening: null == isCrashlyticsListening
-          ? _value.isCrashlyticsListening
-          : isCrashlyticsListening // ignore: cast_nullable_to_non_nullable
-              as bool,
       currentException: freezed == currentException
           ? _value.currentException
           : currentException,
@@ -80,10 +71,7 @@ abstract class _$$ExceptionControllerStateImplCopyWith<$Res>
       __$$ExceptionControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool isCrashlyticsListening,
-      Object? currentException,
-      String? currentExceptionRoute});
+  $Res call({Object? currentException, String? currentExceptionRoute});
 }
 
 /// @nodoc
@@ -99,15 +87,10 @@ class __$$ExceptionControllerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? isCrashlyticsListening = null,
     Object? currentException = freezed,
     Object? currentExceptionRoute = freezed,
   }) {
     return _then(_$ExceptionControllerStateImpl(
-      isCrashlyticsListening: null == isCrashlyticsListening
-          ? _value.isCrashlyticsListening
-          : isCrashlyticsListening // ignore: cast_nullable_to_non_nullable
-              as bool,
       currentException: freezed == currentException
           ? _value.currentException
           : currentException,
@@ -125,12 +108,8 @@ class _$ExceptionControllerStateImpl
     with DiagnosticableTreeMixin
     implements _ExceptionControllerState {
   const _$ExceptionControllerStateImpl(
-      {required this.isCrashlyticsListening,
-      this.currentException,
-      this.currentExceptionRoute});
+      {this.currentException, this.currentExceptionRoute});
 
-  @override
-  final bool isCrashlyticsListening;
   @override
   final Object? currentException;
   @override
@@ -138,7 +117,7 @@ class _$ExceptionControllerStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ExceptionControllerState(isCrashlyticsListening: $isCrashlyticsListening, currentException: $currentException, currentExceptionRoute: $currentExceptionRoute)';
+    return 'ExceptionControllerState(currentException: $currentException, currentExceptionRoute: $currentExceptionRoute)';
   }
 
   @override
@@ -146,8 +125,6 @@ class _$ExceptionControllerStateImpl
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'ExceptionControllerState'))
-      ..add(
-          DiagnosticsProperty('isCrashlyticsListening', isCrashlyticsListening))
       ..add(DiagnosticsProperty('currentException', currentException))
       ..add(
           DiagnosticsProperty('currentExceptionRoute', currentExceptionRoute));
@@ -158,8 +135,6 @@ class _$ExceptionControllerStateImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ExceptionControllerStateImpl &&
-            (identical(other.isCrashlyticsListening, isCrashlyticsListening) ||
-                other.isCrashlyticsListening == isCrashlyticsListening) &&
             const DeepCollectionEquality()
                 .equals(other.currentException, currentException) &&
             (identical(other.currentExceptionRoute, currentExceptionRoute) ||
@@ -169,7 +144,6 @@ class _$ExceptionControllerStateImpl
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      isCrashlyticsListening,
       const DeepCollectionEquality().hash(currentException),
       currentExceptionRoute);
 
@@ -183,12 +157,9 @@ class _$ExceptionControllerStateImpl
 
 abstract class _ExceptionControllerState implements ExceptionControllerState {
   const factory _ExceptionControllerState(
-      {required final bool isCrashlyticsListening,
-      final Object? currentException,
+      {final Object? currentException,
       final String? currentExceptionRoute}) = _$ExceptionControllerStateImpl;
 
-  @override
-  bool get isCrashlyticsListening;
   @override
   Object? get currentException;
   @override

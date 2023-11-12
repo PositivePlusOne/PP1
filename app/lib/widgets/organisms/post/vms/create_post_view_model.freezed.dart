@@ -144,7 +144,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
-    Object? currentFilter = freezed,
+    Object? currentFilter = null,
     Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
@@ -226,7 +226,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentFilter: freezed == currentFilter
+      currentFilter: null == currentFilter
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
@@ -378,7 +378,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? allowComments = null,
     Object? activeButtonFlexText = null,
     Object? saveToGallery = null,
-    Object? currentFilter = freezed,
+    Object? currentFilter = null,
     Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
@@ -460,7 +460,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.saveToGallery
           : saveToGallery // ignore: cast_nullable_to_non_nullable
               as bool,
-      currentFilter: freezed == currentFilter
+      currentFilter: null == currentFilter
           ? _value.currentFilter
           : currentFilter // ignore: cast_nullable_to_non_nullable
               as AwesomeFilter,
@@ -741,8 +741,8 @@ class _$CreatePostViewModelStateImpl
                 other.activeButtonFlexText == activeButtonFlexText) &&
             (identical(other.saveToGallery, saveToGallery) ||
                 other.saveToGallery == saveToGallery) &&
-            const DeepCollectionEquality()
-                .equals(other.currentFilter, currentFilter) &&
+            (identical(other.currentFilter, currentFilter) ||
+                other.currentFilter == currentFilter) &&
             (identical(other.reposterActivityID, reposterActivityID) ||
                 other.reposterActivityID == reposterActivityID) &&
             (identical(other.previousActivity, previousActivity) ||
@@ -792,7 +792,7 @@ class _$CreatePostViewModelStateImpl
         allowComments,
         activeButtonFlexText,
         saveToGallery,
-        const DeepCollectionEquality().hash(currentFilter),
+        currentFilter,
         reposterActivityID,
         previousActivity,
         delayTimerCurrentSelection,

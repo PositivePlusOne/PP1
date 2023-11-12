@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +21,8 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveVideoPlayer extends StatefulHookConsumerWidget {

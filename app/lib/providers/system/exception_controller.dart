@@ -17,6 +17,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import '../../services/third_party.dart';
@@ -27,14 +28,11 @@ part 'exception_controller.g.dart';
 @freezed
 class ExceptionControllerState with _$ExceptionControllerState {
   const factory ExceptionControllerState({
-    required bool isCrashlyticsListening,
     Object? currentException,
     String? currentExceptionRoute,
   }) = _ExceptionControllerState;
 
-  factory ExceptionControllerState.initialState() => const ExceptionControllerState(
-        isCrashlyticsListening: false,
-      );
+  factory ExceptionControllerState.initialState() => const ExceptionControllerState();
 }
 
 @Riverpod(keepAlive: true)
@@ -44,30 +42,17 @@ class ExceptionController extends _$ExceptionController {
     return ExceptionControllerState.initialState();
   }
 
-  Future<void> setupCrashlyticListeners() async {
-    final Logger logger = ref.read(loggerProvider);
-    final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
-
-    if (state.isCrashlyticsListening) {
-      logger.d('setupCrashlyticListeners: Already listening to crashlytics');
-      return;
-    }
-
-    await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-
-    FlutterError.onError = onFlutterErrorOccured;
-    PlatformDispatcher.instance.onError = onPlatformDispatcherErrorOccured;
-
-    logger.d('setupCrashlyticListeners: Listening to crashlytics');
-    state = state.copyWith(isCrashlyticsListening: true);
-  }
-
   Future<void> onFlutterErrorOccured(FlutterErrorDetails details) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
-    crashlytics.recordFlutterError(details);
+    final AnalyticsControllerState analyticsControllerState = ref.read(analyticsControllerProvider);
+
+    if (analyticsControllerState.isCollectingData) {
+      crashlytics.recordFlutterError(details);
+    }
 
     try {
+      logger.e('onFlutterErrorOccured: $details');
       await handleException(details.exception);
     } catch (ex) {
       logger.e('onFlutterErrorOccured: $ex');
@@ -77,8 +62,12 @@ class ExceptionController extends _$ExceptionController {
   bool onPlatformDispatcherErrorOccured(Object exception, StackTrace stackTrace) {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
+    final AnalyticsControllerState analyticsControllerState = ref.read(analyticsControllerProvider);
 
-    crashlytics.recordError(exception, stackTrace, fatal: true);
+    if (analyticsControllerState.isCollectingData) {
+      crashlytics.recordError(exception, stackTrace, fatal: true);
+    }
+
     unawaited(handleException(exception).onError((error, stackTrace) {
       logger.e('onPlatformDispatcherErrorOccured: $error');
     }));

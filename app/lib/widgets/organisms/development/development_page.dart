@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +10,11 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/resources/resources.dart';
@@ -120,34 +120,34 @@ class DevelopmentPage extends ConsumerWidget {
                   ),
                 ),
               ],
-              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-              CupertinoListTile(
-                title: Text(
-                  'Design and UI',
-                  style: typography.styleSubtextBold.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: developmentViewModel.displayAuthClaims,
-                title: Text(
-                  'Dark mode',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'This is a work in progress, so please bare with us!',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-                additionalInfo: Transform.scale(
-                  scale: 0.7,
-                  child: PositiveSwitch(
-                    activeColour: colors.white,
-                    inactiveColour: colors.colorGray7,
-                    ignoring: false,
-                    value: developmentViewModelState.darkMode,
-                    onTapped: (_) => developmentViewModel.toggleDarkMode(),
-                  ),
-                ),
-              ),
+              // PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+              // CupertinoListTile(
+              //   title: Text(
+              //     'Design and UI',
+              //     style: typography.styleSubtextBold.copyWith(color: colors.white),
+              //   ),
+              // ),
+              // CupertinoListTile.notched(
+              //   onTap: developmentViewModel.displayAuthClaims,
+              //   title: Text(
+              //     'Dark mode',
+              //     style: typography.styleButtonRegular.copyWith(color: colors.white),
+              //   ),
+              //   subtitle: Text(
+              //     'This is a work in progress, so please bare with us!',
+              //     style: typography.styleSubtext.copyWith(color: colors.white),
+              //   ),
+              //   additionalInfo: Transform.scale(
+              //     scale: 0.7,
+              //     child: PositiveSwitch(
+              //       activeColour: colors.white,
+              //       inactiveColour: colors.colorGray7,
+              //       ignoring: false,
+              //       value: developmentViewModelState.darkMode,
+              //       onTapped: (_) => developmentViewModel.toggleDarkMode(),
+              //     ),
+              //   ),
+              // ),
               PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               CupertinoListTile(
                 title: Text(

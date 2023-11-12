@@ -17,11 +17,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
+import 'package:app/widgets/organisms/splash/dialogs/analytics_collection_dialog.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
@@ -67,6 +70,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -104,6 +108,22 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
       await router.replace(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
       return;
+    }
+
+    // Check for data collection
+    final bool canPromptForAnalyticsCollection = analyticsController.state.canPromptForAnalytics;
+    if (canPromptForAnalyticsCollection) {
+      final bool? shouldCollectAnalytics = await PositiveDialog.show(
+        context: context,
+        title: 'Enable Analytics',
+        child: const AnalyticsCollectionDialog(),
+      );
+
+      if (shouldCollectAnalytics == true) {
+        await analyticsController.toggleAnalyticsCollection(true);
+      } else {
+        await analyticsController.toggleAnalyticsCollection(false);
+      }
     }
 
     //* Wait until the required splash length has been reached
