@@ -37,6 +37,11 @@ export namespace PromotionsService {
     }
 
     export async function getOwnedPromotionsForManagedAccounts(members: string[]): Promise<any[]> {
+        // If only one member, no need to query as they will not be managing any accounts
+        if (!members || members.length < 2) {
+            return [];
+        }
+
         return DataService.getDocumentWindowRaw({
             schemaKey: 'promotions',
             where: [
