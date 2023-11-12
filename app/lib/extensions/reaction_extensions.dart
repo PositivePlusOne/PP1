@@ -41,6 +41,7 @@ extension ReactionExt on Reaction {
     final Relationship? relationship = cacheController.get(expectedRelationshipId);
     final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
     final bool isTargetBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+    final bool isTargetConnected = relationshipStates.contains(RelationshipState.fullyConnected);
 
     if (currentProfileId.isNotEmpty && currentProfileId == targetProfileId) {
       await PositiveDialog.show(
@@ -68,7 +69,7 @@ extension ReactionExt on Reaction {
         reactionID: reactionID,
         types: {
           if (!isTargetBlocked) ...<ReactionModalDialogOptionType>[
-            ReactionModalDialogOptionType.message,
+            if (isTargetConnected) ReactionModalDialogOptionType.message,
             ReactionModalDialogOptionType.block,
           ],
           if (reactionID.isNotEmpty) ReactionModalDialogOptionType.reportReaction,
