@@ -156,7 +156,11 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         return;
       }
 
-      currentPositiveCameraState?.onClipResetState();
+      if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
+        displayCamera(PostType.clip);
+      } else {
+        currentPositiveCameraState?.onClipResetState();
+      }
 
       // Close the video and remove the page
       if (shouldForceClose) {
