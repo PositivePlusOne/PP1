@@ -20,7 +20,6 @@ import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/security_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -49,7 +48,6 @@ Future<void> setupApplication() async {
   final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
   final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
   final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-  final ExceptionController exceptionController = providerContainer.read(exceptionControllerProvider.notifier);
   final AsyncSecurityController securityController = providerContainer.read(asyncSecurityControllerProvider.notifier);
   final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
@@ -114,7 +112,7 @@ Future<void> setupApplication() async {
   await notificationsController.requestPushNotificationPermissions();
   await notificationsController.setupPushNotificationListeners();
 
-  await exceptionController.setupCrashlyticListeners();
+  await analyticsController.loadAnalyticsPreferences();
 
   //* Verify shared preferences future has been resolved
   await providerContainer.read(sharedPreferencesProvider.future);

@@ -80,10 +80,19 @@ FutureOr<Mixpanel> mixpanel(MixpanelRef ref) async {
   late final Mixpanel mixpanel;
   switch (systemController.environment) {
     case SystemEnvironment.production:
-      mixpanel = await Mixpanel.init('bed92b8481a9761ab9b54d10cc7478d9', trackAutomaticEvents: true);
+      mixpanel = await Mixpanel.init(
+        'bed92b8481a9761ab9b54d10cc7478d9',
+        trackAutomaticEvents: true,
+        optOutTrackingDefault: true,
+      );
       break;
     default:
-      mixpanel = await Mixpanel.init('f022a5ab8247d3bb6a1b332445837914', trackAutomaticEvents: true);
+      mixpanel = await Mixpanel.init(
+        'f022a5ab8247d3bb6a1b332445837914',
+        trackAutomaticEvents: true,
+        optOutTrackingDefault: true,
+      );
+
       mixpanel.setLoggingEnabled(true);
       break;
   }

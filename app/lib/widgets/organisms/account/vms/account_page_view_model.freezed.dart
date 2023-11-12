@@ -50,19 +50,19 @@ class _$AccountPageViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
-    Object? profileAccentColour = freezed,
-    Object? organisationAccentColour = freezed,
+    Object? profileAccentColour = null,
+    Object? organisationAccentColour = null,
   }) {
     return _then(_value.copyWith(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      profileAccentColour: freezed == profileAccentColour
+      profileAccentColour: null == profileAccentColour
           ? _value.profileAccentColour
           : profileAccentColour // ignore: cast_nullable_to_non_nullable
               as Color,
-      organisationAccentColour: freezed == organisationAccentColour
+      organisationAccentColour: null == organisationAccentColour
           ? _value.organisationAccentColour
           : organisationAccentColour // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -97,19 +97,19 @@ class __$$AccountPageViewModelStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
-    Object? profileAccentColour = freezed,
-    Object? organisationAccentColour = freezed,
+    Object? profileAccentColour = null,
+    Object? organisationAccentColour = null,
   }) {
     return _then(_$AccountPageViewModelStateImpl(
       isBusy: null == isBusy
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
-      profileAccentColour: freezed == profileAccentColour
+      profileAccentColour: null == profileAccentColour
           ? _value.profileAccentColour
           : profileAccentColour // ignore: cast_nullable_to_non_nullable
               as Color,
-      organisationAccentColour: freezed == organisationAccentColour
+      organisationAccentColour: null == organisationAccentColour
           ? _value.organisationAccentColour
           : organisationAccentColour // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -146,18 +146,16 @@ class _$AccountPageViewModelStateImpl implements _AccountPageViewModelState {
         (other.runtimeType == runtimeType &&
             other is _$AccountPageViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
-            const DeepCollectionEquality()
-                .equals(other.profileAccentColour, profileAccentColour) &&
-            const DeepCollectionEquality().equals(
-                other.organisationAccentColour, organisationAccentColour));
+            (identical(other.profileAccentColour, profileAccentColour) ||
+                other.profileAccentColour == profileAccentColour) &&
+            (identical(
+                    other.organisationAccentColour, organisationAccentColour) ||
+                other.organisationAccentColour == organisationAccentColour));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      isBusy,
-      const DeepCollectionEquality().hash(profileAccentColour),
-      const DeepCollectionEquality().hash(organisationAccentColour));
+      runtimeType, isBusy, profileAccentColour, organisationAccentColour);
 
   @JsonKey(ignore: true)
   @override

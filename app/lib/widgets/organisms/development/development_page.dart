@@ -120,34 +120,34 @@ class DevelopmentPage extends ConsumerWidget {
                   ),
                 ),
               ],
-              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-              CupertinoListTile(
-                title: Text(
-                  'Design and UI',
-                  style: typography.styleSubtextBold.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: developmentViewModel.displayAuthClaims,
-                title: Text(
-                  'Dark mode',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'This is a work in progress, so please bare with us!',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-                additionalInfo: Transform.scale(
-                  scale: 0.7,
-                  child: PositiveSwitch(
-                    activeColour: colors.white,
-                    inactiveColour: colors.colorGray7,
-                    ignoring: false,
-                    value: developmentViewModelState.darkMode,
-                    onTapped: (_) => developmentViewModel.toggleDarkMode(),
-                  ),
-                ),
-              ),
+              // PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+              // CupertinoListTile(
+              //   title: Text(
+              //     'Design and UI',
+              //     style: typography.styleSubtextBold.copyWith(color: colors.white),
+              //   ),
+              // ),
+              // CupertinoListTile.notched(
+              //   onTap: developmentViewModel.displayAuthClaims,
+              //   title: Text(
+              //     'Dark mode',
+              //     style: typography.styleButtonRegular.copyWith(color: colors.white),
+              //   ),
+              //   subtitle: Text(
+              //     'This is a work in progress, so please bare with us!',
+              //     style: typography.styleSubtext.copyWith(color: colors.white),
+              //   ),
+              //   additionalInfo: Transform.scale(
+              //     scale: 0.7,
+              //     child: PositiveSwitch(
+              //       activeColour: colors.white,
+              //       inactiveColour: colors.colorGray7,
+              //       ignoring: false,
+              //       value: developmentViewModelState.darkMode,
+              //       onTapped: (_) => developmentViewModel.toggleDarkMode(),
+              //     ),
+              //   ),
+              // ),
               PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               CupertinoListTile(
                 title: Text(

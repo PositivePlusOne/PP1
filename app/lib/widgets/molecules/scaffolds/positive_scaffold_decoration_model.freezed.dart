@@ -71,8 +71,8 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
   @override
   $Res call({
     Object? asset = null,
-    Object? alignment = freezed,
-    Object? color = freezed,
+    Object? alignment = null,
+    Object? color = null,
     Object? scale = null,
     Object? offsetX = null,
     Object? offsetY = null,
@@ -83,11 +83,11 @@ class _$PositiveScaffoldDecorationModelCopyWithImpl<$Res,
           ? _value.asset
           : asset // ignore: cast_nullable_to_non_nullable
               as String,
-      alignment: freezed == alignment
+      alignment: null == alignment
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
-      color: freezed == color
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -145,8 +145,8 @@ class __$$PositiveScaffoldDecorationModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? asset = null,
-    Object? alignment = freezed,
-    Object? color = freezed,
+    Object? alignment = null,
+    Object? color = null,
     Object? scale = null,
     Object? offsetX = null,
     Object? offsetY = null,
@@ -157,11 +157,11 @@ class __$$PositiveScaffoldDecorationModelImplCopyWithImpl<$Res>
           ? _value.asset
           : asset // ignore: cast_nullable_to_non_nullable
               as String,
-      alignment: freezed == alignment
+      alignment: null == alignment
           ? _value.alignment
           : alignment // ignore: cast_nullable_to_non_nullable
               as Alignment,
-      color: freezed == color
+      color: null == color
           ? _value.color
           : color // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -233,8 +233,9 @@ class _$PositiveScaffoldDecorationModelImpl
         (other.runtimeType == runtimeType &&
             other is _$PositiveScaffoldDecorationModelImpl &&
             (identical(other.asset, asset) || other.asset == asset) &&
-            const DeepCollectionEquality().equals(other.alignment, alignment) &&
-            const DeepCollectionEquality().equals(other.color, color) &&
+            (identical(other.alignment, alignment) ||
+                other.alignment == alignment) &&
+            (identical(other.color, color) || other.color == color) &&
             (identical(other.scale, scale) || other.scale == scale) &&
             (identical(other.offsetX, offsetX) || other.offsetX == offsetX) &&
             (identical(other.offsetY, offsetY) || other.offsetY == offsetY) &&
@@ -244,15 +245,8 @@ class _$PositiveScaffoldDecorationModelImpl
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      asset,
-      const DeepCollectionEquality().hash(alignment),
-      const DeepCollectionEquality().hash(color),
-      scale,
-      offsetX,
-      offsetY,
-      rotationDegrees);
+  int get hashCode => Object.hash(runtimeType, asset, alignment, color, scale,
+      offsetX, offsetY, rotationDegrees);
 
   @JsonKey(ignore: true)
   @override
