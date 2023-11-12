@@ -51,7 +51,6 @@ import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/organisms/shared/tag_feed_page.dart';
 import 'package:app/widgets/organisms/terms_and_conditions/terms_and_conditions_page.dart';
 import '../guards/auth_setup_guard.dart';
-import '../guards/development_guard.dart';
 import '../guards/notification_guard.dart';
 import '../guards/pledge_guard.dart';
 import '../guards/profile_setup_guard.dart';
@@ -123,7 +122,6 @@ class AppRouter extends _$AppRouter {
   final ProfileSetupGuard profileSetupGuard = ProfileSetupGuard();
   final ProfileDisplayGuard profileDisplayGuard = ProfileDisplayGuard();
   final SplashGuard splashGuard = SplashGuard();
-  final DevelopmentGuard developmentGuard = DevelopmentGuard();
   final SecurityGuard securityGuard = SecurityGuard();
 
   List<AutoRouteGuard> get kCommonGuards => [
@@ -228,7 +226,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: VerificationDialogRoute.page, path: '/verification/dialog'),
         //* Other
         AutoRoute(page: ErrorRoute.page, path: '/error'),
-        AutoRoute(page: DevelopmentRoute.page, path: '/devtools', guards: [developmentGuard]),
+        AutoRoute(page: DevelopmentRoute.page, path: '/devtools'),
         RedirectRoute(path: '*', redirectTo: '/'),
       ];
 }
