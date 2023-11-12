@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/main.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -424,6 +426,7 @@ class UserController extends _$UserController {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
+    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
 
     log.d('[UserController] signOut()');
     if (!isUserLoggedIn) {
@@ -449,5 +452,8 @@ class UserController extends _$UserController {
       appRouter.removeWhere((route) => true);
       await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
     }
+
+    //? Remove all shared preferences from local storage
+    await systemController.resetSharedPreferences();
   }
 }
