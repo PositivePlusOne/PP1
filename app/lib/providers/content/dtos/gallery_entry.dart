@@ -22,6 +22,14 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/services/third_party.dart';
 
+class UploadResult {
+  UploadResult({
+    required this.mediaThumbnails,
+  });
+
+  final List<MediaThumbnail> mediaThumbnails;
+}
+
 class GalleryEntry {
   GalleryEntry({
     this.reference,
@@ -61,12 +69,14 @@ class GalleryEntry {
 
   Future<Media> createMedia({AwesomeFilter? filter, String altText = '', String mimeType = ''}) async {
     final Logger logger = providerContainer.read(loggerProvider);
+    final List<MediaThumbnail> mediaThumbnails = <MediaThumbnail>[];
     logger.i('createMedia() checking if uploaded');
 
     final bool isUploaded = await hasBeenUploaded();
     if (!isUploaded) {
       logger.i('createMedia() uploading');
-      await upload(filter: filter);
+      final UploadResult result = await upload(filter: filter);
+      mediaThumbnails.addAll(result.mediaThumbnails);
     }
 
     logger.i('createMedia() creating media');
@@ -77,18 +87,20 @@ class GalleryEntry {
       width: width ?? -1,
       priority: kMediaPriorityDefault,
       bucketPath: reference!.fullPath,
+      thumbnails: mediaThumbnails,
       type: MediaType.fromMimeType(mimeType, storedInBucket: true),
     );
   }
 
-  Future<void> upload({AwesomeFilter? filter}) async {
+  Future<UploadResult> upload({AwesomeFilter? filter}) async {
     final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
+    final List<MediaThumbnail> mediaThumbnails = <MediaThumbnail>[];
 
     final bool hasBeenUploaded = await this.hasBeenUploaded();
     if (hasBeenUploaded) {
       logger.d('upload() hasBeenUploaded');
-      return;
+      return UploadResult(mediaThumbnails: mediaThumbnails);
     }
 
     Uint8List data = await file?.readAsBytes() ?? Uint8List(0);
@@ -110,11 +122,36 @@ class GalleryEntry {
       data = await compressImageAndApplyFilter(data: data, filter: filter);
     }
 
-    //* This is optional, so leaving commented out as currently the editor will handle this
-    // if (mimeType.startsWith('video/')) {
-    //   logger.d('upload() mimeType.startsWith(video/)');
-    //   data = await compressVideo(data: data);
-    // }
+    if (mimeType.startsWith('video/')) {
+      logger.d('upload() mimeType.startsWith(video/)');
+
+      // Get a thumbnail and store it as a media thumbnail
+      logger.d('upload() creating thumbnail');
+      final File thumbnailFile = await createThumbnailForVideo();
+      final Uint8List thumbnailData = await thumbnailFile.readAsBytes();
+      final String thumbnailFileName = fileName.replaceAll(RegExp(r'\.[^\.]+$'), '_thumbnail.jpg');
+      final Reference thumbnailReference = galleryController.rootProfileGalleryReference.child(thumbnailFileName);
+      final UploadTask thumbnailUploadTask = thumbnailReference.putData(
+        thumbnailData,
+        SettableMetadata(
+          contentType: 'image/jpeg',
+          cacheControl: 'public, max-age=31536000',
+          contentDisposition: 'attachment; filename="$thumbnailFileName"',
+        ),
+      );
+
+      await thumbnailUploadTask.whenComplete(() {});
+
+      final MediaThumbnail mediaThumbnail = MediaThumbnail(
+        bucketPath: thumbnailReference.fullPath,
+        url: await thumbnailReference.getDownloadURL(),
+      );
+
+      mediaThumbnails.add(mediaThumbnail);
+
+      //* This is optional, so leaving commented out as currently the editor will handle this
+      // data = await compressVideo(data: data);
+    }
 
     final SettableMetadata metadata = SettableMetadata(
       contentType: mimeType,
@@ -124,6 +161,43 @@ class GalleryEntry {
 
     storageUploadTask = reference?.putData(data, metadata);
     await storageUploadTask!.whenComplete(() {});
+
+    return UploadResult(mediaThumbnails: mediaThumbnails);
+  }
+
+  Future<File> createThumbnailForVideo() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    logger.d('createThumbnailForVideo()');
+
+    final String tempFilePath = file!.path.replaceAll(RegExp(r'\.[^\.]+$'), '_thumbnail.jpg');
+
+    // Scale the thumbnail to 1280
+    final String command = '-y -i ${file!.path} -vf scale=-2:1280 -vframes 1 $tempFilePath';
+    final FFmpegSession session = await FFmpegKit.executeAsync(command);
+
+    final SessionState state = await session.getState();
+    if (state == SessionState.failed) {
+      final ReturnCode? returnCode = await session.getReturnCode();
+      final String? output = await session.getOutput();
+      final List<Log> logs = await session.getLogs();
+      logger.e('createThumbnailForVideo() ffmpeg failed: $returnCode\n$output\n$logs');
+      throw Exception('createThumbnailForVideo() ffmpeg failed: $returnCode\n$output\n$logs');
+    }
+
+    // Wait for the file to be written
+    final File thumbnailFile = File(tempFilePath);
+
+    int i = 0;
+    while (!await thumbnailFile.exists()) {
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      i++;
+
+      if (i >= 10) {
+        throw Exception('createThumbnailForVideo() thumbnailFile does not exist');
+      }
+    }
+
+    return thumbnailFile;
   }
 
   Future<Uint8List> compressVideo({required Uint8List data}) async {

@@ -8,12 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/constants/profile_constants.dart';
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/dialog_hint_helpers.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/account/account_confirm_password_page.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';

@@ -1,10 +1,13 @@
+// Dart imports:
+import 'dart:typed_data';
+
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -23,6 +26,8 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
 import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveVideoPlayer extends StatefulHookConsumerWidget {
@@ -45,9 +50,17 @@ class PositiveVideoPlayer extends StatefulHookConsumerWidget {
 class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
   Player? player;
   String? url;
+  Uint8List thumbnailData = Uint8List(0);
+
   VideoController? videoController;
   bool isLoadingVideoPlayer = false;
   bool isMuted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => loadVideoThumbnail());
+  }
 
   @override
   void dispose() {
@@ -64,6 +77,49 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     }
   }
 
+  Future<void> loadVideoThumbnail() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    if (thumbnailData.isNotEmpty) {
+      return;
+    }
+
+    final pp1_media.MediaThumbnail? thumbnail = widget.media.thumbnails.firstWhereOrNull((element) => element.bucketPath.isNotEmpty);
+    final DefaultCacheManager cacheManager = await providerContainer.read(defaultCacheManagerProvider.future);
+    logger.d('Loading video thumbnail for ${widget.media.name}');
+
+    if (thumbnail == null) {
+      logger.w('No video thumbnail found for ${widget.media.name}');
+      return;
+    }
+
+    final String bucketPath = thumbnail.bucketPath;
+    if (bucketPath.isEmpty) {
+      logger.w('No video thumbnail found for ${widget.media.name}');
+      return;
+    }
+
+    final FileInfo? info = await cacheManager.getFileFromMemory(bucketPath);
+    if (info != null) {
+      logger.d('Video thumbnail for ${widget.media.name} found in cache');
+      thumbnailData = info.file.readAsBytesSync();
+      setStateIfMounted();
+      return;
+    }
+
+    final FirebaseStorage firebaseStorage = providerContainer.read(firebaseStorageProvider);
+    final Reference ref = firebaseStorage.ref(bucketPath);
+    final Uint8List? newThumbnailData = await ref.getData();
+    if (newThumbnailData == null) {
+      logger.w('No video thumbnail found for ${widget.media.name}');
+      return;
+    }
+
+    logger.d('Video thumbnail for ${widget.media.name} downloaded from Firebase');
+    thumbnailData = newThumbnailData;
+    await cacheManager.putFile(bucketPath, newThumbnailData);
+    setStateIfMounted();
+  }
+
   Future<void> resetPlayer() async {
     if (player?.state.playing == true) {
       await player?.stop();
@@ -74,6 +130,9 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
 
     videoController = null;
     url = null;
+
+    thumbnailData = Uint8List(0);
+    WidgetsBinding.instance.addPostFrameCallback((_) => loadVideoThumbnail());
 
     setStateIfMounted();
   }
@@ -149,6 +208,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
     } else {
       await player!.setVolume(0.0);
     }
+
     setState(() {
       isMuted = !isMuted;
     });
@@ -188,45 +248,55 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
           ),
           child: Stack(
             children: <Widget>[
-              Positioned(
-                bottom: kPaddingInformationBreak * -1,
-                right: kPaddingInformationBreak * -1,
-                child: Opacity(
-                  opacity: kOpacityFaint,
-                  child: SvgPicture.asset(
-                    SvgImages.logosCircular,
-                    color: colours.colorGray8,
-                    height: screenHeight * 0.5,
-                    width: screenHeight * 0.5,
+              if (videoController == null) ...<Widget>[
+                if (thumbnailData.isEmpty) ...<Widget>[
+                  Positioned(
+                    bottom: kPaddingInformationBreak * -1,
+                    right: kPaddingInformationBreak * -1,
+                    child: Opacity(
+                      opacity: kOpacityFaint,
+                      child: SvgPicture.asset(
+                        SvgImages.logosCircular,
+                        colorFilter: ColorFilter.mode(colours.colorGray8, BlendMode.srcIn),
+                        height: screenHeight * 0.5,
+                        width: screenHeight * 0.5,
+                      ),
+                    ),
+                  ),
+                ],
+                if (thumbnailData.isNotEmpty) ...<Widget>[
+                  Positioned.fill(
+                    child: Image.memory(
+                      thumbnailData,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+                Positioned.fill(
+                  child: PositiveTapBehaviour(
+                    isEnabled: !isLoadingVideoPlayer,
+                    onTap: (_) async => handleTrackRequest(),
+                    child: Center(
+                      child: Icon(
+                        UniconsLine.play,
+                        color: colours.white,
+                        size: kIconMedium,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              Positioned.fill(
-                child: AnimatedSwitcher(
-                  duration: kAnimationDurationRegular,
-                  child: videoController != null
-                      ? Video(
-                          filterQuality: FilterQuality.none,
-                          alignment: Alignment.center,
-                          controller: videoController!,
-                          pauseUponEnteringBackgroundMode: true,
-                          aspectRatio: videoAspectRatio,
-                          wakelock: true,
-                        )
-                      : PositiveTapBehaviour(
-                          isEnabled: !isLoadingVideoPlayer,
-                          onTap: (_) async => handleTrackRequest(),
-                          child: Center(
-                            child: Icon(
-                              UniconsLine.play,
-                              color: colours.white,
-                              size: kIconMedium,
-                            ),
-                          ),
-                        ),
+              ],
+              if (videoController != null) ...<Widget>[
+                Positioned.fill(
+                  child: Video(
+                    filterQuality: FilterQuality.none,
+                    alignment: Alignment.center,
+                    controller: videoController!,
+                    pauseUponEnteringBackgroundMode: true,
+                    aspectRatio: videoAspectRatio,
+                    wakelock: true,
+                  ),
                 ),
-              ),
-              if (videoController != null)
                 Positioned(
                   top: kPaddingMedium,
                   right: kPaddingMedium,
@@ -239,6 +309,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
                     onTapped: () => onToggleMute(),
                   ),
                 ),
+              ],
             ],
           ),
         ),

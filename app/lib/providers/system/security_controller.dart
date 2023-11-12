@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:freerasp/freerasp.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:local_auth/local_auth.dart';

@@ -169,14 +169,14 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     return bytes;
   }
 
-  Future<Uint8List> loadFromFirebase() async {
+  Future<Uint8List> loadFromFirebase({String? expectedFileExtension}) async {
     final Logger logger = providerContainer.read(loggerProvider);
     Reference ref = FirebaseStorage.instance.ref(media.bucketPath);
 
     if (thumbnailTargetSize != null && useThumbnailIfAvailable) {
       final String bucketPathWithoutFilename = media.bucketPath.substring(0, media.bucketPath.lastIndexOf('/'));
       final String filenameWithoutExtension = media.name.substring(0, media.name.lastIndexOf('.'));
-      final String fileExtension = media.name.split('.').last;
+      final String fileExtension = expectedFileExtension ?? media.name.split('.').last;
 
       final Reference thumbnailReference = FirebaseStorage.instance.ref('$bucketPathWithoutFilename/thumbnails');
 
