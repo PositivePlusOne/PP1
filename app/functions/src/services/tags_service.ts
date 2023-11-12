@@ -210,8 +210,6 @@ export namespace TagsService {
     const feedWindow = await FeedService.getFeedWindow(uid, userFeed, 3, "");
     const activities = await ActivitiesService.getActivityFeedWindow(feedWindow.results) as ActivityJSON[];
 
-    functions.logger.info("Getting tags from activities", { activities });
-
     const tagStringValues = [] as string[];
     for (const activity of activities) {
       for (const tag of activity?.enrichmentConfiguration?.tags || []) {
@@ -223,13 +221,14 @@ export namespace TagsService {
       }
     }
 
-    functions.logger.info("Getting recent tags from cache", { tagStringValues });
+    let filteredTags = [] as TagJSON[];
+
+    if (tagStringValues.length === 0) {
+      return filteredTags;
+    }
+
     const cachedTags = await TagsService.getMultipleTags(tagStringValues);
-
-    // Filter out nulls
-    const filteredTags = cachedTags.filter((tag) => !!tag);
-
-    functions.logger.info("Got recent tags from cache", { cachedTags });
+    filteredTags = cachedTags.filter((tag) => !!tag);
     return filteredTags;
   }
 

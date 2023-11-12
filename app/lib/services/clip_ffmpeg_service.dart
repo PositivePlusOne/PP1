@@ -104,10 +104,10 @@ class CreateClipExportService {
       "ultrafast",
       //? Filter to downscale
       "-vf",
-      "scale=-2:720",
+      "scale=-2:1280",
       //! Cannot find documentation on -crf?
       "-crf",
-      "32",
+      "26",
       //? copy audio stream and reencode to aac codec
       "-c:a",
       "aac",
