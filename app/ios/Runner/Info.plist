@@ -89,9 +89,9 @@
 	<string>We require access to reminders so that we may remind you of events in your schedule.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Positive+1 asks for microphone access as users can create video content within the app. Microphone access allows users to capture audio alongside the video.</string>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<string>NSUserTrackingUsageDescription</string>
+	<key>NSUserTrackingUsageDescription</key>
 	<string>Your data will be used to deliver promoted content personalized to you, and help us improve your experience.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

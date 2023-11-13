@@ -12,12 +12,12 @@ import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../../services/third_party.dart';
 
 part 'analytics_controller.freezed.dart';

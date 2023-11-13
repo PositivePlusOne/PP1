@@ -3,17 +3,17 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Package imports:
-import 'package:universal_io/io.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -28,7 +28,6 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/splash/dialogs/analytics_collection_dialog.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
 
