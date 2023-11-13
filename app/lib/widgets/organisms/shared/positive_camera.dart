@@ -249,30 +249,41 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       );
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await checkCameraPermission(request: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => attemptPreloadCameraPermissions());
+  }
 
-      final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-      if (deviceInfo is AndroidDeviceInfo) {
-        isPhysicalDevice = deviceInfo.isPhysicalDevice;
-      } else if (deviceInfo is IosDeviceInfo) {
-        isPhysicalDevice = deviceInfo.isPhysicalDevice;
-      }
+  Future<void> attemptPreloadCameraPermissions() async {
+    await checkCameraPermission(request: true);
 
-      if (hasCameraPermission) {
-        viewMode = PositiveCameraViewMode.camera;
-      } else {
-        viewMode = PositiveCameraViewMode.cameraPermissionOverlay;
-      }
+    final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+    if (deviceInfo is AndroidDeviceInfo) {
+      isPhysicalDevice = deviceInfo.isPhysicalDevice;
+    } else if (deviceInfo is IosDeviceInfo) {
+      isPhysicalDevice = deviceInfo.isPhysicalDevice;
+    }
 
-      setStateIfMounted();
-    });
+    if (hasCameraPermission) {
+      viewMode = PositiveCameraViewMode.camera;
+    } else {
+      viewMode = PositiveCameraViewMode.cameraPermissionOverlay;
+    }
+
+    setStateIfMounted();
   }
 
   @override
   void onPause() {
     super.onPause();
     stopClipRecording();
+  }
+
+  @override
+  void onResume() {
+    super.onResume();
+
+    if (!hasCameraPermission) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => attemptPreloadCameraPermissions());
+    }
   }
 
   @override
@@ -289,8 +300,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   Future<void> checkCameraPermission({bool request = false}) async {
     try {
       if (request) {
-        cameraPermissionStatus ??= await Permission.camera.request();
-        microphonePermissionStatus ??= await Permission.microphone.request();
+        cameraPermissionStatus = await Permission.camera.request();
+        microphonePermissionStatus = await Permission.microphone.request();
       } else {
         cameraPermissionStatus = await Permission.camera.status;
         microphonePermissionStatus = await Permission.microphone.status;
