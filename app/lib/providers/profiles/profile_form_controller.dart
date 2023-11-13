@@ -1058,7 +1058,9 @@ class ProfileFormController extends _$ProfileFormController {
     final XFile? result = await showCupertinoDialog(
       context: context,
       builder: (_) {
-        return const PositiveCameraDialog();
+        return const PositiveCameraDialog(
+          displayCameraShade: false,
+        );
       },
     );
 
