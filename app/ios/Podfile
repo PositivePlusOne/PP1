@@ -80,13 +80,13 @@ post_install do |installer|
         '$(inherited)',
 
         ## dart: PermissionGroup.calendar
-        'PERMISSION_EVENTS=1',
+        # 'PERMISSION_EVENTS=1',
 
         ## dart: PermissionGroup.reminders
-        'PERMISSION_REMINDERS=1',
+        # 'PERMISSION_REMINDERS=1',
 
         ## dart: PermissionGroup.contacts
-        'PERMISSION_CONTACTS=1',
+        # 'PERMISSION_CONTACTS=1',
 
         ## dart: PermissionGroup.camera
         'PERMISSION_CAMERA=1',
@@ -116,7 +116,7 @@ post_install do |installer|
         # 'PERMISSION_BLUETOOTH=1',
 
         ## dart: PermissionGroup.appTrackingTransparency
-        # 'PERMISSION_APP_TRACKING_TRANSPARENCY=1',
+        'PERMISSION_APP_TRACKING_TRANSPARENCY=1',
 
         ## dart: PermissionGroup.criticalAlerts
         # 'PERMISSION_CRITICAL_ALERTS=1'

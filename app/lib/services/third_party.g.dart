@@ -418,6 +418,24 @@ final locationPermissionsProvider = FutureProvider<PermissionStatus>.internal(
 );
 
 typedef LocationPermissionsRef = FutureProviderRef<PermissionStatus>;
+String _$appTrackingTransparencyPermissionsHash() =>
+    r'5ae7c4a8f6c8f3fc71f6aa7c46b69864bff9ca5f';
+
+/// See also [appTrackingTransparencyPermissions].
+@ProviderFor(appTrackingTransparencyPermissions)
+final appTrackingTransparencyPermissionsProvider =
+    FutureProvider<PermissionStatus>.internal(
+  appTrackingTransparencyPermissions,
+  name: r'appTrackingTransparencyPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$appTrackingTransparencyPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AppTrackingTransparencyPermissionsRef
+    = FutureProviderRef<PermissionStatus>;
 String _$packageInfoHash() => r'9a2956f08c2e98b92dd8cce49cb331a127c78670';
 
 /// See also [packageInfo].
