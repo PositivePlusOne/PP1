@@ -401,13 +401,13 @@ class ProfileFormController extends _$ProfileFormController {
     final DateTime today = DateTime.now();
     final DateTime thirteenYearsAgo = DateTime(today.year - kAgeRequirement13, today.month, today.day);
 
-    if (!isBirthdayValid) {
-      return;
-    }
-
     if (birthday.isAfter(thirteenYearsAgo)) {
       logger.e('User is not 13 years old, navigating to age requirement screen');
       await appRouter.push(const BirthdayDeleteAccountRoute());
+      return;
+    }
+
+    if (!isBirthdayValid) {
       return;
     }
 
