@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,6 +27,7 @@ import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
+import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_details_view_model.freezed.dart';
@@ -70,6 +73,77 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       logger.d('AccountDetailsViewModel userChanges: $user');
       updateSocialProviders();
     });
+  }
+
+  Future<void> onChangeImageFromCameraSelected(BuildContext context) async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.d("onSelectCamera");
+    await appRouter.pop();
+
+    state = state.copyWith(isBusy: true);
+
+    final XFile? result = await showCupertinoDialog(
+      context: context,
+      builder: (_) {
+        return const PositiveCameraDialog();
+      },
+    );
+
+    state = state.copyWith(isBusy: false);
+
+    if (result == null || result.path.isEmpty) {
+      logger.d("onSelectCamera: result is null or not a string");
+      return;
+    }
+
+    logger.d("onSelectCamera: result is $result");
+    await onImageUploadRequest(result);
+  }
+
+  Future<void> onChangeImageFromPickerSelected(BuildContext context) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final ImagePicker picker = ref.read(imagePickerProvider);
+
+    await appRouter.pop();
+
+    logger.d("[AccountDetails] onImagePicker [start]");
+    final XFile? picture = await picker.pickImage(source: ImageSource.gallery);
+    if (picture == null) {
+      logger.d("onImagePicker: picture is null");
+      return;
+    }
+
+    logger.d("onImagePicker: picture is $picture");
+    await onImageUploadRequest(picture);
+  }
+
+  Future<void> onImageUploadRequest(XFile? picture) async {
+    final Logger logger = ref.read(loggerProvider);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if (picture == null) {
+      logger.d("onImageUploadRequest: picture is null");
+      return;
+    }
+
+    try {
+      logger.d("onImageUploadRequest: picture is $picture");
+      state = state.copyWith(isBusy: true);
+
+      final Profile? profile = profileController.currentProfile;
+      final String profileId = profile?.flMeta?.id ?? '';
+      if (profileId.isEmpty || profile == null) {
+        logger.e('No profile found');
+        return;
+      }
+
+      await profileController.updateProfileImage(picture);
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
   }
 
   Future<void> updateSocialProviders() async {

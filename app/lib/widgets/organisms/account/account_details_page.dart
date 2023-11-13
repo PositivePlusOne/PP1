@@ -31,6 +31,7 @@ import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
@@ -39,6 +40,7 @@ import 'package:app/widgets/molecules/prompts/positive_visibility_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/components/account_profile_banner.dart';
 import 'package:app/widgets/organisms/account/vms/account_details_view_model.dart';
+import 'package:app/widgets/organisms/profile/dialogs/profile_photo_dialog.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/input/positive_fake_text_field_button.dart';
 
@@ -154,7 +156,25 @@ class AccountDetailsPage extends HookConsumerWidget {
     required Profile? profile,
     required Profile? ownerProfile,
   }) {
-    return [
+    final bool isOwner = profile?.flMeta?.id != null && profile?.flMeta?.ownedBy == null || profile?.flMeta?.ownedBy == profile?.flMeta?.id;
+    return <Widget>[
+      if (isOwner) ...<Widget>[
+        PositiveButton(
+          colors: colors,
+          primaryColor: colors.black,
+          isDisabled: viewModelState.isBusy,
+          label: 'Change profile photo',
+          onTapped: () => PositiveDialog.show(
+            title: 'Photo options',
+            context: context,
+            child: ProfilePhotoDialog(
+              onCameraSelected: () => viewModel.onChangeImageFromCameraSelected(context),
+              onImagePickerSelected: () => viewModel.onChangeImageFromPickerSelected(context),
+            ),
+          ),
+        ),
+        const SizedBox(height: kPaddingMedium),
+      ],
       PositiveGlassSheet(
         horizontalPadding: kPaddingMedium,
         verticalPadding: kPaddingMedium,
