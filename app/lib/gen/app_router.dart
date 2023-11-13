@@ -29,9 +29,6 @@ import 'package:app/widgets/organisms/guidance/guidance_entry_page.dart';
 import 'package:app/widgets/organisms/home/home_login_prompt_page.dart';
 import 'package:app/widgets/organisms/home/home_page.dart';
 import 'package:app/widgets/organisms/login/login_account_recovery_page.dart';
-import 'package:app/widgets/organisms/onboarding/onboarding_connect_page.dart';
-import 'package:app/widgets/organisms/onboarding/onboarding_education_page.dart';
-import 'package:app/widgets/organisms/onboarding/onboarding_guidance_page.dart';
 import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/post/post_page.dart';
 import 'package:app/widgets/organisms/post/post_share_page.dart';
@@ -81,7 +78,6 @@ import '../widgets/organisms/login/login_password_page.dart';
 import '../widgets/organisms/login/login_welcome_back_page.dart';
 import '../widgets/organisms/notifications/notification_preferences_page.dart';
 import '../widgets/organisms/notifications/notifications_page.dart';
-import '../widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/post/create_post_page.dart';
@@ -140,9 +136,6 @@ class AppRouter extends _$AppRouter {
         // //* Onboarding and splash
         CustomRoute(page: SplashRoute.page, guards: [splashGuard], path: '/', transitionsBuilder: CircularClipRoute.clipRoute),
         CustomRoute(page: OnboardingWelcomeRoute.page, path: '/onboarding/welcome', transitionsBuilder: CircularClipRoute.clipRoute),
-        AutoRoute(page: OnboardingConnectRoute.page, path: '/onboarding/connect'),
-        AutoRoute(page: OnboardingEducationRoute.page, path: '/onboarding/education'),
-        AutoRoute(page: OnboardingGuidanceRoute.page, path: '/onboarding/guidance'),
         AutoRoute(page: OnboardingOurPledgeRoute.page, path: '/onboarding/our-pledge'),
         AutoRoute(page: OnboardingYourPledgeRoute.page, path: '/onboarding/your-pledge'),
         //* Registration and Onboarding

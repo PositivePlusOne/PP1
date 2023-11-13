@@ -100,7 +100,7 @@ final appLinksProvider = Provider<AppLinks>.internal(
 );
 
 typedef AppLinksRef = ProviderRef<AppLinks>;
-String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
+String _$mixpanelHash() => r'4baae3640ce777e1ec61f662bf89fae624e0a957';
 
 /// See also [mixpanel].
 @ProviderFor(mixpanel)

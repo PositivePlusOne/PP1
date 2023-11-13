@@ -40,17 +40,8 @@ class OnboardingWelcomePage extends ConsumerWidget {
       footerWidgets: <Widget>[
         PositiveButton(
           colors: colors,
-          onTapped: viewModel.onSignUpSelected,
-          label: appLocalizations.shared_actions_sign_up,
-          layout: PositiveButtonLayout.textOnly,
-          style: PositiveButtonStyle.primary,
-          primaryColor: colors.white,
-        ),
-        const SizedBox(height: kPaddingMedium),
-        PositiveButton(
-          colors: colors,
           onTapped: viewModel.onContinueSelected,
-          label: appLocalizations.shared_actions_continue,
+          label: appLocalizations.shared_actions_get_started,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
           primaryColor: colors.black,

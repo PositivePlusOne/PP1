@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/providers/user/pledge_controller.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
-import '../enumerations/onboarding_style.dart';
 
 part 'onboarding_your_pledge_view_model.freezed.dart';
 part 'onboarding_your_pledge_view_model.g.dart';
@@ -40,23 +39,17 @@ class OnboardingYourPledgeViewModel extends _$OnboardingYourPledgeViewModel with
     );
   }
 
-  Future<void> onContinueSelected(OnboardingStyle style) async {
+  Future<void> onContinueSelected() async {
     final AsyncPledgeController pledgeController = ref.watch(asyncPledgeControllerProvider.notifier);
     await pledgeController.notifyPledgesAccepted();
 
-    final AppRouter appRouter = ref.watch(appRouterProvider);
-
-    if (style == OnboardingStyle.registration) {
-      await appRouter.push(const RegistrationAccountRoute());
-    } else {
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const HomeRoute());
-    }
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    await appRouter.replaceAll([const HomeRoute()]);
   }
 
   Future<void> onLinkTapped(String link) async {
     //! This is only the terms and conditions link
-    final AppRouter appRouter = ref.watch(appRouterProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
     await appRouter.push(const TermsAndConditionsRoute());
   }
 }

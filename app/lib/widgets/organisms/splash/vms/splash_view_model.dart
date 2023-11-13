@@ -115,7 +115,9 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     if (canPromptForAnalyticsCollection) {
       final bool? shouldCollectAnalytics = await PositiveDialog.show(
         context: context,
-        title: 'Enable Analytics',
+        barrierDismissible: false,
+        showCloseButton: false,
+        title: 'Allow Positive+1 to track your activity across the application?',
         child: const AnalyticsCollectionDialog(),
       );
 

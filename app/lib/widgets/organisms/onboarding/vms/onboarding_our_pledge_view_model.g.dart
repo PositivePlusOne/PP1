@@ -7,7 +7,7 @@ part of 'onboarding_our_pledge_view_model.dart';
 // **************************************************************************
 
 String _$onboardingOurPledgeViewModelHash() =>
-    r'a44d50c3af2b711ebfa2a144be6413aebfc682c8';
+    r'961fd12d4c8eb82a77a872d9db010640353db95d';
 
 /// See also [OnboardingOurPledgeViewModel].
 @ProviderFor(OnboardingOurPledgeViewModel)

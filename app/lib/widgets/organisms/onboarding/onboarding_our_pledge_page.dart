@@ -12,7 +12,6 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
 import 'package:app/widgets/atoms/typography/positive_bulleted_text.dart';
-import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import 'package:app/widgets/organisms/onboarding/vms/onboarding_our_pledge_view_model.dart';
 import '../../../constants/design_constants.dart';
 import '../../atoms/buttons/enumerations/positive_button_layout.dart';
@@ -27,11 +26,8 @@ import '../../molecules/scaffolds/positive_scaffold.dart';
 @RoutePage()
 class OnboardingOurPledgePage extends ConsumerWidget {
   const OnboardingOurPledgePage({
-    this.style = OnboardingStyle.home,
     super.key,
   });
-
-  final OnboardingStyle style;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +45,7 @@ class OnboardingOurPledgePage extends ConsumerWidget {
         PositiveButton(
           colors: colors,
           isDisabled: !state.hasAcceptedPledge,
-          onTapped: () => viewModel.onContinueSelected(style),
+          onTapped: () => viewModel.onContinueSelected(),
           label: localizations.shared_actions_continue,
           layout: PositiveButtonLayout.textOnly,
           style: PositiveButtonStyle.primary,
