@@ -339,6 +339,7 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
               currentProfileId: currentProfileId,
             ),
     ),
+    showDeleteMessage: isMyMessage,
     message: details.message,
     reverse: isMyMessage,
     padding: const EdgeInsets.all(8),
