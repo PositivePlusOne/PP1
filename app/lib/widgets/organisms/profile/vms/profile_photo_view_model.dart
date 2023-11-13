@@ -65,7 +65,9 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
 
       final XFile result = await showCupertinoDialog(
         context: context,
-        builder: (_) => const PositiveCameraDialog(),
+        builder: (_) => const PositiveCameraDialog(
+          displayCameraShade: false,
+        ),
       );
 
       logger.d("onSelectCamera: result is $result");

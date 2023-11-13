@@ -186,7 +186,9 @@ class CreatePostDialogue extends HookConsumerWidget {
             ),
 
             //* -=-=-=-=- Alt Text -=-=-=-=- *\\
-            if (postType == PostType.image || postType == PostType.clip) ...[
+            //TODO(S): Removed due to lack of alt text on clips
+            // if (postType == PostType.image || postType == PostType.clip) ...[
+            if (postType == PostType.image) ...[
               const SizedBox(height: kPaddingSmall),
               CreatePostTextField(
                 text: localisations.page_create_post_alt_text,

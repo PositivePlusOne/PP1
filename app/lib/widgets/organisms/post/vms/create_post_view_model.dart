@@ -255,6 +255,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       lastActiveButton: PositivePostNavigationActiveButton.post,
       currentPostType: PostType.image,
     );
+    await currentPositiveCameraState?.reactivateFlash();
   }
 
   Future<void> onClipPressed() async {
@@ -263,6 +264,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       lastActiveButton: PositivePostNavigationActiveButton.clip,
       currentPostType: PostType.clip,
     );
+    await currentPositiveCameraState?.deactivateFlash();
   }
 
   Future<void> onEventPressed() async {
