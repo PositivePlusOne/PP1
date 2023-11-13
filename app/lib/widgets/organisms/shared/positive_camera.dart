@@ -170,6 +170,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   CaptureRequest? videoCaptureRequest;
 
   FlashMode flashMode = FlashMode.auto;
+  bool isFrontFacing = true;
 
   final SensorConfig config = SensorConfig.single(
     flashMode: FlashMode.auto,
@@ -866,7 +867,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     return [
       if (widget.onTapClose != null) CameraFloatingButton.close(active: true, onTap: widget.onTapClose!),
       const Spacer(),
-      if (widget.enableFlashControls && hasCameraPermission && !widget.isVideoMode)
+      if (widget.enableFlashControls && hasCameraPermission && !widget.isVideoMode && !isFrontFacing)
         CameraFloatingButton.flash(
           active: true,
           flashMode: flashMode,
@@ -1162,6 +1163,26 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     setStateIfMounted();
   }
 
+  Future<void> deactivateFlash() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i("Flash mode: ${FlashMode.none}");
+    await config.setFlashMode(FlashMode.none);
+
+    setStateIfMounted();
+  }
+
+  Future<void> reactivateFlash() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    if (isFrontFacing == false) {
+      logger.i("Flash mode: $flashMode");
+      await config.setFlashMode(flashMode);
+
+      setStateIfMounted();
+    }
+  }
+
   Future<CaptureRequest> buildCaptureRequest(List<Sensor> sensors, bool isVideo) async {
     final Directory dir = await getTemporaryDirectory();
     final String currentTime = DateTime.now().millisecondsSinceEpoch.toString();
@@ -1177,6 +1198,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
     await state.switchCameraSensor();
     await state.sensorConfig.setFlashMode(flashMode);
+    isFrontFacing = (state.cameraContext.sensorConfig.sensors.first.position == SensorPosition.front);
+    if (!widget.isVideoMode) {
+      await reactivateFlash();
+    }
   }
 
   Future<void> onActiveButtonSelected(BuildContext context, CameraState state) async {
