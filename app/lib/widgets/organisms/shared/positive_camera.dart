@@ -979,6 +979,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     if (!hasStartedCamera) {
       hasStartedCamera = true;
       widget.onCameraStarted?.call();
+      config.setAspectRatio(CameraAspectRatios.ratio_16_9);
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         setStateIfMounted();
       });
