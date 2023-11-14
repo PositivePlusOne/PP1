@@ -106,7 +106,7 @@ class RegistrationPasswordEntryPage extends ConsumerWidget {
                     const SizedBox(width: kPaddingSmall),
                     PositivePageIndicator(
                       color: colors.black,
-                      pagesNum: 4,
+                      pagesNum: 2,
                       currentPage: 1,
                     ),
                   ],
