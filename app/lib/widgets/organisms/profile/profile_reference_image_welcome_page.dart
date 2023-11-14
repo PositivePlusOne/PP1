@@ -42,6 +42,7 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
     return PositiveScaffold(
       isBusy: state.isBusy,
       decorations: buildType4ScaffoldDecorations(colors),
+      onWillPopScope: () => viewModel.onBackSelected(),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
@@ -73,6 +74,20 @@ class ProfileReferenceImageWelcomePage extends ConsumerWidget {
             Text(
               localizations.page_profile_image_welcome_body,
               style: typography.styleBody.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IntrinsicWidth(
+                child: PositiveButton(
+                  colors: colors,
+                  primaryColor: colors.black,
+                  label: localizations.shared_form_information_display,
+                  size: PositiveButtonSize.small,
+                  style: PositiveButtonStyle.text,
+                  onTapped: () => viewModel.moreInformation(context),
+                ),
+              ),
             ),
             const SizedBox(height: kPaddingMedium),
           ],

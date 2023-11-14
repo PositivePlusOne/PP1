@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/helpers/dialog_hint_helpers.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -76,9 +77,16 @@ class ProfileReferenceImageViewModel extends _$ProfileReferenceImageViewModel {
     }
   }
 
-  void onBackSelected() async {
+  Future<bool> onBackSelected() async {
     final AppRouter appRouter = ref.watch(appRouterProvider);
     appRouter.pop();
+    return false;
+  }
+
+  void moreInformation(BuildContext context) {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final HintDialogRoute route = buildProfilePhotoHint(context);
+    appRouter.push(route);
   }
 
   Future<void> onCompletion() async {
