@@ -273,9 +273,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   }
 
   @override
-  void onPause() {
+  Future<void> onPause() async {
     super.onPause();
-    stopClipRecording();
+    if (!clipRecordingState.isInactive) {
+      await stopClipRecording();
+      clipRecordingState = ClipRecordingState.notRecording;
+      widget.onClipStateChange!(clipRecordingState);
+    }
   }
 
   @override
