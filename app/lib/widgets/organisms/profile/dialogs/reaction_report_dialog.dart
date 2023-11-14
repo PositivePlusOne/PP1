@@ -78,7 +78,8 @@ class ReactionReportDialog extends ConsumerWidget {
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveTextField(
-          hintText: localizations.shared_profile_report_modal_tooltip,
+          labelText: localizations.shared_profile_report_modal_tooltip,
+          labelColor: colors.red,
           minLines: AccountFeedbackDialog.kFeedbackLineCount,
           maxLines: AccountFeedbackDialog.kFeedbackLineCount,
           onTextChanged: viewModel.onFeedbackUpdated,

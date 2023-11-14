@@ -93,7 +93,8 @@ class ProfileReportDialog extends HookConsumerWidget {
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveTextField(
-          hintText: localizations.shared_profile_report_modal_tooltip,
+          labelText: localizations.shared_profile_report_modal_tooltip,
+          tintColor: colors.red,
           minLines: AccountFeedbackDialog.kFeedbackLineCount,
           maxLines: AccountFeedbackDialog.kFeedbackLineCount,
           onTextChanged: viewModel.onFeedbackUpdated,
