@@ -434,8 +434,8 @@ class ProfileApiService {
   FutureOr<Map<String, Object?>> updatePlace({
     required String description,
     required String placeId,
-    required double latitude,
-    required double longitude,
+    required String latitude,
+    required String longitude,
     bool optOut = false,
     Set<String> visibilityFlags = const {},
   }) async {

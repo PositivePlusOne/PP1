@@ -45,10 +45,12 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
   @override
   void didUpdateWidget(PositiveFocusedPlaceMapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final bool hasLatLng = widget.place.latitude != null && widget.place.longitude != null;
+    final double? newLat = double.tryParse(oldWidget.place.latitude ?? "");
+    final double? newLng = double.tryParse(oldWidget.place.longitude ?? "");
+    final bool hasLatLng = newLat != null && newLng != null;
     final bool hasChange = oldWidget.place.latitude != widget.place.latitude || oldWidget.place.longitude != widget.place.longitude;
     if (hasLatLng && hasChange) {
-      _controller?.animateCamera(CameraUpdate.newLatLng(LatLng(widget.place.latitude!, widget.place.longitude!)));
+      _controller?.animateCamera(CameraUpdate.newLatLng(LatLng(newLat, newLng)));
     }
   }
 
@@ -73,7 +75,9 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final MediaQueryData mediaQuery = MediaQuery.of(context);
 
-    final bool hasLocation = widget.place.latitude != null && widget.place.longitude != null;
+    final double? latitude = double.tryParse(widget.place.latitude ?? "");
+    final double? longitude = double.tryParse(widget.place.longitude ?? "");
+    final bool hasLocation = latitude != null && longitude != null;
 
     if (!hasLocation) {
       return Center(
@@ -84,7 +88,7 @@ class _PositiveFocusedPlaceMapWidgetState extends ConsumerState<PositiveFocusedP
       );
     }
 
-    final LatLng latLng = LatLng(widget.place.latitude!, widget.place.longitude!);
+    final LatLng latLng = LatLng(latitude, longitude);
     final ValueKey<String> key = ValueKey<String>("map_${widget.place.latitude}_${widget.place.longitude}");
 
     return AnimatedOpacity(

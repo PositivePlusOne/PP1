@@ -24,8 +24,8 @@ export namespace VenueMappers {
       postalCode: occasionGeniusVenue.postal_code,
       space: occasionGeniusVenue.space,
       place: {
-        latitude: latitude,
-        longitude: longitude,
+        latitudeCoordinates: latitude,
+        longitudeCoordinates: longitude,
         description: "", // Assuming there's no suitable property from OccasionGeniusVenue for description
         placeId: "", // Assuming there's no suitable property from OccasionGeniusVenue for placeId
         optOut: false, // Assuming there's no suitable property from OccasionGeniusVenue for optOut
@@ -49,8 +49,8 @@ export namespace VenueMappers {
       country: venue.country,
       postal_code: venue.postalCode,
       space: venue.space,
-      latitude: venue.place?.latitude?.toString() ?? "",
-      longitude: venue.place?.longitude?.toString() ?? "",
+      latitude: venue.place?.latitudeCoordinates?.toString() ?? "",
+      longitude: venue.place?.longitudeCoordinates?.toString() ?? "",
     };
   }
 }

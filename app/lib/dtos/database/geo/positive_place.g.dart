@@ -10,8 +10,8 @@ _$PositivePlaceImpl _$$PositivePlaceImplFromJson(Map<String, dynamic> json) =>
     _$PositivePlaceImpl(
       description: json['description'] as String? ?? '',
       placeId: json['placeId'] as String? ?? '',
-      latitude: (json['latitudeCoordinates'] as num?)?.toDouble(),
-      longitude: (json['longitudeCoordinates'] as num?)?.toDouble(),
+      latitude: json['latitudeCoordinates'] as String?,
+      longitude: json['longitudeCoordinates'] as String?,
       optOut: json['optOut'] as bool? ?? false,
     );
 

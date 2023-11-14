@@ -23,9 +23,9 @@ mixin _$PositivePlace {
   String get description => throw _privateConstructorUsedError;
   String get placeId => throw _privateConstructorUsedError;
   @JsonKey(name: 'latitudeCoordinates')
-  double? get latitude => throw _privateConstructorUsedError;
+  String? get latitude => throw _privateConstructorUsedError;
   @JsonKey(name: 'longitudeCoordinates')
-  double? get longitude => throw _privateConstructorUsedError;
+  String? get longitude => throw _privateConstructorUsedError;
   bool get optOut => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,8 +43,8 @@ abstract class $PositivePlaceCopyWith<$Res> {
   $Res call(
       {String description,
       String placeId,
-      @JsonKey(name: 'latitudeCoordinates') double? latitude,
-      @JsonKey(name: 'longitudeCoordinates') double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') String? latitude,
+      @JsonKey(name: 'longitudeCoordinates') String? longitude,
       bool optOut});
 }
 
@@ -79,11 +79,11 @@ class _$PositivePlaceCopyWithImpl<$Res, $Val extends PositivePlace>
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       optOut: null == optOut
           ? _value.optOut
           : optOut // ignore: cast_nullable_to_non_nullable
@@ -103,8 +103,8 @@ abstract class _$$PositivePlaceImplCopyWith<$Res>
   $Res call(
       {String description,
       String placeId,
-      @JsonKey(name: 'latitudeCoordinates') double? latitude,
-      @JsonKey(name: 'longitudeCoordinates') double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') String? latitude,
+      @JsonKey(name: 'longitudeCoordinates') String? longitude,
       bool optOut});
 }
 
@@ -137,11 +137,11 @@ class __$$PositivePlaceImplCopyWithImpl<$Res>
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       optOut: null == optOut
           ? _value.optOut
           : optOut // ignore: cast_nullable_to_non_nullable
@@ -171,10 +171,10 @@ class _$PositivePlaceImpl implements _PositivePlace {
   final String placeId;
   @override
   @JsonKey(name: 'latitudeCoordinates')
-  final double? latitude;
+  final String? latitude;
   @override
   @JsonKey(name: 'longitudeCoordinates')
-  final double? longitude;
+  final String? longitude;
   @override
   @JsonKey()
   final bool optOut;
@@ -222,8 +222,8 @@ abstract class _PositivePlace implements PositivePlace {
   const factory _PositivePlace(
       {final String description,
       final String placeId,
-      @JsonKey(name: 'latitudeCoordinates') final double? latitude,
-      @JsonKey(name: 'longitudeCoordinates') final double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') final String? latitude,
+      @JsonKey(name: 'longitudeCoordinates') final String? longitude,
       final bool optOut}) = _$PositivePlaceImpl;
 
   factory _PositivePlace.fromJson(Map<String, dynamic> json) =
@@ -235,10 +235,10 @@ abstract class _PositivePlace implements PositivePlace {
   String get placeId;
   @override
   @JsonKey(name: 'latitudeCoordinates')
-  double? get latitude;
+  String? get latitude;
   @override
   @JsonKey(name: 'longitudeCoordinates')
-  double? get longitude;
+  String? get longitude;
   @override
   bool get optOut;
   @override

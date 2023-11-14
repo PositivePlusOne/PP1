@@ -9,8 +9,8 @@ class PositivePlace with _$PositivePlace {
   const factory PositivePlace({
     @Default('') String description,
     @Default('') String placeId,
-    @JsonKey(name: 'latitudeCoordinates') double? latitude,
-    @JsonKey(name: 'longitudeCoordinates') double? longitude,
+    @JsonKey(name: 'latitudeCoordinates') String? latitude,
+    @JsonKey(name: 'longitudeCoordinates') String? longitude,
     @Default(false) bool optOut,
   }) = _PositivePlace;
 

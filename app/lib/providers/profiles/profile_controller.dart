@@ -466,8 +466,8 @@ class ProfileController extends _$ProfileController {
       optOut: place == null,
       description: place?.description ?? '',
       placeId: place?.placeId ?? '',
-      latitude: place?.latitude ?? 0,
-      longitude: place?.longitude ?? 0,
+      latitude: place?.latitude ?? '',
+      longitude: place?.longitude ?? '',
       visibilityFlags: visibilityFlags,
     );
   }
