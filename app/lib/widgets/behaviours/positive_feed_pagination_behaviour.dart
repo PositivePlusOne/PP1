@@ -232,12 +232,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
   }
 
-  String getCorrectPublisherId(Activity? activity) {
-    final String publisherId = activity?.publisherInformation?.publisherId ?? '';
-    final String reposterId = activity?.repostConfiguration?.targetActivityPublisherId ?? '';
-    return reposterId.isNotEmpty ? reposterId : publisherId;
-  }
-
   static Widget buildVisualSeparator(BuildContext context, {Widget? parent, Color? color}) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
@@ -270,7 +264,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
     final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    final String targetProfileId = getCorrectPublisherId(activity);
+    final String targetProfileId = activity?.publisherInformation?.publisherId ?? '';
 
     if (activityId.isEmpty || currentProfileId.isEmpty || targetProfileId.isEmpty) {
       return const SizedBox.shrink();
@@ -315,20 +309,18 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final viewMode = activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.private();
-    final bool canAct = viewMode.canActOnActivity(
-      activity: activity,
-      currentProfile: currentProfile,
-      publisherRelationship: relationship,
-    );
-
-    // If we can't act on the activity, then we can't display the separator or a promoted activity
-    if (!canAct) {
-      return const SizedBox.shrink();
-    }
-
     // We have not been able to get a promoted activity, so just use a normal separator
     if (promotedActivity == null || promotion == null) {
+      return buildVisualSeparator(context);
+    }
+
+    // Check the relationship for the promoted activity
+    final String promotedActivityPublisherId = promotedActivity.publisherInformation?.publisherId ?? '';
+    final String promotedActivityRelationshipId = [promotedActivityPublisherId, currentProfileId].asGUID;
+    final Relationship? promotedActivityRelationship = cacheController.get(promotedActivityRelationshipId);
+
+    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile, promotedActivityRelationship);
+    if (!canDisplayPromotedActivity) {
       return buildVisualSeparator(context);
     }
 
