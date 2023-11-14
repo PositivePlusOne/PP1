@@ -283,7 +283,10 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
           ],
           Expanded(
             child: AnimatedPadding(
-              padding: EdgeInsetsDirectional.only(top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : labelPadding),
+              padding: EdgeInsetsDirectional.only(
+                top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : labelPadding,
+                bottom: !(hasTextIsFocused && widget.labelText != null) ? kPaddingExtraSmall : labelPadding,
+              ),
               duration: kAnimationDurationFast,
               child: TextFormField(
                 textCapitalization: widget.textCapitalization,
