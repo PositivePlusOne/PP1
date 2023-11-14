@@ -24,6 +24,7 @@ import { ProfileStatisticsService } from "../services/profile_statistics_service
 import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 import { SystemService } from "../services/system_service";
+import { CacheService } from "../services/cache_service";
 
 export namespace PostEndpoints {
     export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
@@ -328,6 +329,9 @@ export namespace PostEndpoints {
     const index = SearchService.getIndex(searchClient, "activities");
     await SearchService.deleteDocumentInIndex(index, activityId);
     functions.logger.info("Deleted activity from search index", { activityId });
+
+    await CacheService.deleteFromCache(activityId);
+    functions.logger.info("Deleted activity from cache", { activityId });
 
     return buildEndpointResponse(context, {
       sender: uid,
