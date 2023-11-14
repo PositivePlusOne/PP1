@@ -232,12 +232,17 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
   }
 
-  static Widget buildVisualSeparator(BuildContext context, {Widget? parent, Color? color}) {
+  static Widget buildVisualSeparator(
+    BuildContext context, {
+    Widget? parent,
+    Color? color,
+    double vPadding = kPaddingSmall,
+  }) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     // Keep it classy. :D
     final Widget separator = Padding(
-      padding: const EdgeInsets.symmetric(vertical: kPaddingSmall),
+      padding: EdgeInsets.symmetric(vertical: vPadding),
       child: Container(
         height: 2.0,
         decoration: BoxDecoration(
