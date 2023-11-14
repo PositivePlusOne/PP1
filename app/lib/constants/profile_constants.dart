@@ -16,7 +16,7 @@ const String kAccountFlagNameOffensive = 'name_offensive';
 const String kAccountFlagDisplayNameOffensive = 'display_name_offensive';
 
 const Map<String, bool> kDefaultVisibilityFlags = {
-  kVisibilityFlagName: false,
+  kVisibilityFlagName: true,
   kVisibilityFlagBirthday: false,
   kVisibilityFlagInterests: false,
   kVisibilityFlagGenders: false,
