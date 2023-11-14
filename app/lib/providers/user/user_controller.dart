@@ -31,7 +31,7 @@ class UserControllerState with _$UserControllerState {
   }) = _UserControllerState;
 
   factory UserControllerState.initialState() => UserControllerState(
-        last2FACheck: DateTime.now(),
+        last2FACheck: DateTime.fromMicrosecondsSinceEpoch(0),
       );
 }
 

@@ -467,6 +467,7 @@ class AccountFormController extends _$AccountFormController {
 
     try {
       final UserController userController = ref.read(userControllerProvider.notifier);
+      await userController.perform2FACheck();
       await userController.updatePassword(state.password);
 
       final AccountUpdatedRoute route = AccountUpdatedRoute(
