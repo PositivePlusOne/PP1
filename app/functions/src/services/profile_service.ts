@@ -413,7 +413,7 @@ export namespace ProfileService {
    * @param {string} uid The user ID of the user to update the location for.
    * @param {string} place The place to update.
    */
-  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitude: number | null, longitude: number | null): Promise<any> {
+  export async function updatePlace(uid: string, description: string, placeId: string, optOut: boolean, latitudeCoordinates: number | null, longitudeCoordinates: number | null): Promise<any> {
     functions.logger.info(`Updating place for user: ${uid}`);
 
     return await DataService.updateDocument({
@@ -424,8 +424,8 @@ export namespace ProfileService {
           placeId,
           optOut,
           description,
-          latitude,
-          longitude,
+          latitudeCoordinates,
+          longitudeCoordinates,
         },
       },
     });

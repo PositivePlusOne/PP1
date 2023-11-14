@@ -117,6 +117,14 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
             ],
           ),
           const SizedBox(height: kPaddingSmall),
+          if (profile.isOrganisation && profile.isLocationAvailable)
+            // display the location when there is one to show
+            Expanded(
+              child: Text(
+                profile.formattedLocation,
+                style: typography.styleButtonRegular.copyWith(color: textColor.withOpacity(metadataOpacity)),
+              ),
+            ),
           Flexible(
             child: Wrap(
               spacing: kPaddingSmall,

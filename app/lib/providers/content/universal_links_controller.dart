@@ -7,6 +7,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
@@ -15,7 +16,6 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'universal_links_controller.freezed.dart';
 part 'universal_links_controller.g.dart';

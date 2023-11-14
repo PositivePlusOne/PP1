@@ -22,8 +22,10 @@ PositivePlace _$PositivePlaceFromJson(Map<String, dynamic> json) {
 mixin _$PositivePlace {
   String get description => throw _privateConstructorUsedError;
   String get placeId => throw _privateConstructorUsedError;
-  double? get latitude => throw _privateConstructorUsedError;
-  double? get longitude => throw _privateConstructorUsedError;
+  @JsonKey(name: 'latitudeCoordinates')
+  String? get latitude => throw _privateConstructorUsedError;
+  @JsonKey(name: 'longitudeCoordinates')
+  String? get longitude => throw _privateConstructorUsedError;
   bool get optOut => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -41,8 +43,8 @@ abstract class $PositivePlaceCopyWith<$Res> {
   $Res call(
       {String description,
       String placeId,
-      double? latitude,
-      double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') String? latitude,
+      @JsonKey(name: 'longitudeCoordinates') String? longitude,
       bool optOut});
 }
 
@@ -77,11 +79,11 @@ class _$PositivePlaceCopyWithImpl<$Res, $Val extends PositivePlace>
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       optOut: null == optOut
           ? _value.optOut
           : optOut // ignore: cast_nullable_to_non_nullable
@@ -101,8 +103,8 @@ abstract class _$$PositivePlaceImplCopyWith<$Res>
   $Res call(
       {String description,
       String placeId,
-      double? latitude,
-      double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') String? latitude,
+      @JsonKey(name: 'longitudeCoordinates') String? longitude,
       bool optOut});
 }
 
@@ -135,11 +137,11 @@ class __$$PositivePlaceImplCopyWithImpl<$Res>
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double?,
+              as String?,
       optOut: null == optOut
           ? _value.optOut
           : optOut // ignore: cast_nullable_to_non_nullable
@@ -154,8 +156,8 @@ class _$PositivePlaceImpl implements _PositivePlace {
   const _$PositivePlaceImpl(
       {this.description = '',
       this.placeId = '',
-      this.latitude,
-      this.longitude,
+      @JsonKey(name: 'latitudeCoordinates') this.latitude,
+      @JsonKey(name: 'longitudeCoordinates') this.longitude,
       this.optOut = false});
 
   factory _$PositivePlaceImpl.fromJson(Map<String, dynamic> json) =>
@@ -168,9 +170,11 @@ class _$PositivePlaceImpl implements _PositivePlace {
   @JsonKey()
   final String placeId;
   @override
-  final double? latitude;
+  @JsonKey(name: 'latitudeCoordinates')
+  final String? latitude;
   @override
-  final double? longitude;
+  @JsonKey(name: 'longitudeCoordinates')
+  final String? longitude;
   @override
   @JsonKey()
   final bool optOut;
@@ -218,8 +222,8 @@ abstract class _PositivePlace implements PositivePlace {
   const factory _PositivePlace(
       {final String description,
       final String placeId,
-      final double? latitude,
-      final double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') final String? latitude,
+      @JsonKey(name: 'longitudeCoordinates') final String? longitude,
       final bool optOut}) = _$PositivePlaceImpl;
 
   factory _PositivePlace.fromJson(Map<String, dynamic> json) =
@@ -230,9 +234,11 @@ abstract class _PositivePlace implements PositivePlace {
   @override
   String get placeId;
   @override
-  double? get latitude;
+  @JsonKey(name: 'latitudeCoordinates')
+  String? get latitude;
   @override
-  double? get longitude;
+  @JsonKey(name: 'longitudeCoordinates')
+  String? get longitude;
   @override
   bool get optOut;
   @override

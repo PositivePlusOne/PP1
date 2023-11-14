@@ -102,7 +102,16 @@ class LocationController extends _$LocationController {
         throw Exception(searchResponse.errorMessage);
       }
 
-      return searchResponse.results.where((element) => element.formattedAddress?.isNotEmpty ?? false).map((e) => PositivePlace(description: e.formattedAddress!, placeId: e.placeId, latitude: e.geometry.location.lat, longitude: e.geometry.location.lng, optOut: false)).toList();
+      return searchResponse.results
+          .where((element) => element.formattedAddress?.isNotEmpty ?? false)
+          .map((e) => PositivePlace(
+                description: e.formattedAddress!,
+                placeId: e.placeId,
+                latitude: e.geometry.location.lat.toString(),
+                longitude: e.geometry.location.lng.toString(),
+                optOut: false,
+              ))
+          .toList();
     } catch (ex) {
       logger.e('Error getting location permission: $ex');
     }
@@ -129,8 +138,8 @@ class LocationController extends _$LocationController {
               placeId: prediction.placeId!,
               description: prediction.description ?? '',
               optOut: false,
-              latitude: result.geometry?.location.lat,
-              longitude: result.geometry?.location.lng,
+              latitude: result.geometry?.location.lat.toString(),
+              longitude: result.geometry?.location.lng.toString(),
             ),
           );
         }

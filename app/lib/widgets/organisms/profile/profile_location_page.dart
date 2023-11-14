@@ -275,6 +275,9 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
     final bool hasDifferentDescription = hasLocation && state.locationSearchQuery != profileState.currentProfile?.place?.description;
     final bool hasNewLocation = hasLocation && state.place?.placeId != profileState.currentProfile?.place?.placeId;
 
+    final bool hasVisibilityFlag = profileState.currentProfile?.visibilityFlags.contains(kVisibilityFlagLocation) ?? false;
+    final bool hasDifferentVisibilityFlags = hasLocation && state.visibilityFlags[kVisibilityFlagLocation] != hasVisibilityFlag;
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -287,7 +290,7 @@ class _ProfileLocationProfileDisplayShade extends StatelessWidget {
           excludeBlur: true,
           children: <Widget>[
             PositiveExpandableWidget(
-              isExpanded: hasNewLocation || hasDifferentDescription,
+              isExpanded: hasNewLocation || hasDifferentDescription || hasDifferentVisibilityFlags,
               collapsedChild: PositiveButton(
                 colors: colors,
                 primaryColor: colors.black,

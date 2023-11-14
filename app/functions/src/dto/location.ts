@@ -1,6 +1,6 @@
 export interface PlaceJSON {
-  latitude?: number;
-  longitude?: number;
+  latitudeCoordinates?: number;
+  longitudeCoordinates?: number;
   description?: string;
   placeId?: string;
   optOut?: boolean;
@@ -16,8 +16,8 @@ export interface PlaceJSON {
  * @property {boolean} optOut the opt out flag. (Used by profiles to opt out of sharing their location)
  */
 export class Place {
-  latitude: number | null;
-  longitude: number | null;
+  latitudeCoordinates: number | null;
+  longitudeCoordinates: number | null;
   description: string | null;
   placeId: string | null;
   optOut: boolean;
@@ -28,8 +28,8 @@ export class Place {
    * @returns {Place} the place.
    */
   constructor(json: PlaceJSON) {
-    this.latitude = json.latitude || null;
-    this.longitude = json.longitude || null;
+    this.latitudeCoordinates = json.latitudeCoordinates || null;
+    this.longitudeCoordinates = json.longitudeCoordinates || null;
     this.description = json.description || null;
     this.placeId = json.placeId || null;
     this.optOut = json.optOut || false;
