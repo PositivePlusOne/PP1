@@ -15,6 +15,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'universal_links_controller.freezed.dart';
 part 'universal_links_controller.g.dart';
@@ -33,6 +34,8 @@ class UniversalLinksState with _$UniversalLinksState {
 abstract class IUniversalLinksController {
   UniversalLinksState build();
   Future<HandleLinkResult> initialize({bool replaceRouteOnNavigate = false});
+  Future<void> setInitialLinkFlagInSharedPreferences(Uri? latestUri);
+  Future<void> removeInitialLinkFlagInSharedPreferences();
   Future<bool> canHandleLink(Uri? uri);
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
@@ -56,6 +59,8 @@ typedef UniversalTagRouteDetails = ({String? tagId});
 class UniversalLinksController extends _$UniversalLinksController implements IUniversalLinksController {
   StreamSubscription<Uri?>? _allUriLinkStreamSubscription;
 
+  static const String kLatestUniversalLinkKey = 'positive_latest_universal_link';
+
   @override
   UniversalLinksState build() {
     return UniversalLinksState.initialState();
@@ -76,9 +81,40 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       return HandleLinkResult.notHandled;
     }
 
+    // Check to see if we have already handled the initial link
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final String? latestUniversalLink = sharedPreferences.getString(kLatestUniversalLinkKey);
+    if (latestUniversalLink == initialUri.toString()) {
+      logger.i('Already handled initial universal link: $initialUri');
+      return HandleLinkResult.notHandled;
+    }
+
     logger.i('Handling initial universal link: $initialUri');
-    // await sharedPreferences.setString(kLatestUniversalLinkKey, actualLatestUniversalLink);
+    await setInitialLinkFlagInSharedPreferences(initialUri);
     return await handleLink(initialUri, replaceRouteOnNavigate: replaceRouteOnNavigate);
+  }
+
+  @override
+  Future<void> setInitialLinkFlagInSharedPreferences(Uri? latestUri) async {
+    if (latestUri == null) {
+      return;
+    }
+
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final String actualLatestUniversalLink = latestUri.toString();
+    logger.i('Setting latest universal link in shared preferences: $actualLatestUniversalLink');
+
+    await sharedPreferences.setString(kLatestUniversalLinkKey, actualLatestUniversalLink);
+  }
+
+  @override
+  Future<void> removeInitialLinkFlagInSharedPreferences() async {
+    final Logger logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    logger.i('Removing latest universal link in shared preferences');
+
+    await sharedPreferences.remove(kLatestUniversalLinkKey);
   }
 
   @override
