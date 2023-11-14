@@ -218,7 +218,10 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
             pagingController: reactionsState.pagingController,
             separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
               context,
+              // designed to have a very thin seperator of the grey
               color: colours.colorGray1,
+              // without any padding
+              vPadding: 0,
             ),
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
