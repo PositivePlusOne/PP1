@@ -312,38 +312,43 @@ class _PositiveAppBarTrailConcave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: const Offset(0, -2.0), // Fixes a known bug with multiple SliverToBoxAdapters (https://github.com/flutter/flutter/issues/37578)
-      child: Container(
-        height: PositiveAppBar.kPositiveAppBarRadius * 2,
-        width: double.infinity,
-        decoration: BoxDecoration(color: backgroundColor),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            AnimatedContainer(
-              duration: kAnimationDurationRegular,
-              height: kPositiveConcavePillHeight,
-              width: kPositiveConcavePillWidth,
-              decoration: BoxDecoration(
-                color: decorationColor,
-                borderRadius: BorderRadius.circular(kPositiveConcavePillRadius),
-              ),
+    return Container(
+      height: PositiveAppBar.kPositiveAppBarRadius * 2,
+      width: double.infinity,
+      decoration: BoxDecoration(color: backgroundColor),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          AnimatedContainer(
+            duration: kAnimationDurationRegular,
+            height: kPositiveConcavePillHeight,
+            width: kPositiveConcavePillWidth,
+            decoration: BoxDecoration(
+              color: decorationColor,
+              borderRadius: BorderRadius.circular(kPositiveConcavePillRadius),
             ),
-            const SizedBox(height: kPaddingExtraSmall),
-            AnimatedContainer(
-              duration: kAnimationDurationRegular,
-              height: PositiveAppBar.kPositiveAppBarRadius,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: decorationColor,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(PositiveAppBar.kPositiveAppBarRadius * 2),
+          ),
+          const SizedBox(height: kPaddingExtraSmall),
+          AnimatedContainer(
+            duration: kAnimationDurationRegular,
+            height: PositiveAppBar.kPositiveAppBarRadius,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: decorationColor,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: decorationColor,
+                  blurRadius: kBorderRadiusNone,
+                  spreadRadius: kBorderRadiusNone,
+                  offset: const Offset(0, 1.0), // Fixes a known bug with multiple SliverToBoxAdapters (https://github.com/flutter/flutter/issues/37578)
                 ),
+              ],
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(PositiveAppBar.kPositiveAppBarRadius * 2),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

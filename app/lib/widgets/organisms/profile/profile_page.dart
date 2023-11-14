@@ -182,7 +182,7 @@ class ProfilePage extends HookConsumerWidget {
               //     localizations.shared_ui_gallery,
               //   ],
               // ),
-              //const SizedBox(height: kPaddingSmall),
+              // const SizedBox(height: kPaddingSmall),
               if (targetProfile?.biography.isNotEmpty == true) ...<Widget>[
                 Container(
                   padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
