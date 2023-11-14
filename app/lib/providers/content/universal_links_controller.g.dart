@@ -7,7 +7,7 @@ part of 'universal_links_controller.dart';
 // **************************************************************************
 
 String _$universalLinksControllerHash() =>
-    r'1cbae3fe152d100173f158ea7756af9e417672a2';
+    r'9cd3493cdeaeec4994c5120c6c0dd51a7ccc5ccc';
 
 /// See also [UniversalLinksController].
 @ProviderFor(UniversalLinksController)

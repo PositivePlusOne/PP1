@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -85,8 +86,11 @@ class _VerificationDialogPageState extends ConsumerState<VerificationDialogPage>
     setStateIfMounted();
 
     try {
+      final AppRouter appRouter = ref.read(appRouterProvider);
       final UserController userController = ref.read(userControllerProvider.notifier);
       await userController.confirmPassword(currentPassword);
+
+      appRouter.removeLast();
       await widget.onVerified();
     } finally {
       isBusy = false;
