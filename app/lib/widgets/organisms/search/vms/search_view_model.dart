@@ -71,6 +71,7 @@ enum SearchTab {
 @Riverpod(keepAlive: true)
 class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   StreamSubscription<ProfileSwitchedEvent>? onProfileChanged;
+  final TextEditingController searchTextController = TextEditingController();
 
   @override
   SearchViewModelState build(SearchTab tab) {
@@ -254,6 +255,10 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     state = state.copyWith(currentTab: newTab);
+
+    if (searchTextController.text.isNotEmpty) {
+      onSearchSubmitted(searchTextController.text);
+    }
   }
 
   Future<void> onTopicSelected(BuildContext context, Tag tag) async {

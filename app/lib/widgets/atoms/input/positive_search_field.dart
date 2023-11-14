@@ -61,6 +61,7 @@ class PositiveSearchFieldState extends ConsumerState<PositiveSearchField> {
 
     _controller = widget.controller ?? TextEditingController(text: widget.initialText);
     _focusNode = widget.focusNode ?? FocusNode();
+    _controller.text = widget.initialText;
 
     setupListeners();
   }
