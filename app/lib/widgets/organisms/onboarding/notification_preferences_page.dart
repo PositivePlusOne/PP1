@@ -46,11 +46,11 @@ class NotificationPreferencesPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            PositivePageIndicator(
-              color: colors.black,
-              pagesNum: 4,
-              currentPage: 2,
-            ),
+            // PositivePageIndicator(
+            //   color: colors.black,
+            //   pagesNum: 4,
+            //   currentPage: 2,
+            // ),
             const SizedBox(height: kPaddingLarge),
             Align(
               alignment: Alignment.centerLeft,
