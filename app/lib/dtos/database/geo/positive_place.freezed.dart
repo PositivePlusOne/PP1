@@ -22,7 +22,9 @@ PositivePlace _$PositivePlaceFromJson(Map<String, dynamic> json) {
 mixin _$PositivePlace {
   String get description => throw _privateConstructorUsedError;
   String get placeId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'latitudeCoordinates')
   double? get latitude => throw _privateConstructorUsedError;
+  @JsonKey(name: 'longitudeCoordinates')
   double? get longitude => throw _privateConstructorUsedError;
   bool get optOut => throw _privateConstructorUsedError;
 
@@ -41,8 +43,8 @@ abstract class $PositivePlaceCopyWith<$Res> {
   $Res call(
       {String description,
       String placeId,
-      double? latitude,
-      double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') double? latitude,
+      @JsonKey(name: 'longitudeCoordinates') double? longitude,
       bool optOut});
 }
 
@@ -101,8 +103,8 @@ abstract class _$$PositivePlaceImplCopyWith<$Res>
   $Res call(
       {String description,
       String placeId,
-      double? latitude,
-      double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') double? latitude,
+      @JsonKey(name: 'longitudeCoordinates') double? longitude,
       bool optOut});
 }
 
@@ -154,8 +156,8 @@ class _$PositivePlaceImpl implements _PositivePlace {
   const _$PositivePlaceImpl(
       {this.description = '',
       this.placeId = '',
-      this.latitude,
-      this.longitude,
+      @JsonKey(name: 'latitudeCoordinates') this.latitude,
+      @JsonKey(name: 'longitudeCoordinates') this.longitude,
       this.optOut = false});
 
   factory _$PositivePlaceImpl.fromJson(Map<String, dynamic> json) =>
@@ -168,8 +170,10 @@ class _$PositivePlaceImpl implements _PositivePlace {
   @JsonKey()
   final String placeId;
   @override
+  @JsonKey(name: 'latitudeCoordinates')
   final double? latitude;
   @override
+  @JsonKey(name: 'longitudeCoordinates')
   final double? longitude;
   @override
   @JsonKey()
@@ -218,8 +222,8 @@ abstract class _PositivePlace implements PositivePlace {
   const factory _PositivePlace(
       {final String description,
       final String placeId,
-      final double? latitude,
-      final double? longitude,
+      @JsonKey(name: 'latitudeCoordinates') final double? latitude,
+      @JsonKey(name: 'longitudeCoordinates') final double? longitude,
       final bool optOut}) = _$PositivePlaceImpl;
 
   factory _PositivePlace.fromJson(Map<String, dynamic> json) =
@@ -230,8 +234,10 @@ abstract class _PositivePlace implements PositivePlace {
   @override
   String get placeId;
   @override
+  @JsonKey(name: 'latitudeCoordinates')
   double? get latitude;
   @override
+  @JsonKey(name: 'longitudeCoordinates')
   double? get longitude;
   @override
   bool get optOut;
