@@ -83,15 +83,8 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   static const String kPositiveLogoTag = 'pp1-app-bar-hero';
   static const double kPositiveAppBarRadius = 20.0;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-
-    return SizedBox(
-      height: preferredSize.height,
-      width: preferredSize.width,
-      child: Stack(
-        children: <Widget>[
+  Widget _imageStack() => Stack(
+        children: [
           Positioned(
             right: kPaddingNone,
             left: kPaddingNone,
@@ -132,6 +125,67 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ),
             ),
           ],
+        ],
+      );
+
+  Widget _partialShadedImageStack() => Stack(
+        children: [
+          Positioned(
+            right: kPaddingNone,
+            left: kPaddingNone,
+            top: kPaddingNone,
+            bottom: getDecorationHeight,
+            child: AnimatedContainer(
+              color: backgroundColor,
+              duration: kAnimationDurationExtended,
+            ),
+          ),
+          if (backgroundImage != null) ...<Widget>[
+            PositiveMediaImage(
+              media: backgroundImage!,
+              fit: BoxFit.cover,
+            ),
+            //* Use the background color as a darkening overlay
+            Positioned.fill(
+              child: ColoredBox(
+                color: backgroundColor.withOpacity(kOpacityHalf),
+              ),
+            ),
+          ],
+        ],
+      );
+
+  Widget _unshadedImageStack() => Stack(
+        children: [
+          Positioned(
+            right: kPaddingNone,
+            left: kPaddingNone,
+            top: kPaddingNone,
+            bottom: getDecorationHeight,
+            child: AnimatedContainer(
+              color: backgroundColor,
+              duration: kAnimationDurationExtended,
+            ),
+          ),
+          if (backgroundImage != null) ...<Widget>[
+            PositiveMediaImage(
+              media: backgroundImage!,
+              fit: BoxFit.cover,
+            ),
+          ],
+        ],
+      );
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+
+    return SizedBox(
+      height: preferredSize.height,
+      width: preferredSize.width,
+      child: Stack(
+        children: <Widget>[
+          _partialShadedImageStack(),
           Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
