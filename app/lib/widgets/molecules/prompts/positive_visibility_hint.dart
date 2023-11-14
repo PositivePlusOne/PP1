@@ -42,7 +42,7 @@ class PositiveVisibilityHint extends ConsumerWidget {
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     late final Widget toggleIconWidget;
-    final String text;
+    late final String text;
 
     assert(PositiveTogglableState.activeForcefully != toggleState || style == PositiveVisibilityHintStyle.defaultStyle, 'PositiveVisibilityHintStyle must be defaultStyle when PositiveTogglableState is activeForcefully');
 
@@ -60,10 +60,6 @@ class PositiveVisibilityHint extends ConsumerWidget {
           decoration: BoxDecoration(
             color: colors.green,
             borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-            border: Border.all(
-              color: colors.black,
-              width: PositiveButton.kButtonBorderWidth,
-            ),
           ),
           child: Icon(
             UniconsLine.check,
@@ -98,10 +94,6 @@ class PositiveVisibilityHint extends ConsumerWidget {
           decoration: BoxDecoration(
             color: colors.colorGray3.withOpacity(kOpacityQuarter),
             borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-            border: Border.all(
-              color: colors.black,
-              width: PositiveButton.kButtonBorderWidth,
-            ),
           ),
           child: Icon(
             UniconsLine.eye_slash,

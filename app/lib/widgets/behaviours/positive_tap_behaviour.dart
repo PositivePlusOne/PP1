@@ -13,6 +13,7 @@ class PositiveTapBehaviour extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 200),
     this.isEnabled = true,
     this.showDisabledState = false,
+    this.hitTestBehaviourOverride,
     super.key,
   });
 
@@ -22,6 +23,7 @@ class PositiveTapBehaviour extends StatefulWidget {
 
   final bool isEnabled;
   final bool showDisabledState;
+  final HitTestBehavior? hitTestBehaviourOverride;
 
   @override
   PositiveTapBehaviourState createState() => PositiveTapBehaviourState();
@@ -62,6 +64,7 @@ class PositiveTapBehaviourState extends State<PositiveTapBehaviour> {
         onTapDown: _onTapDown,
         onTapUp: _onTapUp,
         onTapCancel: _onTapCancel,
+        behavior: widget.hitTestBehaviourOverride,
         onTap: () => widget.onTap?.call(context),
         child: AnimatedOpacity(
           opacity: opacity,

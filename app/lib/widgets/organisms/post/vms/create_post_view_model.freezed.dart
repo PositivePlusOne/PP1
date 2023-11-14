@@ -530,7 +530,7 @@ class _$CreatePostViewModelStateImpl
       this.editingGalleryEntry,
       final List<String> tags = const [],
       this.promotionKey = '',
-      this.allowSharing = false,
+      this.allowSharing = true,
       @JsonKey(
           fromJson: ActivitySecurityConfigurationMode.fromJson,
           toJson: ActivitySecurityConfigurationMode.toJson)

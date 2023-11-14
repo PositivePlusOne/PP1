@@ -1,5 +1,10 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -56,6 +61,9 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final Size screenSize = MediaQuery.of(context).size;
+    final double topPaddingCameraShader = (screenSize.height - screenSize.width) / 2;
 
     logger.d("onSelectCamera");
     await appRouter.pop();
@@ -65,9 +73,27 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
 
       final XFile result = await showCupertinoDialog(
         context: context,
-        builder: (_) => const PositiveCameraDialog(
-          displayCameraShade: false,
-        ),
+        builder: (_) {
+          return Stack(
+            children: [
+              const Positioned.fill(
+                child: PositiveCameraDialog(
+                  displayCameraShade: false,
+                ),
+              ),
+              Positioned.fill(
+                child: PositiveClipExternalShader(
+                  paddingLeft: kPaddingNone,
+                  paddingRight: kPaddingNone,
+                  paddingTop: topPaddingCameraShader,
+                  paddingBottom: topPaddingCameraShader,
+                  colour: colours.black.withOpacity(kOpacityBarrier),
+                  radius: kBorderRadiusInfinite,
+                ),
+              ),
+            ],
+          );
+        },
       );
 
       logger.d("onSelectCamera: result is $result");

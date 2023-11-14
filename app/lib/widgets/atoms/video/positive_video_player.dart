@@ -275,12 +275,17 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
                 Positioned.fill(
                   child: PositiveTapBehaviour(
                     isEnabled: !isLoadingVideoPlayer,
+                    hitTestBehaviourOverride: HitTestBehavior.opaque,
                     onTap: (_) async => handleTrackRequest(),
                     child: Center(
-                      child: Icon(
-                        UniconsLine.play,
-                        color: colours.white,
-                        size: kIconMedium,
+                      child: SizedBox(
+                        width: kIconMedium * 2,
+                        height: kIconMedium * 2,
+                        child: Icon(
+                          UniconsLine.play,
+                          color: colours.white,
+                          size: kIconMedium,
+                        ),
                       ),
                     ),
                   ),

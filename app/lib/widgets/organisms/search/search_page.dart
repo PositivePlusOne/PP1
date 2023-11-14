@@ -227,6 +227,7 @@ class SearchPage extends ConsumerWidget {
               initialText: searchQuery,
               onChange: viewModel.onSearchChanged,
               onSubmitted: viewModel.onSearchSubmitted,
+              controller: viewModel.searchTextController,
               isEnabled: !isBusy,
             ),
           ),

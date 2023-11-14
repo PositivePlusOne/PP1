@@ -2,11 +2,17 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
 import 'package:fluent_validation/fluent_validation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -1049,6 +1055,9 @@ class ProfileFormController extends _$ProfileFormController {
   Future<void> onChangeImageFromCameraSelected(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final Size screenSize = MediaQuery.of(context).size;
+    final double topPaddingCameraShader = (screenSize.height - screenSize.width) / 2;
 
     logger.d("onSelectCamera");
     await appRouter.pop();
@@ -1058,8 +1067,24 @@ class ProfileFormController extends _$ProfileFormController {
     final XFile? result = await showCupertinoDialog(
       context: context,
       builder: (_) {
-        return const PositiveCameraDialog(
-          displayCameraShade: false,
+        return Stack(
+          children: [
+            const Positioned.fill(
+              child: PositiveCameraDialog(
+                displayCameraShade: false,
+              ),
+            ),
+            Positioned.fill(
+              child: PositiveClipExternalShader(
+                paddingLeft: kPaddingNone,
+                paddingRight: kPaddingNone,
+                paddingTop: topPaddingCameraShader,
+                paddingBottom: topPaddingCameraShader,
+                colour: colours.black.withOpacity(kOpacityBarrier),
+                radius: kBorderRadiusInfinite,
+              ),
+            ),
+          ],
         );
       },
     );

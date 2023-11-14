@@ -62,7 +62,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     GalleryEntry? editingGalleryEntry,
     @Default([]) List<String> tags,
     @Default('') String promotionKey,
-    @Default(false) bool allowSharing,
+    @Default(true) bool allowSharing,
     @Default(ActivitySecurityConfigurationMode.public()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode visibleTo,
     @Default(ActivitySecurityConfigurationMode.signedIn()) @JsonKey(fromJson: ActivitySecurityConfigurationMode.fromJson, toJson: ActivitySecurityConfigurationMode.toJson) ActivitySecurityConfigurationMode allowComments,
     @Default("") String activeButtonFlexText,
