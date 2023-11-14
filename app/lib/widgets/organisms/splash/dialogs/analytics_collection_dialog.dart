@@ -23,25 +23,28 @@ class AnalyticsCollectionDialog extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Enable analytics to help us improve the app and your experience.',
+          'Your data will be used to deliver promoted content personalized to you, and help us improve your experience.',
+          textAlign: TextAlign.start,
           style: typography.styleSubtitle.copyWith(color: colors.white),
         ),
         const SizedBox(height: kPaddingMedium),
         PositiveButton(
           colors: colors,
-          onTapped: () => Navigator.pop(context, true),
-          label: 'Accept and Continue',
+          onTapped: () => Navigator.pop(context, false),
+          label: 'Ask app not to track',
           primaryColor: colors.black,
           style: PositiveButtonStyle.primary,
         ),
         const SizedBox(height: kPaddingSmall),
         PositiveButton(
           colors: colors,
-          onTapped: () => Navigator.pop(context, false),
-          label: 'Continue without Analytics',
-          primaryColor: colors.black,
+          onTapped: () => Navigator.pop(context, true),
+          label: 'Allow',
+          primaryColor: colors.white,
           style: PositiveButtonStyle.primary,
         ),
       ],

@@ -305,33 +305,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const NotificationsPage(),
       );
     },
-    OnboardingConnectRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingConnectPage(),
-      );
-    },
-    OnboardingEducationRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingEducationPage(),
-      );
-    },
-    OnboardingGuidanceRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const OnboardingGuidancePage(),
-      );
-    },
     OnboardingOurPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingOurPledgeRouteArgs>(
-          orElse: () => const OnboardingOurPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: OnboardingOurPledgePage(
-          style: args.style,
-          key: args.key,
-        ),
+        child: const OnboardingOurPledgePage(),
       );
     },
     OnboardingWelcomeRoute.name: (routeData) {
@@ -341,14 +318,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     OnboardingYourPledgeRoute.name: (routeData) {
-      final args = routeData.argsAs<OnboardingYourPledgeRouteArgs>(
-          orElse: () => const OnboardingYourPledgeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: OnboardingYourPledgePage(
-          style: args.style,
-          key: args.key,
-        ),
+        child: const OnboardingYourPledgePage(),
       );
     },
     PostRoute.name: (routeData) {
@@ -1405,84 +1377,17 @@ class NotificationsRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [OnboardingConnectPage]
-class OnboardingConnectRoute extends PageRouteInfo<void> {
-  const OnboardingConnectRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingConnectRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingConnectRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingEducationPage]
-class OnboardingEducationRoute extends PageRouteInfo<void> {
-  const OnboardingEducationRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingEducationRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingEducationRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [OnboardingGuidancePage]
-class OnboardingGuidanceRoute extends PageRouteInfo<void> {
-  const OnboardingGuidanceRoute({List<PageRouteInfo>? children})
-      : super(
-          OnboardingGuidanceRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'OnboardingGuidanceRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
 /// [OnboardingOurPledgePage]
-class OnboardingOurPledgeRoute
-    extends PageRouteInfo<OnboardingOurPledgeRouteArgs> {
-  OnboardingOurPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class OnboardingOurPledgeRoute extends PageRouteInfo<void> {
+  const OnboardingOurPledgeRoute({List<PageRouteInfo>? children})
+      : super(
           OnboardingOurPledgeRoute.name,
-          args: OnboardingOurPledgeRouteArgs(
-            style: style,
-            key: key,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'OnboardingOurPledgeRoute';
 
-  static const PageInfo<OnboardingOurPledgeRouteArgs> page =
-      PageInfo<OnboardingOurPledgeRouteArgs>(name);
-}
-
-class OnboardingOurPledgeRouteArgs {
-  const OnboardingOurPledgeRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingOurPledgeRouteArgs{style: $style, key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -1501,41 +1406,16 @@ class OnboardingWelcomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [OnboardingYourPledgePage]
-class OnboardingYourPledgeRoute
-    extends PageRouteInfo<OnboardingYourPledgeRouteArgs> {
-  OnboardingYourPledgeRoute({
-    OnboardingStyle style = OnboardingStyle.home,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class OnboardingYourPledgeRoute extends PageRouteInfo<void> {
+  const OnboardingYourPledgeRoute({List<PageRouteInfo>? children})
+      : super(
           OnboardingYourPledgeRoute.name,
-          args: OnboardingYourPledgeRouteArgs(
-            style: style,
-            key: key,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'OnboardingYourPledgeRoute';
 
-  static const PageInfo<OnboardingYourPledgeRouteArgs> page =
-      PageInfo<OnboardingYourPledgeRouteArgs>(name);
-}
-
-class OnboardingYourPledgeRouteArgs {
-  const OnboardingYourPledgeRouteArgs({
-    this.style = OnboardingStyle.home,
-    this.key,
-  });
-
-  final OnboardingStyle style;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'OnboardingYourPledgeRouteArgs{style: $style, key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

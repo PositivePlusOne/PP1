@@ -100,7 +100,7 @@ final appLinksProvider = Provider<AppLinks>.internal(
 );
 
 typedef AppLinksRef = ProviderRef<AppLinks>;
-String _$mixpanelHash() => r'b9de4df7c2b6f20aaa86608b1d1a89c9b1a7d28b';
+String _$mixpanelHash() => r'4baae3640ce777e1ec61f662bf89fae624e0a957';
 
 /// See also [mixpanel].
 @ProviderFor(mixpanel)
@@ -418,6 +418,24 @@ final locationPermissionsProvider = FutureProvider<PermissionStatus>.internal(
 );
 
 typedef LocationPermissionsRef = FutureProviderRef<PermissionStatus>;
+String _$appTrackingTransparencyPermissionsHash() =>
+    r'5ae7c4a8f6c8f3fc71f6aa7c46b69864bff9ca5f';
+
+/// See also [appTrackingTransparencyPermissions].
+@ProviderFor(appTrackingTransparencyPermissions)
+final appTrackingTransparencyPermissionsProvider =
+    FutureProvider<PermissionStatus>.internal(
+  appTrackingTransparencyPermissions,
+  name: r'appTrackingTransparencyPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$appTrackingTransparencyPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AppTrackingTransparencyPermissionsRef
+    = FutureProviderRef<PermissionStatus>;
 String _$packageInfoHash() => r'9a2956f08c2e98b92dd8cce49cb331a127c78670';
 
 /// See also [packageInfo].

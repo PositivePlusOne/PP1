@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/widgets/organisms/onboarding/enumerations/onboarding_style.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 
 part 'onboarding_our_pledge_view_model.freezed.dart';
@@ -39,8 +38,8 @@ class OnboardingOurPledgeViewModel extends _$OnboardingOurPledgeViewModel with L
     );
   }
 
-  Future<void> onContinueSelected(OnboardingStyle style) async {
+  Future<void> onContinueSelected() async {
     final AppRouter appRouter = ref.watch(appRouterProvider);
-    await appRouter.push(OnboardingYourPledgeRoute(style: style));
+    await appRouter.push(const OnboardingYourPledgeRoute());
   }
 }

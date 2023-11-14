@@ -272,6 +272,11 @@ FutureOr<PermissionStatus> locationPermissions(LocationPermissionsRef ref) async
 }
 
 @Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> appTrackingTransparencyPermissions(AppTrackingTransparencyPermissionsRef ref) async {
+  return Permission.appTrackingTransparency.request();
+}
+
+@Riverpod(keepAlive: true)
 FutureOr<PackageInfo> packageInfo(PackageInfoRef ref) async {
   return await PackageInfo.fromPlatform();
 }

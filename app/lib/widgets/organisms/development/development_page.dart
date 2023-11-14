@@ -14,6 +14,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
@@ -38,6 +39,9 @@ class DevelopmentPage extends ConsumerWidget {
     final DevelopmentViewModelState developmentViewModelState = ref.watch(developmentViewModelProvider);
 
     final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
+
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final AnalyticsControllerState analyticsControllerState = ref.watch(analyticsControllerProvider);
 
     final AppRouter appRouter = ref.read(appRouterProvider);
 
@@ -70,22 +74,17 @@ class DevelopmentPage extends ConsumerWidget {
           delegate: SliverChildListDelegate(
             <Widget>[
               CupertinoListTile(
-                title: Text(
-                  'Welcome to our "secret" development page!',
-                  style: typography.styleNotification.copyWith(color: colors.white),
+                title: SelectableText(
+                  developmentViewModelState.status,
+                  maxLines: 3,
+                  style: typography.styleBody.copyWith(color: colors.white),
                 ),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SelectableText(
-                      developmentViewModelState.status,
-                      maxLines: 3,
-                      style: typography.styleSubtext.copyWith(color: colors.white),
-                    ),
-                    const SizedBox(height: kPaddingExtraSmall),
                     Text(
                       'Version: ${systemControllerState.version}',
-                      style: typography.styleSubtextBold.copyWith(color: colors.white),
+                      style: typography.styleButtonBold.copyWith(color: colors.white),
                     ),
                   ],
                 ),
@@ -111,8 +110,8 @@ class DevelopmentPage extends ConsumerWidget {
                   additionalInfo: Transform.scale(
                     scale: 0.7,
                     child: PositiveSwitch(
-                      activeColour: colors.white,
-                      inactiveColour: colors.colorGray7,
+                      activeColour: colors.green.withAlpha(210),
+                      inactiveColour: colors.red.withAlpha(210),
                       ignoring: false,
                       value: isShowingDebugMessages,
                       onTapped: (_) => ref.read(systemControllerProvider.notifier).toggleDebugMessages(),
@@ -140,8 +139,8 @@ class DevelopmentPage extends ConsumerWidget {
               //   additionalInfo: Transform.scale(
               //     scale: 0.7,
               //     child: PositiveSwitch(
-              //       activeColour: colors.white,
-              //       inactiveColour: colors.colorGray7,
+              //       activeColour: colors.green.withAlpha(210),
+              //       inactiveColour: colors.red.withAlpha(210),
               //       ignoring: false,
               //       value: developmentViewModelState.darkMode,
               //       onTapped: (_) => developmentViewModel.toggleDarkMode(),
@@ -167,7 +166,6 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               CupertinoListTile.notched(
-                onTap: developmentViewModel.displayAuthClaims,
                 title: Text(
                   'Toggle ID display',
                   style: typography.styleButtonRegular.copyWith(color: colors.white),
@@ -179,11 +177,32 @@ class DevelopmentPage extends ConsumerWidget {
                 additionalInfo: Transform.scale(
                   scale: 0.7,
                   child: PositiveSwitch(
-                    activeColour: colors.white,
-                    inactiveColour: colors.colorGray7,
+                    activeColour: colors.green.withAlpha(210),
+                    inactiveColour: colors.red.withAlpha(210),
                     ignoring: false,
                     value: developmentViewModelState.displaySelectablePostIDs,
                     onTapped: (_) => developmentViewModel.toggleSelectablePostIDs(),
+                  ),
+                ),
+              ),
+              CupertinoListTile.notched(
+                title: Text(
+                  'Activity Tracking',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'Your data will be used to deliver promoted content personalized to you, and help us improve your experience.',
+                  maxLines: 2,
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+                additionalInfo: Transform.scale(
+                  scale: 0.7,
+                  child: PositiveSwitch(
+                    activeColour: colors.green.withAlpha(210),
+                    inactiveColour: colors.red.withAlpha(210),
+                    ignoring: false,
+                    value: analyticsControllerState.isCollectingData,
+                    onTapped: (_) => analyticsController.toggleAnalyticsCollection(!analyticsControllerState.isCollectingData),
                   ),
                 ),
               ),

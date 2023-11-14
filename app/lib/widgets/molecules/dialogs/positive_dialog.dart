@@ -35,6 +35,8 @@ class PositiveDialog extends ConsumerWidget {
     this.isDisabled = false,
     this.heroTag = '',
     this.barrierOpacity = kBarrierOpacityOverlay,
+    this.barrierDismissible = true,
+    this.showCloseButton = true,
     super.key,
   });
 
@@ -50,6 +52,9 @@ class PositiveDialog extends ConsumerWidget {
 
   final double barrierOpacity;
   final double backgroundOpacity;
+
+  final bool barrierDismissible;
+  final bool showCloseButton;
 
   static const double kBorderRadius = 40.0;
   static const double kPadding = 20.0;
@@ -76,6 +81,7 @@ class PositiveDialog extends ConsumerWidget {
     bool useSafeArea = false,
     double backgroundOpacity = kBackgroundOpacity,
     PositiveDialogStyle style = PositiveDialogStyle.overlay,
+    bool showCloseButton = true,
   }) async {
     return await showCupertinoDialog(
       context: context,
@@ -87,6 +93,8 @@ class PositiveDialog extends ConsumerWidget {
         barrierOpacity: style == PositiveDialogStyle.overlay ? kBarrierOpacityOverlay : kBarrierOpacityFullScreen,
         style: style,
         hints: hints,
+        barrierDismissible: barrierDismissible,
+        showCloseButton: showCloseButton,
         child: child,
       ),
     );
@@ -105,44 +113,48 @@ class PositiveDialog extends ConsumerWidget {
       child: ScaffoldMessenger(
         child: Builder(builder: (context) {
           return GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
+            onTap: () => barrierDismissible ? Navigator.of(context).pop() : null,
             child: AnnotatedRegion<SystemUiOverlayStyle>(
               value: buildSystemUiOverlayStyle(appBarColor: colors.black, backgroundColor: colors.black),
-              child: Scaffold(
-                backgroundColor: colors.black.withOpacity(barrierOpacity),
-                body: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverPadding(
-                      padding: EdgeInsets.only(bottom: bottomViewInsets),
-                      sliver: SliverFillRemaining(
-                        child: style == PositiveDialogStyle.overlay
-                            ? PositiveOverlayDialogContent(
-                                kBorderRadius: kBorderRadius,
-                                kSigmaBlur: kSigmaBlur,
-                                kPadding: kPadding,
-                                colors: colors,
-                                backgroundOpacity: backgroundOpacity,
-                                title: title,
-                                typography: typography,
-                                isDisabled: isDisabled,
-                                hints: hints,
-                                child: child,
-                              )
-                            : PositiveFullscreenDialogContent(
-                                kBorderRadius: kBorderRadius,
-                                kSigmaBlur: kSigmaBlur,
-                                kPadding: kPadding,
-                                colors: colors,
-                                backgroundOpacity: backgroundOpacity,
-                                title: title,
-                                typography: typography,
-                                isDisabled: isDisabled,
-                                hints: hints,
-                                child: child,
-                              ),
+              child: WillPopScope(
+                onWillPop: () async => barrierDismissible,
+                child: Scaffold(
+                  backgroundColor: colors.black.withOpacity(barrierOpacity),
+                  body: CustomScrollView(
+                    slivers: <Widget>[
+                      SliverPadding(
+                        padding: EdgeInsets.only(bottom: bottomViewInsets),
+                        sliver: SliverFillRemaining(
+                          child: style == PositiveDialogStyle.overlay
+                              ? PositiveOverlayDialogContent(
+                                  kBorderRadius: kBorderRadius,
+                                  kSigmaBlur: kSigmaBlur,
+                                  kPadding: kPadding,
+                                  colors: colors,
+                                  backgroundOpacity: backgroundOpacity,
+                                  title: title,
+                                  typography: typography,
+                                  isDisabled: isDisabled,
+                                  hints: hints,
+                                  showCloseButton: showCloseButton,
+                                  child: child,
+                                )
+                              : PositiveFullscreenDialogContent(
+                                  kBorderRadius: kBorderRadius,
+                                  kSigmaBlur: kSigmaBlur,
+                                  kPadding: kPadding,
+                                  colors: colors,
+                                  backgroundOpacity: backgroundOpacity,
+                                  title: title,
+                                  typography: typography,
+                                  isDisabled: isDisabled,
+                                  hints: hints,
+                                  child: child,
+                                ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -261,6 +273,7 @@ class PositiveOverlayDialogContent extends StatelessWidget {
     required this.isDisabled,
     required this.hints,
     required this.child,
+    required this.showCloseButton,
   });
 
   final double kBorderRadius;
@@ -273,6 +286,8 @@ class PositiveOverlayDialogContent extends StatelessWidget {
   final bool isDisabled;
   final List<Widget> hints;
   final Widget child;
+
+  final bool showCloseButton;
 
   @override
   Widget build(BuildContext context) {
@@ -304,16 +319,18 @@ class PositiveOverlayDialogContent extends StatelessWidget {
                               style: typography.styleTitle.copyWith(color: colors.white),
                             ),
                           ),
-                          const SizedBox(width: kPaddingMedium),
-                          PositiveButton.appBarIcon(
-                            colors: colors,
-                            icon: UniconsLine.multiply,
-                            primaryColor: title.isNotEmpty ? colors.white : colors.black,
-                            size: PositiveButtonSize.small,
-                            style: PositiveButtonStyle.text,
-                            isDisabled: isDisabled,
-                            onTapped: () => Navigator.of(context).pop(),
-                          ),
+                          if (showCloseButton) ...<Widget>[
+                            const SizedBox(width: kPaddingMedium),
+                            PositiveButton.appBarIcon(
+                              colors: colors,
+                              icon: UniconsLine.multiply,
+                              primaryColor: title.isNotEmpty ? colors.white : colors.black,
+                              size: PositiveButtonSize.small,
+                              style: PositiveButtonStyle.text,
+                              isDisabled: isDisabled,
+                              onTapped: () => Navigator.of(context).pop(),
+                            ),
+                          ],
                         ],
                       ),
                       if (title.isNotEmpty) const SizedBox(height: kPaddingMedium),

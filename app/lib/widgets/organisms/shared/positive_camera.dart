@@ -23,6 +23,7 @@ import 'package:wheel_chooser/wheel_chooser.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/ml/face_detector_model.dart';
+import 'package:app/extensions/permission_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/image_helpers.dart';
@@ -32,6 +33,7 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dar
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';
@@ -47,7 +49,6 @@ enum PositiveCameraViewMode {
   none,
   camera,
   cameraPermissionOverlay,
-  libraryPermissionOverlay,
 }
 
 class PositiveCamera extends StatefulHookConsumerWidget {
@@ -202,8 +203,19 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   int clipCurrentTime = 0;
   Timer? clipTimer;
 
-  bool get hasCameraPermission => (cameraPermissionStatus == PermissionStatus.granted || cameraPermissionStatus == PermissionStatus.limited) && microphonePermissionStatus == PermissionStatus.granted || microphonePermissionStatus == PermissionStatus.limited;
-  bool get hasLibraryPermission => (libraryImagePermissionStatus == PermissionStatus.granted && libraryVideoPermissionStatus == PermissionStatus.granted) || (libraryImagePermissionStatus == PermissionStatus.limited && libraryVideoPermissionStatus == PermissionStatus.limited);
+  bool get hasCameraPermission {
+    final bool isCameraPermissionGranted = cameraPermissionStatus?.canUsePermission ?? false;
+    final bool isMicrophonePermissionGranted = microphonePermissionStatus?.canUsePermission ?? false;
+
+    return isCameraPermissionGranted && isMicrophonePermissionGranted;
+  }
+
+  bool get hasLibraryPermission {
+    final bool isLibraryImagePermissionGranted = libraryImagePermissionStatus?.canUsePermission ?? false;
+    final bool isLibraryVideoPermissionGranted = libraryVideoPermissionStatus?.canUsePermission ?? false;
+
+    return isLibraryImagePermissionGranted && isLibraryVideoPermissionGranted;
+  }
 
   bool get hasDetectedFace => faceDetectionModel != null && faceDetectionModel!.faces.isNotEmpty && faceDetectionModel!.isFacingCamera && faceDetectionModel!.isInsideBoundingBox;
 
@@ -238,35 +250,41 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       );
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await checkCameraPermission(request: true);
-      await checkLibraryPermission(request: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => attemptPreloadCameraPermissions());
+  }
 
-      if (!mounted) {
-        return;
-      }
+  Future<void> attemptPreloadCameraPermissions() async {
+    await checkCameraPermission(request: true);
 
-      final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-      if (deviceInfo is AndroidDeviceInfo) {
-        isPhysicalDevice = deviceInfo.isPhysicalDevice;
-      } else if (deviceInfo is IosDeviceInfo) {
-        isPhysicalDevice = deviceInfo.isPhysicalDevice;
-      }
+    final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
+    if (deviceInfo is AndroidDeviceInfo) {
+      isPhysicalDevice = deviceInfo.isPhysicalDevice;
+    } else if (deviceInfo is IosDeviceInfo) {
+      isPhysicalDevice = deviceInfo.isPhysicalDevice;
+    }
 
-      if (hasCameraPermission) {
-        viewMode = PositiveCameraViewMode.camera;
-      } else {
-        viewMode = PositiveCameraViewMode.cameraPermissionOverlay;
-      }
+    if (hasCameraPermission) {
+      viewMode = PositiveCameraViewMode.camera;
+    } else {
+      viewMode = PositiveCameraViewMode.cameraPermissionOverlay;
+    }
 
-      setStateIfMounted();
-    });
+    setStateIfMounted();
   }
 
   @override
   void onPause() {
     super.onPause();
     stopClipRecording();
+  }
+
+  @override
+  void onResume() {
+    super.onResume();
+
+    if (!hasCameraPermission) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => attemptPreloadCameraPermissions());
+    }
   }
 
   @override
@@ -296,54 +314,59 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   Future<void> checkLibraryPermission({bool request = true}) async {
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
-    Permission baseLibraryPermissionPhoto = Permission.photos;
-    Permission baseLibraryPermissionVideo = Permission.videos;
-
-    // Check if Android and past Tiramisu version
-    if (deviceInfo is AndroidDeviceInfo) {
-      final int sdkInt = deviceInfo.version.sdkInt;
-      if (sdkInt <= 32) {
-        Permission baseLibraryPermission = Permission.storage;
-        try {
-          if (request) {
-            libraryImagePermissionStatus = await baseLibraryPermission.request();
-          } else {
-            libraryImagePermissionStatus = await baseLibraryPermission.status;
-          }
-          libraryVideoPermissionStatus = libraryImagePermissionStatus;
-        } catch (e) {
-          libraryImagePermissionStatus = PermissionStatus.denied;
-          libraryVideoPermissionStatus = PermissionStatus.denied;
-        }
-        return;
-      }
-    }
 
     try {
+      if (deviceInfo is AndroidDeviceInfo) {
+        final int sdkInt = deviceInfo.version.sdkInt;
+        PermissionStatus? newStatus;
+        if (sdkInt <= 32 && request) {
+          newStatus = await Permission.storage.request();
+        } else if (sdkInt <= 32 && !request) {
+          newStatus = await Permission.storage.status;
+        }
+
+        if (newStatus != null) {
+          libraryImagePermissionStatus = newStatus;
+          libraryVideoPermissionStatus = newStatus;
+          return;
+        }
+      }
+
+      // On iOS, there is no video permission, so we use the photo permission
+      if (deviceInfo is IosDeviceInfo) {
+        PermissionStatus? newStatus;
+        if (request) {
+          newStatus = await Permission.photos.request();
+        } else {
+          newStatus = await Permission.photos.status;
+        }
+
+        libraryImagePermissionStatus = newStatus;
+        libraryVideoPermissionStatus = newStatus;
+        return;
+      }
+
+      // On new Android devices, we have to request both permissions
       if (request) {
-        libraryImagePermissionStatus = await baseLibraryPermissionPhoto.request();
+        libraryImagePermissionStatus = await Permission.photos.request();
+        libraryVideoPermissionStatus = await Permission.videos.request();
       } else {
-        libraryImagePermissionStatus = await baseLibraryPermissionPhoto.status;
+        libraryImagePermissionStatus = await Permission.photos.status;
+        libraryVideoPermissionStatus = await Permission.videos.status;
       }
     } catch (e) {
       libraryImagePermissionStatus = PermissionStatus.denied;
-    }
-
-    try {
-      if (request) {
-        libraryVideoPermissionStatus = await baseLibraryPermissionVideo.request();
-      } else {
-        libraryVideoPermissionStatus = await baseLibraryPermissionVideo.status;
-      }
-    } catch (e) {
       libraryVideoPermissionStatus = PermissionStatus.denied;
+    } finally {
+      setStateIfMounted();
     }
   }
 
-  void onInternalAddImageTap(BuildContext context) {
+  Future<void> onInternalAddImageTap(BuildContext context) async {
+    await checkLibraryPermission(request: true);
     if (!hasLibraryPermission) {
-      viewMode = PositiveCameraViewMode.libraryPermissionOverlay;
-      setStateIfMounted();
+      final PositiveSnackBar errorSnackBar = PositiveErrorSnackBar(text: 'Please enable access to your photo library.');
+      ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
       return;
     }
 
@@ -766,18 +789,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               child: widget.textPostActionWidget!,
             ),
           ],
-          if (viewMode == PositiveCameraViewMode.libraryPermissionOverlay) ...<Widget>[
-            Container(
-              padding: const EdgeInsets.only(right: kPaddingMedium),
-              alignment: Alignment.centerRight,
-              child: CameraFloatingButton.showCamera(
-                active: true,
-                onTap: (context) => setStateIfMounted(callback: () {
-                  viewMode = hasCameraPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-                }),
-              ),
-            ),
-          ],
           if (viewMode == PositiveCameraViewMode.cameraPermissionOverlay) ...<Widget>[
             Container(
               padding: const EdgeInsets.only(right: kPaddingMedium),
@@ -820,26 +831,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               viewMode = hasCameraPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
               setStateIfMounted();
             }));
-        break;
-      case PositiveCameraViewMode.libraryPermissionOverlay:
-        children.add(LibraryPermissionDialog(
-          colours: colours,
-          typography: typography,
-          ref: ref,
-          onTapClose: () async {
-            await checkLibraryPermission(request: false);
-            if (!hasLibraryPermission) {
-              final SystemController systemController = ref.read(systemControllerProvider.notifier);
-              await systemController.openPermissionSettings();
-              await checkLibraryPermission(request: false);
-            }
-
-            viewMode = hasLibraryPermission ? PositiveCameraViewMode.camera : PositiveCameraViewMode.cameraPermissionOverlay;
-            if (hasLibraryPermission) {
-              onInternalAddImageTap(context);
-            }
-          },
-        ));
         break;
       default:
         children.add(const SizedBox.shrink());
@@ -1231,62 +1222,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     //   onVideoMode: (recordingState) => onVideoRecordingRequestStart(recordingState),
     //   onVideoRecordingMode: (recordingState) => onPauseResumeClip(freshCameraState: recordingState),
     // );
-  }
-}
-
-class LibraryPermissionDialog extends StatelessWidget {
-  const LibraryPermissionDialog({
-    super.key,
-    required this.colours,
-    required this.typography,
-    required this.ref,
-    required this.onTapClose,
-  });
-
-  final DesignColorsModel colours;
-  final DesignTypographyModel typography;
-  final WidgetRef ref;
-
-  final FutureOr<void> Function()? onTapClose;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: colours.black,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingLarge),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(UniconsLine.image_plus, size: kIconMedium, color: colours.white),
-          const SizedBox(height: kPaddingSmall),
-          Text(
-            "Enable access to your photo library",
-            style: typography.styleButtonBold.copyWith(color: colours.white),
-          ),
-          const SizedBox(height: kPaddingSmall),
-          SizedBox(
-            child: Align(
-              child: Row(
-                children: [
-                  const Spacer(),
-                  PositiveButton(
-                    label: "Enable Library Access",
-                    colors: colours,
-                    style: PositiveButtonStyle.primary,
-                    primaryColor: colours.teal,
-                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingVerySmall),
-                    onTapped: () => onTapClose?.call(),
-                  ),
-                  const Spacer(),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
 

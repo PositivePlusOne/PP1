@@ -9,8 +9,10 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/providers/analytics/analytic_events.dart';
@@ -74,15 +76,26 @@ class AnalyticsController extends _$AnalyticsController {
     PlatformDispatcher.instance.onError = exceptionController.onPlatformDispatcherErrorOccured;
   }
 
-  Future<void> toggleAnalyticsCollection(bool isEnabled) async {
+  Future<void> toggleAnalyticsCollection(bool attemptToEnable) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
     final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
-    if (state.isCollectingData == isEnabled || !state.isCollectingData && !isEnabled) {
+    if (state.isCollectingData == attemptToEnable || !state.isCollectingData && !attemptToEnable) {
       logger.d('toggleAnalyticsCollection: Analytics already enabled or disabled, not toggling');
       return;
+    }
+
+    bool isEnabled = attemptToEnable;
+
+    // On iOS we need to show the app tracking dialog
+    if (attemptToEnable && UniversalPlatform.isIOS) {
+      final PermissionStatus permissionStatus = await ref.read(appTrackingTransparencyPermissionsProvider.future);
+      if (permissionStatus == PermissionStatus.denied) {
+        logger.d('toggleAnalyticsCollection: App tracking permission denied, not toggling');
+        isEnabled = false;
+      }
     }
 
     if (isEnabled) {

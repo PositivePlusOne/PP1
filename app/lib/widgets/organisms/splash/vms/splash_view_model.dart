@@ -10,8 +10,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -111,13 +113,30 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     }
 
     // Check for data collection
+    // On iOS, we need to show the app tracking dialog
+    // On Android, we have our own dialog
     final bool canPromptForAnalyticsCollection = analyticsController.state.canPromptForAnalytics;
     if (canPromptForAnalyticsCollection) {
-      final bool? shouldCollectAnalytics = await PositiveDialog.show(
-        context: context,
-        title: 'Enable Analytics',
-        child: const AnalyticsCollectionDialog(),
-      );
+      bool? shouldCollectAnalytics;
+
+      if (UniversalPlatform.isAndroid) {
+        shouldCollectAnalytics = await PositiveDialog.show(
+          context: context,
+          barrierDismissible: false,
+          showCloseButton: false,
+          title: 'Allow Positive+1 to track your activity across the application?',
+          child: const AnalyticsCollectionDialog(),
+        );
+      }
+
+      if (UniversalPlatform.isIOS) {
+        final PermissionStatus trackingPermission = await ref.read(appTrackingTransparencyPermissionsProvider.future);
+        if (trackingPermission == PermissionStatus.granted || trackingPermission == PermissionStatus.limited) {
+          shouldCollectAnalytics = true;
+        } else {
+          shouldCollectAnalytics = false;
+        }
+      }
 
       if (shouldCollectAnalytics == true) {
         await analyticsController.toggleAnalyticsCollection(true);
