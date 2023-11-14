@@ -1139,9 +1139,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                   active: canTakePictureOrVideo,
                   onTap: (context) => onChangeCameraRequest(context, state),
                 ),
-              if (clipRecordingState.isFinishedRecording) const SizedBox(width: kIconLarge),
+              if (clipRecordingState.isFinishedRecording || widget.useFaceDetection) const SizedBox(width: kIconLarge),
             ],
           ),
+          if (widget.useFaceDetection) const SizedBox(height: kPaddingMedium)
         ],
       ),
     );
