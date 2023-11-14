@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -19,6 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:unicons/unicons.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -957,7 +959,29 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         ),
       );
 
-      children.add(Positioned.fill(child: widget));
+      final Size screenSize = MediaQuery.of(context).size;
+      final double edgeInsetStartX = (screenSize.width * 0.06) + kPaddingSmall;
+      final double edgeInsetStarty = (screenSize.height * 0.15) + kPaddingSmall;
+      final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+      final TextStyle textStyle = typography.styleButtonBold.copyWith(color: colours.white);
+      final AppLocalizations appLocalization = AppLocalizations.of(context)!;
+
+      children.addAll(
+        [
+          Positioned.fill(child: widget),
+          Positioned(
+            top: edgeInsetStarty,
+            left: edgeInsetStartX,
+            child: PositiveTapBehaviour(
+              onTap: (context) => context.popRoute(),
+              child: Text(
+                appLocalization.shared_actions_cancel,
+                style: textStyle,
+              ),
+            ),
+          )
+        ],
+      );
     }
 
     return Stack(children: children);
@@ -1110,7 +1134,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
               //* -=-=-=-=-=-            Change Camera Orientation             -=-=-=-=-=- *\\
               //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-              if (clipRecordingState.isInactive)
+              if (clipRecordingState.isInactive && !widget.useFaceDetection)
                 CameraFloatingButton.changeCamera(
                   active: canTakePictureOrVideo,
                   onTap: (context) => onChangeCameraRequest(context, state),
