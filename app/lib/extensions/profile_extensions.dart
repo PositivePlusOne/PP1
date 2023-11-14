@@ -279,12 +279,14 @@ extension ProfileExtensions on Profile {
     return '';
   }
 
+  bool get isLocationAvailable => place?.description.isNotEmpty ?? false;
+
   String get formattedLocation {
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     final BuildContext context = appRouter.navigatorKey.currentContext!;
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    if (place?.description.isEmpty ?? true) {
+    if (!isLocationAvailable) {
       return localizations.shared_profile_unknown_location;
     }
 
