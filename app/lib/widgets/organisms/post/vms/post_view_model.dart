@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -67,12 +68,12 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
 
   Future<bool> onWillPopScope() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final bool comeFromDeepLink = appRouter.stack.any((element) => element.child is SplashPage);
+    final bool hasHomeRouteInStack = appRouter.stack.any((element) => element.name == HomeRoute.name);
 
-    if (comeFromDeepLink) {
-      appRouter.replaceAll([const HomeRoute()]);
-    } else {
+    if (hasHomeRouteInStack) {
       appRouter.removeLast();
+    } else {
+      await appRouter.replaceAll([const HomeRoute()]);
     }
 
     return false;

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -47,6 +48,9 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   void onFirstRender() {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onFirstRender()');
+
+    final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
+    universalLinksController.removeInitialLinkFlagInSharedPreferences();
 
     // Add a bit of time before performing the profile checks
     Future.delayed(const Duration(seconds: 5)).then((_) {
