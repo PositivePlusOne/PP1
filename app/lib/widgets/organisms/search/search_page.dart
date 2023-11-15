@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/extensions/activity_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -75,7 +76,6 @@ class SearchPage extends ConsumerWidget {
     };
 
     final List<Widget> searchResultWidgets = [];
-
     if (!canDisplaySearchResults) {
       if (isSearching) {
         searchResultWidgets.addAll(
@@ -141,30 +141,46 @@ class SearchPage extends ConsumerWidget {
           break;
 
         case SearchTab.posts:
-          searchResultWidgets.addAll(<Widget>[
-            for (final Activity activity in searchPostsResults) ...<Widget>[
-              PositiveCacheWidget(
-                currentProfile: currentProfile,
-                cacheObjects: [activity],
-                onBuild: (context) {
-                  final String publisherId = activity.publisherInformation?.publisherId ?? '';
-                  final String reposterId = activity.repostConfiguration?.targetActivityPublisherId ?? '';
-                  final String relationshipId = [currentProfile?.flMeta?.id ?? '', publisherId].asGUID;
-                  final String reposterRelationshipId = [currentProfile?.flMeta?.id ?? '', reposterId].asGUID;
+          // Inject a separator between the searchResultWidgets which are posts
+          final Widget postDivider = PositiveFeedPaginationBehaviour.buildVisualSeparator(context);
+          final List<Widget> postWidgets = <Widget>[];
 
-                  return PositiveFeedPaginationBehaviour.buildWidgetForFeed(
-                    activityId: activity.flMeta?.id ?? '',
-                    currentProfileId: currentProfile?.flMeta?.id ?? '',
-                    feed: TargetFeed.fromOrigin(activity.publisherInformation?.originFeed ?? ''),
-                    item: activity,
-                    index: searchPostsResults.indexOf(activity),
-                    relationshipId: relationshipId,
-                    reposterRelationshipId: reposterRelationshipId,
-                  );
-                },
-              ),
-            ],
-          ].spaceWithVertical(kPaddingMedium));
+          for (final Activity activity in searchPostsResults) {
+            // Check if we can display this in the feed
+            final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+            if (currentProfileId.isNotEmpty) {
+              final String expectedRelationshipId = [currentProfileId, activity.publisherInformation?.publisherId ?? ''].asGUID;
+              final Relationship? relationshipWithActivityPublisher = cacheController.get(expectedRelationshipId);
+              if (!activity.canDisplayOnFeed(currentProfile, relationshipWithActivityPublisher)) {
+                continue;
+              }
+            }
+
+            final Widget postWidget = PositiveCacheWidget(
+              currentProfile: currentProfile,
+              cacheObjects: [activity],
+              onBuild: (context) {
+                final String publisherId = activity.publisherInformation?.publisherId ?? '';
+                final String reposterId = activity.repostConfiguration?.targetActivityPublisherId ?? '';
+                final String relationshipId = [currentProfile?.flMeta?.id ?? '', publisherId].asGUID;
+                final String reposterRelationshipId = [currentProfile?.flMeta?.id ?? '', reposterId].asGUID;
+
+                return PositiveFeedPaginationBehaviour.buildWidgetForFeed(
+                  activityId: activity.flMeta?.id ?? '',
+                  currentProfileId: currentProfile?.flMeta?.id ?? '',
+                  feed: TargetFeed.fromOrigin(activity.publisherInformation?.originFeed ?? ''),
+                  item: activity,
+                  index: searchPostsResults.indexOf(activity),
+                  relationshipId: relationshipId,
+                  reposterRelationshipId: reposterRelationshipId,
+                );
+              },
+            );
+
+            postWidgets.add(postWidget);
+          }
+
+          searchResultWidgets.addAll(postWidgets.addSeparatorsToWidgetList(separator: postDivider));
           break;
 
         case SearchTab.tags:
@@ -200,7 +216,6 @@ class SearchPage extends ConsumerWidget {
 
     // Add padding to searchResultWidgets
     final double navBarHeight = PositiveNavigationBar.calculateHeight(mediaQuery);
-    searchResultWidgets.add(SizedBox(height: navBarHeight));
 
     return PositiveScaffold(
       isBusy: isBusy,
@@ -262,6 +277,7 @@ class SearchPage extends ConsumerWidget {
                 ),
                 const SizedBox(height: kPaddingSmall),
                 ...searchResultWidgets,
+                SizedBox(height: navBarHeight),
               ],
             ),
           ),
