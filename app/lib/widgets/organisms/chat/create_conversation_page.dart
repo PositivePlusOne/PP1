@@ -92,7 +92,7 @@ class CreateConversationPage extends HookConsumerWidget {
       onProfileSelected: (String profileId) => chatViewModel.onCurrentChannelMemberSelected(profileId),
       canCallToAction: true,
       actionLabel: localizations.page_chat_action_start_conversation,
-      isEnabled: !chatViewModelState.isBusy,
+      isEnabled: !chatViewModelState.isBusy && chatViewModelState.selectedMembers.isNotEmpty,
       onActionPressed: () async => chatViewModel.onCurrentChannelMembersConfirmed(context),
     );
   }
