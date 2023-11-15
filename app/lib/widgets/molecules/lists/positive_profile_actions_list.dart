@@ -19,7 +19,6 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/events/request_refresh_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';

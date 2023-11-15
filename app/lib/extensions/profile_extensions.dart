@@ -172,7 +172,7 @@ extension ProfileExtensions on Profile {
   }
 
   String get formattedAgeRespectingFlags {
-    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagBirthday);
+    final bool shouldIgnore = !visibilityFlags.contains(kVisibilityFlagBirthday);
     if (shouldIgnore) {
       return '';
     }
@@ -258,7 +258,7 @@ extension ProfileExtensions on Profile {
   }
 
   String get formattedGenderRespectingFlags {
-    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagGenders);
+    final bool shouldIgnore = !visibilityFlags.contains(kVisibilityFlagGenders);
     if (shouldIgnore) {
       return '';
     }
@@ -267,7 +267,7 @@ extension ProfileExtensions on Profile {
   }
 
   String get formattedHIVStatusRespectingFlags {
-    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagHivStatus);
+    final bool shouldIgnore = !visibilityFlags.contains(kVisibilityFlagHivStatus);
     if (shouldIgnore) {
       return '';
     }
@@ -276,7 +276,7 @@ extension ProfileExtensions on Profile {
   }
 
   String get formattedInterestsRespectingFlags {
-    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagInterests);
+    final bool shouldIgnore = !visibilityFlags.contains(kVisibilityFlagInterests);
     if (shouldIgnore) {
       return '';
     }
@@ -330,7 +330,7 @@ extension ProfileExtensions on Profile {
   }
 
   String get formattedLocationRespectingFlags {
-    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagLocation);
+    final bool shouldIgnore = !visibilityFlags.contains(kVisibilityFlagLocation);
     if (shouldIgnore) {
       return '';
     }

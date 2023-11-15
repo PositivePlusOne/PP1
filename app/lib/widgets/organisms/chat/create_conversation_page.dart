@@ -10,6 +10,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
+import 'package:app/constants/chat_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -64,6 +65,12 @@ class CreateConversationPage extends HookConsumerWidget {
 
     final bool isManagedProfile = profileController.isCurrentlyManagedProfile;
 
+    // By default, we want to show the current user as a member of the channel
+    int currentChannelMemberCount = 1;
+    if (currentChannelMembers.isNotEmpty) {
+      currentChannelMemberCount = currentChannelMembers.length;
+    }
+
     return PositiveCommunitiesDialog(
       initialCommunityType: isManagedProfile ? CommunityType.followers : CommunityType.connected,
       mode: CommunitiesDialogMode.select,
@@ -78,6 +85,7 @@ class CreateConversationPage extends HookConsumerWidget {
       ],
       profileDescriptionBuilder: buildProfileDescription,
       selectedProfiles: chatViewModelState.selectedMembers.toList(),
+      maximumSelectedProfiles: (kMaximumChatParticipants - currentChannelMemberCount).clamp(0, kMaximumChatParticipants),
       hiddenProfiles: currentChannelMembers,
       onProfileSelected: (String profileId) => chatViewModel.onCurrentChannelMemberSelected(profileId),
       canCallToAction: true,
