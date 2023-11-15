@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';

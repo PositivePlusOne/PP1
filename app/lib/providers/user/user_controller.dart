@@ -388,12 +388,6 @@ class UserController extends _$UserController {
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final User? user = firebaseAuth.currentUser;
 
-    // Check if last 2FA check was within the last 5 minutes.
-    if (state.last2FACheck.isAfter(DateTime.now().subtract(const Duration(minutes: 5)))) {
-      log.d('[UserController] perform2FACheck() last 2FA check was within the last 5 minutes');
-      return;
-    }
-
     final UserInfo? emailProvider = user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'password');
     if (emailProvider?.email == null) {
       log.e('[UserController] perform2FACheck() emailProvider is null');
