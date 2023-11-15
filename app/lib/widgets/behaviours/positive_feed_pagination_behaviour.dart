@@ -332,18 +332,51 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        buildVisualSeparator(context),
-        buildItem(
-          currentProfile: currentProfile,
-          feed: feed,
-          context: context,
-          item: promotedActivity,
-          index: index,
-          promotion: promotion,
-        ),
+        if (doesItemHaveContent(feed: feed, item: promotedActivity))
+          // this item does have content, separate and show it
+          ...[
+          buildVisualSeparator(context),
+          buildItem(
+            currentProfile: currentProfile,
+            feed: feed,
+            context: context,
+            item: promotedActivity,
+            index: index,
+            promotion: promotion,
+          ),
+        ],
         buildVisualSeparator(context),
       ],
     );
+  }
+
+  static bool doesItemHaveContent({
+    required TargetFeed? feed,
+    required Activity item,
+  }) {
+    final String activityId = item.flMeta?.id ?? '';
+    final String publisherId = item.publisherInformation?.publisherId ?? '';
+    if (activityId.isEmpty || publisherId.isEmpty) {
+      return false;
+    }
+
+    // Check promotion is valid for rare feed states
+    final bool isClipFeed = feed?.targetSlug == 'tags' && feed?.targetUserId == 'clip';
+    final bool isPostFeed = feed?.targetSlug == 'tags' && feed?.targetUserId == 'post';
+    final ActivityGeneralConfigurationType? type = item.generalConfiguration?.type;
+
+    // Check if is a clip and we're not on the clip feed
+    if (isClipFeed && type != const ActivityGeneralConfigurationType.clip()) {
+      return false;
+    }
+
+    // Check if is a post and we're not on the post feed
+    if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
+      return false;
+    }
+
+    // else there is enough content to show
+    return true;
   }
 
   static Widget buildItem({
@@ -359,22 +392,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
 
-    if (activityId.isEmpty || publisherId.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    // Check promotion is valid for rare feed states
-    final bool isClipFeed = feed?.targetSlug == 'tags' && feed?.targetUserId == 'clip';
-    final bool isPostFeed = feed?.targetSlug == 'tags' && feed?.targetUserId == 'post';
-    final ActivityGeneralConfigurationType? type = item.generalConfiguration?.type;
-
-    // Check if is a clip and we're not on the clip feed
-    if (isClipFeed && type != const ActivityGeneralConfigurationType.clip()) {
-      return const SizedBox.shrink();
-    }
-
-    // Check if is a post and we're not on the post feed
-    if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
+    if (!doesItemHaveContent(feed: feed, item: item)) {
       return const SizedBox.shrink();
     }
 
