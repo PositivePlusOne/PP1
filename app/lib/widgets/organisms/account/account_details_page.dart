@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -158,23 +160,33 @@ class AccountDetailsPage extends HookConsumerWidget {
   }) {
     final bool isOwner = profile?.flMeta?.id != null && profile?.flMeta?.ownedBy == null || profile?.flMeta?.ownedBy == profile?.flMeta?.id;
     return <Widget>[
-      if (isOwner) ...<Widget>[
-        PositiveButton(
-          colors: colors,
-          primaryColor: colors.black,
-          isDisabled: viewModelState.isBusy,
-          label: 'Change profile photo',
-          onTapped: () => PositiveDialog.show(
-            title: 'Photo options',
-            context: context,
-            child: ProfilePhotoDialog(
-              onCameraSelected: () => viewModel.onChangeImageFromCameraSelected(context),
-              onImagePickerSelected: () => viewModel.onChangeImageFromPickerSelected(context),
-            ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Details',
+            style: typography.styleHeroMedium,
           ),
-        ),
-        const SizedBox(height: kPaddingMedium),
-      ],
+          if (isOwner) ...<Widget>[
+            const Spacer(),
+            PositiveProfileCircularIndicator(
+              profile: profile,
+              size: kIconHuge,
+              icon: UniconsLine.camera_change,
+              onTap: () => PositiveDialog.show(
+                title: 'Photo options',
+                context: context,
+                child: ProfilePhotoDialog(
+                  onCameraSelected: () => viewModel.onChangeImageFromCameraSelected(context),
+                  onImagePickerSelected: () => viewModel.onChangeImageFromPickerSelected(context),
+                ),
+              ),
+            ),
+          ]
+        ],
+      ),
+      const SizedBox(height: kPaddingMedium),
       PositiveGlassSheet(
         horizontalPadding: kPaddingMedium,
         verticalPadding: kPaddingMedium,
