@@ -261,11 +261,12 @@
     "page_profile_edit_about_you_desc": "Say something about yourself",
     "page_profile_edit_about_you_thanks": "Your about info has been changed",
 
+    "page_profile_edit_age": "Age",
     "page_profile_edit_dob": "Date Of Birth",
     "page_profile_edit_change_details": "Need to change these details? Please refer to our ",
     "page_profile_edit_change_details_link": "Guidance to find out more",
     "page_profile_edit_change_details_email": "Need to change this? Drop us a line at mailto:support@positiveplusone.com",
-    "page_profile_edit_hiv_status": "HIV Status",
+    "page_profile_edit_hiv_status": "HIV Connection",
     "page_profile_edit_gender": "Gender",
     "page_profile_edit_location": "Location (Town/City)",
     "page_profile_edit_interests": "Your Interests",

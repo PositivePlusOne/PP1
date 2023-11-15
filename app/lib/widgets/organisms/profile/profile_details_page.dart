@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
@@ -36,6 +37,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final String targetProfileId = state.targetProfileId ?? '';
     final Profile? targetProfile = cacheController.get(targetProfileId);
@@ -93,7 +95,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (targetProfile?.isOrganisation == true) ...[
                   PositiveFakeTextFieldButton.profile(
-                    hintText: 'Company Sectors',
+                    hintText: localisations.page_profile_edit_company_sectors,
                     labelText: targetProfile?.formattedCompanySectorsIgnoreFlags,
                   ),
                   const SizedBox(height: kPaddingMedium),
@@ -104,7 +106,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 if (!(targetProfile?.isOrganisation ?? false)) ...[
                   PositiveFakeTextFieldButton(
-                    hintText: 'Age',
+                    hintText: localisations.page_profile_edit_age,
                     labelText: targetProfile?.formattedAgeRespectingFlags ?? '',
                     //? empty onTap, users may not update date of birth in app
                   ),
@@ -114,7 +116,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                   //* -=-=-=-=-=- Gender -=-=-=-=-=- *\\
                   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                   PositiveFakeTextFieldButton.profile(
-                    hintText: 'Gender Identity',
+                    hintText: localisations.page_profile_edit_gender,
                     labelText: targetProfile?.formattedGenderRespectingFlags,
                   ),
                   const SizedBox(height: kPaddingMedium),
@@ -123,7 +125,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                   //* -=-=-=-=-=- HIV Status -=-=-=-=-=- *\\
                   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                   PositiveFakeTextFieldButton.profile(
-                    hintText: 'HIV Status',
+                    hintText: localisations.page_registration_hiv_status_title,
                     labelText: targetProfile?.formattedHIVStatusRespectingFlags,
                   ),
                   const SizedBox(height: kPaddingMedium),
@@ -133,7 +135,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=- Location -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
-                  hintText: 'Location',
+                  hintText: localisations.page_profile_edit_location,
                   labelText: targetProfile?.formattedLocationRespectingFlags,
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -142,7 +144,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=- Your Interests -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
-                  hintText: 'Interests',
+                  hintText: localisations.page_profile_edit_interests,
                   labelText: targetProfile?.formattedInterestsRespectingFlags,
                 ),
               ],
