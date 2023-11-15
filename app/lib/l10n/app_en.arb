@@ -348,12 +348,10 @@
 
     "page_account_promote_posts_title": "Promote your posts",
     "page_account_promote_posts_body": "To promote your posts, you'll need to get set up with payment details and one of our promotion plans.",
-    "page_account_promote_posts_body_one": "Features",
-    "page_account_promote_posts_body_two": "And",
-    "page_account_promote_posts_body_three": "Benefits",
-    "page_account_promote_posts_body_four": "Of",
-    "page_account_promote_posts_body_five": "Promoted",
-    "page_account_promote_posts_body_six": "Posts",
+    "page_account_promote_posts_body_one": "Get your message in front of the people that you need to see it",
+    "page_account_promote_posts_body_two": "The ability to promote content to people's feeds",
+    "page_account_promote_posts_body_three": "Tailor the promotion targeting using tags",
+    "page_account_promote_posts_body_four": "Create promotions that will appear in people's chat feeds",
     "page_account_close_button": "Got it",
 
     "page_account_promoted_posts_present_tooltip": "Promoted posts remaining:",

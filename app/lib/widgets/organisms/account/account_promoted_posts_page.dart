@@ -105,19 +105,24 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
       // now we finally have the stats, we can see how many promotions we have remaining
       remainingPromotions = profileStatistics?.promotionsPermitted ?? 0;
     }
+
     // get our feed for all promoted activities from this user
     final feed = TargetFeed.fromPromoted(userId: currentProfileId);
+
     // and the state for that
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(feed);
     final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: feed, currentProfileId: currentProfileId!);
+
     // we have the feed state now (from the cache) are there items already inside?
     itemHubCount.value = feedState.pagingController.itemList?.length.toString() ?? itemHubCount.value;
+
     // and listen for any changes to the page so we can update when the page does
+    // and set this value to update the view
     feedState.pagingController.addListener(() {
       log.i('page updated ${feedState.pagingController.itemList?.length ?? 0}');
-      // and set this value to update the view
       itemHubCount.value = feedState.pagingController.itemList?.length.toString() ?? itemHubCount.value;
     });
+
     return PositiveScaffold(
       decorations: buildType5ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
@@ -142,7 +147,10 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveTabBar(
-              tabs: [localisations.page_profile_promoted_posts_tab_hub(itemHubCount.value), localisations.page_profile_promoted_posts_tab_chat(itemChatCount.value)],
+              tabs: [
+                localisations.page_profile_promoted_posts_tab_hub(itemHubCount.value),
+                localisations.page_profile_promoted_posts_tab_chat(itemChatCount.value),
+              ],
               onTapped: (index) => selectedTab.value = index,
               tabColours: [colors.green, colors.green],
               index: selectedTab.value,
