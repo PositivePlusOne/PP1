@@ -55,7 +55,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.valuePromotedPost = false,
     this.tags = const [],
     this.trailingWidget,
-    this.initialValueSharingVisibility = const ActivitySecurityConfigurationMode.public(),
+    this.sharingVisibility = const ActivitySecurityConfigurationMode.public(),
     this.initialValueAllowComments = const ActivitySecurityConfigurationMode.public(),
     super.key,
   });
@@ -80,7 +80,7 @@ class CreatePostDialogue extends HookConsumerWidget {
   final Function(ActivitySecurityConfigurationMode)? onUpdateAllowComments;
 
   final ActivitySecurityConfigurationMode initialValueAllowComments;
-  final ActivitySecurityConfigurationMode initialValueSharingVisibility;
+  final ActivitySecurityConfigurationMode sharingVisibility;
 
   final bool valueAllowSharing;
   final bool valueSaveToGallery;
@@ -261,7 +261,7 @@ class CreatePostDialogue extends HookConsumerWidget {
               child: PositiveTextFieldDropdown<ActivitySecurityConfigurationMode>(
                 labelText: localisations.page_create_post_visibility,
                 values: ActivitySecurityConfigurationMode.orderedVisibilityModes,
-                initialValue: initialValueSharingVisibility,
+                initialValue: sharingVisibility,
                 valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
                 placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
                 onValueChanged: (type) => onUpdateVisibleTo!(type),
@@ -294,6 +294,30 @@ class CreatePostDialogue extends HookConsumerWidget {
                 isEnabled: !isBusy,
               ),
             ),
+
+            //* -=-=-=-=- Post Visibility Warning -=-=-=-=- *\\
+            const SizedBox(height: kPaddingMedium),
+            if (sharingVisibility == const ActivitySecurityConfigurationMode.public())
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(kPaddingSmall),
+                decoration: BoxDecoration(
+                  color: colours.white.withAlpha(30),
+                  borderRadius: BorderRadius.circular(kBorderRadiusLargePlus),
+                  border: Border.all(
+                    color: colours.purple,
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Icon(UniconsLine.info_circle, color: colours.purple),
+                    const SizedBox(width: kPaddingSmall),
+                    Flexible(child: Text(localisations.page_create_post_visibility_warning, style: textStyle)),
+                  ],
+                ),
+              ),
+
             trailingWidget ?? const SizedBox(),
             kCreatePostNavigationHeight.asVerticalBox,
             mediaQueryData.padding.bottom.asVerticalBox,
@@ -428,7 +452,7 @@ class CreatePostDialogue extends HookConsumerWidget {
                       labelText: localisations.page_create_post_visibility,
                       onValueChanged: (type) => onUpdateVisibleTo!(type),
                       values: ActivitySecurityConfigurationMode.orderedVisibilityModes,
-                      initialValue: initialValueSharingVisibility,
+                      initialValue: sharingVisibility,
                       labelTextStyle: typography.styleSubtextBold.copyWith(color: colours.white),
                       valueStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
                       placeholderStringBuilder: (value) => ActivitySecurityConfigurationMode.toVisibilityLocale(value, localisations),
