@@ -84,7 +84,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
-    final ActivitiesController activitiesController = ref.read(activitiesControllerProvider.notifier);
     final EventBus eventBus = ref.read(eventBusProvider);
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     logger.d('Follow tapped');
@@ -116,7 +115,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return;
     }
 
-    final AppRouter appRouter = ref.read(appRouterProvider);
     final String targetUserId = widget.targetProfile.flMeta?.id ?? '';
     final Logger logger = ref.read(loggerProvider);
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
@@ -241,6 +239,9 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       return const SizedBox.shrink();
     }
 
+    final Color accentColor = widget.targetProfile.accentColor.toSafeColorFromHex(defaultColor: colors.black);
+    final Color expectedButtonColor = accentColor.complimentTextColor;
+
     final Set<RelationshipState> relationshipStates = widget.relationship?.relationshipStatesForEntity(profileController.currentProfileId!) ?? {};
     final String flamelinkId = widget.targetProfile.flMeta?.id ?? '';
 
@@ -253,9 +254,6 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     bool hasConnectedToTargetUser = false;
     bool hasPendingConnectionToTargetUser = false;
     bool isRelationshipBlocked = false;
-
-    final Color targetProfileColor = widget.targetProfile.accentColor.toSafeColorFromHex(defaultColor: colors.purple);
-    final Color targetProfileComplimentColor = targetProfileColor.getNextSelectableProfileColor();
 
     if (widget.targetProfile.flMeta?.id?.isNotEmpty ?? false) {
       isCurrentUser = widget.targetProfile.flMeta!.id == profileController.currentProfileId;
@@ -271,7 +269,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (isCurrentUser) {
       final Widget editProfileAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.black,
+        primaryColor: expectedButtonColor,
         onTapped: onEditProfileTapped,
         label: localizations.page_account_actions_edit_profile,
         icon: UniconsLine.pen,
@@ -288,7 +286,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (isRelationshipBlocked) {
       final Widget unblockAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.black,
+        primaryColor: expectedButtonColor,
         onTapped: onUnblockTapped,
         label: localizations.shared_actions_unblock,
         icon: UniconsLine.ban,
@@ -305,7 +303,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isRelationshipBlocked && !isCurrentUser && !hasFollowedTargetUser) {
       final Widget followAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.black,
+        primaryColor: expectedButtonColor,
         onTapped: onFollowTapped,
         label: localizations.shared_actions_follow,
         icon: UniconsLine.plus_circle,
@@ -322,7 +320,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && hasFollowedTargetUser) {
       final Widget unfollowAction = PositiveButton(
         colors: colors,
-        primaryColor: targetProfileComplimentColor,
+        primaryColor: expectedButtonColor,
         onTapped: onUnfollowTapped,
         icon: UniconsLine.check_circle,
         tooltip: localizations.shared_actions_unfollow,
@@ -337,7 +335,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && hasPendingConnectionToTargetUser && !relationshipContainsOrganisation) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
-        primaryColor: targetProfileComplimentColor,
+        primaryColor: expectedButtonColor,
         onTapped: () => PositiveDialog.show(
           title: 'Remove Connection',
           context: context,
@@ -358,7 +356,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isRelationshipBlocked && !isCurrentUser && !hasConnectedToTargetUser && !hasPendingConnectionToTargetUser && !relationshipContainsOrganisation) {
       final Widget connectAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.black,
+        primaryColor: expectedButtonColor,
         onTapped: onConnectTapped,
         label: localizations.shared_actions_connect,
         icon: UniconsLine.user_plus,
@@ -374,7 +372,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser && hasConnectedToTargetUser && !relationshipContainsOrganisation) {
       final Widget disconnectAction = PositiveButton(
         colors: colors,
-        primaryColor: targetProfileComplimentColor,
+        primaryColor: expectedButtonColor,
         onTapped: () => PositiveDialog.show(
           title: 'Remove Connection',
           context: context,
@@ -393,7 +391,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if ((!isCurrentUser && hasConnectedToTargetUser) || (!isCurrentUser && relationshipContainsOrganisation)) {
       final Widget messageAction = PositiveButton(
         colors: colors,
-        primaryColor: colors.black,
+        primaryColor: expectedButtonColor,
         onTapped: () async => await getStreamController.createConversation([flamelinkId], shouldPopDialog: true),
         icon: UniconsLine.comment,
         tooltip: 'Message',
@@ -410,7 +408,7 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     if (!isCurrentUser) {
       final Widget moreActionsButton = PositiveButton(
         colors: colors,
-        primaryColor: targetProfileColor.complimentTextColor,
+        primaryColor: expectedButtonColor,
         onTapped: onMoreActionsTapped,
         icon: UniconsLine.ellipsis_h,
         tooltip: localizations.shared_actions_more,
