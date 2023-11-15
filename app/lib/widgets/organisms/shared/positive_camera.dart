@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -11,6 +10,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:camerawesome/pigeon.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,7 +20,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:unicons/unicons.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -36,6 +35,7 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/camera/camera_floating_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/navigation/positive_slim_tab_bar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:app/widgets/organisms/shared/components/mlkit_utils.dart';

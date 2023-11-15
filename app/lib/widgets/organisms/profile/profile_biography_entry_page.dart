@@ -43,7 +43,7 @@ class ProfileBiographyEntryPage extends ConsumerStatefulWidget {
 }
 
 class _ProfileBiographyEntryPageState extends ConsumerState<ProfileBiographyEntryPage> {
-  bool _isFocused = false;
+  final bool _isFocused = false;
 
   Color getTextFieldTintColor(ProfileFormController controller, DesignColorsModel colors) {
     // ignore: invalid_use_of_visible_for_testing_member

@@ -8,7 +8,6 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
 import '../../../providers/enumerations/positive_togglable_state.dart';

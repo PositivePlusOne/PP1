@@ -1,6 +1,4 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
-import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,6 +27,7 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
+import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_dropdown.dart';

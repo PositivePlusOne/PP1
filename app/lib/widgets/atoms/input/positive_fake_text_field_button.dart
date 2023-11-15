@@ -18,7 +18,7 @@ import '../../../constants/design_constants.dart';
 
 class PositiveFakeTextFieldButton extends ConsumerWidget {
   const PositiveFakeTextFieldButton({
-    required this.onTap,
+    this.onTap,
     this.isEnabled = true,
     this.labelText = ' ',
     this.hintText = ' ',
@@ -37,7 +37,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
 
   final bool isEnabled;
 
-  final FutureOr<void> Function(BuildContext context) onTap;
+  final FutureOr<void> Function(BuildContext context)? onTap;
 
   final Widget? suffixIcon;
   final Widget? prefixIcon;
@@ -47,7 +47,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
   static const double kMinimumTextColumnHeight = 40.0;
 
   factory PositiveFakeTextFieldButton.profile({
-    required void Function(BuildContext context) onTap,
+    void Function(BuildContext context)? onTap,
     labelText = ' ',
     hintText = ' ',
     tintColor,
@@ -58,18 +58,20 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
       labelText: labelText,
       hintText: hintText,
       tintColor: tintColor,
-      suffixIcon: Container(
-        width: kIconLarge,
-        height: kIconLarge,
-        decoration: BoxDecoration(
-          color: colors.purple,
-          borderRadius: BorderRadius.circular(kBorderRadiusLarge),
-        ),
-        child: Icon(
-          UniconsLine.angle_right,
-          color: colors.white,
-        ),
-      ),
+      suffixIcon: onTap != null
+          ? Container(
+              width: kIconLarge,
+              height: kIconLarge,
+              decoration: BoxDecoration(
+                color: colors.purple,
+                borderRadius: BorderRadius.circular(kBorderRadiusLarge),
+              ),
+              child: Icon(
+                UniconsLine.angle_right,
+                color: colors.white,
+              ),
+            )
+          : null,
     );
   }
 
@@ -114,7 +116,7 @@ class PositiveFakeTextFieldButton extends ConsumerWidget {
                   // Take away some padding to compensate for bad monospace font
                   const SizedBox(height: kPaddingExtraSmall),
                   Text(
-                    labelText,
+                    labelText.isEmpty ? 'Not Shared' : labelText,
                     style: typography.styleButtonRegular.copyWith(color: colors.black),
                     maxLines: 5,
                   ),

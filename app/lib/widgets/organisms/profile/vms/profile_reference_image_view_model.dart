@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/helpers/dialog_hint_helpers.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -14,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/ml/face_detector_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/dialog_hint_helpers.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/services/third_party.dart';
 

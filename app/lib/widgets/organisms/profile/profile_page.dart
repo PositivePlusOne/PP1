@@ -37,7 +37,6 @@ import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../behaviours/positive_feed_pagination_behaviour.dart';
 import '../../molecules/lists/positive_profile_actions_list.dart';
-import '../../molecules/lists/positive_profile_interests_list.dart';
 import '../../molecules/tiles/positive_profile_tile.dart';
 import '../../molecules/tiles/profile_biography_tile.dart';
 import 'components/profile_app_bar_header.dart';
@@ -186,7 +185,11 @@ class ProfilePage extends HookConsumerWidget {
               if (targetProfile?.biography.isNotEmpty == true) ...<Widget>[
                 Container(
                   padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                  child: ProfileBiographyTile(profile: targetProfile!),
+                  child: ProfileBiographyTile(
+                    profile: targetProfile!,
+                    isBusy: state.isBusy,
+                    displayDetailsOption: !targetProfile.isOrganisation,
+                  ),
                 ),
               ],
               // if (targetProfile?.interests.isNotEmpty == true) ...<Widget>[

@@ -2,8 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
@@ -16,6 +14,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
@@ -27,6 +26,7 @@ import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
+import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../services/third_party.dart';
