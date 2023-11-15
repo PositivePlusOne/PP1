@@ -206,6 +206,10 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
     }
 
+    if (state.currentCreatePostPage.isCreationDialog) {
+      clearPostData();
+    }
+
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
       case CreatePostCurrentPage.repostPreview:
@@ -236,6 +240,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         displayCamera(PostType.image);
         break;
       case CreatePostCurrentPage.createPostEditClip:
+        clearVideoData();
         displayCamera(PostType.clip);
         break;
       case CreatePostCurrentPage.createPostClip:
@@ -247,6 +252,26 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   Future<void> goBackFromCamera() async {
     final AppRouter router = ref.read(appRouterProvider);
     router.removeLast();
+  }
+
+  void clearPostData() {
+    captionController.clear();
+    altTextController.clear();
+    promotionKeyTextController.clear();
+
+    state = state.copyWith(
+      allowSharing: true,
+      visibleTo: const ActivitySecurityConfigurationMode.public(),
+      allowComments: const ActivitySecurityConfigurationMode.signedIn(),
+      saveToGallery: false,
+      galleryEntries: [],
+      tags: [],
+    );
+  }
+
+  void clearVideoData() {
+    uneditedVideoFile = null;
+    videoEditorController = null;
   }
 
   Future<void> onPostPressed() async {

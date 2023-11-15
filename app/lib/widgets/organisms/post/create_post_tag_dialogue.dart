@@ -45,6 +45,9 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   //? List of tags that have been filtered by the user's search query (may contain tags that have already been selected)
   final List<Tag> filteredTags = [];
 
+  //? List of tags that have been filtered by the user's search query (may contain tags that have already been selected)
+  List<Tag> unfilteredTags = [];
+
   Tag? lastSearchedTag;
   final TextEditingController searchController = TextEditingController();
   static int maxTagsPerPage = 20;
@@ -80,8 +83,9 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
       ),
     );
 
+    unfilteredTags = response.results;
     filteredTags.clear();
-    filteredTags.addAll(TagHelpers.filterReservedTags(response.results));
+    filteredTags.addAll(TagHelpers.filterReservedTags(unfilteredTags));
 
     if (!filteredTags.any((element) => element.key == formattedSearchString)) {
       if (!selectedTags.any((element) => element.key == formattedSearchString)) {
@@ -143,7 +147,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
     final TagsController tagsController = ref.watch(tagsControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final double marginHeight = kPaddingMedium + mediaQueryData.padding.top;
+    final double marginHeight = kPaddingSmall + 2 + mediaQueryData.padding.top;
 
     final List<Widget> tagWidgets = [];
 
@@ -152,7 +156,7 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
 
     if (isSearchedTagValidForSearch) {
       //todo this may need to become a more complex getter in tag extentions
-      final bool isSearchedTagInSearchResults = filteredTags.where((element) => element.key == lastSearchedTag!.key).isNotEmpty;
+      final bool isSearchedTagInSearchResults = unfilteredTags.where((element) => element.key == lastSearchedTag!.key).isNotEmpty;
       final bool isSearchedTagSelected = selectedTags.where((element) => element.key == lastSearchedTag!.key).isNotEmpty;
       if (!isSearchedTagInSearchResults && !isSearchedTagSelected) {
         tagWidgets.add(
