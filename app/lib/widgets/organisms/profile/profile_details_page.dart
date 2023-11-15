@@ -106,7 +106,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 if (!(targetProfile?.isOrganisation ?? false)) ...[
                   PositiveFakeTextFieldButton(
-                    hintText: localisations.page_profile_edit_dob,
+                    hintText: localisations.page_profile_edit_age,
                     labelText: targetProfile?.formattedAgeRespectingFlags ?? '',
                     //? empty onTap, users may not update date of birth in app
                   ),
