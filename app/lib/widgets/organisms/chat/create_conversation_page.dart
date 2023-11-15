@@ -4,6 +4,7 @@
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
@@ -54,6 +55,7 @@ class CreateConversationPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ChatViewModelState chatViewModelState = ref.watch(chatViewModelProvider);
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     useLifecycleHook(chatViewModel);
 
@@ -74,7 +76,7 @@ class CreateConversationPage extends HookConsumerWidget {
     return PositiveCommunitiesDialog(
       initialCommunityType: isManagedProfile ? CommunityType.followers : CommunityType.connected,
       mode: CommunitiesDialogMode.select,
-      searchTooltip: isManagedProfile ? 'Search Followers' : 'Search Connections',
+      searchTooltip: isManagedProfile ? localizations.page_chat_label_search_followers : localizations.page_chat_label_search_connections,
       displayManagementTooltipIfAvailable: false,
       supportedCommunityTypes: <CommunityType>[
         if (isManagedProfile) ...[
@@ -89,7 +91,7 @@ class CreateConversationPage extends HookConsumerWidget {
       hiddenProfiles: currentChannelMembers,
       onProfileSelected: (String profileId) => chatViewModel.onCurrentChannelMemberSelected(profileId),
       canCallToAction: true,
-      actionLabel: 'Start Chat',
+      actionLabel: localizations.page_chat_action_start_conversation,
       isEnabled: !chatViewModelState.isBusy,
       onActionPressed: () async => chatViewModel.onCurrentChannelMembersConfirmed(context),
     );
