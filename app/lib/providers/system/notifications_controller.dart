@@ -236,14 +236,14 @@ class NotificationsController extends _$NotificationsController {
 
     if (event.isStreamChatNotification) {
       logger.d('onRemoteNotificationReceived: Stream chat message, handling');
-      handleStreamChatMessage(event: event, isForeground: true);
+      await handleStreamChatMessage(event: event, isForeground: true);
       return;
     }
 
     final NotificationPayload? payload = event.asPositivePayload;
     if (payload != null) {
       logger.d('onRemoteNotificationReceived: Positive notification, handling');
-      handleNotification(payload, isForeground: isForeground);
+      await handleNotification(payload, isForeground: isForeground);
     } else {
       logger.w('onRemoteNotificationReceived: Unknown notification, skipping: $event');
     }
@@ -290,21 +290,21 @@ class NotificationsController extends _$NotificationsController {
       topic: const NotificationTopic.newMessage(),
     );
 
-    handleNotification(model, isForeground: isForeground);
+    await handleNotification(model, isForeground: isForeground);
   }
 
   Future<void> handleNotification(NotificationPayload payload, {bool isForeground = false}) async {
-    final logger = ref.read(loggerProvider);
+    final logger = providerContainer.read(loggerProvider);
     final NotificationHandler handler = getHandlerForPayload(payload);
     logger.d('attemptToParsePayload: $payload');
 
     try {
       if (isForeground) {
-        attemptToStoreNotificationPayloadInFeed(payload, isForeground);
-        attemptToTriggerNotification(handler, payload, isForeground: isForeground);
+        await attemptToStoreNotificationPayloadInFeed(payload, isForeground);
+        await attemptToTriggerNotification(handler, payload, isForeground: isForeground);
       }
 
-      attemptToDisplayNotification(handler, payload, isForeground: isForeground);
+      await attemptToDisplayNotification(handler, payload, isForeground: isForeground);
     } catch (e) {
       logger.e('attemptToParsePayload: Failed to parse payload');
     }
@@ -337,7 +337,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {
-    final logger = ref.read(loggerProvider);
+    final logger = providerContainer.read(loggerProvider);
     logger.d('onLocalNotificationReceived: $id, $title, $body, $payload');
   }
 
