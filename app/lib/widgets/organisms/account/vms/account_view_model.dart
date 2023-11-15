@@ -146,6 +146,7 @@ class AccountViewModel extends _$AccountViewModel with LifecycleMixin {
         return;
       }
     }
+
     // if we get here, we aren't allowed to create promotions, there's a special page for that
     appRouter.push(const AccountPromotedPostsPromotionRoute());
   }

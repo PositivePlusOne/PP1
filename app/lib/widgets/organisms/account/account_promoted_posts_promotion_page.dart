@@ -59,9 +59,13 @@ class AccountPromotedPostsPromotionPage extends HookConsumerWidget {
     final AccountFormState state = ref.watch(provider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+
     final int activePromotionsCount = currentProfile?.activePromotionsCount ?? 0;
     final int availablePromotionsCount = currentProfile?.availablePromotionsCount ?? 0;
     final bool profileCanPromote = activePromotionsCount > 0 || availablePromotionsCount > 0;
+
+    final PromotionsControllerState promotionsControllerState = ref.watch(promotionsControllerProvider);
 
     if (profileCanPromote) {
       return AccountPromotedPostsFeeds(
@@ -75,7 +79,7 @@ class AccountPromotedPostsPromotionPage extends HookConsumerWidget {
       );
     }
 
-    return AccountPromotedPostsPlaceholder(
+    return AccountPromotedPostsDisabledPlaceholder(
       colors: colors,
       typography: typography,
       localisations: localisations,
@@ -130,9 +134,7 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
 
   @override
   Widget build(BuildContext context) {
-    final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
     final PromotionsControllerState promotionsControllerState = ref.watch(promotionsControllerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     final List<Widget> actions = [];
@@ -168,49 +170,66 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
     Widget child = const SizedBox.shrink();
     switch (type) {
       case AccountPromotedPostsType.hub:
-        child = ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          separatorBuilder: (context, index) => PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-          itemCount: feedPromotions.length,
-          itemBuilder: (context, index) {
-            final Activity? activity = cacheController.get(feedPromotions[index].activityId);
-            if (activity == null) {
-              return const SizedBox.shrink();
-            }
+        if (feedPromotions.isEmpty) {
+          child = _NoActivePromotionsPlaceholder(widget: widget);
+        }
 
-            return PositiveFeedPaginationBehaviour.buildItem(
-              currentProfile: widget.currentProfile,
-              promotion: feedPromotions[index],
-              feed: const TargetFeed(),
-              context: context,
-              item: activity,
-              index: index,
-            );
-          },
-        );
+        if (feedPromotions.isNotEmpty) {
+          child = ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            separatorBuilder: (context, index) => PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+            itemCount: feedPromotions.length,
+            itemBuilder: (context, index) {
+              final Activity? activity = cacheController.get(feedPromotions[index].activityId);
+              if (activity == null) {
+                return const SizedBox.shrink();
+              }
+
+              return PositiveFeedPaginationBehaviour.buildItem(
+                currentProfile: widget.currentProfile,
+                promotion: feedPromotions[index],
+                feed: const TargetFeed(),
+                context: context,
+                item: activity,
+                index: index,
+              );
+            },
+          );
+        }
         break;
       case AccountPromotedPostsType.chat:
-        child = ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          separatorBuilder: (context, index) => PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-          itemCount: chatPromotions.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-              child: PositivePromotedChannelListTile(
-                promotion: chatPromotions[index],
-                promotedActivity: cacheController.get(chatPromotions[index].activityId),
-                owner: cacheController.get(chatPromotions[index].ownerId),
-              ),
-            );
-          },
-        );
+        if (chatPromotions.isEmpty) {
+          child = _NoActivePromotionsPlaceholder(widget: widget);
+        }
+
+        if (chatPromotions.isNotEmpty) {
+          child = ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            separatorBuilder: (context, index) => PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+            itemCount: chatPromotions.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+                child: PositivePromotedChannelListTile(
+                  promotion: chatPromotions[index],
+                  promotedActivity: cacheController.get(chatPromotions[index].activityId),
+                  owner: cacheController.get(chatPromotions[index].ownerId),
+                ),
+              );
+            },
+          );
+        }
         break;
     }
+
+    final bool shouldShowDecorations = switch (type) {
+      AccountPromotedPostsType.hub => feedPromotions.isEmpty,
+      AccountPromotedPostsType.chat => chatPromotions.isEmpty,
+    };
 
     return PositiveScaffold(
       visibleComponents: PositiveScaffoldComponent.excludeFooterPadding,
@@ -218,6 +237,11 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
         mediaQuery: mediaQueryData,
         index: NavigationBarIndex.hub,
       ),
+      decorations: [
+        if (shouldShowDecorations) ...[
+          ...buildType1ScaffoldDecorations(widget.colors),
+        ],
+      ],
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           appBarTrailing: actions,
@@ -274,8 +298,39 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
   }
 }
 
-class AccountPromotedPostsPlaceholder extends StatelessWidget {
-  const AccountPromotedPostsPlaceholder({
+class _NoActivePromotionsPlaceholder extends StatelessWidget {
+  const _NoActivePromotionsPlaceholder({
+    required this.widget,
+  });
+
+  final AccountPromotedPostsFeeds widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: kPaddingMedium, left: kPaddingMedium, right: kPaddingMedium),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'No Active Promotions',
+            style: widget.typography.styleHero.copyWith(color: widget.colors.black),
+          ),
+          const SizedBox(height: kPaddingMedium),
+          PositiveRichText(
+            body: 'You do not have any promotions. To promote content on the Hub or Chat, drop us a line at {}',
+            style: widget.typography.styleBody.copyWith(color: widget.colors.black),
+            onActionTapped: (_) => 'mailto:promote@positiveplusone.com'.attemptToLaunchURL(),
+            actions: const ['promote@positiveplusone.com'],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AccountPromotedPostsDisabledPlaceholder extends StatelessWidget {
+  const AccountPromotedPostsDisabledPlaceholder({
     required this.colors,
     required this.typography,
     required this.localisations,
@@ -299,7 +354,7 @@ class AccountPromotedPostsPlaceholder extends StatelessWidget {
           .map((e) => Padding(
                 padding: const EdgeInsets.only(
                   bottom: kPaddingMedium,
-                  left: kPaddingMedium,
+                  left: kPaddingSmall,
                 ),
                 child: PositiveBulletedText(
                   text: Text(
@@ -337,8 +392,6 @@ class AccountPromotedPostsPlaceholder extends StatelessWidget {
                     localisations.page_account_promote_posts_body_two,
                     localisations.page_account_promote_posts_body_three,
                     localisations.page_account_promote_posts_body_four,
-                    localisations.page_account_promote_posts_body_five,
-                    localisations.page_account_promote_posts_body_six,
                   ],
                   colors,
                   typography,
