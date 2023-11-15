@@ -114,9 +114,23 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
-  Future<void> goBack({
-    bool shouldForceClose = false,
-  }) async {
+  /// when the 'x' button is clicked, we want to confim that the user want's to discard
+  /// their progress before going back to the previous state
+  Future<bool> confirmBackState() {
+    // show the dialog and return the user's request
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    // and show the dialog, returning the result
+    return positiveDiscardPostDialogue(
+      context: context,
+      colors: colors,
+      typography: typography,
+    );
+  }
+
+  Future<void> goBack({bool shouldForceClose = false, bool isDiscardDialogAlreadyShown = false}) async {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -168,49 +182,32 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         router.removeLast();
       }
       return;
-    } else {
-      // we actually always want to show a basic dialog telling them that quitting the dialog
-      // will discard their post
-      bool isCancelDialogRequired = false;
+    } else if (!isDiscardDialogAlreadyShown) {
+      // we only come into here if not showing the warning about discarding the clip
+      // and we haven't already asked if they are okay discarding their data...
       switch (state.currentCreatePostPage) {
-        //? All create pages should request a dialog
-        case CreatePostCurrentPage.createPostText:
-        case CreatePostCurrentPage.createPostMultiImage:
-        case CreatePostCurrentPage.createPostImage:
-        case CreatePostCurrentPage.createPostClip:
-        //? As edit photo is equivalent of edit clip, and does not have criteria, assume dialog functionality should match.
+        //? As edit photo is equivalent of edit clip, and going back will discard the image we should confirm this
         case CreatePostCurrentPage.editPhoto:
-          isCancelDialogRequired = true;
-
-        //? PP1-615, back button on repost preview returns to last page
-        case CreatePostCurrentPage.repostPreview:
-        //? according to PP1-284 camera page should direct back to hub without dialog, unless a clip is being recorded
-        case CreatePostCurrentPage.camera:
-        //? Assuming entry page (called while camera initialises), should have the same logic as camera above
-        case CreatePostCurrentPage.entry:
-        //? Edit Clip page has its own dialog above
-        case CreatePostCurrentPage.createPostEditClip:
+        //? the create multi image page has selected many things, going back will discard these too
+        case CreatePostCurrentPage.createPostMultiImage:
+          if (false == await confirmBackState()) {
+            // they don't want to discard and go back afterall
+            logger.d("User has not accepted discard dialog, do not close page");
+            return;
+          } else {
+            // they have chosn to discard - not go back, so this is a full return from making a post
+            return goBackFromCamera();
+          }
         default:
-          isCancelDialogRequired = false;
-      }
-      if (isCancelDialogRequired) {
-        final bool hasAcceptedDiscardDialog = await positiveDiscardPostDialogue(
-          context: context,
-          colors: colors,
-          typography: typography,
-        );
-
-        if (!hasAcceptedDiscardDialog) {
-          logger.d("User has not accepted discard dialog, do not close page");
-          return;
-        }
+          // no dialog by default
+          break;
       }
     }
 
     if (state.currentCreatePostPage.isCreationDialog) {
       clearPostData();
     }
-
+    // if here, all's well and we can handle going back to the previous state then please
     switch (state.currentCreatePostPage) {
       case CreatePostCurrentPage.entry:
       case CreatePostCurrentPage.repostPreview:

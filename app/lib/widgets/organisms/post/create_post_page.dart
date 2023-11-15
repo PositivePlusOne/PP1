@@ -139,7 +139,14 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       //? On Tap section
                       onCameraImageTaken: (image) => viewModel.onImageTaken(image),
                       onCameraVideoTaken: (file) => viewModel.onVideoEditRequest(file),
-                      onTapClose: (_) => appRouter.pop(),
+                      // close the dialog and we need to confirm they want to before going back
+                      onTapClose: (_) => viewModel.confirmBackState().then(
+                        (value) {
+                          if (value) {
+                            viewModel.goBack(isDiscardDialogAlreadyShown: true);
+                          }
+                        },
+                      ),
                       onTapForceClose: (_) => viewModel.goBack(shouldForceClose: true),
                       onTapAddImage: (context) => viewModel.onMultiMediaPicker(),
                       //? Padding at the bottom of the screen to move the camera button above the bottom navigation
