@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -48,10 +49,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
       forceDecorationMaxSize: true,
-      decorationWidget: Image.asset(
-        MockImages.bike,
-        fit: BoxFit.cover,
-      ),
+      decorations: buildType1ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[

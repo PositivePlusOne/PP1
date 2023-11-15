@@ -1,38 +1,34 @@
-// Dart imports:
 import 'dart:io';
 
-// Package imports:
 import 'package:flutter_test/flutter_test.dart';
-
-// Project imports:
 import 'package:app/resources/resources.dart';
 
 void main() {
   test('svg_images assets test', () {
-    expect(File(SvgImages.decorationArrowHollowLeft).existsSync(), true);
-    expect(File(SvgImages.decorationArrowHollowRight).existsSync(), true);
-    expect(File(SvgImages.decorationArrowLeft).existsSync(), true);
-    expect(File(SvgImages.decorationArrowRight).existsSync(), true);
-    expect(File(SvgImages.decorationEye).existsSync(), true);
-    expect(File(SvgImages.decorationEyeHollow).existsSync(), true);
-    expect(File(SvgImages.decorationFace).existsSync(), true);
-    expect(File(SvgImages.decorationFlower).existsSync(), true);
-    expect(File(SvgImages.decorationGlobe).existsSync(), true);
-    expect(File(SvgImages.decorationLozengeBl).existsSync(), true);
-    expect(File(SvgImages.decorationLozengeBr).existsSync(), true);
-    expect(File(SvgImages.decorationLozengeTl).existsSync(), true);
-    expect(File(SvgImages.decorationLozengeTr).existsSync(), true);
-    expect(File(SvgImages.decorationRings).existsSync(), true);
-    expect(File(SvgImages.decorationRingsCut).existsSync(), true);
-    expect(File(SvgImages.decorationStampCertified).existsSync(), true);
-    expect(File(SvgImages.decorationStampStar).existsSync(), true);
-    expect(File(SvgImages.decorationStar).existsSync(), true);
-    expect(File(SvgImages.decorationTree).existsSync(), true);
-    expect(File(SvgImages.logosCircular).existsSync(), true);
-    expect(File(SvgImages.logosFooter).existsSync(), true);
-    expect(File(SvgImages.stampFist).existsSync(), true);
-    expect(File(SvgImages.stampPlusOne).existsSync(), true);
-    expect(File(SvgImages.stampSmile).existsSync(), true);
-    expect(File(SvgImages.stampVictoryHand).existsSync(), true);
+    expect(File(SvgImages.decorationArrowHollowLeft).existsSync(), isTrue);
+    expect(File(SvgImages.decorationArrowHollowRight).existsSync(), isTrue);
+    expect(File(SvgImages.decorationArrowLeft).existsSync(), isTrue);
+    expect(File(SvgImages.decorationArrowRight).existsSync(), isTrue);
+    expect(File(SvgImages.decorationEye).existsSync(), isTrue);
+    expect(File(SvgImages.decorationEyeHollow).existsSync(), isTrue);
+    expect(File(SvgImages.decorationFace).existsSync(), isTrue);
+    expect(File(SvgImages.decorationFlower).existsSync(), isTrue);
+    expect(File(SvgImages.decorationGlobe).existsSync(), isTrue);
+    expect(File(SvgImages.decorationLozengeBl).existsSync(), isTrue);
+    expect(File(SvgImages.decorationLozengeBr).existsSync(), isTrue);
+    expect(File(SvgImages.decorationLozengeTl).existsSync(), isTrue);
+    expect(File(SvgImages.decorationLozengeTr).existsSync(), isTrue);
+    expect(File(SvgImages.decorationRings).existsSync(), isTrue);
+    expect(File(SvgImages.decorationRingsCut).existsSync(), isTrue);
+    expect(File(SvgImages.decorationStampCertified).existsSync(), isTrue);
+    expect(File(SvgImages.decorationStampStar).existsSync(), isTrue);
+    expect(File(SvgImages.decorationStar).existsSync(), isTrue);
+    expect(File(SvgImages.decorationTree).existsSync(), isTrue);
+    expect(File(SvgImages.logosCircular).existsSync(), isTrue);
+    expect(File(SvgImages.logosFooter).existsSync(), isTrue);
+    expect(File(SvgImages.stampFist).existsSync(), isTrue);
+    expect(File(SvgImages.stampPlusOne).existsSync(), isTrue);
+    expect(File(SvgImages.stampSmile).existsSync(), isTrue);
+    expect(File(SvgImages.stampVictoryHand).existsSync(), isTrue);
   });
 }

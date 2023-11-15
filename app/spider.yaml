@@ -17,10 +17,6 @@ use_references_list: false
 package: resources
 
 groups:
-  - path: assets/images/mocks
-    class_name: MockImages
-    types: [ .png, .jpg, .jpeg, .webp, .webm, .bmp ]
-
   - path: assets/images/svg
     class_name: SvgImages
     types: [ .svg]
@@ -29,6 +25,6 @@ groups:
     class_name: AlbertSansFonts
     types: [ .ttf]
 
-  - path: assets/fonts/AlbertSans
-    class_name: AlbertSansFonts
+  - path: assets/fonts/BN
+    class_name: BN
     types: [ .ttf]

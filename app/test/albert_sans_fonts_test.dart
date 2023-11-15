@@ -1,31 +1,29 @@
-// Dart imports:
 import 'dart:io';
 
-// Package imports:
 import 'package:flutter_test/flutter_test.dart';
-
-// Project imports:
 import 'package:app/resources/resources.dart';
 
 void main() {
   test('albert_sans_fonts assets test', () {
-    expect(File(AlbertSansFonts.albertSansBlack).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansBlackItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansBold).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansBoldItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansExtraBold).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansExtraBoldItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansExtraLight).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansExtraLightItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansLight).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansLightItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansMedium).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansMediumItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansRegular).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansSemiBold).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansSemiBoldItalic).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansThin).existsSync(), true);
-    expect(File(AlbertSansFonts.albertSansThinItalic).existsSync(), true);
+    expect(File(AlbertSansFonts.albertSansBlack).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansBlackItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansBold).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansBoldItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansExtraBold).existsSync(), isTrue);
+    expect(
+        File(AlbertSansFonts.albertSansExtraBoldItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansExtraLight).existsSync(), isTrue);
+    expect(
+        File(AlbertSansFonts.albertSansExtraLightItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansLight).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansLightItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansMedium).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansMediumItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansRegular).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansSemiBold).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansSemiBoldItalic).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansThin).existsSync(), isTrue);
+    expect(File(AlbertSansFonts.albertSansThinItalic).existsSync(), isTrue);
   });
 }

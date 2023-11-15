@@ -65,12 +65,7 @@ class PositiveGenericPage extends ConsumerWidget {
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-
-    const double decorationHeightMin = 400;
-    final double decorationHeightMax = max(mediaQueryData.size.height / 2, decorationHeightMin);
     const double badgeRadius = 166.0;
-    const double imageTopOffset = badgeRadius / 4;
 
     return PositiveScaffold(
       onWillPopScope: () async {
@@ -89,13 +84,9 @@ class PositiveGenericPage extends ConsumerWidget {
           ...PositiveScaffoldComponent.values,
         ],
       },
-      decorations: [
-        if (style == PositiveGenericPageStyle.decorated) ...[
-          ...buildType1ScaffoldDecorations(colors),
-        ],
-      ],
+      decorations: buildType1ScaffoldDecorations(colors),
       footerWidgets: <Widget>[
-        if (style == PositiveGenericPageStyle.decorated) ...[
+        if (style == PositiveGenericPageStyle.decorated || style == PositiveGenericPageStyle.imaged) ...[
           PositiveButton(
             colors: colors,
             primaryColor: colors.black,
@@ -103,6 +94,7 @@ class PositiveGenericPage extends ConsumerWidget {
             onTapped: onContinueSelected,
             isDisabled: isBusy,
           ),
+          const SizedBox(height: kPaddingSmall),
         ],
       ],
       headingWidgets: <Widget>[
@@ -151,105 +143,20 @@ class PositiveGenericPage extends ConsumerWidget {
               ),
             ],
             const SizedBox(height: kPaddingMassive),
-          ],
-        ),
-        if (style == PositiveGenericPageStyle.imaged) ...<Widget>[
-          SliverFillRemaining(
-            fillOverscroll: false,
-            hasScrollBody: false,
-            child: _PositiveGenericPageFooterImage(
-              decorationHeightMax: decorationHeightMax,
-              decorationHeightMin: decorationHeightMin,
-              imageTopOffset: imageTopOffset,
-              colors: colors,
-              badgeRadius: badgeRadius,
-              mediaQueryData: mediaQueryData,
-              buttonText: buttonText,
-              onContinueSelected: onContinueSelected,
-              isBusy: isBusy,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-}
-
-class _PositiveGenericPageFooterImage extends StatelessWidget {
-  const _PositiveGenericPageFooterImage({
-    required this.decorationHeightMax,
-    required this.decorationHeightMin,
-    required this.imageTopOffset,
-    required this.colors,
-    required this.badgeRadius,
-    required this.mediaQueryData,
-    required this.buttonText,
-    required this.onContinueSelected,
-    required this.isBusy,
-  });
-
-  final double decorationHeightMax;
-  final double decorationHeightMin;
-  final double imageTopOffset;
-  final DesignColorsModel colors;
-  final double badgeRadius;
-  final MediaQueryData mediaQueryData;
-  final String buttonText;
-  final Future<void> Function() onContinueSelected;
-  final bool isBusy;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      alignment: Alignment.bottomCenter,
-      constraints: BoxConstraints(
-        maxHeight: decorationHeightMax,
-        minHeight: decorationHeightMin,
-      ),
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-            top: imageTopOffset,
-            left: 0.0,
-            bottom: 0.0,
-            right: 0.0,
-            child: Image.asset(
-              MockImages.bike,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Positioned(
-            top: 0.0,
-            left: kPaddingMedium,
-            child: Transform.rotate(
-              angle: 15.0.degreeToRadian,
-              child: PositiveStamp.smile(
-                colors: colors,
-                fillColour: colors.yellow,
-                size: badgeRadius,
+            Transform.translate(
+              offset: const Offset(kPaddingMassive, kPaddingNone),
+              child: Transform.rotate(
+                angle: 15.0.degreeToRadian,
+                child: PositiveStamp.smile(
+                  colors: colors,
+                  fillColour: colors.yellow,
+                  size: badgeRadius,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: mediaQueryData.padding.bottom + kPaddingMedium,
-            left: kPaddingSmall,
-            right: kPaddingSmall,
-            child: PositiveGlassSheet(
-              children: <Widget>[
-                PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  label: buttonText,
-                  onTapped: onContinueSelected,
-                  isDisabled: isBusy,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

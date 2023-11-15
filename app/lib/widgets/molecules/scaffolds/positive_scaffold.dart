@@ -227,70 +227,75 @@ class PositiveScaffoldContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: controller,
-      physics: physics,
-      slivers: <Widget>[
-        if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
-          ...headingWidgets,
-        ],
-        if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
-          SliverToBoxAdapter(
-            child: Container(height: kPaddingMedium, color: decorationColor ?? Colors.transparent),
-          ),
-          SliverStack(
-            positionedAlignment: Alignment.bottomCenter,
-            children: <Widget>[
-              if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                SliverFillRemaining(
-                  fillOverscroll: true,
-                  hasScrollBody: false,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: PositiveTileEntryAnimation(
-                      direction: AxisDirection.down,
-                      child: SizedBox(
-                        height: decorationBoxSize,
-                        width: decorationBoxSize,
-                        child: Stack(children: decorations),
+    //? Dissalow decorations from rendering outside of  the page
+    return ClipRect(
+      child: CustomScrollView(
+        controller: controller,
+        physics: physics,
+        slivers: <Widget>[
+          if (visibleComponents.contains(PositiveScaffoldComponent.headingWidgets)) ...<Widget>[
+            ...headingWidgets,
+          ],
+          if (visibleComponents.any((element) => element.inBottomSliver)) ...<Widget>[
+            SliverToBoxAdapter(
+              child: Container(height: kPaddingMedium, color: decorationColor ?? Colors.transparent),
+            ),
+            SliverStack(
+              positionedAlignment: Alignment.bottomCenter,
+              children: <Widget>[
+                if (decorations.isNotEmpty && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                  SliverFillRemaining(
+                    fillOverscroll: true,
+                    hasScrollBody: false,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: PositiveTileEntryAnimation(
+                        direction: AxisDirection.down,
+                        child: SizedBox(
+                          height: decorationBoxSize,
+                          width: decorationBoxSize,
+                          child: Stack(children: decorations),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-              if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
-                SliverFillRemaining(
-                  fillOverscroll: true,
-                  hasScrollBody: false,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: PositiveTileEntryAnimation(
-                      direction: AxisDirection.down,
-                      child: SizedBox(
-                        height: decorationBoxSize,
-                        width: decorationBoxSize,
-                        child: decorationWidget!,
+                ],
+                if (decorationWidget != null && visibleComponents.contains(PositiveScaffoldComponent.decorationWidget)) ...<Widget>[
+                  SliverFillRemaining(
+                    fillOverscroll: true,
+                    hasScrollBody: false,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: PositiveTileEntryAnimation(
+                        direction: AxisDirection.down,
+                        child: ClipRRect(
+                          child: SizedBox(
+                            height: decorationBoxSize,
+                            width: decorationBoxSize,
+                            child: decorationWidget!,
+                          ),
+                        ),
                       ),
                     ),
                   ),
+                ],
+                SliverFillRemaining(
+                  fillOverscroll: true,
+                  hasScrollBody: false,
+                  child: ScaffoldTrailingContent(
+                    decorationColor: decorationColor,
+                    trailingWidgets: trailingWidgets,
+                    visibleComponents: visibleComponents,
+                    footerWidgets: footerWidgets,
+                    isBusy: isBusy,
+                    bottomPadding: bottomPadding,
+                  ),
                 ),
               ],
-              SliverFillRemaining(
-                fillOverscroll: true,
-                hasScrollBody: false,
-                child: ScaffoldTrailingContent(
-                  decorationColor: decorationColor,
-                  trailingWidgets: trailingWidgets,
-                  visibleComponents: visibleComponents,
-                  footerWidgets: footerWidgets,
-                  isBusy: isBusy,
-                  bottomPadding: bottomPadding,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
