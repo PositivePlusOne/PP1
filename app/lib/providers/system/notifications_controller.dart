@@ -193,8 +193,8 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> setupLocalNotifications() async {
-    final logger = ref.read(loggerProvider);
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
+    final logger = providerContainer.read(loggerProvider);
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = providerContainer.read(flutterLocalNotificationsPluginProvider);
 
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(onDidReceiveLocalNotification: onLocalNotificationReceived);
@@ -243,7 +243,7 @@ class NotificationsController extends _$NotificationsController {
     final NotificationPayload? payload = event.asPositivePayload;
     if (payload != null) {
       logger.d('onRemoteNotificationReceived: Positive notification, handling');
-      handleNotification(payload, isForeground: true);
+      handleNotification(payload, isForeground: isForeground);
     } else {
       logger.w('onRemoteNotificationReceived: Unknown notification, skipping: $event');
     }
@@ -299,8 +299,11 @@ class NotificationsController extends _$NotificationsController {
     logger.d('attemptToParsePayload: $payload');
 
     try {
-      attemptToAppendNotification(payload);
-      attemptToTriggerNotification(handler, payload, isForeground: isForeground);
+      if (isForeground) {
+        attemptToStoreNotificationPayloadInFeed(payload, isForeground);
+        attemptToTriggerNotification(handler, payload, isForeground: isForeground);
+      }
+
       attemptToDisplayNotification(handler, payload, isForeground: isForeground);
     } catch (e) {
       logger.e('attemptToParsePayload: Failed to parse payload');
@@ -331,25 +334,6 @@ class NotificationsController extends _$NotificationsController {
 
     cacheController.add(key: expectedCacheKey, value: notificationsState);
     return notificationsState;
-  }
-
-  void attemptToAppendNotification(NotificationPayload payload) {
-    final logger = ref.read(loggerProvider);
-    logger.d('attemptToAppendNotification: $payload');
-    if (payload.userId.isEmpty) {
-      logger.w('attemptToAppendNotification: Payload has no user id, skipping');
-      return;
-    }
-
-    final PositiveNotificationsState notificationsState = getOrCreateNotificationCacheState(payload.userId);
-    if (notificationsState.pagingController.itemList?.any((element) => element.id == payload.id) ?? false) {
-      logger.d('attemptToAppendNotification: Already has notification, skipping');
-      return;
-    }
-
-    logger.d('attemptToAppendNotification: Appended notification');
-    final List<NotificationPayload> newNotifications = <NotificationPayload>[payload];
-    notificationsState.pagingController.appendSafePage(newNotifications, notificationsState.currentPaginationKey);
   }
 
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {
@@ -385,7 +369,7 @@ class NotificationsController extends _$NotificationsController {
   }
 
   Future<void> attemptToDisplayNotification(NotificationHandler handler, NotificationPayload payload, {bool isForeground = true}) async {
-    final logger = ref.read(loggerProvider);
+    final logger = providerContainer.read(loggerProvider);
     logger.d('attemptToTriggerNotification: $payload, $isForeground');
 
     if (!await handler.canDisplayPayload(payload, isForeground)) {
@@ -393,7 +377,6 @@ class NotificationsController extends _$NotificationsController {
     }
 
     await handler.onNotificationDisplayed(payload, isForeground);
-    await attemptToStoreNotificationPayloadInFeed(payload, isForeground);
   }
 
   Future<void> attemptToStoreNotificationPayloadInFeed(NotificationPayload payload, bool isForeground) async {
