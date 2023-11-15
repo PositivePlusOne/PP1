@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -281,7 +282,18 @@ extension ProfileExtensions on Profile {
       return '';
     }
 
-    return interests.join(', ');
+    final InterestsController interestsController = providerContainer.read(interestsControllerProvider.notifier);
+    final List<String> knownInterests = [];
+
+    for (final String interest in interests) {
+      if (!interestsController.state.interests.containsKey(interest)) {
+        continue;
+      }
+
+      knownInterests.add(interestsController.state.interests[interest] ?? '');
+    }
+
+    return knownInterests.join(', ');
   }
 
   String get formattedCompanySectorsIgnoreFlags {
