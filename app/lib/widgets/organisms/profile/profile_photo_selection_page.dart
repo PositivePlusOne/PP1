@@ -85,20 +85,6 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
               style: typography.styleBody.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  label: localizations.shared_form_information_display,
-                  size: PositiveButtonSize.small,
-                  style: PositiveButtonStyle.text,
-                  onTapped: () => viewModel.moreInformation(context),
-                ),
-              ),
-            ),
-            const SizedBox(height: kPaddingMedium),
           ],
         ),
       ],

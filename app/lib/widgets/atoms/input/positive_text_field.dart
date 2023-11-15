@@ -136,7 +136,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     super.dispose();
   }
 
-  checkTextSize() {
+  void checkTextSize() {
     if (widget.labelText == null) {
       return;
     }
