@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -14,7 +16,6 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -165,13 +166,11 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     final logger = ref.read(loggerProvider);
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
 
     final NotificationPayload payload = presenter.payload;
     final NotificationHandler handler = presenter.handler;
     final bool includeTimestamp = handler.includeTimestampOnFeed(payload);
-
-    final Color backgroundColor = handler.getBackgroundColor(payload);
-    final Color foregroundColor = handler.getForegroundColor(payload);
 
     Widget leading = handler.buildNotificationLeading(this);
     final List<Widget> trailing = handler.buildNotificationTrailing(this);
@@ -216,7 +215,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: colors.white,
           borderRadius: BorderRadius.circular(kBorderRadiusMassive),
         ),
         child: Row(
@@ -229,7 +228,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                 ignoring: true,
                 child: buildMarkdownWidgetFromBody(
                   body,
-                  brightness: foregroundColor.getComputedSystemBrightness(),
+                  brightness: Brightness.light,
                   lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
                   onTapLink: (_) {},
                 ),
