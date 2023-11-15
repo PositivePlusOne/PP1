@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/constants/key_constants.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -9,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
@@ -441,13 +443,13 @@ class UserController extends _$UserController {
 
     await analyticsController.trackEvent(AnalyticEvents.accountSignOut);
 
+    //? Remove the notifications key, so a new user has the chance to accept them.
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    await sharedPreferences.remove(kNotificationsAcceptedKey);
+
     if (shouldNavigate) {
       log.d('[UserController] signOut() Navigating to home route');
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(SplashRoute(style: SplashStyle.tomorrowStartsNow));
+      await appRouter.replaceAll([SplashRoute(style: SplashStyle.tomorrowStartsNow)]);
     }
-
-    //? Remove all shared preferences from local storage
-    await systemController.resetSharedPreferences();
   }
 }
