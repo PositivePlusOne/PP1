@@ -41,6 +41,7 @@ import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/molecules/containers/positive_transparent_sheet.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
+import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
 import 'package:app/widgets/state/positive_community_feed_state.dart';
@@ -54,6 +55,7 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
     this.onActionPressed,
     this.onProfileSelected,
     this.selectedProfiles = const <String>[],
+    this.maximumSelectedProfiles = -1,
     this.hiddenProfiles = const <String>[],
     this.isEnabled = true,
     this.initialCommunityType,
@@ -73,6 +75,8 @@ class PositiveCommunitiesDialog extends StatefulHookConsumerWidget {
   final void Function(String)? onProfileSelected;
 
   final List<String> selectedProfiles;
+  final int maximumSelectedProfiles;
+
   final List<String> hiddenProfiles;
   final bool isEnabled;
 
@@ -327,6 +331,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       isOrganisationManager = currentAuthUserId.isNotEmpty && currentProfile?.flMeta?.ownedBy == currentAuthUserId;
     }
 
+    bool hasExceededSelectedProfileLimit = false;
+    if (widget.maximumSelectedProfiles > -1 && widget.mode == CommunitiesDialogMode.select) {
+      hasExceededSelectedProfileLimit = widget.selectedProfiles.length >= widget.maximumSelectedProfiles;
+    }
+
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
@@ -365,6 +374,14 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
               ),
               const SizedBox(height: kPaddingSmall),
             ],
+            if (hasExceededSelectedProfileLimit) ...<Widget>[
+              PositiveHint(
+                icon: UniconsLine.chat_info,
+                iconColor: colors.purple,
+                label: 'You have reached the maximum number of people for a group chat',
+              ),
+              const SizedBox(height: kPaddingSmall),
+            ],
             child,
           ],
         ),
@@ -375,7 +392,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             colors: colors,
             label: widget.actionLabel ?? 'Done',
             onTapped: () => widget.onActionPressed?.call(),
-            isDisabled: !widget.isEnabled || !widget.canCallToAction,
+            isDisabled: !widget.isEnabled || !widget.canCallToAction || hasExceededSelectedProfileLimit,
           ),
         ],
       ],
@@ -428,11 +445,29 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           final String relationshipId = [senderProfile?.flMeta?.id ?? '', targetProfileId].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
 
+          final bool hasSelectedProfileLimit = widget.maximumSelectedProfiles > -1;
+          final bool hasExceededSelectedProfileLimit = widget.selectedProfiles.length >= widget.maximumSelectedProfiles;
+
+          bool canSelect = true;
+          if (widget.mode == CommunitiesDialogMode.select) {
+            canSelect = widget.isEnabled && (!hasSelectedProfileLimit || !hasExceededSelectedProfileLimit);
+          } else {
+            canSelect = widget.isEnabled;
+          }
+
+          // Allow deselection if we're in select mode
+          final bool isSelected = widget.selectedProfiles.contains(targetProfileId);
+          if (isSelected) {
+            canSelect = widget.isEnabled;
+          }
+
           return buildProfileTile(
             context: context,
             senderProfile: senderProfile,
             targetProfile: targetProfile,
             relationship: relationship,
+            canSelect: canSelect,
+            isSelected: isSelected,
           );
         },
       ),
@@ -457,21 +492,22 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
     required Profile? senderProfile,
     required Profile? targetProfile,
     required Relationship? relationship,
+    required bool canSelect,
+    required bool isSelected,
   }) {
     final String targetProfileId = targetProfile?.flMeta?.id ?? '';
     if (targetProfileId.isEmpty || widget.hiddenProfiles.contains(targetProfileId)) {
       return const SizedBox.shrink();
     }
 
-    final bool isSelected = widget.selectedProfiles.contains(targetProfileId);
     return PositiveProfileListTile(
       targetProfile: targetProfile,
       senderProfile: senderProfile,
       relationship: relationship,
       type: widget.mode.toProfileListTileType,
       isSelected: isSelected,
-      onSelected: () => widget.onProfileSelected?.call(targetProfileId),
-      isEnabled: widget.isEnabled,
+      onSelected: canSelect ? () => widget.onProfileSelected?.call(targetProfileId) : null,
+      isEnabled: canSelect,
       profileDescriptionBuilder: widget.profileDescriptionBuilder,
     );
   }

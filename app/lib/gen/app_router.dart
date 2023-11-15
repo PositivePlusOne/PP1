@@ -18,7 +18,6 @@ import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_p
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_update_name_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
-import 'package:app/widgets/organisms/chat/chat_create_page.dart';
 import 'package:app/widgets/organisms/chat/chat_members_page.dart';
 import 'package:app/widgets/organisms/chat/chat_page.dart';
 import 'package:app/widgets/organisms/chat/create_conversation_page.dart';
@@ -181,7 +180,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, notificationGuard, biometricsGuard, securityGuard]),
         AutoRoute(page: HomeLoginPromptRoute.page, path: '/home/login', guards: [...kCommonGuards]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
-        AutoRoute(page: ChatCreateRoute.page, path: '/chat/new', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
         AutoRoute(page: CreateConversationRoute.page, path: '/chat/connections_list', guards: [...kCommonGuards, signedInGuard]),
         AutoRoute(page: ChatMembersRoute.page, path: '/chat/members', guards: kCommonGuards),
