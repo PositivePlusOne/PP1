@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_numeric_indicator.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -339,6 +340,7 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
               currentProfileId: currentProfileId,
             ),
     ),
+    showEditMessage: isMyMessage,
     showDeleteMessage: isMyMessage,
     message: details.message,
     reverse: isMyMessage,
@@ -775,14 +777,9 @@ class _AvatarList extends ConsumerWidget {
                   height: 40,
                   width: 40,
                   child: i == 2 && filteredMembers.length > 3
-                      ? PositiveCircularIndicator(
-                          gapColor: colors.white,
-                          child: Center(
-                            child: Text(
-                              "+${filteredMembers.length - 2}",
-                              style: typography.styleSubtextBold,
-                            ),
-                          ),
+                      ? PositiveNumericIndicator(
+                          count: filteredMembers.length - 2,
+                          textStyle: typography.styleSubtitle.copyWith(color: colors.white),
                         )
                       : PositiveProfileCircularIndicator(
                           profile: ChatViewModel.getRelationshipForProfile(targetBlockedRelationships, filteredMembers[i])?.members.firstWhereOrNull((element) => element.memberId != currentProfileId && element.hasBlocked) != null ? null : filteredMembers[i],

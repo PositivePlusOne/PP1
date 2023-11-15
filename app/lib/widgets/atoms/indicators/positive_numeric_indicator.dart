@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/color_extensions.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import '../../../providers/system/design_controller.dart';
 
@@ -18,6 +17,7 @@ class PositiveNumericIndicator extends ConsumerWidget {
     this.size = kIconLarge,
     this.borderThickness = kBorderThicknessSmall,
     this.backgroundColor,
+    this.textStyle,
     super.key,
   });
 
@@ -25,6 +25,8 @@ class PositiveNumericIndicator extends ConsumerWidget {
   final double size;
   final double borderThickness;
   final Color? backgroundColor;
+
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,12 +37,13 @@ class PositiveNumericIndicator extends ConsumerWidget {
     return PositiveCircularIndicator(
       ringColor: actualColor,
       borderThickness: borderThickness,
+      backgroundColor: colors.black,
       size: size,
       child: FittedBox(
         fit: BoxFit.scaleDown,
         child: Text(
           '+$count',
-          style: typography.styleTitle.copyWith(color: actualColor.complimentTextColor),
+          style: textStyle ?? typography.styleTitle.copyWith(color: colors.white),
         ),
       ),
     );
