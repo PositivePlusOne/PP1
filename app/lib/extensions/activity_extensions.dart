@@ -587,7 +587,7 @@ extension ActivityExt on Activity {
           promotionKey: enrichmentConfiguration?.promotionKey ?? '',
           postType: PostType.getPostTypeFromActivity(this, true),
           media: media,
-          reposterActivityID: '',
+          reposterActivityID: repostConfiguration?.targetActivityId ?? '',
           commentPermissionMode: securityConfiguration?.commentMode,
           visibilityMode: securityConfiguration?.viewMode,
           allowSharing: securityConfiguration?.shareMode == const ActivitySecurityConfigurationMode.public(),

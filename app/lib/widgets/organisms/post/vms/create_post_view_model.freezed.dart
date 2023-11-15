@@ -25,6 +25,7 @@ mixin _$CreatePostViewModelState {
   CreatePostCurrentPage get currentCreatePostPage =>
       throw _privateConstructorUsedError;
   String get currentActivityID => throw _privateConstructorUsedError;
+  List<Media> get currentActivityMedia => throw _privateConstructorUsedError;
   List<GalleryEntry> get galleryEntries => throw _privateConstructorUsedError;
   GalleryEntry? get editingGalleryEntry => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
@@ -81,6 +82,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       String currentActivityID,
+      List<Media> currentActivityMedia,
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
       List<String> tags,
@@ -135,6 +137,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? currentActivityID = null,
+    Object? currentActivityMedia = null,
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
     Object? tags = null,
@@ -190,6 +193,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.currentActivityID
           : currentActivityID // ignore: cast_nullable_to_non_nullable
               as String,
+      currentActivityMedia: null == currentActivityMedia
+          ? _value.currentActivityMedia
+          : currentActivityMedia // ignore: cast_nullable_to_non_nullable
+              as List<Media>,
       galleryEntries: null == galleryEntries
           ? _value.galleryEntries
           : galleryEntries // ignore: cast_nullable_to_non_nullable
@@ -314,6 +321,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       PostType currentPostType,
       CreatePostCurrentPage currentCreatePostPage,
       String currentActivityID,
+      List<Media> currentActivityMedia,
       List<GalleryEntry> galleryEntries,
       GalleryEntry? editingGalleryEntry,
       List<String> tags,
@@ -369,6 +377,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? currentPostType = null,
     Object? currentCreatePostPage = null,
     Object? currentActivityID = null,
+    Object? currentActivityMedia = null,
     Object? galleryEntries = null,
     Object? editingGalleryEntry = freezed,
     Object? tags = null,
@@ -424,6 +433,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.currentActivityID
           : currentActivityID // ignore: cast_nullable_to_non_nullable
               as String,
+      currentActivityMedia: null == currentActivityMedia
+          ? _value._currentActivityMedia
+          : currentActivityMedia // ignore: cast_nullable_to_non_nullable
+              as List<Media>,
       galleryEntries: null == galleryEntries
           ? _value._galleryEntries
           : galleryEntries // ignore: cast_nullable_to_non_nullable
@@ -526,6 +539,7 @@ class _$CreatePostViewModelStateImpl
       this.currentPostType = PostType.image,
       this.currentCreatePostPage = CreatePostCurrentPage.entry,
       this.currentActivityID = '',
+      final List<Media> currentActivityMedia = const [],
       final List<GalleryEntry> galleryEntries = const [],
       this.editingGalleryEntry,
       final List<String> tags = const [],
@@ -553,7 +567,8 @@ class _$CreatePostViewModelStateImpl
       required this.cameraWidgetKey,
       this.activeButton = PositivePostNavigationActiveButton.post,
       this.lastActiveButton = PositivePostNavigationActiveButton.post})
-      : _galleryEntries = galleryEntries,
+      : _currentActivityMedia = currentActivityMedia,
+        _galleryEntries = galleryEntries,
         _tags = tags;
 
   @override
@@ -580,6 +595,16 @@ class _$CreatePostViewModelStateImpl
   @override
   @JsonKey()
   final String currentActivityID;
+  final List<Media> _currentActivityMedia;
+  @override
+  @JsonKey()
+  List<Media> get currentActivityMedia {
+    if (_currentActivityMedia is EqualUnmodifiableListView)
+      return _currentActivityMedia;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_currentActivityMedia);
+  }
+
   final List<GalleryEntry> _galleryEntries;
   @override
   @JsonKey()
@@ -661,7 +686,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, currentActivityMedia: $currentActivityMedia, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -677,6 +702,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('currentPostType', currentPostType))
       ..add(DiagnosticsProperty('currentCreatePostPage', currentCreatePostPage))
       ..add(DiagnosticsProperty('currentActivityID', currentActivityID))
+      ..add(DiagnosticsProperty('currentActivityMedia', currentActivityMedia))
       ..add(DiagnosticsProperty('galleryEntries', galleryEntries))
       ..add(DiagnosticsProperty('editingGalleryEntry', editingGalleryEntry))
       ..add(DiagnosticsProperty('tags', tags))
@@ -724,6 +750,8 @@ class _$CreatePostViewModelStateImpl
                 other.currentCreatePostPage == currentCreatePostPage) &&
             (identical(other.currentActivityID, currentActivityID) ||
                 other.currentActivityID == currentActivityID) &&
+            const DeepCollectionEquality()
+                .equals(other._currentActivityMedia, _currentActivityMedia) &&
             const DeepCollectionEquality()
                 .equals(other._galleryEntries, _galleryEntries) &&
             (identical(other.editingGalleryEntry, editingGalleryEntry) ||
@@ -783,6 +811,7 @@ class _$CreatePostViewModelStateImpl
         currentPostType,
         currentCreatePostPage,
         currentActivityID,
+        const DeepCollectionEquality().hash(_currentActivityMedia),
         const DeepCollectionEquality().hash(_galleryEntries),
         editingGalleryEntry,
         const DeepCollectionEquality().hash(_tags),
@@ -824,6 +853,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final PostType currentPostType,
           final CreatePostCurrentPage currentCreatePostPage,
           final String currentActivityID,
+          final List<Media> currentActivityMedia,
           final List<GalleryEntry> galleryEntries,
           final GalleryEntry? editingGalleryEntry,
           final List<String> tags,
@@ -869,6 +899,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   CreatePostCurrentPage get currentCreatePostPage;
   @override
   String get currentActivityID;
+  @override
+  List<Media> get currentActivityMedia;
   @override
   List<GalleryEntry> get galleryEntries;
   @override
