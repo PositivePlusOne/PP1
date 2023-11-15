@@ -1,10 +1,5 @@
 // Flutter imports:
-import 'package:app/constants/design_constants.dart';
-import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/providers/system/design_controller.dart';
-import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -13,10 +8,13 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
-import '../../../../gen/app_router.dart';
-import '../../../../helpers/dialog_hint_helpers.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 

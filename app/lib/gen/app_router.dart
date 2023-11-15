@@ -36,6 +36,7 @@ import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart'
 import 'package:app/widgets/organisms/profile/birthday_delete_account_page.dart';
 import 'package:app/widgets/organisms/profile/profile_about_page.dart';
 import 'package:app/widgets/organisms/profile/profile_company_sectors_select_page.dart';
+import 'package:app/widgets/organisms/profile/profile_details_page.dart';
 import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
 import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
@@ -157,6 +158,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),
         //* Profile and Profile Configuration
         AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [profileDisplayGuard]),
+        AutoRoute(page: ProfileDetailsRoute.page, path: '/profile/details/view', guards: [profileDisplayGuard]),
         AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue', guards: [signedInGuard]),
         AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [signedInGuard]),
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),

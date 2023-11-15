@@ -60,7 +60,18 @@ extension StringExtensions on String? {
     }
   }
 
-//? Can we get context or localisations
+  String get age {
+    try {
+      final DateTime dateTime = DateTime.parse(this ?? '');
+      final Duration differenceDuration = DateTime.now().difference(dateTime);
+      final int age = (differenceDuration.inDays / 365).floor();
+      return age.toString();
+    } catch (_) {
+      return '';
+    }
+  }
+
+  //? Can we get context or localisations
   String asDateDifference(BuildContext context) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 

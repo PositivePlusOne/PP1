@@ -19,7 +19,6 @@ import '../../../dtos/system/design_colors_model.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../../providers/system/design_controller.dart';
 import '../../atoms/buttons/enumerations/positive_button_size.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
 
 @RoutePage()
 class NotificationPreferencesPage extends ConsumerWidget {

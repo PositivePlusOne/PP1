@@ -171,6 +171,15 @@ extension ProfileExtensions on Profile {
     return DateTime.now().difference(DateTime.parse(birthday)).inDays ~/ 365;
   }
 
+  String get formattedAgeRespectingFlags {
+    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagBirthday);
+    if (shouldIgnore) {
+      return '';
+    }
+
+    return age.toString();
+  }
+
   /// small function to return if this profile is the profile of an organisation - as taken
   /// from the featureFlags data - does it contain the entry 'organisation'
   bool get isOrganisation => featureFlags.contains(kFeatureFlagOrganisation);
@@ -248,6 +257,33 @@ extension ProfileExtensions on Profile {
     return taglineParts.join(', ');
   }
 
+  String get formattedGenderRespectingFlags {
+    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagGenders);
+    if (shouldIgnore) {
+      return '';
+    }
+
+    return formattedGenderIgnoreFlags;
+  }
+
+  String get formattedHIVStatusRespectingFlags {
+    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagHivStatus);
+    if (shouldIgnore) {
+      return '';
+    }
+
+    return formattedHIVStatus;
+  }
+
+  String get formattedInterestsRespectingFlags {
+    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagInterests);
+    if (shouldIgnore) {
+      return '';
+    }
+
+    return interests.join(', ');
+  }
+
   String get formattedCompanySectorsIgnoreFlags {
     final List<String> taglineParts = [];
     final CompanySectorsControllerState companySectorsControllerState = providerContainer.read(companySectorsControllerProvider);
@@ -293,6 +329,15 @@ extension ProfileExtensions on Profile {
     return place!.description;
   }
 
+  String get formattedLocationRespectingFlags {
+    final bool shouldIgnore = visibilityFlags.contains(kVisibilityFlagLocation);
+    if (shouldIgnore) {
+      return '';
+    }
+
+    return formattedLocation;
+  }
+
   bool get hasMarketingFeature {
     return featureFlags.contains(kFeatureFlagMarketing);
   }
@@ -327,7 +372,36 @@ extension ProfileExtensions on Profile {
     final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
     await profileViewModel.preloadUserProfile(targetProfileId);
 
-    appRouter.push(const ProfileRoute());
+    await appRouter.push(const ProfileRoute());
+  }
+
+  Future<void> navigateToProfileDetails() async {
+    final AppRouter appRouter = providerContainer.read(appRouterProvider);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    final String targetProfileId = flMeta?.id ?? '';
+    if (targetProfileId.isEmpty) {
+      logger.e('onViewProfileButtonSelected: currentProfileId is empty');
+      return;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isNotEmpty) {
+      final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+      final Relationship? relationship = cacheController.get([currentProfileId, targetProfileId].asGUID);
+      final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+      final bool isBlockedByTarget = relationshipStates.contains(RelationshipState.targetBlocked);
+      if (isBlockedByTarget) {
+        logger.e('onViewProfileButtonSelected: target profile is blocked');
+        return;
+      }
+    }
+
+    final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
+    await profileViewModel.preloadUserProfile(targetProfileId);
+
+    await appRouter.push(const ProfileDetailsRoute());
   }
 }
 
