@@ -78,11 +78,7 @@ class PositiveGenericPage extends ConsumerWidget {
       },
       isBusy: isBusy,
       visibleComponents: {
-        if (style == PositiveGenericPageStyle.imaged) ...[
-          ...PositiveScaffoldComponent.excludeFooterPadding,
-        ] else ...[
-          ...PositiveScaffoldComponent.values,
-        ],
+        ...PositiveScaffoldComponent.values,
       },
       decorations: buildType1ScaffoldDecorations(colors),
       footerWidgets: <Widget>[
@@ -94,7 +90,6 @@ class PositiveGenericPage extends ConsumerWidget {
             onTapped: onContinueSelected,
             isDisabled: isBusy,
           ),
-          const SizedBox(height: kPaddingSmall),
         ],
       ],
       headingWidgets: <Widget>[
