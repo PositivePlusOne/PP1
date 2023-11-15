@@ -40,7 +40,7 @@ class OnboardingYourPledgeViewModel extends _$OnboardingYourPledgeViewModel with
   }
 
   Future<void> onContinueSelected() async {
-    final AsyncPledgeController pledgeController = ref.watch(asyncPledgeControllerProvider.notifier);
+    final AsyncPledgeController pledgeController = ref.read(asyncPledgeControllerProvider.notifier);
     await pledgeController.notifyPledgesAccepted();
 
     final AppRouter appRouter = ref.read(appRouterProvider);
