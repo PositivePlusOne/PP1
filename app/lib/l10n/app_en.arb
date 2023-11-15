@@ -422,6 +422,11 @@
     "page_account_verify_account_password_forgotten": "Forgotten Password",
 
     "page_chat_action_start_conversation": "Start Chat",
+    "page_chat_label_user_type": "User Type",
+    "page_chat_label_search_followers": "Search Followers",
+    "page_chat_label_search_connections": "Search Connections",
+    "page_chat_label_reached_chat_limit": "You have reached the maximum number of people for a group chat",
+    "page_chat_label_exceeded_chat_limit": "You have exceeded the maximum number of people for a group chat",
 
     "page_chat_empty": "Get the conversation started! Write your first message to @{displayName}",
     "@page_chat_empty" : {

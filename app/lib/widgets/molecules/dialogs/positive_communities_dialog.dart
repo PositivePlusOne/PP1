@@ -331,9 +331,11 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       isOrganisationManager = currentAuthUserId.isNotEmpty && currentProfile?.flMeta?.ownedBy == currentAuthUserId;
     }
 
+    bool hasReachedSelectedProfileLimit = false;
     bool hasExceededSelectedProfileLimit = false;
     if (widget.maximumSelectedProfiles > -1 && widget.mode == CommunitiesDialogMode.select) {
-      hasExceededSelectedProfileLimit = widget.selectedProfiles.length >= widget.maximumSelectedProfiles;
+      hasReachedSelectedProfileLimit = widget.selectedProfiles.length == widget.maximumSelectedProfiles;
+      hasExceededSelectedProfileLimit = widget.selectedProfiles.length > widget.maximumSelectedProfiles;
     }
 
     return PositiveScaffold(
@@ -353,7 +355,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
                 onValueChanged: (value) => controller.setSelectedCommunityType(value),
                 backgroundColour: colors.white,
                 borderColour: colors.black,
-                labelText: 'User Type',
+                labelText: localizations.page_chat_label_user_type,
                 valueStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
                 placeholderStringBuilder: (value) => (value as CommunityType).toLocale(isManagedProfile),
               ),
@@ -374,11 +376,19 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
               ),
               const SizedBox(height: kPaddingSmall),
             ],
+            if (hasReachedSelectedProfileLimit && !hasExceededSelectedProfileLimit) ...<Widget>[
+              PositiveHint(
+                icon: UniconsLine.chat_info,
+                iconColor: colors.purple,
+                label: localizations.page_chat_label_reached_chat_limit,
+              ),
+              const SizedBox(height: kPaddingSmall),
+            ],
             if (hasExceededSelectedProfileLimit) ...<Widget>[
               PositiveHint(
                 icon: UniconsLine.chat_info,
                 iconColor: colors.purple,
-                label: 'You have reached the maximum number of people for a group chat',
+                label: localizations.page_chat_label_exceeded_chat_limit,
               ),
               const SizedBox(height: kPaddingSmall),
             ],
