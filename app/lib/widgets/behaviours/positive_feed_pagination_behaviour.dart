@@ -271,7 +271,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String targetProfileId = activity?.publisherInformation?.publisherId ?? '';
 
-    if (activityId.isEmpty || currentProfileId.isEmpty || targetProfileId.isEmpty) {
+    if (activityId.isEmpty || targetProfileId.isEmpty) {
       return const SizedBox.shrink();
     }
 

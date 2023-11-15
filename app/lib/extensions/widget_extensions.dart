@@ -49,11 +49,28 @@ extension WidgetListExtensions on List<Widget> {
     return result;
   }
 
-  List<Widget> addSeparatorsToWidgetList({required Widget separator}) {
+  List<Widget> addSeparatorsToWidgetList({
+    required Widget separator,
+    bool ignoreLast = false,
+    bool assumeSeparators = true,
+  }) {
     final List<Widget> result = <Widget>[];
-    for (int i = 0; i < length; i++) {
+    final int totalLength = length;
+    for (int i = 0; i < totalLength; i++) {
+      final Widget widget = this[i];
+
+      // Assume that if the widget is a SizedBox, then it's a separator.
+      if (assumeSeparators && widget is SizedBox) {
+        result.add(widget);
+        continue;
+      }
+
       result.add(this[i]);
       if (i < length - 1) {
+        if (ignoreLast && i == length - 2) {
+          continue;
+        }
+
         result.add(separator);
       }
     }
