@@ -246,12 +246,11 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               CupertinoListTile.notched(
-                onTap: developmentViewModel.displayAuthClaims,
                 title: Text(
                   'Current Push Token',
                   style: typography.styleButtonRegular.copyWith(color: colors.white),
                 ),
-                subtitle: Text(
+                subtitle: SelectableText(
                   currentFCMToken,
                   style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
