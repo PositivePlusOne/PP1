@@ -66,7 +66,7 @@ class HomePage extends HookConsumerWidget {
     );
 
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(timelineFeed);
-    final PositiveFeedState feedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: timelineFeed, currentProfileId: currentProfileId);
+    final PositiveFeedState profileTimelineFeedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: timelineFeed, currentProfileId: currentProfileId);
 
     const TargetFeed everyoneTargetFeed = TargetFeed(
       targetSlug: 'tags',
@@ -114,14 +114,16 @@ class HomePage extends HookConsumerWidget {
 
     final ScrollController controller = useScrollController();
 
-    final Widget allFeedWidget = !isLoggedOut
-        ? PositiveFeedPaginationBehaviour(
-            currentProfile: currentProfile,
-            feedState: feedState,
-            feed: timelineFeed,
-            isSliver: true,
-          )
-        : everyoneFeedWidget;
+    Widget allFeedWidget = everyoneFeedWidget;
+    final bool canUseProfileTimelineFeed = !isLoggedOut && profileTimelineFeedState.pagingController.itemList?.isNotEmpty == true;
+    if (canUseProfileTimelineFeed) {
+      allFeedWidget = PositiveFeedPaginationBehaviour(
+        currentProfile: currentProfile,
+        feedState: profileTimelineFeedState,
+        feed: timelineFeed,
+        isSliver: true,
+      );
+    }
 
     final currentFeedWidget = switch (state.currentTabIndex) {
       0 => allFeedWidget,
@@ -133,7 +135,7 @@ class HomePage extends HookConsumerWidget {
     final PositiveFeedState currentFeedState = switch (state.currentTabIndex) {
       1 => postFeedState,
       2 => clipFeedState,
-      (_) => feedState,
+      (_) => canUseProfileTimelineFeed ? profileTimelineFeedState : everyoneFeedState,
     };
 
     return PositiveScaffold(
