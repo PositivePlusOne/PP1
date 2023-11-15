@@ -306,7 +306,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       galleryEntries: state.galleryEntries,
                       tags: state.tags,
                       initialValueAllowComments: state.allowComments,
-                      initialValueSharingVisibility: state.visibleTo,
+                      sharingVisibility: state.visibleTo,
                     ),
                   ),
                 ],

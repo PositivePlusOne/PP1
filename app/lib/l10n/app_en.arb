@@ -565,6 +565,8 @@
     "page_create_post_processing": "Processing your {postType}...",
     "page_create_post_uploading": "Uploading your {postType}...",
     "page_edit_post_uploading": "Editing your {postType}...",
+    
+    "page_create_post_visibility_warning": "Posts made visible to everyone will be viewable by people who do not have a Positive+1 account.",
 
     "page_create_post_post_type_text": "text",
     "page_create_post_post_type_image": "image",
