@@ -11,5 +11,5 @@ Future<void> onBackgroundMessageReceived(RemoteMessage message) async {
   await Firebase.initializeApp();
   final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
   await notificationsController.setupLocalNotifications();
-  notificationsController.handleNewNotification(event: message, isForeground: false);
+  await notificationsController.handleNewNotification(event: message, isForeground: false);
 }

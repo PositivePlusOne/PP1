@@ -94,10 +94,10 @@ abstract class NotificationHandler {
     }
 
     if (isForeground) {
-      displayForegroundNotification(payload);
+      await displayForegroundNotification(payload);
     }
 
-    displayBackgroundNotification(payload);
+    await displayBackgroundNotification(payload);
   }
 
   Future<void> displayForegroundNotification(NotificationPayload payload) async {
@@ -134,7 +134,13 @@ abstract class NotificationHandler {
       ),
     );
 
-    if (payload.title.isEmpty || payload.body.isEmpty) {
+    String title = payload.title;
+    String body = payload.bodyMarkdown;
+    if (body.isEmpty) {
+      body = payload.body;
+    }
+
+    if (title.isEmpty || body.isEmpty) {
       logger.e('displayBackgroundNotification: Unable to localize notification: $payload');
       return;
     }

@@ -90,9 +90,9 @@ class CreateConversationPage extends HookConsumerWidget {
       maximumSelectedProfiles: (kMaximumChatParticipants - currentChannelMemberCount).clamp(0, kMaximumChatParticipants),
       hiddenProfiles: currentChannelMembers,
       onProfileSelected: (String profileId) => chatViewModel.onCurrentChannelMemberSelected(profileId),
-      canCallToAction: true,
+      canCallToAction: chatViewModelState.selectedMembers.isNotEmpty,
       actionLabel: localizations.page_chat_action_start_conversation,
-      isEnabled: !chatViewModelState.isBusy && chatViewModelState.selectedMembers.isNotEmpty,
+      isEnabled: !chatViewModelState.isBusy,
       onActionPressed: () async => chatViewModel.onCurrentChannelMembersConfirmed(context),
     );
   }
