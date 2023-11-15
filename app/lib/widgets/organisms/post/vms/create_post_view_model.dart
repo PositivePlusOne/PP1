@@ -58,6 +58,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default('') String currentActivityID,
+    @Default([]) List<Media> currentActivityMedia,
     @Default([]) List<GalleryEntry> galleryEntries,
     GalleryEntry? editingGalleryEntry,
     @Default([]) List<String> tags,
@@ -367,6 +368,13 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           break;
       }
 
+      // Store the edited media
+      if (activityData.media?.isNotEmpty == true) {
+        state = state.copyWith(
+          currentActivityMedia: activityData.media ?? [],
+        );
+      }
+
       // If the post is a repost, we have no data so we can skip this
       if (activityData.postType == PostType.repost) {
         state = state.copyWith(
@@ -409,144 +417,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       logger.e("Error loading activity data: $e");
     } finally {
       state = state.copyWith(isBusy: false);
-    }
-  }
-
-  Future<void> onPostFinished(Profile? currentProfile) async {
-    final logger = ref.read(loggerProvider);
-    if (state.isBusy) {
-      logger.w("Attempted to post while busy");
-      return;
-    }
-
-    if (currentProfile == null) {
-      logger.e("Profile ID is null, cannot post");
-      return;
-    }
-
-    try {
-      final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
-      state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty, isCreatingPost: true);
-
-      final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
-      for (final GalleryEntry entry in galleryEntries) {
-        entry.saveToGallery = state.saveToGallery;
-      }
-
-      // Upload gallery entries
-      final List<Media> media = await Future.wait(galleryEntries.map(
-        (e) => e.createMedia(
-          filter: state.currentFilter,
-          altText: altTextController.text.trim(),
-          mimeType: e.mimeType ?? "",
-        ),
-      ));
-
-      late final ActivityData activityData;
-
-      if (state.isEditingPost) {
-        activityData = ActivityData(
-          activityID: state.currentActivityID,
-          content: captionController.text.trim(),
-          altText: altTextController.text.trim(),
-          promotionKey: promotionKeyTextController.text.trim(),
-          tags: state.tags,
-          postType: state.currentPostType,
-          media: media,
-          allowSharing: state.allowSharing,
-          commentPermissionMode: state.allowComments,
-          visibilityMode: state.visibleTo,
-        );
-      } else {
-        activityData = ActivityData(
-          content: captionController.text.trim(),
-          altText: altTextController.text.trim(),
-          promotionKey: promotionKeyTextController.text.trim(),
-          tags: state.tags,
-          postType: state.currentPostType,
-          media: media,
-          allowSharing: state.allowSharing,
-          commentPermissionMode: state.allowComments,
-          visibilityMode: state.visibleTo,
-          reposterActivityID: state.reposterActivityID,
-        );
-      }
-
-      // Prevent sharing of reposts (for now)
-      if (activityData.postType == PostType.repost) {
-        activityData.allowSharing = false;
-      }
-
-      if (!state.isEditingPost) {
-        await activityController.postActivity(
-          currentProfile: currentProfile,
-          activityData: activityData,
-        );
-      } else {
-        await activityController.updateActivity(
-          currentProfile: currentProfile,
-          activityData: activityData,
-        );
-      }
-
-      await onPostActivitySuccess();
-    } catch (e) {
-      logger.e("Error posting activity: $e");
-      await onPostActivityFailure(e);
-      return;
-    } finally {
-      state = state.copyWith(isBusy: false, isUploadingMedia: false, isCreatingPost: false);
-    }
-  }
-
-  Future<void> onPostActivitySuccess() async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final AppLocalizations localisations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
-    final logger = ref.read(loggerProvider);
-    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    logger.i("Attempted to ${state.isEditingPost ? "edit" : "create"} post, Pop Create Post page, push Home page");
-
-    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: state.isEditingPost ? localisations.page_create_post_edited : localisations.page_create_post_created,
-      icon: UniconsLine.plus_circle,
-      backgroundColour: colours.black,
-    );
-
-    router.removeLast();
-
-    // Wait for the page to pop before pushing the snackbar
-    await Future.delayed(kAnimationDurationEntry);
-    if (router.navigatorKey.currentContext != null) {
-      final ScaffoldMessengerState messenger = ScaffoldMessenger.of(router.navigatorKey.currentContext!);
-      messenger.showSnackBar(snackBar);
-    }
-  }
-
-  Future<void> onPostActivityFailure(Object? exception) async {
-    final AppRouter router = ref.read(appRouterProvider);
-    final logger = ref.read(loggerProvider);
-    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-
-    logger.e("Error posting activity: $exception");
-    final bool alreadyExists = exception is FirebaseException && exception.code == "already-exists";
-
-    late final PositiveSnackBar snackBar;
-
-    if (alreadyExists) {
-      snackBar = PositiveGenericSnackBar(
-        title: "No update required",
-        icon: UniconsLine.envelope_exclamation,
-        backgroundColour: colours.black,
-      );
-    } else {
-      snackBar = PositiveErrorSnackBar(
-        text: "Post ${state.isEditingPost ? "Edit" : "Creation"} Failed",
-      );
-    }
-
-    if (router.navigatorKey.currentContext != null) {
-      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
     }
   }
 
@@ -959,5 +829,149 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       currentCreatePostPage: CreatePostCurrentPage.editPhoto,
       activeButtonFlexText: localisations.shared_actions_done,
     );
+  }
+
+  Future<void> onPostFinished(Profile? currentProfile) async {
+    final logger = ref.read(loggerProvider);
+    if (state.isBusy) {
+      logger.w("Attempted to post while busy");
+      return;
+    }
+
+    if (currentProfile == null) {
+      logger.e("Profile ID is null, cannot post");
+      return;
+    }
+
+    try {
+      final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
+      state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty, isCreatingPost: true);
+
+      final List<GalleryEntry> galleryEntries = [...state.galleryEntries];
+      for (final GalleryEntry entry in galleryEntries) {
+        entry.saveToGallery = state.saveToGallery;
+      }
+
+      // Upload gallery entries
+      List<Media> media = [];
+      if (state.isEditingPost) {
+        media = state.currentActivityMedia;
+      } else {
+        media = await Future.wait(galleryEntries.map(
+          (e) => e.createMedia(
+            filter: state.currentFilter,
+            altText: altTextController.text.trim(),
+            mimeType: e.mimeType ?? "",
+          ),
+        ));
+      }
+
+      // If we are editing, and have any media; then we need to reattach it and not upload it again
+
+      late final ActivityData activityData;
+      if (state.isEditingPost) {
+        activityData = ActivityData(
+          activityID: state.currentActivityID,
+          content: captionController.text.trim(),
+          altText: altTextController.text.trim(),
+          promotionKey: promotionKeyTextController.text.trim(),
+          tags: state.tags,
+          postType: state.currentPostType,
+          media: media,
+          allowSharing: state.allowSharing,
+          commentPermissionMode: state.allowComments,
+          visibilityMode: state.visibleTo,
+        );
+      } else {
+        activityData = ActivityData(
+          content: captionController.text.trim(),
+          altText: altTextController.text.trim(),
+          promotionKey: promotionKeyTextController.text.trim(),
+          tags: state.tags,
+          postType: state.currentPostType,
+          media: media,
+          allowSharing: state.allowSharing,
+          commentPermissionMode: state.allowComments,
+          visibilityMode: state.visibleTo,
+          reposterActivityID: state.reposterActivityID,
+        );
+      }
+
+      // Prevent sharing of reposts (for now)
+      if (activityData.postType == PostType.repost) {
+        activityData.allowSharing = false;
+      }
+
+      if (!state.isEditingPost) {
+        await activityController.postActivity(
+          currentProfile: currentProfile,
+          activityData: activityData,
+        );
+      } else {
+        await activityController.updateActivity(
+          currentProfile: currentProfile,
+          activityData: activityData,
+        );
+      }
+
+      await onPostActivitySuccess();
+    } catch (e) {
+      logger.e("Error posting activity: $e");
+      await onPostActivityFailure(e);
+      return;
+    } finally {
+      state = state.copyWith(isBusy: false, isUploadingMedia: false, isCreatingPost: false);
+    }
+  }
+
+  Future<void> onPostActivitySuccess() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
+    final logger = ref.read(loggerProvider);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    logger.i("Attempted to ${state.isEditingPost ? "edit" : "create"} post, Pop Create Post page, push Home page");
+
+    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+      title: state.isEditingPost ? localisations.page_create_post_edited : localisations.page_create_post_created,
+      icon: UniconsLine.plus_circle,
+      backgroundColour: colours.black,
+    );
+
+    router.removeLast();
+
+    // Wait for the page to pop before pushing the snackbar
+    await Future.delayed(kAnimationDurationEntry);
+    if (router.navigatorKey.currentContext != null) {
+      final ScaffoldMessengerState messenger = ScaffoldMessenger.of(router.navigatorKey.currentContext!);
+      messenger.showSnackBar(snackBar);
+    }
+  }
+
+  Future<void> onPostActivityFailure(Object? exception) async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final logger = ref.read(loggerProvider);
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+
+    logger.e("Error posting activity: $exception");
+    final bool alreadyExists = exception is FirebaseException && exception.code == "already-exists";
+
+    late final PositiveSnackBar snackBar;
+
+    if (alreadyExists) {
+      snackBar = PositiveGenericSnackBar(
+        title: "No update required",
+        icon: UniconsLine.envelope_exclamation,
+        backgroundColour: colours.black,
+      );
+    } else {
+      snackBar = PositiveErrorSnackBar(
+        text: "Post ${state.isEditingPost ? "Edit" : "Creation"} Failed",
+      );
+    }
+
+    if (router.navigatorKey.currentContext != null) {
+      ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+    }
   }
 }
