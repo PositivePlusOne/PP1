@@ -368,7 +368,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     try {
       late final CreatePostCurrentPage currentPage;
-      late final PostType currentPostType;
+      PostType currentPostType;
       String flexText = localisations.page_create_post_create;
 
       switch (activityData.postType) {
@@ -382,8 +382,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           break;
         case PostType.repost:
           currentPage = CreatePostCurrentPage.repostPreview;
-          currentPostType = PostType.repost;
           flexText = localisations.shared_actions_next;
+          currentPostType = PostType.repost;
           break;
         case PostType.event:
         case PostType.clip:
@@ -410,13 +410,17 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           activeButtonFlexText: flexText,
           previousActivity: activityData,
         );
-
         return;
       }
 
       captionController.text = activityData.content ?? "";
       altTextController.text = activityData.altText ?? "";
       promotionKeyTextController.text = activityData.promotionKey ?? "";
+
+      if (activityData.reposterActivityID?.isNotEmpty ?? false) {
+        activityData.postType = PostType.repost;
+        currentPostType = PostType.repost;
+      }
 
       //? State is updated in two steps, otherwise the camera can breifly activate on the edit page due to the asynchronus fucnctions required for gallery
       state = state.copyWith(
