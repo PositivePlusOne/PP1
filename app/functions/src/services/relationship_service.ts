@@ -842,6 +842,7 @@ export namespace RelationshipService {
       memberIds.push(member.memberId);
       if (member.memberId === sender) {
         member.hasConnected = true;
+        member.hasFollowed = true;  
       }
 
       if (!member.hasConnected) {
@@ -850,6 +851,8 @@ export namespace RelationshipService {
     }
 
     relationship.connected = isConnected;
+    relationship.followed = isConnected;
+    
     relationship = await RelationshipHelpers.updateRelationshipWithIndexes(relationship);
     await resetRelationshipPaginationCache(relationship);
 
