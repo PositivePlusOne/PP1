@@ -189,12 +189,12 @@ class ProfilePage extends HookConsumerWidget {
                   child: ProfileBiographyTile(profile: targetProfile!),
                 ),
               ],
-              if (targetProfile?.interests.isNotEmpty == true) ...<Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                  child: PositiveProfileInterestsList(profile: targetProfile!),
-                ),
-              ],
+              // if (targetProfile?.interests.isNotEmpty == true) ...<Widget>[
+              //   Padding(
+              //     padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
+              //     child: PositiveProfileInterestsList(profile: targetProfile!),
+              //   ),
+              // ],
             ],
           ),
         ),
