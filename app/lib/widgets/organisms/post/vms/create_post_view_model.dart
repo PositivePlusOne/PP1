@@ -190,6 +190,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         case CreatePostCurrentPage.editPhoto:
         //? the create multi image page has selected many things, going back will discard these too
         case CreatePostCurrentPage.createPostMultiImage:
+        //? the create text doesn't actually discard the data, but back again will without warning so good to show here
+        case CreatePostCurrentPage.createPostText:
           if (false == await confirmBackState()) {
             // they don't want to discard and go back afterall
             logger.d("User has not accepted discard dialog, do not close page");
@@ -202,10 +204,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           // no dialog by default
           break;
       }
-    }
-
-    if (state.currentCreatePostPage.isCreationDialog) {
-      clearPostData();
     }
     // if here, all's well and we can handle going back to the previous state then please
     switch (state.currentCreatePostPage) {
