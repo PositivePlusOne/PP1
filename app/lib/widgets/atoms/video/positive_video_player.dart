@@ -230,9 +230,9 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       videoAspectRatio = 1.0;
     }
 
-    if (videoAspectRatio > 1) {
-      videoAspectRatio = 1 / videoAspectRatio;
-    }
+    // if (videoAspectRatio > 1) {
+    //   videoAspectRatio = 1 / videoAspectRatio;
+    // }
 
     return VisibilityDetector(
       key: widget.visibilityDetectorKey,
