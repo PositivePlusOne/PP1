@@ -26,6 +26,7 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/account_form_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_icon.dart';
@@ -66,6 +67,10 @@ class AccountDetailsPage extends HookConsumerWidget {
 
     final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
     final AccountFormController controller = ref.read(provider.notifier);
+
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final bool isSocialOnly = userController.isSocialProviderLinkedExclusive;
+    final int providerCount = userController.providerCount;
 
     final List<String> cacheKeys = [];
 
@@ -124,6 +129,8 @@ class AccountDetailsPage extends HookConsumerWidget {
                 emailAddress: emailAddress,
                 phoneNumberComponents: phoneNumberComponents,
                 isPendingDeletion: isPendingDeletion,
+                isSocialOnly: isSocialOnly,
+                providerCount: providerCount,
               ),
             ] else ...<Widget>[
               ...buildManagedAccountDetails(
@@ -290,6 +297,8 @@ class AccountDetailsPage extends HookConsumerWidget {
     required String emailAddress,
     required (String, String) phoneNumberComponents,
     required bool isPendingDeletion,
+    required bool isSocialOnly,
+    required int providerCount,
   }) {
     return [
       Text(
@@ -309,8 +318,11 @@ class AccountDetailsPage extends HookConsumerWidget {
         hintText: localisations.shared_email_address,
         labelText: emailAddress,
         onTap: (context) => viewModel.onUpdateEmailAddressButtonPressed(context, locale, controller),
-        isEnabled: !viewModelState.isBusy,
-        suffixIcon: PositiveTextFieldIcon.action(backgroundColor: colors.purple),
+        isEnabled: !viewModelState.isBusy && !isSocialOnly,
+        suffixIcon: PositiveTextFieldIcon.action(
+          backgroundColor: !viewModelState.isBusy && !isSocialOnly ? colors.purple : colors.white,
+          isEnabled: !viewModelState.isBusy && !isSocialOnly,
+        ),
       ),
       const SizedBox(height: kPaddingMedium),
       PositiveFakeTextFieldButton(
@@ -335,20 +347,22 @@ class AccountDetailsPage extends HookConsumerWidget {
                 ),
               ),
       ),
+      if (!isSocialOnly) ...<Widget>[
+        const SizedBox(height: kPaddingMedium),
+        PositiveButton(
+          colors: colors,
+          onTapped: () => viewModel.onUpdatePasswordButtonPressed(context, locale, controller),
+          isDisabled: viewModelState.isBusy,
+          primaryColor: colors.white,
+          label: localisations.page_account_actions_change_password,
+          icon: UniconsLine.lock_alt,
+          fontColorOverride: colors.colorGray7,
+          iconColorOverride: colors.colorGray7,
+          style: PositiveButtonStyle.primary,
+        ),
+      ],
       const SizedBox(height: kPaddingMedium),
-      PositiveButton(
-        colors: colors,
-        onTapped: () => viewModel.onUpdatePasswordButtonPressed(context, locale, controller),
-        isDisabled: viewModelState.isBusy,
-        primaryColor: colors.white,
-        label: localisations.page_account_actions_change_password,
-        icon: UniconsLine.lock_alt,
-        fontColorOverride: colors.colorGray7,
-        iconColorOverride: colors.colorGray7,
-        style: PositiveButtonStyle.primary,
-      ),
-      const SizedBox(height: kPaddingMedium),
-      if (viewModelState.googleUserInfo != null) ...<Widget>[
+      if (viewModelState.googleUserInfo != null && providerCount > 1) ...<Widget>[
         PositiveButton(
           colors: colors,
           onTapped: viewModel.onDisconnectGoogleProviderPressed,
@@ -362,7 +376,7 @@ class AccountDetailsPage extends HookConsumerWidget {
         ),
         const SizedBox(height: kPaddingMedium),
       ],
-      if (viewModelState.appleUserInfo != null) ...<Widget>[
+      if (viewModelState.appleUserInfo != null && providerCount > 1) ...<Widget>[
         PositiveButton(
           colors: colors,
           onTapped: viewModel.onDisconnectAppleProviderPressed,
@@ -389,20 +403,20 @@ class AccountDetailsPage extends HookConsumerWidget {
       //   ),
       //   const SizedBox(height: kPaddingMedium),
       // ],
-      if (viewModelState.googleUserInfo == null || viewModelState.facebookUserInfo == null || viewModelState.googleUserInfo == null || viewModelState.appleUserInfo != null) ...<Widget>[
-        PositiveButton(
-          colors: colors,
-          onTapped: viewModel.onConnectSocialUserRequested,
-          isDisabled: viewModelState.isBusy,
-          primaryColor: colors.white,
-          label: localisations.page_account_actions_change_connect_social_account,
-          icon: UniconsLine.link_alt,
-          fontColorOverride: colors.colorGray7,
-          iconColorOverride: colors.colorGray7,
-          style: PositiveButtonStyle.primary,
-        ),
-        const SizedBox(height: kPaddingMedium),
-      ],
+      // if (false) ...<Widget>[
+      //   PositiveButton(
+      //     colors: colors,
+      //     onTapped: viewModel.onConnectSocialUserRequested,
+      //     isDisabled: viewModelState.isBusy,
+      //     primaryColor: colors.white,
+      //     label: localisations.page_account_actions_change_connect_social_account,
+      //     icon: UniconsLine.link_alt,
+      //     fontColorOverride: colors.colorGray7,
+      //     iconColorOverride: colors.colorGray7,
+      //     style: PositiveButtonStyle.primary,
+      //   ),
+      //   const SizedBox(height: kPaddingMedium),
+      // ],
       PositiveButton(
         colors: colors,
         onTapped: () => isPendingDeletion ? viewModel.onUndeleteAccountButtonPressed(context, locale, controller) : viewModel.onDeleteAccountButtonPressed(context, locale, controller),

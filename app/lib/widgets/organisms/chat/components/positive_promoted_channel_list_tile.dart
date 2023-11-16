@@ -74,7 +74,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                       promotedDescription,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                      style: typography.styleSubtext.copyWith(color: colors.colorGray4),
                     ),
                   ],
                   Text(

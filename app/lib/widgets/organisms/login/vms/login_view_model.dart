@@ -153,6 +153,7 @@ class LoginViewModel extends _$LoginViewModel {
     state = state.copyWith(isBusy: true);
 
     try {
+      final Logger logger = ref.read(loggerProvider);
       final UserController userController = ref.read(userControllerProvider.notifier);
       final SystemController systemController = ref.read(systemControllerProvider.notifier);
       final AppRouter appRouter = ref.read(appRouterProvider);
@@ -165,8 +166,15 @@ class LoginViewModel extends _$LoginViewModel {
 
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const HomeRoute());
+
+      final bool isNewUser = credential.additionalUserInfo?.isNewUser ?? false;
+      if (isNewUser) {
+        logger.d('New user, redirecting to registration');
+        await appRouter.replaceAll([const RegistrationAccountSetupRoute()]);
+        return;
+      } else {
+        await appRouter.replaceAll([const HomeRoute()]);
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
@@ -189,8 +197,15 @@ class LoginViewModel extends _$LoginViewModel {
 
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      appRouter.push(const HomeRoute());
+
+      final bool isNewUser = credential.additionalUserInfo?.isNewUser ?? false;
+      if (isNewUser) {
+        logger.d('New user, redirecting to registration');
+        await appRouter.replaceAll([const RegistrationAccountSetupRoute()]);
+        return;
+      } else {
+        await appRouter.replaceAll([const HomeRoute()]);
+      }
     } catch (e) {
       // when the login doesn't work - we are happy it just closing
       logger.e('login canceled / failed', error: e);

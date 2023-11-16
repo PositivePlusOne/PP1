@@ -47,11 +47,12 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     );
   }
 
-  factory PositiveTextFieldIcon.action({required Color backgroundColor, Color? iconColor}) {
+  factory PositiveTextFieldIcon.action({required Color backgroundColor, Color? iconColor, bool isEnabled = true}) {
     return PositiveTextFieldIcon(
       icon: UniconsLine.angle_right,
       color: backgroundColor,
       iconColor: Colors.white,
+      isEnabled: isEnabled,
     );
   }
 
@@ -79,6 +80,7 @@ class PositiveTextFieldIcon extends ConsumerWidget {
     return PositiveTapBehaviour(
       onTap: onTap ?? (context) => FocusManager.instance.primaryFocus?.unfocus(),
       isEnabled: isEnabled,
+      showDisabledState: !isEnabled,
       child: SizedBox(
         width: size,
         height: size,

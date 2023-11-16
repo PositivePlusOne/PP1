@@ -216,7 +216,7 @@ class PositiveChannelListTile extends ConsumerWidget {
                           child: Text(
                             description,
                             maxLines: 1,
-                            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                            style: typography.styleSubtext.copyWith(color: colors.colorGray4),
                           ),
                         ),
                         const SizedBox(width: kPaddingSmall),
@@ -224,9 +224,10 @@ class PositiveChannelListTile extends ConsumerWidget {
                           Text(
                             time,
                             maxLines: 1,
-                            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                            style: typography.styleSubtext.copyWith(color: colors.colorGray4),
                           ),
                         ],
+                        const SizedBox(width: kPaddingSmall),
                       ],
                     ),
                   ],

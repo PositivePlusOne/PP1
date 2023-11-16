@@ -701,7 +701,6 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
 
     // If you're logged out with no relationship, and the content is public, you can see it
     if (publisherRelationship == null) {
-      logger.e('canActOnSecurityMode() - relationship is null');
       return this == const ActivitySecurityConfigurationMode.public();
     }
 
