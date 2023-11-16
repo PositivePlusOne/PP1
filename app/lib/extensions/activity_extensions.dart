@@ -42,7 +42,12 @@ extension ActivityExt on Activity {
     final bool hasPublisher = publisherInformation?.publisherId.isNotEmpty == true;
     final bool hasBodyContent = generalConfiguration?.content.isNotEmpty == true;
     final bool hasImageMedia = media.where((Media media) => media.type == MediaType.photo_link || media.type == MediaType.video_link).isNotEmpty;
-    return hasPublisher && (hasBodyContent || hasImageMedia);
+    final bool isRepost = repostConfiguration?.targetActivityId.isNotEmpty == true;
+    if (!hasPublisher) {
+      return false;
+    }
+
+    return (hasBodyContent || hasImageMedia) || isRepost;
   }
 
   bool get isPromotion => enrichmentConfiguration?.promotionKey.isNotEmpty == true && enrichmentConfiguration?.tags.contains('promotion') == true;
@@ -694,10 +699,6 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
       return false;
     }
 
-    if (this == const ActivitySecurityConfigurationMode.public() || (this == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
-      return true;
-    }
-
     if (publisherRelationship == null) {
       logger.e('canActOnSecurityMode() - relationship is null');
       return false;
@@ -707,9 +708,14 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
     final bool isBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
+    final bool hasHidden = relationshipStates.contains(RelationshipState.sourceHidden);
 
-    if (isBlocked) {
+    if (isBlocked || hasHidden) {
       return false;
+    }
+
+    if (this == const ActivitySecurityConfigurationMode.public() || (this == const ActivitySecurityConfigurationMode.signedIn() && currentProfileId.isNotEmpty)) {
+      return true;
     }
 
     if (this == const ActivitySecurityConfigurationMode.connections()) {

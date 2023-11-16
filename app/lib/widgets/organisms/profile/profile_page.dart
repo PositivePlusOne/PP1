@@ -182,16 +182,14 @@ class ProfilePage extends HookConsumerWidget {
               //   ],
               // ),
               // const SizedBox(height: kPaddingSmall),
-              if (targetProfile?.biography.isNotEmpty == true) ...<Widget>[
-                Container(
-                  padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
-                  child: ProfileBiographyTile(
-                    profile: targetProfile!,
-                    isBusy: state.isBusy,
-                    displayDetailsOption: !targetProfile.isOrganisation,
-                  ),
+              Container(
+                padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),
+                child: ProfileBiographyTile(
+                  profile: targetProfile!,
+                  isBusy: state.isBusy,
+                  displayDetailsOption: !targetProfile.isOrganisation,
                 ),
-              ],
+              ),
               // if (targetProfile?.interests.isNotEmpty == true) ...<Widget>[
               //   Padding(
               //     padding: const EdgeInsets.only(left: kPaddingMedium, right: kPaddingMedium, bottom: kPaddingSmallMedium),

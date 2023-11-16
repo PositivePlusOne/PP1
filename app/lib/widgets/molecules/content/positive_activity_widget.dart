@@ -1,8 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html2md/html2md.dart' as html2md;
 
@@ -15,6 +15,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
@@ -191,6 +192,12 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       cannotDisplayErrorBody = localizations.shared_post_visibility_limited(postTypeLocale);
     }
 
+    final Set<RelationshipState> relationshipStates = actualRelationship?.relationshipStatesForEntity(widget.currentProfile?.flMeta?.id ?? '') ?? {};
+    final bool hasHidden = relationshipStates.contains(RelationshipState.sourceHidden);
+    if (hasHidden) {
+      cannotDisplayErrorBody = localizations.shared_post_visibility_hidden;
+    }
+
     // Reposts are always shareable as they share a copy of the original post
     ActivitySecurityConfigurationMode shareMode = widget.activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
     if (widget.reposterActivity != null) {
@@ -284,6 +291,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     return IgnorePointer(
       ignoring: !widget.isEnabled,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           PositiveTapBehaviour(
             onTap: (_) => widget.activity?.requestPostRoute(

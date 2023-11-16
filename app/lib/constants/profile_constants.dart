@@ -31,3 +31,9 @@ const Map<String, bool> kDefaultFeatureFlags = {
 
 const int kAgeRequirement13 = 13;
 const int kBiographyMaxLength = 200;
+
+const Set<String> kSupportedProfileStatistics = {
+  'Followers',
+  'Likes',
+  'Posts',
+};
