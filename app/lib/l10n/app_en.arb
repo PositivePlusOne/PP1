@@ -339,7 +339,7 @@
     "page_account_actions_change_delete_account_body_five": "Any comments you have made will be anonymised immediately, and then deleted",
     "page_account_actions_change_delete_account_body_six": "Any likes you have added to other users’ content will be removed",
     "page_account_actions_change_delete_account_body_seven": "All of your connections with other users will be removed, as will any links to organisations associated with your account",
-    "page_account_actions_change_delete_account_body_eight": "Please note that account deletion cannot be undone",
+    "page_account_actions_change_delete_account_body_eight": "Please note that account deletion can be undone upto 24 hours after it’s started.",
 
     "page_account_actions_change_delete_account_confirm_title": "Enter your Password",
     "page_account_actions_change_delete_account_confirm_body": "Please confirm your password, then your account deletion will be started on our side",
