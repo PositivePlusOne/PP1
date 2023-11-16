@@ -152,10 +152,6 @@
     "page_community_supported_empty_title": "You Aren't Supported by Anyone",
     "page_community_supported_empty_body": "Get some more support in the community to help your organisation grow and thrive.",
 
-    "page_confirm_password_enter": "Enter your password",
-    "page_confirm_password_delete_body": "Please confirm your password, then we'll begin the process of deleting your account.",
-    "page_confirm_password_delete_button": "Delete My Account",
-
     "page_login_password_enter": "Enter your password to sign in",
     "page_login_password_forgotten": "Forgotten Password",
     "page_login_password_forgotten_body": "We have sent reset instructions to your email address!",
@@ -182,7 +178,7 @@
     "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
 
     "page_profile_birthday_title": "Your Birthday",
-    "page_profile_birthday_description": "Let us know how old you are",
+    "page_profile_birthday_description": "Positive+1 aims to support everyone, however due to the nature of some of the guidance and material others may post Positive+1 can only be used by people above the age of 13.",
     "page_profile_birthday_input_label": "Your Birthday",
     "page_profile_birthday_under_13_error": "We're sorry, Positive+1 is only available to users over the age of 13",
 
@@ -329,20 +325,21 @@
     "page_account_actions_change_delete_account_pending": "Your account has been flagged for deletion and will be deleted in the next 24 hours",
 
     "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
-    "page_account_actions_change_delete_account_splash_body": "We ask you to verify some of your details just to be sure it’s you trying to delete your account.",
+    "page_account_actions_change_delete_account_splash_body": "We will ask that you are absolutely sure that you wish to delete your account.",
     "page_account_actions_change_delete_account_continue": "Continue",
     "page_account_actions_change_delete_account_body": "Deleting Your Account",
-    "page_account_actions_change_delete_account_body_one": "Before we can delete your account, we ask for your password to verify it’s you",
-    "page_account_actions_change_delete_account_body_two": "Once you confirm your password, you will no longer be able to access your account",
+    "page_account_actions_change_delete_account_body_one": "Before we can delete your account, we ask that you confirm that you are sure.",
+    "page_account_actions_change_delete_account_body_two": "Once you confirm, you will no longer be able to access your account",
     "page_account_actions_change_delete_account_body_three": "All of your posts, clips, and uploaded media will be deleted",
     "page_account_actions_change_delete_account_body_four": "Any chat messages you have sent will be anonymised, but will remain visible to other users in the chat",
     "page_account_actions_change_delete_account_body_five": "Any comments you have made will be anonymised immediately, and then deleted",
     "page_account_actions_change_delete_account_body_six": "Any likes you have added to other users’ content will be removed",
     "page_account_actions_change_delete_account_body_seven": "All of your connections with other users will be removed, as will any links to organisations associated with your account",
-    "page_account_actions_change_delete_account_body_eight": "Please note that account deletion cannot be undone",
+    "page_account_actions_change_delete_account_body_eight": "Please note that account deletion can be undone upto 24 hours after it’s started.",
 
-    "page_account_actions_change_delete_account_confirm_title": "Enter your Password",
-    "page_account_actions_change_delete_account_confirm_body": "Please confirm your password, then your account deletion will be started on our side",
+    "page_account_actions_change_delete_account_confirm_title": "Are you sure?",
+    "page_account_actions_change_delete_account_confirm_body": "Please confirm below that you wish to delete your account.",
+    "page_account_actions_change_delete_account_confirm_button": "Delete My Account",
     "page_account_actions_change_delete_account_finished_title": "Thanks!",
     "page_account_actions_change_delete_account_finished_body": "Your account deletion has been started and you will no longer be able to access your account. You will receive an email once your account has been deleted.",
     "page_account_actions_change_delete_account_finished_button": "Close App",

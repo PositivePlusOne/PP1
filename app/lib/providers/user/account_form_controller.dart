@@ -446,8 +446,7 @@ class AccountFormController extends _$AccountFormController {
 
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-      appRouter.removeWhere((route) => true);
-      await appRouter.push(const RegistrationAccountSetupRoute());
+      await appRouter.replaceAll([const RegistrationAccountSetupRoute()]);
     } finally {
       state = state.copyWith(isBusy: false);
     }

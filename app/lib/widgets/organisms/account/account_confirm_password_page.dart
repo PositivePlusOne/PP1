@@ -12,10 +12,6 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
-import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
-import 'package:app/widgets/atoms/input/positive_text_field.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
@@ -60,10 +56,7 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
     switch (pageType) {
       case AccountConfirmPageType.delete:
         {
-          if (await controller.onConfirmPasswordRequested()) {
-            // the password is good
-            await viewModel.onAccountDeleteOptionSelected();
-          }
+          await viewModel.onAccountDeleteOptionSelected();
           break;
         }
     }
@@ -101,10 +94,10 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: () => _completePage(controller, viewModel),
-          isDisabled: !controller.isPasswordValid,
+          // isDisabled: !controller.isPasswordValid,
           label: pageType == AccountConfirmPageType.delete
               // when confirm to delete - show the delete text
-              ? localizations.page_confirm_password_delete_button
+              ? localizations.page_account_actions_change_delete_account_confirm_button
               // else show the standard form mode button texts
               : controller.state.formMode == FormMode.edit
                   ? localizations.shared_actions_confirm
@@ -115,45 +108,45 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            const PositiveBackButton(),
+            PositiveBackButton(label: localizations.shared_actions_cancel),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_confirm_password_enter,
+              localizations.page_account_actions_change_delete_account_confirm_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_confirm_password_delete_body,
+              localizations.page_account_actions_change_delete_account_confirm_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingSmall),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  isDisabled: false,
-                  onTapped: () => viewModel.onPasswordResetOptionSelected(),
-                  label: localizations.page_login_password_forgotten,
-                  style: PositiveButtonStyle.text,
-                  layout: PositiveButtonLayout.textOnly,
-                  size: PositiveButtonSize.small,
-                ),
-              ),
-            ),
-            const SizedBox(height: kPaddingMedium),
-            PositiveTextField(
-              labelText: 'Password',
-              initialText: state.password,
-              onTextChanged: controller.onPasswordChanged,
-              tintColor: tintColor,
-              suffixIcon: suffixIcon,
-              isEnabled: !state.isBusy,
-              obscureText: true,
-              autocorrect: false,
-              autofocus: true,
-            ),
+            // const SizedBox(height: kPaddingSmall),
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: IntrinsicWidth(
+            //     child: PositiveButton(
+            //       colors: colors,
+            //       primaryColor: colors.black,
+            //       isDisabled: false,
+            //       onTapped: () => viewModel.onPasswordResetOptionSelected(),
+            //       label: localizations.page_login_password_forgotten,
+            //       style: PositiveButtonStyle.text,
+            //       layout: PositiveButtonLayout.textOnly,
+            //       size: PositiveButtonSize.small,
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: kPaddingMedium),
+            // PositiveTextField(
+            //   labelText: 'Password',
+            //   initialText: state.password,
+            //   onTextChanged: controller.onPasswordChanged,
+            //   tintColor: tintColor,
+            //   suffixIcon: suffixIcon,
+            //   isEnabled: !state.isBusy,
+            //   obscureText: true,
+            //   autocorrect: false,
+            //   autofocus: true,
+            // ),
           ],
         ),
       ],

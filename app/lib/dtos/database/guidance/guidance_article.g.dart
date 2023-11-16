@@ -13,6 +13,7 @@ _$GuidanceArticleImpl _$$GuidanceArticleImplFromJson(
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
       locale: json['locale'] as String? ?? 'en',
+      priority: json['priority'] as int? ?? 0,
       flMeta: json['_fl_meta_'] == null
           ? null
           : FlMeta.fromJson(json['_fl_meta_'] as Map<String, dynamic>),
@@ -25,5 +26,6 @@ Map<String, dynamic> _$$GuidanceArticleImplToJson(
       'title': instance.title,
       'body': instance.body,
       'locale': instance.locale,
+      'priority': instance.priority,
       '_fl_meta_': instance.flMeta?.toJson(),
     };

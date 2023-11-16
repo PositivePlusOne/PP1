@@ -1293,6 +1293,12 @@ class CameraPermissionDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: kPaddingLarge),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: CameraFloatingButton(active: true, onTap: (_) => context.popRoute(), iconData: UniconsLine.multiply),
+          ),
+          const Spacer(),
           Icon(UniconsLine.image_plus, size: kIconMedium, color: colours.white),
           const SizedBox(height: kPaddingSmall),
           Text(
@@ -1324,7 +1330,9 @@ class CameraPermissionDialog extends StatelessWidget {
                 ],
               ),
             ),
-          )
+          ),
+          const SizedBox(height: kPaddingExtraLarge),
+          const Spacer(),
         ],
       ),
     );

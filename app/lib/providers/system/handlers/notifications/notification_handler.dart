@@ -145,6 +145,14 @@ abstract class NotificationHandler {
       return;
     }
 
+    // Check if we are already displaying this notification
+    final List<PendingNotificationRequest> pendingNotifications = await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    final bool isAlreadyDisplayed = pendingNotifications.any((element) => element.id == id);
+    if (isAlreadyDisplayed) {
+      logger.d('displayBackgroundNotification: Notification already displayed: $payload');
+      return;
+    }
+
     await flutterLocalNotificationsPlugin.show(id, payload.title, payload.body, notificationDetails);
     logger.d('displayBackgroundNotification: $id');
   }

@@ -230,9 +230,12 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       videoAspectRatio = 1.0;
     }
 
-    if (videoAspectRatio > 1) {
-      videoAspectRatio = 1 / videoAspectRatio;
-    }
+    // if (videoAspectRatio > 1) {
+    //   videoAspectRatio = 1 / videoAspectRatio;
+    // }
+
+    //? Clamp for excessive wide/tall videos
+    videoAspectRatio = videoAspectRatio.clamp(-1.0, 2.0);
 
     return VisibilityDetector(
       key: widget.visibilityDetectorKey,
@@ -244,7 +247,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
           constraints: BoxConstraints(
             minWidth: screenWidth,
             maxWidth: screenWidth,
-            maxHeight: screenHeight * 0.7,
+            maxHeight: (screenWidth / videoAspectRatio),
           ),
           child: Stack(
             children: <Widget>[
@@ -299,6 +302,7 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
                     controller: videoController!,
                     pauseUponEnteringBackgroundMode: true,
                     aspectRatio: videoAspectRatio,
+                    fit: BoxFit.fitHeight,
                     wakelock: true,
                   ),
                 ),

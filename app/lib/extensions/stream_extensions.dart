@@ -141,7 +141,9 @@ extension ChannelListExtensions on Iterable<Channel> {
         final String relationshipIdentifier = [currentProfileId, member].asGUID;
         final Relationship? relationship = cacheController.get(relationshipIdentifier);
         final Profile? otherProfile = cacheController.get<Profile>(member);
-        final bool isValidRelationship = relationship?.isValidConnectedRelationship ?? false;
+        final bool isValidConnectedRelationship = relationship?.isValidConnectedRelationship ?? false;
+        final bool isOrganisationTarget = otherProfile?.isOrganisation ?? false;
+        final bool isValidRelationship = isValidConnectedRelationship || isOrganisationTarget;
         if (isValidRelationship && otherProfile != null) {
           return true;
         }

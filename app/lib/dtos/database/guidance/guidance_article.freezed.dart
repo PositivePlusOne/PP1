@@ -25,6 +25,7 @@ mixin _$GuidanceArticle {
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get locale => throw _privateConstructorUsedError;
+  int get priority => throw _privateConstructorUsedError;
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta => throw _privateConstructorUsedError;
 
@@ -45,6 +46,7 @@ abstract class $GuidanceArticleCopyWith<$Res> {
       String title,
       String body,
       String locale,
+      int priority,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta});
 
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -67,6 +69,7 @@ class _$GuidanceArticleCopyWithImpl<$Res, $Val extends GuidanceArticle>
     Object? title = null,
     Object? body = null,
     Object? locale = null,
+    Object? priority = null,
     Object? flMeta = freezed,
   }) {
     return _then(_value.copyWith(
@@ -86,6 +89,10 @@ class _$GuidanceArticleCopyWithImpl<$Res, $Val extends GuidanceArticle>
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
               as String,
+      priority: null == priority
+          ? _value.priority
+          : priority // ignore: cast_nullable_to_non_nullable
+              as int,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -119,6 +126,7 @@ abstract class _$$GuidanceArticleImplCopyWith<$Res>
       String title,
       String body,
       String locale,
+      int priority,
       @JsonKey(name: '_fl_meta_') FlMeta? flMeta});
 
   @override
@@ -140,6 +148,7 @@ class __$$GuidanceArticleImplCopyWithImpl<$Res>
     Object? title = null,
     Object? body = null,
     Object? locale = null,
+    Object? priority = null,
     Object? flMeta = freezed,
   }) {
     return _then(_$GuidanceArticleImpl(
@@ -159,6 +168,10 @@ class __$$GuidanceArticleImplCopyWithImpl<$Res>
           ? _value.locale
           : locale // ignore: cast_nullable_to_non_nullable
               as String,
+      priority: null == priority
+          ? _value.priority
+          : priority // ignore: cast_nullable_to_non_nullable
+              as int,
       flMeta: freezed == flMeta
           ? _value.flMeta
           : flMeta // ignore: cast_nullable_to_non_nullable
@@ -175,6 +188,7 @@ class _$GuidanceArticleImpl implements _GuidanceArticle {
       this.title = '',
       this.body = '',
       this.locale = 'en',
+      this.priority = 0,
       @JsonKey(name: '_fl_meta_') this.flMeta});
 
   factory _$GuidanceArticleImpl.fromJson(Map<String, dynamic> json) =>
@@ -193,12 +207,15 @@ class _$GuidanceArticleImpl implements _GuidanceArticle {
   @JsonKey()
   final String locale;
   @override
+  @JsonKey()
+  final int priority;
+  @override
   @JsonKey(name: '_fl_meta_')
   final FlMeta? flMeta;
 
   @override
   String toString() {
-    return 'GuidanceArticle(documentId: $documentId, title: $title, body: $body, locale: $locale, flMeta: $flMeta)';
+    return 'GuidanceArticle(documentId: $documentId, title: $title, body: $body, locale: $locale, priority: $priority, flMeta: $flMeta)';
   }
 
   @override
@@ -211,13 +228,15 @@ class _$GuidanceArticleImpl implements _GuidanceArticle {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.body, body) || other.body == body) &&
             (identical(other.locale, locale) || other.locale == locale) &&
+            (identical(other.priority, priority) ||
+                other.priority == priority) &&
             (identical(other.flMeta, flMeta) || other.flMeta == flMeta));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, documentId, title, body, locale, flMeta);
+  int get hashCode => Object.hash(
+      runtimeType, documentId, title, body, locale, priority, flMeta);
 
   @JsonKey(ignore: true)
   @override
@@ -240,6 +259,7 @@ abstract class _GuidanceArticle implements GuidanceArticle {
           final String title,
           final String body,
           final String locale,
+          final int priority,
           @JsonKey(name: '_fl_meta_') final FlMeta? flMeta}) =
       _$GuidanceArticleImpl;
 
@@ -255,6 +275,8 @@ abstract class _GuidanceArticle implements GuidanceArticle {
   String get body;
   @override
   String get locale;
+  @override
+  int get priority;
   @override
   @JsonKey(name: '_fl_meta_')
   FlMeta? get flMeta;
