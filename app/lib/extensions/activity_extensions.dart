@@ -670,6 +670,10 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
+    if (activity == null || !activity.hasContentToDisplay) {
+      return false;
+    }
+
     if (currentProfileId == publisherProfileId) {
       return true;
     }

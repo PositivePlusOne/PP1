@@ -622,6 +622,9 @@
     "shared_user_type_generic_signed_in": "Signed In Users",
     "shared_user_type_generic_disabled": "Disabled",
     "shared_post_tooltips_edited": "(Edited)",
+
+    "shared_post_visibility_limited": "You’re unable to view this {displayName} as the author has limited its visibility",
+    "shared_post_visibility_deleted": "This {displayName} has been deleted",
     
     "shared_reaction_type_generic_everyone": "All Users",
     "shared_reaction_type_generic_connections": "Connections Only",
