@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/resources/resources.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
@@ -25,7 +23,6 @@ import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../atoms/buttons/positive_button.dart';
-import '../../molecules/containers/positive_glass_sheet.dart';
 
 enum PositiveGenericPageStyle {
   imaged,
@@ -77,7 +74,7 @@ class PositiveGenericPage extends ConsumerWidget {
         return false;
       },
       isBusy: isBusy,
-      visibleComponents: {
+      visibleComponents: const {
         ...PositiveScaffoldComponent.values,
       },
       decorations: buildType1ScaffoldDecorations(colors),

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -53,17 +54,23 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
     // final String tagline = profile.getTagline(localizations);
 
     final List<Widget> children = <Widget>[];
-    for (final MapEntry<String, String> entry in metadata.entries) {
+    for (final String statisticKey in kSupportedProfileStatistics) {
+      // Attempt to get the stat from the metadata
+      final String? statistic = metadata[statisticKey];
+      if (statistic == null) {
+        continue;
+      }
+
       final Widget child = Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-            '${entry.key}:',
+            '$statisticKey:',
             style: typography.styleButtonRegular.copyWith(color: textColor.withOpacity(metadataOpacity)),
           ),
           const SizedBox(width: kPaddingExtraSmall),
           Text(
-            entry.value,
+            statistic,
             style: typography.styleButtonBold.copyWith(color: textColor),
           ),
         ],

@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import '../../../constants/design_constants.dart';
 import '../../../dtos/system/design_typography_model.dart';
@@ -36,10 +37,6 @@ class ProfileBiographyTile extends ConsumerWidget {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
-    if (profile.biography.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -47,9 +44,8 @@ class ProfileBiographyTile extends ConsumerWidget {
           localizations.shared_actions_about,
           style: typography.styleSubtitleBold.copyWith(color: colors.colorGray3),
         ),
-        const SizedBox(height: kPaddingSmallMedium),
         // we allow links for companies so show those nice and blue
-        if (profile.isOrganisation) ...<Widget>[
+        if (profile.isOrganisation && profile.biography.isNotEmpty) ...<Widget>[
           Linkify(
             onOpen: (link) => launchUrl(Uri.parse(link.url)),
             text: profile.biography,
@@ -57,24 +53,23 @@ class ProfileBiographyTile extends ConsumerWidget {
           ),
         ],
         // if not an org - we only allow text to be shown here
-        if (!profile.isOrganisation) ...<Widget>[
+        if (!profile.isOrganisation && profile.biography.isNotEmpty) ...<Widget>[
           Text(
             profile.biography,
             style: typography.styleSubtitle.copyWith(color: colors.black),
           ),
         ],
         if (displayDetailsOption) ...<Widget>[
-          const SizedBox(height: kPaddingSmall),
           PositiveTapBehaviour(
             onTap: (_) => profile.navigateToProfileDetails(),
             isEnabled: !isBusy,
             child: Text(
-              'See More',
+              'View More',
               style: typography.styleSubtitleBold.copyWith(color: colors.colorGray7),
             ),
           ),
         ],
-      ],
+      ].spaceWithVertical(kPaddingSmall),
     );
   }
 }

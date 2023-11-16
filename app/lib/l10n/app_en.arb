@@ -625,6 +625,7 @@
 
     "shared_post_visibility_limited": "You’re unable to view this {displayName} as the author has limited its visibility",
     "shared_post_visibility_deleted": "This {displayName} has been deleted",
+    "shared_post_visibility_hidden": "You have hidden posts from this author",
     
     "shared_reaction_type_generic_everyone": "All Users",
     "shared_reaction_type_generic_connections": "Connections Only",
