@@ -104,31 +104,15 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           if (backgroundImage != null) ...<Widget>[
             Positioned.fill(
-              child: ShaderMask(
-                blendMode: BlendMode.srcATop,
-                shaderCallback: (bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    tileMode: TileMode.clamp,
-                    stops: const <double>[0.0, 0.8],
-                    colors: <Color>[
-                      backgroundColor.withOpacity(0.2),
-                      backgroundColor,
-                    ],
-                  ).createShader(bounds);
-                },
-                child: PositiveMediaImage(
-                  media: backgroundImage!,
-                  fit: BoxFit.cover,
-                ),
+              child: PositiveMediaImage(
+                media: backgroundImage!,
+                fit: BoxFit.cover,
               ),
             ),
-            //* Use the background color as a darkening overlay
-            //! TODO(ryan): Chat to Chris about how this needs to appear. (Color burns, requirements, etc).
             Positioned.fill(
-              child: ColoredBox(
-                color: backgroundColor.withOpacity(kOpacityQuarter),
+              child: IgnorePointer(
+                ignoring: true,
+                child: ColoredBox(color: backgroundColor.withAlpha(128)),
               ),
             ),
           ],
@@ -159,7 +143,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
               ],
               if (trailType == PositiveAppBarTrailType.concave) ...<Widget>[
                 _PositiveAppBarTrailConcave(
-                  backgroundColor: backgroundColor,
+                  backgroundColor: backgroundImage != null ? Colors.transparent : backgroundColor,
                   decorationColor: decorationColor,
                   trailType: trailType,
                 ),
