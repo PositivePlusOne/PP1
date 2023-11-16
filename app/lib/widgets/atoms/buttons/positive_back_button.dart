@@ -18,11 +18,13 @@ class PositiveBackButton extends ConsumerWidget {
   const PositiveBackButton({
     this.onBackSelected,
     this.isDisabled = false,
+    this.label,
     super.key,
   });
 
   final VoidCallback? onBackSelected;
   final bool isDisabled;
+  final String? label;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +40,7 @@ class PositiveBackButton extends ConsumerWidget {
           primaryColor: colors.black,
           isDisabled: isDisabled,
           onTapped: onBackSelected ?? () => appRouter.removeLast(),
-          label: localizations.shared_actions_back,
+          label: label ?? localizations.shared_actions_back,
           style: PositiveButtonStyle.text,
           layout: PositiveButtonLayout.textOnly,
           size: PositiveButtonSize.small,
