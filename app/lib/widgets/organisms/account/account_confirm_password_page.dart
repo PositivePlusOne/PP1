@@ -97,7 +97,7 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
           // isDisabled: !controller.isPasswordValid,
           label: pageType == AccountConfirmPageType.delete
               // when confirm to delete - show the delete text
-              ? localizations.page_confirm_password_delete_button
+              ? localizations.page_account_actions_change_delete_account_confirm_button
               // else show the standard form mode button texts
               : controller.state.formMode == FormMode.edit
                   ? localizations.shared_actions_confirm
