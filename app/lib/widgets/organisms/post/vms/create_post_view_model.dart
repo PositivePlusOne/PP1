@@ -114,15 +114,19 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     return CreatePostViewModelState.initialState();
   }
 
-  Future<void> goBack({
+  Future<bool> goBack({
     bool shouldForceClose = false,
   }) async {
+    //? Navigation not permitted while processing
+    if (state.isBusy) {
+      return false;
+    }
+
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final logger = ref.read(loggerProvider);
 
     final bool isHandlingVideo = state.currentCreatePostPage == CreatePostCurrentPage.camera && state.currentPostType == PostType.clip;
     final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
@@ -131,7 +135,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     // Quickly back out if we're editing any post
     if (state.isEditingPost && state.currentCreatePostPage.isCreationDialog) {
       router.removeLast();
-      return;
+      return false;
     }
 
     // Quickly back out if in the countdown
@@ -139,7 +143,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       await currentPositiveCameraState?.stopClipRecording();
       currentPositiveCameraState?.onClipResetState();
       displayCamera(PostType.clip);
-      return;
+      return false;
     }
 
     if (isRecordingVideo || state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
@@ -153,8 +157,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       );
 
       if (!hasAcceptedDiscardDialog) {
-        logger.d("User has not accepted discard dialog, do not close page");
-        return;
+        return false;
       }
 
       if (state.currentCreatePostPage == CreatePostCurrentPage.createPostEditClip) {
@@ -163,24 +166,47 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         currentPositiveCameraState?.onClipResetState();
       }
 
+      if (hasAcceptedDiscardDialog) {
+        clearVideoData();
+        clearPostData();
+        return false;
+      }
+
       // Close the video and remove the page
       if (shouldForceClose) {
         router.removeLast();
       }
-      return;
+      return false;
     } else {
+      if (shouldForceClose) {
+        if (await positiveDiscardPostDialogue(
+          context: context,
+          colors: colors,
+          typography: typography,
+        )) {
+          router.removeLast();
+        } else {
+          return false;
+        }
+      }
+
       // we actually always want to show a basic dialog telling them that quitting the dialog
       // will discard their post
-      bool isCancelDialogRequired = false;
+      bool userRequestedNavigation = false;
+
+      /// When , we want to confim that the user want's to discard
+      /// their progress before going back to the previous state
       switch (state.currentCreatePostPage) {
-        //? All create pages should request a dialog
+        //? Only the create page for post text and multi image are the last in the list so should request a dialog
         case CreatePostCurrentPage.createPostText:
         case CreatePostCurrentPage.createPostMultiImage:
-        case CreatePostCurrentPage.createPostImage:
-        case CreatePostCurrentPage.createPostClip:
         //? As edit photo is equivalent of edit clip, and does not have criteria, assume dialog functionality should match.
         case CreatePostCurrentPage.editPhoto:
-          isCancelDialogRequired = true;
+          userRequestedNavigation = await positiveDiscardPostDialogue(
+            context: context,
+            colors: colors,
+            typography: typography,
+          );
 
         //? PP1-615, back button on repost preview returns to last page
         case CreatePostCurrentPage.repostPreview:
@@ -190,25 +216,15 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         case CreatePostCurrentPage.entry:
         //? Edit Clip page has its own dialog above
         case CreatePostCurrentPage.createPostEditClip:
-        default:
-          isCancelDialogRequired = false;
+        //? Remaining create post pages always pop without asking
+        case CreatePostCurrentPage.createPostImage:
+        case CreatePostCurrentPage.createPostClip:
+          userRequestedNavigation = true;
       }
-      if (isCancelDialogRequired) {
-        final bool hasAcceptedDiscardDialog = await positiveDiscardPostDialogue(
-          context: context,
-          colors: colors,
-          typography: typography,
-        );
 
-        if (!hasAcceptedDiscardDialog) {
-          logger.d("User has not accepted discard dialog, do not close page");
-          return;
-        }
+      if (!userRequestedNavigation) {
+        return false;
       }
-    }
-
-    if (state.currentCreatePostPage.isCreationDialog) {
-      clearPostData();
     }
 
     switch (state.currentCreatePostPage) {
@@ -216,7 +232,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.repostPreview:
       case CreatePostCurrentPage.camera:
         await goBackFromCamera();
-        return;
+        return false;
       case CreatePostCurrentPage.createPostText:
         final bool isRepost = state.previousActivity.postType == PostType.repost;
         if (isRepost) {
@@ -227,6 +243,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         } else {
           displayCamera(PostType.image);
         }
+        clearPostData();
         break;
       case CreatePostCurrentPage.createPostImage:
         state = state.copyWith(
@@ -239,15 +256,18 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.editPhoto:
       case CreatePostCurrentPage.createPostMultiImage:
         displayCamera(PostType.image);
+        clearPostData();
         break;
       case CreatePostCurrentPage.createPostEditClip:
-        clearVideoData();
         displayCamera(PostType.clip);
+        clearVideoData();
+        clearPostData();
         break;
       case CreatePostCurrentPage.createPostClip:
         await loadUneditedVideo();
         break;
     }
+    return false;
   }
 
   Future<void> goBackFromCamera() async {
@@ -652,7 +672,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     videoEditorController = VideoEditorController.file(
       uneditedVideoFile!,
-      minDuration: const Duration(seconds: 1),
+      minDuration: const Duration(milliseconds: 10),
       maxDuration: const Duration(seconds: 180),
     );
 
@@ -708,7 +728,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       editingGalleryEntry: entries.firstOrNull,
       currentPostType: PostType.clip,
       activeButton: PositivePostNavigationActiveButton.flex,
-      activeButtonFlexText: localisations.shared_actions_next,
+      activeButtonFlexText: localisations.page_create_post_create,
     );
   }
 

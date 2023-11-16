@@ -85,7 +85,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
     //* -=-=-=-=-  Clip Timer Variables  -=-=-=-=- *\\
     required this.onRecordingLengthChanged,
     this.isRecordingLengthEnabled = false,
-    this.maxRecordingLength = 0,
+    this.maxRecordingLength = 10000,
     this.recordingLengthSelection = -1,
     this.recordingLengthOptions = const [],
     this.onCameraStarted,
@@ -147,7 +147,7 @@ class PositiveCamera extends StatefulHookConsumerWidget {
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
 
   /// maximum recording length of the clip in milliseconds
-  final int? maxRecordingLength;
+  final int maxRecordingLength;
 
   /// Strings for clip durations offered
   final List<String> recordingLengthOptions;
@@ -190,6 +190,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
   bool isPhysicalDevice = true;
 
   bool hasStartedCamera = false;
+
+  bool isBusy = false;
 
   ///? Location to access the current camera state outside of the builder
   CameraState? cachedCameraState;
@@ -516,6 +518,8 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       return;
     }
 
+    isBusy = true;
+
     final Logger logger = ref.read(loggerProvider);
     late final CameraState newCameraState;
 
@@ -524,11 +528,13 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       newCameraState = await cameraState.cameraContext.stateController.stream.firstWhere((element) => element is VideoCameraState || element is VideoRecordingCameraState);
     } catch (ex) {
       logger.w("Failed to get camera state, maybe unmounted? $ex");
+      isBusy = false;
       rethrow;
     }
 
     if (newCameraState is! VideoCameraState && newCameraState is! VideoRecordingCameraState) {
       logger.e("Error starting video recording: Camera state is not a video camera state");
+      isBusy = false;
       throw ("Error starting video recording: Camera state is not a video camera state");
     }
 
@@ -542,6 +548,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
         final MediaCapture? captureRequest = newCameraState.cameraContext.mediaCaptureController.value;
         if (captureRequest == null) {
           logger.e("Error starting video recording: No capture request was available");
+          isBusy = false;
           throw ("Error starting video recording: No capture request was available");
         }
 
@@ -550,7 +557,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
       clipRecordingState = ClipRecordingState.recording;
       widget.onClipStateChange?.call(clipRecordingState);
-      clipCurrentTime = widget.maxRecordingLength ?? 1;
+      clipCurrentTime = widget.maxRecordingLength;
       startRecordingTimer();
     } catch (e) {
       logger.e("Error starting video recording: $e");
@@ -577,6 +584,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       (timer) async {
         if (!mounted) {
           return;
+        }
+
+        if (isBusy && (widget.maxRecordingLength - clipCurrentTime) >= 500) {
+          isBusy = false;
         }
 
         if (clipCurrentTime <= 0) {
@@ -1227,6 +1238,10 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
 
   Future<void> onActiveButtonSelected(BuildContext context, CameraState state) async {
     final Logger logger = ref.read(loggerProvider);
+
+    if (isBusy) {
+      return;
+    }
 
     if (!widget.isVideoMode) {
       logger.d("Taking photo");

@@ -53,6 +53,7 @@ class CreatePostDialogue extends HookConsumerWidget {
     this.valueAllowSharing = false,
     this.valueSaveToGallery = false,
     this.valuePromotedPost = false,
+    this.onForceClosePressed,
     this.tags = const [],
     this.trailingWidget,
     this.sharingVisibility = const ActivitySecurityConfigurationMode.public(),
@@ -78,6 +79,8 @@ class CreatePostDialogue extends HookConsumerWidget {
   final Function(BuildContext context)? onUpdatePromotedPost;
   final Function(ActivitySecurityConfigurationMode)? onUpdateVisibleTo;
   final Function(ActivitySecurityConfigurationMode)? onUpdateAllowComments;
+
+  final Function()? onForceClosePressed;
 
   final ActivitySecurityConfigurationMode initialValueAllowComments;
   final ActivitySecurityConfigurationMode sharingVisibility;
@@ -148,6 +151,16 @@ class CreatePostDialogue extends HookConsumerWidget {
               style: PositiveButtonStyle.outline,
               onTapped: () => router.pop(),
             ),
+            trailing: [
+              if (onForceClosePressed != null)
+                PositiveButton.appBarIcon(
+                  colors: colours,
+                  icon: UniconsLine.multiply,
+                  primaryColor: colours.white,
+                  style: PositiveButtonStyle.outline,
+                  onTapped: () => onForceClosePressed!(),
+                ),
+            ],
           ),
           //* -=-=-=-=- Multi Image Thumbnails -=-=-=-=- *\\
           [

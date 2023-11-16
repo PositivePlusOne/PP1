@@ -58,7 +58,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
   Future<void> onFirstRender(Duration timeStamp) async {
     ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
-    if (widget.isEditPage || widget.activityData != null) {
+    if (widget.isEditPage && widget.activityData != null) {
       await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
       ref.read(createPostViewModelProvider.notifier).displayCamera(PostType.image);
@@ -85,19 +85,6 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     }
   }
 
-  Future<bool> _handleBackButton(CreatePostViewModelState state, CreatePostViewModel viewModel) async {
-    // we will let them go back out of this page if there's nothing going on...
-    if (state.isBusy) {
-      // don't let them quit
-      return false;
-    } else {
-      // let the view model decide where to go back
-      await viewModel.goBack();
-      // and not the base back action
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.watch(designControllerProvider.select((value) => value.colors));
@@ -112,14 +99,11 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
-    //? Aspect ratio of the available screen space used to measure the clip preview when taking video
-    // final double aspectRatio = (mediaQueryData.size.width - mediaQueryData.padding.right - mediaQueryData.padding.left) / (mediaQueryData.size.height - mediaQueryData.padding.bottom - mediaQueryData.padding.top);
-
     //? phone reserved bottom padding + navigation bar height + padding between navigation and bottom of the screen
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
     return WillPopScope(
-      onWillPop: () => _handleBackButton(state, viewModel),
+      onWillPop: () => viewModel.goBack(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: buildSystemUiOverlayStyle(appBarColor: colours.black, backgroundColor: colours.black),
         child: Scaffold(
@@ -294,6 +278,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
                       captionController: viewModel.captionController,
                       altTextController: viewModel.altTextController,
                       promotionKeyTextController: viewModel.promotionKeyTextController,
+                      onForceClosePressed: () => viewModel.goBack(shouldForceClose: true),
                       onTagsPressed: (context) => viewModel.onTagsPressed(),
                       onUpdateAllowSharing: (_) => viewModel.onUpdateAllowSharing(),
                       onUpdateAllowComments: viewModel.onUpdateAllowComments,

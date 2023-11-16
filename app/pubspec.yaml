@@ -164,7 +164,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/mocks/
     - assets/images/svg/
     - assets/images/png/
     - assets/maps/
