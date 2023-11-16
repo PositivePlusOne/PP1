@@ -1,0 +1,60 @@
+{
+  "name": "functions",
+  "scripts": {
+    "lint": "eslint --ext .js,.ts .",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "check-updates": "ncu -u",
+    "deploy": "firebase deploy --only functions",
+    "format": "prettier --write \"**/*.{js,ts}\"",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@types/cors": "^2.8.15",
+    "algoliasearch": "^4.20.0",
+    "api": "^6.1.1",
+    "axios": "^1.6.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "cross-fetch": "^4.0.0",
+    "crypto": "^1.0.1",
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.5.0",
+    "flamelink": "^1.0.0-rc.2",
+    "getstream": "^8.4.0",
+    "i18next": "^23.6.0",
+    "ioredis": "^5.3.2",
+    "lodash": "^4.17.21",
+    "npm-check-updates": "^16.14.4",
+    "postmark": "^3.1.1",
+    "remove-markdown": "^0.5.0",
+    "safe-json-stringify": "^1.2.0",
+    "stream-chat": "^8.14.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.200",
+    "@types/node": "^20.8.10",
+    "@types/node-fetch": "^2.6.8",
+    "@types/remove-markdown": "^0.3.3",
+    "@types/safe-json-stringify": "^1.1.4",
+    "@types/uuid": "^9.0.6",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "eslint": "^8.52.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "firebase-functions-test": "^3.1.0",
+    "prettier": "3.0.3",
+    "typescript": "^5.2.2"
+  },
+  "private": true
+}

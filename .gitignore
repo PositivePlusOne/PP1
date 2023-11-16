@@ -1,10 +1,31 @@
 
-.vscode/launch.json
+.fvm/flutter_sdk
 
 **/.flutter-plugins-dependencies
+.idea
 
 **/coverage/lcov.info
 **/coverage/html/**
 **/.flutter-plugins
+**/.DS_Store
 
 clients/ppoa/test/rules/node_modules/**
+clients/ppoa/pubspec.lock
+clients/ppoa/pubspec.lock
+app/.fvm/flutter_sdk
+
+app/.fvm/flutter_sdk
+app/functions/firebase-export-*
+
+.vscode/launch.json
+clients/ppoa/linux/flutter/ephemeral
+clients/ppoa/macos/Flutter/ephemeral
+clients/ppoa/windows/flutter/ephemeral
+clients/ppoa/ios/Runner/Generated*
+clients/ppoa/ios/Flutter/Generated*
+clients/ppoa/ios/Flutter/flutter_export_environment.sh
+clients/ppoa/android/local.properties
+clients/ppoa/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+clients/ppoa/android/.gradle
+clients/ppoa/.dart_tool
+app/ios/Podfile.lock

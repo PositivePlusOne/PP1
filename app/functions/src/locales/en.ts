@@ -1,0 +1,123 @@
+export const enTranslations = {
+  interests: {
+    attendingEvents: "Attend Events",
+    meetNewPeople: "Meet New People",
+    getAdvice: "Get Advice",
+    joinACommunity: "Join a Community",
+    dating: "Dating",
+  },
+  genders: {
+    man: "Man",
+    woman: "Woman",
+    androgynous: "Androgynous",
+    bigender: "Bigender",
+    demigirl: "Demigirl",
+    demiguy: "Demiguy",
+    feminine: "Feminine",
+    femme: "Femme",
+    genderqueer: "Genderqueer",
+    genderfluid: "Genderfluid",
+    intersex: "Intersex",
+    masculine: "Masculine",
+    neutrois: "Neutrois",
+    nonbinary: "Nonbinary",
+    gender: "Gender Other",
+    pangender: "Pangender",
+    thirdGender: "Third Gender",
+    transgender: "Transgender",
+    transMan: "Trans Man",
+    transWomen: "Trans Woman",
+  },
+  companySectors: {
+    charity: "Charity",
+    multinational: "Multinational Organisation",
+    government: "Government Body",
+    healthcare_private: "Healthcare (Private)",
+    healthcare_public: "Healthcare (Public)",
+    pharmaceutical: "Pharmaceutical Company",
+    diagnostics: "Diagnostics Company",
+    other: "Other Company",
+    not_for_profit: "Other not-for-profit",
+  },
+  hivStatus: {
+    livingWithHiv: {
+      label: "Living with HIV",
+      children: {
+        positive: "Positive",
+        undetectable: "Undetectable",
+        negative: "Negative",
+        negativeOnPrep: "Negative on PrEP",
+        unsure: "Unsure",
+        ratherNotSay: "Rather Not Say",
+      },
+    },
+    affectedByHiv: {
+      label: "Affected by HIV",
+      children: {
+        parentOf: "Parent of",
+        siblingOf: "Sibling of",
+        relative: "Relative",
+        friend: "Friend",
+        other: "Other",
+      },
+    },
+  },
+  notifications: {
+    connection_accepted: {
+      title: "Connection request accepted",
+      body: "**@{{displayName}}** has accepted your connection request.",
+    },
+    connection_rejected: {
+      title: "Connection request rejected",
+      body: "**@{{displayName}}** has rejected your connection request.",
+    },
+    connection_received: {
+      title: "Connection request received",
+      body: "Connection request from **@{{displayName}}**",
+    },
+    connection_sent: {
+      title: "Connection request sent",
+      body: "You have sent a new connection request to **@{{displayName}}**",
+    },
+    post_comment: {
+      title: "New comment",
+      body: "**@{{displayName}}** commented on **{{shortBody}}**",
+      body_empty: "**@{{displayName}}** commented on your post",
+    },
+    post_comment_grouped: {
+      title: "New comment",
+      body: "**{{count}}** comments on **{{shortBody}}**",
+      body_empty: "**{{count}}** comments on your post",
+    },
+    post_liked: {
+      title: "New like",
+      body: "**@{{displayName}}** liked **{{shortBody}}**",
+      body_empty: "**@{{displayName}}** liked your post",
+    },
+    post_liked_grouped: {
+      title: "New like",
+      body: "**{{count}}** likes on **{{shortBody}}**",
+      body_empty: "**{{count}}** likes on your post",
+    },
+    post_shared: {
+      title: "New share",
+      body: "**@{{displayName}}** shared **{{shortBody}}**",
+      body_empty: "**@{{displayName}}** shared your post",
+    },
+    post_shared_grouped: {
+      title: "New share",
+      body: "**{{count}}** shares on **{{shortBody}}**",
+      body_empty: "**{{count}}** shares on your post",
+    },
+    post_bookmarked: {
+      title: "New bookmark",
+      body: "**@{{displayName}}** bookmarked **{{shortBody}}**",
+      body_empty: "**@{{displayName}}** bookmarked your post",
+    },
+    post_bookmarked_grouped: {
+      title: "New bookmark",
+      body: "**{{count}}** bookmarks on **{{shortBody}}**",
+      body_empty: "**{{count}}** bookmarks on your post",
+    },
+  },
+};

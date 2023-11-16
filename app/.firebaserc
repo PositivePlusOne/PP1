@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "positiveplusone-develop",
+    "staging": "positiveplusone-staging",
+    "production": "positiveplusone-production"
+  }
+}

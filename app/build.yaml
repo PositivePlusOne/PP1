@@ -1,0 +1,40 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          explicit_to_json: true
+        generate_for:
+          include:
+            - lib/**_view_model.dart
+            - lib/**_controller.dart
+            - lib/**_model.dart
+            - lib/dtos/**.dart
+            - lib/gen/**.dart
+      freezed|freezed:
+        options:
+          enable_cached_builds: true
+        generate_for:
+          include:
+            - lib/**_view_model.dart
+            - lib/**_controller.dart
+            - lib/**_model.dart
+            - lib/dtos/**.dart
+            - lib/gen/**.dart
+      riverpod_generator:riverpod_generator:
+        options:
+          enable_cached_builds: true
+        generate_for:
+          include:
+            - lib/**_view_model.dart
+            - lib/**_controller.dart
+            - lib/**_model.dart
+            - lib/dtos/**.dart
+            - lib/services/**.dart
+            - lib/gen/**.dart
+      auto_route_generator:auto_route_generator:
+        options:
+          enable_cached_builds: true
+        generate_for:
+            - lib/widgets/**_page.dart
+            - lib/gen/**.dart

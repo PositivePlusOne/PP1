@@ -1,0 +1,32 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /flamelink/{allPaths=**} {
+      allow read: if true;
+      allow update: if false;
+      allow create: if false;
+      allow delete: if false;
+    }
+
+    match /users/{userId}/gallery/{allPaths=**} {
+      allow read: if true;
+      allow update: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow create: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow delete: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+    }
+
+    match /users/{userId}/public/{allPaths=**} {
+      allow read: if true;
+      allow update: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow create: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow delete: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+    }
+
+    match /users/{userId}/private/{allPaths=**} {
+      allow read: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow update: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow create: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+      allow delete: if (request.auth != null && request.auth.uid == userId) || (userId in request.auth.token.managedProfiles);
+    }
+  }
+}

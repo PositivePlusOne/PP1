@@ -1,0 +1,19 @@
+{
+    "aps" : {
+        "alert": {
+            "title": "@{{ sender.name }}",
+            "body": "{{ truncate message.text 2000 }}"
+        },
+        "mutable-content": 1,
+        "category": "stream.chat"
+    },
+    "stream": {
+        "sender": "stream.chat",
+        "type": "message.new",
+        "version": "v2",
+        "id": "{{ message.id }}",
+        "cid": "{{ channel.cid }}",
+        "title": "@{{ sender.name }}",
+        "body": "{{ truncate message.text 2000 }}"
+    }
+}

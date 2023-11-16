@@ -1,0 +1,222 @@
+name: app
+description: The Positive +1 application.
+publish_to: "none"
+version: 3.1.195+195
+
+environment:
+  sdk: ">=3.0.0 <=4.0.0"
+
+dependency_override:
+  simple_animations: 5.0.2
+  video_player: 2.6.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  hooks_riverpod: ^2.3.6
+  riverpod_annotation: ^2.1.1
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.8.1
+  shared_preferences: ^2.1.1
+  permission_handler: ^11.0.1
+  flutter_cache_manager: ^3.3.1
+  local_auth: ^2.1.6
+  event_bus: ^2.0.0
+  flutter_local_notifications: ^16.1.0
+  universal_platform: 1.0.0+1
+  tuple: ^2.0.1
+  synchronized: ^3.1.0
+  collection: ^1.17.1
+  rxdart: ^0.27.7
+  infinite_scroll_pagination: ^4.0.0
+  flutter_secure_storage: ^9.0.0
+  cron: ^0.5.1
+
+  # Backend
+  firebase_core: ^2.21.0
+  firebase_auth: ^4.12.1
+  firebase_messaging: ^14.7.3
+  firebase_crashlytics: ^3.4.3
+  firebase_storage: ^11.4.1
+  firebase_remote_config: ^4.3.3
+  cloud_firestore: ^4.12.2
+  cloud_functions: ^4.5.3
+  firebase_performance: ^0.9.3+3
+  google_sign_in: ^6.1.4
+  mixpanel_flutter: ^2.1.1
+  freerasp: ^6.2.0
+  stream_chat_flutter: ^7.0.0-beta.4
+  algolia: ^1.1.2
+
+  google_mlkit_face_detection: 0.6.0
+  google_mlkit_commons: 0.3.0
+
+  # Logging and Tracing
+  logger: ^2.0.1
+  device_info_plus: ^9.0.2
+
+  # UI and Localization
+  unicons: ^2.1.1
+  flutter_svg: ^2.0.7
+  sliver_tools: ^0.2.10
+  intl: any
+  smooth_page_indicator: ^1.1.0
+  markdown_widget: ^2.2.0
+  html2md: ^1.3.0
+  fluent_validation: ^2.1.1
+  calendar_date_picker2: ^0.5.3
+  image_picker: ^1.0.4
+  expandable: ^5.0.1
+  banner_carousel: ^1.2.1
+  entry: ^0.0.8+1
+  adaptive_dialog: ^1.9.0-0
+  auto_size_text: ^3.0.0
+  flutter_staggered_grid_view: ^0.7.0
+  wheel_chooser: ^1.1.2
+  custom_refresh_indicator: ^3.0.0
+
+  # Mapping
+  geolocator: ^10.0.0
+  google_maps_flutter: ^2.3.1
+  google_maps_webservice: 0.0.20-nullsafety.5
+
+  # Routing, Linking, and Sharing
+  auto_route: ^7.8.3
+  app_links: ^3.4.3
+  share_plus: ^7.1.0
+  
+  # video and image
+  camerawesome: ^2.0.0-dev.1
+  mime: ^1.0.4
+  flutter_image_compress: ^2.0.4
+  video_editor: ^3.0.0
+  ffmpeg_kit_flutter_full_gpl: ^6.0.3-LTS
+  photo_view: ^0.14.0
+  video_player_avfoundation: ^2.5.1
+  media_kit: ^1.1.10                             # Primary package.
+  media_kit_video: ^1.2.4                        # For video rendering.
+  media_kit_libs_video: ^1.0.4                   # Native video dependencies.
+
+  # Other
+  path_provider: ^2.0.15
+  transparent_image: ^2.0.1
+  open_settings_plus: ^0.1.0
+  package_info_plus: ^4.0.2
+  profanity_filter: ^2.0.0
+  very_good_infinite_list: ^0.7.0
+  url_launcher: ^6.1.12
+  android_intent_plus: ^4.0.3
+  visibility_detector: ^0.4.0+2
+  flutter_linkify: ^6.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Linting and Analysis
+  flutter_lints: ^2.0.1
+  riverpod_lint: ^2.0.1
+  import_sorter: ^4.6.0
+  custom_lint: ^0.5.2
+
+  # Metaprogramming
+  spider: ^4.2.1
+  build_runner: ^2.4.4
+  auto_route_generator: ^7.2.0
+  json_serializable: ^6.6.2
+  riverpod_generator: ^2.2.3
+
+  # State Management
+  freezed: ^2.3.4
+  mocktail: ^1.0.0
+
+  # UI
+  flutter_native_splash: ^2.2.19
+  flutter_launcher_icons: ^0.13.1
+  clippy_flutter: ^2.0.0-nullsafety.1
+  neumorphic_ui: ^1.0.1
+
+flutter_native_splash:
+  background_image: "assets/icons/launcher_bg.png"
+  image: "assets/icons/launcher_fg.png"
+  fullscreen: true
+
+  android_12:
+    image: "assets/icons/launcher_fg.png"
+    color: "#FFFFFF"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/launcher.png"
+  adaptive_icon_background: "assets/icons/launcher_bg.png"
+  adaptive_icon_foreground: "assets/icons/launcher_fg.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - assets/images/svg/
+    - assets/images/png/
+    - assets/maps/
+
+  fonts:
+    - family: BN
+      fonts:
+        - asset: assets/fonts/BN/BNSuper-Sized.otf
+
+    - family: AlbertSans
+      fonts:
+        - asset: assets/fonts/AlbertSans/AlbertSans-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/AlbertSans/AlbertSans-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Light.ttf
+          weight: 300
+        - asset: assets/fonts/AlbertSans/AlbertSans-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/AlbertSans/AlbertSans-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/AlbertSans/AlbertSans-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/AlbertSans/AlbertSans-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/AlbertSans/AlbertSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/AlbertSans/AlbertSans-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/AlbertSans/AlbertSans-Black.ttf
+          weight: 900
+        - asset: assets/fonts/AlbertSans/AlbertSans-BlackItalic.ttf
+          weight: 900
+          style: italic
