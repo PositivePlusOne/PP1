@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -133,6 +134,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final bool displayActivityIds = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
@@ -172,11 +174,22 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     final Relationship? actualRelationship = isRepost ? widget.reposterRelationship : widget.targetRelationship;
 
     ActivitySecurityConfigurationMode viewMode = widget.activity?.securityConfiguration?.viewMode ?? const ActivitySecurityConfigurationMode.disabled();
+    final Activity? focusActivity = widget.reposterActivity ?? widget.activity;
+
     final bool canView = viewMode.canActOnActivity(
-      activity: widget.reposterActivity ?? widget.activity,
+      activity: focusActivity,
       currentProfile: widget.currentProfile,
       publisherRelationship: actualRelationship,
     );
+
+    final ActivityGeneralConfigurationType postType = focusActivity?.generalConfiguration?.type ?? const ActivityGeneralConfigurationType.post();
+    final String postTypeLocale = ActivityGeneralConfigurationType.toLocale(postType, localizations).toLowerCase();
+
+    // Decide what error message to display if the user can't view the post
+    String cannotDisplayErrorBody = localizations.shared_post_visibility_deleted(postTypeLocale);
+    if (focusActivity?.hasContentToDisplay == true) {
+      cannotDisplayErrorBody = localizations.shared_post_visibility_limited(postTypeLocale);
+    }
 
     // Reposts are always shareable as they share a copy of the original post
     ActivitySecurityConfigurationMode shareMode = widget.activity?.securityConfiguration?.shareMode ?? const ActivitySecurityConfigurationMode.disabled();
@@ -185,7 +198,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     }
 
     final bool canActShare = shareMode.canActOnActivity(
-      activity: widget.reposterActivity ?? widget.activity,
+      activity: focusActivity,
       currentProfile: widget.currentProfile,
       publisherRelationship: actualRelationship,
     );
@@ -337,13 +350,10 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
           ] else ...<Widget>[
             Padding(
-              padding: const EdgeInsets.only(
-                left: kPaddingMedium,
-                right: kPaddingMedium,
-                top: kPaddingSmall,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSmall),
               child: Text(
-                'The author of this post has limited it\'s visibility. Why not explore some of their other content?',
+                cannotDisplayErrorBody,
+                textAlign: TextAlign.left,
                 style: typography.styleBody.copyWith(color: colors.black),
               ),
             ),

@@ -70,6 +70,14 @@ class ActivityGeneralConfigurationType with _$ActivityGeneralConfigurationType {
     );
   }
 
+  static String toLocale(ActivityGeneralConfigurationType type, AppLocalizations localizations) {
+    return type.when(
+      post: () => localizations.page_home_post_post,
+      event: () => localizations.page_home_post_event,
+      clip: () => localizations.page_home_post_clip,
+    );
+  }
+
   factory ActivityGeneralConfigurationType.fromJson(String value) {
     switch (value) {
       case 'event':
