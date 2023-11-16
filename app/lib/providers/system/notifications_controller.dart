@@ -236,7 +236,7 @@ class NotificationsController extends _$NotificationsController {
 
     if (event.isStreamChatNotification) {
       logger.d('onRemoteNotificationReceived: Stream chat message, handling');
-      await handleStreamChatMessage(event: event, isForeground: true);
+      await handleStreamChatMessage(event: event, isForeground: isForeground);
       return;
     }
 
