@@ -37,11 +37,11 @@ class NotificationTopic with _$NotificationTopic {
 
   static Set<NotificationTopic> get allTopics => {
         const NotificationTopic.postLikes(),
-        const NotificationTopic.newFollower(),
+        // const NotificationTopic.newFollower(),
         const NotificationTopic.connectionRequest(),
         const NotificationTopic.newComment(),
         const NotificationTopic.newMessage(),
-        const NotificationTopic.postShared(),
+        // const NotificationTopic.postShared(),
         const NotificationTopic.other(),
         //! PP1-984
         // const NotificationTopic.sharedEvent(),
