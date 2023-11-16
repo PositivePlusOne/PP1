@@ -671,7 +671,6 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
     required Profile? currentProfile,
     required Relationship? publisherRelationship,
   }) {
-    final Logger logger = providerContainer.read(loggerProvider);
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String publisherProfileId = activity?.publisherInformation?.publisherId ?? '';
 
@@ -699,12 +698,11 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
       return false;
     }
 
-    // If you're logged out with no relationship, and the content is public, you can see it
-    if (publisherRelationship == null) {
+    if (currentProfileId.isEmpty) {
       return this == const ActivitySecurityConfigurationMode.public();
     }
 
-    final Set<RelationshipState> relationshipStates = publisherRelationship.relationshipStatesForEntity(currentProfileId);
+    final Set<RelationshipState> relationshipStates = publisherRelationship?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool isConnected = relationshipStates.contains(RelationshipState.sourceConnected) && relationshipStates.contains(RelationshipState.targetConnected);
     final bool isFollowing = relationshipStates.contains(RelationshipState.sourceFollowed);
     final bool isBlocked = relationshipStates.contains(RelationshipState.targetBlocked);
