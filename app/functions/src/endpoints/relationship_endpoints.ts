@@ -234,11 +234,14 @@ export namespace RelationshipEndpoints {
       await ChatConnectionReceivedNotification.sendNotification(userProfile, targetProfile);
     }
 
+    const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
+    const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
+
     await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [newRelationship],
+      data: [newRelationship, newSourceStats, newTargetStats],
     });
   });
 
