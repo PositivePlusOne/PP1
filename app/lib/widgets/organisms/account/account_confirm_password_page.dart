@@ -60,10 +60,7 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
     switch (pageType) {
       case AccountConfirmPageType.delete:
         {
-          if (await controller.onConfirmPasswordRequested()) {
-            // the password is good
-            await viewModel.onAccountDeleteOptionSelected();
-          }
+          await viewModel.onAccountDeleteOptionSelected();
           break;
         }
     }
@@ -101,7 +98,7 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
           colors: colors,
           primaryColor: colors.black,
           onTapped: () => _completePage(controller, viewModel),
-          isDisabled: !controller.isPasswordValid,
+          // isDisabled: !controller.isPasswordValid,
           label: pageType == AccountConfirmPageType.delete
               // when confirm to delete - show the delete text
               ? localizations.page_confirm_password_delete_button
@@ -115,45 +112,45 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            const PositiveBackButton(),
+            PositiveBackButton(label: localizations.shared_actions_cancel),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_confirm_password_enter,
+              localizations.page_account_actions_change_delete_account_confirm_title,
               style: typography.styleHero.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
             Text(
-              localizations.page_confirm_password_delete_body,
+              localizations.page_account_actions_change_delete_account_confirm_body,
               style: typography.styleBody.copyWith(color: colors.black),
             ),
-            const SizedBox(height: kPaddingSmall),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IntrinsicWidth(
-                child: PositiveButton(
-                  colors: colors,
-                  primaryColor: colors.black,
-                  isDisabled: false,
-                  onTapped: () => viewModel.onPasswordResetOptionSelected(),
-                  label: localizations.page_login_password_forgotten,
-                  style: PositiveButtonStyle.text,
-                  layout: PositiveButtonLayout.textOnly,
-                  size: PositiveButtonSize.small,
-                ),
-              ),
-            ),
-            const SizedBox(height: kPaddingMedium),
-            PositiveTextField(
-              labelText: 'Password',
-              initialText: state.password,
-              onTextChanged: controller.onPasswordChanged,
-              tintColor: tintColor,
-              suffixIcon: suffixIcon,
-              isEnabled: !state.isBusy,
-              obscureText: true,
-              autocorrect: false,
-              autofocus: true,
-            ),
+            // const SizedBox(height: kPaddingSmall),
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: IntrinsicWidth(
+            //     child: PositiveButton(
+            //       colors: colors,
+            //       primaryColor: colors.black,
+            //       isDisabled: false,
+            //       onTapped: () => viewModel.onPasswordResetOptionSelected(),
+            //       label: localizations.page_login_password_forgotten,
+            //       style: PositiveButtonStyle.text,
+            //       layout: PositiveButtonLayout.textOnly,
+            //       size: PositiveButtonSize.small,
+            //     ),
+            //   ),
+            // ),
+            // const SizedBox(height: kPaddingMedium),
+            // PositiveTextField(
+            //   labelText: 'Password',
+            //   initialText: state.password,
+            //   onTextChanged: controller.onPasswordChanged,
+            //   tintColor: tintColor,
+            //   suffixIcon: suffixIcon,
+            //   isEnabled: !state.isBusy,
+            //   obscureText: true,
+            //   autocorrect: false,
+            //   autofocus: true,
+            // ),
           ],
         ),
       ],
