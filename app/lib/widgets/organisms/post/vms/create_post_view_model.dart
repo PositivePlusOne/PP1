@@ -672,7 +672,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     videoEditorController = VideoEditorController.file(
       uneditedVideoFile!,
-      minDuration: const Duration(seconds: 1),
+      minDuration: const Duration(milliseconds: 10),
       maxDuration: const Duration(seconds: 180),
     );
 
@@ -728,7 +728,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       editingGalleryEntry: entries.firstOrNull,
       currentPostType: PostType.clip,
       activeButton: PositivePostNavigationActiveButton.flex,
-      activeButtonFlexText: localisations.shared_actions_next,
+      activeButtonFlexText: localisations.page_create_post_create,
     );
   }
 
