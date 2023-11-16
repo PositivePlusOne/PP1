@@ -723,11 +723,10 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class _AvatarList extends ConsumerWidget {
   const _AvatarList({
-    Key? key,
     required this.members,
     required this.sourceBlockedRelationships,
     required this.targetBlockedRelationships,
-  }) : super(key: key);
+  });
 
   final List<Profile> members;
   final List<Relationship> sourceBlockedRelationships;

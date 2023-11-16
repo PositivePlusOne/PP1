@@ -105,8 +105,7 @@ class PositiveScaffold extends ConsumerWidget {
 
   static MediaQueryData buildMediaQuery(MediaQueryData mediaQueryData) {
     return mediaQueryData.copyWith(
-      textScaleFactor: 1.0,
-      boldText: false,
+      boldText: false, textScaler: const TextScaler.linear(1.0),
     );
   }
 
