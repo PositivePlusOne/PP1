@@ -173,16 +173,19 @@ class GetStreamController extends _$GetStreamController {
 
     try {
       final Filter filter = Filter.in_('members', [profileController.currentProfileId!]);
-      channelsSubscription = streamChatClient
-          .queryChannels(
-            filter: filter,
-            messageLimit: 1,
-            watch: true,
-            presence: true,
-            state: true,
-            paginationParams: const PaginationParams(limit: 30),
-          )
-          .listen(onChannelsUpdated);
+      final Stream<List<Channel>> channelQuery = streamChatClient.queryChannels(
+        filter: filter,
+        messageLimit: 1,
+        watch: true,
+        presence: true,
+        state: true,
+        paginationParams: const PaginationParams(limit: 30),
+      );
+
+      channelsSubscription = channelQuery.listen(onChannelsUpdated, onError: (err) {
+        log.e('[GetStreamController] setupProfileListeners() error: $err');
+        state = state.copyWith(hasFetchedInitialChannels: true);
+      });
     } catch (e) {
       log.e('[GetStreamController] setupProfileListeners() error: $e');
       //? This can be thrown from the internal framework for a number of reasons
@@ -205,15 +208,15 @@ class GetStreamController extends _$GetStreamController {
     Channel? newChannel;
 
     try {
-      newChannel = (await streamChatClient
-              .queryChannels(
-                filter: Filter.equal('cid', channel.cid!),
-                watch: false,
-                state: true,
-                paginationParams: const PaginationParams(limit: 30),
-              )
-              .first)
-          .firstOrNull;
+      final Stream<List<Channel>> searchQuery = streamChatClient.queryChannels(
+        filter: Filter.equal('cid', channel.cid!),
+        watch: false,
+        state: true,
+        paginationParams: const PaginationParams(limit: 30),
+      );
+
+      final List<Channel>? result = await searchQuery.firstOrNull;
+      newChannel = result?.firstOrNull;
     } catch (e) {
       log.e('[GetStreamController] forceChannelUpdate() error: $e');
       return null;

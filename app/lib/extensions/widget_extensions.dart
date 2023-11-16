@@ -57,6 +57,10 @@ extension WidgetListExtensions on List<Widget> {
     final List<Widget> result = <Widget>[];
     final int totalLength = length;
     for (int i = 0; i < totalLength; i++) {
+      if (i >= length) {
+        break;
+      }
+
       final Widget widget = this[i];
 
       // Assume that if the widget is a SizedBox, then it's a separator.
