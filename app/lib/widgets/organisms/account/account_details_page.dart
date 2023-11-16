@@ -157,7 +157,7 @@ class AccountDetailsPage extends HookConsumerWidget {
     required Profile? profile,
     required Profile? ownerProfile,
   }) {
-    final bool isOwner = profile?.flMeta?.id != null && profile?.flMeta?.ownedBy == null || profile?.flMeta?.ownedBy == profile?.flMeta?.id;
+    final bool isOwner = profile?.isCurrentlyOwnedByUser() == true;
     return <Widget>[
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -172,6 +172,7 @@ class AccountDetailsPage extends HookConsumerWidget {
             PositiveProfileCircularIndicator(
               profile: profile,
               size: kIconHuge,
+              iconColor: profile?.profileImage == null ? colors.yellow : colors.white,
               icon: UniconsLine.camera_change,
               onTap: () => PositiveDialog.show(
                 title: 'Photo options',

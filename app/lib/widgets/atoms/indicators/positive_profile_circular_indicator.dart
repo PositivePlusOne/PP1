@@ -31,6 +31,7 @@ class PositiveProfileCircularIndicator extends ConsumerStatefulWidget {
     this.borderThickness = kBorderThicknessSmall,
     this.borderPadding = kPaddingSmall,
     this.icon,
+    this.iconColor,
     this.complimentRingColorForBackground = false,
     this.backgroundColorOverride,
     this.ringColorOverride,
@@ -48,6 +49,8 @@ class PositiveProfileCircularIndicator extends ConsumerStatefulWidget {
   final bool isEnabled;
 
   final IconData? icon;
+  final Color? iconColor;
+
   final bool complimentRingColorForBackground;
 
   final Color? backgroundColorOverride;
@@ -151,7 +154,7 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
             child: Icon(
               size: kIconMedium,
               widget.icon,
-              color: colours.white,
+              color: widget.iconColor ?? colours.white,
             ),
           ),
         ],
@@ -160,7 +163,7 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
             child: Icon(
               size: kIconMedium,
               Icons.person,
-              color: colours.yellow,
+              color: widget.iconColor ?? colours.yellow,
             ),
           ),
         ],

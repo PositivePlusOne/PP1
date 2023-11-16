@@ -30,6 +30,7 @@ part 'user_controller.g.dart';
 class UserControllerState with _$UserControllerState {
   const factory UserControllerState({
     required DateTime last2FACheck,
+    @Default({}) Map<String, dynamic> currentClaims,
   }) = _UserControllerState;
 
   factory UserControllerState.initialState() => UserControllerState(
@@ -99,11 +100,20 @@ class UserController extends _$UserController {
 
     if (user == null) {
       log.d('[UserController] onUserUpdated() user is null');
+      state = state.copyWith(currentClaims: {});
       return;
     }
 
     log.d('Identifying mixpanel for new user');
     mixpanel.identify(user.uid);
+
+    log.d('Preloading user claims into state');
+    try {
+      final Map<String, dynamic> claims = await user.getIdTokenResult().then((token) => token.claims ?? {});
+      state = state.copyWith(currentClaims: claims);
+    } catch (e) {
+      log.e('Failed to preload user claims into state');
+    }
 
     log.d('Notifying user changed stream');
     userChangedController.sink.add(user);
