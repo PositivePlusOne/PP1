@@ -58,7 +58,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
   Future<void> onFirstRender(Duration timeStamp) async {
     ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
-    if (widget.isEditPage || widget.activityData != null) {
+    if (widget.isEditPage && widget.activityData != null) {
       await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
       ref.read(createPostViewModelProvider.notifier).displayCamera(PostType.image);
