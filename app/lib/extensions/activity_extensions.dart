@@ -699,9 +699,10 @@ extension ActivitySecurityConfigurationModeExtensions on ActivitySecurityConfigu
       return false;
     }
 
+    // If you're logged out with no relationship, and the content is public, you can see it
     if (publisherRelationship == null) {
       logger.e('canActOnSecurityMode() - relationship is null');
-      return false;
+      return this == const ActivitySecurityConfigurationMode.public();
     }
 
     final Set<RelationshipState> relationshipStates = publisherRelationship.relationshipStatesForEntity(currentProfileId);
