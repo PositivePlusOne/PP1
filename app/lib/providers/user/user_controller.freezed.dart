@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$UserControllerState {
   DateTime get last2FACheck => throw _privateConstructorUsedError;
+  Map<String, dynamic> get currentClaims => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $UserControllerStateCopyWith<UserControllerState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $UserControllerStateCopyWith<$Res> {
           UserControllerState value, $Res Function(UserControllerState) then) =
       _$UserControllerStateCopyWithImpl<$Res, UserControllerState>;
   @useResult
-  $Res call({DateTime last2FACheck});
+  $Res call({DateTime last2FACheck, Map<String, dynamic> currentClaims});
 }
 
 /// @nodoc
@@ -46,12 +47,17 @@ class _$UserControllerStateCopyWithImpl<$Res, $Val extends UserControllerState>
   @override
   $Res call({
     Object? last2FACheck = null,
+    Object? currentClaims = null,
   }) {
     return _then(_value.copyWith(
       last2FACheck: null == last2FACheck
           ? _value.last2FACheck
           : last2FACheck // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      currentClaims: null == currentClaims
+          ? _value.currentClaims
+          : currentClaims // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ) as $Val);
   }
 }
@@ -64,7 +70,7 @@ abstract class _$$UserControllerStateImplCopyWith<$Res>
       __$$UserControllerStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime last2FACheck});
+  $Res call({DateTime last2FACheck, Map<String, dynamic> currentClaims});
 }
 
 /// @nodoc
@@ -79,12 +85,17 @@ class __$$UserControllerStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? last2FACheck = null,
+    Object? currentClaims = null,
   }) {
     return _then(_$UserControllerStateImpl(
       last2FACheck: null == last2FACheck
           ? _value.last2FACheck
           : last2FACheck // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      currentClaims: null == currentClaims
+          ? _value._currentClaims
+          : currentClaims // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -92,14 +103,25 @@ class __$$UserControllerStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$UserControllerStateImpl implements _UserControllerState {
-  const _$UserControllerStateImpl({required this.last2FACheck});
+  const _$UserControllerStateImpl(
+      {required this.last2FACheck,
+      final Map<String, dynamic> currentClaims = const {}})
+      : _currentClaims = currentClaims;
 
   @override
   final DateTime last2FACheck;
+  final Map<String, dynamic> _currentClaims;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get currentClaims {
+    if (_currentClaims is EqualUnmodifiableMapView) return _currentClaims;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_currentClaims);
+  }
 
   @override
   String toString() {
-    return 'UserControllerState(last2FACheck: $last2FACheck)';
+    return 'UserControllerState(last2FACheck: $last2FACheck, currentClaims: $currentClaims)';
   }
 
   @override
@@ -108,11 +130,14 @@ class _$UserControllerStateImpl implements _UserControllerState {
         (other.runtimeType == runtimeType &&
             other is _$UserControllerStateImpl &&
             (identical(other.last2FACheck, last2FACheck) ||
-                other.last2FACheck == last2FACheck));
+                other.last2FACheck == last2FACheck) &&
+            const DeepCollectionEquality()
+                .equals(other._currentClaims, _currentClaims));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, last2FACheck);
+  int get hashCode => Object.hash(runtimeType, last2FACheck,
+      const DeepCollectionEquality().hash(_currentClaims));
 
   @JsonKey(ignore: true)
   @override
@@ -123,11 +148,14 @@ class _$UserControllerStateImpl implements _UserControllerState {
 }
 
 abstract class _UserControllerState implements UserControllerState {
-  const factory _UserControllerState({required final DateTime last2FACheck}) =
-      _$UserControllerStateImpl;
+  const factory _UserControllerState(
+      {required final DateTime last2FACheck,
+      final Map<String, dynamic> currentClaims}) = _$UserControllerStateImpl;
 
   @override
   DateTime get last2FACheck;
+  @override
+  Map<String, dynamic> get currentClaims;
   @override
   @JsonKey(ignore: true)
   _$$UserControllerStateImplCopyWith<_$UserControllerStateImpl> get copyWith =>

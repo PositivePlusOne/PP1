@@ -20,6 +20,7 @@ import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
@@ -64,6 +65,20 @@ extension ProfileExtensions on Profile {
     }
 
     return displayName.asHandle;
+  }
+
+  bool isCurrentlyOwnedByUser() {
+    final UserControllerState userControllerState = providerContainer.read(userControllerProvider);
+    final String profileID = flMeta?.id ?? '';
+    if (profileID.isEmpty || userControllerState.currentClaims.isEmpty) {
+      return false;
+    }
+
+    final Map<String, dynamic> claims = userControllerState.currentClaims;
+    final List<dynamic> managedProfiles = claims['managedProfiles'] ?? [];
+    final bool isManaged = managedProfiles.contains(profileID);
+
+    return isManaged;
   }
 
   bool matchesStringSearch(String str) {
