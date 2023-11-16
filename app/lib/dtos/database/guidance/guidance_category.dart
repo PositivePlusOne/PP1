@@ -30,10 +30,16 @@ class GuidanceCategory with _$GuidanceCategory {
 
   static List<GuidanceCategory> decodeGuidanceCategoryList(dynamic jsonData) {
     final List<dynamic> jsonList = json.decode(jsonData);
-    return jsonList.map((json) => GuidanceCategory.fromJson(json)).toList();
+    final List<GuidanceCategory> categories = jsonList.map((json) => GuidanceCategory.fromJson(json)).toList();
+    categories.sort((a, b) => a.priority.compareTo(b.priority));
+
+    return categories;
   }
 
   static List<GuidanceCategory> listFromAlgoliaSnap(List<AlgoliaObjectSnapshot> snap) {
-    return snap.map((e) => GuidanceCategory.fromJson(e.data)).toList();
+    final List<GuidanceCategory> entries = snap.map((e) => GuidanceCategory.fromJson(e.data)).toList();
+    entries.sort((a, b) => a.priority.compareTo(b.priority));
+
+    return entries;
   }
 }

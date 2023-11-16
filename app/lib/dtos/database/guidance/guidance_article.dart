@@ -18,6 +18,7 @@ class GuidanceArticle with _$GuidanceArticle {
     @Default('') String title,
     @Default('') String body,
     @Default('en') String locale,
+    @Default(0) int priority,
     @JsonKey(name: '_fl_meta_') FlMeta? flMeta,
   }) = _GuidanceArticle;
 
@@ -26,10 +27,16 @@ class GuidanceArticle with _$GuidanceArticle {
 
   static List<GuidanceArticle> decodeGuidanceArticleList(dynamic jsonData) {
     final List<dynamic> jsonList = json.decode(jsonData);
-    return jsonList.map((json) => GuidanceArticle.fromJson(json)).toList();
+    final List<GuidanceArticle> articles = jsonList.map((json) => GuidanceArticle.fromJson(json)).toList();
+    articles.sort((a, b) => a.priority.compareTo(b.priority));
+
+    return articles;
   }
 
   static List<GuidanceArticle> listFromAlgoliaSnap(List<AlgoliaObjectSnapshot> snap) {
-    return snap.map((e) => GuidanceArticle.fromJson(e.data)).toList();
+    final List<GuidanceArticle> entries = snap.map((e) => GuidanceArticle.fromJson(e.data)).toList();
+    entries.sort((a, b) => a.priority.compareTo(b.priority));
+
+    return entries;
   }
 }
