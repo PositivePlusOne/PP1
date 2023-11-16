@@ -18,6 +18,7 @@ import { ShufflePromotionSeedsAction } from "./actions/shuffle_promotion_seeds_a
 import { DeactivateInactivePromotionsAction } from "./actions/deactivate_inactive_promotions_action";
 import { DeleteMemberAction } from "./actions/delete_member_action";
 import { ClearFeedAction } from "./actions/clear_feed_action";
+import { UpdateProfileImageAction } from "./actions/update_profile_image_action";
 
 export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
@@ -31,6 +32,7 @@ export namespace AdminQuickActionService {
         'clearFeed': ClearFeedAction.clearFeed,
         'flagAccount': FlagAccountAction.flagAccount,
         'removeAccountFlag': RemoveAccountFlagAction.removeAccountFlag,
+        'updateProfileImage': UpdateProfileImageAction.updateProfileImage,
         'updateCoverImage': UpdateCoverImageAction.updateCoverImage,
         'linkDirectoryEntry': LinkDirectoryEntryAction.linkDirectoryEntry,
         'unlinkDirectoryEntry': UnlinkDirectoryEntryAction.unlinkDirectoryEntry,
