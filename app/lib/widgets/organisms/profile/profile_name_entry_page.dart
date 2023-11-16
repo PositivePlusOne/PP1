@@ -77,6 +77,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
 
     final String currentName = profile?.name ?? '';
     final String newName = state.name;
+    final String initialName = currentName.isNotEmpty ? currentName : newName;
 
     final bool isEditing = state.formMode == FormMode.edit;
     final bool hasChanges = isEditing && currentVisibilityFlagStatus != newVisibilityFlagStatus || currentName != newName;
@@ -140,7 +141,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
             const SizedBox(height: kPaddingLarge),
             PositiveTextField(
               labelText: localizations.page_profile_name_entry_input_label,
-              initialText: state.name,
+              initialText: initialName,
               onTextChanged: controller.onNameChanged,
               onTextSubmitted: (_) => controller.onNameConfirmed(),
               inputformatters: [removeNumbersFormatter()],

@@ -167,7 +167,7 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
               padding: const EdgeInsets.only(right: kPaddingSmall),
               child: Text(
                 Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
-                style: StreamChatTheme.of(context).ownMessageTheme.createdAtStyle,
+                style: typography.styleSubtext.copyWith(color: colors.colorGray4),
               ),
             ),
           ),
@@ -386,7 +386,7 @@ class ChatSelfUsernameRow extends StatelessWidget {
       children: <Widget>[
         Text(
           Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
-          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+          style: typography.styleSubtext.copyWith(color: colors.colorGray4),
         ),
         const SizedBox(width: kPaddingExtraSmall),
       ],

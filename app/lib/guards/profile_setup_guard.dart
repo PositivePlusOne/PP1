@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/user_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/profile_form_controller.dart';
@@ -40,14 +41,12 @@ class ProfileSetupGuard extends AutoRouteGuard {
     if (!hasName) {
       profileFormController.resetState(FormMode.create);
 
-      //   // Get the user's name from the user object if it exists
-      //   if (user.providerName != null) {
-      //     profileFormController.onNameChanged(user.providerName!);
-      //   }
+      // Get the user's name from the user object if it exists
+      if (user.providerName?.isNotEmpty == true) {
+        profileFormController.onNameChanged(user.providerName!);
+      }
 
-      profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileNameEntryRoute());
+      router.replaceAll([const ProfileNameEntryRoute()]);
       resolver.next(false);
       return;
     }

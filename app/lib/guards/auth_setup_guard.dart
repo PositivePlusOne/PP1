@@ -22,6 +22,11 @@ class AuthSetupGuard extends AutoRouteGuard {
       return;
     }
 
+    if (userController.isSocialProviderLinked) {
+      resolver.next(true);
+      return;
+    }
+
     if (!userController.isPasswordProviderLinked) {
       final Locale locale = Localizations.localeOf(router.navigatorKey.currentContext!);
       final AccountFormControllerProvider provider = accountFormControllerProvider(locale);
@@ -30,8 +35,7 @@ class AuthSetupGuard extends AutoRouteGuard {
         controller.onEmailAddressChanged(user.email!);
       }
 
-      router.removeWhere((route) => true);
-      router.push(const RegistrationEmailEntryRoute());
+      router.replaceAll([const RegistrationEmailEntryRoute()]);
       resolver.next(false);
       return;
     }

@@ -92,7 +92,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
 
     // Check if the pledge has been completed or if the user has all required providers linked
-    if (!userController.hasRequiredProvidersLinked || !pledgeController.arePledgesAccepted) {
+    if (!userController.hasAnyProviderLinked || !pledgeController.arePledgesAccepted) {
       await userController.signOut(shouldNavigate: false);
     }
 

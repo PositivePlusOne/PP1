@@ -55,17 +55,37 @@ class UserController extends _$UserController {
   bool get isUserLoggedIn => currentUser != null;
   bool get isPasswordProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'password') ?? false;
   // bool get isPhoneProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'phone') ?? false;
-  bool get hasRequiredProvidersLinked => isPasswordProviderLinked;
 
   bool get isGoogleProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'google.com') ?? false;
   bool get isFacebookProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'facebook.com') ?? false;
   bool get isAppleProviderLinked => currentUser?.providerData.any((userInfo) => userInfo.providerId == 'apple.com') ?? false;
   bool get isSocialProviderLinked => isGoogleProviderLinked || isFacebookProviderLinked || isAppleProviderLinked;
+
   bool get hasAllSocialProvidersLinked => isGoogleProviderLinked && isFacebookProviderLinked && isAppleProviderLinked;
+  bool get hasAnyProviderLinked => isPasswordProviderLinked || isSocialProviderLinked;
+  bool get isSocialProviderLinkedExclusive => isSocialProviderLinked && !isPasswordProviderLinked;
+
+  int get providerCount => currentUser?.providerData.length ?? 0;
 
   UserInfo? get googleProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'google.com');
   UserInfo? get facebookProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'facebook.com');
   UserInfo? get appleProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'apple.com');
+
+  String get nameFromAuthenticationScopes {
+    if (googleProvider != null) {
+      return googleProvider!.displayName ?? '';
+    }
+
+    if (facebookProvider != null) {
+      return facebookProvider!.displayName ?? '';
+    }
+
+    if (appleProvider != null) {
+      return appleProvider!.displayName ?? '';
+    }
+
+    return '';
+  }
 
   @override
   UserControllerState build() {
