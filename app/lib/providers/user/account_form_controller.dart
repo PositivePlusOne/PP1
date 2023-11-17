@@ -194,7 +194,7 @@ class AccountFormController extends _$AccountFormController {
         emailAddress: profileController.state.currentProfile!.email,
         phoneNumber: phoneNumber,
         country: Country.fromPhoneCode(country) ?? Country.fromLocale(locale),
-        visibilityFlags: profileController.state.currentProfile!.buildFormVisibilityFlags(),
+        visibilityFlags: profileController.state.currentProfile!.buildFormVisibilityFlags(isLoadedProfile: true),
       );
     } else {
       state = state.copyWith(

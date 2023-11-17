@@ -101,6 +101,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
   VideoEditorController? videoEditorController;
   io.File? uneditedVideoFile;
 
+  bool get isRepost => state.previousActivity.postType == PostType.repost;
+
   PositiveCameraState? get currentPositiveCameraState {
     return state.cameraWidgetKey.currentState is PositiveCameraState ? state.cameraWidgetKey.currentState as PositiveCameraState : null;
   }
@@ -202,11 +204,15 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         case CreatePostCurrentPage.createPostMultiImage:
         //? As edit photo is equivalent of edit clip, and does not have criteria, assume dialog functionality should match.
         case CreatePostCurrentPage.editPhoto:
-          userRequestedNavigation = await positiveDiscardPostDialogue(
-            context: context,
-            colors: colors,
-            typography: typography,
-          );
+          if (isRepost) {
+            userRequestedNavigation = true;
+          } else {
+            userRequestedNavigation = await positiveDiscardPostDialogue(
+              context: context,
+              colors: colors,
+              typography: typography,
+            );
+          }
 
         //? PP1-615, back button on repost preview returns to last page
         case CreatePostCurrentPage.repostPreview:
@@ -234,7 +240,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
         await goBackFromCamera();
         return false;
       case CreatePostCurrentPage.createPostText:
-        final bool isRepost = state.previousActivity.postType == PostType.repost;
         if (isRepost) {
           state = state.copyWith(
             currentCreatePostPage: CreatePostCurrentPage.repostPreview,

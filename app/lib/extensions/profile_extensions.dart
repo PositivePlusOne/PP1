@@ -142,28 +142,17 @@ extension ProfileExtensions on Profile {
     return children;
   }
 
-  Map<String, bool> buildFormVisibilityFlags() {
-    final Map<String, bool> newVisibilityFlags = {
-      kVisibilityFlagBirthday: kDefaultVisibilityFlags[kVisibilityFlagBirthday] ?? false,
-      kVisibilityFlagInterests: kDefaultVisibilityFlags[kVisibilityFlagInterests] ?? false,
-      kVisibilityFlagLocation: kDefaultVisibilityFlags[kVisibilityFlagLocation] ?? false,
-      kVisibilityFlagName: kDefaultVisibilityFlags[kVisibilityFlagName] ?? false,
-      kVisibilityFlagGenders: kDefaultVisibilityFlags[kVisibilityFlagGenders] ?? false,
-      kVisibilityFlagHivStatus: kDefaultVisibilityFlags[kVisibilityFlagHivStatus] ?? false,
-      kVisibilityFlagCompanySectors: kDefaultVisibilityFlags[kVisibilityFlagCompanySectors] ?? false,
-    };
-
-    final List<(String flag, bool newValue)> overrideFlags = [];
+  Map<String, bool> buildFormVisibilityFlags({bool isLoadedProfile = false}) {
+    final Map<String, bool> newVisibilityFlags = {};
     for (final String flag in visibilityFlags) {
-      if (flag.isEmpty) {
-        continue;
-      }
-
-      overrideFlags.add((flag, true));
+      newVisibilityFlags[flag] = true;
     }
 
-    for (final (String flag, bool newValue) in overrideFlags) {
-      newVisibilityFlags[flag] = newValue;
+    for (final String flag in kDefaultVisibilityFlags.keys) {
+      if (newVisibilityFlags.containsKey(flag)) {
+        continue;
+      }
+      newVisibilityFlags[flag] = isLoadedProfile ? false : kDefaultVisibilityFlags[flag] ?? false;
     }
 
     return newVisibilityFlags;
