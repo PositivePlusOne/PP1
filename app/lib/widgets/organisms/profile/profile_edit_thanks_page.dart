@@ -17,12 +17,12 @@ enum ProfileEditThanksReturnStyle {
 @RoutePage()
 class ProfileEditThanksPage extends ConsumerWidget {
   const ProfileEditThanksPage({
-    Key? key,
+    super.key,
     required this.title,
     required this.body,
     required this.continueText,
     this.returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
-  }) : super(key: key);
+  });
 
   final String title;
   final String body;

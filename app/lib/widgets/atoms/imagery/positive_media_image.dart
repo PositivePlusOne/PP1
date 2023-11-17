@@ -253,8 +253,8 @@ class PositiveMediaImage extends ConsumerStatefulWidget {
     this.isEnabled = true,
     this.onBytesLoaded,
     this.colorBlendMode,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Media media;
   final Color backgroundColor;

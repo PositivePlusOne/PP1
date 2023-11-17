@@ -31,8 +31,8 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
     this.index = NavigationBarIndex.hub,
     this.isDisabled = false,
     this.scrollController,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final MediaQueryData mediaQuery;
   final NavigationBarIndex index;
@@ -93,7 +93,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
 }
 
 class PositiveNavigationBarShade extends ConsumerWidget {
-  const PositiveNavigationBarShade({Key? key}) : super(key: key);
+  const PositiveNavigationBarShade({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -121,11 +121,11 @@ class PositiveNavigationBarShade extends ConsumerWidget {
 
 class PositiveNavigationBarContent extends ConsumerWidget {
   const PositiveNavigationBarContent({
-    Key? key,
+    super.key,
     required this.index,
     required this.isDisabled,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   final NavigationBarIndex index;
   final bool isDisabled;

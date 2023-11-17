@@ -17,8 +17,8 @@ class PositiveExpandableWidget extends StatefulWidget {
     this.animationDuration = kAnimationDurationRegular,
     this.fadeCurve = kAnimationCurveDefault,
     this.sizeCurve = kAnimationCurveDefault,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget collapsedChild;
   final Widget expandedChild;

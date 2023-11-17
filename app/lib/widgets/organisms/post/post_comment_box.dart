@@ -30,8 +30,8 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
     this.onSwitchProfileRequested,
     this.currentProfile,
     this.canSwitchProfile = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final MediaQueryData mediaQuery;
   final Profile? currentProfile;
