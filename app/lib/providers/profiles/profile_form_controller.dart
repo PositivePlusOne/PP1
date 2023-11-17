@@ -66,7 +66,7 @@ class ProfileFormState with _$ProfileFormState {
   }) = _ProfileFormState;
 
   factory ProfileFormState.fromProfile(Profile? profile, FormMode formMode) {
-    final Map<String, bool> visibilityFlags = profile?.buildFormVisibilityFlags() ?? kDefaultVisibilityFlags;
+    final Map<String, bool> visibilityFlags = profile?.buildFormVisibilityFlags(isLoadedProfile: (formMode == FormMode.edit)) ?? kDefaultVisibilityFlags;
 
     return ProfileFormState(
       name: profile?.name ?? '',
