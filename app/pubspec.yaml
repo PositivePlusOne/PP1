@@ -54,7 +54,8 @@ dependencies:
 
   stream_chat_flutter:
     git:
-      url: git://github.com/SKLn-Rad/stream-chat-flutter.git
+      path: "packages/stream_chat_flutter"
+      url: https://github.com/SKLn-Rad/stream-chat-flutter.git
       ref: fix/maintain-package-for-freeeee
 
   google_mlkit_face_detection: 0.6.0

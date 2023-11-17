@@ -2049,10 +2049,10 @@ packages:
     dependency: transitive
     description:
       name: photo_manager
-      sha256: "2d698826421ebd045ecc0df60422e9dd24bd22b178310b68444385f783735b55"
+      sha256: e7c48a921e65e139a40038603f756542bfb5cc58a22d5b95ccb3faa7d506dfe1
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.1"
+    version: "3.0.0-dev.1"
   photo_view:
     dependency: "direct main"
     description:
@@ -2470,26 +2470,27 @@ packages:
     dependency: transitive
     description:
       name: stream_chat
-      sha256: "24de5829c18d1e47e7410d0fa53fdf8275966fb221e3c15b3c740c425a87a89c"
+      sha256: b5c6301786370dee4469857555f0b162b6e065734cd3d722e86530f3b4bb9b81
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0-beta.3"
+    version: "6.9.0"
   stream_chat_flutter:
     dependency: "direct main"
     description:
-      name: stream_chat_flutter
-      sha256: ed5eab6ef7e70745bad6c6d8890b789404f4171cc2092add3aa1d71109092025
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0-beta.4"
+      path: "packages/stream_chat_flutter"
+      ref: "fix/maintain-package-for-freeeee"
+      resolved-ref: "9f14c17ca97037fbfb9430599567f5797cec63bd"
+      url: "https://github.com/SKLn-Rad/stream-chat-flutter.git"
+    source: git
+    version: "6.11.0"
   stream_chat_flutter_core:
     dependency: transitive
     description:
       name: stream_chat_flutter_core
-      sha256: "8a59a33cd92eb030eea3010844cac8037d1d84402ace85d0f12e59125a731b3e"
+      sha256: "7e2193bd93425e2439828b1781eaba1c57f7127e11abfe8a1eb4317f4902bd3f"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0-beta.3"
+    version: "6.10.0"
   stream_transform:
     dependency: transitive
     description:
@@ -2786,14 +2787,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.2"
-  video_player_macos:
-    dependency: transitive
-    description:
-      name: video_player_macos
-      sha256: "038aec5bbb3789be4bc12f08e2eb730940350ce5f3ce790cee9d897c0f6aacb7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   video_player_platform_interface:
     dependency: transitive
     description:
