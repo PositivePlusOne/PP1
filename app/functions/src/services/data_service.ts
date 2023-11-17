@@ -183,17 +183,11 @@ export namespace DataService {
    */
   export const updateDocument = async function (options: { schemaKey: string; entryId: string; data: any }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    const cacheKey = CacheService.generateCacheKey(options);
-
     functions.logger.info(`Updating document for user: ${options.entryId}`);
     let data = {};
 
     await adminApp.firestore().runTransaction(async (transaction) => {
-      let document = await CacheService.get(cacheKey);
-      if (!document) {
-        functions.logger.info(`Document not found, fetching from flamelink`);
-        document = await flamelinkApp.content.get(options);
-      }
+      let document = await flamelinkApp.content.get(options);
 
       // Check if the document needs migration
       if (document && needsMigration(document)) {
