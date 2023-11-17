@@ -116,19 +116,86 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     return Material(
       type: MaterialType.transparency,
       child: postType.when<Widget>(
-        post: () => _postBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-        event: () => _eventBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-        clip: () => _clipBuilder(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+        post: () => _postBuilder(context: context, ref: ref),
+        event: () => _eventBuilder(context: context, ref: ref),
+        clip: () => _clipBuilder(context: context, ref: ref),
       ),
     );
   }
 
-  Widget _eventBuilder({
-    required BuildContext context,
-    required WidgetRef ref,
-    required Profile? currentProfile,
-    required Relationship? publisherRelationship,
-  }) {
+  Widget _postBuilder({required BuildContext context, required WidgetRef ref}) {
+    bool isCarousel = (postContent?.media.length ?? 0) > 1 && isShortformPost;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        //* -=-=-=- Single attached image -=-=-=- *\\
+        if (postContent?.media.isNotEmpty ?? false) ...[
+          const SizedBox(height: kPaddingSmall),
+        ],
+        // put the image in a stack
+        Stack(
+          alignment: AlignmentDirectional.bottomEnd,
+          children: [
+            //* -=-=-=- Single attached image -=-=-=- *\\
+            if (!isCarousel)
+              Column(
+                children: [
+                  ..._postListAttachedImages(),
+                ],
+              ),
+            //* -=-=-=- Carousel of attached images -=-=-=- *\\
+            if (isCarousel)
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return _postCarouselAttachedImages(context, constraints);
+                },
+              ),
+            //* -=-=-=- promotion banner -=-=-=- *\\
+            if (_isPromoted) _promotionBanner(isOnCarousel: isCarousel),
+          ],
+        ),
+        //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
+        markdownWidget,
+        //* -=-=-=- Post Actions -=-=-=- *\\
+        _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+      ],
+    );
+  }
+
+  Widget _clipBuilder({required BuildContext context, required WidgetRef ref}) {
+    final Logger logger = ref.read(loggerProvider);
+
+    if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
+      logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
+      return const SizedBox();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          //* -=-=-=- attached video -=-=-=- *\\
+          _postAttachedVideo(),
+          //* -=-=-=- promotion banner -=-=-=- *\\
+          if (promotion != null) ...[
+            const SizedBox(height: kPaddingSmall),
+            _promotionBanner(),
+          ],
+          //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
+          markdownWidget,
+          //* -=-=-=- Post Actions -=-=-=- *\\
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+        ],
+      ),
+    );
+  }
+
+  Widget _eventBuilder({required BuildContext context, required WidgetRef ref}) {
     final Logger logger = ref.read(loggerProvider);
 
     if (postContent?.eventConfiguration == null || postContent?.enrichmentConfiguration == null) {
@@ -170,64 +237,19 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     );
   }
 
-  Widget _postBuilder({
-    required BuildContext context,
-    required WidgetRef ref,
-    required Profile? currentProfile,
-    required Relationship? publisherRelationship,
-  }) {
-    bool isCarousel = (postContent?.media.length ?? 0) > 1 && isShortformPost;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        //* -=-=-=- Single attached image -=-=-=- *\\
-        if (postContent?.media.isNotEmpty ?? false) ...[
-          const SizedBox(height: kPaddingSmall),
-        ],
-        // put the image in a stack
-        Stack(
-          alignment: AlignmentDirectional.bottomEnd,
-          children: [
-            //* -=-=-=- Single attached image -=-=-=- *\\
-            if (!isCarousel)
-              Column(
-                children: [
-                  ..._postListAttachedImages(),
-                ],
-              ),
-            //* -=-=-=- Carousel of attached images -=-=-=- *\\
-            if (isCarousel)
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return _postCarouselAttachedImages(context, constraints);
-                },
-              ),
-            //* -=-=-=- promotion banner -=-=-=- *\\
-            if (_isPromoted) _promotionBanner(isOnCarousel: isCarousel),
-          ],
-        ),
-        //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-        markdownWidget,
-        //* -=-=-=- Post Actions -=-=-=- *\\
-        _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-      ],
-    );
-  }
-
-  Widget _clipBuilder({
-    required BuildContext context,
-    required WidgetRef ref,
-    required Profile? currentProfile,
-    required Relationship? publisherRelationship,
-  }) {
+  //TODO(S): Partial scaffold for repost, repost functionality moved to another file
+  Future<Widget> _repostBuilder(BuildContext context, WidgetRef ref) async {
     final Logger logger = ref.read(loggerProvider);
 
-    if (postContent?.eventConfiguration != null && postContent?.enrichmentConfiguration != null) {
-      logger.d('postContent does not have eventConfiguration and enrichmentConfiguration');
+    if (postContent != null && postContent!.generalConfiguration != null && postContent!.enrichmentConfiguration != null) {
+      logger.d('widget.postContent does not have generalConfiguration and enrichmentConfiguration');
       return const SizedBox();
     }
+
+    // if (postContent?.generalConfiguration!.repostActivityId.isNotEmpty) {
+    //   logger.d('widget.postContent is missing repost data');
+    //   return const SizedBox();
+    // }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
@@ -237,72 +259,30 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           //* -=-=-=- attached video -=-=-=- *\\
-          _postAttachedVideo(),
-          //* -=-=-=- promotion banner -=-=-=- *\\
-          if (promotion != null) ...[
+          if (postContent!.media.isNotEmpty) ...[
             const SizedBox(height: kPaddingSmall),
-            _promotionBanner(),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return _postCarouselAttachedImages(context, constraints);
+              },
+            ),
+          ],
+          _postAttachedVideo(),
+          //* -=-=-=- Post Actions -=-=-=- *\\
+          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
+          //* -=-=-=- Post Title -=-=-=- *\\
+          _postTitle(),
+          //* -=-=-=- Location -=-=-=- *\\
+          if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
+            const SizedBox(height: kPaddingSmall),
+            _location(),
           ],
           //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
           markdownWidget,
-          //* -=-=-=- Post Actions -=-=-=- *\\
-          _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
         ],
       ),
     );
   }
-
-  //TODO(S): Partial scaffold for repost, repost functionality moved to another file
-  // Future<Widget> _repostBuilder(
-  //   BuildContext context,
-  //   WidgetRef ref,
-  //   Profile? currentProfile,
-  //   Relationship? publisherRelationship,
-  // ) async {
-  //   final Logger logger = ref.read(loggerProvider);
-
-  //   if (postContent != null && postContent!.generalConfiguration != null && postContent!.enrichmentConfiguration != null) {
-  //     logger.d('widget.postContent does not have generalConfiguration and enrichmentConfiguration');
-  //     return const SizedBox();
-  //   }
-
-  //   // if (postContent?.generalConfiguration!.repostActivityId.isNotEmpty) {
-  //   //   logger.d('widget.postContent is missing repost data');
-  //   //   return const SizedBox();
-  //   // }
-
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: kPaddingExtraSmall),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       children: [
-  //         //* -=-=-=- attached video -=-=-=- *\\
-  //         if (postContent!.media.isNotEmpty) ...[
-  //           const SizedBox(height: kPaddingSmall),
-  //           LayoutBuilder(
-  //             builder: (context, constraints) {
-  //               return _postCarouselAttachedImages(context, constraints);
-  //             },
-  //           ),
-  //         ],
-  //         _postAttachedVideo(),
-  //         //* -=-=-=- Post Actions -=-=-=- *\\
-  //         _postActions(context: context, ref: ref, currentProfile: currentProfile, publisherRelationship: publisherRelationship),
-  //         //* -=-=-=- Post Title -=-=-=- *\\
-  //         _postTitle(),
-  //         //* -=-=-=- Location -=-=-=- *\\
-  //         if (postContent!.enrichmentConfiguration!.tags.isNotEmpty) ...[
-  //           const SizedBox(height: kPaddingSmall),
-  //           _location(),
-  //         ],
-  //         //* -=-=-=- Markdown body, displayed for video and posts -=-=-=- *\\
-  //         _markdownBody(context: context, ref: ref),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   //* -=-=-=-=-=-            List of attached images           -=-=-=-=-=- *\\

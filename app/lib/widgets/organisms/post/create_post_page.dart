@@ -58,7 +58,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
 
   Future<void> onFirstRender(Duration timeStamp) async {
     ref.read(createPostViewModelProvider.notifier).onFilterSelected(AwesomeFilter.None);
-    if (widget.isEditPage && widget.activityData != null) {
+    if (widget.activityData != null) {
       await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
       ref.read(createPostViewModelProvider.notifier).displayCamera(PostType.image);
@@ -102,6 +102,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     //? phone reserved bottom padding + navigation bar height + padding between navigation and bottom of the screen
     final double bottomNavigationArea = mediaQueryData.padding.bottom + kCreatePostNavigationHeight + kPaddingMedium;
 
+    //? Replace with PopScope, PopScope seems to have outstanding bugs though causing crashes in the router
     return WillPopScope(
       onWillPop: () => viewModel.goBack(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
