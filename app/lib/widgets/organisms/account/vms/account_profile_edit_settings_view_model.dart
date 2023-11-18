@@ -104,6 +104,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
         state = state.copyWith(toggleStateDateOfBirth: PositiveTogglableState.inactive);
       }
     }
+
     if (!pendingFlags.contains(kVisibilityFlagInterests)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagInterests)) {
         state = state.copyWith(toggleStateYouInterests: PositiveTogglableState.active);
@@ -111,6 +112,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
         state = state.copyWith(toggleStateYouInterests: PositiveTogglableState.inactive);
       }
     }
+
     if (!pendingFlags.contains(kVisibilityFlagLocation)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagLocation)) {
         state = state.copyWith(toggleStateLocation: PositiveTogglableState.active);
@@ -118,6 +120,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
         state = state.copyWith(toggleStateLocation: PositiveTogglableState.inactive);
       }
     }
+
     if (!pendingFlags.contains(kVisibilityFlagGenders)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagGenders)) {
         state = state.copyWith(toggleStateGender: PositiveTogglableState.active);
@@ -125,6 +128,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
         state = state.copyWith(toggleStateGender: PositiveTogglableState.inactive);
       }
     }
+
     if (!pendingFlags.contains(kVisibilityFlagHivStatus)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagHivStatus)) {
         state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.active);
@@ -132,6 +136,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
         state = state.copyWith(toggleStateHIVStatus: PositiveTogglableState.inactive);
       }
     }
+
     if (!pendingFlags.contains(kVisibilityFlagCompanySectors)) {
       if (profile.visibilityFlags.any((element) => element == kVisibilityFlagCompanySectors)) {
         state = state.copyWith(toggleStateCompanySectors: PositiveTogglableState.active);
