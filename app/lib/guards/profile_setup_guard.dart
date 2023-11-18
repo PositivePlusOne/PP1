@@ -119,14 +119,14 @@ class ProfileSetupGuard extends AutoRouteGuard {
     //   return;
     // }
 
-    final bool hasProfileReferenceImage = currentProfile?.referenceImage != null;
-    if (!hasProfileReferenceImage) {
-      profileFormController.resetState(FormMode.create);
-      router.removeWhere((route) => true);
-      router.push(const ProfileReferenceImageWelcomeRoute());
-      resolver.next(false);
-      return;
-    }
+    // final bool hasProfileReferenceImage = currentProfile?.referenceImage != null;
+    // if (!hasProfileReferenceImage) {
+    //   profileFormController.resetState(FormMode.create);
+    //   router.removeWhere((route) => true);
+    //   router.push(const ProfileReferenceImageWelcomeRoute());
+    //   resolver.next(false);
+    //   return;
+    // }
 
     final bool hasProfileImage = currentProfile?.profileImage != null;
     if (!hasProfileImage) {

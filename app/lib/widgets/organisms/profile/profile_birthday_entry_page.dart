@@ -106,7 +106,7 @@ class ProfileBirthdayEntryPage extends ConsumerWidget {
                 ),
                 PositivePageIndicator(
                   color: colors.black,
-                  pagesNum: 6,
+                  pagesNum: 5,
                   currentPage: 2,
                 ),
               ],
