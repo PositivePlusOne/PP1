@@ -123,7 +123,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
                 ),
                 PositivePageIndicator(
                   color: colors.black,
-                  pagesNum: 6,
+                  pagesNum: 5,
                   currentPage: 0,
                 ),
               ],
