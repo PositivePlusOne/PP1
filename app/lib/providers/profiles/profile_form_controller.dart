@@ -199,12 +199,12 @@ class ProfileFormController extends _$ProfileFormController {
         appRouter.replaceAll([const ProfileDisplayNameEntryRoute()]);
         break;
 
-      case ProfileReferenceImageWelcomeRoute:
-        appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
-        break;
+      // case ProfileReferenceImageWelcomeRoute:
+      //   appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
+      //   break;
 
       case ProfilePhotoSelectionRoute:
-        appRouter.replaceAll([const ProfileReferenceImageWelcomeRoute()]);
+        appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
         break;
 
       case ProfileBiographyEntryRoute:
