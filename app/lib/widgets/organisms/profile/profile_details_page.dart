@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -49,6 +50,9 @@ class ProfileDetailsPage extends HookConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    final bool canDisplayName = targetProfile?.visibilityFlags.contains(kVisibilityFlagName) == true;
+    final String bannerText = canDisplayName ? targetProfile?.displayName.asHandle ?? '' : '';
+
     return PositiveScaffold(
       decorations: buildType2ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
@@ -56,7 +60,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
           padding: const EdgeInsets.only(bottom: kPaddingLarge),
           sliver: SliverToBoxAdapter(
             child: PositiveAppBar(
-              title: targetProfile?.name.isNotEmpty == true ? targetProfile?.displayName.asHandle ?? '' : '',
+              title: bannerText,
               centerTitle: true,
               includeLogoWherePossible: false,
               decorationColor: colors.colorGray1,

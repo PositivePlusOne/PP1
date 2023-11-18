@@ -168,6 +168,15 @@ extension ProfileExtensions on Profile {
     return featureFlags.contains(kFeatureFlagVerified);
   }
 
+  String get nameRespectingFlags {
+    final bool shouldIgnore = !visibilityFlags.contains(kVisibilityFlagName);
+    if (shouldIgnore) {
+      return '';
+    }
+
+    return name;
+  }
+
   int get age {
     if (birthday.isEmpty) {
       return 0;
