@@ -56,6 +56,10 @@ export namespace SystemEndpoints {
       await DataHandlerRegistry.executeChangeHandlers(changeType, schema, context.params.documentId, beforeData, afterData);
     });
 
+  export const cronHandler = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).pubsub.schedule("* * * * *").onRun(async (context) => {
+    functions.logger.info("Cron handler executed", { context });
+  });
+
   export const getSystemConfiguration = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const locale = request.data.locale || "en";

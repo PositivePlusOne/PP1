@@ -1,7 +1,42 @@
-import { DocumentReference } from "firebase-admin/firestore";
+import { DocumentReference, Timestamp } from "firebase-admin/firestore";
 import { FlMeta, FlMetaJSON } from "./meta";
 
 export const adminQuickActionsSchemaKey = 'adminQuickActions';
+export const adminScheduledActionsSchemaKey = 'adminScheduledActions';
+
+export interface AdminScheduledActionJSON {
+    _fl_meta_?: FlMetaJSON;
+    cron?: string;
+    actionJson?: string;
+    lastRunDate?: string;
+    lastRunActionId?: string;
+}
+
+export class AdminScheduledAction {
+    _fl_meta_?: FlMeta;
+    cron: string;
+    actionJson: string;
+    lastRunDate?: string;
+    lastRunActionId?: string;
+
+    constructor(data: AdminScheduledActionJSON) {
+        this._fl_meta_ = data._fl_meta_ ? new FlMeta(data._fl_meta_) : undefined;
+        this.cron = data.cron || '';
+        this.actionJson = data.actionJson || '';
+        this.lastRunDate = data.lastRunDate || '';
+        this.lastRunActionId = data.lastRunActionId || '';
+    }
+
+    toJSON(): AdminScheduledActionJSON {
+        return {
+            _fl_meta_: this._fl_meta_?.toJSON(),
+            cron: this.cron || '',
+            actionJson: this.actionJson || '',
+            lastRunDate: this.lastRunDate || '',
+            lastRunActionId: this.lastRunActionId || '',
+        };
+    }
+}
 
 export interface AdminQuickActionDataJSON {
     target?: string;
