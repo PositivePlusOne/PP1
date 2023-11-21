@@ -14,6 +14,7 @@ import 'package:app/helpers/text_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import '../../../constants/design_constants.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {
   const PositiveTextField({
@@ -255,95 +256,98 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       );
     }
 
-    return Container(
-      constraints: const BoxConstraints(minHeight: kCreatePostHeight),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        color: widget.fillColor ?? colours.white,
-        border: Border.all(
-          color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
-          width: widget.borderWidth,
+    return PositiveTapBehaviour(
+      onTap: (_) => textFocusNode.requestFocus(),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: kCreatePostHeight),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          color: widget.fillColor ?? colours.white,
+          border: Border.all(
+            color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
+            width: widget.borderWidth,
+          ),
         ),
-      ),
-      padding: EdgeInsets.only(
-        top: kPaddingExtraSmall - widget.borderWidth,
-        bottom: kPaddingExtraSmall - widget.borderWidth,
-        left: (widget.prefixIcon == null) ? kPaddingLarge - widget.borderWidth : kPaddingExtraSmall - widget.borderWidth,
-        right: kPaddingExtraSmall - widget.borderWidth,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.prefixIcon != null) ...[
-            PositiveTextFieldPrefixContainer(
-              color: hasTextIsFocused ? widget.tintColor : colours.colorGray2,
-              child: widget.prefixIcon!,
-            ),
-            const SizedBox(width: kPaddingExtraSmall),
-          ],
-          Expanded(
-            child: AnimatedPadding(
-              padding: EdgeInsetsDirectional.only(
-                top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : labelPadding,
-                bottom: !(hasTextIsFocused && widget.labelText != null) ? kPaddingExtraSmall : labelPadding,
+        padding: EdgeInsets.only(
+          top: kPaddingExtraSmall - widget.borderWidth,
+          bottom: kPaddingExtraSmall - widget.borderWidth,
+          left: (widget.prefixIcon == null) ? kPaddingLarge - widget.borderWidth : kPaddingExtraSmall - widget.borderWidth,
+          right: kPaddingExtraSmall - widget.borderWidth,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (widget.prefixIcon != null) ...[
+              PositiveTextFieldPrefixContainer(
+                color: hasTextIsFocused ? widget.tintColor : colours.colorGray2,
+                child: widget.prefixIcon!,
               ),
-              duration: kAnimationDurationFast,
-              child: TextFormField(
-                textCapitalization: widget.textCapitalization,
-                autocorrect: widget.autocorrect,
-                autofocus: widget.autofocus,
-                focusNode: textFocusNode,
-                inputFormatters: [
-                  if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
-                  removeDuplicateWhitespaceFormatter(),
-                  ...?widget.inputformatters,
-                ],
-                enableSuggestions: true,
-                obscureText: widget.obscureText,
-                obscuringCharacter: kObscuringTextCharacter,
-                keyboardType: widget.textInputType,
-                textInputAction: widget.textInputAction,
-                controller: textEditingController,
-                enabled: widget.isEnabled,
-                minLines: widget.minLines,
-                maxLines: widget.maxLines,
-                cursorColor: textColour,
-                style: widget.textStyle ?? typography.styleButtonRegular.copyWith(color: textColour),
-                onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
-                decoration: InputDecoration(
-                  isCollapsed: true,
-                  isDense: true,
-                  alignLabelWithHint: true,
-                  label: labelChild,
-                  labelText: labelChild == null ? widget.labelText : null,
-                  labelStyle: labelStyle,
-                  hintText: widget.hintText,
-                  hintStyle: typography.styleButtonRegular.copyWith(
-                    color: textColour,
-                    fontWeight: FontWeight.w600,
+              const SizedBox(width: kPaddingExtraSmall),
+            ],
+            Expanded(
+              child: AnimatedPadding(
+                padding: EdgeInsetsDirectional.only(
+                  top: hasTextIsFocused && widget.labelText != null ? kPaddingExtraSmall : labelPadding,
+                  bottom: !(hasTextIsFocused && widget.labelText != null) ? kPaddingExtraSmall : labelPadding,
+                ),
+                duration: kAnimationDurationFast,
+                child: TextFormField(
+                  textCapitalization: widget.textCapitalization,
+                  autocorrect: widget.autocorrect,
+                  autofocus: widget.autofocus,
+                  focusNode: textFocusNode,
+                  inputFormatters: [
+                    if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
+                    removeDuplicateWhitespaceFormatter(),
+                    ...?widget.inputformatters,
+                  ],
+                  enableSuggestions: true,
+                  obscureText: widget.obscureText,
+                  obscuringCharacter: kObscuringTextCharacter,
+                  keyboardType: widget.textInputType,
+                  textInputAction: widget.textInputAction,
+                  controller: textEditingController,
+                  enabled: widget.isEnabled,
+                  minLines: widget.minLines,
+                  maxLines: widget.maxLines,
+                  cursorColor: textColour,
+                  style: widget.textStyle ?? typography.styleButtonRegular.copyWith(color: textColour),
+                  onFieldSubmitted: (String text) => widget.onTextSubmitted?.call(text),
+                  decoration: InputDecoration(
+                    isCollapsed: true,
+                    isDense: true,
+                    alignLabelWithHint: true,
+                    label: labelChild,
+                    labelText: labelChild == null ? widget.labelText : null,
+                    labelStyle: labelStyle,
+                    hintText: widget.hintText,
+                    hintStyle: typography.styleButtonRegular.copyWith(
+                      color: textColour,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    contentPadding: const EdgeInsets.only(
+                      top: kPaddingSmall,
+                      bottom: kPaddingNone,
+                      left: kPaddingNone,
+                      right: kPaddingNone,
+                    ),
+                    border: baseBorder,
+                    disabledBorder: baseBorder,
+                    errorBorder: baseBorder,
+                    focusedErrorBorder: baseBorder,
+                    enabledBorder: baseBorder,
+                    focusedBorder: baseBorder,
                   ),
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  contentPadding: const EdgeInsets.only(
-                    top: kPaddingSmall,
-                    bottom: kPaddingNone,
-                    left: kPaddingNone,
-                    right: kPaddingNone,
-                  ),
-                  border: baseBorder,
-                  disabledBorder: baseBorder,
-                  errorBorder: baseBorder,
-                  focusedErrorBorder: baseBorder,
-                  enabledBorder: baseBorder,
-                  focusedBorder: baseBorder,
                 ),
               ),
             ),
-          ),
-          if (widget.suffixIcon != null) ...[
-            const SizedBox(width: kPaddingExtraSmall),
-            widget.suffixIcon!,
+            if (widget.suffixIcon != null) ...[
+              const SizedBox(width: kPaddingExtraSmall),
+              widget.suffixIcon!,
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
