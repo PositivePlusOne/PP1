@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/profile_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -140,6 +141,9 @@ class ProfilePage extends HookConsumerWidget {
       actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: appBarTextColor));
     }
 
+    final bool canDisplayName = targetProfile?.visibilityFlags.contains(kVisibilityFlagName) == true;
+    final String bannerText = canDisplayName ? targetProfile?.displayName.asHandle ?? '' : '';
+
     return PositiveScaffold(
       appBarColor: appBarColor,
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
@@ -150,7 +154,7 @@ class ProfilePage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         SliverToBoxAdapter(
           child: PositiveAppBar(
-            title: targetProfile?.name.isNotEmpty == true ? targetProfile?.displayName.asHandle ?? '' : '',
+            title: bannerText,
             centerTitle: true,
             includeLogoWherePossible: false,
             foregroundColor: appBarTextColor,

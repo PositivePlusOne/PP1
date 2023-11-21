@@ -30,7 +30,7 @@ class ProfileReferenceImageCameraPage extends ConsumerWidget {
     String caption = appLocalization.page_profile_image_selfie_pending;
     if (state.isBusy) {
       caption = appLocalization.shared_actions_uploading;
-    } else if (state.faceDetectionModel != null) {
+    } else if (state.faceDetectionModel != null && viewModel.canSubmitPhoto) {
       caption = appLocalization.page_profile_image_selfie_ready;
     }
 
