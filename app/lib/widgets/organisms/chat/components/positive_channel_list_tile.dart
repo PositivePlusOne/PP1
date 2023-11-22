@@ -198,7 +198,7 @@ class PositiveChannelListTile extends ConsumerWidget {
                           width: kIconIndicator,
                           height: kIconIndicator,
                           decoration: BoxDecoration(
-                            color: colors.purple,
+                            color: colors.red,
                             borderRadius: BorderRadius.circular(kIconIndicator),
                           ),
                         ),
