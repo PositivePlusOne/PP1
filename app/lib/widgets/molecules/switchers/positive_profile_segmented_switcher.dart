@@ -45,7 +45,6 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
     switch (isSlim) {
       case true:
         return PositiveSlimTabBar(
-          margin: EdgeInsets.zero,
           index: supportedProfileIds.indexOf(currentProfileId),
           onTapped: (int index) {
             mixin.switchProfile(supportedProfileIds[index]);

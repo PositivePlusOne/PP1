@@ -107,7 +107,7 @@ class AccountPage extends HookConsumerWidget {
               children: <Widget>[
                 if (hasMultipleProfiles && viewModel.availableProfileCount <= 2)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
+                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                     child: PositiveProfileSegmentedSwitcher(
                       mixin: viewModel,
                       isSlim: true,

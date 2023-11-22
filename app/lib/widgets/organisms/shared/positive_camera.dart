@@ -1082,6 +1082,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                 index: widget.delayTimerSelection,
               ),
             ),
+          const SizedBox(height: kPaddingSmall),
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=-=-             Maximum Clip Duration UI             -=-=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
