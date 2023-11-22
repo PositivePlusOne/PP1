@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -54,6 +55,9 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     universalLinksController.removeInitialLinkFlagInSharedPreferences();
+
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    systemController.resetAppBadges();
 
     checkForRefresh();
 

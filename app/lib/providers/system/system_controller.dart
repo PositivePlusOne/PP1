@@ -15,6 +15,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';
@@ -297,5 +298,33 @@ class SystemController extends _$SystemController {
     logger.d('resetSharedPreferences');
 
     await sharedPreferences.clear();
+  }
+
+  Future<void> setAppBadgeCount(int count) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[SystemController] setAppBadgeCount: $count');
+
+    final bool isSupported = await FlutterAppBadger.isAppBadgeSupported();
+    if (!isSupported) {
+      logger.d('[SystemController] setAppBadgeCount: App badges not supported');
+      return;
+    }
+
+    await FlutterAppBadger.updateBadgeCount(count);
+    logger.i('[SystemController] setAppBadgeCount: Completed');
+  }
+
+  Future<void> resetAppBadges() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[SystemController] resetAppBadges');
+
+    final bool isSupported = await FlutterAppBadger.isAppBadgeSupported();
+    if (!isSupported) {
+      logger.d('[SystemController] resetAppBadges: App badges not supported');
+      return;
+    }
+
+    await FlutterAppBadger.removeBadge();
+    logger.i('[SystemController] resetAppBadges: Completed');
   }
 }
