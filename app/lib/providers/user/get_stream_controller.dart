@@ -1,7 +1,6 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -82,14 +81,23 @@ class GetStreamController extends _$GetStreamController {
     return streamChatClient.state.currentUser?.id;
   }
 
-  @override
-  GetStreamControllerState build() {
-    return GetStreamControllerState.initialState();
-  }
-
   Iterable<Channel> get channels {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     return streamChatClient.state.channels.values;
+  }
+
+  int get unreadBadgeCount {
+    int count = 0;
+    for (final Channel channel in channels) {
+      count += channel.state?.unreadCount ?? 0;
+    }
+
+    return count;
+  }
+
+  @override
+  GetStreamControllerState build() {
+    return GetStreamControllerState.initialState();
   }
 
   bool isRelationshipInvolvedInConversation(Relationship? relationship) {

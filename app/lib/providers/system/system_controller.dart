@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -15,7 +16,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 
 // Project imports:
 import 'package:app/constants/key_constants.dart';

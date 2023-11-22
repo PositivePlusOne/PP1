@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/profile_constants.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,6 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';

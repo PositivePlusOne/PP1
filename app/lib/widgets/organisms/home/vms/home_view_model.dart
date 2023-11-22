@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,6 +21,7 @@ import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';

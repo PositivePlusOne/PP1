@@ -161,6 +161,8 @@ class PositiveChannelListTile extends ConsumerWidget {
       complementaryColor = accentColor.complimentTextColor;
     }
 
+    final bool hasUnreadMessages = (channel?.state?.unreadCount ?? 0) > 0;
+
     return PositiveTapBehaviour(
       key: valueKey,
       isEnabled: isEnabled,
@@ -178,13 +180,31 @@ class PositiveChannelListTile extends ConsumerWidget {
               width: indicatorWidth,
               child: Stack(
                 children: <Widget>[
-                  for (final Widget indicator in indicators)
+                  for (final Widget indicator in indicators) ...<Widget>[
                     Positioned(
                       top: 0.0,
                       bottom: 0.0,
                       left: 0.0 + (overlapValue * indicators.indexOf(indicator)),
                       child: indicator,
                     ),
+                  ],
+                  if (hasUnreadMessages) ...<Widget>[
+                    Align(
+                      alignment: Alignment.center,
+                      child: Transform.translate(
+                        // Use kIconHuge as the base size
+                        offset: const Offset(kIconHuge * 0.45, -kIconHuge * 0.45),
+                        child: Container(
+                          width: kIconIndicator,
+                          height: kIconIndicator,
+                          decoration: BoxDecoration(
+                            color: colors.purple,
+                            borderRadius: BorderRadius.circular(kIconIndicator),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

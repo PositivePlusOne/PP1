@@ -641,21 +641,44 @@ class PositiveButtonState extends State<PositiveButton> {
     late Widget mainWidget;
 
     if (widget.style == PositiveButtonStyle.navigation) {
-      mainWidget = Column(
+      mainWidget = Stack(
+        alignment: Alignment.center,
+        fit: StackFit.loose,
         children: <Widget>[
-          if (widget.iconWidgetBuilder != null) ...<Widget>[
-            widget.iconWidgetBuilder!(iconColor),
-          ],
-          if (widget.iconWidgetBuilder == null) ...<Widget>[
-            Icon(widget.icon, color: iconColor, size: iconRadius),
-          ],
-          Text(
-            widget.label,
-            style: textStyle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
+          Column(
+            children: <Widget>[
+              if (widget.iconWidgetBuilder != null) ...<Widget>[
+                widget.iconWidgetBuilder!(iconColor),
+              ],
+              if (widget.iconWidgetBuilder == null) ...<Widget>[
+                Icon(widget.icon, color: iconColor, size: iconRadius),
+              ],
+              Text(
+                widget.label,
+                style: textStyle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
+          if (widget.includeBadge) ...<Widget>[
+            Align(
+              alignment: Alignment.center,
+              child: Transform.translate(
+                // Use iconRadius as the offset to ensure the badge is close to the icon.
+                offset: Offset(iconRadius * 0.55, -iconRadius * 0.80),
+                child: Container(
+                  width: kIconIndicator,
+                  height: kIconIndicator,
+                  decoration: BoxDecoration(
+                    color: widget.colors.purple,
+                    borderRadius: BorderRadius.circular(kIconIndicator),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       );
     } else if (widget.layout == PositiveButtonLayout.iconOnly) {
