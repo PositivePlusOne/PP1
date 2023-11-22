@@ -104,6 +104,18 @@ export namespace CacheService {
     }
 
     /**
+     * This function deletes a cached set of schema data from the Redis cache.
+     * Useful for functions which bulk update/get schema data such as promotions.
+     * 
+     * @param {string} schemaKey the schema key to delete.
+     */
+    export async function clearSchemaFromCache(schemaKey: string): Promise<void> {
+        const redisClient = await getRedisClient();
+        const cacheKey = generateCacheKey({ schemaKey, entryId: '*' });
+        await redisClient.del(cacheKey);
+    };
+
+    /**
      * This function deletes all values from the Redis cache that start with a prefix.
      * @param {string} prefix the prefix to delete.
      * @return {Promise<void>} a promise that resolves when the values have been deleted.

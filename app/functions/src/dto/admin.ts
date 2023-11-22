@@ -1,4 +1,4 @@
-import { DocumentReference, Timestamp } from "firebase-admin/firestore";
+import { DocumentReference } from "firebase-admin/firestore";
 import { FlMeta, FlMetaJSON } from "./meta";
 
 export const adminQuickActionsSchemaKey = 'adminQuickActions';

@@ -1,10 +1,12 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import * as cronParser from "cron-parser";
 
 import { adminApp } from "..";
 import flamelink from "flamelink";
 import { SlackService } from "./slack_service";
 import { ProfileJSON } from "../dto/profile";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace SystemService {
   let flamelinkApp: flamelink.app.App;
@@ -146,5 +148,28 @@ export namespace SystemService {
     }
 
     SlackService.postToChannelAsMember(profile, SlackService.feedbackChannel, slackContent);
+  }
+
+  export function shouldExecuteCron(cron: string, lastRunDate: string, currentTimeEpoch: string) {
+    const expression = cronParser.parseExpression(cron);
+
+    // Check we have a valid iteration.
+    const nextIteration = expression.next();
+    const iterationDate = nextIteration.toDate();
+    const iterationEpoch = parseInt(StreamHelpers.dateToUnixTimestamp(iterationDate));
+
+    // If the last run date is empty, we should run the cron.
+    if (!lastRunDate) {
+      return true;
+    }
+
+    // Check if the current time is after the next iteration.
+    // If it is, we should run the cron.
+    const currentTimeEpochInt = parseInt(currentTimeEpoch);
+    if (currentTimeEpochInt > iterationEpoch) {
+      return true;
+    }
+
+    return false;
   }
 }

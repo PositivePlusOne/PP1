@@ -20,6 +20,9 @@ import { RelationshipService } from "../services/relationship_service";
 import { Pagination } from "../helpers/pagination";
 import { PromotionsService } from "../services/promotions_service";
 import { TestNotification } from "../services/builders/notifications/test/test_notification";
+import { DataService } from "../services/data_service";
+import { AdminScheduledActionJSON, adminScheduledActionsSchemaKey } from "../dto/admin";
+import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -56,8 +59,58 @@ export namespace SystemEndpoints {
       await DataHandlerRegistry.executeChangeHandlers(changeType, schema, context.params.documentId, beforeData, afterData);
     });
 
-  export const cronHandler = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).pubsub.schedule("* * * * *").onRun(async (context) => {
+  /**
+   * Cron handler for scheduled actions.
+   * This is set to run every 5 minutes to allow for a reasonable level of precision and to prevent cron overlap.
+   * 
+   * @see https://firebase.google.com/docs/functions/schedule-functions
+   */
+  export const cronHandler = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).pubsub.schedule("*/5 * * * *").onRun(async (context) => {
     functions.logger.info("Cron handler executed", { context });
+
+    const scheduledActions = await DataService.getBatchDocumentsBySchema({
+      schemaKey: adminScheduledActionsSchemaKey,
+    }) as AdminScheduledActionJSON[];
+
+    functions.logger.info("Found scheduled actions", { count: scheduledActions.length });
+    if (!scheduledActions || scheduledActions.length === 0) {
+      return;
+    }
+
+    const currentTimeEpoch = StreamHelpers.getCurrentUnixTimestamp();
+    
+    // Loop through each scheduled action and check if it should be executed.
+    for (const scheduledAction of scheduledActions) {
+      const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(scheduledAction);
+      if (!scheduledAction || !scheduledAction.cron || !scheduledAction.actionJson || !documentId) {
+        functions.logger.warn("Invalid scheduled action", { scheduledAction });
+        continue;
+      }
+
+      const cron = scheduledAction.cron;
+      const lastRunDate = scheduledAction.lastRunDate || "";
+
+      if (!documentId) {
+        functions.logger.warn("Invalid scheduled action", { scheduledAction });
+        continue;
+      }
+
+      // Check if the cron should be executed.
+      const shouldExecute = SystemService.shouldExecuteCron(cron, lastRunDate, currentTimeEpoch);
+      if (!shouldExecute) {
+        continue;
+      }
+
+      // Update the last run date.
+      scheduledAction.lastRunDate = currentTimeEpoch;
+      // scheduledAction.lastRunActionId = actionId;
+
+      await DataService.updateDocument({
+        schemaKey: adminScheduledActionsSchemaKey,
+        entryId: documentId,
+        data: scheduledAction,
+      });
+    }
   });
 
   export const getSystemConfiguration = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {

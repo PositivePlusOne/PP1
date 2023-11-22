@@ -158,13 +158,7 @@ export namespace DataService {
 
     if (migratedDocument._fl_meta_) {
       if (migratedDocument._fl_meta_.createdDate && !(migratedDocument._fl_meta_.createdDate instanceof Timestamp)) {
-        const createdDate = typeof migratedDocument._fl_meta_.createdDate === 'string'
-          ? new Date(migratedDocument._fl_meta_.createdDate)
-          : migratedDocument._fl_meta_.createdDate;
-
-          if (!(createdDate instanceof Timestamp)) {
-            migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
-          }
+        migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
       }
 
       if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
@@ -284,6 +278,27 @@ export namespace DataService {
     const entries = await Promise.all(futures);
     return entries;
   };
+
+  export const getBatchDocumentsBySchema = async function (options: { schemaKey: string; }): Promise<any> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(`Getting batch documents for ${options.schemaKey}`);
+
+    const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: "*" });
+    const cachedDocuments = await CacheService.get(cacheKey);
+    if (cachedDocuments) {
+      return cachedDocuments;
+    }
+
+    const documents = await flamelinkApp.content.get({
+      schemaKey: options.schemaKey,
+    });
+
+    if (documents) {
+      await CacheService.setInCache(cacheKey, documents, 60 * 60 * 24);
+    }
+
+    return documents;
+  }
 
   export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
