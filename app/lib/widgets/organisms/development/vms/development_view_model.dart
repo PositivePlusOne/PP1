@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/services/api.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
 
@@ -69,6 +70,23 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     } catch (ex) {
       logger.e('Failed to display auth claims. $ex');
       state = state.copyWith(status: 'Failed to display auth claims');
+    }
+  }
+
+  Future<void> sendTestNotification() async {
+    final Logger logger = ref.read(loggerProvider);
+    final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
+    logger.d('Sending test notification');
+
+    state = state.copyWith(status: 'Sending test notification');
+
+    try {
+      await systemApiService.sendTestNotification();
+      logger.d('Successfully sent test notification');
+      state = state.copyWith(status: 'Successfully sent test notification');
+    } catch (ex) {
+      logger.e('Failed to send test notification. $ex');
+      state = state.copyWith(status: 'Failed to send test notification');
     }
   }
 }

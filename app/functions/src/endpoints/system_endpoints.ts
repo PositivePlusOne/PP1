@@ -19,6 +19,7 @@ import { RelationshipJSON } from "../dto/relationships";
 import { RelationshipService } from "../services/relationship_service";
 import { Pagination } from "../helpers/pagination";
 import { PromotionsService } from "../services/promotions_service";
+import { TestNotification } from "../services/builders/notifications/test/test_notification";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -190,6 +191,24 @@ export namespace SystemEndpoints {
       seedData: {
         token: chatToken,
       },
+    });
+  });
+
+  export const sendTestNotification = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    const uid = await UserService.verifyAuthenticated(context, request.sender);
+    functions.logger.info("Sending test notification", { uid });
+
+    const profile = await ProfileService.getProfile(uid) as ProfileJSON;
+    const fcmToken = profile.fcmToken || "";
+
+    if (!fcmToken) {
+      throw new functions.https.HttpsError("failed-precondition", "No FCM token found");
+    }
+
+    await TestNotification.sendNotification(profile);
+    
+    return buildEndpointResponse(context, {
+      sender: uid,
     });
   });
 }

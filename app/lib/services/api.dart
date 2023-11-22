@@ -129,6 +129,12 @@ class SystemApiService {
     );
   }
 
+  FutureOr<EndpointResponse> sendTestNotification() async {
+    return await getHttpsCallableResult(
+      name: 'system-sendTestNotification',
+    );
+  }
+
   FutureOr<EndpointResponse> submitFeedback({
     required String content,
     required FeedbackType feedbackType,

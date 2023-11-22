@@ -247,6 +247,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       currentChannelExtraData: extraData,
     );
 
+    log.d('Marking channel as read');
+    unawaited(channel.markRead());
+
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
       const ChatRoute(),

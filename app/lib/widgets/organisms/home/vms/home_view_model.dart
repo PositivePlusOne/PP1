@@ -21,6 +21,7 @@ import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/organisms/login/vms/login_view_model.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -54,6 +55,9 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     universalLinksController.removeInitialLinkFlagInSharedPreferences();
+
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    systemController.resetAppBadges();
 
     checkForRefresh();
 
@@ -92,18 +96,16 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final User? currentUser = firebaseAuth.currentUser;
-
-    if (currentUser == null) {
-      logger.d('performProfileChecks() - currentUser is null');
-      return;
-    }
 
     final Profile? currentProfile = cacheController.get(profileController.currentProfileId);
     if (currentProfile == null) {
       logger.d('performProfileChecks() - currentProfile is null');
+      return;
+    }
+
+    if (!profileController.isCurrentlyUserProfile) {
+      logger.d('performProfileChecks() - profileController.isCurrentlyUserProfile is false');
       return;
     }
 

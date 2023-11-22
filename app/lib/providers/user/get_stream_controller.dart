@@ -72,7 +72,7 @@ class GetStreamController extends _$GetStreamController {
       case SystemEnvironment.staging:
         return 'Staging';
       case SystemEnvironment.production:
-        return 'Production';
+        return 'Firebase';
     }
   }
 
@@ -81,14 +81,23 @@ class GetStreamController extends _$GetStreamController {
     return streamChatClient.state.currentUser?.id;
   }
 
-  @override
-  GetStreamControllerState build() {
-    return GetStreamControllerState.initialState();
-  }
-
   Iterable<Channel> get channels {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     return streamChatClient.state.channels.values;
+  }
+
+  int get unreadBadgeCount {
+    int count = 0;
+    for (final Channel channel in channels) {
+      count += channel.state?.unreadCount ?? 0;
+    }
+
+    return count;
+  }
+
+  @override
+  GetStreamControllerState build() {
+    return GetStreamControllerState.initialState();
   }
 
   bool isRelationshipInvolvedInConversation(Relationship? relationship) {
@@ -117,9 +126,14 @@ class GetStreamController extends _$GetStreamController {
     cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
 
     await firebaseTokenSubscription?.cancel();
-    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
-      await updateStreamDevices(token);
-    });
+    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen(onTokenUpdateDetected);
+  }
+
+  Future<void> onTokenUpdateDetected(String token) async {
+    final logger = ref.read(loggerProvider);
+    logger.d('[GetStreamController] onTokenUpdateDetected()');
+
+    await updateStreamDevices(token);
   }
 
   Future<void> onProfileChanged(ProfileSwitchedEvent event) async {
@@ -321,8 +335,8 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    if (profileController.state.currentProfile == null) {
-      log.e('[GetStreamController] attemptToUpdateStreamDevices() profile is null');
+    if (!profileController.isCurrentlyUserProfile) {
+      log.e('[GetStreamController] attemptToUpdateStreamDevices() not current auth user');
       return;
     }
 

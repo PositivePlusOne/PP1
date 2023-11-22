@@ -255,6 +255,17 @@ class DevelopmentPage extends ConsumerWidget {
                   style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
               ),
+              CupertinoListTile.notched(
+                onTap: () => developmentViewModel.sendTestNotification(),
+                title: Text(
+                  'Send Test Notification',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'Make sure you are eligible to receive notifications by sending a test notification.',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+              ),
             ],
           ),
         ),
