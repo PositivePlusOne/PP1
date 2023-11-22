@@ -92,18 +92,16 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final User? currentUser = firebaseAuth.currentUser;
-
-    if (currentUser == null) {
-      logger.d('performProfileChecks() - currentUser is null');
-      return;
-    }
 
     final Profile? currentProfile = cacheController.get(profileController.currentProfileId);
     if (currentProfile == null) {
       logger.d('performProfileChecks() - currentProfile is null');
+      return;
+    }
+
+    if (!profileController.isCurrentlyUserProfile) {
+      logger.d('performProfileChecks() - profileController.isCurrentlyUserProfile is false');
       return;
     }
 

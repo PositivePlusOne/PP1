@@ -1,6 +1,7 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class GetStreamController extends _$GetStreamController {
       case SystemEnvironment.staging:
         return 'Staging';
       case SystemEnvironment.production:
-        return 'Production';
+        return 'Firebase';
     }
   }
 
@@ -117,9 +118,14 @@ class GetStreamController extends _$GetStreamController {
     cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
 
     await firebaseTokenSubscription?.cancel();
-    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
-      await updateStreamDevices(token);
-    });
+    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen(onTokenUpdateDetected);
+  }
+
+  Future<void> onTokenUpdateDetected(String token) async {
+    final logger = ref.read(loggerProvider);
+    logger.d('[GetStreamController] onTokenUpdateDetected()');
+
+    await updateStreamDevices(token);
   }
 
   Future<void> onProfileChanged(ProfileSwitchedEvent event) async {
@@ -321,8 +327,8 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    if (profileController.state.currentProfile == null) {
-      log.e('[GetStreamController] attemptToUpdateStreamDevices() profile is null');
+    if (!profileController.isCurrentlyUserProfile) {
+      log.e('[GetStreamController] attemptToUpdateStreamDevices() not current auth user');
       return;
     }
 
