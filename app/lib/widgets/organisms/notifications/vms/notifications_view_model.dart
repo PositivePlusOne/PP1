@@ -1,10 +1,10 @@
 // Package imports:
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';

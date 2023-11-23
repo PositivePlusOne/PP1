@@ -1,11 +1,11 @@
 // Package imports:
-import 'package:app/services/third_party.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Project imports:
 import 'package:app/main.dart';
 import 'package:app/providers/system/notifications_controller.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:app/services/third_party.dart';
 
 @pragma("vm:entry-point")
 Future<void> onBackgroundMessageReceived(RemoteMessage message) async {

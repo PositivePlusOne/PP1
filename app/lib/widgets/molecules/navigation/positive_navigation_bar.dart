@@ -14,6 +14,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
@@ -26,7 +27,7 @@ import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 // Enumeration for NavigationBarIndex
 enum NavigationBarIndex { hub, search, chat, add, guidance }
 
-class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidget {
+class PositiveNavigationBar extends HookConsumerWidget implements PreferredSizeWidget {
   const PositiveNavigationBar({
     required this.mediaQuery,
     this.index = NavigationBarIndex.hub,
@@ -62,8 +63,10 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final GetStreamController getStreamController = ref.watch(getStreamControllerProvider.notifier);
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
     final int badgeCount = getStreamController.unreadBadgeCount;
+
+    usePageRefreshHook();
 
     return SizedBox(
       height: preferredSize.height,

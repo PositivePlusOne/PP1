@@ -764,11 +764,6 @@
     "shared_placeholders_blocked_user": "A message was received",
     "shared_placeholders_empty_name": "Positive +1 member",
     "shared_placeholders_member_count_more": "+{count} More",
-    "shared_placeholders_empty_message": "{handle} sent a message.",
-    "shared_placeholders_deleted_message": "{handle} deleted a message.",
-    "shared_placeholders_image_message": "{handle} sent a photo.",
-    "shared_placeholders_video_message": "{handle} sent a video.",
-    "shared_placeholders_file_message": "{handle} sent a file.",
     
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search Connections",

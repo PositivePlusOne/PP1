@@ -101,7 +101,7 @@ class PositiveChannelListTile extends ConsumerWidget {
       if (isTargetBlocked) {
         description = localizations.shared_placeholders_blocked_user;
       } else {
-        description = latestMessage.getFormattedDescription(localizations);
+        description = latestMessage.getFormattedDescription();
         time = latestMessage.createdAt.timeAgoFromNow;
       }
     }

@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -22,8 +21,6 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/notification_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/activity_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
@@ -32,10 +29,10 @@ import 'package:app/providers/system/handlers/notifications/new_message_notifica
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';
-import '../../dtos/database/profile/profile.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
@@ -330,8 +327,6 @@ class NotificationsController extends _$NotificationsController {
   }) async {
     final logger = providerContainer.read(loggerProvider);
     final scf.StreamChatClient streamChatClient = providerContainer.read(streamChatClientProvider);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final AppRouter appRouter = providerContainer.read(appRouterProvider);
 
     if (!event.isNewStreamMessage) {
       logger.d('handleStreamChatForegroundMessage: Not a new message, skipping');
@@ -343,15 +338,26 @@ class NotificationsController extends _$NotificationsController {
     String title = event.data['title'] ?? '';
     String body = event.data['body'] ?? '';
 
-    if (isForeground && id.isNotEmpty) {
-      final AppLocalizations localizations = AppLocalizations.of(appRouter.navigatorKey.currentContext!)!;
-      final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
-      final String senderId = messageResponse.message.user?.id ?? '';
-      final Profile senderProfile = await profileController.getProfile(senderId);
+    // If in the background, connect to get stream using the last known user
+    final scf.ConnectionStatus connectionStatus = streamChatClient.wsConnectionStatus;
+    final bool isConnected = connectionStatus == scf.ConnectionStatus.connected;
 
-      title = senderProfile.displayName.asHandle;
-      body = messageResponse.message.getFormattedDescription(localizations);
+    if (!isForeground && !isConnected) {
+      final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+      final String lastKnownUserToken = sharedPreferences.getString(GetStreamController.kLastStreamTokenPreferencesKey) ?? '';
+      final String lastKnownUserId = sharedPreferences.getString(GetStreamController.kLastStreamUserId) ?? '';
+
+      if (lastKnownUserId.isEmpty || lastKnownUserToken.isEmpty) {
+        logger.e('handleStreamChatForegroundMessage: No last known user id, skipping');
+        return;
+      }
+
+      await streamChatClient.connectUser(scf.User(id: lastKnownUserId), lastKnownUserToken);
     }
+
+    final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
+    title = (messageResponse.message.user?.name ?? '').asHandle;
+    body = messageResponse.message.getFormattedDescription();
 
     if (title.isEmpty || body.isEmpty) {
       logger.e('handleStreamChatForegroundMessage: Title or body is empty');

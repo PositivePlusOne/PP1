@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
@@ -64,6 +65,9 @@ class GetStreamController extends _$GetStreamController {
 
   StreamSubscription<String>? firebaseTokenSubscription;
   StreamSubscription<List<Channel>>? channelsSubscription;
+
+  static const String kLastStreamTokenPreferencesKey = 'positive_last_stream_token';
+  static const String kLastStreamUserId = 'positive_last_stream_user_id';
 
   String get pushProviderName {
     switch (ref.read(systemControllerProvider).environment) {
@@ -392,9 +396,15 @@ class GetStreamController extends _$GetStreamController {
       log.w('[GetStreamController] onProfileChanged() user is not disconnected');
       return;
     }
+
     // all's okay to create the user then
     final User chatUser = buildStreamChatUser(profile: currentProfile);
     await streamChatClient.connectUser(chatUser, token);
+
+    // Save the token to shared preferences so we can use it later
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    await sharedPreferences.setString(kLastStreamTokenPreferencesKey, token);
+    await sharedPreferences.setString(kLastStreamUserId, currentProfileId);
   }
 
   Future<void> updateStreamDevices(String fcmToken) async {
@@ -471,12 +481,14 @@ class GetStreamController extends _$GetStreamController {
     final String imageUrl = profile.profileImage?.bucketPath ?? '';
     final String displayName = profile.displayName;
     final String accentColor = profile.accentColor;
+
     // which we can build our map of extra data
     final Map<String, dynamic> extraData = buildUserExtraData(
       imageUrl: imageUrl,
       displayName: displayName,
       accentColor: accentColor,
     );
+
     // to create a richly described user
     return User(id: uid, name: displayName, image: imageUrl, extraData: extraData);
   }
@@ -645,6 +657,7 @@ class GetStreamController extends _$GetStreamController {
       log.i('[GetStreamController] onProfileUpdated() user is null');
       return;
     }
+
     log.i('[GetStreamController] onProfileUpdated() updating user');
     final User chatUser = buildStreamChatUser(profile: profileController.state.currentProfile ?? profile);
     streamChatClient.state.updateUser(chatUser);
