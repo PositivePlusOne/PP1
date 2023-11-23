@@ -1,4 +1,6 @@
 // Package imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -49,8 +51,27 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
   Future<void> notifyNotificationsSeen() async {
     final Logger logger = ref.read(loggerProvider);
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if (!profileController.isCurrentlyUserProfile) {
+      logger.d('notifyNotificationsSeen() - not current profile');
+      return;
+    }
 
     logger.d('notifyNotificationsSeen()');
     await notificationsController.updateNotificationCheckTime();
+  }
+
+  Future<void> switchProfileAndAttemptToMarkNotifications(String supportedProfileId) async {
+    final Logger logger = ref.read(loggerProvider);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+
+    logger.d('switchProfileAndAttemptToMarkNotifications($supportedProfileId)');
+    switchProfile(supportedProfileId);
+
+    // Allow time for the window to load.
+    Future.delayed(kAnimationDurationFSWait, () async {
+      await notificationsController.updateNotificationCheckTime();
+    });
   }
 }

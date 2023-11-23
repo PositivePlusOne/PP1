@@ -100,7 +100,7 @@ class NotificationsPage extends HookConsumerWidget {
                   mixin: viewModel,
                   isSlim: true,
                   useProfileBackgroundColours: true,
-                  onTapped: (int profileIndex) => viewModel.switchProfile(viewModel.getSupportedProfileIds()[profileIndex]),
+                  onTapped: (int profileIndex) => viewModel.switchProfileAndAttemptToMarkNotifications(viewModel.getSupportedProfileIds()[profileIndex]),
                 ),
               ),
             ] else if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
