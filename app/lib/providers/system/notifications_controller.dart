@@ -240,6 +240,7 @@ class NotificationsController extends _$NotificationsController {
 
     if (!state.remoteNotificationsInitialized) {
       if (isDeviceIos) {
+        await firebaseMessaging.requestPermission(provisional: true);
         await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
         logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
       }

@@ -54,7 +54,7 @@
 	<key>FLTEnableWideGamut</key>
 	<true/>
 	<key>FirebaseAppDelegateProxyEnabled</key>
-	<true/>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>
