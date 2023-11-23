@@ -28,7 +28,7 @@ import FirebaseMessaging
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func application(
+    override func application(
         _ application: UIApplication,
         didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
       -> UIBackgroundFetchResult {
