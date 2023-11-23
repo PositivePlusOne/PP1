@@ -747,15 +747,6 @@
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
     "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
-
-    "notification_topic_title_other": "Other",
-    "notification_topic_title_new_follower": "New Follower",
-    "notification_topic_title_connection_request": "Connection Request",
-    "notification_topic_title_new_comment": "New Comment",
-    "notification_topic_title_new_message": "New Message",
-    "notification_topic_title_post_shared": "Post Shared",
-    "notification_topic_title_shared_event": "Shared Event",
-    "notification_topic_title_post_likes": "Post Likes",
     
     "shared_get_notified_title": "Get Notified",
     "shared_get_notified_refuse": "I do not want to be notified",
@@ -773,11 +764,6 @@
     "shared_placeholders_blocked_user": "A message was received",
     "shared_placeholders_empty_name": "Positive +1 member",
     "shared_placeholders_member_count_more": "+{count} More",
-    "shared_placeholders_empty_message": "{handle} sent a message.",
-    "shared_placeholders_deleted_message": "{handle} deleted a message.",
-    "shared_placeholders_image_message": "{handle} sent a photo.",
-    "shared_placeholders_video_message": "{handle} sent a video.",
-    "shared_placeholders_file_message": "{handle} sent a file.",
     
     "shared_search_hint": "Search",
     "shared_search_people_hint": "Search Connections",

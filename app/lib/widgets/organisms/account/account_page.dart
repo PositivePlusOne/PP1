@@ -16,6 +16,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
@@ -58,12 +59,16 @@ class AccountPage extends HookConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String currentUserUid = auth.currentUser?.uid ?? '';
 
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    ref.watch(notificationsControllerProvider);
+
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
         colors: colors,
         icon: UniconsLine.bell,
         primaryColor: foregroundColor,
         onTapped: () => onProfileNotificationsActionSelected(shouldReplace: true),
+        includeBadge: notificationsController.canDisplayNotificationFeedBadge,
       ),
       PositiveProfileCircularIndicator(
         profile: profileController.currentProfile,

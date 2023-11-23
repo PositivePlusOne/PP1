@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/database/relationships/relationship_member.dart';
@@ -20,6 +21,7 @@ import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
@@ -112,24 +114,25 @@ extension ProfileExtensions on Profile {
     return true;
   }
 
-  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {
+  List<Widget> buildCommonProfilePageActions({
+    bool disableNotifications = false,
+    bool disableAccount = false,
+    bool includeSpacer = false,
+    Color? color,
+  }) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-
-    // Add notification information
-    // int unreadCount = 0;
-    // if (profileController.currentProfileId != null) {
-    //   final String expectedCacheKey = 'notifications:${profileController.currentProfileId}';
-    //   final PositiveNotificationsState? notificationsState = cacheController.get(expectedCacheKey);
-    //   if (notificationsState != null) {
-    //     unreadCount = notificationsState.unreadCount;
-    //   }
-    // }
+    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+    final bool isUserProfile = profileController.isCurrentlyUserProfile;
 
     if (profileController.hasSetupProfile) {
       children.addAll([
-        PositiveNotificationsButton(color: color, isDisabled: disableNotifications),
+        PositiveNotificationsButton(
+          color: color,
+          isDisabled: disableNotifications,
+          includeBadge: isUserProfile && notificationsController.canDisplayNotificationFeedBadge,
+        ),
+        if (includeSpacer) const SizedBox(width: kPaddingSmall),
         PositiveProfileCircularIndicator(
           profile: profileController.currentProfile,
           isEnabled: !disableAccount,

@@ -7,7 +7,7 @@ part of 'account_form_controller.dart';
 // **************************************************************************
 
 String _$accountFormControllerHash() =>
-    r'51cf6b74e20899261cb4939d63797437583ae5cd';
+    r'73e15f886bae9527799377da19afeae3ac64dc17';
 
 /// Copied from Dart SDK
 class _SystemHash {

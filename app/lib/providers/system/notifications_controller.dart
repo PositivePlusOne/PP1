@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -22,8 +21,6 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/notification_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/handlers/notifications/activity_notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/connection_request_notification_handler.dart';
@@ -32,10 +29,10 @@ import 'package:app/providers/system/handlers/notifications/new_message_notifica
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/providers/system/handlers/notifications/relationship_notification_handler.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
 import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';
-import '../../dtos/database/profile/profile.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';
 import '../user/user_controller.dart';
@@ -49,6 +46,8 @@ class NotificationsControllerState with _$NotificationsControllerState {
   const factory NotificationsControllerState({
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
+    DateTime? lastNotificationReceivedTime,
+    DateTime? lastNotificationCheckTime,
   }) = _NotificationsControllerState;
 
   factory NotificationsControllerState.initialState() => const NotificationsControllerState(
@@ -61,6 +60,24 @@ class NotificationsControllerState with _$NotificationsControllerState {
 class NotificationsController extends _$NotificationsController {
   StreamSubscription<RemoteMessage>? firebaseMessagingStreamSubscription;
   StreamSubscription<User?>? userSubscription;
+
+  static const String kNotificationReceivedTimeKey = 'notificationReceivedTime';
+  static const String kNotificationCheckTimeKey = 'notificationCheckTime';
+
+  bool get canDisplayNotificationFeedBadge {
+    final DateTime? lastNotificationReceivedTime = state.lastNotificationReceivedTime;
+    DateTime? lastNotificationCheckTime = state.lastNotificationCheckTime;
+
+    if (lastNotificationReceivedTime == null) {
+      return false;
+    }
+
+    // If we have no last notification check time, we can assume we have never checked
+    lastNotificationCheckTime ??= DateTime(0);
+
+    final bool hasReceivedNotificationRecently = lastNotificationReceivedTime.isAfter(lastNotificationCheckTime);
+    return hasReceivedNotificationRecently;
+  }
 
   final DefaultNotificationHandler defaultNotificationHandler = DefaultNotificationHandler();
   final List<NotificationHandler> handlers = [
@@ -95,6 +112,60 @@ class NotificationsController extends _$NotificationsController {
   void resetNotifications() {
     final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - Resetting notifications');
+  }
+
+  Future<void> fetchNotificationCheckTime() async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final String? notificationCheckTimeString = sharedPreferences.getString(kNotificationCheckTimeKey);
+    final DateTime? notificationCheckTime = DateTime.tryParse(notificationCheckTimeString ?? '');
+
+    if (notificationCheckTime == null) {
+      logger.d('fetchNotificationCheckTime: No notification check time found');
+      return;
+    }
+
+    logger.d('fetchNotificationCheckTime: $notificationCheckTime');
+    state = state.copyWith(lastNotificationCheckTime: notificationCheckTime);
+  }
+
+  Future<void> fetchNotificationReceivedTime() async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final String? notificationReceivedTimeString = sharedPreferences.getString(kNotificationReceivedTimeKey);
+    final DateTime? notificationReceivedTime = DateTime.tryParse(notificationReceivedTimeString ?? '');
+
+    if (notificationReceivedTime == null) {
+      logger.d('fetchNotificationReceivedTime: No notification received time found');
+      return;
+    }
+
+    logger.d('fetchNotificationReceivedTime: $notificationReceivedTime');
+    state = state.copyWith(lastNotificationReceivedTime: notificationReceivedTime);
+  }
+
+  Future<void> updateNotificationCheckTime() async {
+    final logger = providerContainer.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+
+    final DateTime now = DateTime.now();
+    await sharedPreferences.setString(kNotificationCheckTimeKey, now.toIso8601String());
+    logger.d('updateNotificationCheckTime: $now');
+
+    state = state.copyWith(lastNotificationCheckTime: now);
+  }
+
+  Future<void> updateNotificationReceivedTime() async {
+    final logger = providerContainer.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+
+    final DateTime now = DateTime.now();
+    await sharedPreferences.setString(kNotificationReceivedTimeKey, now.toIso8601String());
+    logger.d('updateNotificationReceivedTime: $now');
+
+    state = state.copyWith(lastNotificationReceivedTime: now);
   }
 
   Future<bool> requestPushNotificationPermissions() async {
@@ -202,7 +273,7 @@ class NotificationsController extends _$NotificationsController {
     final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsDarwin, macOS: initializationSettingsDarwin, linux: initializationSettingsLinux);
     final bool? initializedSuccessfully = await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: onBackgroundMessageResponseReceived,
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
 
@@ -233,8 +304,9 @@ class NotificationsController extends _$NotificationsController {
     bool isForeground = false,
   }) async {
     final logger = providerContainer.read(loggerProvider);
+    await updateNotificationReceivedTime();
 
-    if (event.isStreamChatNotification) {
+    if (event.isStreamChatNotification && !isForeground) {
       logger.d('onRemoteNotificationReceived: Stream chat message, handling');
       await handleStreamChatMessage(event: event, isForeground: isForeground);
       return;
@@ -255,8 +327,6 @@ class NotificationsController extends _$NotificationsController {
   }) async {
     final logger = providerContainer.read(loggerProvider);
     final scf.StreamChatClient streamChatClient = providerContainer.read(streamChatClientProvider);
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final AppRouter appRouter = providerContainer.read(appRouterProvider);
 
     if (!event.isNewStreamMessage) {
       logger.d('handleStreamChatForegroundMessage: Not a new message, skipping');
@@ -268,15 +338,26 @@ class NotificationsController extends _$NotificationsController {
     String title = event.data['title'] ?? '';
     String body = event.data['body'] ?? '';
 
-    if (isForeground && id.isNotEmpty) {
-      final AppLocalizations localizations = AppLocalizations.of(appRouter.navigatorKey.currentContext!)!;
-      final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
-      final String senderId = messageResponse.message.user?.id ?? '';
-      final Profile senderProfile = await profileController.getProfile(senderId);
+    // If in the background, connect to get stream using the last known user
+    final scf.ConnectionStatus connectionStatus = streamChatClient.wsConnectionStatus;
+    final bool isConnected = connectionStatus == scf.ConnectionStatus.connected;
 
-      title = senderProfile.displayName.asHandle;
-      body = messageResponse.message.getFormattedDescription(localizations);
+    if (!isForeground && !isConnected) {
+      final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+      final String lastKnownUserToken = sharedPreferences.getString(GetStreamController.kLastStreamTokenPreferencesKey) ?? '';
+      final String lastKnownUserId = sharedPreferences.getString(GetStreamController.kLastStreamUserId) ?? '';
+
+      if (lastKnownUserId.isEmpty || lastKnownUserToken.isEmpty) {
+        logger.e('handleStreamChatForegroundMessage: No last known user id, skipping');
+        return;
+      }
+
+      await streamChatClient.connectUser(scf.User(id: lastKnownUserId), lastKnownUserToken);
     }
+
+    final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
+    title = (messageResponse.message.user?.name ?? '').asHandle;
+    body = messageResponse.message.getFormattedDescription();
 
     if (title.isEmpty || body.isEmpty) {
       logger.e('handleStreamChatForegroundMessage: Title or body is empty');
@@ -341,11 +422,6 @@ class NotificationsController extends _$NotificationsController {
     logger.d('onLocalNotificationReceived: $id, $title, $body, $payload');
   }
 
-  static void onDidReceiveBackgroundNotificationResponse(NotificationResponse details) {
-    final logger = providerContainer.read(loggerProvider);
-    logger.d('onDidReceiveBackgroundNotificationResponse: $details');
-  }
-
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     final logger = ref.read(loggerProvider);
     logger.d('onDidReceiveNotificationResponse: $details');
@@ -371,6 +447,15 @@ class NotificationsController extends _$NotificationsController {
   Future<void> attemptToDisplayNotification(NotificationHandler handler, NotificationPayload payload, {bool isForeground = true}) async {
     final logger = providerContainer.read(loggerProvider);
     logger.d('attemptToTriggerNotification: $payload, $isForeground');
+
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    await sharedPreferences.reload();
+
+    final bool isSubscribedToTopic = await isSubscribedToTopicByPayload(payload);
+    if (!isSubscribedToTopic) {
+      logger.d('attemptToDisplayNotification: Not subscribed to topic, skipping');
+      return;
+    }
 
     if (!await handler.canDisplayPayload(payload, isForeground)) {
       return;
@@ -421,9 +506,6 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
-    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
-    logger.d('subscribeToTopic: $topicKey, $isSubscribed');
-
     await sharedPreferences.setBool(sharedPreferencesKey, true);
     logger.d('subscribeToTopic: Subscribed to $topicKey');
   }
@@ -432,10 +514,35 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
-    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
-    logger.d('unsubscribeFromTopic: $topicKey, $isSubscribed');
-
     await sharedPreferences.setBool(sharedPreferencesKey, false);
     logger.d('unsubscribeFromTopic: Unsubscribed from $topicKey');
+  }
+
+  Future<Set<String>> getSubscribedTopics() async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final Set<String> subscribedTopics = <String>{};
+    for (final NotificationTopic topic in NotificationTopic.allTopics) {
+      final String topicKey = topic.toSharedPreferencesKey;
+      final bool? isSubscribed = sharedPreferences.getBool(topicKey);
+      if (isSubscribed == true) {
+        subscribedTopics.add(topicKey);
+      }
+    }
+
+    logger.d('getSubscribedTopics: $subscribedTopics');
+    return subscribedTopics;
+  }
+
+  Future<bool> isSubscribedToTopicByPayload(NotificationPayload payload) async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final String topicKey = payload.topic.toSharedPreferencesKey;
+    final bool? isSubscribed = sharedPreferences.getBool(topicKey);
+    logger.d('isSubscribedToTopicByPayload: $topicKey, $isSubscribed');
+
+    return isSubscribed ?? false;
   }
 }

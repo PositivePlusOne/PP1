@@ -12,7 +12,7 @@ import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
 
 void usePageRefreshHook({
-  Duration refreshDuration = const Duration(minutes: 1),
+  Duration refreshDuration = const Duration(seconds: 10),
 }) {
   use(PageRefreshHook(refreshDuration: refreshDuration));
 }

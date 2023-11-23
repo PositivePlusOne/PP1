@@ -377,7 +377,6 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     feedState.currentPaginationKey = '';
 
     feedState.pagingController.refresh();
-    saveFeedState(feedState);
   }
 
   Future<void> loadFirstWindowForAccountIfNeeded() async {

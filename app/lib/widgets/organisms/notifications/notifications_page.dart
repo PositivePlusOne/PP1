@@ -17,6 +17,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/communities_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/behaviours/positive_notification_pagination_behaviour.dart';
@@ -40,6 +41,9 @@ class NotificationsPage extends HookConsumerWidget {
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
     ref.watch(notificationsViewModelProvider);
+
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    ref.watch(notificationsControllerProvider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
@@ -96,7 +100,7 @@ class NotificationsPage extends HookConsumerWidget {
                   mixin: viewModel,
                   isSlim: true,
                   useProfileBackgroundColours: true,
-                  onTapped: (int profileIndex) => viewModel.switchProfile(viewModel.getSupportedProfileIds()[profileIndex]),
+                  onTapped: (int profileIndex) => viewModel.switchProfileAndAttemptToMarkNotifications(viewModel.getSupportedProfileIds()[profileIndex]),
                 ),
               ),
             ] else if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[

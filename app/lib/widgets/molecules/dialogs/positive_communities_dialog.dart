@@ -340,6 +340,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
+      physics: const AlwaysScrollableScrollPhysics(),
+      onRefresh: () => requestRefresh(profile: currentProfile),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,

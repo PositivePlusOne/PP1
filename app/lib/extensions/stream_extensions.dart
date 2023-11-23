@@ -1,5 +1,4 @@
 // Package imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
@@ -180,37 +179,34 @@ extension MemberListExt on Iterable<Member> {
 }
 
 extension MessageExt on Message {
-  String getFormattedDescription(AppLocalizations localizations) {
-    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-    final Profile? profile = cacheController.get<Profile>(user!.id);
-    final String handle = profile?.displayName.asHandle ?? localizations.shared_placeholders_empty_display_name;
+  String getFormattedDescription() {
     final String formattedText = text?.trim() ?? '';
-    final String displayName = profile?.displayName.asHandle ?? ''.asHandle;
+    final String handle = (user?.name ?? '').asHandle;
 
     if (isDeleted) {
-      return localizations.shared_placeholders_deleted_message(handle);
+      return '$handle deleted a message.';
     }
 
     // Check for attachments if no text
     if (attachments.isNotEmpty && formattedText.isEmpty) {
       final Attachment attachment = attachments.first;
       if (attachment.type == 'image') {
-        return localizations.shared_placeholders_image_message(handle);
+        return '$handle sent a photo.';
       } else if (attachment.type == 'video') {
-        return localizations.shared_placeholders_video_message(handle);
+        return '$handle sent a video.';
       } else if (attachment.type == 'file') {
-        return localizations.shared_placeholders_file_message(handle);
+        return '$handle sent a file.';
       }
     }
 
     if (formattedText.isEmpty) {
-      return localizations.shared_placeholders_empty_message(handle);
+      return '$handle sent a message.';
     }
 
     if (formattedText.startsWith('@')) {
       return formattedText;
     }
 
-    return "$displayName $text";
+    return "$text";
   }
 }
