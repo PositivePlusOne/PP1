@@ -87,7 +87,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
         ),
         SliverPadding(
           padding: const EdgeInsets.only(
-            top: kPaddingMassive,
+            top: kPaddingVerySmall,
             left: kPaddingMedium,
             right: kPaddingMedium,
             bottom: kPaddingMedium,
@@ -106,14 +106,14 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                     layout: PositiveButtonLayout.textOnly,
                     size: PositiveButtonSize.small,
                   ),
-                  PositivePageIndicator(
-                    color: colors.white,
-                    pagesNum: 2,
-                    currentPage: 0,
-                  ),
+                  // PositivePageIndicator(
+                  //   color: colors.white,
+                  //   pagesNum: 2,
+                  //   currentPage: 0,
+                  // ),
                 ],
               ),
-              const SizedBox(height: kPaddingLarge),
+              const SizedBox(height: kPaddingExtraLarge),
               Text(
                 'Pick a colour, this will show on your profile',
                 style: typography.styleSubtitle.copyWith(color: colors.white),

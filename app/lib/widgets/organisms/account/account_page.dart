@@ -54,7 +54,10 @@ class AccountPage extends HookConsumerWidget {
     final bool hasMultipleProfiles = viewModel.getSupportedProfiles().length > 1;
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Color foregroundColor = accentColor.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
+    final Color foregroundColor = accentColor.impliedBrightness == Brightness.light ? colors.black : colors.white;
+
+    final bool isBackgroundRed = accentColor.red >= 200 && accentColor.green <= 100 && accentColor.blue <= 100;
+    final Color badgeColour = isBackgroundRed ? colors.white : colors.red;
 
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String currentUserUid = auth.currentUser?.uid ?? '';
@@ -62,20 +65,14 @@ class AccountPage extends HookConsumerWidget {
     final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     ref.watch(notificationsControllerProvider);
 
-    final List<Widget> actions = [
-      PositiveButton.appBarIcon(
-        colors: colors,
-        icon: UniconsLine.bell,
-        primaryColor: foregroundColor,
-        onTapped: () => onProfileNotificationsActionSelected(shouldReplace: true),
-        includeBadge: notificationsController.canDisplayNotificationFeedBadge,
-      ),
-      PositiveProfileCircularIndicator(
-        profile: profileController.currentProfile,
-        ringColorOverride: colors.white,
-        onTap: () {},
-      ),
-    ];
+    final List<Widget> actions = currentProfile?.buildCommonProfilePageActions(
+          color: foregroundColor,
+          ringColorOverrideProfile: colors.white,
+          onTapNotifications: () => onProfileNotificationsActionSelected(shouldReplace: true),
+          onTapProfile: () {},
+          badgeColorOverride: badgeColour,
+        ) ??
+        [];
 
     //? Banner Height
     double bannerHeight = AccountProfileBanner.kBannerHeight;

@@ -14,12 +14,16 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 class PositiveNotificationsButton extends ConsumerWidget {
   const PositiveNotificationsButton({
     this.color,
+    this.badgeColor,
+    this.onTap,
     this.isDisabled = false,
     this.includeBadge = false,
     super.key,
   });
 
   final Color? color;
+  final Color? badgeColor;
+  final void Function()? onTap;
   final bool isDisabled;
   final bool includeBadge;
 
@@ -32,9 +36,11 @@ class PositiveNotificationsButton extends ConsumerWidget {
       icon: UniconsLine.bell,
       colors: colors,
       primaryColor: color ?? colors.black,
-      onTapped: () => router.push(const NotificationsRoute()),
+      foregroundColor: color,
+      onTapped: onTap ?? () => router.push(const NotificationsRoute()),
       isDisabled: isDisabled,
-      includeBadge: includeBadge,
+      includeBadge: true,
+      badgeColorOverride: badgeColor ?? colors.red,
     );
   }
 }
