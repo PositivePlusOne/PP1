@@ -39,7 +39,7 @@ class PositiveNotificationsButton extends ConsumerWidget {
       foregroundColor: color,
       onTapped: onTap ?? () => router.push(const NotificationsRoute()),
       isDisabled: isDisabled,
-      includeBadge: true,
+      includeBadge: includeBadge,
       badgeColorOverride: badgeColor ?? colors.red,
     );
   }
