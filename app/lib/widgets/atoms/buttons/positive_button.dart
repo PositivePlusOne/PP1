@@ -672,7 +672,7 @@ class PositiveButtonState extends State<PositiveButton> {
                   width: kIconIndicator,
                   height: kIconIndicator,
                   decoration: BoxDecoration(
-                    color: widget.colors.red,
+                    color: iconColor,
                     borderRadius: BorderRadius.circular(kIconIndicator),
                   ),
                 ),
@@ -715,7 +715,7 @@ class PositiveButtonState extends State<PositiveButton> {
                 width: kIconIndicator,
                 height: kIconIndicator,
                 decoration: BoxDecoration(
-                  color: widget.colors.red,
+                  color: iconColor,
                   borderRadius: BorderRadius.circular(kIconIndicator),
                 ),
               ),

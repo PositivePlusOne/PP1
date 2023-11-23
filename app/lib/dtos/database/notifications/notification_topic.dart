@@ -10,7 +10,7 @@ extension NotificationTopicExt on NotificationTopic {
   String get toTopicLocale {
     return when(
       other: () => "Other",
-      postLikes: () => "Post Likes",
+      postLike: () => "Post Likes",
       newFollower: () => "New Follower",
       connectionRequest: () => "Connection Request",
       newComment: () => "New Comment",
@@ -26,7 +26,7 @@ extension NotificationTopicExt on NotificationTopic {
 @freezed
 class NotificationTopic with _$NotificationTopic {
   const factory NotificationTopic.other() = Other;
-  const factory NotificationTopic.postLikes() = PostLikes;
+  const factory NotificationTopic.postLike() = PostLike;
   const factory NotificationTopic.newFollower() = NewFollower;
   const factory NotificationTopic.connectionRequest() = ConnectionRequest;
   const factory NotificationTopic.newComment() = NewComment;
@@ -35,7 +35,7 @@ class NotificationTopic with _$NotificationTopic {
   const factory NotificationTopic.sharedEvent() = SharedEvent;
 
   static Set<NotificationTopic> get allTopics => {
-        const NotificationTopic.postLikes(),
+        const NotificationTopic.postLike(),
         // const NotificationTopic.newFollower(),
         const NotificationTopic.connectionRequest(),
         const NotificationTopic.newComment(),
@@ -49,7 +49,7 @@ class NotificationTopic with _$NotificationTopic {
   static String toJson(NotificationTopic type) {
     return type.when(
       other: () => 'other',
-      postLikes: () => 'post_likes',
+      postLike: () => 'post_like',
       newFollower: () => 'new_follower',
       connectionRequest: () => 'connection_request',
       newComment: () => 'new_comment',
@@ -63,8 +63,8 @@ class NotificationTopic with _$NotificationTopic {
     switch (value) {
       case 'other':
         return const NotificationTopic.other();
-      case 'post_likes':
-        return const NotificationTopic.postLikes();
+      case 'post_like':
+        return const NotificationTopic.postLike();
       case 'new_follower':
         return const NotificationTopic.newFollower();
       case 'connection_request':

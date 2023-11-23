@@ -123,13 +123,14 @@ extension ProfileExtensions on Profile {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+    final bool isUserProfile = profileController.isCurrentlyUserProfile;
 
     if (profileController.hasSetupProfile) {
       children.addAll([
         PositiveNotificationsButton(
           color: color,
           isDisabled: disableNotifications,
-          includeBadge: notificationsController.canDisplayNotificationFeedBadge,
+          includeBadge: isUserProfile && notificationsController.canDisplayNotificationFeedBadge,
         ),
         if (includeSpacer) const SizedBox(width: kPaddingSmall),
         PositiveProfileCircularIndicator(
