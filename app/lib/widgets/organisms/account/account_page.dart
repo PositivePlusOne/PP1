@@ -40,17 +40,20 @@ class AccountPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AccountPageViewModel viewModel = ref.read(accountPageViewModelProvider.notifier);
-    final AccountPageViewModelState state = ref.watch(accountPageViewModelProvider);
+    // final AccountPageViewModelState state = ref.watch(accountPageViewModelProvider);
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final ProfileControllerState profileState = ref.watch(profileControllerProvider);
+
+    final Profile? currentProfile = profileState.currentProfile;
+    final Color accentColor = profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.colorGray1;
 
     useLifecycleHook(viewModel);
 
     final bool hasMultipleProfiles = viewModel.getSupportedProfiles().length > 1;
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Color foregroundColor = state.profileAccentColour.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
+    final Color foregroundColor = accentColor.impliedBrightness == Brightness.light ? Colors.black : Colors.white;
 
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String currentUserUid = auth.currentUser?.uid ?? '';
@@ -88,9 +91,6 @@ class AccountPage extends HookConsumerWidget {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final List<Profile> supportedProfiles = viewModel.getSupportedProfiles();
 
-    final Profile? currentProfile = profileState.currentProfile;
-    final Color accentColor = profileState.currentProfile?.accentColor.toSafeColorFromHex() ?? colors.colorGray1;
-
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
       backgroundColor: colors.colorGray1,
@@ -107,7 +107,7 @@ class AccountPage extends HookConsumerWidget {
               children: <Widget>[
                 if (hasMultipleProfiles && viewModel.availableProfileCount <= 2)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
+                    padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                     child: PositiveProfileSegmentedSwitcher(
                       mixin: viewModel,
                       isSlim: true,
