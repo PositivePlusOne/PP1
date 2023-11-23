@@ -448,6 +448,15 @@ class NotificationsController extends _$NotificationsController {
     final logger = providerContainer.read(loggerProvider);
     logger.d('attemptToTriggerNotification: $payload, $isForeground');
 
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    await sharedPreferences.reload();
+
+    final bool isSubscribedToTopic = await isSubscribedToTopicByPayload(payload);
+    if (!isSubscribedToTopic) {
+      logger.d('attemptToDisplayNotification: Not subscribed to topic, skipping');
+      return;
+    }
+
     if (!await handler.canDisplayPayload(payload, isForeground)) {
       return;
     }
@@ -497,9 +506,6 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
-    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
-    logger.d('subscribeToTopic: $topicKey, $isSubscribed');
-
     await sharedPreferences.setBool(sharedPreferencesKey, true);
     logger.d('subscribeToTopic: Subscribed to $topicKey');
   }
@@ -508,10 +514,35 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
-    final bool? isSubscribed = sharedPreferences.getBool(sharedPreferencesKey);
-    logger.d('unsubscribeFromTopic: $topicKey, $isSubscribed');
-
     await sharedPreferences.setBool(sharedPreferencesKey, false);
     logger.d('unsubscribeFromTopic: Unsubscribed from $topicKey');
+  }
+
+  Future<Set<String>> getSubscribedTopics() async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final Set<String> subscribedTopics = <String>{};
+    for (final NotificationTopic topic in NotificationTopic.allTopics) {
+      final String topicKey = topic.toSharedPreferencesKey;
+      final bool? isSubscribed = sharedPreferences.getBool(topicKey);
+      if (isSubscribed == true) {
+        subscribedTopics.add(topicKey);
+      }
+    }
+
+    logger.d('getSubscribedTopics: $subscribedTopics');
+    return subscribedTopics;
+  }
+
+  Future<bool> isSubscribedToTopicByPayload(NotificationPayload payload) async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final String topicKey = payload.topic.toSharedPreferencesKey;
+    final bool? isSubscribed = sharedPreferences.getBool(topicKey);
+    logger.d('isSubscribedToTopicByPayload: $topicKey, $isSubscribed');
+
+    return isSubscribed ?? false;
   }
 }

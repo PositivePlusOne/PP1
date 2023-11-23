@@ -52,6 +52,11 @@ abstract class NotificationHandler {
     return false;
   }
 
+  Future<bool> isSubscribedToTopic(NotificationPayload payload) async {
+    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
+    return notificationsController.isSubscribedToTopicByPayload(payload);
+  }
+
   List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {
     logger.d('buildNotificationTrailing()');
     return [];
