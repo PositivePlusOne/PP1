@@ -386,7 +386,7 @@ class ChatSelfUsernameRow extends StatelessWidget {
       children: <Widget>[
         Text(
           Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
-          style: typography.styleSubtext.copyWith(color: colors.colorGray4),
+          style: typography.styleSubtext.copyWith(color: colors.colorGray6),
         ),
         const SizedBox(width: kPaddingExtraSmall),
       ],
@@ -436,22 +436,22 @@ class ChatMemberUsernameRow extends StatelessWidget {
             child: Icon(
               UniconsLine.ban,
               size: kIconExtraSmall,
-              color: colors.colorGray3,
+              color: colors.colorGray6,
             ),
           ),
         ],
-        Expanded(
+        Flexible(
           child: Text(
             displayName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+            style: typography.styleSubtext.copyWith(color: colors.colorGray6),
           ),
         ),
         const SizedBox(width: kPaddingExtraSmall),
         Text(
           Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
-          style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+          style: typography.styleSubtext.copyWith(color: colors.colorGray6),
         ),
         const SizedBox(width: kPaddingExtraSmall),
       ],
