@@ -747,15 +747,6 @@
     "shared_badges_positive": "POSITIVE",
     "shared_badges_drama": "NO DRAMA\nJUST LOVE",
     "shared_badges_fighter": "I'M A LOVER\nAND A FIGHTER",
-
-    "notification_topic_title_other": "Other",
-    "notification_topic_title_new_follower": "New Follower",
-    "notification_topic_title_connection_request": "Connection Request",
-    "notification_topic_title_new_comment": "New Comment",
-    "notification_topic_title_new_message": "New Message",
-    "notification_topic_title_post_shared": "Post Shared",
-    "notification_topic_title_shared_event": "Shared Event",
-    "notification_topic_title_post_likes": "Post Likes",
     
     "shared_get_notified_title": "Get Notified",
     "shared_get_notified_refuse": "I do not want to be notified",

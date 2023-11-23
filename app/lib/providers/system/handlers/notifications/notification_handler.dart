@@ -123,11 +123,11 @@ abstract class NotificationHandler {
     final int id = convertStringToUniqueInt(payload.id);
     final NotificationDetails notificationDetails = NotificationDetails(
       android: AndroidNotificationDetails(
-        payload.topic.toLocalizedTopic,
-        payload.topic.toLocalizedTopic,
+        payload.topic.toTopicLocale,
+        payload.topic.toTopicLocale,
       ),
       iOS: DarwinNotificationDetails(
-        threadIdentifier: payload.topic.toLocalizedTopic,
+        threadIdentifier: payload.topic.toTopicLocale,
         presentAlert: true,
         presentBadge: true,
         presentSound: true,

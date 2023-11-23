@@ -276,7 +276,7 @@ class NotificationsController extends _$NotificationsController {
     final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsDarwin, macOS: initializationSettingsDarwin, linux: initializationSettingsLinux);
     final bool? initializedSuccessfully = await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveBackgroundNotificationResponse: onDidReceiveBackgroundNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: onBackgroundMessageResponseReceived,
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
 
@@ -309,7 +309,7 @@ class NotificationsController extends _$NotificationsController {
     final logger = providerContainer.read(loggerProvider);
     await updateNotificationReceivedTime();
 
-    if (event.isStreamChatNotification) {
+    if (event.isStreamChatNotification && !isForeground) {
       logger.d('onRemoteNotificationReceived: Stream chat message, handling');
       await handleStreamChatMessage(event: event, isForeground: isForeground);
       return;
@@ -414,11 +414,6 @@ class NotificationsController extends _$NotificationsController {
   void onLocalNotificationReceived(int id, String? title, String? body, String? payload) {
     final logger = providerContainer.read(loggerProvider);
     logger.d('onLocalNotificationReceived: $id, $title, $body, $payload');
-  }
-
-  static void onDidReceiveBackgroundNotificationResponse(NotificationResponse details) {
-    final logger = providerContainer.read(loggerProvider);
-    logger.d('onDidReceiveBackgroundNotificationResponse: $details');
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
