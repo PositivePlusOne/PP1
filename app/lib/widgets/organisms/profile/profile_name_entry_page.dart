@@ -148,7 +148,7 @@ class ProfileNameEntryPage extends ConsumerWidget {
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
-              textInputType: TextInputType.name,
+              textInputType: TextInputType.text,
             ),
             const SizedBox(height: kPaddingSmall),
             if (hasNameViolationFlag) ...<Widget>[
