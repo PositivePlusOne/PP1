@@ -119,6 +119,10 @@ extension ProfileExtensions on Profile {
     bool disableAccount = false,
     bool includeSpacer = false,
     Color? color,
+    Color? ringColorOverrideProfile,
+    Color? badgeColorOverride,
+    void Function()? onTapNotifications,
+    void Function()? onTapProfile,
   }) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
@@ -131,13 +135,15 @@ extension ProfileExtensions on Profile {
           color: color,
           isDisabled: disableNotifications,
           includeBadge: isUserProfile && notificationsController.canDisplayNotificationFeedBadge,
+          badgeColor: badgeColorOverride,
+          onTap: onTapNotifications,
         ),
         if (includeSpacer) const SizedBox(width: kPaddingSmall),
         PositiveProfileCircularIndicator(
           profile: profileController.currentProfile,
           isEnabled: !disableAccount,
-          onTap: onProfileAccountActionSelected,
-          ringColorOverride: color,
+          onTap: onTapProfile ?? onProfileAccountActionSelected,
+          ringColorOverride: ringColorOverrideProfile,
         ),
       ]);
     }

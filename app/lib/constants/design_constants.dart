@@ -87,7 +87,7 @@ const double kTextFieldSizeLarge = 150.0;
 const double kCommentFooter = 135.0;
 
 // Icon
-const double kIconIndicator = 8.0;
+const double kIconIndicator = 10.0;
 const double kIconExtraSmall = 16.0;
 const double kIconSmall = 20.0;
 const double kIconMedium = 24.0;

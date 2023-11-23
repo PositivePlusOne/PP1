@@ -43,6 +43,7 @@ class PositiveButton extends StatefulWidget {
     this.padding,
     this.borderWidth,
     this.includeBadge = false,
+    this.badgeColour,
     super.key,
   });
 
@@ -57,6 +58,7 @@ class PositiveButton extends StatefulWidget {
     final PositiveButtonSize size = PositiveButtonSize.medium,
     final PositiveButtonStyle style = PositiveButtonStyle.outline,
     final bool includeBadge = false,
+    final Color? badgeColorOverride,
   }) {
     return PositiveButton(
       colors: colors,
@@ -70,6 +72,7 @@ class PositiveButton extends StatefulWidget {
       isDisabled: isDisabled,
       tooltip: tooltip,
       includeBadge: includeBadge,
+      badgeColour: badgeColorOverride ?? colors.red,
     );
   }
 
@@ -196,6 +199,9 @@ class PositiveButton extends StatefulWidget {
   /// On an icon only style, this will add a badge to the top right of the icon.
   final bool includeBadge;
 
+  /// Overwrite the badge colour.
+  final Color? badgeColour;
+
   final double? height;
   final double? width;
 
@@ -306,6 +312,8 @@ class PositiveButtonState extends State<PositiveButton> {
     late Color borderColor;
     late double borderRadius;
 
+    late Color badgeColour;
+
     double? paddingWidth;
 
     late EdgeInsets calculatedPadding;
@@ -339,6 +347,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = primaryColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
         iconColor = primaryColor.complimentTextColor;
 
         if (widget.isFocused) {
@@ -380,6 +389,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidth;
         borderColor = primaryColor.complimentTextColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
         iconColor = primaryColor.complimentTextColor;
 
         if (widget.isFocused) {
@@ -422,6 +432,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = widget.colors.colorGray1.withOpacity(PositiveButton.kButtonOpacityGhost);
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;
@@ -474,6 +485,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidth;
         borderColor = newBorderColor;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
 
         if (widget.isFocused) {
           borderColor = widget.focusColor;
@@ -499,6 +511,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
         iconColor = primaryColor;
 
         if (widget.isFocused) {
@@ -524,18 +537,19 @@ class PositiveButtonState extends State<PositiveButton> {
         textColor = widget.colors.colorGray6;
         textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
         borderWidth = PositiveButton.kButtonBorderWidthNone;
+        calculatedPadding = widget.padding ?? PositiveButton.kButtonPaddingNavigation;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
         iconColor = widget.colors.colorGray7;
-        calculatedPadding = widget.padding ?? PositiveButton.kButtonPaddingNavigation;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
           materialColor = widget.colors.white;
           backgroundColor = widget.colors.white;
-          textColor = widget.primaryColor ?? widget.colors.purple;
+          textColor = widget.primaryColor ?? widget.colors.red;
           textStyle = PositiveButton.kButtonTextStyleNavigation.copyWith(color: textColor);
-          iconColor = widget.primaryColor ?? widget.colors.purple;
+          iconColor = widget.primaryColor ?? widget.colors.red;
           borderColor = widget.colors.white;
         }
 
@@ -577,6 +591,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = PositiveButton.kButtonBorderWidthNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
         calculatedPadding = widget.padding ?? EdgeInsets.zero;
         iconRadius = PositiveButton.kButtonIconRadiusTab;
 
@@ -611,6 +626,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderWidth = kPaddingNone;
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
+        badgeColour = widget.badgeColour ?? widget.colors.red;
 
         paddingWidth = kPaddingSmallMedium;
 
@@ -667,12 +683,12 @@ class PositiveButtonState extends State<PositiveButton> {
               alignment: Alignment.center,
               child: Transform.translate(
                 // Use iconRadius as the offset to ensure the badge is close to the icon.
-                offset: Offset(iconRadius * 0.55, -iconRadius * 0.80),
+                offset: Offset(iconRadius * 0.60, -iconRadius * 0.85),
                 child: Container(
                   width: kIconIndicator,
                   height: kIconIndicator,
                   decoration: BoxDecoration(
-                    color: iconColor,
+                    color: badgeColour,
                     borderRadius: BorderRadius.circular(kIconIndicator),
                   ),
                 ),
@@ -715,7 +731,7 @@ class PositiveButtonState extends State<PositiveButton> {
                 width: kIconIndicator,
                 height: kIconIndicator,
                 decoration: BoxDecoration(
-                  color: iconColor,
+                  color: badgeColour,
                   borderRadius: BorderRadius.circular(kIconIndicator),
                 ),
               ),
