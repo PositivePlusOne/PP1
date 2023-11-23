@@ -402,9 +402,13 @@ class GetStreamController extends _$GetStreamController {
     await streamChatClient.connectUser(chatUser, token);
 
     // Save the token to shared preferences so we can use it later
-    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
-    await sharedPreferences.setString(kLastStreamTokenPreferencesKey, token);
-    await sharedPreferences.setString(kLastStreamUserId, currentProfileId);
+    // Only do this if we are the original user
+    if (profileController.isCurrentlyUserProfile) {
+      log.i('[GetStreamController] onProfileChanged() saving token to shared preferences');
+      final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+      await sharedPreferences.setString(kLastStreamTokenPreferencesKey, token);
+      await sharedPreferences.setString(kLastStreamUserId, currentProfileId);
+    }
   }
 
   Future<void> updateStreamDevices(String fcmToken) async {
