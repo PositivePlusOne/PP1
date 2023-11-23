@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -112,24 +114,24 @@ extension ProfileExtensions on Profile {
     return true;
   }
 
-  List<Widget> buildCommonProfilePageActions({bool disableNotifications = false, bool disableAccount = false, Color? color}) {
+  List<Widget> buildCommonProfilePageActions({
+    bool disableNotifications = false,
+    bool disableAccount = false,
+    bool includeSpacer = false,
+    Color? color,
+  }) {
     final List<Widget> children = [];
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    // final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-
-    // Add notification information
-    // int unreadCount = 0;
-    // if (profileController.currentProfileId != null) {
-    //   final String expectedCacheKey = 'notifications:${profileController.currentProfileId}';
-    //   final PositiveNotificationsState? notificationsState = cacheController.get(expectedCacheKey);
-    //   if (notificationsState != null) {
-    //     unreadCount = notificationsState.unreadCount;
-    //   }
-    // }
+    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
 
     if (profileController.hasSetupProfile) {
       children.addAll([
-        PositiveNotificationsButton(color: color, isDisabled: disableNotifications),
+        PositiveNotificationsButton(
+          color: color,
+          isDisabled: disableNotifications,
+          includeBadge: notificationsController.canDisplayNotificationFeedBadge,
+        ),
+        if (includeSpacer) const SizedBox(width: kPaddingSmall),
         PositiveProfileCircularIndicator(
           profile: profileController.currentProfile,
           isEnabled: !disableAccount,

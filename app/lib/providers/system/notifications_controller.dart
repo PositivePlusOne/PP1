@@ -49,6 +49,8 @@ class NotificationsControllerState with _$NotificationsControllerState {
   const factory NotificationsControllerState({
     required bool localNotificationsInitialized,
     required bool remoteNotificationsInitialized,
+    DateTime? lastNotificationReceivedTime,
+    DateTime? lastNotificationCheckTime,
   }) = _NotificationsControllerState;
 
   factory NotificationsControllerState.initialState() => const NotificationsControllerState(
@@ -61,6 +63,24 @@ class NotificationsControllerState with _$NotificationsControllerState {
 class NotificationsController extends _$NotificationsController {
   StreamSubscription<RemoteMessage>? firebaseMessagingStreamSubscription;
   StreamSubscription<User?>? userSubscription;
+
+  static const String kNotificationReceivedTimeKey = 'notificationReceivedTime';
+  static const String kNotificationCheckTimeKey = 'notificationCheckTime';
+
+  bool get canDisplayNotificationFeedBadge {
+    final DateTime? lastNotificationReceivedTime = state.lastNotificationReceivedTime;
+    DateTime? lastNotificationCheckTime = state.lastNotificationCheckTime;
+
+    if (lastNotificationReceivedTime == null) {
+      return false;
+    }
+
+    // If we have no last notification check time, we can assume we have never checked
+    lastNotificationCheckTime ??= DateTime(0);
+
+    final bool hasReceivedNotificationRecently = lastNotificationReceivedTime.isAfter(lastNotificationCheckTime);
+    return hasReceivedNotificationRecently;
+  }
 
   final DefaultNotificationHandler defaultNotificationHandler = DefaultNotificationHandler();
   final List<NotificationHandler> handlers = [
@@ -95,6 +115,60 @@ class NotificationsController extends _$NotificationsController {
   void resetNotifications() {
     final logger = ref.read(loggerProvider);
     logger.i('[Notifications Service] - Resetting notifications');
+  }
+
+  Future<void> fetchNotificationCheckTime() async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final String? notificationCheckTimeString = sharedPreferences.getString(kNotificationCheckTimeKey);
+    final DateTime? notificationCheckTime = DateTime.tryParse(notificationCheckTimeString ?? '');
+
+    if (notificationCheckTime == null) {
+      logger.d('fetchNotificationCheckTime: No notification check time found');
+      return;
+    }
+
+    logger.d('fetchNotificationCheckTime: $notificationCheckTime');
+    state = state.copyWith(lastNotificationCheckTime: notificationCheckTime);
+  }
+
+  Future<void> fetchNotificationReceivedTime() async {
+    final logger = ref.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final String? notificationReceivedTimeString = sharedPreferences.getString(kNotificationReceivedTimeKey);
+    final DateTime? notificationReceivedTime = DateTime.tryParse(notificationReceivedTimeString ?? '');
+
+    if (notificationReceivedTime == null) {
+      logger.d('fetchNotificationReceivedTime: No notification received time found');
+      return;
+    }
+
+    logger.d('fetchNotificationReceivedTime: $notificationReceivedTime');
+    state = state.copyWith(lastNotificationReceivedTime: notificationReceivedTime);
+  }
+
+  Future<void> updateNotificationCheckTime() async {
+    final logger = providerContainer.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+
+    final DateTime now = DateTime.now();
+    await sharedPreferences.setString(kNotificationCheckTimeKey, now.toIso8601String());
+    logger.d('updateNotificationCheckTime: $now');
+
+    state = state.copyWith(lastNotificationCheckTime: now);
+  }
+
+  Future<void> updateNotificationReceivedTime() async {
+    final logger = providerContainer.read(loggerProvider);
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+
+    final DateTime now = DateTime.now();
+    await sharedPreferences.setString(kNotificationReceivedTimeKey, now.toIso8601String());
+    logger.d('updateNotificationReceivedTime: $now');
+
+    state = state.copyWith(lastNotificationReceivedTime: now);
   }
 
   Future<bool> requestPushNotificationPermissions() async {
@@ -233,6 +307,7 @@ class NotificationsController extends _$NotificationsController {
     bool isForeground = false,
   }) async {
     final logger = providerContainer.read(loggerProvider);
+    await updateNotificationReceivedTime();
 
     if (event.isStreamChatNotification) {
       logger.d('onRemoteNotificationReceived: Stream chat message, handling');

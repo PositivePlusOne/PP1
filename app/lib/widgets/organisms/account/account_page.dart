@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -55,12 +56,16 @@ class AccountPage extends HookConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String currentUserUid = auth.currentUser?.uid ?? '';
 
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    ref.watch(notificationsControllerProvider);
+
     final List<Widget> actions = [
       PositiveButton.appBarIcon(
         colors: colors,
         icon: UniconsLine.bell,
         primaryColor: foregroundColor,
         onTapped: () => onProfileNotificationsActionSelected(shouldReplace: true),
+        includeBadge: notificationsController.canDisplayNotificationFeedBadge,
       ),
       PositiveProfileCircularIndicator(
         profile: profileController.currentProfile,

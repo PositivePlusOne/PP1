@@ -708,9 +708,9 @@ class PositiveButtonState extends State<PositiveButton> {
         children: <Widget>[
           icon,
           if (widget.includeBadge) ...<Widget>[
-            Positioned(
-              top: kPaddingNone,
-              right: kPaddingNone,
+            Transform.translate(
+              // Use iconRadius as the offset to ensure the badge is close to the icon.
+              offset: Offset(iconRadius * 0.55, -iconRadius * 0.55),
               child: Container(
                 width: kIconIndicator,
                 height: kIconIndicator,

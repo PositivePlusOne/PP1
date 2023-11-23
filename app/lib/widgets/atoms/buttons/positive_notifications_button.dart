@@ -15,19 +15,18 @@ class PositiveNotificationsButton extends ConsumerWidget {
   const PositiveNotificationsButton({
     this.color,
     this.isDisabled = false,
+    this.includeBadge = false,
     super.key,
   });
 
   final Color? color;
   final bool isDisabled;
+  final bool includeBadge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppRouter router = ref.read(appRouterProvider);
-
-    //! TODO Get this number when we get reaction counts from get stream!
-    const bool includeBadge = false;
 
     return PositiveButton.appBarIcon(
       icon: UniconsLine.bell,

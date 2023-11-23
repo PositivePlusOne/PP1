@@ -111,6 +111,8 @@ Future<void> setupApplication() async {
 
   await notificationsController.requestPushNotificationPermissions();
   await notificationsController.setupPushNotificationListeners();
+  await notificationsController.fetchNotificationCheckTime();
+  await notificationsController.fetchNotificationReceivedTime();
 
   await analyticsController.loadAnalyticsPreferences();
 

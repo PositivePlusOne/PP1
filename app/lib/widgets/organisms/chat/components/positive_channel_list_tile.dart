@@ -188,23 +188,6 @@ class PositiveChannelListTile extends ConsumerWidget {
                       child: indicator,
                     ),
                   ],
-                  if (hasUnreadMessages) ...<Widget>[
-                    Align(
-                      alignment: Alignment.center,
-                      child: Transform.translate(
-                        // Use kIconHuge as the base size
-                        offset: const Offset(kIconHuge * 0.45, -kIconHuge * 0.45),
-                        child: Container(
-                          width: kIconIndicator,
-                          height: kIconIndicator,
-                          decoration: BoxDecoration(
-                            color: colors.red,
-                            borderRadius: BorderRadius.circular(kIconIndicator),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -240,6 +223,17 @@ class PositiveChannelListTile extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: kPaddingSmall),
+                        if (hasUnreadMessages) ...<Widget>[
+                          Container(
+                            height: kIconIndicator,
+                            width: kIconIndicator,
+                            decoration: BoxDecoration(
+                              color: colors.red,
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
+                          ),
+                          const SizedBox(width: 3.0),
+                        ],
                         if (isSelected == null) ...<Widget>[
                           Text(
                             time,

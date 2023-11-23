@@ -1,4 +1,5 @@
 // Package imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -34,6 +35,7 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
   void onFirstRender() {
     super.onFirstRender();
     prepareProfileSwitcher();
+    notifyNotificationsSeen();
   }
 
   Future<void> onAccountSelected() async {
@@ -42,5 +44,13 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
     logger.d('onAccountSelected()');
 
     await appRouter.push(const AccountRoute());
+  }
+
+  Future<void> notifyNotificationsSeen() async {
+    final Logger logger = ref.read(loggerProvider);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+
+    logger.d('notifyNotificationsSeen()');
+    await notificationsController.updateNotificationCheckTime();
   }
 }

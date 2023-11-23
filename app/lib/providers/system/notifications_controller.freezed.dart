@@ -18,6 +18,9 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$NotificationsControllerState {
   bool get localNotificationsInitialized => throw _privateConstructorUsedError;
   bool get remoteNotificationsInitialized => throw _privateConstructorUsedError;
+  DateTime? get lastNotificationReceivedTime =>
+      throw _privateConstructorUsedError;
+  DateTime? get lastNotificationCheckTime => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NotificationsControllerStateCopyWith<NotificationsControllerState>
@@ -34,7 +37,9 @@ abstract class $NotificationsControllerStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool localNotificationsInitialized,
-      bool remoteNotificationsInitialized});
+      bool remoteNotificationsInitialized,
+      DateTime? lastNotificationReceivedTime,
+      DateTime? lastNotificationCheckTime});
 }
 
 /// @nodoc
@@ -53,6 +58,8 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
   $Res call({
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
+    Object? lastNotificationReceivedTime = freezed,
+    Object? lastNotificationCheckTime = freezed,
   }) {
     return _then(_value.copyWith(
       localNotificationsInitialized: null == localNotificationsInitialized
@@ -63,6 +70,14 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
           ? _value.remoteNotificationsInitialized
           : remoteNotificationsInitialized // ignore: cast_nullable_to_non_nullable
               as bool,
+      lastNotificationReceivedTime: freezed == lastNotificationReceivedTime
+          ? _value.lastNotificationReceivedTime
+          : lastNotificationReceivedTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastNotificationCheckTime: freezed == lastNotificationCheckTime
+          ? _value.lastNotificationCheckTime
+          : lastNotificationCheckTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -78,7 +93,9 @@ abstract class _$$NotificationsControllerStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool localNotificationsInitialized,
-      bool remoteNotificationsInitialized});
+      bool remoteNotificationsInitialized,
+      DateTime? lastNotificationReceivedTime,
+      DateTime? lastNotificationCheckTime});
 }
 
 /// @nodoc
@@ -96,6 +113,8 @@ class __$$NotificationsControllerStateImplCopyWithImpl<$Res>
   $Res call({
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
+    Object? lastNotificationReceivedTime = freezed,
+    Object? lastNotificationCheckTime = freezed,
   }) {
     return _then(_$NotificationsControllerStateImpl(
       localNotificationsInitialized: null == localNotificationsInitialized
@@ -106,6 +125,14 @@ class __$$NotificationsControllerStateImplCopyWithImpl<$Res>
           ? _value.remoteNotificationsInitialized
           : remoteNotificationsInitialized // ignore: cast_nullable_to_non_nullable
               as bool,
+      lastNotificationReceivedTime: freezed == lastNotificationReceivedTime
+          ? _value.lastNotificationReceivedTime
+          : lastNotificationReceivedTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastNotificationCheckTime: freezed == lastNotificationCheckTime
+          ? _value.lastNotificationCheckTime
+          : lastNotificationCheckTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -116,16 +143,22 @@ class _$NotificationsControllerStateImpl
     implements _NotificationsControllerState {
   const _$NotificationsControllerStateImpl(
       {required this.localNotificationsInitialized,
-      required this.remoteNotificationsInitialized});
+      required this.remoteNotificationsInitialized,
+      this.lastNotificationReceivedTime,
+      this.lastNotificationCheckTime});
 
   @override
   final bool localNotificationsInitialized;
   @override
   final bool remoteNotificationsInitialized;
+  @override
+  final DateTime? lastNotificationReceivedTime;
+  @override
+  final DateTime? lastNotificationCheckTime;
 
   @override
   String toString() {
-    return 'NotificationsControllerState(localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized)';
+    return 'NotificationsControllerState(localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized, lastNotificationReceivedTime: $lastNotificationReceivedTime, lastNotificationCheckTime: $lastNotificationCheckTime)';
   }
 
   @override
@@ -140,12 +173,23 @@ class _$NotificationsControllerStateImpl
             (identical(other.remoteNotificationsInitialized,
                     remoteNotificationsInitialized) ||
                 other.remoteNotificationsInitialized ==
-                    remoteNotificationsInitialized));
+                    remoteNotificationsInitialized) &&
+            (identical(other.lastNotificationReceivedTime,
+                    lastNotificationReceivedTime) ||
+                other.lastNotificationReceivedTime ==
+                    lastNotificationReceivedTime) &&
+            (identical(other.lastNotificationCheckTime,
+                    lastNotificationCheckTime) ||
+                other.lastNotificationCheckTime == lastNotificationCheckTime));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, localNotificationsInitialized,
-      remoteNotificationsInitialized);
+  int get hashCode => Object.hash(
+      runtimeType,
+      localNotificationsInitialized,
+      remoteNotificationsInitialized,
+      lastNotificationReceivedTime,
+      lastNotificationCheckTime);
 
   @JsonKey(ignore: true)
   @override
@@ -160,13 +204,19 @@ abstract class _NotificationsControllerState
     implements NotificationsControllerState {
   const factory _NotificationsControllerState(
           {required final bool localNotificationsInitialized,
-          required final bool remoteNotificationsInitialized}) =
+          required final bool remoteNotificationsInitialized,
+          final DateTime? lastNotificationReceivedTime,
+          final DateTime? lastNotificationCheckTime}) =
       _$NotificationsControllerStateImpl;
 
   @override
   bool get localNotificationsInitialized;
   @override
   bool get remoteNotificationsInitialized;
+  @override
+  DateTime? get lastNotificationReceivedTime;
+  @override
+  DateTime? get lastNotificationCheckTime;
   @override
   @JsonKey(ignore: true)
   _$$NotificationsControllerStateImplCopyWith<

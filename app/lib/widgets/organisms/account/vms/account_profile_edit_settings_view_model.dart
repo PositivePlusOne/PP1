@@ -250,18 +250,6 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
     }
   }
 
-  void onToggleNotifications() {
-    return;
-  }
-
-  void onAccount() {
-    return;
-  }
-
-  void onProfileImageUpdate() {
-    return;
-  }
-
   Future<void> onDisplayName(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[Profile Edit Settings View Model] - Navigating to Display name view');
