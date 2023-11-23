@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -452,7 +453,6 @@ class UserController extends _$UserController {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
 
     log.d('[UserController] signOut()');
     if (!isUserLoggedIn) {
@@ -476,6 +476,10 @@ class UserController extends _$UserController {
     //? Remove the notifications key, so a new user has the chance to accept them.
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.remove(kNotificationsAcceptedKey);
+
+    //? Remove the stream token and user id, so we do not receive messages from the previous user.
+    await sharedPreferences.remove(GetStreamController.kLastStreamTokenPreferencesKey);
+    await sharedPreferences.remove(GetStreamController.kLastStreamUserId);
 
     if (shouldNavigate) {
       log.d('[UserController] signOut() Navigating to home route');
