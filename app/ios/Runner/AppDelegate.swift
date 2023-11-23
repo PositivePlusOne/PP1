@@ -1,7 +1,8 @@
 import UIKit
 import Flutter
-import Firebase  // Add the Firebase import.
+import Firebase
 import GoogleMaps
+import FirebaseMessaging
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -27,6 +28,13 @@ import GoogleMaps
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
+    func application(
+        _ application: UIApplication,
+        didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
+      -> UIBackgroundFetchResult {
+      return UIBackgroundFetchResult.newData
+    }
+
     func getDartEnv() -> [String: String] {
         let dartDefinesString = Bundle.main.infoDictionary!["DART_DEFINES"] as! String
         var dartDefinesDictionary = [String:String]()
