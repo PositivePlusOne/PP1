@@ -35,6 +35,11 @@ import FirebaseMessaging
       return UIBackgroundFetchResult.newData
     }
 
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
+
     func getDartEnv() -> [String: String] {
         let dartDefinesString = Bundle.main.infoDictionary!["DART_DEFINES"] as! String
         var dartDefinesDictionary = [String:String]()
