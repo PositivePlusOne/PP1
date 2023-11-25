@@ -48,6 +48,7 @@ class NotificationsControllerState with _$NotificationsControllerState {
     required bool remoteNotificationsInitialized,
     DateTime? lastNotificationReceivedTime,
     DateTime? lastNotificationCheckTime,
+    @Default('') String apnsToken,
   }) = _NotificationsControllerState;
 
   factory NotificationsControllerState.initialState() => const NotificationsControllerState(
@@ -243,6 +244,9 @@ class NotificationsController extends _$NotificationsController {
         await firebaseMessaging.requestPermission(provisional: true);
         await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
         logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
+
+        final String apnsToken = await firebaseMessaging.getAPNSToken() ?? '';
+        state = state.copyWith(apnsToken: apnsToken);
       }
 
       //* Here we add the background handler, it is concrete which means testing is a pain.
@@ -507,6 +511,16 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
+    final bool hasPushNotificationPermissions = await this.hasPushNotificationPermissions();
+    if (!hasPushNotificationPermissions) {
+      logger.d('subscribeToTopic: No push notification permissions');
+      final bool hasRequestedPermissions = await requestPushNotificationPermissions();
+      if (!hasRequestedPermissions) {
+        logger.d('subscribeToTopic: No push notification permissions');
+        return;
+      }
+    }
+
     await sharedPreferences.setBool(sharedPreferencesKey, true);
     logger.d('subscribeToTopic: Subscribed to $topicKey');
   }
@@ -522,6 +536,12 @@ class NotificationsController extends _$NotificationsController {
   Future<Set<String>> getSubscribedTopics() async {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final bool hasPushNotificationPermissions = await this.hasPushNotificationPermissions();
+    if (!hasPushNotificationPermissions) {
+      logger.d('getSubscribedTopics: No push notification permissions');
+      return <String>{};
+    }
 
     final Set<String> subscribedTopics = <String>{};
     for (final NotificationTopic topic in NotificationTopic.allTopics) {

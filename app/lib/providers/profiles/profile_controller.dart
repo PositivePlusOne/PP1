@@ -259,6 +259,7 @@ class ProfileController extends _$ProfileController {
   }
 
   Future<void> updateFirebaseMessagingToken() async {
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     final NotificationsControllerState notificationControllerState = ref.read(notificationsControllerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
@@ -266,6 +267,17 @@ class ProfileController extends _$ProfileController {
 
     if (currentUserProfile == null) {
       logger.w('[Profile Service] - Cannot update firebase messaging token without profile');
+      return;
+    }
+
+    if (!isCurrentlyUserProfile) {
+      logger.i('[Profile Service] - Cannot update firebase messaging token for managed profile');
+      return;
+    }
+
+    final bool hasPushNotificationPermissions = await notificationsController.hasPushNotificationPermissions();
+    if (!hasPushNotificationPermissions) {
+      logger.w('[Profile Service] - Cannot update firebase messaging token without push notification permission');
       return;
     }
 
@@ -298,6 +310,11 @@ class ProfileController extends _$ProfileController {
 
     if (user == null || state.currentProfile == null) {
       logger.e('[Profile Service] - Cannot update email address without user or profile');
+      return;
+    }
+
+    if (!isCurrentlyUserProfile) {
+      logger.i('[Profile Service] - Cannot update email address for managed profile');
       return;
     }
 

@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -317,6 +318,15 @@ class SystemController extends _$SystemController {
   Future<void> resetAppBadges() async {
     final Logger logger = ref.read(loggerProvider);
     logger.d('[SystemController] resetAppBadges');
+
+    logger.d('[SystemController] checking for notification permissions');
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final bool hasNotificationPermissions = await notificationsController.hasPushNotificationPermissions();
+
+    if (!hasNotificationPermissions) {
+      logger.d('[SystemController] resetAppBadges: No notification permissions');
+      return;
+    }
 
     final bool isSupported = await FlutterAppBadger.isAppBadgeSupported();
     if (!isSupported) {

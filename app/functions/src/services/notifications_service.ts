@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { NotificationPayload, NotificationPayloadResponse, appendPriorityToMessagePayload } from "./types/notification_payload";
+import { NotificationPayload, NotificationPayloadResponse } from "./types/notification_payload";
 import { FeedService } from "./feed_service";
 import { DefaultGenerics, StreamClient } from "getstream";
 import { adminApp } from "..";
@@ -44,19 +44,22 @@ export namespace NotificationsService {
       return;
     }
 
-    let message = {
-      token,
-      data: {
-        payload: JSON.stringify(notification),
-      },
-    };
-
     // Update the payload with the priority
-    message = appendPriorityToMessagePayload(message, notification.priority);
+    // message = appendPriorityToMessagePayload(message, notification.priority);
 
     try {
-      functions.logger.info(`Sending payload to user: ${notification.user_id} with token ${token}`, { message });
-      await adminApp.messaging().send(message);
+      functions.logger.info(`Sending payload to user: ${notification.user_id} with token ${token}`);
+      // await adminApp.messaging().send(message);
+      
+      await adminApp.messaging().sendToDevice(token, {
+        data: {
+          payload: JSON.stringify(notification),
+        },
+      }, {
+        mutableContent: true,
+        contentAvailable: true,
+        priority: "high",
+      });
     } catch (ex) {
       functions.logger.error(`Error sending payload to user: ${notification.user_id} with token ${token}`, ex);
     }
@@ -120,7 +123,7 @@ export namespace NotificationsService {
           functions.logger.info(`Processing nested notification payload for user: ${uid}`, { nestedActivity });
           const objectStr = nestedActivity?.object;
           let object = {} as any;
-          
+
           try {
             if (typeof objectStr === "string") {
               functions.logger.info(`Attempting to parse notification as JSON for user: ${uid}`, { objectStr });

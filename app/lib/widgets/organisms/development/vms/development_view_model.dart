@@ -1,5 +1,7 @@
 // Package imports:
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -70,6 +72,36 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     } catch (ex) {
       logger.e('Failed to display auth claims. $ex');
       state = state.copyWith(status: 'Failed to display auth claims');
+    }
+  }
+
+  Future<void> displayNotificationSettings() async {
+    final Logger logger = ref.read(loggerProvider);
+    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
+    logger.d('Displaying notification settings');
+
+    state = state.copyWith(status: 'Displaying notification settings');
+    try {
+      final NotificationSettings settings = await firebaseMessaging.getNotificationSettings();
+      final Map<String, dynamic> settingsMap = {
+        'alert': settings.alert,
+        'announcement': settings.announcement,
+        'authorizationStatus': settings.authorizationStatus,
+        'badge': settings.badge,
+        'carPlay': settings.carPlay,
+        'lockScreen': settings.lockScreen,
+        'notificationCenter': settings.notificationCenter,
+        'showPreviews': settings.showPreviews,
+        'timeSensitive': settings.timeSensitive,
+        'criticalAlert': settings.criticalAlert,
+        'sound': settings.sound,
+      };
+
+      logger.d('Notification settings: $settingsMap');
+      state = state.copyWith(status: 'Notification settings: $settingsMap');
+    } catch (ex) {
+      logger.e('Failed to display notification settings. $ex');
+      state = state.copyWith(status: 'Failed to display notification settings');
     }
   }
 

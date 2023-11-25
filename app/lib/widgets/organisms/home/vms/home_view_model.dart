@@ -57,7 +57,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     systemController.resetAppBadges();
-
+  
     checkForRefresh();
 
     // Add a bit of time before performing the profile checks
