@@ -55,6 +55,8 @@
 	<true/>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
+	<key>FirebaseScreenReportingEnabled</key>
+    <true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>

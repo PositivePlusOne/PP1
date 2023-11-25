@@ -103,9 +103,16 @@ export function appendPriorityToMessagePayload(message: any, priority: Notificat
     };
 
     message.apns = {
+        payload: {
+            aps: {
+                "content-available": true,
+                "mutable-content": true,
+            },
+        },
         headers: {
             "apns-priority": apnsPriority,
-            "content-available": "1", // Required for background/quit data-only messages on iOS
+            "apns-push-type": "background",
+            "apns-topic": "com.positiveplusone.v3",
         },
     };
 

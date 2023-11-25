@@ -10,7 +10,6 @@ import FirebaseMessaging
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Use the debug provider in Debug builds:
 #if DEBUG
         let providerFactory = AppCheckDebugProviderFactory()
         AppCheck.setAppCheckProviderFactory(providerFactory)
@@ -24,20 +23,33 @@ import FirebaseMessaging
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
         
+        GMSServices.provideAPIKey("")
         GeneratedPluginRegistrant.register(with: self)
+        application.registerForRemoteNotifications()
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-    
-    override func application(
-        _ application: UIApplication,
-        didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
-      -> UIBackgroundFetchResult {
-      return UIBackgroundFetchResult.newData
     }
 
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Messaging.messaging().apnsToken = deviceToken
-        super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+        Auth.auth().setAPNSToken(deviceToken, type: .prod)
+    }
+
+    override func application(_ application: UIApplication,
+        didReceiveRemoteNotification notification: [AnyHashable : Any],
+        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        if Auth.auth().canHandleNotification(notification) {
+          completionHandler(.noData)
+          return
+        }
+    }
+
+    override func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
+        if Auth.auth().canHandle(url) {
+          return true
+        }
+        
+        return false;
+      }
     }
 
     func getDartEnv() -> [String: String] {
