@@ -49,7 +49,6 @@ import FirebaseMessaging
         }
         
         return false;
-      }
     }
 
     func getDartEnv() -> [String: String] {
