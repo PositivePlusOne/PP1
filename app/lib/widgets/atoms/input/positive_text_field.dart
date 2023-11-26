@@ -13,8 +13,8 @@ import 'package:app/helpers/formatter_helpers.dart';
 import 'package:app/helpers/text_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
-import '../../../constants/design_constants.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import '../../../constants/design_constants.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {
   const PositiveTextField({

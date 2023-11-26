@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +17,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/resources/resources.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';

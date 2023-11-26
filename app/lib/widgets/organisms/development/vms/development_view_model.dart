@@ -1,5 +1,4 @@
 // Package imports:
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

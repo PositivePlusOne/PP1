@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/system/notifications_controller.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
@@ -29,6 +28,7 @@ import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
