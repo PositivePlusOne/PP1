@@ -246,6 +246,9 @@ class NotificationsController extends _$NotificationsController {
         logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
 
         final String apnsToken = await firebaseMessaging.getAPNSToken() ?? '';
+
+        // Add a minor delay to ensure the token is set
+        await Future<void>.delayed(const Duration(seconds: 1));
         state = state.copyWith(apnsToken: apnsToken);
       }
 

@@ -8,6 +8,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
 import { StringHelpers } from "../helpers/string_helpers";
+import { Message } from "firebase-admin/lib/messaging/messaging-api";
 
 export namespace NotificationsService {
   export function prepareNewNotification(notification: NotificationPayload): NotificationPayload {
@@ -44,22 +45,31 @@ export namespace NotificationsService {
       return;
     }
 
-    // Update the payload with the priority
-    // message = appendPriorityToMessagePayload(message, notification.priority);
+    let message = {
+      token,
+      android: {
+        priority: "high",
+      },
+      apns: {
+        payload: {
+          aps: {
+            contentAvailable: true,
+            mutableContent: true,
+          },
+        },
+        headers: {
+          "apns-priority": "10",
+          "apns-push-type": "background",
+        },
+      },
+      data: {
+        payload: JSON.stringify(notification),
+      },
+    } as Message;
 
     try {
-      functions.logger.info(`Sending payload to user: ${notification.user_id} with token ${token}`);
-      // await adminApp.messaging().send(message);
-      
-      await adminApp.messaging().sendToDevice(token, {
-        data: {
-          payload: JSON.stringify(notification),
-        },
-      }, {
-        mutableContent: true,
-        contentAvailable: true,
-        priority: "high",
-      });
+      functions.logger.info(`Sending payload to user: ${notification.user_id} with token ${token}`, { message });
+      await adminApp.messaging().send(message);
     } catch (ex) {
       functions.logger.error(`Error sending payload to user: ${notification.user_id} with token ${token}`, ex);
     }
@@ -123,7 +133,7 @@ export namespace NotificationsService {
           functions.logger.info(`Processing nested notification payload for user: ${uid}`, { nestedActivity });
           const objectStr = nestedActivity?.object;
           let object = {} as any;
-
+          
           try {
             if (typeof objectStr === "string") {
               functions.logger.info(`Attempting to parse notification as JSON for user: ${uid}`, { objectStr });

@@ -1,3 +1,4 @@
+import { Message } from "firebase-admin/lib/messaging/messaging-api";
 import { NotificationAction } from "../../constants/notification_actions";
 import { NotificationTopic } from "../../constants/notification_topics";
 import { StreamHelpers } from "../../helpers/stream_helpers";
@@ -67,54 +68,4 @@ export enum NotificationPriority {
     PRIORITY_LOW = "low",
     PRIORITY_DEFAULT = "default",
     PRIORITY_HIGH = "high",
-}
-
-/**
- * Append priority to message payload
- * @param {any} message The message to append the priority to
- * @param {NotificationPriority} priority The priority to append
- * @return {any} The message with the priority appended
- */
-export function appendPriorityToMessagePayload(message: any, priority: NotificationPriority | null = null): any {
-    if (!priority) {
-        priority = NotificationPriority.PRIORITY_HIGH;
-    }
-
-    let androidPriority = "default";
-    let apnsPriority = "5";
-
-    switch (priority) {
-        case NotificationPriority.PRIORITY_LOW:
-            androidPriority = "low";
-            apnsPriority = "1";
-            break;
-        case NotificationPriority.PRIORITY_DEFAULT:
-            androidPriority = "default";
-            apnsPriority = "5";
-            break;
-        case NotificationPriority.PRIORITY_HIGH:
-            androidPriority = "high";
-            apnsPriority = "10";
-            break;
-    }
-
-    message.android = {
-        priority: androidPriority,
-    };
-
-    message.apns = {
-        payload: {
-            aps: {
-                "content-available": true,
-                "mutable-content": true,
-            },
-        },
-        headers: {
-            "apns-priority": apnsPriority,
-            "apns-push-type": "background",
-            "apns-topic": "com.positiveplusone.v3",
-        },
-    };
-
-    return message;
 }
