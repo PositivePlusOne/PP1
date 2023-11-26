@@ -227,48 +227,43 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
-
-    final bool isDeviceIos = await ref.read(deviceInfoProvider.future).then((deviceInfo) => deviceInfo is IosDeviceInfo);
-    final bool isDeviceAndroid = await ref.read(deviceInfoProvider.future).then((deviceInfo) => deviceInfo is AndroidDeviceInfo);
-    final AndroidFlutterLocalNotificationsPlugin? pluginSettings = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-
     if (!state.localNotificationsInitialized) {
       await setupLocalNotifications();
       logger.d('setupPushNotificationListeners: Initialized local notifications');
     }
 
     if (!state.remoteNotificationsInitialized) {
-      if (isDeviceIos) {
-        await firebaseMessaging.requestPermission(provisional: true);
-        await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
-        logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
-
-        final String apnsToken = await firebaseMessaging.getAPNSToken() ?? '';
-
-        // Add a minor delay to ensure the token is set
-        await Future<void>.delayed(const Duration(seconds: 1));
-        state = state.copyWith(apnsToken: apnsToken);
-      }
-
-      //* Here we add the background handler, it is concrete which means testing is a pain.
-      if (isDeviceAndroid || isDeviceIos) {
-        FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
-      }
-
-      if (pluginSettings != null) {
-        // TODO(ryan): Setup high importance channels for Android foreground notifications
-        // await pluginSettings.createNotificationChannel();
-      }
-
-      //! This is on a concrete implementation which sucks for testing!
-      await firebaseMessagingStreamSubscription?.cancel();
-      firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onForegroundNotificationReceived);
-
-      logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
-      state = state.copyWith(remoteNotificationsInitialized: true);
+      await setupRemoteNotifications();
+      logger.d('setupPushNotificationListeners: Initialized remote notifications');
     }
+  }
+
+  Future<void> setupRemoteNotifications() async {
+    final logger = ref.read(loggerProvider);
+    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
+
+    final bool isDeviceIos = await ref.read(deviceInfoProvider.future).then((deviceInfo) => deviceInfo is IosDeviceInfo);
+
+    if (isDeviceIos) {
+      await firebaseMessaging.requestPermission(provisional: true);
+      await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+      logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
+
+      final String apnsToken = await firebaseMessaging.getAPNSToken() ?? '';
+
+      // Add a minor delay to ensure the token is set
+      await Future<void>.delayed(const Duration(seconds: 1));
+      state = state.copyWith(apnsToken: apnsToken);
+    }
+
+    await firebaseMessagingStreamSubscription?.cancel();
+    await firebaseMessaging.setAutoInitEnabled(true);
+
+    firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onForegroundNotificationReceived);
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
+
+    logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
+    state = state.copyWith(remoteNotificationsInitialized: true);
   }
 
   Future<void> setupLocalNotifications() async {

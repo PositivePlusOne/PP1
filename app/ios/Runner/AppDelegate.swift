@@ -23,34 +23,9 @@ import FirebaseMessaging
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
-
-        FirebaseApp.configure()
-        application.registerForRemoteNotifications()
         
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-
-    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("APNS Token: \(deviceToken)")
-        Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
-    }
-
-    override func application(_ application: UIApplication,
-        didReceiveRemoteNotification notification: [AnyHashable : Any],
-        fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if Auth.auth().canHandleNotification(notification) {
-          completionHandler(.noData)
-          return
-        }
-    }
-
-    override func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {
-        if Auth.auth().canHandle(url) {
-          return true
-        }
-        
-        return false;
     }
 
     func getDartEnv() -> [String: String] {
