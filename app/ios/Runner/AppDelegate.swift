@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
-import Firebase
+import FirebaseCore
+import FirebaseAuth
 import GoogleMaps
 import FirebaseMessaging
 
@@ -22,16 +23,17 @@ import FirebaseMessaging
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
         }
-        
-        GMSServices.provideAPIKey("")
-        GeneratedPluginRegistrant.register(with: self)
-        application.registerForRemoteNotifications()
 
+        FirebaseApp.configure()
+        application.registerForRemoteNotifications()
+        
+        GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Auth.auth().setAPNSToken(deviceToken, type: .prod)
+        print("APNS Token: \(deviceToken)")
+        Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
     }
 
     override func application(_ application: UIApplication,
