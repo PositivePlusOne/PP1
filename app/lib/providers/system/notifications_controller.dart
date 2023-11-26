@@ -358,9 +358,13 @@ class NotificationsController extends _$NotificationsController {
       await streamChatClient.connectUser(scf.User(id: lastKnownUserId), lastKnownUserToken);
     }
 
-    final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
-    title = (messageResponse.message.user?.name ?? '').asHandle;
-    body = messageResponse.message.getFormattedDescription();
+    try {
+      final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
+      title = (messageResponse.message.user?.name ?? '').asHandle;
+      body = messageResponse.message.getFormattedDescription();
+    } catch (e) {
+      logger.e('handleStreamChatForegroundMessage: Failed to get message: $e');
+    }
 
     if (title.isEmpty || body.isEmpty) {
       logger.e('handleStreamChatForegroundMessage: Title or body is empty');
