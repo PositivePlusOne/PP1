@@ -45,7 +45,7 @@ export namespace NotificationsService {
       return;
     }
 
-    let message = {
+    const message = {
       token,
       android: {
         priority: "high",

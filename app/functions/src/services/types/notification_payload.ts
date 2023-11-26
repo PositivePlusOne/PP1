@@ -1,4 +1,3 @@
-import { Message } from "firebase-admin/lib/messaging/messaging-api";
 import { NotificationAction } from "../../constants/notification_actions";
 import { NotificationTopic } from "../../constants/notification_topics";
 import { StreamHelpers } from "../../helpers/stream_helpers";
