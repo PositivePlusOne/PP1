@@ -76,7 +76,7 @@ class PositivePostActions extends HookConsumerWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Icon(
-                    UniconsLine.heart,
+                    isLiked ? Icons.favorite : Icons.favorite_border,
                     color: isLiked ? colours.purple : colours.colorGray6,
                     size: kIconSmall,
                   ),
