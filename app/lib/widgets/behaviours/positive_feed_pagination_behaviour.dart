@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -138,7 +139,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
 
     logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
-    feedState.pagingController.appendPage(activities, next);
+    feedState.currentPaginationKey = next ?? '';
+    feedState.pagingController.appendSafePage(activities, next ?? '');
   }
 
   void saveActivitiesState() {

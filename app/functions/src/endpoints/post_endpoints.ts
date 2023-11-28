@@ -51,10 +51,10 @@ export namespace PostEndpoints {
         const paginationToken = StreamHelpers.extractPaginationToken(window.next);
 
         // We supply this so we can support reposts and the client can filter out the nested activity
-        const windowIds = activities.map((activity: ActivityJSON) => activity?._fl_meta_?.fl_id || "");
+        const windowIds = window.results.map((result) => result.id);
         const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
 
-        functions.logger.info(`Got activities`, { activities, paginationToken, windowIds });
+        functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds });
     
         return buildEndpointResponse(context, {
           sender: uid,
