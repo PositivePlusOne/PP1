@@ -366,7 +366,7 @@ class NotificationsController extends _$NotificationsController {
       title = (messageResponse.message.user?.name ?? '').asHandle;
       body = messageResponse.message.getFormattedDescription();
 
-      final ChannelExtraData channelExtraData = ChannelExtraData.fromJson(messageResponse.message.extraData);
+      final ChannelExtraData channelExtraData = ChannelExtraData.fromJson(messageResponse.channel?.extraData ?? {});
       isArchived = channelExtraData.archivedMembers?.any((element) => element.memberId == lastKnownUserId) ?? false;
     } catch (e) {
       logger.e('handleStreamChatForegroundMessage: Failed to get message: $e');
