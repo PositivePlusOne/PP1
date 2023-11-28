@@ -197,7 +197,7 @@ export namespace ConversationService {
         text: data.text,
         type: "system",
         silent: true,
-        mentioned_users: [data.userId],
+        mentioned_users: [userId],
       },
       {
         skip_push: true,
