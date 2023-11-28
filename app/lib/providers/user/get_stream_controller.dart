@@ -90,9 +90,34 @@ class GetStreamController extends _$GetStreamController {
     return streamChatClient.state.channels.values;
   }
 
-  int get unreadBadgeCount {
+  int getUnreadBadgeCount() {
     int count = 0;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
+      return count;
+    }
+
     for (final Channel channel in channels) {
+      // Check if we are a member
+      final Member? member = channel.state?.members.firstWhereOrNull((element) => element.userId == currentProfileId);
+      if (member == null) {
+        continue;
+      }
+
+      // Check we have a copy of all members
+      final List<String> memberIds = channel.state?.members.map((e) => e.userId!).toList() ?? [];
+      final List<Profile> members = cacheController.list(memberIds);
+      if (members.length != memberIds.length) {
+        continue;
+      }
+
+      final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+      if (extraData.archivedMembers?.any((ArchivedMember archivedMember) => archivedMember.memberId == currentProfileId) ?? false) {
+        continue;
+      }
+
       count += channel.state?.unreadCount ?? 0;
     }
 

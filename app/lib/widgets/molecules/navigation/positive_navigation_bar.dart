@@ -64,7 +64,7 @@ class PositiveNavigationBar extends HookConsumerWidget implements PreferredSizeW
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
-    final int badgeCount = getStreamController.unreadBadgeCount;
+    final int badgeCount = getStreamController.getUnreadBadgeCount();
 
     usePageRefreshHook();
 
