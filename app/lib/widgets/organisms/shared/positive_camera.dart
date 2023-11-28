@@ -1053,7 +1053,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: getPositiveCameraGenericTopChildren(state),
+              children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren(state),
             ),
           ),
           const SizedBox(height: kPaddingMedium),
