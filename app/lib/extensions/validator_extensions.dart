@@ -59,7 +59,7 @@ extension PositiveValidatorExtensions on AbstractRuleBuilder {
 
   //* Checks that the string is alpha, and contains only a specific set of special characters, dashes, and underscores, and apostrophes
   AbstractRuleBuilder isValidName({String? message}) {
-    final RegExp pattern = RegExp(r"^[a-zA-Z-' .À-ÖØ-öø-ÿĀ-ſ-ƀ]+$");
+    final RegExp pattern = RegExp(r"^[a-zA-Z-'` .À-ÖØ-öø-ÿĀ-ſ-ƀ]+$");
     return must((dynamic dyn) => dyn is String && pattern.hasMatch(dyn), message ?? "Must be alphanumeric, and contain only dashes, underscores, and apostrophes", code: "displayName");
   }
 
