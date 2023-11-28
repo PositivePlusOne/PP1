@@ -67,6 +67,7 @@ enum CommunityType {
   managed,
   supported;
 
+  static const List<CommunityType> allCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.blocked, CommunityType.connected, CommunityType.managed, CommunityType.supported];
   static const List<CommunityType> userProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.blocked, CommunityType.connected];
   static const List<CommunityType> managedProfileCommunityTypes = [CommunityType.followers, CommunityType.following, CommunityType.managed];
 
@@ -136,13 +137,31 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
     _cacheKeyUpdatedSubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheRecordUpdated);
     logger.i('CommunitiesController - setupListeners - User changes subscription setup');
 
-    final PositiveCommunityFeedState currentFeedState = getCurrentCommunityFeedState();
-    currentFeedState.pagingController.addPageRequestListener((pageKey) => requestNextPage(pageKey, state.selectedCommunityType));
+    for (final CommunityType communityType in CommunityType.allCommunityTypes) {
+      final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
+        communityType: communityType,
+        profile: getCurrentProfile(),
+        searchQuery: state.searchQuery,
+      );
+
+      feedState.pagingController.addPageRequestListener((pageKey) => requestNextPage(pageKey, communityType));
+    }
   }
 
   void teardownListeners() async {
-    final PositiveCommunityFeedState currentFeedState = getCurrentCommunityFeedState();
-    currentFeedState.pagingController.removePageRequestListener((pageKey) => requestNextPage(pageKey, state.selectedCommunityType));
+    final Logger logger = ref.read(loggerProvider);
+    await _cacheKeyUpdatedSubscription?.cancel();
+    logger.i('CommunitiesController - teardownListeners - User changes subscription cancelled');
+
+    for (final CommunityType communityType in CommunityType.allCommunityTypes) {
+      final PositiveCommunityFeedState feedState = getCommunityFeedStateForType(
+        communityType: communityType,
+        profile: getCurrentProfile(),
+        searchQuery: state.searchQuery,
+      );
+
+      feedState.pagingController.removePageRequestListener((pageKey) => requestNextPage(pageKey, communityType));
+    }
   }
 
   void setSelectedCommunityType(dynamic value) {
@@ -320,21 +339,21 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
 
     if (relationshipStates.contains(RelationshipState.sourceFollowed)) {
       if (!hasFollowerId) {
-        followerFeedState.pagingController.itemList = {...followerFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
+        followingFeedState.pagingController.itemList = {...followerFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
       }
     } else {
       if (hasFollowerId) {
-        followerFeedState.pagingController.itemList = {...followerFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
+        followingFeedState.pagingController.itemList = {...followerFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
       }
     }
 
     if (relationshipStates.contains(RelationshipState.targetFollowing)) {
       if (!hasFollowingId) {
-        followingFeedState.pagingController.itemList = {...followingFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
+        followerFeedState.pagingController.itemList = {...followingFeedState.pagingController.itemList ?? <String>[], otherMemberId}.toList();
       }
     } else {
       if (hasFollowingId) {
-        followingFeedState.pagingController.itemList = {...followingFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
+        followerFeedState.pagingController.itemList = {...followingFeedState.pagingController.itemList ?? <String>[]}.where((element) => element != otherMemberId).toList();
       }
     }
 
@@ -375,6 +394,7 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
 
     feedState.hasPerformedInitialLoad = false;
     feedState.currentPaginationKey = '';
+    saveFeedState(feedState);
 
     feedState.pagingController.refresh();
   }
@@ -588,6 +608,8 @@ class CommunitiesController extends _$CommunitiesController with LifecycleMixin 
 
     logger.d('CommunitiesController - loadNextCommunityData - Appended next community data to page');
     feedState.currentPaginationKey = cursor;
+
+    saveFeedState(feedState);
   }
 
   void saveFeedState(PositiveCommunityFeedState feedState) {
