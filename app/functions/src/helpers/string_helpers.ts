@@ -41,7 +41,7 @@ export namespace StringHelpers {
   }
   
   export function isValidRealName(input: string): boolean {
-    const pattern = /^[a-zA-Z-' .À-ÖØ-öø-ÿĀ-ſ-ƀ]+$/;
+    const pattern = /^[a-zA-Z-'` .À-ÖØ-öø-ÿĀ-ſ-ƀ]+$/;
     return pattern.test(input);
   }
 
