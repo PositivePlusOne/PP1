@@ -423,10 +423,12 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     return SizedBox(
       height: PositiveProfileActionsList.kButtonListHeight,
       width: double.infinity,
-      child: ListView(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
         scrollDirection: Axis.horizontal,
-        children: children.spaceWithHorizontal(kPaddingSmall),
+        child: Row(
+          children: children.spaceWithHorizontal(kPaddingSmall),
+        ),
       ),
     );
   }
