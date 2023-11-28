@@ -100,7 +100,7 @@ class ProfilePhotoSelectionPage extends ConsumerWidget {
             context: context,
             child: ProfilePhotoDialog(
               onCameraSelected: () => viewModel.onSelectCamera(context),
-              onImagePickerSelected: viewModel.onImagePicker,
+              onImagePickerSelected: () => viewModel.onImagePicker(context),
             ),
           ),
         ),
