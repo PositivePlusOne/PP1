@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -345,25 +346,35 @@ class NotificationsController extends _$NotificationsController {
     final scf.ConnectionStatus connectionStatus = streamChatClient.wsConnectionStatus;
     final bool isConnected = connectionStatus == scf.ConnectionStatus.connected;
 
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+    final String lastKnownUserToken = sharedPreferences.getString(GetStreamController.kLastStreamTokenPreferencesKey) ?? '';
+    final String lastKnownUserId = sharedPreferences.getString(GetStreamController.kLastStreamUserId) ?? '';
+
+    if (lastKnownUserId.isEmpty || lastKnownUserToken.isEmpty) {
+      logger.e('handleStreamChatForegroundMessage: No last known user id, skipping');
+      return;
+    }
+
     if (!isForeground && !isConnected) {
-      final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
-      final String lastKnownUserToken = sharedPreferences.getString(GetStreamController.kLastStreamTokenPreferencesKey) ?? '';
-      final String lastKnownUserId = sharedPreferences.getString(GetStreamController.kLastStreamUserId) ?? '';
-
-      if (lastKnownUserId.isEmpty || lastKnownUserToken.isEmpty) {
-        logger.e('handleStreamChatForegroundMessage: No last known user id, skipping');
-        return;
-      }
-
       await streamChatClient.connectUser(scf.User(id: lastKnownUserId), lastKnownUserToken);
     }
+
+    bool isArchived = false;
 
     try {
       final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
       title = (messageResponse.message.user?.name ?? '').asHandle;
       body = messageResponse.message.getFormattedDescription();
+
+      final ChannelExtraData channelExtraData = ChannelExtraData.fromJson(messageResponse.message.extraData);
+      isArchived = channelExtraData.archivedMembers?.any((element) => element.memberId == lastKnownUserId) ?? false;
     } catch (e) {
       logger.e('handleStreamChatForegroundMessage: Failed to get message: $e');
+    }
+
+    if (isArchived) {
+      logger.d('handleStreamChatForegroundMessage: Channel is archived, skipping');
+      return;
     }
 
     if (title.isEmpty || body.isEmpty) {
