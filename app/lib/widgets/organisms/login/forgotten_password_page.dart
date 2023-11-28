@@ -34,6 +34,7 @@ class ForgottenPasswordPage extends ConsumerWidget {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PositiveScaffold(
+      isBusy: state.isBusy,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: true,

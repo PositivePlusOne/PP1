@@ -332,13 +332,14 @@ class LoginViewModel extends _$LoginViewModel {
 
   Future<void> onPasswordResetSelected(BuildContext context) async {
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final Logger logger = ref.read(loggerProvider);
 
     state = state.copyWith(isBusy: true);
 
     try {
-      // send the email
-      //await userController.sendPasswordResetEmail(state.email);
-      // and show the page to inform the user this has worked
+      logger.d('onPasswordResetSelected: ${state.email}');
+      await userController.sendPasswordResetEmail(state.email);
       await appRouter.push(const ForgottenPasswordRecoveryRoute());
     } finally {
       state = state.copyWith(isBusy: false);
