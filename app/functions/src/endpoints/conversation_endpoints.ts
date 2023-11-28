@@ -10,10 +10,11 @@ import { SystemService } from "../services/system_service";
 
 export namespace ConversationEndpoints {
   export const createConversation = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: CreateConversationRequest, context) => {
+    const uid = data.senderId || context.auth?.uid || "";
     await SystemService.validateUsingRedisUserThrottle(context);
-    await UserService.verifyAuthenticated(context);
+    await UserService.verifyAuthenticated(context, uid);
+
     const streamChatClient = ConversationService.getStreamChatInstance();
-    const uid = context.auth!.uid;
 
     const members = data.members || [];
     if (!members.includes(uid)) {
@@ -27,11 +28,12 @@ export namespace ConversationEndpoints {
    * Sends an event message to a channel such as "_ has left the conversation"
    */
   export const sendEventMessage = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: SendEventMessage, context) => {
+    const uid = data.senderId || context.auth?.uid || "";
+    await UserService.verifyAuthenticated(context, uid);
     await SystemService.validateUsingRedisUserThrottle(context);
-    await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
-    return ConversationService.sendEventMessage(data, client, context.auth?.uid || "");
+    return ConversationService.sendEventMessage(data, client, uid);
   });
 
   /**
@@ -82,6 +84,7 @@ export namespace ConversationEndpoints {
           channelId: channelId,
           text: `${message} left the conversation.`,
           mentionedUsers: [member],
+          senderId: uid,
         },
         client,
         context.auth?.uid || ""
@@ -107,11 +110,15 @@ export namespace ConversationEndpoints {
    * Freezes a channel
    */
   export const freezeChannel = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (data: FreezeChannelRequest, context) => {
+    const uid = data.senderId || context.auth?.uid || "";
+    await UserService.verifyAuthenticated(context, uid);
+
     await SystemService.validateUsingRedisUserThrottle(context);
-    await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
 
-    return ConversationService.freezeChannel(data, client, context.auth?.uid || "");
+    // TODO(ryan): Add some security here because Arch forgot too? :)
+
+    return ConversationService.freezeChannel(data, client, uid);
   });
 
   /**
@@ -121,6 +128,8 @@ export namespace ConversationEndpoints {
     await SystemService.validateUsingRedisUserThrottle(context);
     await UserService.verifyAuthenticated(context);
     const client = ConversationService.getStreamChatInstance();
+
+    // TODO(ryan): Add some security here because Arch forgot too? :)
 
     return ConversationService.unfreezeChannel(data, client);
   });
