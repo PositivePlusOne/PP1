@@ -53,8 +53,6 @@
 	<string>$(DART_DEFINES)</string>
 	<key>FLTEnableWideGamut</key>
 	<true/>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sms</string>

@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
-import Firebase
+import FirebaseCore
+import FirebaseAuth
 import GoogleMaps
 import FirebaseMessaging
 
@@ -10,7 +11,6 @@ import FirebaseMessaging
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Use the debug provider in Debug builds:
 #if DEBUG
         let providerFactory = AppCheckDebugProviderFactory()
         AppCheck.setAppCheckProviderFactory(providerFactory)
@@ -26,18 +26,6 @@ import FirebaseMessaging
         
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-    
-    override func application(
-        _ application: UIApplication,
-        didReceiveRemoteNotification userInfo: [AnyHashable: Any]) async
-      -> UIBackgroundFetchResult {
-      return UIBackgroundFetchResult.newData
-    }
-
-    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        Messaging.messaging().apnsToken = deviceToken
-        super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
     }
 
     func getDartEnv() -> [String: String] {

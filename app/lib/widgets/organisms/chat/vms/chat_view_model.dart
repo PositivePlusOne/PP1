@@ -167,12 +167,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   List<Relationship> getCachedMemberRelationships() {
-    final logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
-    logger.i('ChatViewModel.getCachedMemberRelationships()');
     final List<Relationship> relationships = [];
 
     // Get members from the current channel

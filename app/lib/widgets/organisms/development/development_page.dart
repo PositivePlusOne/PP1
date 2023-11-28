@@ -17,6 +17,7 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/resources/resources.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -43,6 +44,8 @@ class DevelopmentPage extends ConsumerWidget {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AnalyticsControllerState analyticsControllerState = ref.watch(analyticsControllerProvider);
 
+    final NotificationsControllerState notificationsControllerState = ref.watch(notificationsControllerProvider);
+
     final AppRouter appRouter = ref.read(appRouterProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -51,6 +54,8 @@ class DevelopmentPage extends ConsumerWidget {
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
     final String currentFCMToken = currentProfile?.fcmToken ?? 'No FCM token found';
+
+    final String currentAPNSToken = notificationsControllerState.apnsToken;
 
     return PositiveScaffold(
       appBar: PositiveAppBar(
@@ -246,12 +251,33 @@ class DevelopmentPage extends ConsumerWidget {
                 ),
               ),
               CupertinoListTile.notched(
+                onTap: developmentViewModel.displayNotificationSettings,
                 title: Text(
-                  'Current Push Token',
+                  'Display notification settings',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: Text(
+                  'Displays the current notification settings as configured.',
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+              ),
+              CupertinoListTile.notched(
+                title: Text(
+                  'Current FCM Token',
                   style: typography.styleButtonRegular.copyWith(color: colors.white),
                 ),
                 subtitle: SelectableText(
                   currentFCMToken,
+                  style: typography.styleSubtext.copyWith(color: colors.white),
+                ),
+              ),
+              CupertinoListTile.notched(
+                title: Text(
+                  'Current APNS Token',
+                  style: typography.styleButtonRegular.copyWith(color: colors.white),
+                ),
+                subtitle: SelectableText(
+                  currentAPNSToken,
                   style: typography.styleSubtext.copyWith(color: colors.white),
                 ),
               ),

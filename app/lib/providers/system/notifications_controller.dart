@@ -48,6 +48,7 @@ class NotificationsControllerState with _$NotificationsControllerState {
     required bool remoteNotificationsInitialized,
     DateTime? lastNotificationReceivedTime,
     DateTime? lastNotificationCheckTime,
+    @Default('') String apnsToken,
   }) = _NotificationsControllerState;
 
   factory NotificationsControllerState.initialState() => const NotificationsControllerState(
@@ -226,42 +227,43 @@ class NotificationsController extends _$NotificationsController {
       return;
     }
 
-    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = ref.read(flutterLocalNotificationsPluginProvider);
-
-    final bool isDeviceIos = await ref.read(deviceInfoProvider.future).then((deviceInfo) => deviceInfo is IosDeviceInfo);
-    final bool isDeviceAndroid = await ref.read(deviceInfoProvider.future).then((deviceInfo) => deviceInfo is AndroidDeviceInfo);
-    final AndroidFlutterLocalNotificationsPlugin? pluginSettings = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-
     if (!state.localNotificationsInitialized) {
       await setupLocalNotifications();
       logger.d('setupPushNotificationListeners: Initialized local notifications');
     }
 
     if (!state.remoteNotificationsInitialized) {
-      if (isDeviceIos) {
-        await firebaseMessaging.requestPermission(provisional: true);
-        await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
-        logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
-      }
-
-      //* Here we add the background handler, it is concrete which means testing is a pain.
-      if (isDeviceAndroid || isDeviceIos) {
-        FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
-      }
-
-      if (pluginSettings != null) {
-        // TODO(ryan): Setup high importance channels for Android foreground notifications
-        // await pluginSettings.createNotificationChannel();
-      }
-
-      //! This is on a concrete implementation which sucks for testing!
-      await firebaseMessagingStreamSubscription?.cancel();
-      firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onForegroundNotificationReceived);
-
-      logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
-      state = state.copyWith(remoteNotificationsInitialized: true);
+      await setupRemoteNotifications();
+      logger.d('setupPushNotificationListeners: Initialized remote notifications');
     }
+  }
+
+  Future<void> setupRemoteNotifications() async {
+    final logger = ref.read(loggerProvider);
+    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
+
+    final bool isDeviceIos = await ref.read(deviceInfoProvider.future).then((deviceInfo) => deviceInfo is IosDeviceInfo);
+
+    if (isDeviceIos) {
+      await firebaseMessaging.requestPermission(provisional: true);
+      await firebaseMessaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+      logger.d('setupPushNotificationListeners: Set foreground notification presentation options for iOS');
+
+      final String apnsToken = await firebaseMessaging.getAPNSToken() ?? '';
+
+      // Add a minor delay to ensure the token is set
+      await Future<void>.delayed(const Duration(seconds: 1));
+      state = state.copyWith(apnsToken: apnsToken);
+    }
+
+    await firebaseMessagingStreamSubscription?.cancel();
+    await firebaseMessaging.setAutoInitEnabled(true);
+
+    firebaseMessagingStreamSubscription = FirebaseMessaging.onMessage.listen(onForegroundNotificationReceived);
+    FirebaseMessaging.onBackgroundMessage(onBackgroundMessageReceived);
+
+    logger.d('setupPushNotificationListeners: Subscribed to remote notifications');
+    state = state.copyWith(remoteNotificationsInitialized: true);
   }
 
   Future<void> setupLocalNotifications() async {
@@ -356,9 +358,13 @@ class NotificationsController extends _$NotificationsController {
       await streamChatClient.connectUser(scf.User(id: lastKnownUserId), lastKnownUserToken);
     }
 
-    final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
-    title = (messageResponse.message.user?.name ?? '').asHandle;
-    body = messageResponse.message.getFormattedDescription();
+    try {
+      final scf.GetMessageResponse messageResponse = await streamChatClient.getMessage(id);
+      title = (messageResponse.message.user?.name ?? '').asHandle;
+      body = messageResponse.message.getFormattedDescription();
+    } catch (e) {
+      logger.e('handleStreamChatForegroundMessage: Failed to get message: $e');
+    }
 
     if (title.isEmpty || body.isEmpty) {
       logger.e('handleStreamChatForegroundMessage: Title or body is empty');
@@ -507,6 +513,16 @@ class NotificationsController extends _$NotificationsController {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
+    final bool hasPushNotificationPermissions = await this.hasPushNotificationPermissions();
+    if (!hasPushNotificationPermissions) {
+      logger.d('subscribeToTopic: No push notification permissions');
+      final bool hasRequestedPermissions = await requestPushNotificationPermissions();
+      if (!hasRequestedPermissions) {
+        logger.d('subscribeToTopic: No push notification permissions');
+        return;
+      }
+    }
+
     await sharedPreferences.setBool(sharedPreferencesKey, true);
     logger.d('subscribeToTopic: Subscribed to $topicKey');
   }
@@ -522,6 +538,12 @@ class NotificationsController extends _$NotificationsController {
   Future<Set<String>> getSubscribedTopics() async {
     final logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+
+    final bool hasPushNotificationPermissions = await this.hasPushNotificationPermissions();
+    if (!hasPushNotificationPermissions) {
+      logger.d('getSubscribedTopics: No push notification permissions');
+      return <String>{};
+    }
 
     final Set<String> subscribedTopics = <String>{};
     for (final NotificationTopic topic in NotificationTopic.allTopics) {
