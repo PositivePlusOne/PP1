@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -161,7 +162,9 @@ class PositiveChannelListTile extends ConsumerWidget {
       complementaryColor = accentColor.complimentTextColor;
     }
 
-    final bool hasUnreadMessages = (channel?.state?.unreadCount ?? 0) > 0;
+    final ChannelExtraData extraData = ChannelExtraData.fromJson(channel?.extraData ?? {});
+    final bool isArchived = extraData.archivedMembers?.any((element) => element.memberId == currentProfileId) ?? false;
+    final bool hasUnreadMessages = !isArchived && (channel?.state?.unreadCount ?? 0) > 0;
 
     return PositiveTapBehaviour(
       key: valueKey,
