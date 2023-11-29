@@ -308,7 +308,6 @@ class NotificationsController extends _$NotificationsController {
     bool isForeground = false,
   }) async {
     final logger = providerContainer.read(loggerProvider);
-    await updateNotificationReceivedTime();
 
     if (event.isStreamChatNotification && !isForeground) {
       logger.d('onRemoteNotificationReceived: Stream chat message, handling');
@@ -319,6 +318,7 @@ class NotificationsController extends _$NotificationsController {
     final NotificationPayload? payload = event.asPositivePayload;
     if (payload != null) {
       logger.d('onRemoteNotificationReceived: Positive notification, handling');
+      await updateNotificationReceivedTime();
       await handleNotification(payload, isForeground: isForeground);
     } else {
       logger.w('onRemoteNotificationReceived: Unknown notification, skipping: $event');
