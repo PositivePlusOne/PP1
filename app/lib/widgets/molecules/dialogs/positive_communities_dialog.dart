@@ -353,7 +353,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
                 values: communityTypes,
-                initialValue: isManagedProfile ? CommunityType.managed : CommunityType.connected,
+                initialValue: selectedCommunityType,
                 onValueChanged: (value) => controller.setSelectedCommunityType(value),
                 backgroundColour: colors.white,
                 borderColour: colors.black,
