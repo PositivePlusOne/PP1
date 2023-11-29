@@ -130,6 +130,7 @@ class ProfilePage extends HookConsumerWidget {
               currentProfile: currentProfile,
               targetProfile: targetProfile,
               relationship: relationship,
+              busyStateDelegate: viewModel,
             ),
           ],
         ],
@@ -147,6 +148,7 @@ class ProfilePage extends HookConsumerWidget {
     return PositiveScaffold(
       appBarColor: appBarColor,
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
+      isBusy: state.isBusy,
       onRefresh: () => viewModel.onRefresh(
         feedState,
         expectedFeedStateKey,

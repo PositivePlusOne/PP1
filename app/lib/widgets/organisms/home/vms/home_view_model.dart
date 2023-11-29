@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -57,7 +58,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
 
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     systemController.resetAppBadges();
-  
+
     checkForRefresh();
 
     // Add a bit of time before performing the profile checks
