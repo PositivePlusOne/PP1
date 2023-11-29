@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { NotificationPayload, NotificationPayloadResponse, appendPriorityToMessagePayload } from "./types/notification_payload";
+import { NotificationPayload, NotificationPayloadResponse } from "./types/notification_payload";
 import { FeedService } from "./feed_service";
 import { DefaultGenerics, StreamClient } from "getstream";
 import { adminApp } from "..";
@@ -8,6 +8,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
 import { StringHelpers } from "../helpers/string_helpers";
+import { Message } from "firebase-admin/lib/messaging/messaging-api";
 
 export namespace NotificationsService {
   export function prepareNewNotification(notification: NotificationPayload): NotificationPayload {
@@ -44,15 +45,27 @@ export namespace NotificationsService {
       return;
     }
 
-    let message = {
+    const message = {
       token,
+      android: {
+        priority: "high",
+      },
+      apns: {
+        payload: {
+          aps: {
+            contentAvailable: true,
+            mutableContent: true,
+          },
+        },
+        headers: {
+          "apns-priority": "10",
+          "apns-push-type": "background",
+        },
+      },
       data: {
         payload: JSON.stringify(notification),
       },
-    };
-
-    // Update the payload with the priority
-    message = appendPriorityToMessagePayload(message, notification.priority);
+    } as Message;
 
     try {
       functions.logger.info(`Sending payload to user: ${notification.user_id} with token ${token}`, { message });

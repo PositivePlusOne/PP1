@@ -1,7 +1,9 @@
 import UIKit
 import Flutter
-import Firebase  // Add the Firebase import.
+import FirebaseCore
+import FirebaseAuth
 import GoogleMaps
+import FirebaseMessaging
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,7 +11,6 @@ import GoogleMaps
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // Use the debug provider in Debug builds:
 #if DEBUG
         let providerFactory = AppCheckDebugProviderFactory()
         AppCheck.setAppCheckProviderFactory(providerFactory)
@@ -26,7 +27,7 @@ import GoogleMaps
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    
+
     func getDartEnv() -> [String: String] {
         let dartDefinesString = Bundle.main.infoDictionary!["DART_DEFINES"] as! String
         var dartDefinesDictionary = [String:String]()

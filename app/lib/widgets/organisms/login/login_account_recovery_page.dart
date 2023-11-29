@@ -32,19 +32,7 @@ class LoginAccountRecoveryPage extends HookConsumerWidget {
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const PositiveBackButton(),
-                const SizedBox(width: kPaddingSmall),
-                PositivePageIndicator(
-                  color: colors.black,
-                  pagesNum: 2,
-                  currentPage: 0,
-                ),
-              ],
-            ),
+            const PositiveBackButton(),
             const SizedBox(height: kPaddingMedium),
             Align(
               alignment: Alignment.centerLeft,

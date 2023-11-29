@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/dart_extensions.dart';
@@ -49,6 +50,9 @@ class ProfileDetailsPage extends HookConsumerWidget {
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
+    final bool canDisplayName = targetProfile?.visibilityFlags.contains(kVisibilityFlagName) == true;
+    final String bannerText = canDisplayName ? targetProfile?.displayName.asHandle ?? '' : '';
+
     return PositiveScaffold(
       decorations: buildType2ScaffoldDecorations(colors),
       headingWidgets: <Widget>[
@@ -56,7 +60,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
           padding: const EdgeInsets.only(bottom: kPaddingLarge),
           sliver: SliverToBoxAdapter(
             child: PositiveAppBar(
-              title: targetProfile?.name.isNotEmpty == true ? targetProfile?.displayName.asHandle ?? '' : '',
+              title: bannerText,
               centerTitle: true,
               includeLogoWherePossible: false,
               decorationColor: colors.colorGray1,

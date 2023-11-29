@@ -15,9 +15,8 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/constants/key_constants.dart';
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../analytics/analytic_events.dart';
@@ -452,7 +451,6 @@ class UserController extends _$UserController {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
 
     log.d('[UserController] signOut()');
     if (!isUserLoggedIn) {
@@ -476,6 +474,10 @@ class UserController extends _$UserController {
     //? Remove the notifications key, so a new user has the chance to accept them.
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.remove(kNotificationsAcceptedKey);
+
+    //? Remove the stream token and user id, so we do not receive messages from the previous user.
+    await sharedPreferences.remove(GetStreamController.kLastStreamTokenPreferencesKey);
+    await sharedPreferences.remove(GetStreamController.kLastStreamUserId);
 
     if (shouldNavigate) {
       log.d('[UserController] signOut() Navigating to home route');

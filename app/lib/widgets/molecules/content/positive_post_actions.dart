@@ -57,9 +57,10 @@ class PositivePostActions extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    const EdgeInsetsGeometry extraClickableArea = EdgeInsets.all(kPaddingSmall);
 
-    return Padding(
-      padding: padding,
+    return Container(
+      padding: padding.subtract(extraClickableArea).clamp(EdgeInsets.zero, padding),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -68,45 +69,53 @@ class PositivePostActions extends HookConsumerWidget {
             onTap: onLike,
             isEnabled: likesEnabled,
             showDisabledState: !likesEnabled,
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  UniconsLine.heart,
-                  color: isLiked ? colours.purple : colours.colorGray6,
-                  size: kIconSmall,
-                ),
-                const SizedBox(width: kPaddingExtraSmall),
-                Text(
-                  '${likes ?? 0}',
-                  style: typography.styleSubtitleBold.copyWith(
-                    color: colours.colorGray6,
-                    fontSize: 12.0,
+            hitTestBehaviourOverride: HitTestBehavior.translucent,
+            child: Padding(
+              padding: extraClickableArea,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: isLiked ? colours.purple : colours.colorGray6,
+                    size: kIconSmall,
                   ),
-                ),
-              ],
+                  const SizedBox(width: kPaddingExtraSmall),
+                  Text(
+                    '${likes ?? 0}',
+                    style: typography.styleSubtitleBold.copyWith(
+                      color: colours.colorGray6,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(width: kPaddingMedium),
           PositiveTapBehaviour(
             onTap: onComment,
             isEnabled: commentsEnabled,
             showDisabledState: !commentsEnabled,
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  UniconsLine.comment_alt_message,
-                  color: colours.colorGray6,
-                  size: kIconSmall,
-                ),
-                const SizedBox(width: kPaddingExtraSmall),
-                Text(
-                  '${comments ?? 0}',
-                  style: typography.styleSubtitleBold.copyWith(
-                    fontSize: 12.0,
+            hitTestBehaviourOverride: HitTestBehavior.translucent,
+            child: Padding(
+              padding: extraClickableArea,
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    UniconsLine.comment_alt_message,
                     color: colours.colorGray6,
+                    size: kIconSmall,
                   ),
-                ),
-              ],
+                  const SizedBox(width: kPaddingExtraSmall),
+                  Text(
+                    '${comments ?? 0}',
+                    style: typography.styleSubtitleBold.copyWith(
+                      fontSize: 12.0,
+                      color: colours.colorGray6,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const Spacer(),
@@ -126,10 +135,14 @@ class PositivePostActions extends HookConsumerWidget {
             onTap: onShare,
             isEnabled: shareEnabled,
             showDisabledState: !shareEnabled,
-            child: Icon(
-              UniconsLine.message,
-              color: colours.colorGray6,
-              size: kIconSmall,
+            hitTestBehaviourOverride: HitTestBehavior.translucent,
+            child: Padding(
+              padding: extraClickableArea,
+              child: Icon(
+                UniconsLine.message,
+                color: colours.colorGray6,
+                size: kIconSmall,
+              ),
             ),
           ),
         ],

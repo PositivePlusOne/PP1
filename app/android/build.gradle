@@ -13,7 +13,7 @@ buildscript {
 
     dependencies {
         classpath 'com.google.gms:google-services:4.3.8'
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.mlkit:face-detection:16.1.5'
     }

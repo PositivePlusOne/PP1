@@ -386,7 +386,7 @@ final deviceInfoProvider = FutureProvider<BaseDeviceInfo>.internal(
 
 typedef DeviceInfoRef = FutureProviderRef<BaseDeviceInfo>;
 String _$notificationPermissionsHash() =>
-    r'5a0789c1ce4758aa33b1f3f24b3b220397f1cc0f';
+    r'a825862b4acc0b13c449d2fe80e14f9d09245388';
 
 /// See also [notificationPermissions].
 @ProviderFor(notificationPermissions)

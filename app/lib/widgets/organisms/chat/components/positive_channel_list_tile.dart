@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -101,7 +102,7 @@ class PositiveChannelListTile extends ConsumerWidget {
       if (isTargetBlocked) {
         description = localizations.shared_placeholders_blocked_user;
       } else {
-        description = latestMessage.getFormattedDescription(localizations);
+        description = latestMessage.getFormattedDescription();
         time = latestMessage.createdAt.timeAgoFromNow;
       }
     }
@@ -161,6 +162,10 @@ class PositiveChannelListTile extends ConsumerWidget {
       complementaryColor = accentColor.complimentTextColor;
     }
 
+    final ChannelExtraData extraData = ChannelExtraData.fromJson(channel?.extraData ?? {});
+    final bool isArchived = extraData.archivedMembers?.any((element) => element.memberId == currentProfileId) ?? false;
+    final bool hasUnreadMessages = !isArchived && (channel?.state?.unreadCount ?? 0) > 0;
+
     return PositiveTapBehaviour(
       key: valueKey,
       isEnabled: isEnabled,
@@ -178,13 +183,14 @@ class PositiveChannelListTile extends ConsumerWidget {
               width: indicatorWidth,
               child: Stack(
                 children: <Widget>[
-                  for (final Widget indicator in indicators)
+                  for (final Widget indicator in indicators) ...<Widget>[
                     Positioned(
                       top: 0.0,
                       bottom: 0.0,
                       left: 0.0 + (overlapValue * indicators.indexOf(indicator)),
                       child: indicator,
                     ),
+                  ],
                 ],
               ),
             ),
@@ -220,6 +226,17 @@ class PositiveChannelListTile extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: kPaddingSmall),
+                        if (hasUnreadMessages) ...<Widget>[
+                          Container(
+                            height: kIconIndicator,
+                            width: kIconIndicator,
+                            decoration: BoxDecoration(
+                              color: colors.red,
+                              borderRadius: BorderRadius.circular(40.0),
+                            ),
+                          ),
+                          const SizedBox(width: 3.0),
+                        ],
                         if (isSelected == null) ...<Widget>[
                           Text(
                             time,

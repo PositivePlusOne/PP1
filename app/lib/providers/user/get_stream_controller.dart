@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
@@ -65,6 +66,9 @@ class GetStreamController extends _$GetStreamController {
   StreamSubscription<String>? firebaseTokenSubscription;
   StreamSubscription<List<Channel>>? channelsSubscription;
 
+  static const String kLastStreamTokenPreferencesKey = 'positive_last_stream_token';
+  static const String kLastStreamUserId = 'positive_last_stream_user_id';
+
   String get pushProviderName {
     switch (ref.read(systemControllerProvider).environment) {
       case SystemEnvironment.develop:
@@ -72,7 +76,7 @@ class GetStreamController extends _$GetStreamController {
       case SystemEnvironment.staging:
         return 'Staging';
       case SystemEnvironment.production:
-        return 'Production';
+        return 'Firebase';
     }
   }
 
@@ -81,14 +85,48 @@ class GetStreamController extends _$GetStreamController {
     return streamChatClient.state.currentUser?.id;
   }
 
-  @override
-  GetStreamControllerState build() {
-    return GetStreamControllerState.initialState();
-  }
-
   Iterable<Channel> get channels {
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
     return streamChatClient.state.channels.values;
+  }
+
+  int getUnreadBadgeCount() {
+    int count = 0;
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    final String currentProfileId = profileController.currentProfileId ?? '';
+    if (currentProfileId.isEmpty) {
+      return count;
+    }
+
+    for (final Channel channel in channels) {
+      // Check if we are a member
+      final Member? member = channel.state?.members.firstWhereOrNull((element) => element.userId == currentProfileId);
+      if (member == null) {
+        continue;
+      }
+
+      // Check we have a copy of all members
+      final List<String> memberIds = channel.state?.members.map((e) => e.userId!).toList() ?? [];
+      final List<Profile> members = cacheController.list(memberIds);
+      if (members.length != memberIds.length) {
+        continue;
+      }
+
+      final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
+      if (extraData.archivedMembers?.any((ArchivedMember archivedMember) => archivedMember.memberId == currentProfileId) ?? false) {
+        continue;
+      }
+
+      count += channel.state?.unreadCount ?? 0;
+    }
+
+    return count;
+  }
+
+  @override
+  GetStreamControllerState build() {
+    return GetStreamControllerState.initialState();
   }
 
   bool isRelationshipInvolvedInConversation(Relationship? relationship) {
@@ -117,9 +155,14 @@ class GetStreamController extends _$GetStreamController {
     cacheKeySubscription = eventBus.on<CacheKeyUpdatedEvent>().listen(onCacheKeyUpdated);
 
     await firebaseTokenSubscription?.cancel();
-    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen((String token) async {
-      await updateStreamDevices(token);
-    });
+    firebaseTokenSubscription = firebaseMessaging.onTokenRefresh.listen(onTokenUpdateDetected);
+  }
+
+  Future<void> onTokenUpdateDetected(String token) async {
+    final logger = ref.read(loggerProvider);
+    logger.d('[GetStreamController] onTokenUpdateDetected()');
+
+    await updateStreamDevices(token);
   }
 
   Future<void> onProfileChanged(ProfileSwitchedEvent event) async {
@@ -321,8 +364,8 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    if (profileController.state.currentProfile == null) {
-      log.e('[GetStreamController] attemptToUpdateStreamDevices() profile is null');
+    if (!profileController.isCurrentlyUserProfile) {
+      log.e('[GetStreamController] attemptToUpdateStreamDevices() not current auth user');
       return;
     }
 
@@ -378,9 +421,19 @@ class GetStreamController extends _$GetStreamController {
       log.w('[GetStreamController] onProfileChanged() user is not disconnected');
       return;
     }
+
     // all's okay to create the user then
     final User chatUser = buildStreamChatUser(profile: currentProfile);
     await streamChatClient.connectUser(chatUser, token);
+
+    // Save the token to shared preferences so we can use it later
+    // Only do this if we are the original user
+    if (profileController.isCurrentlyUserProfile) {
+      log.i('[GetStreamController] onProfileChanged() saving token to shared preferences');
+      final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+      await sharedPreferences.setString(kLastStreamTokenPreferencesKey, token);
+      await sharedPreferences.setString(kLastStreamUserId, currentProfileId);
+    }
   }
 
   Future<void> updateStreamDevices(String fcmToken) async {
@@ -457,12 +510,14 @@ class GetStreamController extends _$GetStreamController {
     final String imageUrl = profile.profileImage?.bucketPath ?? '';
     final String displayName = profile.displayName;
     final String accentColor = profile.accentColor;
+
     // which we can build our map of extra data
     final Map<String, dynamic> extraData = buildUserExtraData(
       imageUrl: imageUrl,
       displayName: displayName,
       accentColor: accentColor,
     );
+
     // to create a richly described user
     return User(id: uid, name: displayName, image: imageUrl, extraData: extraData);
   }
@@ -487,6 +542,7 @@ class GetStreamController extends _$GetStreamController {
       "text": text,
       "eventType": eventType?.toJson(),
       "mentionedUsers": mentionedUserIds ?? [],
+      "senderId": profileController.currentProfileId,
     });
   }
 
@@ -530,7 +586,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds, 'senderId': profileController.currentProfileId});
     if (res.data == null) {
       throw Exception('Failed to create conversation');
     }
@@ -631,6 +687,7 @@ class GetStreamController extends _$GetStreamController {
       log.i('[GetStreamController] onProfileUpdated() user is null');
       return;
     }
+
     log.i('[GetStreamController] onProfileUpdated() updating user');
     final User chatUser = buildStreamChatUser(profile: profileController.state.currentProfile ?? profile);
     streamChatClient.state.updateUser(chatUser);

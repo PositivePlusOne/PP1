@@ -170,6 +170,8 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     final List<NotificationPayload> newNotifications = [];
     final List<dynamic> notifications = (data.containsKey('notifications') ? data['notifications'] : []).map((dynamic activity) => json.decodeSafe(activity)).toList();
 
+    final Set<String> newGroups = {...notificationsState.knownGroups};
+
     // Some notifications may be treated as groups, so we need to keep track of the foreign keys
     // Then we can drop the duplicates
     for (final dynamic notification in notifications) {
@@ -184,12 +186,12 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
         // Prevent grouped notifications (for example 2 likes vs 3 likes)
         final String groupId = newNotification.groupId;
         if (groupId.isNotEmpty) {
-          if (notificationsState.knownGroups.contains(groupId)) {
+          if (newGroups.contains(groupId)) {
             logger.d('requestNextTimelinePage() - Skipping duplicate notification: $notification');
             continue;
           }
 
-          notificationsState.knownGroups.add(groupId);
+          newGroups.add(groupId);
         }
 
         newNotifications.add(newNotification);
@@ -199,6 +201,7 @@ class PositiveNotificationsPaginationBehaviourState extends ConsumerState<Positi
     }
 
     logger.d('requestNextTimelinePage() - newNotifications: $newNotifications');
+    notificationsState.knownGroups = newGroups;
 
     if (!hasNext && mounted) {
       notificationsState.pagingController.appendSafeLastPage(newNotifications);

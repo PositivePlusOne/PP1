@@ -167,12 +167,10 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   }
 
   List<Relationship> getCachedMemberRelationships() {
-    final logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final String currentProfileId = profileController.currentProfileId ?? '';
 
-    logger.i('ChatViewModel.getCachedMemberRelationships()');
     final List<Relationship> relationships = [];
 
     // Get members from the current channel
@@ -246,6 +244,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       currentChannel: channel,
       currentChannelExtraData: extraData,
     );
+
+    log.d('Marking channel as read');
+    unawaited(channel.markRead());
 
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
@@ -362,8 +363,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final List<Channel>? channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).firstOrNull;
-    if (channelResults?.length != 1) {
+    final channels = streamChatClient.queryChannels(filter: Filter.equal('id', id));
+    final List<Channel> channelResults = await channels.first;
+    if (channelResults.length != 1) {
       logger.e('ChatViewModel.onChatIdSelected(), channelResults.length != 1');
       return;
     }

@@ -8,10 +8,6 @@ import 'package:app/providers/system/handlers/notifications/notification_handler
 class NewMessageNotificationHandler extends NotificationHandler {
   @override
   Future<bool> canDisplayPayload(NotificationPayload payload, bool isForeground) async {
-    if (!isForeground) {
-      return true;
-    }
-
     final AppRouter router = providerContainer.read(appRouterProvider);
     final bool isChatPage = router.current.name == ChatRoute.name;
 

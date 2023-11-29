@@ -1,10 +1,15 @@
 // Flutter imports:
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
+import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -100,13 +105,29 @@ class ProfilePhotoViewModel extends _$ProfilePhotoViewModel with LifecycleMixin 
     }
   }
 
-  void onImagePicker() async {
+  void onImagePicker(BuildContext context) async {
     final Logger logger = ref.read(loggerProvider);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ImagePicker picker = ref.read(imagePickerProvider);
 
     await appRouter.pop();
+
+    final Permission libraryPermission = await PositiveCameraState.getValidCameraPermissions();
+    PermissionStatus libraryPermissionStatus = await libraryPermission.status;
+
+    // Check if can request permission
+    if (libraryPermissionStatus.isDenied) {
+      libraryPermissionStatus = await libraryPermission.request();
+    }
+
+    // Check if permission is granted
+    if (libraryPermissionStatus.isDenied || libraryPermissionStatus.isPermanentlyDenied) {
+      logger.d("onImagePicker: permission denied");
+      final AppLocalizations localizations = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(PositiveErrorSnackBar(text: localizations.shared_errors_permissions));
+      return;
+    }
 
     logger.d("[ProfilePhotoViewModel] onImagePicker [start]");
     state = state.copyWith(isBusy: true);

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -27,6 +28,7 @@ import 'package:app/providers/profiles/hiv_status_controller.dart';
 import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
@@ -297,5 +299,42 @@ class SystemController extends _$SystemController {
     logger.d('resetSharedPreferences');
 
     await sharedPreferences.clear();
+  }
+
+  Future<void> setAppBadgeCount(int count) async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[SystemController] setAppBadgeCount: $count');
+
+    final bool isSupported = await FlutterAppBadger.isAppBadgeSupported();
+    if (!isSupported) {
+      logger.d('[SystemController] setAppBadgeCount: App badges not supported');
+      return;
+    }
+
+    await FlutterAppBadger.updateBadgeCount(count);
+    logger.i('[SystemController] setAppBadgeCount: Completed');
+  }
+
+  Future<void> resetAppBadges() async {
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('[SystemController] resetAppBadges');
+
+    logger.d('[SystemController] checking for notification permissions');
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final bool hasNotificationPermissions = await notificationsController.hasPushNotificationPermissions();
+
+    if (!hasNotificationPermissions) {
+      logger.d('[SystemController] resetAppBadges: No notification permissions');
+      return;
+    }
+
+    final bool isSupported = await FlutterAppBadger.isAppBadgeSupported();
+    if (!isSupported) {
+      logger.d('[SystemController] resetAppBadges: App badges not supported');
+      return;
+    }
+
+    await FlutterAppBadger.removeBadge();
+    logger.i('[SystemController] resetAppBadges: Completed');
   }
 }

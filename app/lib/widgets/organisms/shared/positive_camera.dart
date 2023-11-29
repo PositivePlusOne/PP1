@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,6 +53,8 @@ enum PositiveCameraViewMode {
   camera,
   cameraPermissionOverlay,
 }
+
+typedef LibraryVideoPermissions = List<PermissionStatus>;
 
 class PositiveCamera extends StatefulHookConsumerWidget {
   const PositiveCamera({
@@ -317,6 +320,27 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       }
     } catch (e) {
       cameraPermissionStatus = PermissionStatus.denied;
+    }
+  }
+
+  static Future<Permission> getValidCameraPermissions() async {
+    final BaseDeviceInfo deviceInfo = await providerContainer.read(deviceInfoProvider.future);
+
+    try {
+      if (deviceInfo is AndroidDeviceInfo) {
+        final int sdkInt = deviceInfo.version.sdkInt;
+        if (sdkInt <= 32) {
+          return Permission.storage;
+        }
+      }
+
+      if (deviceInfo is IosDeviceInfo) {
+        return Permission.photos;
+      }
+
+      return Permission.photos;
+    } catch (e) {
+      return Permission.storage;
     }
   }
 
@@ -1029,7 +1053,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: getPositiveCameraGenericTopChildren(state),
+              children: (widget.topChildren != null) ? widget.topChildren! : getPositiveCameraGenericTopChildren(state),
             ),
           ),
           const SizedBox(height: kPaddingMedium),
@@ -1082,6 +1106,7 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
                 index: widget.delayTimerSelection,
               ),
             ),
+          const SizedBox(height: kPaddingSmall),
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
           //* -=-=-=-=-=-             Maximum Clip Duration UI             -=-=-=-=-=- *\\
           //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\

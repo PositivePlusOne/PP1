@@ -32,6 +32,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat/src/client/retry_policy.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
@@ -263,6 +264,14 @@ FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
 
 @Riverpod(keepAlive: true)
 FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
+  // If on iOS, then we want to use the LocalNotificationsPlugin to request permissions
+  // This is due to having to request badge, sound and alert permissions separately
+  if (UniversalPlatform.isIOS) {
+    final FirebaseMessaging firebaseMessaging = ref.read(firebaseMessagingProvider);
+    final NotificationSettings requestedIOSPermissions = await firebaseMessaging.requestPermission();
+    return requestedIOSPermissions.authorizationStatus == AuthorizationStatus.authorized ? PermissionStatus.granted : PermissionStatus.denied;
+  }
+
   return Permission.notification.request();
 }
 

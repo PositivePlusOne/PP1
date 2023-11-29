@@ -19,7 +19,7 @@ mixin _$NotificationTopic {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -31,7 +31,7 @@ mixin _$NotificationTopic {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -43,7 +43,7 @@ mixin _$NotificationTopic {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -56,7 +56,7 @@ mixin _$NotificationTopic {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -68,7 +68,7 @@ mixin _$NotificationTopic {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -80,7 +80,7 @@ mixin _$NotificationTopic {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -149,7 +149,7 @@ class _$OtherImpl implements Other {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -164,7 +164,7 @@ class _$OtherImpl implements Other {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -179,7 +179,7 @@ class _$OtherImpl implements Other {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -198,7 +198,7 @@ class _$OtherImpl implements Other {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -213,7 +213,7 @@ class _$OtherImpl implements Other {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -228,7 +228,7 @@ class _$OtherImpl implements Other {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -249,35 +249,35 @@ abstract class Other implements NotificationTopic {
 }
 
 /// @nodoc
-abstract class _$$PostLikesImplCopyWith<$Res> {
-  factory _$$PostLikesImplCopyWith(
-          _$PostLikesImpl value, $Res Function(_$PostLikesImpl) then) =
-      __$$PostLikesImplCopyWithImpl<$Res>;
+abstract class _$$PostLikeImplCopyWith<$Res> {
+  factory _$$PostLikeImplCopyWith(
+          _$PostLikeImpl value, $Res Function(_$PostLikeImpl) then) =
+      __$$PostLikeImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$$PostLikesImplCopyWithImpl<$Res>
-    extends _$NotificationTopicCopyWithImpl<$Res, _$PostLikesImpl>
-    implements _$$PostLikesImplCopyWith<$Res> {
-  __$$PostLikesImplCopyWithImpl(
-      _$PostLikesImpl _value, $Res Function(_$PostLikesImpl) _then)
+class __$$PostLikeImplCopyWithImpl<$Res>
+    extends _$NotificationTopicCopyWithImpl<$Res, _$PostLikeImpl>
+    implements _$$PostLikeImplCopyWith<$Res> {
+  __$$PostLikeImplCopyWithImpl(
+      _$PostLikeImpl _value, $Res Function(_$PostLikeImpl) _then)
       : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$PostLikesImpl implements PostLikes {
-  const _$PostLikesImpl();
+class _$PostLikeImpl implements PostLike {
+  const _$PostLikeImpl();
 
   @override
   String toString() {
-    return 'NotificationTopic.postLikes()';
+    return 'NotificationTopic.postLike()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$PostLikesImpl);
+        (other.runtimeType == runtimeType && other is _$PostLikeImpl);
   }
 
   @override
@@ -287,7 +287,7 @@ class _$PostLikesImpl implements PostLikes {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -295,14 +295,14 @@ class _$PostLikesImpl implements PostLikes {
     required TResult Function() postShared,
     required TResult Function() sharedEvent,
   }) {
-    return postLikes();
+    return postLike();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -310,14 +310,14 @@ class _$PostLikesImpl implements PostLikes {
     TResult? Function()? postShared,
     TResult? Function()? sharedEvent,
   }) {
-    return postLikes?.call();
+    return postLike?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -326,8 +326,8 @@ class _$PostLikesImpl implements PostLikes {
     TResult Function()? sharedEvent,
     required TResult orElse(),
   }) {
-    if (postLikes != null) {
-      return postLikes();
+    if (postLike != null) {
+      return postLike();
     }
     return orElse();
   }
@@ -336,7 +336,7 @@ class _$PostLikesImpl implements PostLikes {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -344,14 +344,14 @@ class _$PostLikesImpl implements PostLikes {
     required TResult Function(PostShared value) postShared,
     required TResult Function(SharedEvent value) sharedEvent,
   }) {
-    return postLikes(this);
+    return postLike(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -359,14 +359,14 @@ class _$PostLikesImpl implements PostLikes {
     TResult? Function(PostShared value)? postShared,
     TResult? Function(SharedEvent value)? sharedEvent,
   }) {
-    return postLikes?.call(this);
+    return postLike?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -375,15 +375,15 @@ class _$PostLikesImpl implements PostLikes {
     TResult Function(SharedEvent value)? sharedEvent,
     required TResult orElse(),
   }) {
-    if (postLikes != null) {
-      return postLikes(this);
+    if (postLike != null) {
+      return postLike(this);
     }
     return orElse();
   }
 }
 
-abstract class PostLikes implements NotificationTopic {
-  const factory PostLikes() = _$PostLikesImpl;
+abstract class PostLike implements NotificationTopic {
+  const factory PostLike() = _$PostLikeImpl;
 }
 
 /// @nodoc
@@ -425,7 +425,7 @@ class _$NewFollowerImpl implements NewFollower {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -440,7 +440,7 @@ class _$NewFollowerImpl implements NewFollower {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -455,7 +455,7 @@ class _$NewFollowerImpl implements NewFollower {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -474,7 +474,7 @@ class _$NewFollowerImpl implements NewFollower {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -489,7 +489,7 @@ class _$NewFollowerImpl implements NewFollower {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -504,7 +504,7 @@ class _$NewFollowerImpl implements NewFollower {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -563,7 +563,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -578,7 +578,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -593,7 +593,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -612,7 +612,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -627,7 +627,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -642,7 +642,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -701,7 +701,7 @@ class _$NewCommentImpl implements NewComment {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -716,7 +716,7 @@ class _$NewCommentImpl implements NewComment {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -731,7 +731,7 @@ class _$NewCommentImpl implements NewComment {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -750,7 +750,7 @@ class _$NewCommentImpl implements NewComment {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -765,7 +765,7 @@ class _$NewCommentImpl implements NewComment {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -780,7 +780,7 @@ class _$NewCommentImpl implements NewComment {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -839,7 +839,7 @@ class _$NewMessageImpl implements NewMessage {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -854,7 +854,7 @@ class _$NewMessageImpl implements NewMessage {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -869,7 +869,7 @@ class _$NewMessageImpl implements NewMessage {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -888,7 +888,7 @@ class _$NewMessageImpl implements NewMessage {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -903,7 +903,7 @@ class _$NewMessageImpl implements NewMessage {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -918,7 +918,7 @@ class _$NewMessageImpl implements NewMessage {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -977,7 +977,7 @@ class _$PostSharedImpl implements PostShared {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -992,7 +992,7 @@ class _$PostSharedImpl implements PostShared {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -1007,7 +1007,7 @@ class _$PostSharedImpl implements PostShared {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -1026,7 +1026,7 @@ class _$PostSharedImpl implements PostShared {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -1041,7 +1041,7 @@ class _$PostSharedImpl implements PostShared {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -1056,7 +1056,7 @@ class _$PostSharedImpl implements PostShared {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,
@@ -1115,7 +1115,7 @@ class _$SharedEventImpl implements SharedEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() other,
-    required TResult Function() postLikes,
+    required TResult Function() postLike,
     required TResult Function() newFollower,
     required TResult Function() connectionRequest,
     required TResult Function() newComment,
@@ -1130,7 +1130,7 @@ class _$SharedEventImpl implements SharedEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? other,
-    TResult? Function()? postLikes,
+    TResult? Function()? postLike,
     TResult? Function()? newFollower,
     TResult? Function()? connectionRequest,
     TResult? Function()? newComment,
@@ -1145,7 +1145,7 @@ class _$SharedEventImpl implements SharedEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? other,
-    TResult Function()? postLikes,
+    TResult Function()? postLike,
     TResult Function()? newFollower,
     TResult Function()? connectionRequest,
     TResult Function()? newComment,
@@ -1164,7 +1164,7 @@ class _$SharedEventImpl implements SharedEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Other value) other,
-    required TResult Function(PostLikes value) postLikes,
+    required TResult Function(PostLike value) postLike,
     required TResult Function(NewFollower value) newFollower,
     required TResult Function(ConnectionRequest value) connectionRequest,
     required TResult Function(NewComment value) newComment,
@@ -1179,7 +1179,7 @@ class _$SharedEventImpl implements SharedEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(Other value)? other,
-    TResult? Function(PostLikes value)? postLikes,
+    TResult? Function(PostLike value)? postLike,
     TResult? Function(NewFollower value)? newFollower,
     TResult? Function(ConnectionRequest value)? connectionRequest,
     TResult? Function(NewComment value)? newComment,
@@ -1194,7 +1194,7 @@ class _$SharedEventImpl implements SharedEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Other value)? other,
-    TResult Function(PostLikes value)? postLikes,
+    TResult Function(PostLike value)? postLike,
     TResult Function(NewFollower value)? newFollower,
     TResult Function(ConnectionRequest value)? connectionRequest,
     TResult Function(NewComment value)? newComment,

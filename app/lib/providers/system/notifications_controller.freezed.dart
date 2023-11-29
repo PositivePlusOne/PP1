@@ -18,6 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$NotificationsControllerState {
   bool get localNotificationsInitialized => throw _privateConstructorUsedError;
   bool get remoteNotificationsInitialized => throw _privateConstructorUsedError;
+  DateTime? get lastNotificationReceivedTime =>
+      throw _privateConstructorUsedError;
+  DateTime? get lastNotificationCheckTime => throw _privateConstructorUsedError;
+  String get apnsToken => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $NotificationsControllerStateCopyWith<NotificationsControllerState>
@@ -34,7 +38,10 @@ abstract class $NotificationsControllerStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool localNotificationsInitialized,
-      bool remoteNotificationsInitialized});
+      bool remoteNotificationsInitialized,
+      DateTime? lastNotificationReceivedTime,
+      DateTime? lastNotificationCheckTime,
+      String apnsToken});
 }
 
 /// @nodoc
@@ -53,6 +60,9 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
   $Res call({
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
+    Object? lastNotificationReceivedTime = freezed,
+    Object? lastNotificationCheckTime = freezed,
+    Object? apnsToken = null,
   }) {
     return _then(_value.copyWith(
       localNotificationsInitialized: null == localNotificationsInitialized
@@ -63,6 +73,18 @@ class _$NotificationsControllerStateCopyWithImpl<$Res,
           ? _value.remoteNotificationsInitialized
           : remoteNotificationsInitialized // ignore: cast_nullable_to_non_nullable
               as bool,
+      lastNotificationReceivedTime: freezed == lastNotificationReceivedTime
+          ? _value.lastNotificationReceivedTime
+          : lastNotificationReceivedTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastNotificationCheckTime: freezed == lastNotificationCheckTime
+          ? _value.lastNotificationCheckTime
+          : lastNotificationCheckTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      apnsToken: null == apnsToken
+          ? _value.apnsToken
+          : apnsToken // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -78,7 +100,10 @@ abstract class _$$NotificationsControllerStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool localNotificationsInitialized,
-      bool remoteNotificationsInitialized});
+      bool remoteNotificationsInitialized,
+      DateTime? lastNotificationReceivedTime,
+      DateTime? lastNotificationCheckTime,
+      String apnsToken});
 }
 
 /// @nodoc
@@ -96,6 +121,9 @@ class __$$NotificationsControllerStateImplCopyWithImpl<$Res>
   $Res call({
     Object? localNotificationsInitialized = null,
     Object? remoteNotificationsInitialized = null,
+    Object? lastNotificationReceivedTime = freezed,
+    Object? lastNotificationCheckTime = freezed,
+    Object? apnsToken = null,
   }) {
     return _then(_$NotificationsControllerStateImpl(
       localNotificationsInitialized: null == localNotificationsInitialized
@@ -106,6 +134,18 @@ class __$$NotificationsControllerStateImplCopyWithImpl<$Res>
           ? _value.remoteNotificationsInitialized
           : remoteNotificationsInitialized // ignore: cast_nullable_to_non_nullable
               as bool,
+      lastNotificationReceivedTime: freezed == lastNotificationReceivedTime
+          ? _value.lastNotificationReceivedTime
+          : lastNotificationReceivedTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastNotificationCheckTime: freezed == lastNotificationCheckTime
+          ? _value.lastNotificationCheckTime
+          : lastNotificationCheckTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      apnsToken: null == apnsToken
+          ? _value.apnsToken
+          : apnsToken // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -116,16 +156,26 @@ class _$NotificationsControllerStateImpl
     implements _NotificationsControllerState {
   const _$NotificationsControllerStateImpl(
       {required this.localNotificationsInitialized,
-      required this.remoteNotificationsInitialized});
+      required this.remoteNotificationsInitialized,
+      this.lastNotificationReceivedTime,
+      this.lastNotificationCheckTime,
+      this.apnsToken = ''});
 
   @override
   final bool localNotificationsInitialized;
   @override
   final bool remoteNotificationsInitialized;
+  @override
+  final DateTime? lastNotificationReceivedTime;
+  @override
+  final DateTime? lastNotificationCheckTime;
+  @override
+  @JsonKey()
+  final String apnsToken;
 
   @override
   String toString() {
-    return 'NotificationsControllerState(localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized)';
+    return 'NotificationsControllerState(localNotificationsInitialized: $localNotificationsInitialized, remoteNotificationsInitialized: $remoteNotificationsInitialized, lastNotificationReceivedTime: $lastNotificationReceivedTime, lastNotificationCheckTime: $lastNotificationCheckTime, apnsToken: $apnsToken)';
   }
 
   @override
@@ -140,12 +190,26 @@ class _$NotificationsControllerStateImpl
             (identical(other.remoteNotificationsInitialized,
                     remoteNotificationsInitialized) ||
                 other.remoteNotificationsInitialized ==
-                    remoteNotificationsInitialized));
+                    remoteNotificationsInitialized) &&
+            (identical(other.lastNotificationReceivedTime,
+                    lastNotificationReceivedTime) ||
+                other.lastNotificationReceivedTime ==
+                    lastNotificationReceivedTime) &&
+            (identical(other.lastNotificationCheckTime,
+                    lastNotificationCheckTime) ||
+                other.lastNotificationCheckTime == lastNotificationCheckTime) &&
+            (identical(other.apnsToken, apnsToken) ||
+                other.apnsToken == apnsToken));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, localNotificationsInitialized,
-      remoteNotificationsInitialized);
+  int get hashCode => Object.hash(
+      runtimeType,
+      localNotificationsInitialized,
+      remoteNotificationsInitialized,
+      lastNotificationReceivedTime,
+      lastNotificationCheckTime,
+      apnsToken);
 
   @JsonKey(ignore: true)
   @override
@@ -159,14 +223,22 @@ class _$NotificationsControllerStateImpl
 abstract class _NotificationsControllerState
     implements NotificationsControllerState {
   const factory _NotificationsControllerState(
-          {required final bool localNotificationsInitialized,
-          required final bool remoteNotificationsInitialized}) =
-      _$NotificationsControllerStateImpl;
+      {required final bool localNotificationsInitialized,
+      required final bool remoteNotificationsInitialized,
+      final DateTime? lastNotificationReceivedTime,
+      final DateTime? lastNotificationCheckTime,
+      final String apnsToken}) = _$NotificationsControllerStateImpl;
 
   @override
   bool get localNotificationsInitialized;
   @override
   bool get remoteNotificationsInitialized;
+  @override
+  DateTime? get lastNotificationReceivedTime;
+  @override
+  DateTime? get lastNotificationCheckTime;
+  @override
+  String get apnsToken;
   @override
   @JsonKey(ignore: true)
   _$$NotificationsControllerStateImplCopyWith<

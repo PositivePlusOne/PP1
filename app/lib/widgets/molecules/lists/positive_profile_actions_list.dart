@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -43,6 +44,7 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
     required this.currentProfile,
     required this.targetProfile,
     required this.relationship,
+    this.busyStateDelegate,
     super.key,
   }) : height = currentProfile == null ? 0.0 : kButtonListHeight;
 
@@ -50,6 +52,8 @@ class PositiveProfileActionsList extends ConsumerStatefulWidget implements Prefe
   final Profile targetProfile;
   final Relationship? relationship;
   final double height;
+
+  final BusyStateDelegateMixin? busyStateDelegate;
 
   static const double kButtonListHeight = 42.0;
 
@@ -391,7 +395,13 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
       final Widget messageAction = PositiveButton(
         colors: colors,
         primaryColor: expectedButtonColor,
-        onTapped: () async => await getStreamController.createConversation([flamelinkId], shouldPopDialog: true),
+        onTapped: () async {
+          if (widget.busyStateDelegate != null) {
+            await widget.busyStateDelegate!.performActionWhileBusy(() => getStreamController.createConversation([flamelinkId], shouldPopDialog: true));
+          } else {
+            await getStreamController.createConversation([flamelinkId], shouldPopDialog: true);
+          }
+        },
         icon: UniconsLine.comment,
         tooltip: 'Message',
         layout: PositiveButtonLayout.iconOnly,
@@ -423,10 +433,12 @@ class _PositiveProfileActionsListState extends ConsumerState<PositiveProfileActi
     return SizedBox(
       height: PositiveProfileActionsList.kButtonListHeight,
       width: double.infinity,
-      child: ListView(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: kPaddingSmallMedium),
         scrollDirection: Axis.horizontal,
-        children: children.spaceWithHorizontal(kPaddingSmall),
+        child: Row(
+          children: children.spaceWithHorizontal(kPaddingSmall),
+        ),
       ),
     );
   }

@@ -154,7 +154,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
               children: <Widget>[
                 for (final NotificationTopic topic in NotificationTopic.allTopics) ...<Widget>[
                   PositiveCheckboxButton(
-                    label: topic.toLocalizedTopic,
+                    label: topic.toTopicLocale,
                     value: state.notificationSubscribedTopics.contains(NotificationTopic.toJson(topic)),
                     isBusy: state.isBusy,
                     showDisabledState: state.isBusy,

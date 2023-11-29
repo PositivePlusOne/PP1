@@ -27,6 +27,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/localization_extensions.dart';
+import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
@@ -138,7 +139,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
 
     logger.d('appendActivityPageToState() - activityList.length: ${activities.length}');
-    feedState.pagingController.appendPage(activities, next);
+    feedState.currentPaginationKey = next ?? '';
+    feedState.pagingController.appendSafePage(activities, next ?? '');
   }
 
   void saveActivitiesState() {

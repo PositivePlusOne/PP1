@@ -14,28 +14,33 @@ import 'package:app/widgets/atoms/buttons/positive_button.dart';
 class PositiveNotificationsButton extends ConsumerWidget {
   const PositiveNotificationsButton({
     this.color,
+    this.badgeColor,
+    this.onTap,
     this.isDisabled = false,
+    this.includeBadge = false,
     super.key,
   });
 
   final Color? color;
+  final Color? badgeColor;
+  final void Function()? onTap;
   final bool isDisabled;
+  final bool includeBadge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final AppRouter router = ref.read(appRouterProvider);
 
-    //! TODO Get this number when we get reaction counts from get stream!
-    const bool includeBadge = false;
-
     return PositiveButton.appBarIcon(
       icon: UniconsLine.bell,
       colors: colors,
       primaryColor: color ?? colors.black,
-      onTapped: () => router.push(const NotificationsRoute()),
+      foregroundColor: color,
+      onTapped: onTap ?? () => router.push(const NotificationsRoute()),
       isDisabled: isDisabled,
       includeBadge: includeBadge,
+      badgeColorOverride: badgeColor ?? colors.red,
     );
   }
 }

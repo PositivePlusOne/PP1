@@ -23,7 +23,6 @@ import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.da
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
@@ -87,7 +86,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
         ),
         SliverPadding(
           padding: const EdgeInsets.only(
-            top: kPaddingMassive,
+            top: kPaddingVerySmall,
             left: kPaddingMedium,
             right: kPaddingMedium,
             bottom: kPaddingMedium,
@@ -106,14 +105,14 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                     layout: PositiveButtonLayout.textOnly,
                     size: PositiveButtonSize.small,
                   ),
-                  PositivePageIndicator(
-                    color: colors.white,
-                    pagesNum: 2,
-                    currentPage: 0,
-                  ),
+                  // PositivePageIndicator(
+                  //   color: colors.white,
+                  //   pagesNum: 2,
+                  //   currentPage: 0,
+                  // ),
                 ],
               ),
-              const SizedBox(height: kPaddingLarge),
+              const SizedBox(height: kPaddingExtraLarge),
               Text(
                 'Pick a colour, this will show on your profile',
                 style: typography.styleSubtitle.copyWith(color: colors.white),

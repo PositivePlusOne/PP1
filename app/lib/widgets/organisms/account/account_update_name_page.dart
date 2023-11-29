@@ -109,7 +109,7 @@ class AccountUpdateNamePage extends ConsumerWidget {
               labelText: localisations.page_profile_name_entry_input_label,
               initialText: state.name,
               onTextChanged: controller.onNameChanged,
-              textInputType: TextInputType.name,
+              textInputType: TextInputType.text,
               tintColor: tintColor,
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,

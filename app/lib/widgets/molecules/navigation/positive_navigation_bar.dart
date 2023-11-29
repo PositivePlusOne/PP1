@@ -14,7 +14,9 @@ import 'package:unicons/unicons.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
@@ -25,7 +27,7 @@ import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
 // Enumeration for NavigationBarIndex
 enum NavigationBarIndex { hub, search, chat, add, guidance }
 
-class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidget {
+class PositiveNavigationBar extends HookConsumerWidget implements PreferredSizeWidget {
   const PositiveNavigationBar({
     required this.mediaQuery,
     this.index = NavigationBarIndex.hub,
@@ -61,6 +63,11 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    final int badgeCount = getStreamController.getUnreadBadgeCount();
+
+    usePageRefreshHook();
+
     return SizedBox(
       height: preferredSize.height,
       child: Stack(
@@ -83,6 +90,7 @@ class PositiveNavigationBar extends ConsumerWidget implements PreferredSizeWidge
                 index: index,
                 isDisabled: isDisabled,
                 scrollController: scrollController,
+                badgeCount: badgeCount,
               ),
             ),
           ),
@@ -125,11 +133,13 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     required this.index,
     required this.isDisabled,
     this.scrollController,
+    this.badgeCount = 0,
   }) : super(key: key);
 
   final NavigationBarIndex index;
   final bool isDisabled;
   final ScrollController? scrollController;
+  final int badgeCount;
 
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
@@ -216,15 +226,15 @@ class PositiveNavigationBarContent extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              buildNavigationBarButton(ref, colors, isDisabled, 'Hub', UniconsLine.estate, NavigationBarIndex.hub),
+              buildNavigationBarButton(ref: ref, colors: colors, isDisabled: isDisabled, label: 'Hub', icon: UniconsLine.estate, buttonIndex: NavigationBarIndex.hub),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled, 'Search', UniconsLine.search, NavigationBarIndex.search),
+              buildNavigationBarButton(ref: ref, colors: colors, isDisabled: isDisabled, label: 'Search', icon: UniconsLine.search, buttonIndex: NavigationBarIndex.search),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled, 'Add', UniconsLine.plus_circle, NavigationBarIndex.add, isPrimary: true),
+              buildNavigationBarButton(ref: ref, colors: colors, isDisabled: isDisabled, label: 'Add', icon: UniconsLine.plus_circle, buttonIndex: NavigationBarIndex.add, isPrimary: true),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled, 'Chat', UniconsLine.comment, NavigationBarIndex.chat),
+              buildNavigationBarButton(ref: ref, colors: colors, isDisabled: isDisabled, label: 'Chat', icon: UniconsLine.comment, buttonIndex: NavigationBarIndex.chat, badgeCount: badgeCount),
               const SizedBox(width: kPaddingExtraSmall),
-              buildNavigationBarButton(ref, colors, isDisabled, 'Guidance', UniconsLine.book_alt, NavigationBarIndex.guidance),
+              buildNavigationBarButton(ref: ref, colors: colors, isDisabled: isDisabled, label: 'Guidance', icon: UniconsLine.book_alt, buttonIndex: NavigationBarIndex.guidance),
             ],
           ),
         ),
@@ -232,7 +242,16 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     );
   }
 
-  Widget buildNavigationBarButton(WidgetRef ref, DesignColorsModel colors, bool isDisabled, String label, IconData icon, NavigationBarIndex buttonIndex, {bool isPrimary = false}) {
+  Widget buildNavigationBarButton({
+    required WidgetRef ref,
+    required DesignColorsModel colors,
+    required bool isDisabled,
+    required String label,
+    required IconData icon,
+    required NavigationBarIndex buttonIndex,
+    bool isPrimary = false,
+    int badgeCount = 0,
+  }) {
     Widget child = PositiveButton(
       colors: colors,
       primaryColor: isPrimary ? colors.black : colors.purple,
@@ -245,6 +264,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
       size: PositiveButtonSize.large,
       isActive: index == buttonIndex,
       isDisabled: isDisabled,
+      includeBadge: badgeCount > 0,
     );
 
     // If the button is not primary...

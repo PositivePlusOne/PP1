@@ -87,6 +87,9 @@ PODS:
   - Firebase/Performance (10.16.0):
     - Firebase/CoreOnly
     - FirebasePerformance (~> 10.16.0)
+  - Firebase/RemoteConfig (10.16.0):
+    - Firebase/CoreOnly
+    - FirebaseRemoteConfig (~> 10.16.0)
   - Firebase/Storage (10.16.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.16.0)
@@ -107,6 +110,10 @@ PODS:
     - Flutter
   - firebase_performance (0.9.3-3):
     - Firebase/Performance (= 10.16.0)
+    - firebase_core
+    - Flutter
+  - firebase_remote_config (4.3.3):
+    - Firebase/RemoteConfig (= 10.16.0)
     - firebase_core
     - Flutter
   - firebase_storage (11.4.1):
@@ -203,6 +210,8 @@ PODS:
     - FirebaseCoreExtension (~> 10.0)
     - GTMSessionFetcher/Core (< 4.0, >= 2.1)
   - Flutter (1.0.0)
+  - flutter_app_badger (1.3.0):
+    - Flutter
   - flutter_image_compress_common (1.0.0):
     - Flutter
     - Mantle
@@ -409,9 +418,11 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_performance (from `.symlinks/plugins/firebase_performance/ios`)
+  - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.16.0`)
   - Flutter (from `Flutter`)
+  - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -524,6 +535,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_performance:
     :path: ".symlinks/plugins/firebase_performance/ios"
+  firebase_remote_config:
+    :path: ".symlinks/plugins/firebase_remote_config/ios"
   firebase_storage:
     :path: ".symlinks/plugins/firebase_storage/ios"
   FirebaseFirestore:
@@ -531,6 +544,8 @@ EXTERNAL SOURCES:
     :tag: 10.16.0
   Flutter:
     :path: Flutter
+  flutter_app_badger:
+    :path: ".symlinks/plugins/flutter_app_badger/ios"
   flutter_image_compress_common:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   flutter_local_notifications:
@@ -619,6 +634,7 @@ SPEC CHECKSUMS:
   firebase_crashlytics: 8ca79ecf4713767f49730568dfc2f02ceaab52fd
   firebase_messaging: e11ea61b449e6e39741b8a309ddab803ef1eb5cd
   firebase_performance: 656ae9aff006cacc8fd88bc7af20447267d0742d
+  firebase_remote_config: ecd68c7a6088a755e307978180118d995e6c24fc
   firebase_storage: 39292d9729a2840035c6156fcec73168c7c234d4
   FirebaseABTesting: 03f0a8b88cf618350527f2c6a2234e29b9c65064
   FirebaseAppCheckInterop: 82358cff9f33452dd44259e88eea5e562500b1cb
@@ -639,6 +655,7 @@ SPEC CHECKSUMS:
   FirebaseSharedSwift: 82b618801ddd76ea2ab54c5746bcd48854272232
   FirebaseStorage: d664834746c0274d267072c6bfa100960f90654a
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_app_badger: b87fc231847b03b92ce1412aa351842e7e97932f
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
@@ -697,6 +714,6 @@ SPEC CHECKSUMS:
   volume_controller: 531ddf792994285c9b17f9d8a7e4dcdd29b3eae9
   wakelock_plus: 8b09852c8876491e4b6d179e17dfe2a0b5f60d47
 
-PODFILE CHECKSUM: cff63e641bf2a9b71b924a3f7c020326c1a15f04
+PODFILE CHECKSUM: 0ac863deb14f6a52e34ed2528d91fc363831bb5b
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.2

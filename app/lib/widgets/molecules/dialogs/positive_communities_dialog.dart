@@ -340,6 +340,8 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
 
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
+      physics: const AlwaysScrollableScrollPhysics(),
+      onRefresh: () => requestRefresh(profile: currentProfile),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,
@@ -351,7 +353,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             if (communityTypes.length >= 2) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
                 values: communityTypes,
-                initialValue: isManagedProfile ? CommunityType.managed : CommunityType.connected,
+                initialValue: selectedCommunityType,
                 onValueChanged: (value) => controller.setSelectedCommunityType(value),
                 backgroundColour: colors.white,
                 borderColour: colors.black,

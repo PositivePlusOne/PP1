@@ -81,6 +81,11 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
 
     final bool shouldDisplayProfileId = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
 
+    String header = profile.nameRespectingFlags;
+    if (header.isEmpty) {
+      header = profile.displayName.asHandle;
+    }
+
     return Container(
       height: preferredSize.height,
       width: double.infinity,
@@ -107,7 +112,7 @@ class PositiveProfileTile extends ConsumerWidget implements PreferredSizeWidget 
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      profile.name.isNotEmpty ? profile.name : profile.displayName.asHandle,
+                      header,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: typography.styleHeroMedium.copyWith(color: textColor),

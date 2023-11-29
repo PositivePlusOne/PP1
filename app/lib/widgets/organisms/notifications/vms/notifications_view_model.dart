@@ -4,6 +4,9 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/constants/design_constants.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import '../../../../gen/app_router.dart';
 import '../../../../hooks/lifecycle_hook.dart';
@@ -34,6 +37,7 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
   void onFirstRender() {
     super.onFirstRender();
     prepareProfileSwitcher();
+    notifyNotificationsSeen();
   }
 
   Future<void> onAccountSelected() async {
@@ -42,5 +46,32 @@ class NotificationsViewModel extends _$NotificationsViewModel with LifecycleMixi
     logger.d('onAccountSelected()');
 
     await appRouter.push(const AccountRoute());
+  }
+
+  Future<void> notifyNotificationsSeen() async {
+    final Logger logger = ref.read(loggerProvider);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+
+    if (!profileController.isCurrentlyUserProfile) {
+      logger.d('notifyNotificationsSeen() - not current profile');
+      return;
+    }
+
+    logger.d('notifyNotificationsSeen()');
+    await notificationsController.updateNotificationCheckTime();
+  }
+
+  Future<void> switchProfileAndAttemptToMarkNotifications(String supportedProfileId) async {
+    final Logger logger = ref.read(loggerProvider);
+    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
+
+    logger.d('switchProfileAndAttemptToMarkNotifications($supportedProfileId)');
+    switchProfile(supportedProfileId);
+
+    // Allow time for the window to load.
+    Future.delayed(kAnimationDurationFSWait, () async {
+      await notificationsController.updateNotificationCheckTime();
+    });
   }
 }
