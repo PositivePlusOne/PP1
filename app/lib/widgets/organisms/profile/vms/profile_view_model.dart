@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,10 +33,15 @@ class ProfileViewModelState with _$ProfileViewModelState {
 }
 
 @Riverpod(keepAlive: true)
-class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin {
+class ProfileViewModel extends _$ProfileViewModel with LifecycleMixin, BusyStateDelegateMixin {
   @override
   ProfileViewModelState build() {
     return ProfileViewModelState.initialState();
+  }
+
+  @override
+  void updateBusyState(bool isBusy) {
+    state = state.copyWith(isBusy: isBusy);
   }
 
   Future<void> onRefresh(PositiveFeedState feedState, String cacheKey) async {
