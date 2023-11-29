@@ -1,5 +1,6 @@
 export type CreateConversationRequest = {
   members: string[];
+  senderId: string;
 };
 
 export type SendEventMessage = {
@@ -7,16 +8,16 @@ export type SendEventMessage = {
   channelId: string;
   text: string;
   mentionedUsers?: string[];
+  senderId: string;
 };
 
 export type FreezeChannelRequest = {
   channelId: string;
-  /** The user that created the freeze request */
-  userId: string;
-  /** The message text to show */
   text: string;
+  senderId: string;
 };
 
 export type UnfreezeChannelRequest = {
   channelId: string;
+  senderId: string;
 };

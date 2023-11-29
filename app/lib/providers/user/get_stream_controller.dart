@@ -542,6 +542,7 @@ class GetStreamController extends _$GetStreamController {
       "text": text,
       "eventType": eventType?.toJson(),
       "mentionedUsers": mentionedUserIds ?? [],
+      "senderId": profileController.currentProfileId,
     });
   }
 
@@ -585,7 +586,7 @@ class GetStreamController extends _$GetStreamController {
       return;
     }
 
-    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds});
+    final res = await firebaseFunctions.httpsCallable('conversation-createConversation').call({'members': memberIds, 'senderId': profileController.currentProfileId});
     if (res.data == null) {
       throw Exception('Failed to create conversation');
     }

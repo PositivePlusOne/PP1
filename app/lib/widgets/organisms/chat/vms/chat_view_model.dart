@@ -363,8 +363,9 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
   Future<void> onChatIdSelected(String id, {bool shouldPopDialog = false}) async {
     final logger = ref.read(loggerProvider);
     final StreamChatClient streamChatClient = ref.read(streamChatClientProvider);
-    final List<Channel>? channelResults = await streamChatClient.queryChannels(filter: Filter.equal('id', id)).firstOrNull;
-    if (channelResults?.length != 1) {
+    final channels = streamChatClient.queryChannels(filter: Filter.equal('id', id));
+    final List<Channel> channelResults = await channels.first;
+    if (channelResults.length != 1) {
       logger.e('ChatViewModel.onChatIdSelected(), channelResults.length != 1');
       return;
     }
