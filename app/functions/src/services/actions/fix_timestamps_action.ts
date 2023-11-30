@@ -4,6 +4,7 @@ import * as admin from "firebase-admin";
 import { AdminQuickActionJSON } from "../../dto/admin";
 import { DataService } from "../data_service";
 import { AdminQuickActionService } from "../admin_quick_action_service";
+import { FlamelinkHelpers } from "../../helpers/flamelink_helpers";
 
 export namespace FixTimestampsAction {
     export async function fixTimestamps(action: AdminQuickActionJSON): Promise<void> {
@@ -11,6 +12,14 @@ export namespace FixTimestampsAction {
 
         const firestore = admin.firestore();
         const allDataCollection = firestore.collection("fl_content");
+        const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
+
+        if (!actionId) {
+            functions.logger.error("No action ID specified");
+            AdminQuickActionService.appendOutput(action, "No action ID specified");
+            AdminQuickActionService.updateStatus(action, "error");
+            return;
+        }
 
         functions.logger.log("Getting all data...");
         AdminQuickActionService.appendOutput(action, "Getting all data...");
@@ -21,8 +30,18 @@ export namespace FixTimestampsAction {
         AdminQuickActionService.appendOutput(action, "Processing all data...");
         for (const doc of allDataDocs) {
             const data = doc.data();
-            const needsMigration = DataService.needsMigration(data);
+            const flId = FlamelinkHelpers.getFlamelinkIdFromObject(data);
+            if (!flId) {
+                functions.logger.log(`Skipping ${doc.id}...`);
+                continue;
+            }
 
+            if (flId === actionId) {
+                functions.logger.log(`Skipping ${doc.id} as it is the action itself...`);
+                continue;
+            }
+
+            const needsMigration = DataService.needsMigration(data);
             if (!needsMigration) {
                 continue;
             }

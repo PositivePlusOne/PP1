@@ -113,7 +113,7 @@ export namespace CacheService {
         const redisClient = await getRedisClient();
         const cacheKey = generateCacheKey({ schemaKey, entryId: '*' });
         await redisClient.del(cacheKey);
-    };
+    }
 
     /**
      * This function deletes all values from the Redis cache that start with a prefix.

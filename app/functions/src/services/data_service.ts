@@ -298,7 +298,7 @@ export namespace DataService {
     }
 
     return documents;
-  }
+  };
 
   export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
