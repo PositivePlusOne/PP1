@@ -234,14 +234,16 @@ class GalleryEntry {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.d('upload() mimeType.startsWith(image/)');
 
-    data = await FlutterImageCompress.compressWithList(
-      data,
-      keepExif: kImageCompressKeepExif,
-      minHeight: kImageCompressMaxHeight,
-      minWidth: kImageCompressMaxWidth,
-      quality: kImageCompressMaxQuality,
-      format: kImageCompressFormat,
-    );
+    //? This image compression is increasing the size of the images and flipping them vertically on Android
+    // data = await FlutterImageCompress.compressWithList(
+    //   data,
+    //   keepExif: kImageCompressKeepExif,
+    //   rotate: 180,
+    //   minHeight: kImageCompressMaxHeight,
+    //   minWidth: kImageCompressMaxWidth,
+    //   quality: kImageCompressMaxQuality,
+    //   format: kImageCompressFormat,
+    // );
 
     // Apply filter if not none
     if (filter != null && filter != AwesomeFilter.None) {
