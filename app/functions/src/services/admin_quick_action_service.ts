@@ -19,6 +19,7 @@ import { DeactivateInactivePromotionsAction } from "./actions/deactivate_inactiv
 import { DeleteMemberAction } from "./actions/delete_member_action";
 import { ClearFeedAction } from "./actions/clear_feed_action";
 import { UpdateProfileImageAction } from "./actions/update_profile_image_action";
+import { FixTimestampsAction } from "./actions/fix_timestamps_action";
 
 export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
@@ -39,6 +40,7 @@ export namespace AdminQuickActionService {
         'updatePromotionMixpanelAnalytics': UpdatePromotionMixpanelAnalyticsAction.updatePromotionsMixpanelAnalytics,
         'shufflePromotionSeeds': ShufflePromotionSeedsAction.shufflePromotionSeeds,
         'deactivateInactivePromotions': DeactivateInactivePromotionsAction.deactivateInactivePromotions,
+        'fixTimestamps': FixTimestampsAction.fixTimestamps,
     };
 
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {
