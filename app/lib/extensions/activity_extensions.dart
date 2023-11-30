@@ -41,13 +41,13 @@ extension ActivityExt on Activity {
   bool get hasContentToDisplay {
     final bool hasPublisher = publisherInformation?.publisherId.isNotEmpty == true;
     final bool hasBodyContent = generalConfiguration?.content.isNotEmpty == true;
-    final bool hasImageMedia = media.where((Media media) => media.type == MediaType.photo_link || media.type == MediaType.video_link).isNotEmpty;
+    final bool hasMedia = media.isNotEmpty == true;
     final bool isRepost = repostConfiguration?.targetActivityId.isNotEmpty == true;
     if (!hasPublisher) {
       return false;
     }
 
-    return (hasBodyContent || hasImageMedia) || isRepost;
+    return (hasBodyContent || hasMedia) || isRepost;
   }
 
   bool get isPromotion => enrichmentConfiguration?.promotionKey.isNotEmpty == true && enrichmentConfiguration?.tags.contains('promotion') == true;
