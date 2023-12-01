@@ -7,7 +7,8 @@ export const adminScheduledActionsSchemaKey = 'adminScheduledActions';
 export interface AdminScheduledActionJSON {
     _fl_meta_?: FlMetaJSON;
     cron?: string;
-    actionJson?: string;
+    action?: string;
+    actionPayloadJson?: string;
     lastRunDate?: string;
     lastRunActionId?: string;
 }
@@ -15,14 +16,16 @@ export interface AdminScheduledActionJSON {
 export class AdminScheduledAction {
     _fl_meta_?: FlMeta;
     cron: string;
-    actionJson: string;
+    action?: string;
+    actionPayloadJson?: string;
     lastRunDate?: string;
     lastRunActionId?: string;
 
     constructor(data: AdminScheduledActionJSON) {
         this._fl_meta_ = data._fl_meta_ ? new FlMeta(data._fl_meta_) : undefined;
         this.cron = data.cron || '';
-        this.actionJson = data.actionJson || '';
+        this.action = data.action || '';
+        this.actionPayloadJson = data.actionPayloadJson || '';
         this.lastRunDate = data.lastRunDate || '';
         this.lastRunActionId = data.lastRunActionId || '';
     }
@@ -31,7 +34,8 @@ export class AdminScheduledAction {
         return {
             _fl_meta_: this._fl_meta_?.toJSON(),
             cron: this.cron || '',
-            actionJson: this.actionJson || '',
+            action: this.action || '',
+            actionPayloadJson: this.actionPayloadJson || '',
             lastRunDate: this.lastRunDate || '',
             lastRunActionId: this.lastRunActionId || '',
         };
@@ -48,6 +52,7 @@ export interface AdminQuickActionDataJSON {
     promotionTypes?: string[];
     url?: string;
     feed?: string;
+    schema?: string;
 }
 
 export class AdminQuickActionData {
@@ -60,6 +65,7 @@ export class AdminQuickActionData {
     promotionTypes: string[];
     url: string;
     feed: string;
+    schema?: string;
 
     constructor(data: AdminQuickActionDataJSON) {
         this.target = data.target || '';
@@ -71,6 +77,7 @@ export class AdminQuickActionData {
         this.promotionTypes = data.promotionTypes || [];
         this.url = data.url || '';
         this.feed = data.feed || '';
+        this.schema = data.schema;
     }
 
     toJSON(): AdminQuickActionDataJSON {

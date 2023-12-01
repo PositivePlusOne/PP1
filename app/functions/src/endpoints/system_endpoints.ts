@@ -72,17 +72,17 @@ export namespace SystemEndpoints {
       schemaKey: adminScheduledActionsSchemaKey,
     }) as AdminScheduledActionJSON[];
 
-    functions.logger.info("Found scheduled actions", { count: scheduledActions.length });
     if (!scheduledActions || scheduledActions.length === 0) {
       return;
     }
-
+    
+    functions.logger.info("Found scheduled actions", { count: scheduledActions.length });
     const currentTimeEpoch = StreamHelpers.getCurrentUnixTimestamp();
     
     // Loop through each scheduled action and check if it should be executed.
     for (const scheduledAction of scheduledActions) {
       const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(scheduledAction);
-      if (!scheduledAction || !scheduledAction.cron || !scheduledAction.actionJson || !documentId) {
+      if (!scheduledAction || !scheduledAction.cron || !scheduledAction.action || !documentId) {
         functions.logger.warn("Invalid scheduled action", { scheduledAction });
         continue;
       }

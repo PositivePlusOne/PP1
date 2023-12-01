@@ -109,7 +109,7 @@ export namespace CacheService {
      * 
      * @param {string} schemaKey the schema key to delete.
      */
-    export async function clearSchemaFromCache(schemaKey: string): Promise<void> {
+    export async function deleteSchemaFromCache(schemaKey: string): Promise<void> {
         const redisClient = await getRedisClient();
         const cacheKey = generateCacheKey({ schemaKey, entryId: '*' });
         await redisClient.del(cacheKey);
