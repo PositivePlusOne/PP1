@@ -140,9 +140,10 @@ abstract class NotificationHandler {
     );
 
     String title = payload.title;
-    String body = payload.bodyMarkdown;
+    String body = payload.body;
     if (body.isEmpty) {
-      body = payload.body;
+      logger.w('displayBackgroundNotification: Unable to localize notification: $payload using bodyMarkdown');
+      body = payload.bodyMarkdown;
     }
 
     if (title.isEmpty || body.isEmpty) {
@@ -158,7 +159,7 @@ abstract class NotificationHandler {
       return;
     }
 
-    await flutterLocalNotificationsPlugin.show(id, payload.title, payload.body, notificationDetails);
+    await flutterLocalNotificationsPlugin.show(id, title, body, notificationDetails);
     logger.d('displayBackgroundNotification: $id');
   }
 }
