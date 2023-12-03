@@ -151,6 +151,10 @@ export namespace SystemService {
   }
 
   export function shouldExecuteCron(cron: string, lastRunDate: string, currentTimeEpoch: string) {
+    if (!cron || !currentTimeEpoch) {
+      return false;
+    }
+
     const expression = cronParser.parseExpression(cron);
 
     // Check we have a valid iteration.
