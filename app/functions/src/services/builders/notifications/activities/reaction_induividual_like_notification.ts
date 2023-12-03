@@ -25,7 +25,7 @@ export namespace ReactionInduividualLikedNotification {
 
     const displayName = userProfile.displayName || "";
     const title = await LocalizationsService.getLocalizedString("notifications.post_liked.title");
-    const body = hasActivityContent ? await LocalizationsService.getLocalizedString("notifications.post_liked.body", { displayName, shortBody: activityContent }) : await LocalizationsService.getLocalizedString("notifications.post_comment.body_empty", { displayName });
+    const body = hasActivityContent ? await LocalizationsService.getLocalizedString("notifications.post_liked.body", { displayName, shortBody: activityContent }) : await LocalizationsService.getLocalizedString("notifications.post_liked.body_empty", { displayName });
     const origin = activity.publisherInformation?.originFeed ?? "";
     
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);

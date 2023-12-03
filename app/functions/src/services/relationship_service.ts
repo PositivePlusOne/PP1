@@ -891,10 +891,6 @@ export namespace RelationshipService {
 
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
-        if (!member) {
-          continue;
-        }
-
         member.hasConnected = false;
       }
     }
