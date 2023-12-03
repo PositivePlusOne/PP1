@@ -26,7 +26,7 @@ export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
 
     const actionMapping: { [key: string]: ActionFunction } = {
-        'deleteMember': DeleteMemberAction.deleteMember,
+        'deletePendingMembers': DeleteMemberAction.deletePendingMembers,
         'removeOrganisationMember': RemoveOrganisationMemberAction.removeOrganisationMember,
         'assignOrganisationMember': AssignOrganisationMemberAction.assignOrganisationMember,
         'assignOrganisationOwner': AssignOrganisationOwnerAction.assignOrganisationOwner,

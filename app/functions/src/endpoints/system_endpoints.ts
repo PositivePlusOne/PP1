@@ -21,7 +21,7 @@ import { Pagination } from "../helpers/pagination";
 import { PromotionsService } from "../services/promotions_service";
 import { TestNotification } from "../services/builders/notifications/test/test_notification";
 import { DataService } from "../services/data_service";
-import { AdminScheduledActionJSON, adminScheduledActionsSchemaKey } from "../dto/admin";
+import { AdminQuickActionJSON, AdminScheduledActionJSON, adminQuickActionsSchemaKey, adminScheduledActionsSchemaKey } from "../dto/admin";
 import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace SystemEndpoints {
@@ -90,20 +90,24 @@ export namespace SystemEndpoints {
       const cron = scheduledAction.cron;
       const lastRunDate = scheduledAction.lastRunDate || "";
 
-      if (!documentId) {
-        functions.logger.warn("Invalid scheduled action", { scheduledAction });
-        continue;
-      }
-
       // Check if the cron should be executed.
       const shouldExecute = SystemService.shouldExecuteCron(cron, lastRunDate, currentTimeEpoch);
       if (!shouldExecute) {
         continue;
       }
 
-      // Update the last run date.
+      const action = {
+        action: scheduledAction.action,
+        data: {},
+      } as AdminQuickActionJSON;
+
+      const actionId = FlamelinkHelpers.generateIdentifier();
+      await DataService.getOrCreateDocument(action, {
+        schemaKey: adminQuickActionsSchemaKey,
+        entryId: actionId,
+      });
+
       scheduledAction.lastRunDate = currentTimeEpoch;
-      // scheduledAction.lastRunActionId = actionId;
 
       await DataService.updateDocument({
         schemaKey: adminScheduledActionsSchemaKey,
