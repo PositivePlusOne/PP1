@@ -15,7 +15,7 @@ export namespace PostMentionNotification {
   export async function sendNotification(userProfile: ProfileJSON, targetProfile: ProfileJSON, activity: ActivityJSON): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(targetProfile);
 
-    const content = activity.generalConfiguration?.content ?? ""
+    const content = activity.generalConfiguration?.content ?? "";
 
     const displayName = userProfile.displayName || "";
     const title = await LocalizationsService.getLocalizedString("notifications.post_mentioned.title");

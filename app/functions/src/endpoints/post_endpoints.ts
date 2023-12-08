@@ -25,7 +25,6 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 import { SystemService } from "../services/system_service";
 import { CacheService } from "../services/cache_service";
-import { NotificationEndpoints } from "./notification_endpoints";
 import { PostMentionNotification } from "../services/builders/notifications/activities/post_mention_notification";
 
 export namespace PostEndpoints {
