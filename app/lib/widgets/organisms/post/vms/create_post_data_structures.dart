@@ -16,10 +16,14 @@ class ActivityData {
     this.commentPermissionMode,
     this.postType,
     this.media,
+    this.mentions = const [],
   });
 
   String? activityID;
   String? reposterActivityID;
+
+  //UserIds mentioned in the post
+  List<String> mentions;
 
   String? content;
   List<String>? tags;

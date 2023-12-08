@@ -270,12 +270,12 @@ export namespace PostEndpoints {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
 
-    for (const mentionedUserUid in mentionedUsers) {
-      if (!mentionedUserUid) {
+    for (const mentionedUserName in mentionedUsers) {
+      if (!mentionedUserName) {
         continue;
       }
 
-      const mentionedProfile = await ProfileService.getProfile(mentionedUserUid);
+      const mentionedProfile = await ProfileService.getProfileFromName(mentionedUserName);
 
       if (!mentionedProfile) {
         continue;

@@ -211,6 +211,7 @@ class PostApiService {
         'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.commentPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
         'allowLikes': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
         'allowBookmarks': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
+        'mentions': activityData.mentions,
       },
     );
   }

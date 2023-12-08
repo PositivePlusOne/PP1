@@ -3,6 +3,8 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/services/search_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -906,22 +908,6 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       }
     }
 
-    //  final List<String> successfullyTaggedUsers = await attemptToTagUsers(taggedUsers);
-
-    //! for later
-    final AppRouter router = ref.read(appRouterProvider);
-    final AppLocalizations localisations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
-    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
-    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
-      title: state.isEditingPost ? localisations.page_create_post_edited : localisations.page_create_post_created,
-      icon: UniconsLine.plus_circle,
-      backgroundColour: colours.black,
-    );
-    if (router.navigatorKey.currentContext != null) {
-      final ScaffoldMessengerState messenger = ScaffoldMessenger.of(router.navigatorKey.currentContext!);
-      messenger.showSnackBar(snackBar);
-    }
-
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
       state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty, isCreatingPost: true);
@@ -960,6 +946,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           allowSharing: state.allowSharing,
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
+          // mentions: taggedUsers,
         );
       } else {
         activityData = ActivityData(
@@ -973,6 +960,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
           reposterActivityID: state.reposterActivityID,
+          mentions: taggedUsers,
         );
       }
 
