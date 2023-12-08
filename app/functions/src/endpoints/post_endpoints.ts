@@ -25,52 +25,54 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 import { SystemService } from "../services/system_service";
 import { CacheService } from "../services/cache_service";
+import { NotificationEndpoints } from "./notification_endpoints";
+import { PostMentionNotification } from "../services/builders/notifications/activities/post_mention_notification";
 
 export namespace PostEndpoints {
-    export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
-      await SystemService.validateUsingRedisUserThrottle(context);
-        const uid = context.auth?.uid || "";
+  export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
+    const uid = context.auth?.uid || "";
 
-        const targetUserId = request.data.targetUserId || "";
-        const targetSlug = request.data.targetSlug || "";
-        const limit = request.limit || 25;
-        const cursor = request.cursor || "";
+    const targetUserId = request.data.targetUserId || "";
+    const targetSlug = request.data.targetSlug || "";
+    const limit = request.limit || 25;
+    const cursor = request.cursor || "";
 
-        functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
+    functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
 
-        if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
-          throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
-        }
-    
-        const feedsClient = FeedService.getFeedsClient();
-        const feed = feedsClient.feed(targetSlug, targetUserId);
-        const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
-    
-        // Convert window results to a list of IDs
-        const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
-        const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+    if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
+    }
 
-        // We supply this so we can support reposts and the client can filter out the nested activity
-        const windowIds = window.results.map((result) => result.id);
-        const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
+    const feedsClient = FeedService.getFeedsClient();
+    const feed = feedsClient.feed(targetSlug, targetUserId);
+    const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
 
-        functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds });
-    
-        return buildEndpointResponse(context, {
-          sender: uid,
-          joins: [feedStatisticsKey],
-          data: [...activities],
-          limit: limit,
-          cursor: paginationToken,
-          seedData: {
-            next: paginationToken,
-            unread: window.unread,
-            unseen: window.unseen,
-            windowIds,
-          },
-        });
-      });
-      
+    // Convert window results to a list of IDs
+    const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
+    const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+
+    // We supply this so we can support reposts and the client can filter out the nested activity
+    const windowIds = window.results.map((result) => result.id);
+    const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
+
+    functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds });
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      joins: [feedStatisticsKey],
+      data: [...activities],
+      limit: limit,
+      cursor: paginationToken,
+      seedData: {
+        next: paginationToken,
+        unread: window.unread,
+        unseen: window.unseen,
+        windowIds,
+      },
+    });
+  });
+
   export const getActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const entry = request.data.entry || "";
@@ -93,7 +95,7 @@ export namespace PostEndpoints {
   export const shareActivityToConversations = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info(`Sharing activity`, { request });
-    
+
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
     const targets = request.data.targets || [] as string[];
@@ -144,6 +146,8 @@ export namespace PostEndpoints {
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
     const promotionKey = request.data.promotionKey || "" as string;
+
+    const mentionedUsers = request.data.mentions || [];
 
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type || TagsService.PostTypeTag.post;
@@ -205,7 +209,7 @@ export namespace PostEndpoints {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
     }
-    
+
     const isPromotion = promotionKey && promotionKey.length > 0;
     const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
     if (isPromotion && availablePromotionsCount <= 0) {
@@ -265,7 +269,21 @@ export namespace PostEndpoints {
     if (isPromotion) {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
-    
+
+    for (const mentionedUserUid in mentionedUsers) {
+      if (!mentionedUserUid) {
+        continue;
+      }
+
+      const mentionedProfile = await ProfileService.getProfile(mentionedUserUid);
+
+      if (!mentionedProfile) {
+        continue;
+      }
+
+      await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, userActivity);
+    }
+
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
       sender: uid,
@@ -313,7 +331,7 @@ export namespace PostEndpoints {
     activity.enrichmentConfiguration.promotionKey = "";
 
     const streamClient = FeedService.getFeedsClient();
-    
+
     await ActivitiesService.updateTagFeedsForActivity(activity);
     await ActivitiesService.removeActivityFromFeed("user", uid, activityId, streamClient);
 
@@ -354,7 +372,7 @@ export namespace PostEndpoints {
     const allowSharing = request.data.allowSharing ? "public" : "disabled" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
     const allowComments = request.data.allowComments || "disabled" as ActivitySecurityConfigurationMode;
-    
+
     const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
     const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
 

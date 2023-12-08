@@ -565,6 +565,11 @@
     "page_create_post_repost_heading": "Repost",
     "page_create_post_processing": "Processing your {postType}...",
     "page_create_post_uploading": "Uploading your {postType}...",
+    "page_create_post_tagged_user": "Tagged {user} in your last post!",
+    "page_create_post_tagged_users": "Tagged the following users in your last post: {user}",
+    "page_create_post_failed_to_tag_user": "Failed to tag {user}",
+    "page_create_post_failed_to_tag_users": "Failed to tag the following users: {user}",
+    "page_create_post_tagged_user_mixed": "Tagged the following users: {user}\n Failed to tag the following users",
     "page_edit_post_uploading": "Editing your {postType}...",
     
     "page_create_post_visibility_warning": "Posts made visible to everyone will be viewable by people who do not have a Positive+1 account.",

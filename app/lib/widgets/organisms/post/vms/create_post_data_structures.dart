@@ -23,6 +23,7 @@ class ActivityData {
 
   String? content;
   List<String>? tags;
+  List<String>? taggedUsers;
   String? altText;
   String? promotionKey;
 

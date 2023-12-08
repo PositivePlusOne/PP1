@@ -17,7 +17,7 @@
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
-    "editor.wordBasedSuggestions": false
+    "editor.wordBasedSuggestions": "off"
   },
   "dart.flutterSdkPath": ".fvm/flutter_sdk",
   "dart.previewFlutterUiGuides": true,

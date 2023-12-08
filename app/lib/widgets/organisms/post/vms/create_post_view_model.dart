@@ -897,6 +897,31 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
+    final List<String> taggedUsers = [];
+    List<String> unclippedNames = captionController.text.split('@');
+    for (String unclipped in unclippedNames) {
+      String nameOnly = unclipped.split(' ').first;
+      if (nameOnly.isNotEmpty) {
+        taggedUsers.add(nameOnly);
+      }
+    }
+
+    //  final List<String> successfullyTaggedUsers = await attemptToTagUsers(taggedUsers);
+
+    //! for later
+    final AppRouter router = ref.read(appRouterProvider);
+    final AppLocalizations localisations = AppLocalizations.of(router.navigatorKey.currentContext!)!;
+    final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final PositiveGenericSnackBar snackBar = PositiveGenericSnackBar(
+      title: state.isEditingPost ? localisations.page_create_post_edited : localisations.page_create_post_created,
+      icon: UniconsLine.plus_circle,
+      backgroundColour: colours.black,
+    );
+    if (router.navigatorKey.currentContext != null) {
+      final ScaffoldMessengerState messenger = ScaffoldMessenger.of(router.navigatorKey.currentContext!);
+      messenger.showSnackBar(snackBar);
+    }
+
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
       state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty, isCreatingPost: true);

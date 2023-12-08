@@ -13,6 +13,7 @@ export enum NotificationAction {
   POST_SHARED_GROUP = 'post_shared_group',
   POST_BOOKMARKED = 'post_bookmarked',
   POST_BOOKMARKED_GROUP = 'post_bookmarked_group',
+  POST_MENTIONED = 'post_mentioned',
   RELATIONSHIP_UPDATED = 'relationship_updated',
 }
 
