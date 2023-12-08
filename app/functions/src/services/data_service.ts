@@ -162,9 +162,9 @@ export namespace DataService {
           ? new Date(migratedDocument._fl_meta_.createdDate)
           : migratedDocument._fl_meta_.createdDate;
 
-          if (!(createdDate instanceof Timestamp)) {
-            migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
-          }
+        if (!(createdDate instanceof Timestamp)) {
+          migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
+        }
       }
 
       if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
@@ -286,8 +286,20 @@ export namespace DataService {
   };
 
   export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
-    return await flamelinkApp.content.getByField(options);
+    // const flamelinkApp = SystemService.getFlamelinkApp();
+    // return await flamelinkApp.content.getByField(options);
+    const firestore = adminApp.firestore();
+    const record = await firestore.collection('fl_content').where(
+      options.field,
+      '==',
+      options.value,
+    ).get();
+
+    if (record.docs.length == 0) {
+      throw new Error(`No documents found using getDocumentByField: ${options}`);
+    }
+
+    return record.docs[0].data();
   };
 
   /**

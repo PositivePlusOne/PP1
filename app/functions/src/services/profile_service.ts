@@ -67,21 +67,6 @@ export namespace ProfileService {
     }, skipCacheLookup) as ProfileJSON;
   }
 
-  /**
-   * Gets the user profile.
-   * @param {string} name The display name of the user.
-   * @return {Promise<any>} The user profile.
-   */
-  export async function getProfileFromName(name: string, skipCacheLookup = false): Promise<any> {
-    functions.logger.info(`Getting user profile for user: ${name}`);
-
-    return await DataService.getDocumentByField({
-      schemaKey: "users",
-      field: 'displayName',
-      value: name,
-    }) as ProfileJSON;
-  }
-
   // /**
   //  * Get analytics for a user profile.
   //  * @param {string} uid The FL ID of the user.
@@ -188,7 +173,7 @@ export namespace ProfileService {
    * @param {string} displayName The display name of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfileByDisplayName(displayName: string): Promise<any> {
+  export async function getProfileByDisplayName(displayName: string): Promise<Record<string, ProfileJSON>> {
     functions.logger.info(`Getting user profile for user: ${displayName}`);
 
     return await DataService.getDocumentByField({

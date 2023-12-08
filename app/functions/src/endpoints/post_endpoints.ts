@@ -147,6 +147,7 @@ export namespace PostEndpoints {
     const promotionKey = request.data.promotionKey || "" as string;
 
     const mentionedUsers = request.data.mentions || [];
+    functions.logger.info(`Getting mentioned users`, { mentionedUsers });
 
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type || TagsService.PostTypeTag.post;
@@ -268,18 +269,24 @@ export namespace PostEndpoints {
     if (isPromotion) {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
+    
+    for (let index = 0; index < mentionedUsers.length; index++) {
+      const mentionedUserName = mentionedUsers[index];
 
-    for (const mentionedUserName in mentionedUsers) {
+      functions.logger.info(`Getting mentioned user`, { mentionedUserName });
+
       if (!mentionedUserName) {
         continue;
       }
 
-      const mentionedProfile = await ProfileService.getProfileFromName(mentionedUserName);
-
+      const mentionedProfile = await ProfileService.getProfileByDisplayName(mentionedUserName);
+      functions.logger.info(`Getting mentioned users profile`, { mentionedProfile });
+      
       if (!mentionedProfile) {
         continue;
       }
 
+      functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
       await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, userActivity);
     }
 

@@ -24,6 +24,7 @@ export namespace PostMentionNotification {
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
     const activityId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
+    const origin = activity.publisherInformation?.originFeed ?? "";
 
     if (!senderId || !receiverId || !activityId) {
       throw new Error("Unable to generate notification payload");
