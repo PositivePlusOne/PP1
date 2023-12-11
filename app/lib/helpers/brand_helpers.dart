@@ -26,9 +26,15 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   List<Tag> tags = const [],
   EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
+  bool boldHandles = false,
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
+
+  //? bold all user handles
+  if (boldHandles) {
+    markdown = markdown.boldHandlesAndLink();
+  }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
   final StringBuffer tagBuffer = StringBuffer();

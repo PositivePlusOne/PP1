@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Package imports:
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
@@ -87,6 +88,10 @@ extension StringExt on String {
     );
   }
 
+  String removeHandles() {
+    return startsWith('@') ? substring(1, length) : this;
+  }
+
   Iterable<String> getHandles({bool includeSymbol = true}) {
     final RegExp exp = RegExp(r"\@\w+");
     return exp.allMatches(this).map((match) => substring(match.start + (includeSymbol ? 0 : 1), match.end));
@@ -95,6 +100,16 @@ extension StringExt on String {
   Iterable<String> getTags({bool includeSymbol = true}) {
     final RegExp exp = RegExp(r"\#\w+");
     return exp.allMatches(this).map((match) => substring(match.start + (includeSymbol ? 0 : 1), match.end));
+  }
+
+  String boldHandles() {
+    RegExp exp = RegExp(r"\@\w+");
+    return replaceAllMapped(exp, (match) => '**${match.group(0)}**');
+  }
+
+  String boldHandlesAndLink() {
+    RegExp exp = RegExp(r"\@\w+");
+    return replaceAllMapped(exp, (match) => '[**${match.group(0)}**](${match.group(0)?.profileStringLink})');
   }
 }
 

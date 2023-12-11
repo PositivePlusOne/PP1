@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -31,6 +32,10 @@ import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
 import '../providers/profiles/profile_controller.dart';
+
+extension ProfileStringExtensions on String {
+  Uri get profileStringLink => providerContainer.read(universalLinksControllerProvider.notifier).buildProfileRouteLink(removeHandles());
+}
 
 extension ProfileExtensions on Profile {
   Media? get profileImage {
@@ -380,7 +385,7 @@ extension ProfileExtensions on Profile {
     return visibilityFlags.contains(kFeatureFlagIncognito);
   }
 
-  Future<void> navigateToProfile() async {
+  Future<void> navigateToProfile({bool replace = false}) async {
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
@@ -406,7 +411,12 @@ extension ProfileExtensions on Profile {
     final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
     await profileViewModel.preloadUserProfile(targetProfileId);
 
-    await appRouter.push(const ProfileRoute());
+    if (replace) {
+      logger.d('Removing all routes before navigating to profile route');
+      await appRouter.replaceAll([const ProfileRoute()]);
+    } else {
+      await appRouter.push(const ProfileRoute());
+    }
   }
 
   Future<void> navigateToProfileDetails() async {

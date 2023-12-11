@@ -2,6 +2,10 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -39,10 +43,13 @@ abstract class IUniversalLinksController {
   Future<bool> canHandleLink(Uri? uri);
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
+  Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handleTagRouteLink(UniversalTagRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
   Future<UniversalPostRouteDetails?> getRouteLinkDetails(Uri? uri);
+  Future<UniversalProfileRouteDetails?> getProfileRouteLinkDetails(Uri? uri);
   Future<UniversalTagRouteDetails?> getTagRouteLinkDetails(Uri? uri);
   Uri buildPostRouteLink(String activityId, String reactionId, String origin);
+  Uri buildProfileRouteLink(String displayName);
   Uri buildTagRouteLink(String tagId);
 }
 
@@ -53,6 +60,7 @@ enum HandleLinkResult {
 }
 
 typedef UniversalPostRouteDetails = ({String? activityId, String? reactionId, String? origin, Uri? source});
+typedef UniversalProfileRouteDetails = ({String? displayName, Uri? source});
 typedef UniversalTagRouteDetails = ({String? tagId});
 
 @Riverpod(keepAlive: true)
@@ -124,9 +132,10 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     }
 
     final UniversalPostRouteDetails? routeDetails = await getRouteLinkDetails(uri);
+    final UniversalProfileRouteDetails? profileRouteDetails = await getProfileRouteLinkDetails(uri);
     final UniversalTagRouteDetails? tagRouteDetails = await getTagRouteLinkDetails(uri);
 
-    return routeDetails != null || tagRouteDetails != null;
+    return routeDetails != null || tagRouteDetails != null || profileRouteDetails != null;
   }
 
   @override
@@ -142,6 +151,19 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     }
 
     return canBuildRouteLink ? (activityId: activityId, reactionId: reactionId, origin: origin, source: uri) : null;
+  }
+
+  @override
+  Future<UniversalProfileRouteDetails?> getProfileRouteLinkDetails(Uri? uri) async {
+    final String displayName = uri?.queryParameters['displayName'] ?? '';
+    final String scheme = uri?.scheme ?? '';
+
+    bool canBuildRouteLink = scheme == state.expectedUniversalLinkScheme;
+    if (displayName.isEmpty) {
+      canBuildRouteLink = false;
+    }
+
+    return canBuildRouteLink ? (displayName: displayName, source: uri) : null;
   }
 
   @override
@@ -180,6 +202,12 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     if (tagRouteDetails != null) {
       logger.i('Handling tag route link: $tagRouteDetails');
       return await handleTagRouteLink(tagRouteDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
+    }
+
+    final UniversalProfileRouteDetails? profileRouteDetails = await getProfileRouteLinkDetails(uri);
+    if (profileRouteDetails != null) {
+      logger.i('Handling profile route link: $profileRouteDetails');
+      return await handleProfileRouteLink(profileRouteDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
     }
 
     logger.w('Unknown universal link');
@@ -244,6 +272,47 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   }
 
   @override
+  Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false}) async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
+
+    // Check that we have completed the initial bootstrap
+    if (!systemController.state.hasPerformedInitialSetup) {
+      logger.e('Cannot handle universal link before initial setup');
+      return HandleLinkResult.notHandled;
+    }
+
+    final bool isProfile = routeDetails.displayName?.isNotEmpty ?? false;
+
+    PageRouteInfo<dynamic>? route;
+
+    if (!isProfile) {
+      logger.e('Unknown universal link');
+      return HandleLinkResult.notHandled;
+    }
+
+    final String displayName = routeDetails.displayName!;
+
+    final Profile profile = await profileApiService.getProfileByDisplayName(displayName: displayName);
+
+    // Check if already on the route
+    bool isOnRoute = appRouter.current.name == ProfileRoute.name;
+
+    if (isOnRoute) {
+      logger.i('Already on route: $route');
+      return HandleLinkResult.handledWithoutNavigation;
+    }
+
+    await profile.navigateToProfile(replace: replaceRouteOnNavigate);
+
+    logger.i('Handling route link: $routeDetails');
+    state = state.copyWith(isUniversalLinkHandled: true);
+    return HandleLinkResult.handledWithNavigation;
+  }
+
+  @override
   Uri buildPostRouteLink(String activityId, String reactionId, String origin) {
     final String scheme = state.expectedUniversalLinkScheme;
     const String host = 'positiveplusone.com';
@@ -253,6 +322,20 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       'activityId': activityId,
       'reactionId': reactionId,
       'origin': origin,
+    };
+
+    final String encodedQuery = query.entries.map((e) => '${e.key}=${Uri.encodeQueryComponent(e.value)}').join('&');
+    return Uri(scheme: scheme, host: host, path: path, query: encodedQuery);
+  }
+
+  @override
+  Uri buildProfileRouteLink(String displayName) {
+    final String scheme = state.expectedUniversalLinkScheme;
+    const String host = 'positiveplusone.com';
+    const String path = '/profile';
+
+    final Map<String, String> query = <String, String>{
+      'displayName': displayName,
     };
 
     final String encodedQuery = query.entries.map((e) => '${e.key}=${Uri.encodeQueryComponent(e.value)}').join('&');

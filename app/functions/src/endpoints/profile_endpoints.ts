@@ -70,6 +70,31 @@ export namespace ProfileEndpoints {
     });
   });
 
+
+  export const getProfileByDisplayName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
+    functions.logger.info("Getting user profile", { structuredData: true });
+
+    const uid = request.sender || context.auth?.uid || "";
+    const targeDisplayName = request.data.displayName || "";
+    if (targeDisplayName.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
+    }
+
+    const userProfiles = await ProfileService.getProfileByDisplayName(targeDisplayName);
+    
+    if (!userProfiles) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
+    
+    const userProfile = userProfiles[0];
+    
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [userProfile],
+    });
+  });
+
   export const toggleProfileDeletion = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -463,7 +488,7 @@ export namespace ProfileEndpoints {
 
     let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
-    
+
     newProfile = await ProfileService.updateHivStatus(uid, status);
 
     functions.logger.info("Profile hiv status updated", {

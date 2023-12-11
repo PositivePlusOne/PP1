@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -293,6 +294,18 @@ class ProfileApiService {
       selector: (response) => json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == uid)),
       parameters: {
         'uid': uid,
+      },
+    );
+  }
+
+  FutureOr<Profile> getProfileByDisplayName({
+    required String displayName,
+  }) async {
+    return await getHttpsCallableResult<Profile>(
+      name: 'profile-getProfileByDisplayName',
+      selector: (response) => Profile.fromJson(json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['displayName'] == displayName))),
+      parameters: {
+        'displayName': displayName,
       },
     );
   }

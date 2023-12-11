@@ -422,7 +422,11 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: padding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
+        child: buildMarkdownWidgetFromBody(
+          parsedMarkdown,
+          tags: tags,
+          boldHandles: true,
+        ),
       ),
     );
   }
