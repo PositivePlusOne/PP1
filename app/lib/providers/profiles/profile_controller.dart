@@ -42,6 +42,7 @@ class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
     Profile? currentProfile,
     @Default({}) Set<String> availableProfileIds,
+    @Default({}) Map<String, String> displayNameToId,
   }) = _ProfileControllerState;
 
   factory ProfileControllerState.initialState() => const ProfileControllerState(
@@ -214,6 +215,19 @@ class ProfileController extends _$ProfileController {
     if (currentProfile == null) {
       logger.e('[Profile Service] - Current profile is null, cannot reload');
       return;
+    }
+
+    if (event.value is Profile) {
+      final String displayName = (event.value as Profile).displayName;
+      final String userId = (event.value as Profile).flMeta?.id ?? '';
+      if (displayName.isNotEmpty && userId.isNotEmpty) {
+        state = state.copyWith(
+          displayNameToId: {
+            ...state.displayNameToId,
+            ...{displayName: userId},
+          },
+        );
+      }
     }
 
     state = state.copyWith(currentProfile: currentProfile);

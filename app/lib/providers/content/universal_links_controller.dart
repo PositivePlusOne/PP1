@@ -4,7 +4,9 @@ import 'dart:async';
 // Package imports:
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
@@ -275,6 +277,7 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
@@ -293,9 +296,17 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       return HandleLinkResult.notHandled;
     }
 
-    final String displayName = routeDetails.displayName!;
+    final String displayName = routeDetails.displayName!.removeHandles();
 
-    final Profile profile = await profileApiService.getProfileByDisplayName(displayName: displayName);
+    Profile? profile;
+
+    if (profileControllerState.displayNameToId.containsKey(displayName)) {
+      final String id = profileControllerState.displayNameToId[displayName] ?? '';
+      final CacheController cacheController = ref.read(cacheControllerProvider);
+      profile = cacheController.get(id);
+    }
+
+    profile ??= await profileApiService.getProfileByDisplayName(displayName: displayName);
 
     // Check if already on the route
     bool isOnRoute = appRouter.current.name == ProfileRoute.name;
