@@ -26,6 +26,7 @@ import { SearchService } from "../services/search_service";
 import { SystemService } from "../services/system_service";
 import { CacheService } from "../services/cache_service";
 import { PostMentionNotification } from "../services/builders/notifications/activities/post_mention_notification";
+import { RelationshipHelpers } from "../helpers/relationship_helpers";
 
 export namespace PostEndpoints {
   export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
@@ -146,6 +147,7 @@ export namespace PostEndpoints {
     const userTags = request.data.tags || [] as string[];
     const promotionKey = request.data.promotionKey || "" as string;
 
+    const mentionedUserIds = request.data.mentionedUserIds as string[] || [] as string[];
     const mentionedUsers = request.data.mentions || [];
     functions.logger.info(`Getting mentioned users`, { mentionedUsers });
 
@@ -230,6 +232,64 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Missing type or style");
     }
 
+
+    //? For each mentionedUser attempt get the users ID and prepare to notify
+    const mentionedUserProfiles = [] as ProfileJSON[];
+    for (let index = 0; index < mentionedUsers.length; index++) {
+      const mentionedUserName = mentionedUsers[index];
+
+      functions.logger.info(`Getting mentioned user`, { mentionedUserName });
+
+      if (!mentionedUserName) {
+        continue;
+      }
+      try {
+        const mentionedProfiles = await ProfileService.getProfileByDisplayName(mentionedUserName);
+
+        if (!mentionedProfiles) {
+          functions.logger.error(`Profile does not exist`, { mentionedUserName });
+          continue;
+        }
+
+        const mentionedProfile = mentionedProfiles[0];
+
+        functions.logger.info(`Getting mentioned users profile`, { mentionedProfile });
+        const mentionedProfileId = mentionedProfile._fl_meta_?.fl_id ?? '';
+        functions.logger.info(`Getting mentioned users profileId`, { mentionedProfileId });
+
+        if (!mentionedProfileId) {
+          continue;
+        }
+
+        if (mentionedUserIds.includes(mentionedProfileId)) {
+          functions.logger.info(`Cannot notify profile that has already been notified before on this post`, { mentionedProfile });
+          continue;
+        }
+
+        if (mentionedProfileId == uid) {
+          functions.logger.info(`Cannot mention own profile`, { mentionedProfile });
+          continue;
+        }
+
+        const relationship = await RelationshipService.getRelationship([uid, mentionedProfileId]);
+        const isRelationshipBlocked = RelationshipHelpers.hasUserBlocked(mentionedProfileId, relationship);
+
+        if (isRelationshipBlocked) {
+          functions.logger.info(`Cannot mention user who has blocked you`, { mentionedProfile });
+          continue;
+        }
+
+        //? Add profile and profile ID to be used later to send notification and record that a notification has been sent
+        mentionedUserIds.push(mentionedProfileId);
+        mentionedUserProfiles.push(mentionedProfile);
+      } catch (error) {
+        functions.logger.error(`Mention user failed with error:`, { error });
+      }
+    }
+
+    functions.logger.info(`The following user ids have been or will be mentioned`, { mentionedUserIds });
+    functions.logger.info(`Mentioning the following user profiles`, { mentionedUserProfiles });
+
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
@@ -243,6 +303,7 @@ export namespace PostEndpoints {
       enrichmentConfiguration: {
         tags: validatedTags,
         promotionKey: promotionKey,
+        mentionedUserIds: mentionedUserIds,
       },
       securityConfiguration: {
         viewMode: visibleTo,
@@ -269,23 +330,9 @@ export namespace PostEndpoints {
     if (isPromotion) {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
-    
-    for (let index = 0; index < mentionedUsers.length; index++) {
-      const mentionedUserName = mentionedUsers[index];
 
-      functions.logger.info(`Getting mentioned user`, { mentionedUserName });
-
-      if (!mentionedUserName) {
-        continue;
-      }
-
-      const mentionedProfile = await ProfileService.getProfileByDisplayName(mentionedUserName);
-      functions.logger.info(`Getting mentioned users profile`, { mentionedProfile });
-      
-      if (!mentionedProfile) {
-        continue;
-      }
-
+    for (let index = 0; index < mentionedUserProfiles.length; index++) {
+      const mentionedProfile = mentionedUserProfiles[index];
       functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
       await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, userActivity);
     }
@@ -382,6 +429,9 @@ export namespace PostEndpoints {
     const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
     const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
 
+    const mentionedUserIds = request.data.mentionedUserIds as string[] || [] as string[];
+    const mentionedUsers = request.data.mentions || [];
+
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
     }
@@ -460,11 +510,94 @@ export namespace PostEndpoints {
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
 
+
+    //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+    //* -=-=-=-=-=-                   Mentions                   -=-=-=-=-=- *\\
+    //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+    //? For each mentionedUser attempt get the users ID and prepare to notify
+      functions.logger.info(`List of mentionable users`, { mentionedUsers });
+    const mentionedUserProfiles = [] as ProfileJSON[];
+    for (let index = 0; index < mentionedUsers.length; index++) {
+      const mentionedUserName = mentionedUsers[index];
+
+      functions.logger.info(`Getting mentioned user`, { mentionedUserName });
+
+      if (!mentionedUserName) {
+        continue;
+      }
+      try {
+        const mentionedProfiles = await ProfileService.getProfileByDisplayName(mentionedUserName);
+
+        if (!mentionedProfiles) {
+          functions.logger.error(`Profile does not exist`, { mentionedUserName });
+          continue;
+        }
+
+        const mentionedProfile = mentionedProfiles[0];
+
+        functions.logger.info(`Getting mentioned users profile`, { mentionedProfile });
+        const mentionedProfileId = mentionedProfile._fl_meta_?.fl_id ?? '';
+        functions.logger.info(`Getting mentioned users profileId`, { mentionedProfileId });
+
+        if (!mentionedProfileId) {
+          continue;
+        }
+
+        if (mentionedUserIds.includes(mentionedProfileId)) {
+          functions.logger.info(`Cannot notify profile that has already been notified before on this post`, { mentionedProfile });
+          continue;
+        }
+
+        if (mentionedProfileId == uid) {
+          functions.logger.info(`Cannot mention own profile`, { mentionedProfile });
+          continue;
+        }
+
+        const relationship = await RelationshipService.getRelationship([uid, mentionedProfileId]);
+        const isRelationshipBlocked = RelationshipHelpers.hasUserBlocked(mentionedProfileId, relationship);
+
+        if (isRelationshipBlocked) {
+          functions.logger.info(`Cannot mention user who has blocked you`, { mentionedProfile });
+          continue;
+        }
+
+        //? Add profile and profile ID to be used later to send notification and record that a notification has been sent
+        mentionedUserIds.push(mentionedProfileId);
+        mentionedUserProfiles.push(mentionedProfile);
+      } catch (error) {
+        functions.logger.error(`Mention user failed with error:`, { error });
+      }
+    }
+
+    if (!activity.enrichmentConfiguration) {
+      activity.enrichmentConfiguration!.mentionedUserIds = mentionedUserIds;
+    }
+
+    functions.logger.info(`The following user ids have been or will be mentioned`, { mentionedUserIds });
+    functions.logger.info(`Mentioning the following user profiles`, { mentionedUserProfiles });
+
     activity = await DataService.updateDocument({
       schemaKey: "activities",
       entryId: activityId,
       data: activity,
     });
+
+    const publisherId = activity.publisherInformation?.publisherId;
+    functions.logger.info(`Mentioning using publisher id`, { publisherId });
+    if (publisherId) {
+      try {
+        const publisherProfile = await ProfileService.getProfile(publisherId);
+       
+        functions.logger.info(`Debug print user profiles`, { mentionedUserProfiles });
+        for (let index = 0; index < mentionedUserProfiles.length; index++) {
+          const mentionedProfile = mentionedUserProfiles[index];
+          functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
+          await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity);
+        }
+      } catch (error) {
+        functions.logger.error(`Mention user failed with error:`, { error });
+      }
+    }
 
     await ActivitiesService.updateTagFeedsForActivity(activity);
 
@@ -473,5 +606,7 @@ export namespace PostEndpoints {
       sender: uid,
       data: [activity, ...tagObjects, promotion],
     });
-  });
+  }
+
+  );
 }

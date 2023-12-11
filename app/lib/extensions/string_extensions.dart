@@ -86,6 +86,16 @@ extension StringExt on String {
       key: tagKey,
     );
   }
+
+  Iterable<String> getHandles({bool includeSymbol = true}) {
+    final RegExp exp = RegExp(r"\@\w+");
+    return exp.allMatches(this).map((match) => substring(match.start + (includeSymbol ? 0 : 1), match.end));
+  }
+
+  Iterable<String> getTags({bool includeSymbol = true}) {
+    final RegExp exp = RegExp(r"\#\w+");
+    return exp.allMatches(this).map((match) => substring(match.start + (includeSymbol ? 0 : 1), match.end));
+  }
 }
 
 extension StringListExt on Iterable<String> {

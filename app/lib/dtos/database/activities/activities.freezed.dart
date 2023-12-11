@@ -4355,6 +4355,7 @@ mixin _$ActivityEnrichmentConfiguration {
   List<String> get taggedUsers => throw _privateConstructorUsedError;
   String get promotionKey => throw _privateConstructorUsedError;
   String get publishLocation => throw _privateConstructorUsedError;
+  List<String> get mentionedUserIds => throw _privateConstructorUsedError;
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions => throw _privateConstructorUsedError;
 
@@ -4377,6 +4378,7 @@ abstract class $ActivityEnrichmentConfigurationCopyWith<$Res> {
       @JsonKey(fromJson: stringListFromJson) List<String> taggedUsers,
       String promotionKey,
       String publishLocation,
+      List<String> mentionedUserIds,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions});
 }
@@ -4399,6 +4401,7 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
     Object? taggedUsers = null,
     Object? promotionKey = null,
     Object? publishLocation = null,
+    Object? mentionedUserIds = null,
     Object? mentions = null,
   }) {
     return _then(_value.copyWith(
@@ -4418,6 +4421,10 @@ class _$ActivityEnrichmentConfigurationCopyWithImpl<$Res,
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
               as String,
+      mentionedUserIds: null == mentionedUserIds
+          ? _value.mentionedUserIds
+          : mentionedUserIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       mentions: null == mentions
           ? _value.mentions
           : mentions // ignore: cast_nullable_to_non_nullable
@@ -4440,6 +4447,7 @@ abstract class _$$ActivityEnrichmentConfigurationImplCopyWith<$Res>
       @JsonKey(fromJson: stringListFromJson) List<String> taggedUsers,
       String promotionKey,
       String publishLocation,
+      List<String> mentionedUserIds,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       List<Mention> mentions});
 }
@@ -4461,6 +4469,7 @@ class __$$ActivityEnrichmentConfigurationImplCopyWithImpl<$Res>
     Object? taggedUsers = null,
     Object? promotionKey = null,
     Object? publishLocation = null,
+    Object? mentionedUserIds = null,
     Object? mentions = null,
   }) {
     return _then(_$ActivityEnrichmentConfigurationImpl(
@@ -4480,6 +4489,10 @@ class __$$ActivityEnrichmentConfigurationImplCopyWithImpl<$Res>
           ? _value.publishLocation
           : publishLocation // ignore: cast_nullable_to_non_nullable
               as String,
+      mentionedUserIds: null == mentionedUserIds
+          ? _value._mentionedUserIds
+          : mentionedUserIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       mentions: null == mentions
           ? _value._mentions
           : mentions // ignore: cast_nullable_to_non_nullable
@@ -4499,10 +4512,12 @@ class _$ActivityEnrichmentConfigurationImpl
       final List<String> taggedUsers = const [],
       this.promotionKey = '',
       this.publishLocation = '',
+      final List<String> mentionedUserIds = const [],
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions = const []})
       : _tags = tags,
         _taggedUsers = taggedUsers,
+        _mentionedUserIds = mentionedUserIds,
         _mentions = mentions;
 
   factory _$ActivityEnrichmentConfigurationImpl.fromJson(
@@ -4533,6 +4548,16 @@ class _$ActivityEnrichmentConfigurationImpl
   @override
   @JsonKey()
   final String publishLocation;
+  final List<String> _mentionedUserIds;
+  @override
+  @JsonKey()
+  List<String> get mentionedUserIds {
+    if (_mentionedUserIds is EqualUnmodifiableListView)
+      return _mentionedUserIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_mentionedUserIds);
+  }
+
   final List<Mention> _mentions;
   @override
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
@@ -4544,7 +4569,7 @@ class _$ActivityEnrichmentConfigurationImpl
 
   @override
   String toString() {
-    return 'ActivityEnrichmentConfiguration(tags: $tags, taggedUsers: $taggedUsers, promotionKey: $promotionKey, publishLocation: $publishLocation, mentions: $mentions)';
+    return 'ActivityEnrichmentConfiguration(tags: $tags, taggedUsers: $taggedUsers, promotionKey: $promotionKey, publishLocation: $publishLocation, mentionedUserIds: $mentionedUserIds, mentions: $mentions)';
   }
 
   @override
@@ -4559,6 +4584,8 @@ class _$ActivityEnrichmentConfigurationImpl
                 other.promotionKey == promotionKey) &&
             (identical(other.publishLocation, publishLocation) ||
                 other.publishLocation == publishLocation) &&
+            const DeepCollectionEquality()
+                .equals(other._mentionedUserIds, _mentionedUserIds) &&
             const DeepCollectionEquality().equals(other._mentions, _mentions));
   }
 
@@ -4570,6 +4597,7 @@ class _$ActivityEnrichmentConfigurationImpl
       const DeepCollectionEquality().hash(_taggedUsers),
       promotionKey,
       publishLocation,
+      const DeepCollectionEquality().hash(_mentionedUserIds),
       const DeepCollectionEquality().hash(_mentions));
 
   @JsonKey(ignore: true)
@@ -4595,6 +4623,7 @@ abstract class _ActivityEnrichmentConfiguration
       @JsonKey(fromJson: stringListFromJson) final List<String> taggedUsers,
       final String promotionKey,
       final String publishLocation,
+      final List<String> mentionedUserIds,
       @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
       final List<Mention> mentions}) = _$ActivityEnrichmentConfigurationImpl;
 
@@ -4611,6 +4640,8 @@ abstract class _ActivityEnrichmentConfiguration
   String get promotionKey;
   @override
   String get publishLocation;
+  @override
+  List<String> get mentionedUserIds;
   @override
   @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
   List<Mention> get mentions;

@@ -319,6 +319,7 @@ class ActivityEnrichmentConfiguration with _$ActivityEnrichmentConfiguration {
     @JsonKey(fromJson: stringListFromJson) @Default([]) List<String> taggedUsers,
     @Default('') String promotionKey,
     @Default('') String publishLocation,
+    @Default([]) List<String> mentionedUserIds,
     @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
   }) = _ActivityEnrichmentConfiguration;
 

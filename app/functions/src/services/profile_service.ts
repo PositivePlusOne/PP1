@@ -173,7 +173,7 @@ export namespace ProfileService {
    * @param {string} displayName The display name of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfileByDisplayName(displayName: string): Promise<Record<string, ProfileJSON>> {
+  export async function getProfileByDisplayName(displayName: string): Promise<ProfileJSON[]> {
     functions.logger.info(`Getting user profile for user: ${displayName}`);
 
     return await DataService.getDocumentByField({

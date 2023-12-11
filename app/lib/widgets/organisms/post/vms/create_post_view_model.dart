@@ -4,6 +4,7 @@ import 'dart:io';
 
 // Flutter imports:
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/services/search_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -899,14 +900,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    final List<String> taggedUsers = [];
-    List<String> unclippedNames = captionController.text.split('@');
-    for (String unclipped in unclippedNames) {
-      String nameOnly = unclipped.split(' ').first;
-      if (nameOnly.isNotEmpty) {
-        taggedUsers.add(nameOnly);
-      }
-    }
+    final Iterable<String> taggedUsers = captionController.text.getHandles(includeSymbol: false);
 
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
@@ -946,7 +940,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           allowSharing: state.allowSharing,
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
-          // mentions: taggedUsers,
+          mentions: taggedUsers.toList(),
         );
       } else {
         activityData = ActivityData(
@@ -960,7 +954,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
           reposterActivityID: state.reposterActivityID,
-          mentions: taggedUsers,
+          mentions: taggedUsers.toList(),
         );
       }
 

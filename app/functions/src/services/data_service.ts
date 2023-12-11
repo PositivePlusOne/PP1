@@ -298,8 +298,8 @@ export namespace DataService {
     if (record.docs.length == 0) {
       throw new Error(`No documents found using getDocumentByField: ${options}`);
     }
-
-    return record.docs[0].data();
+    return [...record.docs.map((record) => record.data())];
+    // return record.docs[0].data();
   };
 
   /**
