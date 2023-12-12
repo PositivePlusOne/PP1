@@ -5,11 +5,13 @@ import 'dart:async';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/content/events/deep_link_handling_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,6 +58,7 @@ abstract class IUniversalLinksController {
 }
 
 enum HandleLinkResult {
+  handling,
   handledWithNavigation,
   handledWithoutNavigation,
   notHandled,
@@ -101,7 +104,8 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
 
     logger.i('Handling initial universal link: $initialUri');
     await setInitialLinkFlagInSharedPreferences(initialUri);
-    return await handleLink(initialUri, replaceRouteOnNavigate: replaceRouteOnNavigate);
+
+    return handleLink(initialUri, replaceRouteOnNavigate: replaceRouteOnNavigate);
   }
 
   @override
@@ -184,6 +188,7 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   @override
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false}) async {
     final Logger logger = ref.read(loggerProvider);
+    final EventBus eventBus = ref.read(eventBusProvider);
     logger.i('Handling universal link: $uri');
 
     state = state.copyWith(latestUniversalLink: uri, isUniversalLinkHandled: false);
@@ -194,26 +199,36 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       return HandleLinkResult.notHandled;
     }
 
-    final UniversalPostRouteDetails? routeDetails = await getRouteLinkDetails(uri);
-    if (routeDetails != null) {
-      logger.i('Handling post route link: $routeDetails');
-      return await handlePostRouteLink(routeDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
-    }
+    HandleLinkResult result = HandleLinkResult.notHandled;
+    eventBus.fire(DeepLinkHandlingEvent(uri: uri, result: HandleLinkResult.handling));
 
-    final UniversalTagRouteDetails? tagRouteDetails = await getTagRouteLinkDetails(uri);
-    if (tagRouteDetails != null) {
-      logger.i('Handling tag route link: $tagRouteDetails');
-      return await handleTagRouteLink(tagRouteDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
-    }
+    try {
+      final UniversalPostRouteDetails? routeDetails = await getRouteLinkDetails(uri);
+      if (result == HandleLinkResult.notHandled && routeDetails != null) {
+        logger.i('Handling post route link: $routeDetails');
+        result = await handlePostRouteLink(routeDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
+      }
 
-    final UniversalProfileRouteDetails? profileRouteDetails = await getProfileRouteLinkDetails(uri);
-    if (profileRouteDetails != null) {
-      logger.i('Handling profile route link: $profileRouteDetails');
-      return await handleProfileRouteLink(profileRouteDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
-    }
+      final UniversalTagRouteDetails? tagRouteDetails = await getTagRouteLinkDetails(uri);
+      if (result == HandleLinkResult.notHandled && tagRouteDetails != null) {
+        logger.i('Handling tag route link: $tagRouteDetails');
+        result = await handleTagRouteLink(tagRouteDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
+      }
 
-    logger.w('Unknown universal link');
-    return HandleLinkResult.notHandled;
+      final UniversalProfileRouteDetails? profileRouteDetails = await getProfileRouteLinkDetails(uri);
+      if (result == HandleLinkResult.notHandled && profileRouteDetails != null) {
+        logger.i('Handling profile route link: $profileRouteDetails');
+        result = await handleProfileRouteLink(profileRouteDetails, replaceRouteOnNavigate: replaceRouteOnNavigate);
+      }
+
+      logger.w('Unknown universal link');
+      eventBus.fire(DeepLinkHandlingEvent(uri: uri, result: result));
+      return result;
+    } catch (e) {
+      logger.e('Failed to handle universal link: $e');
+      eventBus.fire(DeepLinkHandlingEvent(uri: uri, result: HandleLinkResult.notHandled));
+      return HandleLinkResult.notHandled;
+    }
   }
 
   @override

@@ -1,13 +1,22 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/content/events/deep_link_handling_event.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
+import 'package:app/services/third_party.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
@@ -33,7 +42,7 @@ enum PositiveScaffoldComponent {
   static Set<PositiveScaffoldComponent> get excludeFooterPadding => PositiveScaffoldComponent.values.toSet()..remove(footerPadding);
 }
 
-class PositiveScaffold extends ConsumerWidget {
+class PositiveScaffold extends StatefulHookConsumerWidget {
   const PositiveScaffold({
     this.headingWidgets = const <Widget>[],
     this.trailingWidgets = const <Widget>[],
@@ -111,65 +120,116 @@ class PositiveScaffold extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PositiveScaffold> createState() => _PositiveScaffoldState();
+}
+
+class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
+  StreamSubscription<DeepLinkHandlingEvent>? _deepLinkHandlingEventSubscription;
+
+  bool _isBusy = false;
+  bool get isBusy => _isBusy;
+  set isBusy(bool value) {
+    if (value != _isBusy) {
+      _isBusy = value;
+      setStateIfMounted();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupListeners();
+  }
+
+  @override
+  void dispose() {
+    disposeListeners();
+    super.dispose();
+  }
+
+  Future<void> setupListeners() async {
+    final EventBus eventBus = providerContainer.read(eventBusProvider);
+    await _deepLinkHandlingEventSubscription?.cancel();
+    _deepLinkHandlingEventSubscription = eventBus.on<DeepLinkHandlingEvent>().listen(onDeepLinkHandlingEvent);
+  }
+
+  Future<void> disposeListeners() async {
+    await _deepLinkHandlingEventSubscription?.cancel();
+  }
+
+  void onDeepLinkHandlingEvent(DeepLinkHandlingEvent event) {
+    final Logger log = providerContainer.read(loggerProvider);
+    log.d("Deep link handling event received: ${event.result}");
+
+    if (event.result == HandleLinkResult.handling) {
+      isBusy = true;
+    } else {
+      isBusy = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Size screenSize = mediaQueryData.size;
 
     double decorationBoxSize = min(400.0, screenSize.width);
-    if (forceDecorationMaxSize) {
+    if (widget.forceDecorationMaxSize) {
       decorationBoxSize = screenSize.width;
     }
 
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     // Check if the bottom navigation bar is present
-    final bool hasBottomNavigationBar = bottomNavigationBar != null && mediaQueryData.viewInsets.bottom == 0;
+    final bool hasBottomNavigationBar = widget.bottomNavigationBar != null && mediaQueryData.viewInsets.bottom == 0;
 
     //* Add padding for the bottom of the screens to cover the bottom navigation bar
-    final double bottomPadding = !hasBottomNavigationBar ? mediaQueryData.padding.bottom + kPaddingMedium : bottomNavigationBar?.preferredSize.height ?? 0;
+    final double bottomPadding = !hasBottomNavigationBar ? mediaQueryData.padding.bottom + kPaddingMedium : widget.bottomNavigationBar?.preferredSize.height ?? 0;
 
-    final Color actualBackgroundColor = backgroundColor ?? colors.colorGray1;
+    final Color actualBackgroundColor = widget.backgroundColor ?? colors.colorGray1;
+
+    final bool isBusy = this.isBusy || widget.isBusy;
 
     return WillPopScope(
-      onWillPop: isBusy ? (() async => false) : (onWillPopScope ?? () async => true),
+      onWillPop: isBusy ? (() async => false) : (widget.onWillPopScope ?? () async => true),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: buildSystemUiOverlayStyle(appBarColor: appBarColor, backgroundColor: actualBackgroundColor),
+        value: buildSystemUiOverlayStyle(appBarColor: widget.appBarColor, backgroundColor: actualBackgroundColor),
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: MediaQuery(
-            data: buildMediaQuery(mediaQueryData),
+            data: PositiveScaffold.buildMediaQuery(mediaQueryData),
             child: PositiveRefreshIndicator(
-              onRefresh: () async => onRefresh?.call(),
-              controller: IndicatorController(refreshEnabled: onRefresh != null),
+              onRefresh: () async => widget.onRefresh?.call(),
+              controller: IndicatorController(refreshEnabled: widget.onRefresh != null),
               child: Stack(
                 children: <Widget>[
                   Positioned.fill(
                     child: Scaffold(
                       backgroundColor: actualBackgroundColor,
-                      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-                      extendBody: extendBody,
-                      appBar: appBar,
-                      bottomNavigationBar: bottomNavigationBar ?? const SizedBox.shrink(),
+                      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+                      extendBody: widget.extendBody,
+                      appBar: widget.appBar,
+                      bottomNavigationBar: widget.bottomNavigationBar ?? const SizedBox.shrink(),
                       body: Stack(
                         children: <Widget>[
                           Positioned.fill(
                             child: PositiveScaffoldContent(
-                              controller: controller,
-                              physics: physics,
-                              visibleComponents: visibleComponents,
-                              headingWidgets: headingWidgets,
-                              decorationColor: decorationColor,
-                              decorations: decorations,
+                              controller: widget.controller,
+                              physics: widget.physics,
+                              visibleComponents: widget.visibleComponents,
+                              headingWidgets: widget.headingWidgets,
+                              decorationColor: widget.decorationColor,
+                              decorations: widget.decorations,
                               decorationBoxSize: decorationBoxSize,
-                              decorationWidget: decorationWidget,
-                              trailingWidgets: trailingWidgets,
-                              footerWidgets: footerWidgets,
+                              decorationWidget: widget.decorationWidget,
+                              trailingWidgets: widget.trailingWidgets,
+                              footerWidgets: widget.footerWidgets,
                               isBusy: isBusy,
                               bottomPadding: bottomPadding,
                             ),
                           ),
-                          if (overlayWidgets.isNotEmpty) ...<Widget>[
-                            ...overlayWidgets,
+                          if (widget.overlayWidgets.isNotEmpty) ...<Widget>[
+                            ...widget.overlayWidgets,
                           ],
                         ],
                       ),

@@ -10,6 +10,7 @@ import { ProfileJSON } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { MediaJSON } from "../dto/media";
 import { StorageService } from "./storage_service";
+import { SearchService } from "./search_service";
 
 export namespace ProfileService {
   /**
@@ -173,14 +174,22 @@ export namespace ProfileService {
    * @param {string} displayName The display name of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfileByDisplayName(displayName: string): Promise<ProfileJSON[]> {
-    functions.logger.info(`Getting user profile for user: ${displayName}`);
+  export async function getProfilesByDisplayName(displayName: string, resultLength = 1): Promise<ProfileJSON[]> {
+    // functions.logger.info(`Getting user profile for user: ${displayName}`);
 
-    return await DataService.getDocumentByField({
-      schemaKey: "users",
-      field: "displayName",
-      value: displayName,
-    });
+    // return await DataService.getDocumentByField({
+    //   schemaKey: "users",
+    //   field: "displayName",
+    //   value: displayName,
+    // });
+
+    functions.logger.info(`Getting user profile for user: ${displayName}`);
+    const searchClient = SearchService.getAlgoliaClient();
+    const index = SearchService.getIndex(searchClient, "users");
+
+    // Add a facet filter to match the display name excluding case
+    const displayNameFacetFilter = `displayName:${displayName}`;
+    return SearchService.search(index, "", 0, resultLength, [], [displayNameFacetFilter]);
   }
 
   /**
