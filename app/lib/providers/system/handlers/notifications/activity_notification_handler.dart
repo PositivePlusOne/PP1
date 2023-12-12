@@ -36,8 +36,9 @@ class ActivityNotificationHandler extends NotificationHandler {
     final bool isLike = payload.action == const NotificationAction.postLiked() || payload.action == const NotificationAction.postLikedGrouped();
     final bool isShare = payload.action == const NotificationAction.postShared() || payload.action == const NotificationAction.postSharedGrouped();
     final bool isBookmark = payload.action == const NotificationAction.postBookmarked() || payload.action == const NotificationAction.postBookmarkedGrouped();
+    final bool isMention = payload.action == const NotificationAction.postMentioned() || payload.action == const NotificationAction.postMentionedGrouped();
 
-    return isComment || isLike || isShare || isBookmark;
+    return isComment || isLike || isShare || isBookmark || isMention;
   }
 
   bool isGrouped(NotificationPayload payload) {
