@@ -279,6 +279,34 @@ export namespace PostEndpoints {
           continue;
         }
 
+        //? Check that the user is able to see the original post based on viewMode
+        //! Should this try to inform the original user that the mention has/will fail based on security config?
+        switch (visibleTo) {
+          case 'public':
+            break;
+
+          case 'followers_and_connections':
+            const isMentionedFollowing = RelationshipHelpers.isUserFollowing(mentionedProfileId, relationship);
+            if (isMentionedFollowing) {
+              continue;
+            }
+            break;
+
+          case 'connections':
+            const isMentionedConnected = RelationshipHelpers.isUserConnected(mentionedProfileId, relationship);
+            if (isMentionedConnected) {
+              continue;
+            }
+            break;
+
+          case 'signed_in':
+            //? Since the user is being mentioned, then the user must be, or have been, logged in at some point
+            break;
+
+          default: //? 'private' and 'disabled' by default
+            continue;
+        }
+
         //? Add profile and profile ID to be used later to send notification and record that a notification has been sent
         mentionedUserIds.push(mentionedProfileId);
         mentionedUserProfiles.push(mentionedProfile);
@@ -515,7 +543,7 @@ export namespace PostEndpoints {
     //* -=-=-=-=-=-                   Mentions                   -=-=-=-=-=- *\\
     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
     //? For each mentionedUser attempt get the users ID and prepare to notify
-      functions.logger.info(`List of mentionable users`, { mentionedUsers });
+    functions.logger.info(`List of mentionable users`, { mentionedUsers });
     const mentionedUserProfiles = [] as ProfileJSON[];
     for (let index = 0; index < mentionedUsers.length; index++) {
       const mentionedUserName = mentionedUsers[index];
@@ -561,6 +589,34 @@ export namespace PostEndpoints {
           continue;
         }
 
+        //? Check that the user is able to see the original post based on viewMode
+        //! Should this try to inform the original user that the mention has/will fail based on security config?
+        switch (visibleTo) {
+          case 'public':
+            break;
+
+          case 'followers_and_connections':
+            const isMentionedFollowing = RelationshipHelpers.isUserFollowing(mentionedProfileId, relationship);
+            if (isMentionedFollowing) {
+              continue;
+            }
+            break;
+
+          case 'connections':
+            const isMentionedConnected = RelationshipHelpers.isUserConnected(mentionedProfileId, relationship);
+            if (isMentionedConnected) {
+              continue;
+            }
+            break;
+
+          case 'signed_in':
+            //? Since the user is being mentioned, then the user must be, or have been, logged in at some point
+            break;
+
+          default: //? 'private' and 'disabled' by default
+            continue;
+        }
+
         //? Add profile and profile ID to be used later to send notification and record that a notification has been sent
         mentionedUserIds.push(mentionedProfileId);
         mentionedUserProfiles.push(mentionedProfile);
@@ -587,7 +643,7 @@ export namespace PostEndpoints {
     if (publisherId) {
       try {
         const publisherProfile = await ProfileService.getProfile(publisherId);
-       
+
         functions.logger.info(`Debug print user profiles`, { mentionedUserProfiles });
         for (let index = 0; index < mentionedUserProfiles.length; index++) {
           const mentionedProfile = mentionedUserProfiles[index];
