@@ -130,6 +130,10 @@
     "page_registration_new_number": "What is your new phone number?",
     "page_registration_change_number": "Change Phone Number",
 
+    "page_registration_accent_photo_body": "Pick a colour, this will show on your profile.",
+    "page_registration_accent_photo_change": "Change Profile Photo",
+    "page_registration_accent_photo_update": "Update Profile",
+
     "page_account_recovery_title": "Account Recovery",
     "page_account_recovery_body": "Don't worry. It happens. We'll send a recovery link to the email address linked to your account. No biggie.",
     "page_account_recovery_started_title": "Recovery Started",
