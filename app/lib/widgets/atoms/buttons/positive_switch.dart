@@ -41,23 +41,15 @@ class PositiveSwitch extends ConsumerWidget {
   final Color? activeColour;
   final Color? inactiveColour;
 
-  // Dimensions and positioning constants for the switch and its dial.
-  static const double kSwitchWidth = 60.0;
-  static const double kSwitchHeight = 30.0;
-  static const double kSwitchBorderWidth = 2.0;
-
-  static const double kSwitchDialTop = 2.0;
-  static const double kSwitchDialLeftTrue = 30.0;
-  static const double kSwitchDialLeftFalse = 4.0;
-  static const double kSwitchDialHeight = 22.0;
-  static const double kSwitchDialWidth = 22.0;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Get the current design colors from the Riverpod state.
     final DesignColorsModel colors = ref.watch(designControllerProvider.select((value) => value.colors));
 
     final Color colour = value ? (activeColour ?? colors.green) : (inactiveColour ?? colors.colorGray7);
+
+    //? size of widget height - the two border radii on both top and bottom
+    const double kSwitchDialSize = kPaddingLarge - kBorderThicknessMedium * 4;
 
     // Build the switch widget.
     return IgnorePointer(
@@ -66,13 +58,13 @@ class PositiveSwitch extends ConsumerWidget {
         onTap: (context) => onTapped?.call(context),
         isEnabled: isEnabled,
         child: Container(
-          height: kSwitchHeight,
-          width: kSwitchWidth,
+          height: kPaddingLarge,
+          width: kPaddingLarge * 2,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(kSwitchHeight),
+            borderRadius: BorderRadius.circular(kBorderRadiusExtraLarge),
             border: Border.all(
               color: colour,
-              width: kSwitchBorderWidth,
+              width: kBorderThicknessMedium,
             ),
           ),
           child: Stack(
@@ -80,15 +72,15 @@ class PositiveSwitch extends ConsumerWidget {
               AnimatedPositioned(
                 duration: kAnimationDurationRegular,
                 curve: Curves.easeInOut,
-                top: kSwitchDialTop,
-                left: value ? kSwitchDialLeftTrue : kSwitchDialLeftFalse,
-                height: kSwitchDialHeight,
-                width: kSwitchDialWidth,
+                top: kBorderThicknessMedium,
+                left: value ? (kPaddingLarge + kBorderThicknessMedium) : kBorderThicknessMedium,
+                height: kSwitchDialSize,
+                width: kSwitchDialSize,
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: colour,
-                    borderRadius: BorderRadius.circular(kSwitchDialHeight / 2),
+                    borderRadius: BorderRadius.circular(kBorderRadiusExtraLarge),
                   ),
                 ),
               ),
