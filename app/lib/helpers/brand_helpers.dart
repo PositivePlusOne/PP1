@@ -43,7 +43,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
 
   // Add the tags to the start of the markdown as bolded text
   if (tagBuffer.isNotEmpty) {
-    markdown = '$markdown\n${tagBuffer.toString()}';
+    markdown = '$markdown\n\n${tagBuffer.toString()}';
   }
 
   return MarkdownWidget(
