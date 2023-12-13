@@ -268,6 +268,13 @@
     "page_profile_edit_interests": "Your Interests",
     "page_profile_edit_interests_hint": "Attend Events, Meet New People, Join A Community",
     "page_profile_edit_company_sectors": "Company Sector",
+    
+    "page_profile_view_company_sectors": "Company Sector",
+    "page_profile_view_age": "Age",
+    "page_profile_view_gender": "Gender",
+    "page_profile_view_hiv_status": "HIV Status",
+    "page_profile_view_location": "Location",
+    "page_profile_view_interests": "Interests",
 
     "page_profile_location_remove": "Remove Location",
 
