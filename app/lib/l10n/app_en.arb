@@ -321,6 +321,7 @@
     "page_account_organisation_actions_followers": "Followers",
     "page_account_organisation_actions_chat": "Company Chat",
     "page_account_organisation_actions_leave": "Leave {company}",
+    "generic_organisation_actions_comment_as_title": "Comment As",
     
     "page_account_actions_change_return_account": "Back to Account",
     "page_account_actions_change_return_profile": "Back to Profile",
@@ -610,7 +611,7 @@
     "post_comments_signed_in_followers_header": "You must have an account and be following to comment",
     "post_comments_signed_in_connections_header": "You must have an account and be connected to comment",
     "post_comments_private_header": "Comments have been disabled",
-    "post_comments_disabled_header": "Comments have been disabled",
+    "post_comments_disabled_header": " been disabled",
 
     "post_report_dialog_title": "Report Post",
     "post_report_dialog_body": "If you believe this post is breaking the Positive +1 rules, please complete a report and we will investigate.",
@@ -639,7 +640,7 @@
     "shared_reaction_type_generic_connections": "Connections Only",
     "shared_reaction_type_generic_followers": "Followers Only",
     "shared_reaction_type_generic_me": "Only Poster",
-    "shared_reaction_type_generic_disabled": "Disabled",
+    "shared_reaction_type_generic_disabled": "Commenting Off",
     "shared_reaction_type_generic_signed_in": "Signed In Users",
 
     "shared_promotion_type_hub": "Hub",
