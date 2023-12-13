@@ -19,7 +19,6 @@
     "editor.tabCompletion": "onlySnippets",
     "editor.wordBasedSuggestions": "off"
   },
-  "dart.flutterSdkPath": ".fvm/flutter_sdk",
   "dart.previewFlutterUiGuides": true,
   "dart.lineLength": 512,
   "[python]": {
@@ -27,5 +26,6 @@
   },
   "java.import.gradle.wrapper.enabled": false,
   "java.import.gradle.version": "7.4",
-  "cmake.configureOnOpen": false
+  "cmake.configureOnOpen": false,
+  "dart.flutterSdkPath": "~/fvm/versions/3.16.3"
 }

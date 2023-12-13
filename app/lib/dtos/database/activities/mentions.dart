@@ -15,11 +15,19 @@ class Mention with _$Mention {
   const factory Mention({
     @Default(-1) int startIndex,
     @Default(-1) int endIndex,
+    @Default('') String displayName,
     @Default('') String foreignKey,
     @Default('') String schema,
   }) = _Mention;
 
   factory Mention.fromJson(Map<String, dynamic> json) => _$MentionFromJson(json);
+
+  static Mention fromForeignKey(String foreignKey, String schema) {
+    return Mention(
+      foreignKey: foreignKey,
+      schema: schema,
+    );
+  }
 
   static List<Mention> fromJsonList(List<dynamic> data) {
     return data.map((e) => Mention.fromJson(json.decodeSafe(e))).toList();

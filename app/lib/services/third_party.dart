@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Package imports:
-import 'package:algolia/algolia.dart';
 import 'package:app_links/app_links.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -225,22 +224,6 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
   }
 
   return client;
-}
-
-@Riverpod(keepAlive: true)
-FutureOr<Algolia> algolia(AlgoliaRef ref) async {
-  final Logger logger = ref.read(loggerProvider);
-  logger.i('Initializing Algolia');
-
-  final SystemController systemController = ref.read(systemControllerProvider.notifier);
-  switch (systemController.environment) {
-    case SystemEnvironment.develop:
-      return const Algolia.init(applicationId: 'N7Q08JSQY0', apiKey: '0011036dc6c06fc2211c001146162eda');
-    case SystemEnvironment.staging:
-      return const Algolia.init(applicationId: 'AWKMEQDRX7', apiKey: '5a93c4dd3739ea7086014c3d323cc59a');
-    case SystemEnvironment.production:
-      return const Algolia.init(applicationId: 'DB7J3BMYAI', apiKey: '01c205da1edb779162d0991de0f01500');
-  }
 }
 
 @Riverpod(keepAlive: true)

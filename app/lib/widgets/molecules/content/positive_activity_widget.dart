@@ -426,6 +426,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
           parsedMarkdown,
           tags: tags,
           boldHandles: true,
+          mentions: targetActivity?.enrichmentConfiguration?.mentions ?? [],
         ),
       ),
     );

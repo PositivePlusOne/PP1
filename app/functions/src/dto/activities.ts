@@ -418,7 +418,6 @@ export class ActivityPublisherInformation {
 export interface ActivityEnrichmentConfigurationJSON {
   tags?: string[];
   publishLocation?: string;
-  mentionedUserIds?: string[];
   promotionKey?: string;
   mentions?: MentionJSON[];
   originFeed?: string;
@@ -437,7 +436,6 @@ export interface ActivityEnrichmentConfigurationJSON {
 export class ActivityEnrichmentConfiguration {
   tags: string[];
   publishLocation: string;
-  mentionedUserIds: string[];
   promotionKey: string;
   mentions: Mention[];
   originFeed: string;
@@ -447,7 +445,6 @@ export class ActivityEnrichmentConfiguration {
   constructor(json: ActivityEnrichmentConfigurationJSON) {
     this.tags = json.tags || [];
     this.publishLocation = json.publishLocation || '';
-    this.mentionedUserIds = json.mentionedUserIds || [] as string[];
     this.promotionKey = json.promotionKey || '';
     this.mentions = json.mentions ? json.mentions.map((m) => new Mention(m)) : [];
     this.originFeed = json.originFeed || '';

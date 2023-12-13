@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -114,8 +113,7 @@ class PositiveScaffold extends StatefulHookConsumerWidget {
 
   static MediaQueryData buildMediaQuery(MediaQueryData mediaQueryData) {
     return mediaQueryData.copyWith(
-      textScaleFactor: 1.0,
-      boldText: false,
+      boldText: false, textScaler: const TextScaler.linear(1.0),
     );
   }
 

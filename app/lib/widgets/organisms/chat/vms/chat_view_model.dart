@@ -370,7 +370,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
-    await onChatChannelSelected(channelResults!.first);
+    await onChatChannelSelected(channelResults.first);
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {

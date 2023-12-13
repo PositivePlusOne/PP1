@@ -65,7 +65,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
   }
 
   @override
-  ImageStreamCompleter load(PositiveMediaImageProvider key, DecoderCallback decode) {
+  ImageStreamCompleter loadImage(PositiveMediaImageProvider key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: loadAsync(key, decode),
       scale: 1.0,
@@ -75,7 +75,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     );
   }
 
-  Future<Codec> loadAsync(PositiveMediaImageProvider key, DecoderCallback decode) async {
+  Future<Codec> loadAsync(PositiveMediaImageProvider key, ImageDecoderCallback decode) async {
     assert(key == this);
     final Uint8List bytes = await loadBytes();
     if (bytes.lengthInBytes == 0) {
@@ -86,7 +86,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     if (mimeType == 'image/svg+xml') {
       return Future<Codec>.error('SVG doesn\'t need to be decoded using ImageProvider.');
     } else {
-      return decode(bytes);
+      return decode(await ImmutableBuffer.fromUint8List(bytes));
     }
   }
 

@@ -187,9 +187,13 @@ export namespace ProfileService {
     const searchClient = SearchService.getAlgoliaClient();
     const index = SearchService.getIndex(searchClient, "users");
 
-    // Add a facet filter to match the display name excluding case
-    const displayNameFacetFilter = `displayName:${displayName}`;
-    return SearchService.search(index, "", 0, resultLength, [], [displayNameFacetFilter]);
+    // Add a facet filter to match the display name excluding case, only if the request is for a single result
+    if (resultLength === 1) {
+      const displayNameFacetFilter = `displayName:${displayName}`;
+      return SearchService.search(index, "", 0, resultLength, [], [displayNameFacetFilter]);
+    }
+
+    return SearchService.search(index, "", 0, resultLength, [], []);
   }
 
   /**

@@ -26,7 +26,7 @@ import { SearchService } from "../services/search_service";
 import { SystemService } from "../services/system_service";
 import { CacheService } from "../services/cache_service";
 import { PostMentionNotification } from "../services/builders/notifications/activities/post_mention_notification";
-import { RelationshipHelpers } from "../helpers/relationship_helpers";
+import { MentionJSON } from "../dto/mentions";
 
 export namespace PostEndpoints {
   export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
@@ -146,10 +146,7 @@ export namespace PostEndpoints {
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
     const promotionKey = request.data.promotionKey || "" as string;
-
-    const mentionedUserIds = request.data.mentionedUserIds as string[] || [] as string[];
-    const mentionedUsers = request.data.mentions || [];
-    functions.logger.info(`Getting mentioned users`, { mentionedUsers });
+    const mentions = (request.data.mentions || []) as MentionJSON[] || [] as MentionJSON[];
 
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type || TagsService.PostTypeTag.post;
@@ -232,91 +229,8 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Missing type or style");
     }
 
-
     //? For each mentionedUser attempt get the users ID and prepare to notify
-    const mentionedUserProfiles = [] as ProfileJSON[];
-    for (let index = 0; index < mentionedUsers.length; index++) {
-      const mentionedUserName = mentionedUsers[index];
-
-      functions.logger.info(`Getting mentioned user`, { mentionedUserName });
-
-      if (!mentionedUserName) {
-        continue;
-      }
-      try {
-        const mentionedProfiles = await ProfileService.getProfileByDisplayName(mentionedUserName);
-
-        if (!mentionedProfiles) {
-          functions.logger.error(`Profile does not exist`, { mentionedUserName });
-          continue;
-        }
-
-        const mentionedProfile = mentionedProfiles[0];
-
-        functions.logger.info(`Getting mentioned users profile`, { mentionedProfile });
-        const mentionedProfileId = mentionedProfile._fl_meta_?.fl_id ?? '';
-        functions.logger.info(`Getting mentioned users profileId`, { mentionedProfileId });
-
-        if (!mentionedProfileId) {
-          continue;
-        }
-
-        if (mentionedUserIds.includes(mentionedProfileId)) {
-          functions.logger.info(`Cannot notify profile that has already been notified before on this post`, { mentionedProfile });
-          continue;
-        }
-
-        if (mentionedProfileId == uid) {
-          functions.logger.info(`Cannot mention own profile`, { mentionedProfile });
-          continue;
-        }
-
-        const relationship = await RelationshipService.getRelationship([uid, mentionedProfileId]);
-        const isRelationshipBlocked = RelationshipHelpers.hasUserBlocked(mentionedProfileId, relationship);
-
-        if (isRelationshipBlocked) {
-          functions.logger.info(`Cannot mention user who has blocked you`, { mentionedProfile });
-          continue;
-        }
-
-        //? Check that the user is able to see the original post based on viewMode
-        //! Should this try to inform the original user that the mention has/will fail based on security config?
-        switch (visibleTo) {
-          case 'public':
-            break;
-
-          case 'followers_and_connections':
-            const isMentionedFollowing = RelationshipHelpers.isUserFollowing(mentionedProfileId, relationship);
-            if (isMentionedFollowing) {
-              continue;
-            }
-            break;
-
-          case 'connections':
-            const isMentionedConnected = RelationshipHelpers.isUserConnected(mentionedProfileId, relationship);
-            if (isMentionedConnected) {
-              continue;
-            }
-            break;
-
-          case 'signed_in':
-            //? Since the user is being mentioned, then the user must be, or have been, logged in at some point
-            break;
-
-          default: //? 'private' and 'disabled' by default
-            continue;
-        }
-
-        //? Add profile and profile ID to be used later to send notification and record that a notification has been sent
-        mentionedUserIds.push(mentionedProfileId);
-        mentionedUserProfiles.push(mentionedProfile);
-      } catch (error) {
-        functions.logger.error(`Mention user failed with error:`, { error });
-      }
-    }
-
-    functions.logger.info(`The following user ids have been or will be mentioned`, { mentionedUserIds });
-    functions.logger.info(`Mentioning the following user profiles`, { mentionedUserProfiles });
+    const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
 
     const activityRequest = {
       publisherInformation: {
@@ -331,7 +245,7 @@ export namespace PostEndpoints {
       enrichmentConfiguration: {
         tags: validatedTags,
         promotionKey: promotionKey,
-        mentionedUserIds: mentionedUserIds,
+        mentions: sanitizedMentions,
       },
       securityConfiguration: {
         viewMode: visibleTo,
@@ -359,8 +273,18 @@ export namespace PostEndpoints {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
 
-    for (let index = 0; index < mentionedUserProfiles.length; index++) {
-      const mentionedProfile = mentionedUserProfiles[index];
+    for (let index = 0; index < sanitizedMentions.length; index++) {
+      const mention = sanitizedMentions[index];
+      const foreignKey = mention.foreignKey;
+      if (!foreignKey) {
+        continue;
+      }
+
+      const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
+      if (!mentionedProfile) {
+        continue;
+      }
+
       functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
       await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, userActivity);
     }
@@ -457,8 +381,7 @@ export namespace PostEndpoints {
     const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
     const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
 
-    const mentionedUserIds = request.data.mentionedUserIds as string[] || [] as string[];
-    const mentionedUsers = request.data.mentions || [];
+    const mentions = request.data.mentions || [] as MentionJSON[] || [] as MentionJSON[] || [] as MentionJSON[];
 
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
@@ -487,6 +410,11 @@ export namespace PostEndpoints {
       if (!promotion) {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
+    }
+
+    const publisherProfile = await ProfileService.getProfile(uid) as ProfileJSON;
+    if (!publisherProfile) {
+      throw new functions.https.HttpsError("not-found", "Profile not found");
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
@@ -543,117 +471,36 @@ export namespace PostEndpoints {
     //* -=-=-=-=-=-                   Mentions                   -=-=-=-=-=- *\\
     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
     //? For each mentionedUser attempt get the users ID and prepare to notify
-    functions.logger.info(`List of mentionable users`, { mentionedUsers });
-    const mentionedUserProfiles = [] as ProfileJSON[];
-    for (let index = 0; index < mentionedUsers.length; index++) {
-      const mentionedUserName = mentionedUsers[index];
-
-      functions.logger.info(`Getting mentioned user`, { mentionedUserName });
-
-      if (!mentionedUserName) {
+    const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
+    for (let index = 0; index < sanitizedMentions.length; index++) {
+      const mention = sanitizedMentions[index];
+      const foreignKey = mention.foreignKey;
+      if (!foreignKey) {
         continue;
       }
-      try {
-        const mentionedProfiles = await ProfileService.getProfileByDisplayName(mentionedUserName);
 
-        if (!mentionedProfiles) {
-          functions.logger.error(`Profile does not exist`, { mentionedUserName });
-          continue;
-        }
-
-        const mentionedProfile = mentionedProfiles[0];
-
-        functions.logger.info(`Getting mentioned users profile`, { mentionedProfile });
-        const mentionedProfileId = mentionedProfile._fl_meta_?.fl_id ?? '';
-        functions.logger.info(`Getting mentioned users profileId`, { mentionedProfileId });
-
-        if (!mentionedProfileId) {
-          continue;
-        }
-
-        if (mentionedUserIds.includes(mentionedProfileId)) {
-          functions.logger.info(`Cannot notify profile that has already been notified before on this post`, { mentionedProfile });
-          continue;
-        }
-
-        if (mentionedProfileId == uid) {
-          functions.logger.info(`Cannot mention own profile`, { mentionedProfile });
-          continue;
-        }
-
-        const relationship = await RelationshipService.getRelationship([uid, mentionedProfileId]);
-        const isRelationshipBlocked = RelationshipHelpers.hasUserBlocked(mentionedProfileId, relationship);
-
-        if (isRelationshipBlocked) {
-          functions.logger.info(`Cannot mention user who has blocked you`, { mentionedProfile });
-          continue;
-        }
-
-        //? Check that the user is able to see the original post based on viewMode
-        //! Should this try to inform the original user that the mention has/will fail based on security config?
-        switch (visibleTo) {
-          case 'public':
-            break;
-
-          case 'followers_and_connections':
-            const isMentionedFollowing = RelationshipHelpers.isUserFollowing(mentionedProfileId, relationship);
-            if (isMentionedFollowing) {
-              continue;
-            }
-            break;
-
-          case 'connections':
-            const isMentionedConnected = RelationshipHelpers.isUserConnected(mentionedProfileId, relationship);
-            if (isMentionedConnected) {
-              continue;
-            }
-            break;
-
-          case 'signed_in':
-            //? Since the user is being mentioned, then the user must be, or have been, logged in at some point
-            break;
-
-          default: //? 'private' and 'disabled' by default
-            continue;
-        }
-
-        //? Add profile and profile ID to be used later to send notification and record that a notification has been sent
-        mentionedUserIds.push(mentionedProfileId);
-        mentionedUserProfiles.push(mentionedProfile);
-      } catch (error) {
-        functions.logger.error(`Mention user failed with error:`, { error });
+      const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
+      if (!mentionedProfile) {
+        continue;
       }
+
+      functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
+      await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity);
     }
 
-    if (!activity.enrichmentConfiguration) {
-      activity.enrichmentConfiguration!.mentionedUserIds = mentionedUserIds;
+    if (activity.enrichmentConfiguration) {
+      activity.enrichmentConfiguration.mentions = sanitizedMentions;
+    } else {
+      activity.enrichmentConfiguration = {
+        mentions: sanitizedMentions,
+      };
     }
-
-    functions.logger.info(`The following user ids have been or will be mentioned`, { mentionedUserIds });
-    functions.logger.info(`Mentioning the following user profiles`, { mentionedUserProfiles });
 
     activity = await DataService.updateDocument({
       schemaKey: "activities",
       entryId: activityId,
       data: activity,
     });
-
-    const publisherId = activity.publisherInformation?.publisherId;
-    functions.logger.info(`Mentioning using publisher id`, { publisherId });
-    if (publisherId) {
-      try {
-        const publisherProfile = await ProfileService.getProfile(publisherId);
-
-        functions.logger.info(`Debug print user profiles`, { mentionedUserProfiles });
-        for (let index = 0; index < mentionedUserProfiles.length; index++) {
-          const mentionedProfile = mentionedUserProfiles[index];
-          functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
-          await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity);
-        }
-      } catch (error) {
-        functions.logger.error(`Mention user failed with error:`, { error });
-      }
-    }
 
     await ActivitiesService.updateTagFeedsForActivity(activity);
 

@@ -3,9 +3,8 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/extensions/string_extensions.dart';
-import 'package:app/services/search_api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -940,7 +939,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           allowSharing: state.allowSharing,
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
-          mentions: taggedUsers.toList(),
+          mentions: taggedUsers.map((e) => Mention.fromForeignKey(e, 'users')).toList(),
         );
       } else {
         activityData = ActivityData(
@@ -954,7 +953,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
           reposterActivityID: state.reposterActivityID,
-          mentions: taggedUsers.toList(),
+          mentions: taggedUsers.map((e) => Mention.fromForeignKey(e, 'users')).toList(),
         );
       }
 

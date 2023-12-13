@@ -326,20 +326,6 @@ final streamChatClientProvider = Provider<StreamChatClient>.internal(
 );
 
 typedef StreamChatClientRef = ProviderRef<StreamChatClient>;
-String _$algoliaHash() => r'e2c52e9d82bc99f8bce566de2e2b16b7608e1130';
-
-/// See also [algolia].
-@ProviderFor(algolia)
-final algoliaProvider = FutureProvider<Algolia>.internal(
-  algolia,
-  name: r'algoliaProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$algoliaHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef AlgoliaRef = FutureProviderRef<Algolia>;
 String _$googleMapsGeocodingHash() =>
     r'c8c11ca9a39a5f6c83970cdc8bee8f3de11a362a';
 

@@ -47,7 +47,7 @@ abstract class IUniversalLinksController {
   Future<bool> canHandleLink(Uri? uri);
   Future<HandleLinkResult> handleLink(Uri? uri, {bool replaceRouteOnNavigate = false});
   Future<HandleLinkResult> handlePostRouteLink(UniversalPostRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
-  Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
+  Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false, Map<String, String> knownIdMap = const {}});
   Future<HandleLinkResult> handleTagRouteLink(UniversalTagRouteDetails routeDetails, {bool replaceRouteOnNavigate = false});
   Future<UniversalPostRouteDetails?> getRouteLinkDetails(Uri? uri);
   Future<UniversalProfileRouteDetails?> getProfileRouteLinkDetails(Uri? uri);
@@ -289,7 +289,7 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   }
 
   @override
-  Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false}) async {
+  Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false, Map<String, String> knownIdMap = const {}}) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
@@ -355,7 +355,7 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   }
 
   @override
-  Uri buildProfileRouteLink(String displayName) {
+  Uri buildProfileRouteLink(String displayName, {Map<String, String> knownIdMap = const {}}) {
     final String scheme = state.expectedUniversalLinkScheme;
     const String host = 'positiveplusone.com';
     const String path = '/profile';

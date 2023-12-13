@@ -107,9 +107,9 @@ extension StringExt on String {
     return replaceAllMapped(exp, (match) => '**${match.group(0)}**');
   }
 
-  String boldHandlesAndLink() {
+  String boldHandlesAndLink({Map<String, String> knownIdMap = const {}}) {
     RegExp exp = RegExp(r"\@\w+");
-    return replaceAllMapped(exp, (match) => '[**${match.group(0)}**](${match.group(0)?.profileStringLink})');
+    return replaceAllMapped(exp, (match) => '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})');
   }
 }
 

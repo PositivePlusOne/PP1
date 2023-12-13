@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/common/media.dart';
 
 //? Simplified Activity structure
@@ -23,7 +24,7 @@ class ActivityData {
   String? reposterActivityID;
 
   //UserIds mentioned in the post
-  List<String> mentions;
+  List<Mention> mentions;
 
   String? content;
   List<String>? tags;

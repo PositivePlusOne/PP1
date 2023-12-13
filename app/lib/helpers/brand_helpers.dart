@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,13 +28,19 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
   bool boldHandles = false,
+  List<Mention> mentions = const [],
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
+  final Map<String, String> mentionsIdMap = {};
+
+  for (final Mention mention in mentions) {
+    mentionsIdMap[mention.displayName] = mention.foreignKey;
+  }
 
   //? bold all user handles
   if (boldHandles) {
-    markdown = markdown.boldHandlesAndLink();
+    markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
   }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
@@ -44,7 +51,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
       continue;
     }
 
-    tagBuffer.write('[#${tag.key}](${tag.feedLink}) ');
+    tagBuffer.write('[#${tag.key}](${tag.buildTagLink()}) ');
   }
 
   // Add the tags to the start of the markdown as bolded text
