@@ -80,7 +80,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
       case PostType.repost:
         return localizations.page_create_post_post_type_repost;
       case PostType.error:
-        return localizations.page_create_post_post_type_errpr;
+        return localizations.page_create_post_post_type_error;
       // default not doing so warns us if enum grows and we forget this function
     }
   }

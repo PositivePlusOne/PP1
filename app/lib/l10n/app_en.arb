@@ -578,6 +578,7 @@
     "page_create_post_processing": "Processing your {postType}...",
     "page_create_post_uploading": "Uploading your {postType}...",
     "page_edit_post_uploading": "Editing your {postType}...",
+    "page_edit_post_no_tags_found": "No Tags found...",
     
     "page_create_post_visibility_warning": "Posts made visible to everyone will be viewable by people who do not have a Positive+1 account.",
 
@@ -587,7 +588,7 @@
     "page_create_post_post_type_clip": "clip",
     "page_create_post_post_type_event": "event",
     "page_create_post_post_type_repost": "repost",
-    "page_create_post_post_type_errpr": "error",
+    "page_create_post_post_type_error": "error",
 
     "page_create_post_clip_length_limit": "Clips can be a maximum of 3 minutes long - trim yours down to post it.",
     "page_create_post_seconds": "s",
