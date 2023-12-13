@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter_gen/gen_l10n/app_localisations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
@@ -54,7 +54,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final AppLocalisations localisations = AppLocalisations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final Profile currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile ?? Profile.empty()));
     final String profileId = currentProfile.flMeta?.id ?? '';
