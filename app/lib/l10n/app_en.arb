@@ -804,7 +804,7 @@
     "shared_errors_defaults_action": "Try Again",
     "shared_errors_not_max_length": "The value supplied is too long",
     "shared_errors_invalid_email": "Please enter a valid email address",
-    "shared_errors_invalid_phone": "The phone number you have entered is incorrect",
+    "shared_errors_invalid_phone": "Please enter a valid phone number",
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",
     "shared_errors_user_not_found": "The user account was not found",
     "shared_errors_wrong_password": "The password is invalid or the user does not have a password",
