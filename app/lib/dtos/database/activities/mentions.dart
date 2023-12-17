@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
@@ -24,7 +25,7 @@ class Mention with _$Mention {
 
   static Mention fromForeignKey(String foreignKey, String schema) {
     return Mention(
-      foreignKey: foreignKey,
+      foreignKey: foreignKey.asHandle,
       schema: schema,
     );
   }

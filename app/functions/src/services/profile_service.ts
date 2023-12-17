@@ -183,6 +183,9 @@ export namespace ProfileService {
     //   value: displayName,
     // });
 
+    // Remove the @ from the display name
+    displayName = displayName.replace("@", "");
+
     functions.logger.info(`Getting user profile for user: ${displayName}`);
     const searchClient = SearchService.getAlgoliaClient();
     const index = SearchService.getIndex(searchClient, "users");

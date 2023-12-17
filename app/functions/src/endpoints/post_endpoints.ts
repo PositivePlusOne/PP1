@@ -190,7 +190,7 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
     }
 
-    functions.logger.info(`Posting activity`, { uid, content, media, userTags });
+    functions.logger.info(`Posting activity`, { uid, content, media, userTags, mentions });
     const hasContentOrMedia = content || media.length > 0;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
@@ -231,6 +231,8 @@ export namespace PostEndpoints {
 
     //? For each mentionedUser attempt get the users ID and prepare to notify
     const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
+
+    functions.logger.info(`Got sanitized mentions`, { sanitizedMentions });
 
     const activityRequest = {
       publisherInformation: {

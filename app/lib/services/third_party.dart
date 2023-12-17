@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Package imports:
+import 'package:algolia/algolia.dart';
 import 'package:app_links/app_links.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -15,11 +16,11 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_google_maps_webservices/geocoding.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freerasp/freerasp.dart';
-import 'package:google_maps_webservice/geocoding.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
@@ -71,6 +72,22 @@ Random random(RandomRef ref) {
 @Riverpod(keepAlive: true)
 AppLinks appLinks(AppLinksRef ref) {
   return AppLinks();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<Algolia> algolia(AlgoliaRef ref) async {
+  final Logger logger = ref.read(loggerProvider);
+  logger.i('Initializing Algolia');
+
+  final SystemController systemController = ref.read(systemControllerProvider.notifier);
+  switch (systemController.environment) {
+    case SystemEnvironment.develop:
+      return const Algolia.init(applicationId: 'N7Q08JSQY0', apiKey: '0011036dc6c06fc2211c001146162eda');
+    case SystemEnvironment.staging:
+      return const Algolia.init(applicationId: 'AWKMEQDRX7', apiKey: '5a93c4dd3739ea7086014c3d323cc59a');
+    case SystemEnvironment.production:
+      return const Algolia.init(applicationId: 'DB7J3BMYAI', apiKey: '01c205da1edb779162d0991de0f01500');
+  }
 }
 
 @Riverpod(keepAlive: true)

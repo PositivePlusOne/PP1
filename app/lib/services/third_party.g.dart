@@ -100,6 +100,20 @@ final appLinksProvider = Provider<AppLinks>.internal(
 );
 
 typedef AppLinksRef = ProviderRef<AppLinks>;
+String _$algoliaHash() => r'e2c52e9d82bc99f8bce566de2e2b16b7608e1130';
+
+/// See also [algolia].
+@ProviderFor(algolia)
+final algoliaProvider = FutureProvider<Algolia>.internal(
+  algolia,
+  name: r'algoliaProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$algoliaHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AlgoliaRef = FutureProviderRef<Algolia>;
 String _$mixpanelHash() => r'4baae3640ce777e1ec61f662bf89fae624e0a957';
 
 /// See also [mixpanel].
