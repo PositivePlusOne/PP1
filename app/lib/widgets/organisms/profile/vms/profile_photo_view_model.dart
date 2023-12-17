@@ -1,11 +1,9 @@
 // Flutter imports:
-import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
-import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
@@ -18,7 +16,9 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
+import 'package:app/widgets/organisms/shared/positive_camera.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';

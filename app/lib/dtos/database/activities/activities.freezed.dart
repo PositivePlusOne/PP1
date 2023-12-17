@@ -405,7 +405,7 @@ class _$ActivityImpl implements _Activity {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityImpl &&
@@ -648,7 +648,7 @@ class _$ActivityRepostConfigurationImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityRepostConfigurationImpl &&
@@ -922,7 +922,7 @@ class _$ActivityGeneralConfigurationImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityGeneralConfigurationImpl &&
@@ -1093,7 +1093,7 @@ class _$ActivityGeneralConfigurationTypePostImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityGeneralConfigurationTypePostImpl);
@@ -1209,7 +1209,7 @@ class _$ActivityGeneralConfigurationTypeEventImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityGeneralConfigurationTypeEventImpl);
@@ -1325,7 +1325,7 @@ class _$ActivityGeneralConfigurationTypeClipImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityGeneralConfigurationTypeClipImpl);
@@ -1508,7 +1508,7 @@ class _$ActivityGeneralConfigurationStyleMarkdownImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityGeneralConfigurationStyleMarkdownImpl);
@@ -1621,7 +1621,7 @@ class _$ActivityGeneralConfigurationStyleTextImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityGeneralConfigurationStyleTextImpl);
@@ -1947,7 +1947,7 @@ class _$ActivitySecurityConfigurationImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivitySecurityConfigurationImpl &&
@@ -2162,7 +2162,7 @@ class _$ActivitySecurityConfigurationModePublicImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivitySecurityConfigurationModePublicImpl);
@@ -2322,7 +2322,7 @@ class _$ActivitySecurityConfigurationModeFollowersAndConnectionsImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other
@@ -2477,7 +2477,7 @@ class _$ActivitySecurityConfigurationModeConnectionsImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivitySecurityConfigurationModeConnectionsImpl);
@@ -2628,7 +2628,7 @@ class _$ActivitySecurityConfigurationModePrivateImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivitySecurityConfigurationModePrivateImpl);
@@ -2779,7 +2779,7 @@ class _$ActivitySecurityConfigurationModeSignedInImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivitySecurityConfigurationModeSignedInImpl);
@@ -2930,7 +2930,7 @@ class _$ActivitySecurityConfigurationModeDisabledImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivitySecurityConfigurationModeDisabledImpl);
@@ -3258,7 +3258,7 @@ class _$ActivityEventConfigurationImpl implements _ActivityEventConfiguration {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEventConfigurationImpl &&
@@ -3456,7 +3456,7 @@ class _$ActivityScheduleImpl implements _ActivitySchedule {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityScheduleImpl &&
@@ -3651,7 +3651,7 @@ class _$ActivityPricingInformationImpl implements _ActivityPricingInformation {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityPricingInformationImpl &&
@@ -3903,7 +3903,7 @@ class _$ActivityPricingExternalStoreInformationImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityPricingExternalStoreInformationImpl &&
@@ -4088,7 +4088,7 @@ class _$ActivityPricingExternalStoreInformationPricingStrategyOnePersonImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other
@@ -4292,7 +4292,7 @@ class _$ActivityPublisherInformationImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityPublisherInformationImpl &&
@@ -4548,7 +4548,7 @@ class _$ActivityEnrichmentConfigurationImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentConfigurationImpl &&

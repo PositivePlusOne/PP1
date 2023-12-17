@@ -109,7 +109,7 @@ class _$ProfilePhotoViewModelStateImpl implements _ProfilePhotoViewModelState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfilePhotoViewModelStateImpl &&

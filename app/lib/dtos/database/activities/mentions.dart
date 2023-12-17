@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/extensions/dart_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 
 part 'mentions.freezed.dart';

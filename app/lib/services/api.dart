@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/profile/profile.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -16,6 +15,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/main.dart';

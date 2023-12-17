@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:app/providers/content/universal_links_controller.dart';
 
 class DeepLinkHandlingEvent {

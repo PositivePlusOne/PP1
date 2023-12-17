@@ -3,8 +3,6 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/mentions.dart';
-import 'package:app/extensions/string_extensions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,11 +20,13 @@ import 'package:video_editor/video_editor.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';

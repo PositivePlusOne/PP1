@@ -1,6 +1,9 @@
+// Package imports:
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
-import 'package:logger/logger.dart';
 
 mixin BusyStateDelegateMixin {
   void updateBusyState(bool isBusy);

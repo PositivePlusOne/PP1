@@ -140,7 +140,7 @@ class _$UniversalLinksStateImpl implements _UniversalLinksState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UniversalLinksStateImpl &&

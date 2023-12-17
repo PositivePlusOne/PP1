@@ -278,7 +278,7 @@ class _$ReactionImpl implements _Reaction {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionImpl &&
@@ -473,7 +473,7 @@ class _$ReactionTypeUnknownReactionImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionTypeUnknownReactionImpl);
@@ -602,7 +602,7 @@ class _$ReactionTypeLikeImpl implements _ReactionTypeLike {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$ReactionTypeLikeImpl);
   }
@@ -729,7 +729,7 @@ class _$ReactionTypeDislikeImpl implements _ReactionTypeDislike {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionTypeDislikeImpl);
@@ -857,7 +857,7 @@ class _$ReactionTypeCommentImpl implements _ReactionTypeComment {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionTypeCommentImpl);
@@ -985,7 +985,7 @@ class _$ReactionTypeBookmarkImpl implements _ReactionTypeBookmark {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionTypeBookmarkImpl);
@@ -1113,7 +1113,7 @@ class _$ReactionTypeShareImpl implements _ReactionTypeShare {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$ReactionTypeShareImpl);
   }
@@ -1411,7 +1411,7 @@ class _$ReactionStatisticsImpl implements _ReactionStatistics {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionStatisticsImpl &&
@@ -1594,7 +1594,7 @@ class _$TargetFeedImpl implements _TargetFeed {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TargetFeedImpl &&

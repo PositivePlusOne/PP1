@@ -3,24 +3,24 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/main.dart';
-import 'package:app/providers/content/events/deep_link_handling_event.dart';
-import 'package:app/providers/content/universal_links_controller.dart';
-import 'package:app/services/third_party.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/content/events/deep_link_handling_event.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';

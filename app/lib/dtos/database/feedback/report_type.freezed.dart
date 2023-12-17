@@ -119,7 +119,7 @@ class _$UnknownImpl implements Unknown {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$UnknownImpl);
   }
@@ -239,7 +239,7 @@ class _$InappropriateContentImpl implements InappropriateContent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InappropriateContentImpl);
@@ -359,7 +359,7 @@ class _$SpamImpl implements Spam {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$SpamImpl);
   }
@@ -479,7 +479,7 @@ class _$HarassmentImpl implements Harassment {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$HarassmentImpl);
   }
@@ -599,7 +599,7 @@ class _$OtherImpl implements Other {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$OtherImpl);
   }

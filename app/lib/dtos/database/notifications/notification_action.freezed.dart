@@ -195,7 +195,7 @@ class _$NoneImpl implements None {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$NoneImpl);
   }
@@ -391,7 +391,7 @@ class _$TestImpl implements Test {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$TestImpl);
   }
@@ -591,7 +591,7 @@ class _$ConnectionRequestAcceptedImpl implements ConnectionRequestAccepted {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConnectionRequestAcceptedImpl);
@@ -792,7 +792,7 @@ class _$ConnectionRequestRejectedImpl implements ConnectionRequestRejected {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConnectionRequestRejectedImpl);
@@ -991,7 +991,7 @@ class _$ConnectionRequestSentImpl implements ConnectionRequestSent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConnectionRequestSentImpl);
@@ -1192,7 +1192,7 @@ class _$ConnectionRequestReceivedImpl implements ConnectionRequestReceived {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConnectionRequestReceivedImpl);
@@ -1390,7 +1390,7 @@ class _$PostCommentedImpl implements PostCommented {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostCommentedImpl);
   }
@@ -1587,7 +1587,7 @@ class _$PostCommentedGroupedImpl implements PostCommentedGrouped {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PostCommentedGroupedImpl);
@@ -1785,7 +1785,7 @@ class _$PostLikedImpl implements PostLiked {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostLikedImpl);
   }
@@ -1982,7 +1982,7 @@ class _$PostLikedGroupedImpl implements PostLikedGrouped {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostLikedGroupedImpl);
   }
@@ -2179,7 +2179,7 @@ class _$PostSharedImpl implements PostShared {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostSharedImpl);
   }
@@ -2376,7 +2376,7 @@ class _$PostSharedGroupedImpl implements PostSharedGrouped {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostSharedGroupedImpl);
   }
@@ -2573,7 +2573,7 @@ class _$PostBookmarkedImpl implements PostBookmarked {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostBookmarkedImpl);
   }
@@ -2771,7 +2771,7 @@ class _$PostBookmarkedGroupedImpl implements PostBookmarkedGrouped {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PostBookmarkedGroupedImpl);
@@ -2969,7 +2969,7 @@ class _$PostMentionedImpl implements PostMentioned {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostMentionedImpl);
   }
@@ -3166,7 +3166,7 @@ class _$RelationshipUpdatedImpl implements RelationshipUpdated {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RelationshipUpdatedImpl);

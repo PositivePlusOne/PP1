@@ -2,13 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/providers/content/events/deep_link_handling_event.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/api.dart';
 import 'package:app_links/app_links.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:event_bus/event_bus.dart';
@@ -20,9 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/events/deep_link_handling_event.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
+import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
 
 part 'universal_links_controller.freezed.dart';
