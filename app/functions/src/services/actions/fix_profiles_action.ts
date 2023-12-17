@@ -6,9 +6,9 @@ import { DataService } from "../data_service";
 import { AdminQuickActionService } from "../admin_quick_action_service";
 import { FlamelinkHelpers } from "../../helpers/flamelink_helpers";
 
-export namespace FixTimestampsAction {
-    export async function fixTimestamps(action: AdminQuickActionJSON): Promise<void> {
-        functions.logger.log("Fixing timestamps...");
+export namespace FixProfilesAction {
+    export async function fixProfiles(action: AdminQuickActionJSON): Promise<void> {
+        functions.logger.log("Fixing profile data...");
 
         const firestore = admin.firestore();
         const allDataCollection = firestore.collection("fl_content");

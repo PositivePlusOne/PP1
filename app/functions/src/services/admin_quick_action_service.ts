@@ -19,7 +19,7 @@ import { DeactivateInactivePromotionsAction } from "./actions/deactivate_inactiv
 import { DeleteMemberAction } from "./actions/delete_member_action";
 import { ClearFeedAction } from "./actions/clear_feed_action";
 import { UpdateProfileImageAction } from "./actions/update_profile_image_action";
-import { FixTimestampsAction } from "./actions/fix_timestamps_action";
+import { FixProfilesAction } from "./actions/fix_profiles_action";
 import { ClearServerCacheAction } from "./actions/clear_server_cache_action";
 
 export namespace AdminQuickActionService {
@@ -41,7 +41,7 @@ export namespace AdminQuickActionService {
         'updatePromotionMixpanelAnalytics': UpdatePromotionMixpanelAnalyticsAction.updatePromotionsMixpanelAnalytics,
         'shufflePromotionSeeds': ShufflePromotionSeedsAction.shufflePromotionSeeds,
         'deactivateInactivePromotions': DeactivateInactivePromotionsAction.deactivateInactivePromotions,
-        'fixTimestamps': FixTimestampsAction.fixTimestamps,
+        'fixProfileData': FixProfilesAction.fixProfiles,
         'clearServerCache': ClearServerCacheAction.clearServerCache,
     };
 

@@ -149,7 +149,8 @@ export namespace DataService {
   export const needsMigration = (document: any): boolean => {
     return !!(document._fl_meta_ && (
       (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
-      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp))
+      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) ||
+      (document.displayName && document.displayName !== document.displayName.toUpperCase())
     ));
   };
 
@@ -170,6 +171,10 @@ export namespace DataService {
       if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
         migratedDocument._fl_meta_.lastModifiedDate = Timestamp.fromDate(new Date());
       }
+    }
+
+    if (migratedDocument.displayName && migratedDocument.displayName !== migratedDocument.displayName.toUpperCase()) {
+      migratedDocument.displayName = migratedDocument.displayName.toUpperCase();
     }
 
     return migratedDocument;
