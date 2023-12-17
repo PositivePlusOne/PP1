@@ -6,7 +6,7 @@ import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
 import { Keys } from "../constants/keys";
-import { ProfileJSON } from "../dto/profile";
+import { ProfileJSON, featureFlagPendingDeletion } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { MediaJSON } from "../dto/media";
 import { StorageService } from "./storage_service";
@@ -111,6 +111,17 @@ export namespace ProfileService {
       schemaKey: "users",
       entryIds: profileIds,
     });
+  }
+
+  export async function getPendingDeletionProfiles(): Promise<ProfileJSON[]> {
+    functions.logger.info(`Getting pending deletion profiles`);
+
+    return DataService.getDocumentWindowRaw({
+      schemaKey: "users",
+      where: [
+        { fieldPath: "accountFlags", op: "array-contains", value: featureFlagPendingDeletion },
+      ],
+    }) as Promise<ProfileJSON[]>;
   }
 
   /**

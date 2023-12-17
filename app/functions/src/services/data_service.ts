@@ -285,6 +285,27 @@ export namespace DataService {
     return entries;
   };
 
+  export const getBatchDocumentsBySchema = async function (options: { schemaKey: string; }): Promise<any> {
+    const flamelinkApp = SystemService.getFlamelinkApp();
+    functions.logger.info(`Getting batch documents for ${options.schemaKey}`);
+
+    const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: "*" });
+    const cachedDocuments = await CacheService.get(cacheKey);
+    if (cachedDocuments) {
+      return cachedDocuments;
+    }
+
+    const documents = await flamelinkApp.content.get({
+      schemaKey: options.schemaKey,
+    });
+
+    if (documents) {
+      await CacheService.setInCache(cacheKey, documents, 60 * 60 * 24);
+    }
+
+    return documents;
+  };
+
   export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
     // const flamelinkApp = SystemService.getFlamelinkApp();
     // return await flamelinkApp.content.getByField(options);
