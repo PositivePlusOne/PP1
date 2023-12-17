@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/formatters/upper_case_input_formatter.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -151,6 +152,8 @@ class ProfileDisplayNameEntryPage extends ConsumerWidget {
               suffixIcon: suffixIcon,
               isEnabled: !state.isBusy,
               textInputType: TextInputType.text,
+              inputformatters: [UpperCaseInputFormatter()],
+              textCapitalization: TextCapitalization.characters,
             ),
           ],
         ),

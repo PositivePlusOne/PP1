@@ -76,12 +76,12 @@ export namespace ProfileEndpoints {
     functions.logger.info("Getting user profile", { structuredData: true });
 
     const uid = request.sender || context.auth?.uid || "";
-    const targeDisplayName = request.data.displayName || "";
-    if (targeDisplayName.length === 0) {
+    const targetDisplayName = (request.data.displayName || "").toUpperCase();
+    if (targetDisplayName.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
     }
 
-    const userProfiles = await ProfileService.getProfilesByDisplayName(targeDisplayName, 1);
+    const userProfiles = await ProfileService.getProfilesByDisplayName(targetDisplayName, 1);
     
     if (!userProfiles) {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
@@ -266,7 +266,7 @@ export namespace ProfileEndpoints {
   export const updateDisplayName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const displayName = request.data.displayName || "";
+    const displayName = (request.data.displayName || "").toUpperCase();
     functions.logger.info("Updating profile display name", {
       uid,
       displayName,
