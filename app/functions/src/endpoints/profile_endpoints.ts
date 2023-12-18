@@ -263,24 +263,15 @@ export namespace ProfileEndpoints {
   export const updateDisplayName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const displayName = (request.data.displayName || "").toUpperCase();
+    const displayName = request.data.displayName || "";
     functions.logger.info("Updating profile display name", {
       uid,
       displayName,
     });
 
-    if (!(typeof displayName === "string") || displayName.length < 3) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
-    }
-
-    const isFirebaseUIDFormat = StringHelpers.isFirebaseUID(displayName);
-    if (isFirebaseUIDFormat) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
-    }
-
-    const isValid = displayName.length > 3 && displayName.length < 15 && StringHelpers.isAlphanumericWithSpecialChars(displayName);
+    const isValid = displayName.length >= 3 && displayName.length <= 15 && StringHelpers.isLowercaseAlphanumericWithSpecialChars(displayName);
     if (!isValid) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name string of at least 3 characters and no more than 15 characters");
     }
 
     const newProfile = await ProfileService.updateDisplayName(uid, displayName);
@@ -293,7 +284,7 @@ export namespace ProfileEndpoints {
       displayName,
     });
 
-    //TODO we might want to send an update email here
+    // TODO we might want to send an update email here
     // await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
