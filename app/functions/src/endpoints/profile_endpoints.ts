@@ -81,13 +81,10 @@ export namespace ProfileEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
     }
 
-    const userProfiles = await ProfileService.getProfilesByDisplayName(targetDisplayName, 1);
-    
-    if (!userProfiles) {
+    const userProfile = await ProfileService.getProfileByDisplayName(targetDisplayName);
+    if (userProfile) {
       throw new functions.https.HttpsError("not-found", "The user profile does not exist");
     }
-    
-    const userProfile = userProfiles[0];
     
     return buildEndpointResponse(context, {
       sender: uid,

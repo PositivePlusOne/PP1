@@ -47,7 +47,7 @@ export namespace FixProfilesAction {
             }
 
             functions.logger.log(`Migrating ${doc.id}...`);
-            const migratedData = DataService.migrateDocument(data);
+            const migratedData = await DataService.migrateDocument(data);
             await doc.ref.set(migratedData);
         }
 

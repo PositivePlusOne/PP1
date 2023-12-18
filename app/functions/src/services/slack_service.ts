@@ -128,7 +128,7 @@ export namespace SlackService {
           }
 
           if (ownerDisplayName) {
-            const ownerProfile = await ProfileService.getProfilesByDisplayName(ownerDisplayName, 1);
+            const ownerProfile = await ProfileService.getProfileByDisplayName(ownerDisplayName);
             if (!ownerProfile) {
                 await postRawToChannel(slackChannel, `Could not find owner profile with display name ${ownerDisplayName}`);
                 return;

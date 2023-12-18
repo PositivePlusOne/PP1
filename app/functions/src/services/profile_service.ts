@@ -10,7 +10,6 @@ import { ProfileJSON, featureFlagPendingDeletion } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { MediaJSON } from "../dto/media";
 import { StorageService } from "./storage_service";
-import { SearchService } from "./search_service";
 
 export namespace ProfileService {
   /**
@@ -185,15 +184,22 @@ export namespace ProfileService {
    * @param {string} displayName The display name of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfilesByDisplayName(displayName: string, resultLength = 1): Promise<ProfileJSON[]> {
-    // Remove the @ from the display name
+  export async function getProfileByDisplayName(displayName: string): Promise<ProfileJSON> {
     displayName = displayName.replace("@", "");
+    displayName = displayName.trim().toLocaleLowerCase();
 
-    return await DataService.getDocumentByField({
+    const profiles = await await DataService.getDocumentsByField({
       schemaKey: "users",
-      field: "displayNameUnique",
+      field: "displayName",
       value: displayName,
-    });
+    }) as ProfileJSON[];
+    
+    functions.logger.info(`Got profiles by display name: ${displayName}`, profiles);
+    if (!profiles || profiles.length === 0) {
+      return {};
+    }
+
+    return profiles[0];
   }
 
   /**
