@@ -151,7 +151,7 @@ export namespace DataService {
     return !!(document._fl_meta_ && (
       (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
       (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) ||
-      (document.displayName && document.displayName !== document.displayName.toLocaleLowerCase())
+      (document.displayName && document.displayName !== (document.displayName?.toLocaleLowerCase() ?? ""))
     ));
   };
 
@@ -178,8 +178,8 @@ export namespace DataService {
 
     // All display names must be made lowercase.
     // If the profile already exists, we need to clear the displayName and let the user update it manually.
-    const expectedDisplayName = migratedDocument.displayName.toLocaleLowerCase();
-    if (migratedDocument.displayName && migratedDocument.displayName !== expectedDisplayName) {
+    const expectedDisplayName = migratedDocument.displayName?.toLocaleLowerCase() ?? "";
+    if (migratedDocument.displayName && expectedDisplayName && migratedDocument.displayName !== expectedDisplayName) {
       functions.logger.info(`Migrating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
       const existingProfile = await ProfileService.getProfileByDisplayName(expectedDisplayName);
       if (existingProfile) {
