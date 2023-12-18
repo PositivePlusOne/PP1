@@ -186,28 +186,14 @@ export namespace ProfileService {
    * @return {Promise<any>} The user profile.
    */
   export async function getProfilesByDisplayName(displayName: string, resultLength = 1): Promise<ProfileJSON[]> {
-    // functions.logger.info(`Getting user profile for user: ${displayName}`);
-
-    // return await DataService.getDocumentByField({
-    //   schemaKey: "users",
-    //   field: "displayName",
-    //   value: displayName,
-    // });
-
     // Remove the @ from the display name
     displayName = displayName.replace("@", "");
 
-    functions.logger.info(`Getting user profile for user: ${displayName}`);
-    const searchClient = SearchService.getAlgoliaClient();
-    const index = SearchService.getIndex(searchClient, "users");
-
-    // Add a facet filter to match the display name excluding case, only if the request is for a single result
-    if (resultLength === 1) {
-      const displayNameFacetFilter = `displayName:${displayName}`;
-      return SearchService.search(index, "", 0, resultLength, [], [displayNameFacetFilter]);
-    }
-
-    return SearchService.search(index, "", 0, resultLength, [], []);
+    return await DataService.getDocumentByField({
+      schemaKey: "users",
+      field: "displayNameUnique",
+      value: displayName,
+    });
   }
 
   /**
@@ -387,7 +373,7 @@ export namespace ProfileService {
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
 
-    const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
+    const displayNameCheck = await firestore.collection("fl_content").where("displayNameUnique", "==", displayName.toLowerCase()).get();
     if (displayNameCheck.size > 0) {
       throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
     }
@@ -397,6 +383,7 @@ export namespace ProfileService {
       entryId: uid,
       data: {
         displayName,
+        displayNameUnique: displayName.toLowerCase(),
       },
     });
   }
