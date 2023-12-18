@@ -150,7 +150,7 @@ export namespace DataService {
     return !!(document._fl_meta_ && (
       (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
       (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) ||
-      (document.displayName && !document.displayNameUnique)
+      (document.displayName && document.displayName !== document.displayName.toLowerCase())
     ));
   };
 
@@ -173,8 +173,8 @@ export namespace DataService {
       }
     }
 
-    if (migratedDocument.displayName && !migratedDocument.displayNameUnique) {
-      migratedDocument.displayNameUnique = migratedDocument.displayName.toLowerCase();
+    if (migratedDocument.displayName && migratedDocument.displayName !== migratedDocument.displayName.toLowerCase()) {
+      migratedDocument.displayName = migratedDocument.displayName.toLowerCase();
     }
 
     return migratedDocument;

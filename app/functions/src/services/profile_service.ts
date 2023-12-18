@@ -373,7 +373,9 @@ export namespace ProfileService {
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
 
-    const displayNameCheck = await firestore.collection("fl_content").where("displayNameUnique", "==", displayName.toLowerCase()).get();
+    displayName = displayName.trim().toLocaleLowerCase();
+
+    const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {
       throw new functions.https.HttpsError("already-exists", `Display name ${displayName} is already taken by another user`);
     }
@@ -383,7 +385,6 @@ export namespace ProfileService {
       entryId: uid,
       data: {
         displayName,
-        displayNameUnique: displayName.toLowerCase(),
       },
     });
   }
