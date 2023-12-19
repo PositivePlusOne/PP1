@@ -182,9 +182,12 @@ export namespace DataService {
     if (migratedDocument.displayName && expectedDisplayName && migratedDocument.displayName !== expectedDisplayName) {
       functions.logger.info(`Migrating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
       const existingProfile = await ProfileService.getProfileByDisplayName(expectedDisplayName);
-      if (existingProfile) {
+      const matchesCase = existingProfile?.displayName === expectedDisplayName;
+      if (existingProfile && matchesCase) {
+        functions.logger.info(`Profile already exists for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}, clearing displayName`);
         migratedDocument.displayName = "";
       } else {
+        functions.logger.info(`Updating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId} to ${expectedDisplayName}`);
         migratedDocument.displayName = expectedDisplayName;
       }
     }
