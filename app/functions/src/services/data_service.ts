@@ -8,6 +8,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
 import { QueryOptions, UpdateOptions } from "./types/query_options";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { ProfileService } from "./profile_service";
 
 export namespace DataService {
 
@@ -150,11 +151,11 @@ export namespace DataService {
     return !!(document._fl_meta_ && (
       (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
       (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) ||
-      (document.displayName && document.displayName !== document.displayName.toLowerCase())
+      (document.displayName && document.displayName !== (document.displayName?.toLocaleLowerCase() ?? ""))
     ));
   };
 
-  export const migrateDocument = (document: any): any => {
+  export const migrateDocument = async (document: any): Promise<any> => {
     const migratedDocument = { ...document };
 
     if (migratedDocument._fl_meta_) {
@@ -164,17 +165,31 @@ export namespace DataService {
           : migratedDocument._fl_meta_.createdDate;
 
         if (!(createdDate instanceof Timestamp)) {
+          functions.logger.info(`Migrating createdDate for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
           migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
         }
       }
 
       if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
+        functions.logger.info(`Migrating lastModifiedDate for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
         migratedDocument._fl_meta_.lastModifiedDate = Timestamp.fromDate(new Date());
       }
     }
 
-    if (migratedDocument.displayName && migratedDocument.displayName !== migratedDocument.displayName.toLowerCase()) {
-      migratedDocument.displayName = migratedDocument.displayName.toLowerCase();
+    // All display names must be made lowercase.
+    // If the profile already exists, we need to clear the displayName and let the user update it manually.
+    const expectedDisplayName = migratedDocument.displayName?.toLocaleLowerCase() ?? "";
+    if (migratedDocument.displayName && expectedDisplayName && migratedDocument.displayName !== expectedDisplayName) {
+      functions.logger.info(`Migrating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
+      const existingProfile = await ProfileService.getProfileByDisplayName(expectedDisplayName);
+      const matchesCase = existingProfile?.displayName === expectedDisplayName;
+      if (existingProfile && matchesCase) {
+        functions.logger.info(`Profile already exists for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}, clearing displayName`);
+        migratedDocument.displayName = "";
+      } else {
+        functions.logger.info(`Updating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId} to ${expectedDisplayName}`);
+        migratedDocument.displayName = expectedDisplayName;
+      }
     }
 
     return migratedDocument;
@@ -196,7 +211,7 @@ export namespace DataService {
 
       // Check if the document needs migration
       if (document && needsMigration(document)) {
-        document = migrateDocument(document);
+        document = await migrateDocument(document);
       }
 
       if (!document) {
@@ -311,7 +326,7 @@ export namespace DataService {
     return documents;
   };
 
-  export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
+  export const getDocumentsByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
     // const flamelinkApp = SystemService.getFlamelinkApp();
     // return await flamelinkApp.content.getByField(options);
     const firestore = adminApp.firestore();
@@ -322,10 +337,10 @@ export namespace DataService {
     ).get();
 
     if (record.docs.length == 0) {
-      throw new Error(`No documents found using getDocumentByField: ${options}`);
+      return [];
     }
+
     return [...record.docs.map((record) => record.data())];
-    // return record.docs[0].data();
   };
 
   /**

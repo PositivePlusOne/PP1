@@ -213,14 +213,8 @@ export namespace ActivitiesService {
           mention,
         });
 
-        const foundProfiles = await ProfileService.getProfilesByDisplayName(mention.foreignKey);
-        if (foundProfiles) {
-          functions.logger.info("Adding foreign key to mention", {
-            mention,
-            foundProfiles,
-          });
-
-          const foundProfile = foundProfiles[0];
+        const foundProfile = await ProfileService.getProfileByDisplayName(mention.foreignKey);
+        if (foundProfile) {
           mention.foreignKey = foundProfile?._fl_meta_?.fl_id ?? "";
         } else {
           functions.logger.error("Could not find profile for mention", {

@@ -39,6 +39,11 @@ export namespace StringHelpers {
     const pattern = /^[a-zA-Z0-9-_']+$/;
     return pattern.test(input);
   }
+
+  export function isLowercaseAlphanumericWithSpecialChars(input: string): boolean {
+    const pattern = /^[a-z0-9-_']+$/;
+    return pattern.test(input);
+  }
   
   export function isValidRealName(input: string): boolean {
     const pattern = /^[a-zA-Z-`‘’’' .À-ÖØ-öø-ÿĀ-ſ-ƀ]+$/;
