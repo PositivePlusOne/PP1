@@ -16,17 +16,17 @@ class Mention with _$Mention {
   const factory Mention({
     @Default(-1) int startIndex,
     @Default(-1) int endIndex,
-    @Default('') String displayName,
+    @Default('') String label,
     @Default('') String foreignKey,
     @Default('') String schema,
   }) = _Mention;
 
   factory Mention.fromJson(Map<String, dynamic> json) => _$MentionFromJson(json);
 
-  static Mention fromForeignKey(String foreignKey, String schema) {
+  static Mention fromDisplayName(String displayName) {
     return Mention(
-      foreignKey: foreignKey.asHandle,
-      schema: schema,
+      label: displayName.asHandle,
+      schema: 'users',
     );
   }
 

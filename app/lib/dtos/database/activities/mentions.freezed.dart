@@ -22,7 +22,7 @@ Mention _$MentionFromJson(Map<String, dynamic> json) {
 mixin _$Mention {
   int get startIndex => throw _privateConstructorUsedError;
   int get endIndex => throw _privateConstructorUsedError;
-  String get displayName => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
   String get foreignKey => throw _privateConstructorUsedError;
   String get schema => throw _privateConstructorUsedError;
 
@@ -39,7 +39,7 @@ abstract class $MentionCopyWith<$Res> {
   $Res call(
       {int startIndex,
       int endIndex,
-      String displayName,
+      String label,
       String foreignKey,
       String schema});
 }
@@ -59,7 +59,7 @@ class _$MentionCopyWithImpl<$Res, $Val extends Mention>
   $Res call({
     Object? startIndex = null,
     Object? endIndex = null,
-    Object? displayName = null,
+    Object? label = null,
     Object? foreignKey = null,
     Object? schema = null,
   }) {
@@ -72,9 +72,9 @@ class _$MentionCopyWithImpl<$Res, $Val extends Mention>
           ? _value.endIndex
           : endIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      displayName: null == displayName
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
               as String,
       foreignKey: null == foreignKey
           ? _value.foreignKey
@@ -98,7 +98,7 @@ abstract class _$$MentionImplCopyWith<$Res> implements $MentionCopyWith<$Res> {
   $Res call(
       {int startIndex,
       int endIndex,
-      String displayName,
+      String label,
       String foreignKey,
       String schema});
 }
@@ -116,7 +116,7 @@ class __$$MentionImplCopyWithImpl<$Res>
   $Res call({
     Object? startIndex = null,
     Object? endIndex = null,
-    Object? displayName = null,
+    Object? label = null,
     Object? foreignKey = null,
     Object? schema = null,
   }) {
@@ -129,9 +129,9 @@ class __$$MentionImplCopyWithImpl<$Res>
           ? _value.endIndex
           : endIndex // ignore: cast_nullable_to_non_nullable
               as int,
-      displayName: null == displayName
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
               as String,
       foreignKey: null == foreignKey
           ? _value.foreignKey
@@ -151,7 +151,7 @@ class _$MentionImpl implements _Mention {
   const _$MentionImpl(
       {this.startIndex = -1,
       this.endIndex = -1,
-      this.displayName = '',
+      this.label = '',
       this.foreignKey = '',
       this.schema = ''});
 
@@ -166,7 +166,7 @@ class _$MentionImpl implements _Mention {
   final int endIndex;
   @override
   @JsonKey()
-  final String displayName;
+  final String label;
   @override
   @JsonKey()
   final String foreignKey;
@@ -176,7 +176,7 @@ class _$MentionImpl implements _Mention {
 
   @override
   String toString() {
-    return 'Mention(startIndex: $startIndex, endIndex: $endIndex, displayName: $displayName, foreignKey: $foreignKey, schema: $schema)';
+    return 'Mention(startIndex: $startIndex, endIndex: $endIndex, label: $label, foreignKey: $foreignKey, schema: $schema)';
   }
 
   @override
@@ -188,8 +188,7 @@ class _$MentionImpl implements _Mention {
                 other.startIndex == startIndex) &&
             (identical(other.endIndex, endIndex) ||
                 other.endIndex == endIndex) &&
-            (identical(other.displayName, displayName) ||
-                other.displayName == displayName) &&
+            (identical(other.label, label) || other.label == label) &&
             (identical(other.foreignKey, foreignKey) ||
                 other.foreignKey == foreignKey) &&
             (identical(other.schema, schema) || other.schema == schema));
@@ -197,8 +196,8 @@ class _$MentionImpl implements _Mention {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, startIndex, endIndex, displayName, foreignKey, schema);
+  int get hashCode =>
+      Object.hash(runtimeType, startIndex, endIndex, label, foreignKey, schema);
 
   @JsonKey(ignore: true)
   @override
@@ -218,7 +217,7 @@ abstract class _Mention implements Mention {
   const factory _Mention(
       {final int startIndex,
       final int endIndex,
-      final String displayName,
+      final String label,
       final String foreignKey,
       final String schema}) = _$MentionImpl;
 
@@ -229,7 +228,7 @@ abstract class _Mention implements Mention {
   @override
   int get endIndex;
   @override
-  String get displayName;
+  String get label;
   @override
   String get foreignKey;
   @override

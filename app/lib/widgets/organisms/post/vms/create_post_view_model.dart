@@ -939,7 +939,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           allowSharing: state.allowSharing,
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
-          mentions: taggedUsers.map((e) => Mention.fromForeignKey(e, 'users')).toList(),
+          mentions: taggedUsers.map((e) => Mention.fromDisplayName(e)).toList(),
         );
       } else {
         activityData = ActivityData(
@@ -953,7 +953,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
           reposterActivityID: state.reposterActivityID,
-          mentions: taggedUsers.map((e) => Mention.fromForeignKey(e, 'users')).toList(),
+          mentions: taggedUsers.map((e) => Mention.fromDisplayName(e)).toList(),
         );
       }
 

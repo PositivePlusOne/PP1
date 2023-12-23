@@ -148,6 +148,8 @@ export namespace PostEndpoints {
     const promotionKey = request.data.promotionKey || "" as string;
     const mentions = (request.data.mentions || []) as MentionJSON[] || [] as MentionJSON[];
 
+    functions.logger.info(`Posting activity`, { uid, content, media, userTags, mentions });
+
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type || TagsService.PostTypeTag.post;
     const style = request.data.style;

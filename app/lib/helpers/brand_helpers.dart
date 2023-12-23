@@ -35,7 +35,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   final Map<String, String> mentionsIdMap = {};
 
   for (final Mention mention in mentions) {
-    mentionsIdMap[mention.displayName] = mention.foreignKey;
+    mentionsIdMap[mention.label] = mention.foreignKey;
   }
 
   //? bold all user handles

@@ -197,37 +197,19 @@ export namespace ActivitiesService {
     }
 
     // Loop through each, and if they do not have a foreign key, add one based on the label
-    const invalidProfiles = [] as string[];
     for (const mention of newMentions) {
-      if (!mention.foreignKey) {
-        functions.logger.error("Mention does not have a foreign key", {
-          mention,
-        });
-
-        continue;
-      }
-      
-      const startsWithHandle = mention.foreignKey?.startsWith("@") ?? false;
-      if (startsWithHandle) {
-        functions.logger.info("Mention requires a lookup", {
-          mention,
-        });
-
-        const foundProfile = await ProfileService.getProfileByDisplayName(mention.foreignKey);
+      const isDisplayNameMention = mention.label?.startsWith("@") ?? false;
+      const isUsersSchema = mention.schema === "users";
+      if (!mention.foreignKey && isDisplayNameMention && isUsersSchema) {
+        const displayName = mention.label?.substring(1) ?? "";
+        const foundProfile = await ProfileService.getProfileByDisplayName(displayName);
         if (foundProfile) {
           mention.foreignKey = foundProfile?._fl_meta_?.fl_id ?? "";
-        } else {
-          functions.logger.error("Could not find profile for mention", {
-            mention,
-          });
-
-          invalidProfiles.push(mention.foreignKey);
         }
       }
-    }
 
-    // Remove the invalid profiles
-    newMentions = newMentions.filter((mention) => !invalidProfiles.includes(mention.foreignKey ?? ""));
+      // TODO - Handle tags and other things
+    }
 
     // Loop through each, and add a start and end index from the content if they do not have one already
     // Check that the content is not empty and that the label is inside the content
@@ -245,7 +227,17 @@ export namespace ActivitiesService {
 
     // Perform relationship checks and remove any mentions that are not valid
     const tempMentions = [...newMentions];
+    const isEveryoneFlag = visibilityFlag === 'public';
     newMentions = [];
+
+    functions.logger.info("Sanitizing mentions", {
+      profileId,
+      profileDisplayName,
+      visibilityFlag,
+      mentions,
+      tempMentions,
+      isEveryoneFlag,
+    });
 
     for (const mention of tempMentions) {
       if (!mention.foreignKey) {
@@ -256,11 +248,15 @@ export namespace ActivitiesService {
 
       // Remove the mention as we have no relationship to the user
       if (!relationship) {
-        functions.logger.info("Mentioned user relationship does not exist", {
-          mention,
-          relationship,
-        });
-
+        if (isEveryoneFlag) {
+          newMentions.push(mention);
+        } else {
+          functions.logger.error("Missing everyone flag and no relationship", {
+            mention,
+            relationship,
+          });
+        }
+        
         continue;
       }
 

@@ -34,7 +34,9 @@ import '../helpers/profile_helpers.dart';
 import '../providers/profiles/profile_controller.dart';
 
 extension ProfileStringExtensions on String {
-  Uri buildProfileStringLink({Map<String, String> knownIdMap = const {}}) => providerContainer.read(universalLinksControllerProvider.notifier).buildProfileRouteLink(removeHandles(), knownIdMap: knownIdMap);
+  Uri buildProfileStringLink({Map<String, String> knownIdMap = const {}}) {
+    return providerContainer.read(universalLinksControllerProvider.notifier).buildProfileRouteLink(this, knownIdMap: knownIdMap);
+  }
 }
 
 extension ProfileExtensions on Profile {

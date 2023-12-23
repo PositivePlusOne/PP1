@@ -144,7 +144,7 @@ class ProfileGenderSelectPage extends ConsumerWidget {
 }
 
 class _Search extends ConsumerStatefulWidget {
-  const _Search({Key? key, required this.scrollController, required this.selectionListKey}) : super(key: key);
+  const _Search({required this.scrollController, required this.selectionListKey});
 
   final ScrollController scrollController;
   final GlobalKey selectionListKey;
@@ -208,7 +208,7 @@ class _SearchState extends ConsumerState<_Search> {
 }
 
 class _SelectionList extends ConsumerWidget {
-  const _SelectionList({Key? key}) : super(key: key);
+  const _SelectionList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

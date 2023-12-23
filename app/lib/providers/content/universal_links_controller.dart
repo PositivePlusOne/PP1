@@ -15,12 +15,9 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/profile_extensions.dart';
-import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/events/deep_link_handling_event.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/services/third_party.dart';
@@ -65,7 +62,7 @@ enum HandleLinkResult {
 }
 
 typedef UniversalPostRouteDetails = ({String? activityId, String? reactionId, String? origin, Uri? source});
-typedef UniversalProfileRouteDetails = ({String? displayName, Uri? source});
+typedef UniversalProfileRouteDetails = ({String? id, Uri? source});
 typedef UniversalTagRouteDetails = ({String? tagId});
 
 @Riverpod(keepAlive: true)
@@ -161,15 +158,15 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
 
   @override
   Future<UniversalProfileRouteDetails?> getProfileRouteLinkDetails(Uri? uri) async {
-    final String displayName = uri?.queryParameters['displayName'] ?? '';
+    final String id = uri?.queryParameters['id'] ?? '';
     final String scheme = uri?.scheme ?? '';
 
     bool canBuildRouteLink = scheme == state.expectedUniversalLinkScheme;
-    if (displayName.isEmpty) {
+    if (id.isEmpty) {
       canBuildRouteLink = false;
     }
 
-    return canBuildRouteLink ? (displayName: displayName, source: uri) : null;
+    return canBuildRouteLink ? (id: id, source: uri) : null;
   }
 
   @override
@@ -292,7 +289,6 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
   Future<HandleLinkResult> handleProfileRouteLink(UniversalProfileRouteDetails routeDetails, {bool replaceRouteOnNavigate = false, Map<String, String> knownIdMap = const {}}) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
-    final ProfileControllerState profileControllerState = ref.read(profileControllerProvider);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
 
@@ -302,7 +298,7 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       return HandleLinkResult.notHandled;
     }
 
-    final bool isProfile = routeDetails.displayName?.isNotEmpty ?? false;
+    final bool isProfile = routeDetails.id?.isNotEmpty ?? false;
 
     PageRouteInfo<dynamic>? route;
 
@@ -311,17 +307,10 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
       return HandleLinkResult.notHandled;
     }
 
-    final String displayName = routeDetails.displayName!.removeHandles();
+    final String id = routeDetails.id!;
 
-    Profile? profile;
-
-    if (profileControllerState.displayNameToId.containsKey(displayName)) {
-      final String id = profileControllerState.displayNameToId[displayName] ?? '';
-      final CacheController cacheController = ref.read(cacheControllerProvider);
-      profile = cacheController.get(id);
-    }
-
-    profile ??= await profileApiService.getProfileByDisplayName(displayName: displayName);
+    final Map<String, dynamic> profileData = await profileApiService.getProfile(uid: id);
+    final Profile profile = Profile.fromJson(profileData);
 
     // Check if already on the route
     bool isOnRoute = appRouter.current.name == ProfileRoute.name;
@@ -360,8 +349,13 @@ class UniversalLinksController extends _$UniversalLinksController implements IUn
     const String host = 'positiveplusone.com';
     const String path = '/profile';
 
+    final String id = knownIdMap[displayName] ?? '';
+    if (id.isEmpty) {
+      return Uri(scheme: scheme, host: host, path: path);
+    }
+
     final Map<String, String> query = <String, String>{
-      'displayName': displayName,
+      'id': id,
     };
 
     final String encodedQuery = query.entries.map((e) => '${e.key}=${Uri.encodeQueryComponent(e.value)}').join('&');

@@ -109,7 +109,13 @@ extension StringExt on String {
 
   String boldHandlesAndLink({Map<String, String> knownIdMap = const {}}) {
     RegExp exp = RegExp(r"\@\w+");
-    return replaceAllMapped(exp, (match) => '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})');
+    return replaceAllMapped(exp, (match) {
+      if (!knownIdMap.containsKey(match.group(0))) {
+        return match.group(0) ?? '';
+      }
+
+      return '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})';
+    });
   }
 }
 
