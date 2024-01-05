@@ -10,7 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
