@@ -11,6 +11,7 @@ import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
+import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -401,14 +402,6 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       onTap: (_) => textFocusNode.requestFocus(),
       child: Container(
         constraints: const BoxConstraints(minHeight: kCreatePostHeight),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: widget.fillColor ?? colours.white,
-          border: Border.all(
-            color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
-            width: widget.borderWidth,
-          ),
-        ),
         padding: EdgeInsets.only(
           top: kPaddingExtraSmall - widget.borderWidth,
           bottom: kPaddingExtraSmall - widget.borderWidth,
@@ -492,16 +485,30 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       ),
     );
 
-    return Column(
-      children: <Widget>[
-        child,
-        if (canDisplayMentionSearchIndicator) ...<Widget>[
-          buildMentionSearchIndicator(),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        color: widget.fillColor ?? colours.white,
+        border: Border.all(
+          color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
+          width: widget.borderWidth,
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          child,
+          PositiveExpandableWidget(
+            isExpanded: canDisplayMentionSearchIndicator,
+            collapsedChild: const SizedBox(),
+            expandedChild: buildMentionSearchIndicator(),
+          ),
+          PositiveExpandableWidget(
+            isExpanded: canDisplayMentionSearchResults,
+            collapsedChild: const SizedBox(),
+            expandedChild: buildMentionSearchResults(),
+          ),
         ],
-        if (canDisplayMentionSearchResults) ...<Widget>[
-          buildMentionSearchResults(),
-        ],
-      ],
+      ),
     );
   }
 
@@ -537,6 +544,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
           targetProfile: targetProfile,
           relationship: relationship,
           type: PositiveProfileListTileType.selectable,
+          isDense: true,
           onSelected: () => appendMentionToCursorPosition(targetProfile),
         ),
       );

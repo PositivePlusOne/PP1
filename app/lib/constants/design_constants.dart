@@ -91,6 +91,7 @@ const double kIconIndicator = 10.0;
 const double kIconExtraSmall = 16.0;
 const double kIconSmall = 20.0;
 const double kIconMedium = 24.0;
+const double kIconMediumLarge = 30.0;
 const double kIconLarge = 40.0;
 const double kIconHuge = 50.0;
 const double kIconMassive = 60.0;

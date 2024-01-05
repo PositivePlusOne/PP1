@@ -39,6 +39,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     required this.targetProfile,
     required this.relationship,
     this.isEnabled = true,
+    this.isDense = false,
     this.isSelected = false,
     this.type = PositiveProfileListTileType.view,
     this.analyticProperties = const <String, Object?>{},
@@ -52,6 +53,7 @@ class PositiveProfileListTile extends ConsumerWidget {
   final Relationship? relationship;
 
   final bool isEnabled;
+  final bool isDense;
 
   final PositiveProfileListTileType type;
   final Map<String, Object?> analyticProperties;
@@ -62,6 +64,7 @@ class PositiveProfileListTile extends ConsumerWidget {
   final String Function(Profile? profile)? profileDescriptionBuilder;
 
   static const double kProfileTileHeight = 72.0;
+  static const double kProfileTileDenseHeight = 52.0;
   static const double kProfileTileBorderRadius = 40.0;
 
   Future<void> onOptionsTapped(BuildContext context) async {
@@ -112,9 +115,9 @@ class PositiveProfileListTile extends ConsumerWidget {
       onTap: (context) => onListTileSelected(context, analyticProperties),
       isEnabled: isEnabled,
       child: Container(
-        constraints: const BoxConstraints(
-          minHeight: kProfileTileHeight,
-          maxHeight: kProfileTileHeight,
+        constraints: BoxConstraints(
+          minHeight: isDense ? kProfileTileDenseHeight : kProfileTileHeight,
+          maxHeight: isDense ? kProfileTileDenseHeight : kProfileTileHeight,
         ),
         decoration: BoxDecoration(
           color: colors.white,
@@ -123,7 +126,10 @@ class PositiveProfileListTile extends ConsumerWidget {
         padding: const EdgeInsets.all(kPaddingSmall),
         child: Row(
           children: <Widget>[
-            PositiveProfileCircularIndicator(profile: targetProfile, size: kIconHuge),
+            PositiveProfileCircularIndicator(
+              profile: targetProfile,
+              size: isDense ? kIconMediumLarge : kIconHuge,
+            ),
             const SizedBox(width: kPaddingSmall),
             Expanded(
               child: Column(
@@ -147,8 +153,10 @@ class PositiveProfileListTile extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(width: kPaddingSmall),
-            buildAction(context),
+            if (!isDense) ...<Widget>[
+              const SizedBox(width: kPaddingSmall),
+              buildAction(context),
+            ],
           ],
         ),
       ),
