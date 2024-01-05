@@ -7,6 +7,7 @@ import 'package:markdown_widget/widget/all.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -26,9 +27,21 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   List<Tag> tags = const [],
   EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
+  bool boldHandles = false,
+  List<Mention> mentions = const [],
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
+  final Map<String, String> mentionsIdMap = {};
+
+  for (final Mention mention in mentions) {
+    mentionsIdMap[mention.label] = mention.foreignKey;
+  }
+
+  //? bold all user handles
+  if (boldHandles) {
+    markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
+  }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
   final StringBuffer tagBuffer = StringBuffer();
@@ -38,7 +51,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
       continue;
     }
 
-    tagBuffer.write('[#${tag.key}](${tag.feedLink}) ');
+    tagBuffer.write('[#${tag.key}](${tag.buildTagLink()}) ');
   }
 
   // Add the tags to the start of the markdown as bolded text

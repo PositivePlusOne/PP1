@@ -20,11 +20,13 @@ import 'package:video_editor/video_editor.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
@@ -897,6 +899,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
+    final Iterable<String> taggedUsers = captionController.text.getHandles(includeSymbol: false);
+
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
       state = state.copyWith(isBusy: true, isUploadingMedia: state.galleryEntries.isNotEmpty, isCreatingPost: true);
@@ -935,6 +939,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           allowSharing: state.allowSharing,
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
+          mentions: taggedUsers.map((e) => Mention.fromDisplayName(e)).toList(),
         );
       } else {
         activityData = ActivityData(
@@ -948,6 +953,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           commentPermissionMode: state.allowComments,
           visibilityMode: state.visibleTo,
           reposterActivityID: state.reposterActivityID,
+          mentions: taggedUsers.map((e) => Mention.fromDisplayName(e)).toList(),
         );
       }
 

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -30,6 +29,7 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
@@ -793,7 +793,6 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
       middleContentBuilder: (state) => cameraOverlay(state),
       bottomActionsBuilder: (state) => widget.cameraNavigation?.call(state) ?? const SizedBox.shrink(),
       previewDecoratorBuilder: buildPreviewDecoratorWidgets,
-      filter: AwesomeFilter.None,
       previewFit: CameraPreviewFit.contain,
       theme: AwesomeTheme(bottomActionsBackgroundColor: colours.transparent),
       onImageForAnalysis: widget.useFaceDetection ? onAnalyzeImage : null,
@@ -910,10 +909,11 @@ class PositiveCameraState extends ConsumerState<PositiveCamera> with LifecycleMi
     ];
   }
 
-  Widget buildPreviewDecoratorWidgets(CameraState state, PreviewSize previewSize, Rect previewRect) {
+  Widget buildPreviewDecoratorWidgets(CameraState state, Preview preview) {
     final List<Widget> children = <Widget>[];
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
+    final Size previewSize = preview.previewSize;
 
     // Add a shade to the top and bottom of the screen, leaving a square in the middle
     final Size screenSize = MediaQuery.of(context).size;

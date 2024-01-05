@@ -404,7 +404,7 @@ class _$NotificationPayloadImpl implements _NotificationPayload {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationPayloadImpl &&
@@ -630,7 +630,7 @@ class _$NotificationPriorityLowImpl implements _NotificationPriorityLow {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationPriorityLowImpl);
@@ -744,7 +744,7 @@ class _$NotificationPriorityDefaultImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationPriorityDefaultImpl);
@@ -858,7 +858,7 @@ class _$NotificationPriorityHighImpl implements _NotificationPriorityHigh {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NotificationPriorityHighImpl);

@@ -146,7 +146,7 @@ export namespace RelationshipHelpers {
     return true;
   }
 
-  export function hasBlockedRelationship(uid: string, relationship: any) {
+  export function hasBlockedRelationship(uid: string, relationship: any): boolean {
     if (!relationship) {
       return false;
     }

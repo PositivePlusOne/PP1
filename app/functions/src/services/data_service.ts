@@ -149,27 +149,32 @@ export namespace DataService {
   export const needsMigration = (document: any): boolean => {
     return !!(document._fl_meta_ && (
       (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
-      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp))
+      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) ||
+      (document._fl_meta_.schema === "users" && document.displayName && document.displayName !== (document.displayName?.toLocaleLowerCase() ?? ""))
     ));
   };
 
-  export const migrateDocument = (document: any): any => {
+  export const migrateDocument = async (document: any): Promise<any> => {
     const migratedDocument = { ...document };
 
+    // Migrate timestamps to created and modified date
     if (migratedDocument._fl_meta_) {
       if (migratedDocument._fl_meta_.createdDate && !(migratedDocument._fl_meta_.createdDate instanceof Timestamp)) {
-        const createdDate = typeof migratedDocument._fl_meta_.createdDate === 'string'
-          ? new Date(migratedDocument._fl_meta_.createdDate)
-          : migratedDocument._fl_meta_.createdDate;
-
-          if (!(createdDate instanceof Timestamp)) {
-            migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
-          }
+        migratedDocument._fl_meta_.createdDate = Timestamp.fromDate(new Date());
       }
 
       if (migratedDocument._fl_meta_.lastModifiedDate && !(migratedDocument._fl_meta_.lastModifiedDate instanceof Timestamp)) {
+        functions.logger.info(`Migrating lastModifiedDate for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
         migratedDocument._fl_meta_.lastModifiedDate = Timestamp.fromDate(new Date());
       }
+    }
+
+    // All display names must be made lowercase.
+    // If the profile already exists, we need to clear the displayName and let the user update it manually.
+    const expectedDisplayName = migratedDocument.displayName?.toLocaleLowerCase() ?? "";
+    if (migratedDocument?._fl_meta_?.schema === "users" && migratedDocument.displayName && expectedDisplayName && migratedDocument.displayName !== expectedDisplayName) {
+      functions.logger.info(`Updating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId} to ${expectedDisplayName}`);
+      migratedDocument.displayName = expectedDisplayName;
     }
 
     return migratedDocument;
@@ -191,7 +196,7 @@ export namespace DataService {
 
       // Check if the document needs migration
       if (document && needsMigration(document)) {
-        document = migrateDocument(document);
+        document = await migrateDocument(document);
       }
 
       if (!document) {
@@ -285,9 +290,42 @@ export namespace DataService {
     return entries;
   };
 
-  export const getDocumentByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
+  export const getBatchDocumentsBySchema = async function (options: { schemaKey: string; }): Promise<any> {
     const flamelinkApp = SystemService.getFlamelinkApp();
-    return await flamelinkApp.content.getByField(options);
+    functions.logger.info(`Getting batch documents for ${options.schemaKey}`);
+
+    const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: "*" });
+    const cachedDocuments = await CacheService.get(cacheKey);
+    if (cachedDocuments) {
+      return cachedDocuments;
+    }
+
+    const documents = await flamelinkApp.content.get({
+      schemaKey: options.schemaKey,
+    });
+
+    if (documents) {
+      await CacheService.setInCache(cacheKey, documents, 60 * 60 * 24);
+    }
+
+    return documents;
+  };
+
+  export const getDocumentsByField = async function (options: { schemaKey: string; field: string; value: string }): Promise<any> {
+    // const flamelinkApp = SystemService.getFlamelinkApp();
+    // return await flamelinkApp.content.getByField(options);
+    const firestore = adminApp.firestore();
+    const record = await firestore.collection('fl_content').where(
+      options.field,
+      '==',
+      options.value,
+    ).get();
+
+    if (record.docs.length == 0) {
+      return [];
+    }
+
+    return [...record.docs.map((record) => record.data())];
   };
 
   /**

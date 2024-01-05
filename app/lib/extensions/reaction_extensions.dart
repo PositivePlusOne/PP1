@@ -118,6 +118,7 @@ extension ReactionExt on Reaction {
       await activityController.deleteComment(
         comment: this,
         currentProfile: currentProfile,
+        activityOrigin: reactionFeedState.activityOrigin,
         feedState: reactionFeedState,
       );
     } catch (e) {

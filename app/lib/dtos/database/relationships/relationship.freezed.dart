@@ -314,7 +314,7 @@ class _$RelationshipImpl implements _Relationship {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RelationshipImpl &&
@@ -499,7 +499,7 @@ class _$RelationshipFlagOrganisationManagerImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RelationshipFlagOrganisationManagerImpl);

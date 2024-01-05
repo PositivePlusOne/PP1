@@ -20,6 +20,7 @@ import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -132,6 +133,7 @@ class SearchPage extends ConsumerWidget {
                       targetProfile: targetProfile,
                       senderProfile: currentProfile,
                       relationship: relationship,
+                      analyticProperties: generatePropertiesForSearchSource(searchQuery),
                     ),
                   );
                 },

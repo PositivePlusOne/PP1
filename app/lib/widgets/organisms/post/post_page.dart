@@ -75,10 +75,11 @@ class PostPage extends HookConsumerWidget {
     final bool isSignedOut = currentProfile == null;
 
     final Activity? activity = cacheController.get(activityId);
+    final String activityOrigin = TargetFeed.toOrigin(feed);
 
-    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
+    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId, activityOrigin: activityOrigin);
     PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
-    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId, currentProfileId);
+    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId, currentProfileId, activityOrigin);
 
     final Promotion? promotion = cacheController.get(promotionId);
 

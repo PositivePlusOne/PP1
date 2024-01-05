@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:typed_data';
 
 // Flutter imports:
@@ -22,6 +23,8 @@ import 'package:app/dtos/database/common/media.dart' as pp1_media;
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/resources/resources.dart';
@@ -34,12 +37,14 @@ class PositiveVideoPlayer extends StatefulHookConsumerWidget {
   const PositiveVideoPlayer({
     required this.media,
     required this.visibilityDetectorKey,
+    this.analyticsProperties = const {},
     this.borderRadius,
     super.key,
   });
 
   final pp1_media.Media media;
   final Key visibilityDetectorKey;
+  final Map<String, Object?> analyticsProperties;
 
   final BorderRadius? borderRadius;
 
@@ -55,6 +60,19 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
   VideoController? videoController;
   bool isLoadingVideoPlayer = false;
   bool isMuted = false;
+
+  bool hasTrackedEngagement = false;
+  StreamSubscription<Duration>? durationSubscription;
+  StreamSubscription<bool>? completionSubscription;
+
+  // There is "some" science behind this.
+  // @see: https://www.techsmith.com/blog/measure-video-engagement/
+  // The nose and the tail are usually the first and last 2% of the video.
+  // However this is could be short given the video is short.
+  // So we have a static value of 15 seconds.
+  // If the video is longer than 5 seconds, we use the 2% rule.
+  // If the video is shorter than 5 seconds, we check for completion.
+  static const Duration kEngagementMaximumDuration = Duration(seconds: 5);
 
   @override
   void initState() {
@@ -139,6 +157,8 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
 
   Future<void> handleTrackRequest() async {
     final Logger logger = providerContainer.read(loggerProvider);
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+
     try {
       isLoadingVideoPlayer = true;
       url = await getDownloadUrl();
@@ -152,6 +172,12 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
         ),
       );
 
+      await durationSubscription?.cancel();
+      durationSubscription = player?.stream.duration.listen(trackDurationAnalytics);
+
+      await completionSubscription?.cancel();
+      player?.stream.completed.listen(onCompletionEvent);
+
       final Media media = Media(url!, httpHeaders: {
         'Accept': 'video/mp4',
         'Accept-Encoding': 'gzip, deflate, br',
@@ -159,9 +185,13 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
         'Connection': 'keep-alive',
       });
 
-      if (player?.platform?.isVideoControllerAttached == true) {
-        await player?.open(media, play: true);
+      if (player?.platform?.isVideoControllerAttached != true) {
+        logger.w('Video player is not attached to the platform');
+        return;
       }
+
+      await player?.open(media, play: true);
+      analyticsController.trackEvent(AnalyticEvents.videoViewed, properties: generateMergedAnalyticProperties());
     } catch (ex) {
       logger.e('Failed to load video player for ${widget.media.name}');
       await resetPlayer();
@@ -203,15 +233,81 @@ class _PositiveVideoPlayerState extends ConsumerState<PositiveVideoPlayer> {
       return;
     }
 
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+
     if (isMuted) {
       await player!.setVolume(100.0);
-    } else {
-      await player!.setVolume(0.0);
+      analyticsController.trackEvent(AnalyticEvents.videoUnmuted, properties: widget.analyticsProperties);
+      setStateIfMounted(callback: () => isMuted = false);
+      return;
     }
 
-    setState(() {
-      isMuted = !isMuted;
-    });
+    await player!.setVolume(0.0);
+    analyticsController.trackEvent(AnalyticEvents.videoMuted, properties: widget.analyticsProperties);
+    setStateIfMounted(callback: () => isMuted = true);
+  }
+
+  Map<String, Object?> generateMergedAnalyticProperties() {
+    final Map<String, Object?> videoProperties = {
+      'video_name': widget.media.name,
+      'video_url': widget.media.url,
+      'video_bucket_path': widget.media.bucketPath,
+      'video_type': widget.media.type.toAnalyticsName,
+      'video_priority': widget.media.priority,
+      'video_is_private': widget.media.isPrivate,
+      'video_is_sensitive': widget.media.isSensitive,
+    };
+
+    return {...widget.analyticsProperties, ...videoProperties};
+  }
+
+  Duration getExpectedEngagementDuration() {
+    final Duration totalDuration = videoController?.player.state.duration ?? Duration.zero;
+    if (totalDuration == Duration.zero) {
+      return Duration.zero;
+    }
+
+    final Duration watchedDuration = videoController?.player.state.position ?? Duration.zero;
+    if (watchedDuration == Duration.zero) {
+      return Duration.zero;
+    }
+
+    // If the video is less than 5 seconds, we use 98% of the video.
+    if (totalDuration < kEngagementMaximumDuration) {
+      return totalDuration * 0.98;
+    }
+
+    // If the video is longer than 5 seconds, we use 5 seconds.
+    return kEngagementMaximumDuration;
+  }
+
+  void trackDurationAnalytics(Duration durationElapsed) {
+    if (hasTrackedEngagement) {
+      return;
+    }
+
+    final Duration expectedEngagementDuration = getExpectedEngagementDuration();
+    if (expectedEngagementDuration == Duration.zero) {
+      return;
+    }
+
+    final Duration videoDuration = videoController?.player.state.duration ?? Duration.zero;
+    if (videoDuration == Duration.zero) {
+      return;
+    }
+
+    if (durationElapsed < expectedEngagementDuration) {
+      return;
+    }
+
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    analyticsController.trackEvent(AnalyticEvents.videoViewedWithEngagement, properties: generateMergedAnalyticProperties());
+    hasTrackedEngagement = true;
+  }
+
+  void onCompletionEvent(bool isCompleted) {
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    analyticsController.trackEvent(AnalyticEvents.videoViewedFully, properties: generateMergedAnalyticProperties());
   }
 
   @override

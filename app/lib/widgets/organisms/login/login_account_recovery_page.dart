@@ -13,7 +13,6 @@ import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_back_button.dart';
-import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';

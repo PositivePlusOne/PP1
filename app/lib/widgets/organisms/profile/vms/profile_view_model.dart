@@ -2,13 +2,13 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';

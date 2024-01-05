@@ -16,16 +16,18 @@ class PositiveReactionsState with PositivePaginationControllerState {
     required this.profileId,
     required this.pagingController,
     required this.activityId,
+    required this.activityOrigin,
     this.currentPaginationKey = '',
   });
 
-  static final PositiveReactionsState emptyState = PositiveReactionsState.createNewFeedState('', '');
+  static final PositiveReactionsState emptyState = PositiveReactionsState.createNewFeedState('', '', '');
 
   @override
   final PagingController<String, Reaction> pagingController;
 
   final String profileId;
   final String activityId;
+  final String activityOrigin;
 
   String currentPaginationKey;
 
@@ -36,6 +38,7 @@ class PositiveReactionsState with PositivePaginationControllerState {
   String buildCacheKey() {
     return buildReactionsCacheKey(
       activityId: activityId,
+      activityOrigin: activityOrigin,
       profileId: profileId,
     );
   }
@@ -63,10 +66,11 @@ class PositiveReactionsState with PositivePaginationControllerState {
     cacheController.add(key: cacheKey, value: this);
   }
 
-  static PositiveReactionsState createNewFeedState(String activityId, String profileId) {
+  static PositiveReactionsState createNewFeedState(String activityId, String activityOrigin, String profileId) {
     return PositiveReactionsState(
       profileId: profileId,
       activityId: activityId,
+      activityOrigin: activityOrigin,
       pagingController: PagingController<String, Reaction>(
         firstPageKey: '',
       ),
@@ -75,9 +79,10 @@ class PositiveReactionsState with PositivePaginationControllerState {
 
   static String buildReactionsCacheKey({
     required String activityId,
+    required String activityOrigin,
     required String profileId,
   }) {
-    return 'feed:paging:reactions:$activityId:$profileId';
+    return 'feed:paging:reactions:$activityId:$activityOrigin:$profileId';
   }
 
   void updateReactionStatistics(ReactionStatistics statistics) {

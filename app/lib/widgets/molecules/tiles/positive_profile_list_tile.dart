@@ -41,6 +41,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     this.isEnabled = true,
     this.isSelected = false,
     this.type = PositiveProfileListTileType.view,
+    this.analyticProperties = const <String, Object?>{},
     this.onSelected,
     this.profileDescriptionBuilder,
     super.key,
@@ -53,6 +54,7 @@ class PositiveProfileListTile extends ConsumerWidget {
   final bool isEnabled;
 
   final PositiveProfileListTileType type;
+  final Map<String, Object?> analyticProperties;
 
   final bool isSelected;
   final VoidCallback? onSelected;
@@ -83,14 +85,14 @@ class PositiveProfileListTile extends ConsumerWidget {
     );
   }
 
-  Future<void> onListTileSelected(BuildContext context) async {
+  Future<void> onListTileSelected(BuildContext context, Map<String, Object?> analyticProperties) async {
     if (targetProfile == null) {
       return;
     }
 
     if (type == PositiveProfileListTileType.view) {
       final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-      await profileController.viewProfile(targetProfile!);
+      await profileController.viewProfile(targetProfile!, analyticProperties);
       return;
     }
 
@@ -107,7 +109,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     final String profileDescription = profileDescriptionBuilder?.call(targetProfile!) ?? '';
 
     return PositiveTapBehaviour(
-      onTap: onListTileSelected,
+      onTap: (context) => onListTileSelected(context, analyticProperties),
       isEnabled: isEnabled,
       child: Container(
         constraints: const BoxConstraints(

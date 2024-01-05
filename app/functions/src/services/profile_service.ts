@@ -6,7 +6,7 @@ import { DataService } from "./data_service";
 
 import { SystemService } from "./system_service";
 import { Keys } from "../constants/keys";
-import { ProfileJSON } from "../dto/profile";
+import { ProfileJSON, featureFlagPendingDeletion } from "../dto/profile";
 import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { MediaJSON } from "../dto/media";
 import { StorageService } from "./storage_service";
@@ -112,6 +112,17 @@ export namespace ProfileService {
     });
   }
 
+  export async function getPendingDeletionProfiles(): Promise<ProfileJSON[]> {
+    functions.logger.info(`Getting pending deletion profiles`);
+
+    return DataService.getDocumentWindowRaw({
+      schemaKey: "users",
+      where: [
+        { fieldPath: "accountFlags", op: "array-contains", value: featureFlagPendingDeletion },
+      ],
+    }) as Promise<ProfileJSON[]>;
+  }
+
   /**
    * Creates a profile from the current users auth data.
    * @param {string} uid The user ID of the user to create the profile for.
@@ -173,14 +184,34 @@ export namespace ProfileService {
    * @param {string} displayName The display name of the user.
    * @return {Promise<any>} The user profile.
    */
-  export async function getProfileByDisplayName(displayName: string): Promise<any> {
-    functions.logger.info(`Getting user profile for user: ${displayName}`);
+  export async function getProfileByDisplayName(displayName: string): Promise<ProfileJSON> {
+    if (!displayName) {
+      return {};
+    }
+    
+    displayName = displayName.replace("@", "");
+    displayName = displayName.trim().toLocaleLowerCase();
 
-    return await DataService.getDocumentByField({
+    const profiles = await await DataService.getDocumentsByField({
       schemaKey: "users",
       field: "displayName",
       value: displayName,
-    });
+    }) as ProfileJSON[];
+    
+    functions.logger.info(`Got profiles by display name: ${displayName}`, profiles);
+    if (!profiles || profiles.length === 0) {
+      return {};
+    }
+
+    const profile = profiles[0];
+    const currentDisplayName = profile.displayName;
+
+    // Firestore is not case sensitive, so we have to check this here.
+    if (displayName !== currentDisplayName) {
+      return {};
+    }
+
+    return profile;
   }
 
   /**
@@ -359,6 +390,8 @@ export namespace ProfileService {
    */
   export async function updateDisplayName(uid: string, displayName: string): Promise<any> {
     const firestore = adminApp.firestore();
+
+    displayName = displayName.trim().toLocaleLowerCase();
 
     const displayNameCheck = await firestore.collection("fl_content").where("displayName", "==", displayName).get();
     if (displayNameCheck.size > 0) {

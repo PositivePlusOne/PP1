@@ -16,6 +16,7 @@ import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
 import 'package:app/providers/profiles/hiv_status_controller.dart';
@@ -31,6 +32,12 @@ import '../constants/profile_constants.dart';
 import '../dtos/database/profile/profile.dart';
 import '../helpers/profile_helpers.dart';
 import '../providers/profiles/profile_controller.dart';
+
+extension ProfileStringExtensions on String {
+  Uri buildProfileStringLink({Map<String, String> knownIdMap = const {}}) {
+    return providerContainer.read(universalLinksControllerProvider.notifier).buildProfileRouteLink(this, knownIdMap: knownIdMap);
+  }
+}
 
 extension ProfileExtensions on Profile {
   Media? get profileImage {
@@ -380,7 +387,7 @@ extension ProfileExtensions on Profile {
     return visibilityFlags.contains(kFeatureFlagIncognito);
   }
 
-  Future<void> navigateToProfile() async {
+  Future<void> navigateToProfile({bool replace = false}) async {
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
@@ -406,7 +413,12 @@ extension ProfileExtensions on Profile {
     final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
     await profileViewModel.preloadUserProfile(targetProfileId);
 
-    await appRouter.push(const ProfileRoute());
+    if (replace) {
+      logger.d('Removing all routes before navigating to profile route');
+      await appRouter.replaceAll([const ProfileRoute()]);
+    } else {
+      await appRouter.push(const ProfileRoute());
+    }
   }
 
   Future<void> navigateToProfileDetails() async {

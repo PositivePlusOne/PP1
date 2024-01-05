@@ -70,6 +70,28 @@ export namespace ProfileEndpoints {
     });
   });
 
+
+  export const getProfileByDisplayName = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
+    functions.logger.info("Getting user profile", { structuredData: true });
+
+    const uid = request.sender || context.auth?.uid || "";
+    const targetDisplayName = (request.data.displayName || "").toUpperCase();
+    if (targetDisplayName.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "The function must be called with a valid uid");
+    }
+
+    const userProfile = await ProfileService.getProfileByDisplayName(targetDisplayName);
+    if (userProfile) {
+      throw new functions.https.HttpsError("not-found", "The user profile does not exist");
+    }
+    
+    return buildEndpointResponse(context, {
+      sender: uid,
+      data: [userProfile],
+    });
+  });
+
   export const toggleProfileDeletion = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const uid = await UserService.verifyAuthenticated(context, request.sender);
@@ -247,18 +269,9 @@ export namespace ProfileEndpoints {
       displayName,
     });
 
-    if (!(typeof displayName === "string") || displayName.length < 3) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
-    }
-
-    const isFirebaseUIDFormat = StringHelpers.isFirebaseUID(displayName);
-    if (isFirebaseUIDFormat) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
-    }
-
-    const isValid = displayName.length > 3 && displayName.length < 15 && StringHelpers.isAlphanumericWithSpecialChars(displayName);
+    const isValid = displayName.length >= 3 && displayName.length <= 15 && StringHelpers.isLowercaseAlphanumericWithSpecialChars(displayName);
     if (!isValid) {
-      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name");
+      throw new functions.https.HttpsError("invalid-argument", "You must provide a valid display name string of at least 3 characters and no more than 15 characters");
     }
 
     const newProfile = await ProfileService.updateDisplayName(uid, displayName);
@@ -271,7 +284,7 @@ export namespace ProfileEndpoints {
       displayName,
     });
 
-    //TODO we might want to send an update email here
+    // TODO we might want to send an update email here
     // await sendRequiredAccountUpdateEmail(uid, newProfile);
 
     return buildEndpointResponse(context, {
@@ -463,7 +476,7 @@ export namespace ProfileEndpoints {
 
     let newProfile = await ProfileService.updateVisibilityFlags(uid, visibilityFlags);
     await CacheService.setInCache(newProfile._fl_meta_.fl_id, newProfile);
-    
+
     newProfile = await ProfileService.updateHivStatus(uid, status);
 
     functions.logger.info("Profile hiv status updated", {

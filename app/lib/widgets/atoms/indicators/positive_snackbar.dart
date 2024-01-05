@@ -21,7 +21,7 @@ import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator
 import '../../../providers/system/design_controller.dart';
 
 class PositiveSnackBar extends SnackBar {
-  PositiveSnackBar({super.key, required Widget content, Color? backgroundColor})
+  PositiveSnackBar({super.key, required super.content, Color? backgroundColor})
       : super(
           margin: const EdgeInsets.only(left: kPaddingSmall, right: kPaddingSmall, bottom: kPaddingSmall),
           behavior: SnackBarBehavior.floating,
@@ -31,7 +31,6 @@ class PositiveSnackBar extends SnackBar {
               Radius.circular(30),
             ),
           ),
-          content: content,
         );
 }
 

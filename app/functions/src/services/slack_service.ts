@@ -7,7 +7,7 @@ import { ProfileJSON } from "../dto/profile";
 import { StringHelpers } from "../helpers/string_helpers";
 import { SystemService } from "./system_service";
 import { ProfileService } from "./profile_service";
-import { RelationshipService } from "./relationship_service";
+// import { RelationshipService } from "./relationship_service";
 import { adminApp } from "..";
 
 export namespace SlackService {
@@ -134,12 +134,12 @@ export namespace SlackService {
                 return;
             }
 
-            const ownerId = ownerProfile._fl_meta_.fl_id;
-            const userIds = [ownerId, uuid];
-            const relationship = await RelationshipService.getRelationship(userIds);
+            // const ownerId = ownerProfile._fl_meta_.fl_id;
+            // const userIds = [ownerId, uuid];
+            // const relationship = await RelationshipService.getRelationship(userIds);
 
-            await RelationshipService.manageRelationship(ownerId, relationship, true);
-            await postRawToChannel(slackChannel, `Added ${uuid} to ${ownerId}'s profile as a child`);
+            // await RelationshipService.manageRelationship(ownerId, relationship, true);
+            // await postRawToChannel(slackChannel, `Added ${uuid} to ${ownerId}'s profile as a child`);
           }
 
           await postRawToChannel(slackChannel, `All done!`);

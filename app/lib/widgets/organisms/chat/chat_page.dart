@@ -28,6 +28,8 @@ import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -609,6 +611,21 @@ class MessageInput extends ConsumerWidget {
     );
   }
 
+  Future<void> trackMessageSentEvent(Message message) async {
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    final Map<String, Object?> baseProperties = {
+      'message_id': message.id,
+      'message_type': message.type,
+      'message_text': message.text,
+      'message_attachments': message.attachments.map((e) => e.assetUrl ?? '').toList(),
+      'message_mentions': message.mentionedUsers.map((e) => e.id).toList(),
+      'message_reaction_counts': message.reactionCounts,
+      'message_reaction_scores': message.reactionScores,
+    };
+
+    await analyticsController.trackEvent(AnalyticEvents.chatMessageSent, properties: baseProperties);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -629,6 +646,7 @@ class MessageInput extends ConsumerWidget {
             commandButtonBuilder: (context, commandButton) => const SizedBox.shrink(),
             attachmentButtonBuilder: (context, attachmentButton) => buildAttachmentButton(onPressed: attachmentButton.onPressed, context: context),
             enableActionAnimation: false,
+            onMessageSent: trackMessageSentEvent,
             sendButtonLocation: SendButtonLocation.inside,
             activeSendButton: buildSendButton(),
             idleSendButton: buildSendButton(isActive: false),
@@ -723,11 +741,10 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
 
 class _AvatarList extends ConsumerWidget {
   const _AvatarList({
-    Key? key,
     required this.members,
     required this.sourceBlockedRelationships,
     required this.targetBlockedRelationships,
-  }) : super(key: key);
+  });
 
   final List<Profile> members;
   final List<Relationship> sourceBlockedRelationships;

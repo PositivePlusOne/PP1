@@ -45,33 +45,57 @@ enum AnalyticEvents {
   accountReported, // A user has reported someones accouny
   profileSetup, // A users profile has been setup
   profileEdited, // A users profile has been edited
+  profileBlocked, // A user has blocked another user
+  profileUnblocked, // A user has unblocked another user
   profileFollowed, // A user has followed another user
-  profileConnected, // A user has connected with another user
+  profileUnfollowed, // A user has unfollowed another user
+  profileMuted, // A user has muted another user
+  profileUnmuted, // A user has unmuted another user
+  profileHidden, // A user has hidden another user
+  profileUnhidden, // A user has unhidden another user
+  profileConnectionRequestSent, // A user has sent a connection request to another user
+  profileConnectionRequestDeclined, // A user has declined a connection request from another user
+  profileConnectionRequestAccepted, // A user has accepted a connection request from another user
+  profileConnectionRequestCancelled, // A user has cancelled a connection request to another user
+  profileDisconnected, // A user has disconnected from another user
+  profileViewed, // A user has viewed another users profile
   postDisplayed, // A post has been displayed to the user
-  postShared, // A post has been shared to another user
   postCreated, // A post has been created on the platform
   postEdited, // A post has been edited
   postViewed, // A post has been viewed by the user and is no longer on the screen
+  profileViewedFromPost, // A user has viewed another users profile from a post
+  profileViewedFromSearch, // A user has viewed another users profile from a search
   postReported, // The user has reported a post
   postDeleted, // A user has deleted a post
-  eventDisplayed, // An event has been displayed to the user
-  eventShared, // An event has been shared to another user
-  eventCreated, // An event has been created on the platform
-  eventEdited, // An event has been edited
-  eventViewed, // An event has been viewed by the user and is no longer on the screen
-  eventReported, // The user has reported an event
-  eventDeleted, // A user has deleted an event
-  subscriptionCreated, // A user has created a subscription
-  subscriptionEnded, // A user has ended a subscription
-  subscriptionRenewed, // A user has renewed a subscription
-  purchaseCreated, // A user has created a purchase
-  search, // A user has performed a search on the platform
+  postLiked, // A user has liked a post
+  postUnliked, // A user has unliked a post
+  postBookmarked, // A user has bookmarked a post
+  postUnbookmarked, // A user has unbookmarked a post
+  postCommented, // A user has commented on a post
+  postCommentDeleted, // A user has deleted a comment on a post
+  postSharedExternally, // A user has shared a post externally
+  postSharedOnFeed, // A user has shared a post on their feed
+  postSharedThroughChat, // A user has shared a post through chat
+  photoViewed, // A user has viewed a photo
+  videoMuted, // A user has muted a video
+  videoUnmuted, // A user has unmuted a video
+  videoViewed, // A user has viewed a video
+  videoViewedWithEngagement, // A user has viewed a video with engagement past the nose (2% or maximum duration if less than 5 seconds) of the video
+  videoViewedFully, // A user has viewed a video fully
+  chatStarted, // A user has started a chat with another user
+  chatViewed, // A user has viewed a chat
+  chatMessageSent, // A user has sent a message in a chat
+  tagViewed, // TODO
+  tagViewedFromSearch, // TODO
+  searchPost, // A user has searched for a post
+  searchUser, // A user has searched for a user
+  searchTag, // A user has searched for a tag
   openLinkTerms, // A user has been presented with the terms and conditions
   openLinkTickets, // A user has requested to view an events tickets
   securityAlert, // A security related event
   // Custom conversion events
-  conversionRegisterFromInterestRegistration,
-  conversionRegisterFromPostComments;
+  conversionRegisterFromInterestRegistration, // A user has registered from the interest registration page
+  conversionRegisterFromPostComments; // A user has registered from the post comments page
 
   // Takes the camel case name of the enum and converts it to a string with spaces and capital letters
   String get friendlyName {

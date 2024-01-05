@@ -25,52 +25,54 @@ import { FeedStatisticsService } from "../services/feed_statistics_service";
 import { SearchService } from "../services/search_service";
 import { SystemService } from "../services/system_service";
 import { CacheService } from "../services/cache_service";
+import { PostMentionNotification } from "../services/builders/notifications/activities/post_mention_notification";
+import { MentionJSON } from "../dto/mentions";
 
 export namespace PostEndpoints {
-    export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
-      await SystemService.validateUsingRedisUserThrottle(context);
-        const uid = context.auth?.uid || "";
+  export const listActivities = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_1G).https.onCall(async (request: EndpointRequest, context) => {
+    await SystemService.validateUsingRedisUserThrottle(context);
+    const uid = context.auth?.uid || "";
 
-        const targetUserId = request.data.targetUserId || "";
-        const targetSlug = request.data.targetSlug || "";
-        const limit = request.limit || 25;
-        const cursor = request.cursor || "";
+    const targetUserId = request.data.targetUserId || "";
+    const targetSlug = request.data.targetSlug || "";
+    const limit = request.limit || 25;
+    const cursor = request.cursor || "";
 
-        functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
+    functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
 
-        if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
-          throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
-        }
-    
-        const feedsClient = FeedService.getFeedsClient();
-        const feed = feedsClient.feed(targetSlug, targetUserId);
-        const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
-    
-        // Convert window results to a list of IDs
-        const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
-        const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+    if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
+      throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
+    }
 
-        // We supply this so we can support reposts and the client can filter out the nested activity
-        const windowIds = window.results.map((result) => result.id);
-        const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
+    const feedsClient = FeedService.getFeedsClient();
+    const feed = feedsClient.feed(targetSlug, targetUserId);
+    const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
 
-        functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds });
-    
-        return buildEndpointResponse(context, {
-          sender: uid,
-          joins: [feedStatisticsKey],
-          data: [...activities],
-          limit: limit,
-          cursor: paginationToken,
-          seedData: {
-            next: paginationToken,
-            unread: window.unread,
-            unseen: window.unseen,
-            windowIds,
-          },
-        });
-      });
-      
+    // Convert window results to a list of IDs
+    const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
+    const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+
+    // We supply this so we can support reposts and the client can filter out the nested activity
+    const windowIds = window.results.map((result) => result.id);
+    const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
+
+    functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds });
+
+    return buildEndpointResponse(context, {
+      sender: uid,
+      joins: [feedStatisticsKey],
+      data: [...activities],
+      limit: limit,
+      cursor: paginationToken,
+      seedData: {
+        next: paginationToken,
+        unread: window.unread,
+        unseen: window.unseen,
+        windowIds,
+      },
+    });
+  });
+
   export const getActivity = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     const entry = request.data.entry || "";
@@ -93,7 +95,7 @@ export namespace PostEndpoints {
   export const shareActivityToConversations = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
     await SystemService.validateUsingRedisUserThrottle(context);
     functions.logger.info(`Sharing activity`, { request });
-    
+
     const uid = await UserService.verifyAuthenticated(context, request.sender);
     const activityId = request.data.activityId || "";
     const targets = request.data.targets || [] as string[];
@@ -144,6 +146,9 @@ export namespace PostEndpoints {
     const media = request.data.media || [] as MediaJSON[];
     const userTags = request.data.tags || [] as string[];
     const promotionKey = request.data.promotionKey || "" as string;
+    const mentions = (request.data.mentions || []) as MentionJSON[] || [] as MentionJSON[];
+
+    functions.logger.info(`Posting activity`, { uid, content, media, userTags, mentions });
 
     const feed = request.data.feed || FeedName.User;
     const type = request.data.type || TagsService.PostTypeTag.post;
@@ -187,7 +192,7 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
     }
 
-    functions.logger.info(`Posting activity`, { uid, content, media, userTags });
+    functions.logger.info(`Posting activity`, { uid, content, media, userTags, mentions });
     const hasContentOrMedia = content || media.length > 0;
     if (!hasContentOrMedia) {
       throw new functions.https.HttpsError("invalid-argument", "Content missing from activity");
@@ -205,7 +210,7 @@ export namespace PostEndpoints {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
     }
-    
+
     const isPromotion = promotionKey && promotionKey.length > 0;
     const availablePromotionsCount = publisherProfile.availablePromotionsCount || 0;
     if (isPromotion && availablePromotionsCount <= 0) {
@@ -226,6 +231,11 @@ export namespace PostEndpoints {
       throw new functions.https.HttpsError("invalid-argument", "Missing type or style");
     }
 
+    //? For each mentionedUser attempt get the users ID and prepare to notify
+    const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
+
+    functions.logger.info(`Got sanitized mentions`, { sanitizedMentions });
+
     const activityRequest = {
       publisherInformation: {
         publisherId: uid,
@@ -239,6 +249,7 @@ export namespace PostEndpoints {
       enrichmentConfiguration: {
         tags: validatedTags,
         promotionKey: promotionKey,
+        mentions: sanitizedMentions,
       },
       securityConfiguration: {
         viewMode: visibleTo,
@@ -265,7 +276,23 @@ export namespace PostEndpoints {
     if (isPromotion) {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
-    
+
+    for (let index = 0; index < sanitizedMentions.length; index++) {
+      const mention = sanitizedMentions[index];
+      const foreignKey = mention.foreignKey;
+      if (!foreignKey) {
+        continue;
+      }
+
+      const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
+      if (!mentionedProfile) {
+        continue;
+      }
+
+      functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
+      await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, userActivity);
+    }
+
     functions.logger.info("Posted user activity", { feedActivity: userActivity });
     return buildEndpointResponse(context, {
       sender: uid,
@@ -313,7 +340,7 @@ export namespace PostEndpoints {
     activity.enrichmentConfiguration.promotionKey = "";
 
     const streamClient = FeedService.getFeedsClient();
-    
+
     await ActivitiesService.updateTagFeedsForActivity(activity);
     await ActivitiesService.removeActivityFromFeed("user", uid, activityId, streamClient);
 
@@ -354,9 +381,11 @@ export namespace PostEndpoints {
     const allowSharing = request.data.allowSharing ? "public" : "disabled" as ActivitySecurityConfigurationMode;
     const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
     const allowComments = request.data.allowComments || "disabled" as ActivitySecurityConfigurationMode;
-    
+
     const allowLikes = request.data.allowLikes || "disabled" as ActivitySecurityConfigurationMode;
     const allowBookmarks = request.data.allowBookmarks || "disabled" as ActivitySecurityConfigurationMode;
+
+    const mentions = request.data.mentions || [] as MentionJSON[] || [] as MentionJSON[] || [] as MentionJSON[];
 
     if (!allowComments || !allowSharing || !visibleTo) {
       throw new functions.https.HttpsError("invalid-argument", "Missing security configuration");
@@ -385,6 +414,11 @@ export namespace PostEndpoints {
       if (!promotion) {
         throw new functions.https.HttpsError("invalid-argument", "Invalid promotion key");
       }
+    }
+
+    const publisherProfile = await ProfileService.getProfile(uid) as ProfileJSON;
+    if (!publisherProfile) {
+      throw new functions.https.HttpsError("not-found", "Profile not found");
     }
 
     functions.logger.info(`Updating activity`, { uid, content, media, userTags, activityId });
@@ -436,6 +470,36 @@ export namespace PostEndpoints {
     const mediaBucketPaths = StorageService.getBucketPathsFromMediaArray(media);
     await StorageService.verifyMediaPathsContainsData(mediaBucketPaths);
 
+
+    //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+    //* -=-=-=-=-=-                   Mentions                   -=-=-=-=-=- *\\
+    //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
+    //? For each mentionedUser attempt get the users ID and prepare to notify
+    const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
+    for (let index = 0; index < sanitizedMentions.length; index++) {
+      const mention = sanitizedMentions[index];
+      const foreignKey = mention.foreignKey;
+      if (!foreignKey) {
+        continue;
+      }
+
+      const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
+      if (!mentionedProfile) {
+        continue;
+      }
+
+      functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
+      await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity);
+    }
+
+    if (activity.enrichmentConfiguration) {
+      activity.enrichmentConfiguration.mentions = sanitizedMentions;
+    } else {
+      activity.enrichmentConfiguration = {
+        mentions: sanitizedMentions,
+      };
+    }
+
     activity = await DataService.updateDocument({
       schemaKey: "activities",
       entryId: activityId,
@@ -449,5 +513,7 @@ export namespace PostEndpoints {
       sender: uid,
       data: [activity, ...tagObjects, promotion],
     });
-  });
+  }
+
+  );
 }

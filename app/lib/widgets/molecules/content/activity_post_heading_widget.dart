@@ -21,6 +21,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/profile_helpers.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
@@ -32,10 +33,11 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
-    required this.onOptions,
     required this.currentProfile,
     required this.publisher,
     required this.publisherRelationship,
+    required this.origin,
+    required this.onOptions,
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
     this.flMetaData,
     this.promotion,
@@ -47,6 +49,8 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
   final Profile? currentProfile;
   final Profile? publisher;
+  final String origin;
+
   final Relationship? publisherRelationship;
 
   final FlMeta? flMetaData;
@@ -102,6 +106,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
           children: <Widget>[
             PositiveProfileCircularIndicator(
               profile: isBlocked ? null : publisher,
+              analyticProperties: generatePropertiesForPostSource(flMetaData?.id ?? '', origin),
             ),
             const SizedBox(width: kPaddingSmall),
             Flexible(

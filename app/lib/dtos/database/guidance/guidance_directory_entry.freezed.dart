@@ -292,7 +292,7 @@ class _$GuidanceDirectoryEntryImpl implements _GuidanceDirectoryEntry {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryImpl &&
@@ -514,7 +514,7 @@ class _$GuidanceDirectoryEntryServiceHivSupportImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryServiceHivSupportImpl);
@@ -662,7 +662,7 @@ class _$GuidanceDirectoryEntryServiceCounsellingImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryServiceCounsellingImpl);
@@ -813,7 +813,7 @@ class _$GuidanceDirectoryEntryServiceFinancialAdviceImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryServiceFinancialAdviceImpl);
@@ -961,7 +961,7 @@ class _$GuidanceDirectoryEntryServiceTestingImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryServiceTestingImpl);
@@ -1109,7 +1109,7 @@ class _$GuidanceDirectoryEntryServiceSexualHealthImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryServiceSexualHealthImpl);
@@ -1257,7 +1257,7 @@ class _$GuidanceDirectoryEntryServiceUnknownImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceDirectoryEntryServiceUnknownImpl);
