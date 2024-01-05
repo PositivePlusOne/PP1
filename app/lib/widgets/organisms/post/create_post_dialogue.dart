@@ -600,6 +600,7 @@ class _CreatePostTextFieldState extends State<CreatePostTextField> {
         maxLines: widget.maxLines,
         textInputType: widget.textInputType,
         textCapitalization: widget.textCapitalization,
+        allowMentions: true,
       ),
     );
   }

@@ -1,4 +1,16 @@
 // Flutter imports:
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
+import 'package:app/services/search_api_service.dart';
+import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,6 +26,8 @@ import 'package:app/helpers/text_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
+import 'package:logger/logger.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import '../../../constants/design_constants.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {
@@ -51,6 +65,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.showRemainingStyle,
     this.autofocus = false,
     this.autocorrect = true,
+    this.allowMentions = false,
     super.key,
   });
 
@@ -97,6 +112,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final bool autofocus;
   final bool autocorrect;
 
+  final bool allowMentions;
+
   final void Function(TextEditingController controller)? onControllerCreated;
 
   @override
@@ -110,8 +127,17 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
   String lastKnownText = '';
   double labelPadding = 0.0;
 
-  bool get isFocused => _isFocused;
+  CancelableOperation<Iterable<Profile>>? mentionSearchOperation;
+  Iterable<Profile>? mentionSearchResults;
+  String? latestMentionSearchQuery;
 
+  bool get isSearchingForMentions => mentionSearchOperation != null;
+
+  // Display flags based on mention search
+  bool get canDisplayMentionSearchIndicator => isSearchingForMentions;
+  bool get canDisplayMentionSearchResults => mentionSearchResults != null && mentionSearchResults!.isNotEmpty;
+
+  bool get isFocused => _isFocused;
   bool _isFocused = false;
   set isFocused(bool value) {
     if (_isFocused != value) {
@@ -203,8 +229,123 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       widget.onTextChanged!(textEditingController.text);
     }
 
+    // Clear the mention search results if the text changes
+    if (mentionSearchResults != null) {
+      mentionSearchResults = null;
+      setStateIfMounted();
+    }
+
+    // Get the cursor position
+    final int cursorPosition = textEditingController.selection.baseOffset;
+    attemptPerformMentionLookup(cursorPosition);
+
     lastKnownText = textEditingController.text;
     setState(() {});
+  }
+
+  Future<void> attemptPerformMentionLookup(int cursorPosition) async {
+    if (!widget.allowMentions) {
+      return;
+    }
+
+    // Get the word at the cursor position
+    final String? word = getWordAtCursorPosition(textEditingController.text, cursorPosition);
+    if (word == null) {
+      return;
+    }
+
+    // Check if the word is a mention
+    if (!word.startsWith('@')) {
+      return;
+    }
+
+    // Check if we have already searched for this word
+    if (word == latestMentionSearchQuery) {
+      return;
+    }
+
+    // Cancel any previous search
+    await mentionSearchOperation?.cancel();
+    mentionSearchOperation = null;
+    mentionSearchResults = null;
+    setStateIfMounted();
+
+    // Check if we have more than just the @ symbol
+    if (word.length <= 1) {
+      return;
+    }
+
+    try {
+      mentionSearchOperation = CancelableOperation.fromFuture(
+        performMentionUserSearch(word.substring(1)),
+      );
+
+      setStateIfMounted();
+      mentionSearchResults = await mentionSearchOperation?.value;
+    } finally {
+      mentionSearchOperation = null;
+      setStateIfMounted();
+    }
+  }
+
+  Future<Iterable<Profile>> performMentionUserSearch(String query) async {
+    final logger = ref.read(loggerProvider);
+    final SearchApiService searchApiService = await ref.read(searchApiServiceProvider.future);
+
+    logger.d("Searching for users with query: $query");
+    final SearchResult<Profile> response = await searchApiService.search(
+      query: query,
+      index: "users",
+      fromJson: (json) => Profile.fromJson(json),
+      pagination: const Pagination(
+        limit: 3,
+      ),
+    );
+
+    return response.results;
+  }
+
+  String? getWordAtCursorPosition(String text, int cursorPosition) {
+    if (text.isEmpty) {
+      return null;
+    }
+
+    // Check if the character prior to the cursor is a space
+    if (cursorPosition > 0 && text[cursorPosition - 1] == ' ') {
+      return null;
+    }
+
+    // Get the word at the cursor position
+    final List<String> words = text.split(' ');
+    int wordStart = 0;
+    int wordEnd = 0;
+    for (int i = 0; i < words.length; i++) {
+      final String word = words[i];
+      wordStart = wordEnd;
+      wordEnd = wordStart + word.length + 1;
+      if (cursorPosition >= wordStart && cursorPosition <= wordEnd) {
+        return word;
+      }
+    }
+
+    return null;
+  }
+
+  void appendMentionToCursorPosition(Profile profile) {
+    final String? word = getWordAtCursorPosition(textEditingController.text, textEditingController.selection.baseOffset);
+    if (word == null) {
+      return;
+    }
+
+    final String mention = '@${profile.displayName}';
+    final String text = textEditingController.text;
+    final String newText = text.replaceRange(
+      textEditingController.selection.baseOffset - word.length,
+      textEditingController.selection.baseOffset,
+      mention,
+    );
+
+    textEditingController.text = '$newText ';
   }
 
   @override
@@ -256,7 +397,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       );
     }
 
-    return PositiveTapBehaviour(
+    final Widget child = PositiveTapBehaviour(
       onTap: (_) => textFocusNode.requestFocus(),
       child: Container(
         constraints: const BoxConstraints(minHeight: kCreatePostHeight),
@@ -348,6 +489,63 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
             ],
           ],
         ),
+      ),
+    );
+
+    return Column(
+      children: <Widget>[
+        child,
+        if (canDisplayMentionSearchIndicator) ...<Widget>[
+          buildMentionSearchIndicator(),
+        ],
+        if (canDisplayMentionSearchResults) ...<Widget>[
+          buildMentionSearchResults(),
+        ],
+      ],
+    );
+  }
+
+  Widget buildMentionSearchIndicator() {
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+
+    return Padding(
+      padding: const EdgeInsets.all(kPaddingSmall),
+      child: PositiveGlassSheet(
+        children: <Widget>[
+          PositiveLoadingIndicator(color: colours.white),
+        ],
+      ),
+    );
+  }
+
+  Widget buildMentionSearchResults() {
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+
+    final Profile? senderProfile = profileController.currentProfile;
+    final String senderProfileId = senderProfile?.flMeta?.id ?? '';
+
+    final List<Widget> tiles = [];
+    for (final Profile targetProfile in mentionSearchResults ?? []) {
+      final String targetProfileId = targetProfile.flMeta?.id ?? '';
+      final String expectedRelationshipId = [senderProfileId, targetProfileId].asGUID;
+      final Relationship? relationship = cacheController.get(expectedRelationshipId);
+
+      tiles.add(
+        PositiveProfileListTile(
+          senderProfile: senderProfile,
+          targetProfile: targetProfile,
+          relationship: relationship,
+          type: PositiveProfileListTileType.selectable,
+          onSelected: () => appendMentionToCursorPosition(targetProfile),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(kPaddingSmall),
+      child: PositiveGlassSheet(
+        children: tiles.spaceWithVertical(kPaddingExtraSmall),
       ),
     );
   }
