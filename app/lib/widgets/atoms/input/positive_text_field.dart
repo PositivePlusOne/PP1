@@ -499,12 +499,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
           child,
           PositiveExpandableWidget(
             isExpanded: canDisplayMentionSearchIndicator,
-            collapsedChild: const SizedBox(),
+            collapsedChild: const SizedBox(width: double.infinity),
             expandedChild: buildMentionSearchIndicator(),
           ),
           PositiveExpandableWidget(
             isExpanded: canDisplayMentionSearchResults,
-            collapsedChild: const SizedBox(),
+            collapsedChild: const SizedBox(width: double.infinity),
             expandedChild: buildMentionSearchResults(),
           ),
         ],
@@ -526,6 +526,10 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
   }
 
   Widget buildMentionSearchResults() {
+    if (mentionSearchResults == null) {
+      return const SizedBox(width: double.infinity);
+    }
+
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
