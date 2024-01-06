@@ -48,13 +48,16 @@ class PostPage extends HookConsumerWidget {
   const PostPage({
     required this.activityId,
     required this.feed,
+    this.reactionId = '',
     this.promotionId = '',
     super.key,
   });
 
   final String activityId;
-  final String promotionId;
   final TargetFeed feed;
+
+  final String reactionId;
+  final String promotionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

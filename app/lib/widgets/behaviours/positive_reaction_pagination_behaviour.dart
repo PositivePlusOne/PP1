@@ -47,6 +47,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     required this.reactionsState,
     required this.feed,
     required this.kind,
+    this.highlightedReactionId = '',
     this.reactionMode,
     this.windowSize = 10,
     super.key,
@@ -57,6 +58,8 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
   final PositiveReactionsState reactionsState;
   final TargetFeed feed;
   final String kind;
+
+  final String highlightedReactionId;
 
   final ActivitySecurityConfigurationMode? reactionMode;
 
@@ -176,8 +179,25 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
+    late final PagingController<String, Reaction> shimmedPagingController = PagingController.fromValue(
+      reactionsState.pagingController.value,
+      firstPageKey: reactionsState.currentPaginationKey,
+    );
+
+    // Attempt to move the highlighted reaction to the top of the list
+    if (highlightedReactionId.isNotEmpty) {
+      final List<Reaction>? reactionList = shimmedPagingController.itemList;
+      if (reactionList != null) {
+        final int index = reactionList.indexWhere((element) => element.flMeta?.id == highlightedReactionId);
+        if (index > 0) {
+          final Reaction reaction = reactionList.removeAt(index);
+          reactionList.insert(0, reaction);
+        }
+      }
+    }
+
     usePagingController(
-      controller: reactionsState.pagingController,
+      controller: shimmedPagingController,
       listener: requestNextPage,
     );
 
@@ -215,7 +235,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
         if (!commentsDisabled) ...<Widget>[
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
-            pagingController: reactionsState.pagingController,
+            pagingController: shimmedPagingController,
             separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
               context,
               // designed to have a very thin seperator of the grey
@@ -226,19 +246,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
               transitionDuration: kAnimationDurationRegular,
-              itemBuilder: (_, reaction, index) => PositiveComment(
-                currentProfile: currentProfile,
-                comment: reaction,
-                feedOrigin: TargetFeed.toOrigin(feed),
-                isFirst: index == 0,
-                onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(
-                  context: context,
-                  targetProfile: publisherProfile,
-                  currentProfile: currentProfile,
-                  reactionID: comment.flMeta?.id ?? "",
-                  reactionFeedState: reactionsState,
-                ),
-              ),
+              itemBuilder: (context, reaction, index) => buildReactionItem(context, reaction, currentProfile, index),
               firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),
@@ -249,6 +257,22 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
           ),
         ],
       ],
+    );
+  }
+
+  Widget buildReactionItem(BuildContext context, Reaction item, Profile? currentProfile, int index) {
+    return PositiveComment(
+      currentProfile: currentProfile,
+      comment: item,
+      feedOrigin: TargetFeed.toOrigin(feed),
+      isFirst: index == 0,
+      onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(
+        context: context,
+        targetProfile: publisherProfile,
+        currentProfile: currentProfile,
+        reactionID: comment.flMeta?.id ?? "",
+        reactionFeedState: reactionsState,
+      ),
     );
   }
 }

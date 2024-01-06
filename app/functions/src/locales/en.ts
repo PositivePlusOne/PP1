@@ -123,5 +123,9 @@ export const enTranslations = {
       title: "New Mention",
       body: "**{{displayName}}** has mentioned you in their post: **{{shortBody}}**",
     },
+    reaction_mentioned: {
+      title: "New Mention",
+      body: "**{{displayName}}** has mentioned you in a comment: **{{shortBody}}**",
+    },
   },
 };

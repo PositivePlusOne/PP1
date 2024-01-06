@@ -36,6 +36,8 @@ mixin _$Reaction {
   String get text => throw _privateConstructorUsedError;
   @JsonKey(name: 'tags')
   List<String> get tags => throw _privateConstructorUsedError;
+  @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+  List<Mention> get mentions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -57,7 +59,9 @@ abstract class $ReactionCopyWith<$Res> {
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       ReactionType kind,
       @JsonKey(name: 'text') String text,
-      @JsonKey(name: 'tags') List<String> tags});
+      @JsonKey(name: 'tags') List<String> tags,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      List<Mention> mentions});
 
   $FlMetaCopyWith<$Res>? get flMeta;
   $ReactionTypeCopyWith<$Res> get kind;
@@ -84,6 +88,7 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
     Object? kind = null,
     Object? text = null,
     Object? tags = null,
+    Object? mentions = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -118,6 +123,10 @@ class _$ReactionCopyWithImpl<$Res, $Val extends Reaction>
           ? _value.tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      mentions: null == mentions
+          ? _value.mentions
+          : mentions // ignore: cast_nullable_to_non_nullable
+              as List<Mention>,
     ) as $Val);
   }
 
@@ -159,7 +168,9 @@ abstract class _$$ReactionImplCopyWith<$Res>
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       ReactionType kind,
       @JsonKey(name: 'text') String text,
-      @JsonKey(name: 'tags') List<String> tags});
+      @JsonKey(name: 'tags') List<String> tags,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      List<Mention> mentions});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -186,6 +197,7 @@ class __$$ReactionImplCopyWithImpl<$Res>
     Object? kind = null,
     Object? text = null,
     Object? tags = null,
+    Object? mentions = null,
   }) {
     return _then(_$ReactionImpl(
       flMeta: freezed == flMeta
@@ -220,6 +232,10 @@ class __$$ReactionImplCopyWithImpl<$Res>
           ? _value._tags
           : tags // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      mentions: null == mentions
+          ? _value._mentions
+          : mentions // ignore: cast_nullable_to_non_nullable
+              as List<Mention>,
     ));
   }
 }
@@ -236,8 +252,11 @@ class _$ReactionImpl implements _Reaction {
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       this.kind = const ReactionType.unknownReaction(),
       @JsonKey(name: 'text') this.text = '',
-      @JsonKey(name: 'tags') final List<String> tags = const []})
-      : _tags = tags;
+      @JsonKey(name: 'tags') final List<String> tags = const [],
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      final List<Mention> mentions = const []})
+      : _tags = tags,
+        _mentions = mentions;
 
   factory _$ReactionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReactionImplFromJson(json);
@@ -272,9 +291,18 @@ class _$ReactionImpl implements _Reaction {
     return EqualUnmodifiableListView(_tags);
   }
 
+  final List<Mention> _mentions;
+  @override
+  @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+  List<Mention> get mentions {
+    if (_mentions is EqualUnmodifiableListView) return _mentions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_mentions);
+  }
+
   @override
   String toString() {
-    return 'Reaction(flMeta: $flMeta, activityId: $activityId, reactionId: $reactionId, entryId: $entryId, userId: $userId, kind: $kind, text: $text, tags: $tags)';
+    return 'Reaction(flMeta: $flMeta, activityId: $activityId, reactionId: $reactionId, entryId: $entryId, userId: $userId, kind: $kind, text: $text, tags: $tags, mentions: $mentions)';
   }
 
   @override
@@ -291,13 +319,23 @@ class _$ReactionImpl implements _Reaction {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.kind, kind) || other.kind == kind) &&
             (identical(other.text, text) || other.text == text) &&
-            const DeepCollectionEquality().equals(other._tags, _tags));
+            const DeepCollectionEquality().equals(other._tags, _tags) &&
+            const DeepCollectionEquality().equals(other._mentions, _mentions));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, flMeta, activityId, reactionId,
-      entryId, userId, kind, text, const DeepCollectionEquality().hash(_tags));
+  int get hashCode => Object.hash(
+      runtimeType,
+      flMeta,
+      activityId,
+      reactionId,
+      entryId,
+      userId,
+      kind,
+      text,
+      const DeepCollectionEquality().hash(_tags),
+      const DeepCollectionEquality().hash(_mentions));
 
   @JsonKey(ignore: true)
   @override
@@ -323,7 +361,9 @@ abstract class _Reaction implements Reaction {
       @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson)
       final ReactionType kind,
       @JsonKey(name: 'text') final String text,
-      @JsonKey(name: 'tags') final List<String> tags}) = _$ReactionImpl;
+      @JsonKey(name: 'tags') final List<String> tags,
+      @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+      final List<Mention> mentions}) = _$ReactionImpl;
 
   factory _Reaction.fromJson(Map<String, dynamic> json) =
       _$ReactionImpl.fromJson;
@@ -352,6 +392,9 @@ abstract class _Reaction implements Reaction {
   @override
   @JsonKey(name: 'tags')
   List<String> get tags;
+  @override
+  @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList)
+  List<Mention> get mentions;
   @override
   @JsonKey(ignore: true)
   _$$ReactionImplCopyWith<_$ReactionImpl> get copyWith =>

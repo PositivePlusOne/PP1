@@ -138,6 +138,26 @@ class ReactionsController extends _$ReactionsController {
     return state;
   }
 
+  Future<Reaction> getReaction({
+    required String reactionId,
+  }) async {
+    final Logger logger = ref.read(loggerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    logger.i('CommunitiesController - getReaction - Getting reaction: $reactionId');
+
+    final Reaction? cachedReaction = cacheController.get<Reaction>(reactionId);
+    if (cachedReaction != null) {
+      logger.i('CommunitiesController - getReaction - Got cached reaction: $reactionId');
+      return cachedReaction;
+    }
+
+    final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+    final Reaction reaction = await reactionApiService.getReaction(reactionId: reactionId);
+
+    logger.i('CommunitiesController - getReaction - Got reaction: $reactionId');
+    return reaction;
+  }
+
   List<Reaction> getOwnReactionsForActivityAndProfile({
     required Activity activity,
     required Profile? currentProfile,

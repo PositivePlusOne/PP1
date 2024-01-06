@@ -20,6 +20,7 @@ class NotificationAction with _$NotificationAction {
   const factory NotificationAction.postBookmarked() = PostBookmarked;
   const factory NotificationAction.postBookmarkedGrouped() = PostBookmarkedGrouped;
   const factory NotificationAction.postMentioned() = PostMentioned;
+  const factory NotificationAction.reactionMentioned() = ReactionMentioned;
   const factory NotificationAction.relationshipUpdated() = RelationshipUpdated;
 
   static String toJson(NotificationAction type) {
@@ -39,6 +40,7 @@ class NotificationAction with _$NotificationAction {
       postBookmarked: () => 'post_bookmarked',
       postBookmarkedGrouped: () => 'post_bookmarked_grouped',
       postMentioned: () => 'post_mentioned',
+      reactionMentioned: () => 'reaction_mentioned',
       relationshipUpdated: () => 'relationship_updated',
     );
   }
@@ -71,6 +73,8 @@ class NotificationAction with _$NotificationAction {
         return const NotificationAction.postSharedGrouped();
       case 'post_mentioned':
         return const NotificationAction.postMentioned();
+      case 'reaction_mentioned':
+        return const NotificationAction.reactionMentioned();
       case 'post_bookmarked':
         return const NotificationAction.postBookmarked();
       case 'relationship_updated':
