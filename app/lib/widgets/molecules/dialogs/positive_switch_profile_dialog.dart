@@ -48,7 +48,11 @@ class PositiveSwitchProfileDialog extends HookConsumerWidget {
                 final bool isCurrentUser = profile.flMeta?.id == currentUserId;
                 final int index = profiles.indexOf(profile);
 
-                final String label = isCurrentUser ? 'Yourself' : profile.displayName;
+                String label = isCurrentUser ? 'Yourself' : profile.displayName;
+                if (label.isEmpty) {
+                  label = isCurrentUser ? 'Yourself' : 'Unknown';
+                }
+
                 return PositiveButton(
                   icon: isCurrentUser ? UniconsLine.user_circle : UniconsLine.building,
                   label: label,

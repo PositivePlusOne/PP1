@@ -226,6 +226,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       return;
     }
 
+    attemptToRemoveDuplicateMentions();
+
     if (widget.onTextChanged != null && lastKnownText != textEditingController.text) {
       widget.onTextChanged!(textEditingController.text);
     }
@@ -242,6 +244,52 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
     lastKnownText = textEditingController.text;
     setState(() {});
+  }
+
+  void attemptToRemoveDuplicateMentions() {
+    // Find all mentions in the text
+    final List<String> mentions = findMentions(textEditingController.text);
+
+    // Remove any duplicate mentions
+    final List<String> uniqueMentions = mentions.toSet().toList();
+
+    // Check if we need to remove any mentions
+    if (mentions.length == uniqueMentions.length) {
+      return;
+    }
+
+    // For each mention, remove all but the first
+    for (final String mention in uniqueMentions) {
+      final int firstIndex = textEditingController.text.indexOf(mention);
+      final int lastIndex = textEditingController.text.lastIndexOf(mention);
+      if (firstIndex != lastIndex) {
+        final String newText = textEditingController.text.replaceRange(
+          lastIndex,
+          lastIndex + mention.length,
+          '',
+        );
+
+        textEditingController.text = newText;
+      }
+    }
+
+    // If the new text has a duplicate trailing space, remove it
+    if (textEditingController.text.endsWith('  ')) {
+      final String newText = textEditingController.text.substring(0, textEditingController.text.length - 1);
+      textEditingController.text = newText;
+    }
+  }
+
+  List<String> findMentions(String text) {
+    final List<String> mentions = [];
+    final List<String> words = text.split(' ');
+    for (final String word in words) {
+      if (word.startsWith('@')) {
+        mentions.add(word);
+      }
+    }
+
+    return mentions;
   }
 
   Future<void> attemptPerformMentionLookup(int cursorPosition) async {
@@ -311,13 +359,17 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       return null;
     }
 
-    // Check if the character prior to the cursor is a space
-    if (cursorPosition > 0 && text[cursorPosition - 1] == ' ') {
+    if (cursorPosition <= 0) {
       return null;
     }
 
-    // Get the word at the cursor position
-    final List<String> words = text.split(' ');
+    // Check if the character prior to the cursor is a space or a new line
+    if (cursorPosition > 0 && text[cursorPosition - 1] == ' ' || text[cursorPosition - 1] == '\n') {
+      return null;
+    }
+
+    // Get the word at the cursor position, including new lines
+    final List<String> words = text.split(RegExp(r'\s+'));
     int wordStart = 0;
     int wordEnd = 0;
     for (int i = 0; i < words.length; i++) {
