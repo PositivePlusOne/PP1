@@ -27,7 +27,6 @@ import 'package:app/helpers/text_helpers.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:logger/logger.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import '../../../constants/design_constants.dart';
 
@@ -260,8 +259,10 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
     // For each mention, remove all but the first
     for (final String mention in uniqueMentions) {
+      // Get the index of only a matching entire word
       final int firstIndex = textEditingController.text.indexOf(mention);
       final int lastIndex = textEditingController.text.lastIndexOf(mention);
+
       if (firstIndex != lastIndex) {
         final String newText = textEditingController.text.replaceRange(
           lastIndex,
@@ -270,19 +271,25 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
         );
 
         textEditingController.text = newText;
+        textEditingController.selection = TextSelection.fromPosition(
+          TextPosition(offset: lastIndex),
+        );
       }
     }
 
-    // If the new text has a duplicate trailing space, remove it
-    if (textEditingController.text.endsWith('  ')) {
-      final String newText = textEditingController.text.substring(0, textEditingController.text.length - 1);
+    // If the new text has a duplicate trailing space including new lines, remove it
+    final String newText = textEditingController.text.trim();
+    if (newText != textEditingController.text) {
       textEditingController.text = newText;
+      textEditingController.selection = TextSelection.fromPosition(
+        TextPosition(offset: newText.length),
+      );
     }
   }
 
   List<String> findMentions(String text) {
     final List<String> mentions = [];
-    final List<String> words = text.split(' ');
+    final List<String> words = text.split(RegExp(r'\s+'));
     for (final String word in words) {
       if (word.startsWith('@')) {
         mentions.add(word);
