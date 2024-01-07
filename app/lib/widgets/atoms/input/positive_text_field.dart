@@ -66,6 +66,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.autofocus = false,
     this.autocorrect = true,
     this.allowMentions = false,
+    this.mentionSearchLimit = 3,
     super.key,
   });
 
@@ -113,6 +114,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final bool autocorrect;
 
   final bool allowMentions;
+  final int mentionSearchLimit;
 
   final void Function(TextEditingController controller)? onControllerCreated;
 
@@ -353,8 +355,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       query: query,
       index: "users",
       fromJson: (json) => Profile.fromJson(json),
-      pagination: const Pagination(
-        limit: 3,
+      pagination: Pagination(
+        limit: widget.mentionSearchLimit,
       ),
     );
 

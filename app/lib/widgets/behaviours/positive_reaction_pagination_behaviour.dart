@@ -179,14 +179,9 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
-    late final PagingController<String, Reaction> shimmedPagingController = PagingController.fromValue(
-      reactionsState.pagingController.value,
-      firstPageKey: reactionsState.currentPaginationKey,
-    );
-
     // Attempt to move the highlighted reaction to the top of the list
     if (highlightedReactionId.isNotEmpty) {
-      final List<Reaction>? reactionList = shimmedPagingController.itemList;
+      final List<Reaction>? reactionList = reactionsState.pagingController.itemList;
       if (reactionList != null) {
         final int index = reactionList.indexWhere((element) => element.flMeta?.id == highlightedReactionId);
         if (index > 0) {
@@ -197,7 +192,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     }
 
     usePagingController(
-      controller: shimmedPagingController,
+      controller: reactionsState.pagingController,
       listener: requestNextPage,
     );
 
@@ -235,7 +230,7 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
         if (!commentsDisabled) ...<Widget>[
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
-            pagingController: shimmedPagingController,
+            pagingController: reactionsState.pagingController,
             separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
               context,
               // designed to have a very thin seperator of the grey

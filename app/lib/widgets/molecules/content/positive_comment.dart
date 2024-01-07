@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -70,10 +71,10 @@ class PositiveComment extends ConsumerWidget {
           const SizedBox(height: kPaddingSmall),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-            child: Text(
+            child: buildMarkdownWidgetFromBody(
               comment.text,
-              textAlign: TextAlign.left,
-              style: typography.styleBody,
+              boldHandles: true,
+              mentions: comment.mentions,
             ),
           ),
         ],

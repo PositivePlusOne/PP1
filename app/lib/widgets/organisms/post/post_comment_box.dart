@@ -108,14 +108,15 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                   Expanded(
                     child: PositiveTextField(
                       labelText: 'Leave a comment',
+                      allowMentions: true,
+                      mentionSearchLimit: 2,
                       textEditingController: widget.commentTextController,
                       onTextChanged: widget.onCommentChanged,
                       onTextSubmitted: widget.onPostCommentRequested,
                       fillColor: colours.colorGray1,
                       isEnabled: !widget.isBusy,
                       minLines: 1,
-                      //TODO(S): We need a best guess helper to make sure maxLines can fit within the provided area
-                      maxLines: 10,
+                      maxLines: 5,
                       onFocusedChanged: (focus) {
                         setState(() {
                           hasFocus = focus;

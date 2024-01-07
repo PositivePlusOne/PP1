@@ -2,6 +2,8 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/dtos/database/activities/mentions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -285,12 +287,14 @@ class ReactionsController extends _$ReactionsController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
+    final Iterable<String> taggedUsers = comment.getHandles(includeSymbol: false);
 
     final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activityId, activityOrigin);
     final Reaction newReaction = await reactionApiService.postReaction(
       activityId: activityId,
       kind: 'comment',
       text: comment,
+      mentions: taggedUsers.map((e) => Mention.fromDisplayName(e)).toList(),
     );
 
     // Track the event

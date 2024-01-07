@@ -184,7 +184,7 @@ export namespace ReactionService {
             }
 
             functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
-            await ReactionMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity, reaction);
+            await ReactionMentionNotification.sendNotification(userProfile, mentionedProfile, activity, reaction);
         }
 
         functions.logger.info("Finished processing notifications", { kind, userId, activity });

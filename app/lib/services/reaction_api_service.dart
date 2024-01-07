@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -51,6 +52,7 @@ class ReactionApiService {
   FutureOr<Reaction> postReaction({
     required String activityId,
     required String kind,
+    List<Mention> mentions = const [],
     String text = '',
   }) async {
     return await getHttpsCallableResult<Reaction>(
@@ -60,6 +62,7 @@ class ReactionApiService {
         'activityId': activityId,
         'kind': kind,
         'text': text,
+        'mentions': mentions.map((e) => e.toJson()).toList(),
       },
     );
   }
