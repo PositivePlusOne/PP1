@@ -144,6 +144,8 @@ class PostPage extends HookConsumerWidget {
     final Widget commentBox = Align(
       alignment: Alignment.bottomCenter,
       child: PostCommentBox(
+        postId: activityId,
+        postOrigin: activityOrigin,
         mediaQuery: mediaQuery,
         currentProfile: currentProfile,
         canSwitchProfile: viewModel.canSwitchProfile,

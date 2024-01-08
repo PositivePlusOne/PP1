@@ -76,6 +76,8 @@ enum AnalyticEvents {
   postSharedExternally, // A user has shared a post externally
   postSharedOnFeed, // A user has shared a post on their feed
   postSharedThroughChat, // A user has shared a post through chat
+  mentionStarted, // A user has started a mention
+  mentionSelected, // A user has selected a mention
   photoViewed, // A user has viewed a photo
   videoMuted, // A user has muted a video
   videoUnmuted, // A user has unmuted a video

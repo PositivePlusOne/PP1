@@ -4,6 +4,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -27,6 +28,8 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
     required this.onCommentChanged,
     required this.onPostCommentRequested,
     required this.isBusy,
+    required this.postId,
+    required this.postOrigin,
     this.onSwitchProfileRequested,
     this.currentProfile,
     this.canSwitchProfile = false,
@@ -37,6 +40,9 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
   final Profile? currentProfile;
   final bool canSwitchProfile;
   final VoidCallback? onSwitchProfileRequested;
+
+  final String postId;
+  final String postOrigin;
 
   final TextEditingController commentTextController;
   final Function(String) onCommentChanged;
@@ -110,6 +116,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                       labelText: 'Leave a comment',
                       allowMentions: true,
                       mentionSearchLimit: 2,
+                      analyticProperties: generatePropertiesForPostSource(widget.postId, widget.postOrigin),
                       textEditingController: widget.commentTextController,
                       onTextChanged: widget.onCommentChanged,
                       onTextSubmitted: widget.onPostCommentRequested,

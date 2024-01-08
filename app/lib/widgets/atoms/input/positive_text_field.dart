@@ -4,6 +4,9 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/services/search_api_service.dart';
@@ -67,6 +70,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.autocorrect = true,
     this.allowMentions = false,
     this.mentionSearchLimit = 3,
+    this.analyticProperties = const {},
     super.key,
   });
 
@@ -115,6 +119,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final bool allowMentions;
   final int mentionSearchLimit;
+  final Map<String, dynamic> analyticProperties;
 
   final void Function(TextEditingController controller)? onControllerCreated;
 
@@ -322,6 +327,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       return;
     }
 
+    // Add an analytic event if the dialog is opened for the first time
+    if (!isSearchingForMentions) {
+      final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+      analyticsController.trackEvent(AnalyticEvents.mentionStarted, properties: widget.analyticProperties);
+    }
+
     // Cancel any previous search
     await mentionSearchOperation?.cancel();
     mentionSearchOperation = null;
@@ -408,6 +419,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     );
 
     textEditingController.text = '$newText ';
+
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    analyticsController.trackEvent(AnalyticEvents.mentionSelected, properties: {
+      ...widget.analyticProperties,
+      'mentioned_user_id': profile.flMeta?.id,
+    });
   }
 
   @override
