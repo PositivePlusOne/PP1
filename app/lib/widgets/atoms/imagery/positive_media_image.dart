@@ -305,7 +305,6 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   void initState() {
     super.initState();
     onForceMediaFetchCalled(ForceMediaFetchEvent(media: widget.media));
-    WidgetsBinding.instance.addPostFrameCallback(recordAnalytics);
   }
 
   @override
@@ -388,7 +387,7 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     return {...widget.analyticsProperties, ...mediaProperties};
   }
 
-  void recordAnalytics(Duration duration) {
+  void recordAnalytics() {
     final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
     analyticsController.trackEvent(AnalyticEvents.photoViewed, properties: generateMergedAnalyticProperties());
   }
@@ -461,6 +460,8 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
       widget.onTap!();
       return;
     }
+
+    recordAnalytics();
 
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     await appRouter.push(MediaRoute(media: widget.media));
