@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -144,6 +146,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     final bool isOnHomeRoute = router.current.name == HomeRoute.name;
     if (isOnHomeRoute && newIndex == NavigationBarIndex.hub) {
@@ -157,6 +160,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     switch (newIndex) {
       case NavigationBarIndex.add:
         routeInfo = CreatePostRoute();
+        analyticsController.trackEvent(AnalyticEvents.postCreationStarted);
         break;
       case NavigationBarIndex.guidance:
         routeInfo = const GuidanceRoute();

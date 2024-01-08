@@ -60,6 +60,7 @@ enum AnalyticEvents {
   profileDisconnected, // A user has disconnected from another user
   profileViewed, // A user has viewed another users profile
   postDisplayed, // A post has been displayed to the user
+  postCreationStarted, // A user has started creating a post
   postCreated, // A post has been created on the platform
   postEdited, // A post has been edited
   postViewed, // A post has been viewed by the user and is no longer on the screen

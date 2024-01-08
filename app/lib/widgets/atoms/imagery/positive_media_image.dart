@@ -56,6 +56,8 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     this.onBytesLoaded,
   });
 
+  static const int kMaximumFileSize = 1024 * 1024 * 25;
+
   final Media media;
   final bool useThumbnailIfAvailable;
   final PositiveThumbnailTargetSize? thumbnailTargetSize;
@@ -211,7 +213,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     Uint8List bytes = Uint8List(0);
 
     try {
-      bytes = await ref.getData() ?? Uint8List(0);
+      bytes = await ref.getData(kMaximumFileSize) ?? Uint8List(0);
     } catch (e) {
       logger.e('Unable to load image: $e');
     }
