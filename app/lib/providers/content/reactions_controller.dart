@@ -287,14 +287,15 @@ class ReactionsController extends _$ReactionsController {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
-    final Iterable<String> taggedUsers = comment.getHandles(includeSymbol: false);
+    final Iterable<String> taggedUsers = comment.getHandles(includeHandle: false);
+    final List<Mention> mentions = taggedUsers.map((e) => Mention.fromDisplayName(e)).toList();
 
     final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activityId, activityOrigin);
     final Reaction newReaction = await reactionApiService.postReaction(
       activityId: activityId,
       kind: 'comment',
       text: comment,
-      mentions: taggedUsers.map((e) => Mention.fromDisplayName(e)).toList(),
+      mentions: mentions,
     );
 
     // Track the event

@@ -92,23 +92,23 @@ extension StringExt on String {
     return startsWith('@') ? substring(1, length) : this;
   }
 
-  Iterable<String> getHandles({bool includeSymbol = true}) {
-    final RegExp exp = RegExp(r"\@\w+");
-    return exp.allMatches(this).map((match) => substring(match.start + (includeSymbol ? 0 : 1), match.end));
+  Iterable<String> getHandles({bool includeHandle = true}) {
+    final RegExp exp = RegExp(r"@\w+[\w\-]*");
+    return exp.allMatches(this).map((match) => substring(match.start + (includeHandle ? 0 : 1), match.end));
   }
 
-  Iterable<String> getTags({bool includeSymbol = true}) {
-    final RegExp exp = RegExp(r"\#\w+");
-    return exp.allMatches(this).map((match) => substring(match.start + (includeSymbol ? 0 : 1), match.end));
+  Iterable<String> getTags({bool includeHandle = true}) {
+    final RegExp exp = RegExp(r"#\w+[\w\-]*");
+    return exp.allMatches(this).map((match) => substring(match.start + (includeHandle ? 0 : 1), match.end));
   }
 
   String boldHandles() {
-    RegExp exp = RegExp(r"\@\w+");
+    final RegExp exp = RegExp(r"@\w+[\w\-]*");
     return replaceAllMapped(exp, (match) => '**${match.group(0)}**');
   }
 
   String boldHandlesAndLink({Map<String, String> knownIdMap = const {}}) {
-    RegExp exp = RegExp(r"\@\w+");
+    final RegExp exp = RegExp(r"@\w+[\w\-]*");
     return replaceAllMapped(exp, (match) {
       if (!knownIdMap.containsKey(match.group(0))) {
         return match.group(0) ?? '';

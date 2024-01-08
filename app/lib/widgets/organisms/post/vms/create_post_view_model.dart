@@ -899,7 +899,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       return;
     }
 
-    final Iterable<String> taggedUsers = captionController.text.getHandles(includeSymbol: false);
+    final Iterable<String> taggedUsers = captionController.text.getHandles(includeHandle: false);
 
     try {
       final ActivitiesController activityController = ref.read(activitiesControllerProvider.notifier);
