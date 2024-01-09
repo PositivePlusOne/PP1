@@ -45,6 +45,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     this.analyticProperties = const <String, Object?>{},
     this.onSelected,
     this.profileDescriptionBuilder,
+    this.brightness = Brightness.light,
     super.key,
   });
 
@@ -60,6 +61,8 @@ class PositiveProfileListTile extends ConsumerWidget {
 
   final bool isSelected;
   final VoidCallback? onSelected;
+
+  final Brightness brightness;
 
   final String Function(Profile? profile)? profileDescriptionBuilder;
 
@@ -110,6 +113,7 @@ class PositiveProfileListTile extends ConsumerWidget {
     final DesignTypographyModel typography = ref.watch(designControllerProvider.select((value) => value.typography));
 
     final String profileDescription = profileDescriptionBuilder?.call(targetProfile!) ?? '';
+    final bool isLight = brightness == Brightness.light;
 
     return PositiveTapBehaviour(
       onTap: (context) => onListTileSelected(context, analyticProperties),
@@ -120,7 +124,7 @@ class PositiveProfileListTile extends ConsumerWidget {
           maxHeight: isDense ? kProfileTileDenseHeight : kProfileTileHeight,
         ),
         decoration: BoxDecoration(
-          color: colors.white,
+          color: isLight ? colors.white : colors.colorGray1,
           borderRadius: BorderRadius.circular(kProfileTileBorderRadius),
         ),
         child: Row(

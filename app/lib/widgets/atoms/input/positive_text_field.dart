@@ -70,6 +70,7 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.allowMentions = false,
     this.mentionSearchLimit = 3,
     this.analyticProperties = const {},
+    this.searchResultsBrightness = Brightness.light,
     super.key,
   });
 
@@ -119,6 +120,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
   final bool allowMentions;
   final int mentionSearchLimit;
   final Map<String, dynamic> analyticProperties;
+
+  final Brightness searchResultsBrightness;
 
   final void Function(TextEditingController controller)? onControllerCreated;
 
@@ -601,12 +604,12 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
   Widget buildMentionSearchIndicator() {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(kPaddingSmall),
-      child: PositiveGlassSheet(
-        children: <Widget>[
-          PositiveLoadingIndicator(color: colours.white),
-        ],
+      child: Align(
+        alignment: Alignment.center,
+        child: PositiveLoadingIndicator(color: widget.searchResultsBrightness == Brightness.light ? colours.black : colours.white),
       ),
     );
   }
@@ -635,6 +638,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
           relationship: relationship,
           type: PositiveProfileListTileType.selectable,
           isDense: true,
+          brightness: widget.searchResultsBrightness == Brightness.light ? Brightness.dark : Brightness.light,
           onSelected: () => appendMentionToCursorPosition(targetProfile),
         ),
       );
@@ -642,7 +646,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
 
     return Padding(
       padding: const EdgeInsets.all(kPaddingSmall),
-      child: PositiveGlassSheet(
+      child: Column(
         children: tiles.spaceWithVertical(kPaddingExtraSmall),
       ),
     );

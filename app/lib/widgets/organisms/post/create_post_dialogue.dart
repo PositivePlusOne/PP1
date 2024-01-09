@@ -601,6 +601,7 @@ class _CreatePostTextFieldState extends State<CreatePostTextField> {
         textInputType: widget.textInputType,
         textCapitalization: widget.textCapitalization,
         allowMentions: true,
+        searchResultsBrightness: Brightness.dark,
       ),
     );
   }

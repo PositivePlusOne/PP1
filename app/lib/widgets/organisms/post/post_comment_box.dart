@@ -121,6 +121,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                       onTextChanged: widget.onCommentChanged,
                       onTextSubmitted: widget.onPostCommentRequested,
                       fillColor: colours.colorGray1,
+                      searchResultsBrightness: Brightness.light,
                       isEnabled: !widget.isBusy,
                       minLines: 1,
                       maxLines: 5,
