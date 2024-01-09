@@ -488,6 +488,12 @@ export namespace PostEndpoints {
         continue;
       }
 
+      // If the mention already exists, skip it
+      const existingMention = activity.enrichmentConfiguration?.mentions?.find((existingMention) => existingMention.foreignKey === foreignKey);
+      if (existingMention) {
+        continue;
+      }
+
       functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
       await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity);
     }
