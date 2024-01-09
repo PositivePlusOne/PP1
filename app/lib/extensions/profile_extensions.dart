@@ -397,19 +397,6 @@ extension ProfileExtensions on Profile {
       return;
     }
 
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final String currentProfileId = profileController.currentProfileId ?? '';
-    if (currentProfileId.isNotEmpty) {
-      final CacheController cacheController = providerContainer.read(cacheControllerProvider);
-      final Relationship? relationship = cacheController.get([currentProfileId, targetProfileId].asGUID);
-      final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
-      final bool isBlockedByTarget = relationshipStates.contains(RelationshipState.targetBlocked);
-      if (isBlockedByTarget) {
-        logger.e('onViewProfileButtonSelected: target profile is blocked');
-        return;
-      }
-    }
-
     final ProfileViewModel profileViewModel = providerContainer.read(profileViewModelProvider.notifier);
     await profileViewModel.preloadUserProfile(targetProfileId);
 
