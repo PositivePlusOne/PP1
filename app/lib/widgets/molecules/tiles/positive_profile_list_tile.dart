@@ -64,7 +64,7 @@ class PositiveProfileListTile extends ConsumerWidget {
   final String Function(Profile? profile)? profileDescriptionBuilder;
 
   static const double kProfileTileHeight = 72.0;
-  static const double kProfileTileDenseHeight = 52.0;
+  static const double kProfileTileDenseHeight = 42.0;
   static const double kProfileTileBorderRadius = 40.0;
 
   Future<void> onOptionsTapped(BuildContext context) async {
@@ -123,34 +123,36 @@ class PositiveProfileListTile extends ConsumerWidget {
           color: colors.white,
           borderRadius: BorderRadius.circular(kProfileTileBorderRadius),
         ),
-        padding: const EdgeInsets.all(kPaddingSmall),
         child: Row(
           children: <Widget>[
+            const SizedBox(width: kPaddingSmall),
             PositiveProfileCircularIndicator(
               profile: targetProfile,
               size: isDense ? kIconMediumLarge : kIconHuge,
             ),
-            const SizedBox(width: kPaddingSmall),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    getSafeDisplayNameFromProfile(targetProfile),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
-                  ),
-                  if (profileDescription.isNotEmpty) ...<Widget>[
+              child: Padding(
+                padding: const EdgeInsets.all(kPaddingSmall),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Text(
-                      profileDescription,
+                      getSafeDisplayNameFromProfile(targetProfile),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                      style: typography.styleTitle.copyWith(color: colors.colorGray7),
                     ),
+                    if (profileDescription.isNotEmpty) ...<Widget>[
+                      Text(
+                        profileDescription,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: typography.styleSubtext.copyWith(color: colors.colorGray3),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
             if (!isDense) ...<Widget>[

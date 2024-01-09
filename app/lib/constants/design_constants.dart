@@ -18,6 +18,9 @@ import 'package:app/extensions/color_extensions.dart';
 const double kBrightnessUpperThreshold = 0.15;
 const double kBrightnessLowerThreshold = 0.015;
 
+// API Debounce
+const Duration kDebounceDuration = Duration(milliseconds: 500);
+
 // Animations
 const Duration kAnimationDurationInstant = Duration(milliseconds: 0);
 const Duration kAnimationDurationVeryFast = Duration(milliseconds: 75);

@@ -5,7 +5,6 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -134,15 +133,9 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
   String lastKnownText = '';
   double labelPadding = 0.0;
 
-  CancelableOperation<Iterable<Profile>>? mentionSearchOperation;
+  Debounce? mentionSearchOperation;
   Iterable<Profile>? mentionSearchResults;
   String? latestMentionSearchQuery;
-
-  bool get isSearchingForMentions => mentionSearchOperation != null;
-
-  // Display flags based on mention search
-  bool get canDisplayMentionSearchIndicator => isSearchingForMentions;
-  bool get canDisplayMentionSearchResults => mentionSearchResults != null && mentionSearchResults!.isNotEmpty;
 
   bool get isFocused => _isFocused;
   bool _isFocused = false;
@@ -153,6 +146,19 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       });
     }
   }
+
+  bool _isSearchingForMentions = false;
+  bool get isSearchingForMentions => _isSearchingForMentions;
+  set isSearchingForMentions(bool value) {
+    if (_isSearchingForMentions != value) {
+      _isSearchingForMentions = value;
+      setStateIfMounted();
+    }
+  }
+
+  // Display flags based on mention search
+  bool get canDisplayMentionSearchIndicator => isSearchingForMentions;
+  bool get canDisplayMentionSearchResults => mentionSearchResults != null && mentionSearchResults!.isNotEmpty;
 
   @override
   void initState() {
@@ -333,28 +339,29 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       analyticsController.trackEvent(AnalyticEvents.mentionStarted, properties: widget.analyticProperties);
     }
 
-    // Cancel any previous search
-    await mentionSearchOperation?.cancel();
-    mentionSearchOperation = null;
-    mentionSearchResults = null;
-    setStateIfMounted();
-
     // Check if we have more than just the @ symbol
     if (word.length <= 1) {
       return;
     }
 
-    try {
-      mentionSearchOperation = CancelableOperation.fromFuture(
-        performMentionUserSearch(word.substring(1)),
-      );
+    mentionSearchOperation?.cancel();
+    mentionSearchResults = null;
+    isSearchingForMentions = true;
+    setStateIfMounted();
 
-      setStateIfMounted();
-      mentionSearchResults = await mentionSearchOperation?.value;
-    } finally {
-      mentionSearchOperation = null;
-      setStateIfMounted();
-    }
+    mentionSearchOperation = debounce(
+      () async {
+        try {
+          mentionSearchResults = await performMentionUserSearch(word.substring(1));
+        } finally {
+          isSearchingForMentions = false;
+          setStateIfMounted();
+        }
+      },
+      kDebounceDuration,
+    );
+
+    mentionSearchOperation?.call();
   }
 
   Future<Iterable<Profile>> performMentionUserSearch(String query) async {
@@ -563,30 +570,31 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       ),
     );
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        color: widget.fillColor ?? colours.white,
-        border: Border.all(
-          color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
-          width: widget.borderWidth,
+    return Column(
+      children: <Widget>[
+        DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(widget.borderRadius),
+            color: widget.fillColor ?? colours.white,
+            border: Border.all(
+              color: hasBorder ? widget.tintColor : widget.fillColor ?? colours.white,
+              width: widget.borderWidth,
+            ),
+          ),
+          child: child,
         ),
-      ),
-      child: Column(
-        children: <Widget>[
-          child,
-          PositiveExpandableWidget(
-            isExpanded: canDisplayMentionSearchIndicator,
-            collapsedChild: const SizedBox(width: double.infinity),
-            expandedChild: buildMentionSearchIndicator(),
-          ),
-          PositiveExpandableWidget(
-            isExpanded: canDisplayMentionSearchResults,
-            collapsedChild: const SizedBox(width: double.infinity),
-            expandedChild: buildMentionSearchResults(),
-          ),
-        ],
-      ),
+        const SizedBox(height: kPaddingExtraSmall),
+        PositiveExpandableWidget(
+          isExpanded: canDisplayMentionSearchIndicator,
+          collapsedChild: const SizedBox(width: double.infinity),
+          expandedChild: buildMentionSearchIndicator(),
+        ),
+        PositiveExpandableWidget(
+          isExpanded: canDisplayMentionSearchResults,
+          collapsedChild: const SizedBox(width: double.infinity),
+          expandedChild: buildMentionSearchResults(),
+        ),
+      ],
     );
   }
 
