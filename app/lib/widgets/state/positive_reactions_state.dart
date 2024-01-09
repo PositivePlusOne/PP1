@@ -20,7 +20,7 @@ class PositiveReactionsState with PositivePaginationControllerState {
     this.currentPaginationKey = '',
   });
 
-  static final PositiveReactionsState emptyState = PositiveReactionsState.createNewFeedState('', '', '');
+  static final PositiveReactionsState emptyState = PositiveReactionsState.createNewFeedState(activityId: '', activityOrigin: '', profileId: '');
 
   @override
   final PagingController<String, Reaction> pagingController;
@@ -66,7 +66,11 @@ class PositiveReactionsState with PositivePaginationControllerState {
     cacheController.add(key: cacheKey, value: this);
   }
 
-  static PositiveReactionsState createNewFeedState(String activityId, String activityOrigin, String profileId) {
+  static PositiveReactionsState createNewFeedState({
+    required String activityId,
+    required String activityOrigin,
+    required String profileId,
+  }) {
     return PositiveReactionsState(
       profileId: profileId,
       activityId: activityId,

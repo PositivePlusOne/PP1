@@ -118,6 +118,11 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
     logger.d('appendReactionPageToState() - reactionList: $reactionList');
 
+    if (next == null) {
+      reactionsState.pagingController.appendLastPage(reactionList);
+      return;
+    }
+
     reactionsState.pagingController.appendPage(reactionList, next);
   }
 

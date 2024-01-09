@@ -31,6 +31,10 @@ Map<String, Object?> generatePropertiesForPostSource(
   String origin, {
   String searchTerm = '',
 }) {
+  if (postId.isEmpty || origin.isEmpty) {
+    return {};
+  }
+
   return {
     sourceKey: AnalyticSource.post.locale,
     postIdKey: postId,

@@ -117,7 +117,11 @@ class ReactionsController extends _$ReactionsController {
     final Logger logger = ref.read(loggerProvider);
     if (activityId.isEmpty || currentProfileId.isEmpty) {
       logger.w('Cannot build positive reactions state for activity: $activityId and profile: $currentProfileId');
-      return PositiveReactionsState.createNewFeedState('', '', '');
+      return PositiveReactionsState.createNewFeedState(
+        activityId: activityId,
+        activityOrigin: activityOrigin,
+        profileId: currentProfileId,
+      );
     }
 
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -134,7 +138,12 @@ class ReactionsController extends _$ReactionsController {
     }
 
     logger.i('Adding positive reactions state to cache: $cacheKey');
-    final PositiveReactionsState state = PositiveReactionsState.createNewFeedState(activityId, currentProfileId, activityOrigin);
+    final PositiveReactionsState state = PositiveReactionsState.createNewFeedState(
+      activityId: activityId,
+      activityOrigin: activityOrigin,
+      profileId: currentProfileId,
+    );
+
     cacheController.add(key: cacheKey, value: state);
 
     return state;
@@ -318,9 +327,9 @@ class ReactionsController extends _$ReactionsController {
 
     final PositiveReactionsState reactionsState = cacheController.get<PositiveReactionsState>(reactionsCacheKey) ??
         PositiveReactionsState.createNewFeedState(
-          activityId,
-          profileController.currentProfileId ?? '',
-          activityOrigin,
+          activityId: activityId,
+          activityOrigin: activityOrigin,
+          profileId: profileController.currentProfileId ?? '',
         );
 
     reactionsState.pagingController.itemList?.insert(0, newReaction);
