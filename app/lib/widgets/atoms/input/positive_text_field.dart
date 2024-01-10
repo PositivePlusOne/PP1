@@ -300,7 +300,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     }
 
     // Check if we have more than just the @ symbol
-    if (word.length <= kMinimumMentionSearchLength + 1) {
+    if (word.length <= kMinimumMentionSearchLength) {
       return;
     }
 

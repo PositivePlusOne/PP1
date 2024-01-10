@@ -244,6 +244,17 @@ export namespace ActivitiesService {
         continue;
       }
 
+      // Check if the foreign key is us
+      if (mention.foreignKey === profileId) {
+        functions.logger.info("Mentioned user is us", {
+          mention,
+        });
+
+        // Can we mention ourselves?
+        newMentions.push(mention);
+        continue;
+      }
+
       const relationship = await RelationshipService.getRelationship([profileId, mention.foreignKey]);
 
       // Remove the mention as we have no relationship to the user
