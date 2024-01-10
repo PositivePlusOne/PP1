@@ -72,6 +72,7 @@ export namespace ReactionEndpoints {
 
         //? For each mentionedUser attempt get the users ID and prepare to notify
         const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, text, visibleTo, mentions);
+        const uniqueMentions = sanitizedMentions.filter((mention, index, self) => self.findIndex(m => m.label === mention.label) === index);
 
         // Build reaction
         const reactionJSON = {
@@ -98,7 +99,7 @@ export namespace ReactionEndpoints {
         const streamClient = FeedService.getFeedsClient();
         const [reaction, reactionStats, sourceProfileStats, targetProfileStats] = await ReactionService.addReaction(streamClient, reactionJSON);
 
-        await ReactionService.processNotifications(kind, uid, activity, reaction, reactionStats, sanitizedMentions);
+        await ReactionService.processNotifications(kind, uid, activity, reaction, reactionStats, uniqueMentions);
 
         return buildEndpointResponse(context, {
             sender: uid,
