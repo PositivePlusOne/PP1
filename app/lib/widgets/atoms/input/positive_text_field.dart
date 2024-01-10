@@ -241,16 +241,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       return;
     }
 
-    attemptToRemoveDuplicateMentions();
-
     if (widget.onTextChanged != null && lastKnownText != textEditingController.text) {
       widget.onTextChanged!(textEditingController.text);
-    }
-
-    // Clear the mention search results if the text changes
-    if (mentionSearchResults != null) {
-      mentionSearchResults = null;
-      setStateIfMounted();
     }
 
     // Get the cursor position
@@ -261,51 +253,9 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     setState(() {});
   }
 
-  void attemptToRemoveDuplicateMentions() {
-    // Find all mentions in the text
-    final List<String> mentions = findMentions(textEditingController.text);
-
-    // Remove any duplicate mentions
-    final List<String> uniqueMentions = mentions.toSet().toList();
-
-    // Check if we need to remove any mentions
-    if (mentions.length == uniqueMentions.length) {
-      return;
-    }
-
-    // For each mention, remove all but the first
-    for (final String mention in uniqueMentions) {
-      // Get the index of only a matching entire word
-      final int firstIndex = textEditingController.text.indexOf(mention);
-      final int lastIndex = textEditingController.text.lastIndexOf(mention);
-
-      if (firstIndex != lastIndex) {
-        final String newText = textEditingController.text.replaceRange(
-          lastIndex,
-          lastIndex + mention.length,
-          '',
-        );
-
-        textEditingController.text = newText;
-        textEditingController.selection = TextSelection.fromPosition(
-          TextPosition(offset: lastIndex),
-        );
-      }
-    }
-
-    // If the new text has a duplicate trailing space including new lines, remove it
-    final String newText = textEditingController.text.trim();
-    if (newText != textEditingController.text) {
-      textEditingController.text = newText;
-      textEditingController.selection = TextSelection.fromPosition(
-        TextPosition(offset: newText.length),
-      );
-    }
-  }
-
   List<String> findMentions(String text) {
     final List<String> mentions = [];
-    final List<String> words = text.split(RegExp(r'\s+'));
+    final List<String> words = RegExp(r'(?<=@)\S+').allMatches(text).map((match) => match.group(0)!).toList();
     for (final String word in words) {
       if (word.startsWith('@')) {
         mentions.add(word);
@@ -319,6 +269,11 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     if (!widget.allowMentions) {
       return;
     }
+
+    mentionSearchOperation?.cancel();
+    isSearchingForMentions = false;
+    mentionSearchResults = null;
+    setStateIfMounted();
 
     // Get the word at the cursor position
     final String? word = getWordAtCursorPosition(textEditingController.text, cursorPosition);
@@ -347,8 +302,6 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       return;
     }
 
-    mentionSearchOperation?.cancel();
-    mentionSearchResults = null;
     isSearchingForMentions = true;
     setStateIfMounted();
 
@@ -394,24 +347,28 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     }
 
     // Check if the character prior to the cursor is a space or a new line
-    if (cursorPosition > 0 && text[cursorPosition - 1] == ' ' || text[cursorPosition - 1] == '\n') {
+    final String letter = text[cursorPosition - 1];
+    if (letter == ' ' || letter == '\n') {
       return null;
     }
 
-    // Get the word at the cursor position, including new lines
-    final List<String> words = text.split(RegExp(r'\s+'));
-    int wordStart = 0;
-    int wordEnd = 0;
-    for (int i = 0; i < words.length; i++) {
-      final String word = words[i];
-      wordStart = wordEnd;
-      wordEnd = wordStart + word.length + 1;
-      if (cursorPosition >= wordStart && cursorPosition <= wordEnd) {
-        return word;
+    List<String> letters = [];
+
+    // Walk backwards through the string until we hit a space or a new line
+    for (int i = cursorPosition - 1; i >= 0; i--) {
+      final String letter = text[i];
+      if (letter == ' ' || letter == '\n') {
+        break;
       }
+
+      letters.add(letter);
     }
 
-    return null;
+    // Reverse the letters
+    letters = letters.reversed.toList();
+
+    // Join the letters together
+    return letters.join();
   }
 
   void appendMentionToCursorPosition(Profile profile) {
@@ -520,7 +477,6 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                   focusNode: textFocusNode,
                   inputFormatters: [
                     if (widget.maxLengthEnforcement != MaxLengthEnforcement.none) LengthLimitingTextInputFormatter(widget.maxLength),
-                    removeDuplicateWhitespaceFormatter(),
                     ...?widget.inputformatters,
                   ],
                   enableSuggestions: true,

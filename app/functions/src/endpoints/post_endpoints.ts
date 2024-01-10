@@ -233,8 +233,13 @@ export namespace PostEndpoints {
 
     //? For each mentionedUser attempt get the users ID and prepare to notify
     const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
+    const uniqueMentions = sanitizedMentions.filter((mention, index, self) =>
+      index === self.findIndex((t) => (
+        t.label === mention.label
+      ))
+    );
 
-    functions.logger.info(`Got sanitized mentions`, { sanitizedMentions });
+    functions.logger.info(`Got sanitized mentions`, { sanitizedMentions, uniqueMentions });
 
     const activityRequest = {
       publisherInformation: {
@@ -277,8 +282,8 @@ export namespace PostEndpoints {
       await ProfileService.increaseAvailablePromotedCountsForProfile(publisherProfile, -1);
     }
 
-    for (let index = 0; index < sanitizedMentions.length; index++) {
-      const mention = sanitizedMentions[index];
+    for (let index = 0; index < uniqueMentions.length; index++) {
+      const mention = uniqueMentions[index];
       const foreignKey = mention.foreignKey;
       if (!foreignKey) {
         continue;
@@ -476,8 +481,32 @@ export namespace PostEndpoints {
     //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
     //? For each mentionedUser attempt get the users ID and prepare to notify
     const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, content, visibleTo, mentions);
-    for (let index = 0; index < sanitizedMentions.length; index++) {
-      const mention = sanitizedMentions[index];
+    const uniqueMentions = sanitizedMentions.filter((mention, index, self) =>
+      index === self.findIndex((t) => (
+        t.label === mention.label
+      ))
+    );
+
+    functions.logger.info(`Got sanitized mentions`, { sanitizedMentions, uniqueMentions });
+
+    if (activity.enrichmentConfiguration) {
+      activity.enrichmentConfiguration.mentions = sanitizedMentions;
+    } else {
+      activity.enrichmentConfiguration = {
+        mentions: sanitizedMentions,
+      };
+    }
+
+    activity = await DataService.updateDocument({
+      schemaKey: "activities",
+      entryId: activityId,
+      data: activity,
+    });
+
+    await ActivitiesService.updateTagFeedsForActivity(activity);
+
+    for (let index = 0; index < uniqueMentions.length; index++) {
+      const mention = uniqueMentions[index];
       const foreignKey = mention.foreignKey;
       if (!foreignKey) {
         continue;
@@ -497,22 +526,6 @@ export namespace PostEndpoints {
       functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
       await PostMentionNotification.sendNotification(publisherProfile, mentionedProfile, activity);
     }
-
-    if (activity.enrichmentConfiguration) {
-      activity.enrichmentConfiguration.mentions = sanitizedMentions;
-    } else {
-      activity.enrichmentConfiguration = {
-        mentions: sanitizedMentions,
-      };
-    }
-
-    activity = await DataService.updateDocument({
-      schemaKey: "activities",
-      entryId: activityId,
-      data: activity,
-    });
-
-    await ActivitiesService.updateTagFeedsForActivity(activity);
 
     functions.logger.info("Updated user activity", { feedActivity: activity });
     return buildEndpointResponse(context, {
