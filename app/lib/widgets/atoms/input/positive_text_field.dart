@@ -136,6 +136,8 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
   String lastKnownText = '';
   double labelPadding = 0.0;
 
+  static const int kMinimumMentionSearchLength = 3;
+
   Debounce? mentionSearchOperation;
   Iterable<Profile>? mentionSearchResults;
   String? latestMentionSearchQuery;
@@ -298,7 +300,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     }
 
     // Check if we have more than just the @ symbol
-    if (word.length <= 1) {
+    if (word.length <= kMinimumMentionSearchLength + 1) {
       return;
     }
 
