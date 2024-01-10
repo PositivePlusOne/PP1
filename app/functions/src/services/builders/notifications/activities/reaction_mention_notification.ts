@@ -3,6 +3,7 @@ import { ActivityJSON } from "../../../../dto/activities";
 import { ProfileJSON } from "../../../../dto/profile";
 import { ReactionJSON } from "../../../../dto/reactions";
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
+import { StringHelpers } from "../../../../helpers/string_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
@@ -20,7 +21,8 @@ export namespace ReactionMentionNotification {
 
     const displayName = userProfile.displayName || "";
     const title = await LocalizationsService.getLocalizedString("notifications.reaction_mentioned.title");
-    const body = await LocalizationsService.getLocalizedString("notifications.reaction_mentioned.body", { displayName, shortBody: content });
+    const safeContent = StringHelpers.markdownToPlainText(content);
+    const body = await LocalizationsService.getLocalizedString("notifications.reaction_mentioned.body", { displayName, shortBody: safeContent });
 
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
@@ -45,7 +47,7 @@ export namespace ReactionMentionNotification {
         reaction_id: reactionId,
         origin,
       },
-      action: NotificationAction.POST_MENTIONED,
+      action: NotificationAction.REACTION_MENTIONED,
     });
 
     const preparedNotification = NotificationsService.prepareNewNotification(payload);
