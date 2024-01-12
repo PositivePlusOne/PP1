@@ -125,7 +125,7 @@ class _$GenderOptionImpl extends _GenderOption {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GenderOptionImpl &&
@@ -271,7 +271,7 @@ class _$GenderControllerStateImpl extends _GenderControllerState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GenderControllerStateImpl &&

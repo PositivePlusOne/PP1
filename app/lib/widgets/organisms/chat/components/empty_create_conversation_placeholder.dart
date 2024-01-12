@@ -14,7 +14,7 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/providers/system/design_controller.dart';
 
 class EmptyCreateConversationPlaceholder extends ConsumerWidget {
-  const EmptyCreateConversationPlaceholder({Key? key}) : super(key: key);
+  const EmptyCreateConversationPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

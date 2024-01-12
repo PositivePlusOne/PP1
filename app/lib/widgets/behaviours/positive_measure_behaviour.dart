@@ -6,8 +6,8 @@ class PositiveMeasureBehaviour extends StatelessWidget {
   const PositiveMeasureBehaviour({
     required this.child,
     required this.onMeasure,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget child;
   final Function(Size) onMeasure;

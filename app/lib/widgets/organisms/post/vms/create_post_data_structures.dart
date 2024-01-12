@@ -1,5 +1,6 @@
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/common/media.dart';
 
 //? Simplified Activity structure
@@ -16,13 +17,18 @@ class ActivityData {
     this.commentPermissionMode,
     this.postType,
     this.media,
+    this.mentions = const [],
   });
 
   String? activityID;
   String? reposterActivityID;
 
+  //UserIds mentioned in the post
+  List<Mention> mentions;
+
   String? content;
   List<String>? tags;
+  List<String>? taggedUsers;
   String? altText;
   String? promotionKey;
 

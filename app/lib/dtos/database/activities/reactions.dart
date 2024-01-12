@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
@@ -22,6 +23,7 @@ class Reaction with _$Reaction {
     @Default(ReactionType.unknownReaction()) @JsonKey(fromJson: ReactionType.fromJson, toJson: ReactionType.toJson) ReactionType kind,
     @Default('') @JsonKey(name: 'text') String text,
     @Default([]) @JsonKey(name: 'tags') List<String> tags,
+    @JsonKey(fromJson: Mention.fromJsonList, toJson: Mention.toJsonList) @Default([]) List<Mention> mentions,
   }) = _Reaction;
 
   factory Reaction.fromJson(Map<String, dynamic> json) => _$ReactionFromJson(json);

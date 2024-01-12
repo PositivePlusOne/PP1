@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/helpers/brand_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +24,7 @@ class PositiveComment extends ConsumerWidget {
   const PositiveComment({
     required this.currentProfile,
     required this.comment,
+    required this.feedOrigin,
     required this.onOptionSelected,
     this.isFirst = false,
     super.key,
@@ -30,6 +32,8 @@ class PositiveComment extends ConsumerWidget {
 
   final Profile? currentProfile;
   final Reaction comment;
+  final String feedOrigin;
+
   final bool isFirst;
   final FutureOr<void> Function(Reaction comment, Profile? publisherProfile) onOptionSelected;
 
@@ -61,15 +65,16 @@ class PositiveComment extends ConsumerWidget {
             currentProfile: currentProfile,
             publisher: publisherProfile ?? Profile.empty(),
             publisherRelationship: relationship,
+            origin: feedOrigin,
             onOptions: () => onOptionSelected(comment, publisherProfile),
           ),
           const SizedBox(height: kPaddingSmall),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-            child: Text(
+            child: buildMarkdownWidgetFromBody(
               comment.text,
-              textAlign: TextAlign.left,
-              style: typography.styleBody,
+              boldHandles: true,
+              mentions: comment.mentions,
             ),
           ),
         ],

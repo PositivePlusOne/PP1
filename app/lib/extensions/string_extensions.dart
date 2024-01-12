@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
+import 'package:app/extensions/profile_extensions.dart';
 
 extension StringExt on String {
   static const int maxTagLength = 30;
@@ -85,6 +86,36 @@ extension StringExt on String {
       fallback: tagKey,
       key: tagKey,
     );
+  }
+
+  String removeHandles() {
+    return startsWith('@') ? substring(1, length) : this;
+  }
+
+  Iterable<String> getHandles({bool includeHandle = true}) {
+    final RegExp exp = RegExp(r"@\w+[\w\-]*");
+    return exp.allMatches(this).map((match) => substring(match.start + (includeHandle ? 0 : 1), match.end));
+  }
+
+  Iterable<String> getTags({bool includeHandle = true}) {
+    final RegExp exp = RegExp(r"#\w+[\w\-]*");
+    return exp.allMatches(this).map((match) => substring(match.start + (includeHandle ? 0 : 1), match.end));
+  }
+
+  String boldHandles() {
+    final RegExp exp = RegExp(r"@\w+[\w\-]*");
+    return replaceAllMapped(exp, (match) => '**${match.group(0)}**');
+  }
+
+  String boldHandlesAndLink({Map<String, String> knownIdMap = const {}}) {
+    final RegExp exp = RegExp(r"@\w+[\w\-]*");
+    return replaceAllMapped(exp, (match) {
+      if (!knownIdMap.containsKey(match.group(0))) {
+        return match.group(0) ?? '';
+      }
+
+      return '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})';
+    });
   }
 }
 

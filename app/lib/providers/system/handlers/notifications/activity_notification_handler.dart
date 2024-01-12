@@ -2,6 +2,10 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/providers/content/reactions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -36,8 +40,9 @@ class ActivityNotificationHandler extends NotificationHandler {
     final bool isLike = payload.action == const NotificationAction.postLiked() || payload.action == const NotificationAction.postLikedGrouped();
     final bool isShare = payload.action == const NotificationAction.postShared() || payload.action == const NotificationAction.postSharedGrouped();
     final bool isBookmark = payload.action == const NotificationAction.postBookmarked() || payload.action == const NotificationAction.postBookmarkedGrouped();
+    final bool isMention = payload.action == const NotificationAction.postMentioned() || payload.action == const NotificationAction.reactionMentioned();
 
-    return isComment || isLike || isShare || isBookmark;
+    return isComment || isLike || isShare || isBookmark || isMention;
   }
 
   bool isGrouped(NotificationPayload payload) {
@@ -78,6 +83,8 @@ class ActivityNotificationHandler extends NotificationHandler {
       postSharedGrouped: () => UniconsLine.share_alt,
       postBookmarked: () => UniconsLine.bookmark,
       postBookmarkedGrouped: () => UniconsLine.bookmark,
+      postMentioned: () => UniconsLine.comment_lines,
+      reactionMentioned: () => UniconsLine.comment_lines,
       none: () => UniconsLine.exclamation_triangle,
       test: () => UniconsLine.exclamation_triangle,
       connectionRequestAccepted: () => UniconsLine.exclamation_triangle,
@@ -112,21 +119,40 @@ class ActivityNotificationHandler extends NotificationHandler {
   FutureOr<void> onNotificationSelected(NotificationPayload payload, BuildContext context) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ActivitiesController activitiesController = providerContainer.read(activitiesControllerProvider.notifier);
+    final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+
     final String activityId = payload.extraData.containsKey('activity_id') ? payload.extraData['activity_id'] as String : '';
     final String reactionId = payload.extraData.containsKey('reaction_id') ? payload.extraData['reaction_id'] as String : '';
     final String origin = payload.extraData.containsKey('origin') ? payload.extraData['origin'] as String : '';
 
-    if (activityId.isEmpty || reactionId.isEmpty || origin.isEmpty) {
+    if (activityId.isEmpty || origin.isEmpty) {
       logger.e('onNotificationSelected(), activityId, reactionId or feed is empty');
       return;
     }
 
     // Preload the activity
-    await activitiesController.getActivity(activityId);
+    final Activity activity = await activitiesController.getActivity(activityId);
+
+    // Preload the reaction and add it to the feed
+    if (reactionId.isNotEmpty) {
+      final Reaction reaction = await reactionsController.getReaction(reactionId: reactionId);
+      final PositiveReactionsState feedState = reactionsController.getPositiveReactionsStateForActivity(activity: activity, currentProfile: profileController.currentProfile);
+
+      // Add the reaction to the feed if it doesn't exist
+      final bool hasReaction = feedState.pagingController.itemList?.any((element) => element.flMeta?.id == reactionId) ?? false;
+      if (!hasReaction) {
+        feedState.pagingController.itemList?.add(reaction);
+        final String newCacheKey = feedState.buildCacheKey();
+        cacheController.add(key: newCacheKey, value: feedState);
+      }
+    }
 
     final AppRouter router = providerContainer.read(appRouterProvider);
     final PostRoute postRoute = PostRoute(
       activityId: activityId,
+      reactionId: reactionId,
       feed: TargetFeed.fromOrigin(origin),
     );
 

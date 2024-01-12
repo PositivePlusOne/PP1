@@ -263,7 +263,7 @@ class _$TagImpl implements _Tag {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TagImpl &&
@@ -457,7 +457,7 @@ class _$TagLocalizationImpl implements _TagLocalization {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TagLocalizationImpl &&
@@ -656,7 +656,7 @@ class _$TagTopicImpl implements _TagTopic {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TagTopicImpl &&

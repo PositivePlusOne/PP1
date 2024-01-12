@@ -13,6 +13,10 @@ import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
 import { ProfileJSON } from "../dto/profile";
 import { PromotionJSON } from "../dto/promotions";
+import { MentionJSON } from "../dto/mentions";
+import { ProfileService } from "./profile_service";
+import { RelationshipService } from "./relationship_service";
+import { RelationshipHelpers } from "../helpers/relationship_helpers";
 
 export namespace ActivitiesService {
   /**
@@ -170,6 +174,141 @@ export namespace ActivitiesService {
       schemaKey: "promotions",
       entryId: promotionKey,
     });
+  }
+
+  export async function sanitizeMentions(profile: ProfileJSON, content: string, visibilityFlag: string, mentions: MentionJSON[]): Promise<MentionJSON[]> {
+    let newMentions: MentionJSON[] = [];
+
+    // Get our ID and display name
+    const profileId = profile?._fl_meta_?.fl_id ?? "";
+    const profileDisplayName = profile?.displayName ?? "";
+
+    // Exit if we don't have a profile ID or display name
+    if (!profileId || !profileDisplayName) {
+      return mentions;
+    }
+
+    // Remove any mentions that are us
+    for (const mention of mentions) {
+      if (mention.foreignKey !== profileId && mention.label !== profileDisplayName) {
+        functions.logger.info("Adding mention", { mention });
+        newMentions.push(mention);
+      }
+    }
+
+    // Loop through each, and if they do not have a foreign key, add one based on the label
+    for (const mention of newMentions) {
+      const isDisplayNameMention = mention.label?.startsWith("@") ?? false;
+      const isUsersSchema = mention.schema === "users";
+      if (!mention.foreignKey && isDisplayNameMention && isUsersSchema) {
+        const displayName = mention.label?.substring(1) ?? "";
+        const foundProfile = await ProfileService.getProfileByDisplayName(displayName);
+        if (foundProfile) {
+          mention.foreignKey = foundProfile?._fl_meta_?.fl_id ?? "";
+        }
+      }
+
+      // TODO - Handle tags and other things
+    }
+
+    // Loop through each, and add a start and end index from the content if they do not have one already
+    // Check that the content is not empty and that the label is inside the content
+    if (content && content.length > 0) {
+      for (const mention of newMentions) {
+        if (!mention.startIndex && !mention.endIndex && mention.label) {
+          const startIndex = content.indexOf(mention.label);
+          if (startIndex > -1) {
+            mention.startIndex = startIndex;
+            mention.endIndex = startIndex + mention.label.length;
+          }
+        }
+      }
+    }
+
+    // Perform relationship checks and remove any mentions that are not valid
+    const tempMentions = [...newMentions];
+    const isEveryoneFlag = visibilityFlag === 'public';
+    newMentions = [];
+
+    functions.logger.info("Sanitizing mentions", {
+      profileId,
+      profileDisplayName,
+      visibilityFlag,
+      mentions,
+      tempMentions,
+      isEveryoneFlag,
+    });
+
+    for (const mention of tempMentions) {
+      if (!mention.foreignKey) {
+        continue;
+      }
+
+      // Check if the foreign key is us
+      if (mention.foreignKey === profileId) {
+        functions.logger.info("Mentioned user is us", {
+          mention,
+        });
+
+        // Can we mention ourselves?
+        newMentions.push(mention);
+        continue;
+      }
+
+      const relationship = await RelationshipService.getRelationship([profileId, mention.foreignKey]);
+
+      // Remove the mention as we have no relationship to the user
+      if (!relationship) {
+        if (isEveryoneFlag) {
+          newMentions.push(mention);
+        } else {
+          functions.logger.error("Missing everyone flag and no relationship", {
+            mention,
+            relationship,
+          });
+        }
+        
+        continue;
+      }
+
+      // Check if they have blocked us
+      const isBlockedByMentioned = RelationshipHelpers.hasBlockedRelationship(mention.foreignKey, relationship);
+      if (isBlockedByMentioned) {
+        functions.logger.info("Mentioned user has blocked us", {
+          mention,
+          relationship,
+        });
+
+        continue;
+      }
+
+      // Visibility check
+      const isMentionedFollowing = RelationshipHelpers.isUserFollowing(mention.foreignKey, relationship);
+      const isMentionedConnected = RelationshipHelpers.isUserConnected(mention.foreignKey, relationship);
+      let canMention = true;
+
+      if (visibilityFlag === 'followers_and_connections' && !isMentionedFollowing) {
+        functions.logger.info("Mentioned user is not following", {
+          mention,
+          relationship,
+        });
+
+        canMention = false;
+      } else if (visibilityFlag === 'connections' && !isMentionedConnected) {
+        functions.logger.info("Mentioned user is not connected", {
+          mention,
+          relationship,
+        });
+
+        canMention = false;
+      }
+
+      if (canMention) {
+        newMentions.push(mention);
+      }
+    }
+
+    return newMentions;
   }
 
   export async function getForeignIdTimeForActivity(activity: ActivityJSON): Promise<ForeignIDTimes> {

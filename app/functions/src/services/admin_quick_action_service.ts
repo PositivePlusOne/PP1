@@ -19,12 +19,14 @@ import { DeactivateInactivePromotionsAction } from "./actions/deactivate_inactiv
 import { DeleteMemberAction } from "./actions/delete_member_action";
 import { ClearFeedAction } from "./actions/clear_feed_action";
 import { UpdateProfileImageAction } from "./actions/update_profile_image_action";
+import { FixProfilesAction } from "./actions/fix_profiles_action";
+import { ClearServerCacheAction } from "./actions/clear_server_cache_action";
 
 export namespace AdminQuickActionService {
     type ActionFunction = (action: AdminQuickActionJSON) => Promise<void>;
 
     const actionMapping: { [key: string]: ActionFunction } = {
-        'deleteMember': DeleteMemberAction.deleteMember,
+        'deletePendingMembers': DeleteMemberAction.deletePendingMembers,
         'removeOrganisationMember': RemoveOrganisationMemberAction.removeOrganisationMember,
         'assignOrganisationMember': AssignOrganisationMemberAction.assignOrganisationMember,
         'assignOrganisationOwner': AssignOrganisationOwnerAction.assignOrganisationOwner,
@@ -39,6 +41,8 @@ export namespace AdminQuickActionService {
         'updatePromotionMixpanelAnalytics': UpdatePromotionMixpanelAnalyticsAction.updatePromotionsMixpanelAnalytics,
         'shufflePromotionSeeds': ShufflePromotionSeedsAction.shufflePromotionSeeds,
         'deactivateInactivePromotions': DeactivateInactivePromotionsAction.deactivateInactivePromotions,
+        'fixProfileData': FixProfilesAction.fixProfiles,
+        'clearServerCache': ClearServerCacheAction.clearServerCache,
     };
 
     export async function processQuickAction(action: AdminQuickActionJSON): Promise<void> {

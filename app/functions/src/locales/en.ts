@@ -119,5 +119,13 @@ export const enTranslations = {
       body: "**{{count}}** bookmarks on **{{shortBody}}**",
       body_empty: "**{{count}}** bookmarks on your post",
     },
+    post_mentioned: {
+      title: "New Mention",
+      body: "**{{displayName}}** has mentioned you in their post: **{{shortBody}}**",
+    },
+    reaction_mentioned: {
+      title: "New Mention",
+      body: "**{{displayName}}** has mentioned you in a comment: **{{shortBody}}**",
+    },
   },
 };

@@ -147,7 +147,7 @@ class _$HivStatusImpl implements _HivStatus {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HivStatusImpl &&
@@ -297,7 +297,7 @@ class _$HivStatusControllerStateImpl implements _HivStatusControllerState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HivStatusControllerStateImpl &&

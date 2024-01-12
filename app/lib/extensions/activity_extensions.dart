@@ -19,6 +19,7 @@ import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
@@ -240,10 +241,12 @@ extension ActivityExt on Activity {
     );
 
     final String activityId = flMeta?.id ?? '';
+    final String originFeed = publisherInformation?.originFeed ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String expectedCacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfileId,
+      activityOrigin: originFeed,
     );
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -322,6 +325,7 @@ extension ActivityExt on Activity {
         targetProfileId: targetProfileId,
         currentProfileId: currentProfileId,
         activityId: flMeta?.id ?? '',
+        analyticProperties: generatePropertiesForPostSource(flMeta?.id ?? '', publisherInformation?.originFeed ?? ''),
         types: const {
           ProfileModalDialogOptionType.viewProfile,
           ProfileModalDialogOptionType.follow,
@@ -362,13 +366,18 @@ extension ActivityExt on Activity {
     required Profile? currentProfile,
   }) async {
     final ActivitiesController activityController = providerContainer.read(activitiesControllerProvider.notifier);
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
+    final String activityId = flMeta?.id ?? '';
+    final String activityOrigin = publisherInformation?.originFeed ?? '';
+
     try {
       await activityController.deleteActivity(activity: this, currentProfile: currentProfile);
+      await analyticsController.trackEvent(AnalyticEvents.postDeleted, properties: generatePropertiesForPostSource(activityId, activityOrigin));
     } catch (e) {
       logger.e("Error deleting activity: $e");
 
@@ -443,13 +452,15 @@ extension ActivityExt on Activity {
     required Profile? currentProfile,
   }) {
     final String activityId = flMeta?.id ?? '';
-    if (activityId.isEmpty) {
+    final String originFeed = publisherInformation?.originFeed ?? '';
+    if (activityId.isEmpty || originFeed.isEmpty) {
       return null;
     }
 
     final String activityFeedStateCacheKey = PositiveReactionsState.buildReactionsCacheKey(
       activityId: activityId,
       profileId: currentProfile?.flMeta?.id ?? '',
+      activityOrigin: originFeed,
     );
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -469,6 +480,7 @@ extension ActivityExt on Activity {
 
     final String activityId = flMeta?.id ?? '';
     final String profileId = currentProfile?.flMeta?.id ?? '';
+    final String activityOrigin = publisherInformation?.originFeed ?? '';
 
     if (profileId.isEmpty || activityId.isEmpty) {
       throw Exception('Invalid activity or user');
@@ -476,14 +488,22 @@ extension ActivityExt on Activity {
 
     final bool isBookmarked = isActivityBookmarked(currentProfile: currentProfile);
     if (isBookmarked) {
-      await reactionsController.removeBookmarkActivity(activity: this, currentProfile: currentProfile, reactionsFeedState: reactionsFeedState);
+      await reactionsController.removeBookmarkActivity(
+        activity: this,
+        activityOrigin: publisherInformation?.originFeed ?? '',
+        currentProfile: currentProfile,
+        reactionsFeedState: reactionsFeedState,
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unbookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
       );
+
       return;
     }
 
-    await reactionsController.bookmarkActivity(activityId: activityId);
+    await reactionsController.bookmarkActivity(activityId: activityId, activityOrigin: activityOrigin);
+
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
     );
@@ -524,32 +544,46 @@ extension ActivityExt on Activity {
 
     final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
+    final String activityOrigin = publisherInformation?.originFeed ?? '';
+
+    final Map<String, Object?> analyticProperties = generatePropertiesForPostSource(activityId, activityOrigin);
 
     if (profileId.isEmpty || activityId.isEmpty) {
       throw Exception('Invalid activity or user');
     }
-    ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
+
+    final ReactionStatistics reactionStatistics = reactionsController.getStatisticsForActivity(activityId: activityId);
     final bool isLiked = isActivityLiked(currentProfile: currentProfile);
 
     if (isLiked) {
       logger.d('unliking post');
-      await reactionsController.unlikeActivity(activity: this, currentProfile: currentProfile);
+      await reactionsController.unlikeActivity(
+        activity: this,
+        activityOrigin: activityOrigin,
+        currentProfile: currentProfile,
+      );
+
       // update the count to be one fewer
       incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: -1);
+
       // and show the snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
       );
-    } else {
-      logger.d('liking post');
-      await reactionsController.likeActivity(activityId: activityId);
-      // update the count to be one more
-      incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
-      // and show the snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
-      );
+
+      return;
     }
+
+    logger.d('liking post');
+    await reactionsController.likeActivity(activityId: activityId, activityOrigin: activityOrigin);
+
+    // update the count to be one more
+    incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
+
+    // and show the snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
+    );
   }
 
   Future<void> onRequestPostSharedToFeed({

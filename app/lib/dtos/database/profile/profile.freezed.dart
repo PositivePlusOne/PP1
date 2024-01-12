@@ -685,7 +685,7 @@ class _$ProfileImpl implements _Profile {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileImpl &&
@@ -1013,7 +1013,7 @@ class _$ProfileCompanySizeUnknownImpl implements _ProfileCompanySizeUnknown {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileCompanySizeUnknownImpl);
@@ -1148,7 +1148,7 @@ class _$ProfileCompanySizeLessThanFiveImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileCompanySizeLessThanFiveImpl);
@@ -1284,7 +1284,7 @@ class _$ProfileCompanySizeLessThanTwentyFiveImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileCompanySizeLessThanTwentyFiveImpl);
@@ -1421,7 +1421,7 @@ class _$ProfileCompanySizeLessThanOneHundredImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileCompanySizeLessThanOneHundredImpl);
@@ -1558,7 +1558,7 @@ class _$ProfileCompanySizeMoreThanOneHundredImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileCompanySizeMoreThanOneHundredImpl);
@@ -1823,7 +1823,7 @@ class _$ProfileStatisticsImpl implements _ProfileStatistics {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProfileStatisticsImpl &&

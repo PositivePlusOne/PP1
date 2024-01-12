@@ -21,6 +21,8 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -231,6 +233,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final ChannelExtraData extraData = ChannelExtraData.fromJson(channel.extraData);
     final GetStreamController getStreamController = ref.read(getStreamControllerProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     try {
       await getStreamController.forceChannelUpdate(channel);
@@ -240,13 +243,15 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
     }
 
     log.d('ChatController: onChatChannelSelected');
-    state = state.copyWith(
-      currentChannel: channel,
-      currentChannelExtraData: extraData,
-    );
+    state = state.copyWith(currentChannel: channel, currentChannelExtraData: extraData);
 
     log.d('Marking channel as read');
     unawaited(channel.markRead());
+
+    await analyticsController.trackEvent(AnalyticEvents.chatViewed, properties: {
+      'channel_id': channel.id,
+      'channel_type': channel.type,
+    });
 
     await appRouter.replaceAll([
       const ChatConversationsRoute(),
@@ -370,7 +375,7 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       return;
     }
 
-    await onChatChannelSelected(channelResults!.first);
+    await onChatChannelSelected(channelResults.first);
   }
 
   Future<void> onChatModalRequested(BuildContext context, String uid, Channel channel) async {

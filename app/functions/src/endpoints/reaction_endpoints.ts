@@ -10,14 +10,35 @@ import { FeedService } from "../services/feed_service";
 import { CommentHelpers } from "../helpers/comment_helpers";
 import { RelationshipService } from "../services/relationship_service";
 import { SystemService } from "../services/system_service";
+import { ProfileService } from "../services/profile_service";
+import { ActivitySecurityConfigurationMode } from "../dto/activities";
+import { MentionJSON } from "../dto/mentions";
 
 export namespace ReactionEndpoints {
+    export const getReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
+        await SystemService.validateUsingRedisUserThrottle(context);
+        const uid = context.auth?.uid || "";
+        const reactionId = request.data.reactionId;
+
+        const reaction = await ReactionService.getReaction(reactionId);
+        if (!reaction) {
+            throw new functions.https.HttpsError("not-found", "Reaction not found");
+        }
+
+        return buildEndpointResponse(context, {
+            sender: uid,
+            data: [reaction],
+        });
+    });
+    
     export const postReaction = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA_256).https.onCall(async (request: EndpointRequest, context) => {
         await SystemService.validateUsingRedisUserThrottle(context);
         const uid = await UserService.verifyAuthenticated(context, request.sender);
         const activityId = request.data.activityId;
         const kind = request.data.kind;
         const text = request.data.text || "";
+        const mentions = (request.data.mentions || []) as MentionJSON[] || [] as MentionJSON[];
+        const visibleTo = request.data.visibleTo || "public" as ActivitySecurityConfigurationMode;
 
         if (!activityId || !kind) {
             throw new functions.https.HttpsError("invalid-argument", "Invalid reaction");
@@ -35,6 +56,11 @@ export namespace ReactionEndpoints {
             throw new functions.https.HttpsError("not-found", "Activity not found");
         }
 
+        const publisherProfile = await ProfileService.getProfile(publisher);
+        if (!publisherProfile) {
+            throw new functions.https.HttpsError("not-found", "Publisher profile not found");
+        }
+
         // Prevent likes on your own activity
         if (uid === publisher && kind === "like") {
             throw new functions.https.HttpsError("permission-denied", "Cannot like your own activity");
@@ -44,6 +70,10 @@ export namespace ReactionEndpoints {
         const relationship = await RelationshipService.getRelationship([uid, publisher], true);
         await ReactionService.verifyReactionKind(kind, uid, activity, relationship);
 
+        //? For each mentionedUser attempt get the users ID and prepare to notify
+        const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, text, visibleTo, mentions);
+        const uniqueMentions = sanitizedMentions.filter((mention, index, self) => self.findIndex(m => m.label === mention.label) === index);
+
         // Build reaction
         const reactionJSON = {
             activity_id: activityId,
@@ -52,6 +82,7 @@ export namespace ReactionEndpoints {
             user_id: uid,
             kind: kind,
             text: text,
+            mentions: sanitizedMentions,
         } as ReactionJSON;
 
         const isUniqueReaction = ReactionService.isUniqueReactionKind(kind);
@@ -63,13 +94,12 @@ export namespace ReactionEndpoints {
                 throw new functions.https.HttpsError("already-exists", "Unique reaction already exists for this activity and user");
             }
         }
-
-        const streamClient = FeedService.getFeedsClient();
-
+        
         functions.logger.info("Adding reaction", { reactionJSON });
+        const streamClient = FeedService.getFeedsClient();
         const [reaction, reactionStats, sourceProfileStats, targetProfileStats] = await ReactionService.addReaction(streamClient, reactionJSON);
 
-        await ReactionService.processNotifications(kind, uid, activity, reaction, reactionStats);
+        await ReactionService.processNotifications(kind, uid, activity, reaction, reactionStats, uniqueMentions);
 
         return buildEndpointResponse(context, {
             sender: uid,

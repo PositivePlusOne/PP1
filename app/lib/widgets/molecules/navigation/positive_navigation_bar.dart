@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -33,8 +35,8 @@ class PositiveNavigationBar extends HookConsumerWidget implements PreferredSizeW
     this.index = NavigationBarIndex.hub,
     this.isDisabled = false,
     this.scrollController,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final MediaQueryData mediaQuery;
   final NavigationBarIndex index;
@@ -101,7 +103,7 @@ class PositiveNavigationBar extends HookConsumerWidget implements PreferredSizeW
 }
 
 class PositiveNavigationBarShade extends ConsumerWidget {
-  const PositiveNavigationBarShade({Key? key}) : super(key: key);
+  const PositiveNavigationBarShade({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -129,12 +131,12 @@ class PositiveNavigationBarShade extends ConsumerWidget {
 
 class PositiveNavigationBarContent extends ConsumerWidget {
   const PositiveNavigationBarContent({
-    Key? key,
+    super.key,
     required this.index,
     required this.isDisabled,
     this.scrollController,
     this.badgeCount = 0,
-  }) : super(key: key);
+  });
 
   final NavigationBarIndex index;
   final bool isDisabled;
@@ -144,6 +146,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
   Future<void> onIndexSelected(WidgetRef ref, NavigationBarIndex newIndex) async {
     final AppRouter router = ref.read(appRouterProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     final bool isOnHomeRoute = router.current.name == HomeRoute.name;
     if (isOnHomeRoute && newIndex == NavigationBarIndex.hub) {
@@ -157,6 +160,7 @@ class PositiveNavigationBarContent extends ConsumerWidget {
     switch (newIndex) {
       case NavigationBarIndex.add:
         routeInfo = CreatePostRoute();
+        analyticsController.trackEvent(AnalyticEvents.postCreationStarted);
         break;
       case NavigationBarIndex.guidance:
         routeInfo = const GuidanceRoute();

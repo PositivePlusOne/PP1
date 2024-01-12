@@ -30,8 +30,8 @@ class PositiveChatMemberTile extends ConsumerWidget {
     this.isSelected = false,
     this.isEnabled = true,
     this.displaySelectToggle = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Profile profile;
   final String currentProfileId;

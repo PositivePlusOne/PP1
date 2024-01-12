@@ -1,3 +1,4 @@
+import { Mention, MentionJSON } from "./mentions";
 import { FlMeta, FlMetaJSON } from "./meta";
 
 export const reactionSchemaKey = "reactions";
@@ -12,6 +13,7 @@ export interface ReactionJSON {
     kind?: string;
     text?: string;
     tags?: string[];
+    mentions?: MentionJSON[];
 }
 
 export class Reaction {
@@ -24,6 +26,7 @@ export class Reaction {
     kind?: string;
     text?: string;
     tags?: string[];
+    mentions: Mention[];
 
     constructor(json: ReactionJSON) {
         this._fl_meta_ = json._fl_meta_ ? new FlMeta(json._fl_meta_) : undefined;
@@ -35,6 +38,7 @@ export class Reaction {
         this.kind = json.kind;
         this.text = json.text;
         this.tags = json.tags;
+        this.mentions = json.mentions ? json.mentions.map((m) => new Mention(m)) : [];
     }
 
     public toJSON(): ReactionJSON {
@@ -48,6 +52,7 @@ export class Reaction {
             kind: this.kind,
             text: this.text,
             tags: this.tags,
+            mentions: this.mentions ? this.mentions.map((m) => m.toJSON()) : undefined,
         };
     }
 

@@ -23,6 +23,8 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -54,6 +56,8 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     this.onBytesLoaded,
   });
 
+  static const int kMaximumFileSize = 1024 * 1024 * 25;
+
   final Media media;
   final bool useThumbnailIfAvailable;
   final PositiveThumbnailTargetSize? thumbnailTargetSize;
@@ -65,7 +69,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
   }
 
   @override
-  ImageStreamCompleter load(PositiveMediaImageProvider key, DecoderCallback decode) {
+  ImageStreamCompleter loadImage(PositiveMediaImageProvider key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: loadAsync(key, decode),
       scale: 1.0,
@@ -75,7 +79,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     );
   }
 
-  Future<Codec> loadAsync(PositiveMediaImageProvider key, DecoderCallback decode) async {
+  Future<Codec> loadAsync(PositiveMediaImageProvider key, ImageDecoderCallback decode) async {
     assert(key == this);
     final Uint8List bytes = await loadBytes();
     if (bytes.lengthInBytes == 0) {
@@ -86,7 +90,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     if (mimeType == 'image/svg+xml') {
       return Future<Codec>.error('SVG doesn\'t need to be decoded using ImageProvider.');
     } else {
-      return decode(bytes);
+      return decode(await ImmutableBuffer.fromUint8List(bytes));
     }
   }
 
@@ -209,7 +213,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     Uint8List bytes = Uint8List(0);
 
     try {
-      bytes = await ref.getData() ?? Uint8List(0);
+      bytes = await ref.getData(kMaximumFileSize) ?? Uint8List(0);
     } catch (e) {
       logger.e('Unable to load image: $e');
     }
@@ -252,6 +256,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
 class PositiveMediaImage extends ConsumerStatefulWidget {
   const PositiveMediaImage({
     required this.media,
+    this.analyticsProperties = const {},
     this.backgroundColor = Colors.transparent,
     this.placeholderBuilder,
     this.errorBuilder,
@@ -264,14 +269,16 @@ class PositiveMediaImage extends ConsumerStatefulWidget {
     this.isEnabled = true,
     this.onBytesLoaded,
     this.colorBlendMode,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Media media;
   final Color backgroundColor;
   final WidgetBuilder? placeholderBuilder;
   final WidgetBuilder? errorBuilder;
   final void Function(String mimeType, Uint8List bytes)? onBytesLoaded;
+
+  final Map<String, Object?> analyticsProperties;
 
   final double? height;
   final double? width;
@@ -363,6 +370,30 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
     setStateIfMounted();
   }
 
+  Map<String, Object?> generateMergedAnalyticProperties() {
+    final Map<String, Object?> mediaProperties = {
+      'media_name': widget.media.name,
+      'media_type': widget.media.type.toAnalyticsName,
+      'media_url': widget.media.url,
+      'media_bucket_path': widget.media.bucketPath,
+      'media_priority': widget.media.priority,
+      'media_alt_text': widget.media.altText,
+      'media_width': widget.media.width,
+      'media_height': widget.media.height,
+      'media_is_sensitive': widget.media.isSensitive,
+      'media_is_private': widget.media.isPrivate,
+      'media_has_thumbnail': widget.media.thumbnails.isNotEmpty,
+      'media_thumbnail_count': widget.media.thumbnails.length,
+    };
+
+    return {...widget.analyticsProperties, ...mediaProperties};
+  }
+
+  void recordAnalytics() {
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    analyticsController.trackEvent(AnalyticEvents.photoViewed, properties: generateMergedAnalyticProperties());
+  }
+
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
@@ -431,6 +462,8 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
       widget.onTap!();
       return;
     }
+
+    recordAnalytics();
 
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     await appRouter.push(MediaRoute(media: widget.media));

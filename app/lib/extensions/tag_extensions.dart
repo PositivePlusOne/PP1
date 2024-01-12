@@ -7,7 +7,7 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 
 extension TagExtensions on Tag {
-  Uri get feedLink => providerContainer.read(universalLinksControllerProvider.notifier).buildTagRouteLink(key);
+  Uri buildTagLink() => providerContainer.read(universalLinksControllerProvider.notifier).buildTagRouteLink(key);
 
   String get toLocale {
     if (topic?.fallback.isNotEmpty == true) {

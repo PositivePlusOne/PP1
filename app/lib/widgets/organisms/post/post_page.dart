@@ -48,13 +48,16 @@ class PostPage extends HookConsumerWidget {
   const PostPage({
     required this.activityId,
     required this.feed,
+    this.reactionId = '',
     this.promotionId = '',
     super.key,
   });
 
   final String activityId;
-  final String promotionId;
   final TargetFeed feed;
+
+  final String reactionId;
+  final String promotionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,10 +78,11 @@ class PostPage extends HookConsumerWidget {
     final bool isSignedOut = currentProfile == null;
 
     final Activity? activity = cacheController.get(activityId);
+    final String activityOrigin = TargetFeed.toOrigin(feed);
 
-    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId);
+    final String expectedReactionsKey = PositiveReactionsState.buildReactionsCacheKey(activityId: activityId, profileId: currentProfileId, activityOrigin: activityOrigin);
     PositiveReactionsState? reactionsState = cacheController.get(expectedReactionsKey);
-    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId, currentProfileId);
+    reactionsState ??= PositiveReactionsState.createNewFeedState(activityId: activityId, activityOrigin: activityOrigin, profileId: currentProfileId);
 
     final Promotion? promotion = cacheController.get(promotionId);
 
@@ -140,6 +144,8 @@ class PostPage extends HookConsumerWidget {
     final Widget commentBox = Align(
       alignment: Alignment.bottomCenter,
       child: PostCommentBox(
+        postId: activityId,
+        postOrigin: activityOrigin,
         mediaQuery: mediaQuery,
         currentProfile: currentProfile,
         canSwitchProfile: viewModel.canSwitchProfile,

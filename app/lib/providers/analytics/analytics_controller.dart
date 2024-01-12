@@ -122,14 +122,13 @@ class AnalyticsController extends _$AnalyticsController {
     bool includeDefaultProperties = true,
     Map<String, dynamic> properties = const {},
   }) async {
-    final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
     final Logger logger = ref.read(loggerProvider);
-
     if (!state.isCollectingData) {
       logger.d('Analytics is disabled, not tracking event: $event');
       return;
     }
 
+    final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
     final Map<String, dynamic> publishedProperties = {
       ...properties,
     };

@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,6 +21,7 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/events/request_refresh_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/shared/mixin/busy_state_delegate_mixin.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/services/third_party.dart';

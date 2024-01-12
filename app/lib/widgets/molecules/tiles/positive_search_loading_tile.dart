@@ -11,7 +11,7 @@ import 'package:app/providers/system/design_controller.dart';
 import '../../../constants/design_constants.dart';
 
 class PositiveSearchLoadingTile extends ConsumerWidget {
-  const PositiveSearchLoadingTile({Key? key}) : super(key: key);
+  const PositiveSearchLoadingTile({super.key});
 
   static const double kProfileTileHeight = 72.0;
   static const double kProfileTileBorderRadius = 40.0;

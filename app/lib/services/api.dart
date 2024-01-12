@@ -15,6 +15,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/database/feedback/feedback_type.dart';
 import 'package:app/dtos/database/feedback/report_type.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/riverpod_extensions.dart';
 import 'package:app/main.dart';
@@ -211,6 +212,7 @@ class PostApiService {
         'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.commentPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
         'allowLikes': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
         'allowBookmarks': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
+        'mentions': activityData.mentions.map((e) => e.toJson()).toList(),
       },
     );
   }
@@ -234,6 +236,7 @@ class PostApiService {
         'allowComments': ActivitySecurityConfigurationMode.toJson(activityData.commentPermissionMode ?? const ActivitySecurityConfigurationMode.followersAndConnections()),
         'allowLikes': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
         'allowBookmarks': ActivitySecurityConfigurationMode.toJson(const ActivitySecurityConfigurationMode.public()),
+        'mentions': activityData.mentions.map((e) => e.toJson()).toList(),
       },
     );
   }
@@ -291,6 +294,18 @@ class ProfileApiService {
       selector: (response) => json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['_fl_meta_']['fl_id'] == uid)),
       parameters: {
         'uid': uid,
+      },
+    );
+  }
+
+  FutureOr<Profile> getProfileByDisplayName({
+    required String displayName,
+  }) async {
+    return await getHttpsCallableResult<Profile>(
+      name: 'profile-getProfileByDisplayName',
+      selector: (response) => Profile.fromJson(json.decodeSafe((response.data['users'] as List).firstWhere((element) => element['displayName'] == displayName))),
+      parameters: {
+        'displayName': displayName,
       },
     );
   }

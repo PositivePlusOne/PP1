@@ -26,6 +26,8 @@ import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/stream_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/events/connections/channels_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/jobs/profile_fetch_processor.dart';
@@ -566,6 +568,7 @@ class GetStreamController extends _$GetStreamController {
     final FirebaseFunctions firebaseFunctions = ref.read(firebaseFunctionsProvider);
     final ChatViewModel chatViewModel = ref.read(chatViewModelProvider.notifier);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     log.d('[GetStreamController] createConversation() memberIds: $memberIds');
 
     if (profileController.currentProfileId == null) {
@@ -592,6 +595,11 @@ class GetStreamController extends _$GetStreamController {
     }
 
     final conversationId = json.decodeSafe(res.data)['conversationId'] as String;
+    await analyticsController.trackEvent(AnalyticEvents.chatStarted, properties: {
+      'conversation_id': conversationId,
+      'members': memberIds.join(', '),
+    });
+
     await chatViewModel.onChatIdSelected(conversationId, shouldPopDialog: shouldPopDialog);
   }
 

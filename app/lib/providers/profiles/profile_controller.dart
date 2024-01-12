@@ -22,6 +22,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/common/events/force_media_fetch_event.dart';
 import 'package:app/providers/content/gallery_controller.dart';
@@ -42,6 +43,7 @@ class ProfileControllerState with _$ProfileControllerState {
   const factory ProfileControllerState({
     Profile? currentProfile,
     @Default({}) Set<String> availableProfileIds,
+    @Default({}) Map<String, String> displayNameToId,
   }) = _ProfileControllerState;
 
   factory ProfileControllerState.initialState() => const ProfileControllerState(
@@ -216,11 +218,25 @@ class ProfileController extends _$ProfileController {
       return;
     }
 
+    if (event.value is Profile) {
+      final String displayName = (event.value as Profile).displayName;
+      final String userId = (event.value as Profile).flMeta?.id ?? '';
+      if (displayName.isNotEmpty && userId.isNotEmpty) {
+        state = state.copyWith(
+          displayNameToId: {
+            ...state.displayNameToId,
+            ...{displayName: userId},
+          },
+        );
+      }
+    }
+
     state = state.copyWith(currentProfile: currentProfile);
   }
 
-  Future<void> viewProfile(Profile profile) async {
+  Future<void> viewProfile(Profile profile, Map<String, Object?> analyticsProperties) async {
     final ProfileViewModel profileViewModel = ref.read(profileViewModelProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
 
@@ -231,6 +247,18 @@ class ProfileController extends _$ProfileController {
     }
 
     await profileViewModel.preloadUserProfile(id);
+
+    final bool isFromPost = propertiesSourcedFromPost(analyticsProperties);
+    final bool isFromSearch = propertiesSourcedFromSearch(analyticsProperties);
+
+    if (isFromPost) {
+      await analyticsController.trackEvent(AnalyticEvents.profileViewedFromPost, properties: analyticsProperties);
+    } else if (isFromSearch) {
+      await analyticsController.trackEvent(AnalyticEvents.profileViewedFromSearch, properties: analyticsProperties);
+    }
+
+    // We always want to track a profile viewed event, even if it's from a post or search
+    await analyticsController.trackEvent(AnalyticEvents.profileViewed);
 
     logger.i('Navigating to profile: ${profile.flMeta?.id}');
     await appRouter.push(const ProfileRoute());

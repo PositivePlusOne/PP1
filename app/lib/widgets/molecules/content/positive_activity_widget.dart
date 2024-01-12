@@ -223,6 +223,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               publisher: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
               currentProfile: widget.currentProfile,
+              origin: widget.activity?.repostConfiguration?.targetActivityOriginFeed ?? '',
               flMetaData: widget.activity?.flMeta,
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isOptionsHidden: widget.isShared,
@@ -304,6 +305,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               padding: EdgeInsets.symmetric(horizontal: widget.isShared ? kPaddingSmall : kPaddingMedium, vertical: kPaddingSuperSmall),
               publisher: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
+              origin: widget.activity?.publisherInformation?.originFeed ?? '',
               currentProfile: widget.currentProfile,
               promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
@@ -422,7 +424,12 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: padding),
-        child: buildMarkdownWidgetFromBody(parsedMarkdown, tags: tags),
+        child: buildMarkdownWidgetFromBody(
+          parsedMarkdown,
+          tags: tags,
+          boldHandles: true,
+          mentions: targetActivity?.enrichmentConfiguration?.mentions ?? [],
+        ),
       ),
     );
   }
