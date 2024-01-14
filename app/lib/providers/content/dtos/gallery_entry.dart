@@ -1,8 +1,10 @@
 // Dart imports:
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 // Package imports:
+import 'package:app/constants/compression_constants.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_session.dart';
@@ -10,7 +12,7 @@ import 'package:ffmpeg_kit_flutter_full_gpl/log.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/session_state.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
@@ -232,17 +234,49 @@ class GalleryEntry {
   }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.d('upload() mimeType.startsWith(image/)');
+    if (data.isEmpty) {
+      throw Exception('GalleryEntry.upload() data is empty');
+    }
 
-    //? This image compression is increasing the size of the images and flipping them vertically on Android
-    // data = await FlutterImageCompress.compressWithList(
-    //   data,
-    //   keepExif: kImageCompressKeepExif,
-    //   rotate: 180,
-    //   minHeight: kImageCompressMaxHeight,
-    //   minWidth: kImageCompressMaxWidth,
-    //   quality: kImageCompressMaxQuality,
-    //   format: kImageCompressFormat,
-    // );
+    // Check the image width or height does not exceed the max kImageCompressMaxWidth or kImageCompressMaxHeight
+    // Use instantiateImageCodec to resize the image if it does
+
+    // Get the image size
+    ui.Codec codec = await ui.instantiateImageCodec(data);
+    ui.FrameInfo frame;
+    int width = 0;
+    int height = 0;
+
+    try {
+      frame = await codec.getNextFrame();
+      width = frame.image.width;
+      height = frame.image.height;
+    } finally {
+      codec.dispose();
+    }
+
+    if (width == 0 || height == 0) {
+      throw Exception('GalleryEntry.upload() width or height is 0');
+    }
+
+    logger.d('upload() width: $width, height: $height');
+    if (width > kImageCompressMaxWidth || height > kImageCompressMaxHeight) {
+      logger.d('upload() width > kImageCompressMaxWidth || height > kImageCompressMaxHeight');
+      // Use ui.instantiateImageCodec to resize the image
+      codec = await ui.instantiateImageCodec(data, targetWidth: kImageCompressMaxWidth, targetHeight: kImageCompressMaxHeight);
+      final ui.FrameInfo frame = await codec.getNextFrame();
+      final ui.Image image = frame.image;
+
+      // Convert the resized image to a byte array (jpeg)
+      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      final Uint8List resizedData = byteData?.buffer.asUint8List() ?? Uint8List(0);
+      if (byteData == null || resizedData.isEmpty) {
+        throw Exception('GalleryEntry.upload() byteData is null');
+      }
+
+      logger.i('upload() resized byteData.lengthInBytes: ${byteData.lengthInBytes}');
+      data = resizedData;
+    }
 
     // Apply filter if not none
     if (filter != null && filter != AwesomeFilter.None) {

@@ -56,7 +56,7 @@ class PositiveMediaImageProvider extends ImageProvider<PositiveMediaImageProvide
     this.onBytesLoaded,
   });
 
-  static const int kMaximumFileSize = 1024 * 1024 * 25;
+  static const int kMaximumFileSize = 1024 * 1024 * 50;
 
   final Media media;
   final bool useThumbnailIfAvailable;
