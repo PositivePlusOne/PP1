@@ -111,7 +111,7 @@ extension StringExt on String {
     final RegExp exp = RegExp(r"@\w+[\w\-]*");
     return replaceAllMapped(exp, (match) {
       if (!knownIdMap.containsKey(match.group(0))) {
-        return match.group(0) ?? '';
+        return '**${match.group(0)}**';
       }
 
       return '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})';
