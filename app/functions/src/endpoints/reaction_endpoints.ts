@@ -49,6 +49,11 @@ export namespace ReactionEndpoints {
             CommentHelpers.verifyCommentLength(text);
         }
 
+        const profile = await ProfileService.getProfile(uid);
+        if (!profile) {
+            throw new functions.https.HttpsError("not-found", "Profile not found");
+        }
+
         // Activity verification
         const activity = await ActivitiesService.getActivity(activityId);
         const publisher = activity?.publisherInformation?.publisherId || "";
@@ -71,7 +76,7 @@ export namespace ReactionEndpoints {
         await ReactionService.verifyReactionKind(kind, uid, activity, relationship);
 
         //? For each mentionedUser attempt get the users ID and prepare to notify
-        const sanitizedMentions = await ActivitiesService.sanitizeMentions(publisherProfile, text, visibleTo, mentions);
+        const sanitizedMentions = await ActivitiesService.sanitizeMentions(profile, text, visibleTo, mentions);
         const uniqueMentions = sanitizedMentions.filter((mention, index, self) => self.findIndex(m => m.label === mention.label) === index);
 
         // Build reaction

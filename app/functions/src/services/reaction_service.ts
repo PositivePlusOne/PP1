@@ -139,6 +139,22 @@ export namespace ReactionService {
             totalReactionCountOfKind = reactionStats.counts[kind];
         }
 
+        for (let index = 0; index < mentions.length; index++) {
+            const mention = mentions[index];
+            const foreignKey = mention.foreignKey;
+            if (!foreignKey) {
+                continue;
+            }
+
+            const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
+            if (!mentionedProfile) {
+                continue;
+            }
+
+            functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
+            await ReactionMentionNotification.sendNotification(userProfile, mentionedProfile, activity, reaction);
+        }
+
         const isFibbonacci = NumberHelpers.isFibbonacci(totalReactionCountOfKind);
         if (!isFibbonacci) {
             functions.logger.info("Reaction count is not a fibbonacci number, skipping notification", { userId, publisherId, userProfile, publisherProfile, totalReactionCountOfKind });
@@ -169,22 +185,6 @@ export namespace ReactionService {
                 default:
                     break;
             }
-        }
-
-        for (let index = 0; index < mentions.length; index++) {
-            const mention = mentions[index];
-            const foreignKey = mention.foreignKey;
-            if (!foreignKey) {
-                continue;
-            }
-
-            const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
-            if (!mentionedProfile) {
-                continue;
-            }
-
-            functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
-            await ReactionMentionNotification.sendNotification(userProfile, mentionedProfile, activity, reaction);
         }
 
         functions.logger.info("Finished processing notifications", { kind, userId, activity });
