@@ -27,7 +27,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   List<Tag> tags = const [],
   EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
-  bool boldHandles = false,
+  bool boldHandles = true,
   List<Mention> mentions = const [],
 }) {
   //! Add the tags to the start of the markdown as bolded text
@@ -39,6 +39,9 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   }
 
   //? bold all user handles
+  //! This is useful as if you attempt to mention someone who has blocked you
+  //! The mention will not be added to the list of mentions
+  //! So in this case, we want to bold the handle so the user knows it is a handle, despite no mention being persisted
   if (boldHandles) {
     markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
   }
