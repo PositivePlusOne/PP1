@@ -238,6 +238,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
               return false;
             }
 
+            // Check if we already know about this profile
+            final bool hasUser = state.searchUsersResults.any((element) => element.flMeta?.id == profile.flMeta?.id);
+            if (hasUser) {
+              return false;
+            }
+
             if (currentProfileId.isNotEmpty) {
               final String relationshipId = [currentProfileId, profile.flMeta?.id ?? ''].asGUID;
               final Relationship? relationship = cacheController.get(relationshipId);
