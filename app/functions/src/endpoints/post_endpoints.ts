@@ -488,6 +488,7 @@ export namespace PostEndpoints {
     );
 
     functions.logger.info(`Got sanitized mentions`, { sanitizedMentions, uniqueMentions });
+    const oldMentions = [...(activity.enrichmentConfiguration?.mentions || [])];
 
     if (activity.enrichmentConfiguration) {
       activity.enrichmentConfiguration.mentions = sanitizedMentions;
@@ -518,7 +519,7 @@ export namespace PostEndpoints {
       }
 
       // If the mention already exists, skip it
-      const existingMention = activity.enrichmentConfiguration?.mentions?.find((existingMention) => existingMention.foreignKey === foreignKey);
+      const existingMention = oldMentions.find((oldMention) => oldMention.foreignKey === foreignKey);
       if (existingMention) {
         continue;
       }
