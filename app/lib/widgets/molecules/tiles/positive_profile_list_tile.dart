@@ -162,6 +162,7 @@ class PositiveProfileListTile extends ConsumerWidget {
             if (!isDense) ...<Widget>[
               const SizedBox(width: kPaddingSmall),
               buildAction(context),
+              const SizedBox(width: kPaddingSmall),
             ],
           ],
         ),
