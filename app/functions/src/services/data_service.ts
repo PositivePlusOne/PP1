@@ -290,8 +290,8 @@ export namespace DataService {
     return entries;
   };
 
-  export const getBatchDocumentsBySchema = async function (options: { schemaKey: string; }): Promise<any> {
-    const flamelinkApp = SystemService.getFlamelinkApp();
+  export const getBatchDocumentsBySchema = async function (options: { schemaKey: string }): Promise<any> {
+    const firestore = adminApp.firestore();
     functions.logger.info(`Getting batch documents for ${options.schemaKey}`);
 
     const cacheKey = CacheService.generateCacheKey({ schemaKey: options.schemaKey, entryId: "*" });
@@ -300,12 +300,12 @@ export namespace DataService {
       return cachedDocuments;
     }
 
-    const documents = await flamelinkApp.content.get({
-      schemaKey: options.schemaKey,
+    const documents = await firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey).get().then((querySnapshot) => {
+      return querySnapshot.docs.map((doc) => doc.data());
     });
 
     if (documents) {
-      await CacheService.setInCache(cacheKey, documents, 60 * 60 * 24);
+      await CacheService.setInCache(cacheKey, documents, 60 * 60);
     }
 
     return documents;
