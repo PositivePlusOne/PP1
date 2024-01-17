@@ -4,6 +4,7 @@ import 'dart:math';
 // Package imports:
 import 'package:algolia/algolia.dart';
 import 'package:app_links/app_links.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:cron/cron.dart';
@@ -88,6 +89,39 @@ FutureOr<Algolia> algolia(AlgoliaRef ref) async {
     case SystemEnvironment.production:
       return const Algolia.init(applicationId: 'DB7J3BMYAI', apiKey: '01c205da1edb779162d0991de0f01500');
   }
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<AppsflyerSdk> appsflyerSdk(AppsflyerSdkRef ref) async {
+  final SystemController systemController = ref.read(systemControllerProvider.notifier);
+  final FirebaseRemoteConfig remoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
+
+  late final String appId;
+  const String devKey = 'wXzaseNY9i2Jxfezugyosn';
+  final bool showDebug = systemController.environment != SystemEnvironment.production;
+  final String oneLink = remoteConfig.getString(SystemController.kFirebaseRemoteConfigAppsFlyerOneLinkKey);
+
+  final bool isIOS = UniversalPlatform.isIOS;
+  if (isIOS) {
+    appId = '1637990754';
+  } else {
+    appId = '';
+  }
+
+  final AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
+    showDebug: showDebug,
+    appId: appId,
+    afDevKey: devKey,
+    appInviteOneLink: oneLink,
+  );
+
+  final AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+  await appsflyerSdk.initSdk(
+    registerConversionDataCallback: true,
+    registerOnAppOpenAttributionCallback: true,
+  );
+
+  return appsflyerSdk;
 }
 
 @Riverpod(keepAlive: true)
