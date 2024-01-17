@@ -183,7 +183,6 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     if (isEnabled) {
       logger.d('toggleAnalyticsCollection: Enabling crashlytics');
       await crashlytics.setCrashlyticsCollectionEnabled(true);
-      appsflyer.disableSKAdNetwork(false);
       appsflyer.setDisableAdvertisingIdentifiers(false); // These are backwards which confuses the hell out of me
       mixpanel.optInTracking();
     }
@@ -191,7 +190,6 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     if (!isEnabled) {
       logger.d('toggleAnalyticsCollection: Disabling crashlytics');
       await crashlytics.setCrashlyticsCollectionEnabled(false);
-      appsflyer.disableSKAdNetwork(true);
       appsflyer.setDisableAdvertisingIdentifiers(true); // These are backwards which confuses the hell out of me
       mixpanel.optOutTracking();
     }
