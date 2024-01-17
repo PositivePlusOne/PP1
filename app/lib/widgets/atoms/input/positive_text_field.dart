@@ -1,35 +1,33 @@
 // Flutter imports:
-import 'package:app/dtos/database/pagination/pagination.dart';
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/string_extensions.dart';
-import 'package:app/extensions/widget_extensions.dart';
-import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/analytics/analytics_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/services/search_api_service.dart';
-import 'package:app/services/third_party.dart';
-import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
-import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
-import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
-import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 // Project imports:
+import 'package:app/dtos/database/pagination/pagination.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/helpers/formatter_helpers.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/helpers/text_helpers.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
+import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/search_api_service.dart';
+import 'package:app/services/third_party.dart';
+import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_prefix_container.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
+import 'package:app/widgets/organisms/shared/animations/positive_expandable_widget.dart';
 import '../../../constants/design_constants.dart';
 
 class PositiveTextField extends StatefulHookConsumerWidget {

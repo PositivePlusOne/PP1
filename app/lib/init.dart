@@ -97,7 +97,7 @@ Future<void> setupApplication() async {
   await providerContainer.read(asyncSecurityControllerProvider.future);
 
   await getStreamController.setupListeners();
-  await analyticsController.flushEvents();
+  await analyticsController.setupListeners();
   await userController.setupListeners();
   await relationshipController.setupListeners();
   await notificationsController.setupListeners();

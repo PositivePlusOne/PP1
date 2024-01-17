@@ -2,10 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/dtos/database/activities/activities.dart';
-import 'package:app/providers/content/reactions_controller.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
-import 'package:app/widgets/state/positive_reactions_state.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +9,7 @@ import 'package:logger/logger.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/notifications/notification_action.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
@@ -21,12 +18,15 @@ import 'package:app/extensions/color_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/reactions_controller.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/handlers/notifications/notification_handler.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/indicators/positive_circular_indicator.dart';
 import 'package:app/widgets/organisms/notifications/components/positive_notification_tile.dart';
+import 'package:app/widgets/state/positive_reactions_state.dart';
 
 class ActivityNotificationHandler extends NotificationHandler {
   @override

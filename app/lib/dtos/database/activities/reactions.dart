@@ -1,10 +1,10 @@
 // Dart imports:
 
 // Package imports:
-import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
