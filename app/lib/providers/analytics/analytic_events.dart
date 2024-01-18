@@ -66,6 +66,8 @@ enum AnalyticEvents {
   postViewed, // A post has been viewed by the user and is no longer on the screen
   profileViewedFromPost, // A user has viewed another users profile from a post
   profileViewedFromSearch, // A user has viewed another users profile from a search
+  postDiscarded, // A user has discarded a post
+  postEditDiscarded, // A user has discarded an edit to a post
   postReported, // The user has reported a post
   postDeleted, // A user has deleted a post
   postLiked, // A user has liked a post

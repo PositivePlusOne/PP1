@@ -1,4 +1,8 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -32,7 +36,7 @@ Future<bool> positiveDiscardPostDialogue({
             const SizedBox(height: kPaddingMedium),
             PositiveButton(
               colors: colors,
-              onTapped: () => Navigator.pop(context, true),
+              onTapped: () => _onInternalDiscard(context),
               label: localizations.page_create_post_discard_post_button,
               primaryColor: colors.black.withOpacity(kOpacityQuarter),
               style: PositiveButtonStyle.primary,
@@ -44,4 +48,13 @@ Future<bool> positiveDiscardPostDialogue({
       false;
   // and return the result
   return result;
+}
+
+Future<void> _onInternalDiscard(BuildContext context) async {
+  final AppRouter appRouter = providerContainer.read(appRouterProvider);
+  if (appRouter.stack.isNotEmpty) {
+    await appRouter.pop(true);
+  } else {
+    await appRouter.replaceAll([const HomeRoute()]);
+  }
 }

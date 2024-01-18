@@ -3,6 +3,8 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,6 +133,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     final bool isHandlingVideo = state.currentCreatePostPage == CreatePostCurrentPage.camera && state.currentPostType == PostType.clip;
     final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
@@ -138,6 +141,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     // Quickly back out if we're editing any post
     if (state.isEditingPost && state.currentCreatePostPage.isCreationDialog) {
+      analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
       router.removeLast();
       return false;
     }
@@ -178,6 +182,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       // Close the video and remove the page
       if (shouldForceClose) {
+        analyticsController.trackEvent(AnalyticEvents.postDiscarded);
         router.removeLast();
       }
       return false;
@@ -188,6 +193,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           colors: colors,
           typography: typography,
         )) {
+          analyticsController.trackEvent(AnalyticEvents.postDiscarded);
           router.removeLast();
         } else {
           return false;
@@ -279,6 +285,14 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> goBackFromCamera() async {
     final AppRouter router = ref.read(appRouterProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final bool isEditingPost = state.isEditingPost;
+    if (isEditingPost) {
+      analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
+    } else {
+      analyticsController.trackEvent(AnalyticEvents.postDiscarded);
+    }
+
     router.removeLast();
   }
 
