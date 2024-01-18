@@ -251,6 +251,14 @@ class ProfileController extends _$ProfileController {
     final bool isFromPost = propertiesSourcedFromPost(analyticsProperties);
     final bool isFromSearch = propertiesSourcedFromSearch(analyticsProperties);
 
+    // Add the users ID and display name to the analytics properties
+    analyticsProperties = {
+      ...analyticsProperties,
+      ...{
+        'targetUserId': id,
+      },
+    };
+
     if (isFromPost) {
       await analyticsController.trackEvent(AnalyticEvents.profileViewedFromPost, properties: analyticsProperties);
     } else if (isFromSearch) {
