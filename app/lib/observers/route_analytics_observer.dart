@@ -22,6 +22,10 @@ class RouteAnalyticsObserver extends AutoRouteObserver {
   Future<void> notifyPush(Route route) async {
     final AnalyticsController analyticsController = await providerContainer.read(analyticsControllerProvider.notifier);
 
+    if (route.settings.name?.isEmpty ?? true) {
+      return;
+    }
+
     await analyticsController.trackEvent(
       AnalyticEvents.screenDisplayed,
       includeDefaultProperties: false,
