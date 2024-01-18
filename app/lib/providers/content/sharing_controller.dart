@@ -204,9 +204,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     await Future<void>.delayed(kAnimationDurationDebounce);
     await Share.share(text, subject: title, sharePositionOrigin: origin);
 
-    final String postId = postOptions?.activity.flMeta?.id ?? '';
-    final String postOrigin = postOptions?.origin ?? '';
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(postId, postOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: postOptions?.activity);
 
     await analyticsController.trackEvent(AnalyticEvents.postSharedExternally, properties: additionalProperties);
   }
@@ -249,10 +247,7 @@ class SharingController extends _$SharingController implements ISharingControlle
       description: text,
     );
 
-    final String postId = postOptions.activity.flMeta?.id ?? '';
-    final String postOrigin = postOptions.origin ?? '';
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(postId, postOrigin);
-
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: postOptions.activity);
     await analyticsController.trackEvent(AnalyticEvents.postSharedThroughChat, properties: additionalProperties);
   }
 
@@ -275,10 +270,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     await appRouter.pop();
     await postOptions.activity.onRequestPostSharedToFeed(repostActivityId: activityId);
 
-    final String postId = postOptions.activity.flMeta?.id ?? '';
-    final String postOrigin = postOptions.origin;
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(postId, postOrigin);
-
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: postOptions.activity);
     await analyticsController.trackEvent(AnalyticEvents.postSharedOnFeed, properties: additionalProperties);
   }
 }

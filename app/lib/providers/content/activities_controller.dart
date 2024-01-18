@@ -17,6 +17,9 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
@@ -111,12 +114,19 @@ class ActivitiesController extends _$ActivitiesController {
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     logger.i('[Activities Service] - Posting activity');
 
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     final Activity activity = await postApiService.postActivity(
       activityData: activityData,
       reposterActivityId: activityData.reposterActivityID ?? '',
+    );
+
+    // Save any analytics
+    await analyticsController.trackEvent(
+      AnalyticEvents.postCreated,
+      properties: generatePropertiesForPostSource(activity: activity),
     );
 
     // Add the tags to the users recent tags

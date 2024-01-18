@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -40,10 +41,12 @@ class AnalyticsController extends _$AnalyticsController {
   Map<String, dynamic> get defaultProperties {
     final Map<String, dynamic> properties = {};
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
     if (userController.currentUser != null) {
       properties['userId'] = userController.currentUser!.uid;
       properties['emailAddress'] = userController.currentUser!.email;
+      properties['currentRoute'] = appRouter.current.name;
     }
 
     return properties;

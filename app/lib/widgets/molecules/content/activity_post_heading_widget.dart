@@ -11,6 +11,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
@@ -33,13 +34,13 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
+    required this.activity,
     required this.currentProfile,
     required this.publisher,
     required this.publisherRelationship,
     required this.origin,
     required this.onOptions,
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-    this.flMetaData,
     this.promotion,
     this.tags = const [],
     this.isOptionsHidden = false,
@@ -53,7 +54,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
   final Relationship? publisherRelationship;
 
-  final FlMeta? flMetaData;
+  final Activity? activity;
   final EdgeInsets padding;
 
   final Promotion? promotion;
@@ -80,10 +81,11 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       displayName = getSafeDisplayNameFromProfile(publisher);
     }
 
-    if (flMetaData != null && flMetaData!.createdDate != null) {
-      postDateTooltip = flMetaData!.createdDate!.asDateDifference(context);
-      if (flMetaData!.lastModifiedDate != null && flMetaData!.lastModifiedDate!.isNotEmpty && flMetaData!.createdDate! != flMetaData!.lastModifiedDate!) {
-        postDateTooltip = '${flMetaData!.createdDate!.asDateDifference(context)} ${localisations.shared_post_tooltips_edited}';
+    final FlMeta? flMetaData = activity?.flMeta;
+    if (flMetaData != null && flMetaData.createdDate != null) {
+      postDateTooltip = flMetaData.createdDate!.asDateDifference(context);
+      if (flMetaData.lastModifiedDate != null && flMetaData.lastModifiedDate!.isNotEmpty && flMetaData.createdDate! != flMetaData.lastModifiedDate!) {
+        postDateTooltip = '${flMetaData.createdDate!.asDateDifference(context)} ${localisations.shared_post_tooltips_edited}';
       }
     }
 
@@ -106,7 +108,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
           children: <Widget>[
             PositiveProfileCircularIndicator(
               profile: isBlocked ? null : publisher,
-              analyticProperties: generatePropertiesForPostSource(flMetaData?.id ?? '', origin),
+              analyticProperties: generatePropertiesForPostSource(activity: activity),
             ),
             const SizedBox(width: kPaddingSmall),
             Flexible(

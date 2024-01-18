@@ -1,8 +1,15 @@
+// Project imports:
+import 'package:app/dtos/database/activities/activities.dart';
+
 const String sourceKey = 'source';
 
 const String postIdKey = 'postId';
 const String postOriginKey = 'postOrigin';
 const String searchTermKey = 'searchTerm';
+const String containsMediaKey = 'containsMedia';
+const String viewPermissionsKey = 'viewPermissions';
+const String commentPermissionsKey = 'commentPermissions';
+const String sharePermissionsKey = 'sharePermissions';
 
 enum AnalyticSource {
   post,
@@ -26,11 +33,12 @@ bool propertiesSourcedFromSearch(Map<String, Object?> properties) {
   return properties.containsKey(sourceKey) && properties[sourceKey] == AnalyticSource.search.locale;
 }
 
-Map<String, Object?> generatePropertiesForPostSource(
-  String postId,
-  String origin, {
-  String searchTerm = '',
+Map<String, Object?> generatePropertiesForPostSource({
+  Activity? activity,
+  String? searchTerm,
 }) {
+  final String postId = activity?.flMeta?.id ?? '';
+  final String origin = activity?.publisherInformation?.originFeed ?? '';
   if (postId.isEmpty || origin.isEmpty) {
     return {};
   }
@@ -40,6 +48,10 @@ Map<String, Object?> generatePropertiesForPostSource(
     postIdKey: postId,
     postOriginKey: origin,
     searchTermKey: searchTerm,
+    containsMediaKey: activity?.media.isNotEmpty,
+    viewPermissionsKey: activity?.securityConfiguration?.viewMode,
+    commentPermissionsKey: activity?.securityConfiguration?.commentMode,
+    sharePermissionsKey: activity?.securityConfiguration?.shareMode,
   };
 }
 

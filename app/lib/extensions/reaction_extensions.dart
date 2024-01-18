@@ -8,6 +8,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
@@ -114,11 +115,14 @@ extension ReactionExt on Reaction {
     final AppRouter router = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final Activity? activity = cacheController.get<Activity>(reactionFeedState.activityId);
+
     try {
       await activityController.deleteComment(
         comment: this,
         currentProfile: currentProfile,
-        activityOrigin: reactionFeedState.activityOrigin,
+        activity: activity,
         feedState: reactionFeedState,
       );
     } catch (e) {

@@ -30,7 +30,7 @@ class RouteAnalyticsObserver extends AutoRouteObserver {
       AnalyticEvents.screenDisplayed,
       includeDefaultProperties: false,
       properties: {
-        'routeName': route.settings.name,
+        'targetRoute': route.settings.name,
       },
     );
   }
