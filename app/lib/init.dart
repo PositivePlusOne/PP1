@@ -105,6 +105,7 @@ Future<void> setupApplication() async {
   await galleryController.setupListeners();
   await tagsController.setupListeners();
   await cacheController.setupListeners();
+  await analyticsController.registerScheduledJobs();
 
   await systemController.preloadPackageInformation();
   await promotionsController.updatePromotionFrequenciesFromRemoteConfig();

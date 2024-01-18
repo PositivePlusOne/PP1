@@ -2,10 +2,10 @@
 import 'dart:ui';
 
 // Flutter imports:
-import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:cron/cron.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -16,9 +16,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
+import 'package:app/dtos/database/notifications/notification_topic.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/handlers/profile_user_property_configuration_handler.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/exception_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/widgets/organisms/notifications/notification_preferences_page.dart';
 import '../../services/third_party.dart';
 
 part 'analytics_controller.freezed.dart';
@@ -34,9 +41,23 @@ class AnalyticsControllerState with _$AnalyticsControllerState {
   factory AnalyticsControllerState.initialState() => const AnalyticsControllerState();
 }
 
+mixin AnalyticsControllerInterface {
+  Future<void> registerScheduledJobs();
+  Future<void> loadAnalyticsPreferences();
+  Future<void> toggleAnalyticsCollection(bool attemptToEnable);
+  Future<void> trackEvent(
+    AnalyticEvents event, {
+    bool includeDefaultProperties = true,
+    Map<String, dynamic> properties = const {},
+  });
+  Future<void> flushEvents();
+}
+
 @Riverpod(keepAlive: true)
-class AnalyticsController extends _$AnalyticsController {
+class AnalyticsController extends _$AnalyticsController with AnalyticsControllerInterface {
   static const String kAnalyticsEnabledKey = 'positive_analytics_enabled';
+
+  ScheduledTask? updateProfilePropertiesTask;
 
   Map<String, dynamic> get defaultProperties {
     final Map<String, dynamic> properties = {};
@@ -57,6 +78,20 @@ class AnalyticsController extends _$AnalyticsController {
     return AnalyticsControllerState.initialState();
   }
 
+  @override
+  Future<void> registerScheduledJobs() async {
+    final Cron cron = providerContainer.read(cronProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.d('registerScheduledJobs: Registering scheduled jobs');
+
+    // Register a job to occur every minute to update analytics properties
+    updateProfilePropertiesTask ??= cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+      logger.d('registerScheduledJobs: Updating analytics properties');
+      await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
+    });
+  }
+
+  @override
   Future<void> loadAnalyticsPreferences() async {
     final Logger logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
@@ -79,6 +114,7 @@ class AnalyticsController extends _$AnalyticsController {
     PlatformDispatcher.instance.onError = exceptionController.onPlatformDispatcherErrorOccured;
   }
 
+  @override
   Future<void> toggleAnalyticsCollection(bool attemptToEnable) async {
     final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
@@ -120,6 +156,7 @@ class AnalyticsController extends _$AnalyticsController {
     state = state.copyWith(isCollectingData: isEnabled, canPromptForAnalytics: false);
   }
 
+  @override
   Future<void> trackEvent(
     AnalyticEvents event, {
     bool includeDefaultProperties = true,
@@ -144,6 +181,7 @@ class AnalyticsController extends _$AnalyticsController {
     mixpanel.track(event.friendlyName, properties: publishedProperties);
   }
 
+  @override
   Future<void> flushEvents() async {
     final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
     await mixpanel.flush();

@@ -40,7 +40,8 @@ enum AnalyticEvents {
   screenDisplayed, // A user has been shown a screen on the app
   accountPledgesAccepted, // A user has agreed to the pledge
   accountSignOut, // A user has signed out from the application
-  accountDelete, // A user has deleted their account
+  accountDeletionRequested, // A user has requested their account to be deleted
+  accountDeletionCancelled, // A user has cancelled their account deletion
   accountSetup, // A users account has been setup
   accountReported, // A user has reported someones accouny
   profileSetup, // A users profile has been setup

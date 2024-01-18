@@ -23,6 +23,8 @@ import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/validator_extensions.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/api.dart';
@@ -289,18 +291,17 @@ class LoginViewModel extends _$LoginViewModel {
     await appRouter.push(const RegistrationAccountRoute());
   }
 
+  //! Actually delete the account (mark for deletion)
   Future<void> onAccountDeleteOptionSelected() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
     final Logger logger = ref.read(loggerProvider);
     final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-
-    logger.d('onAccountDeleteSelected');
-
-    state = state.copyWith(isBusy: true);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     try {
-      logger.i('Deleting profile');
+      logger.d('onAccountDeleteSelected');
+      state = state.copyWith(isBusy: true);
 
       final Profile? profile = profileController.currentProfile;
       final String profileId = profile?.flMeta?.id ?? '';
@@ -315,6 +316,7 @@ class LoginViewModel extends _$LoginViewModel {
         return;
       }
 
+      await analyticsController.trackEvent(AnalyticEvents.accountDeletionRequested);
       await profileApiService.toggleProfileDeletion(uid: profileId);
       appRouter.popUntil((route) => route.settings.name == AccountDetailsRoute.name);
     } finally {

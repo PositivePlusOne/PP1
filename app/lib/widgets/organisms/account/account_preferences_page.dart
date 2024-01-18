@@ -78,44 +78,6 @@ class AccountPreferencesPage extends HookConsumerWidget {
         PositiveBasicSliverList(
           includeAppBar: false,
           children: <Widget>[
-            // Text(
-            //   'App Preferences',
-            //   style: typography.styleHeroMedium.copyWith(color: colors.black),
-            // ),
-            // const SizedBox(height: kPaddingMedium),
-            // PositiveGlassSheet(
-            //   children: <Widget>[
-            //     //! PP1-984
-            //     // PositiveCheckboxButton(
-            //     //   icon: UniconsLine.eye_slash,
-            //     //   label: 'Incognito mode',
-            //     //   value: state.isIncognitoEnabled,
-            //     //   onTapped: viewModel.toggleIncognitoMode,
-            //     //   isBusy: state.isBusy,
-            //     //   showDisabledState: state.isBusy,
-            //     // ),
-            //     // const SizedBox(height: kPaddingMedium),
-            //     PositiveCheckboxButton(
-            //       icon: UniconsLine.lock_access,
-            //       label: localizations.page_profile_biometrics_title,
-            //       value: state.areBiometricsEnabled,
-            //       onTapped: viewModel.toggleBiometrics,
-            //       isBusy: state.isBusy,
-            //       showDisabledState: state.isBusy,
-            //     ),
-            //     //! PP1-984
-            //     // const SizedBox(height: kPaddingMedium),
-            //     // PositiveCheckboxButton(
-            //     //   icon: UniconsLine.envelope_check,
-            //     //   label: 'Marketing emails',
-            //     //   value: state.areMarketingEmailsEnabled,
-            //     //   onTapped: viewModel.toggleMarketingEmails,
-            //     //   isBusy: state.isBusy,
-            //     //   showDisabledState: state.isBusy,
-            //     // ),
-            //   ],
-            // ),
-            // const SizedBox(height: kPaddingMedium),
             Text(
               'Data Collection',
               style: typography.styleHeroMedium.copyWith(color: colors.black),
