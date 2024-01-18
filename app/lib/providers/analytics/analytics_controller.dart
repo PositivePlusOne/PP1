@@ -46,7 +46,7 @@ class AnalyticsController extends _$AnalyticsController {
     if (userController.currentUser != null) {
       properties['userId'] = userController.currentUser!.uid;
       properties['emailAddress'] = userController.currentUser!.email;
-      properties['currentRoute'] = appRouter.current.name;
+      properties['currentRoute'] = appRouter.stack.last.name;
     }
 
     return properties;

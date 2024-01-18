@@ -141,7 +141,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     // Quickly back out if we're editing any post
     if (state.isEditingPost && state.currentCreatePostPage.isCreationDialog) {
-      analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
+      await analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
       router.removeLast();
       return false;
     }
@@ -182,7 +182,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       // Close the video and remove the page
       if (shouldForceClose) {
-        analyticsController.trackEvent(AnalyticEvents.postDiscarded);
+        await analyticsController.trackEvent(AnalyticEvents.postDiscarded);
         router.removeLast();
       }
       return false;
@@ -193,7 +193,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           colors: colors,
           typography: typography,
         )) {
-          analyticsController.trackEvent(AnalyticEvents.postDiscarded);
+          await analyticsController.trackEvent(AnalyticEvents.postDiscarded);
           router.removeLast();
         } else {
           return false;
@@ -288,9 +288,9 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final bool isEditingPost = state.isEditingPost;
     if (isEditingPost) {
-      analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
+      await analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
     } else {
-      analyticsController.trackEvent(AnalyticEvents.postDiscarded);
+      await analyticsController.trackEvent(AnalyticEvents.postDiscarded);
     }
 
     router.removeLast();

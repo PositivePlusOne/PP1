@@ -366,18 +366,13 @@ extension ActivityExt on Activity {
     required Profile? currentProfile,
   }) async {
     final ActivitiesController activityController = providerContainer.read(activitiesControllerProvider.notifier);
-    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
-    final String activityId = flMeta?.id ?? '';
-    final String activityOrigin = publisherInformation?.originFeed ?? '';
-
     try {
       await activityController.deleteActivity(activity: this, currentProfile: currentProfile);
-      await analyticsController.trackEvent(AnalyticEvents.postDeleted, properties: generatePropertiesForPostSource(activity: this));
     } catch (e) {
       logger.e("Error deleting activity: $e");
 

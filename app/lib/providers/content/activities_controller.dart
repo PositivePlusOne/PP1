@@ -148,11 +148,13 @@ class ActivitiesController extends _$ActivitiesController {
   }) async {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final String activityId = activity.flMeta?.id ?? '';
 
     logger.i('[Activities Service] - Deleting activity: $activityId');
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     await postApiService.deleteActivity(activityId: activityId);
+    await analyticsController.trackEvent(AnalyticEvents.postDeleted, properties: generatePropertiesForPostSource(activity: activity));
 
     //* We can keep the activity in the cache for now, as this will prevent the UI from breaking
     //* cacheController.remove(activityId);
