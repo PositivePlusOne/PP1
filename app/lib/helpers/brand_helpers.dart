@@ -89,7 +89,10 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      style: typography.styleBold.copyWith(color: colors.black),
+      style: typography.styleBold.copyWith(
+        color: colors.linkBlue,
+        decoration: TextDecoration.underline,
+      ),
       onTap: (link) {
         if (onTapLink != null) {
           onTapLink(link);
