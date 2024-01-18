@@ -253,7 +253,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     setState(() {});
   }
 
-  List<String> findMentions(String text) {
+  static List<String> findMentions(String text) {
     final List<String> mentions = [];
     final List<String> words = RegExp(r'(?<=@)\S+').allMatches(text).map((match) => match.group(0)!).toList();
     for (final String word in words) {
@@ -289,12 +289,6 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
     // Check if we have already searched for this word
     if (word == latestMentionSearchQuery) {
       return;
-    }
-
-    // Add an analytic event if the dialog is opened for the first time
-    if (!isSearchingForMentions) {
-      final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-      analyticsController.trackEvent(AnalyticEvents.mentionStarted, properties: widget.analyticProperties);
     }
 
     // Check if we have more than just the @ symbol

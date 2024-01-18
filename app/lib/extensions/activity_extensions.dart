@@ -625,6 +625,12 @@ extension ActivityExt on Activity {
       await router.pop();
     }
 
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    await analyticsController.trackEvent(
+      AnalyticEvents.postEditStarted,
+      properties: generatePropertiesForPostSource(activity: this),
+    );
+
     await router.push(
       CreatePostRoute(
         activityData: ActivityData(

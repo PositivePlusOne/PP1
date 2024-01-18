@@ -184,17 +184,24 @@ class ActivitiesController extends _$ActivitiesController {
     }
   }
 
-  Future<Activity> updateActivity({
+  Future<Activity> editActivity({
     required ActivityData activityData,
     required Profile? currentProfile,
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     logger.i('[Activities Service] - Updating activity');
 
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     final Activity activity = await postApiService.updateActivity(activityData: activityData);
+
+    // Save any analytics
+    await analyticsController.trackEvent(
+      AnalyticEvents.postEdited,
+      properties: generatePropertiesForPostSource(activity: activity),
+    );
 
     // Add the tags to the users recent tags
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);

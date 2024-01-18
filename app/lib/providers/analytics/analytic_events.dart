@@ -61,6 +61,7 @@ enum AnalyticEvents {
   profileViewed, // A user has viewed another users profile
   postDisplayed, // A post has been displayed to the user
   postCreationStarted, // A user has started creating a post
+  postEditStarted, // A user has started editing a post
   postCreated, // A post has been created on the platform
   postEdited, // A post has been edited
   postViewed, // A post has been viewed by the user and is no longer on the screen
@@ -79,7 +80,6 @@ enum AnalyticEvents {
   postSharedExternally, // A user has shared a post externally
   postSharedOnFeed, // A user has shared a post on their feed
   postSharedThroughChat, // A user has shared a post through chat
-  mentionStarted, // A user has started a mention
   mentionSelected, // A user has selected a mention
   photoViewed, // A user has viewed a photo
   videoMuted, // A user has muted a video

@@ -982,7 +982,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           activityData: activityData,
         );
       } else {
-        await activityController.updateActivity(
+        await activityController.editActivity(
           currentProfile: currentProfile,
           activityData: activityData,
         );

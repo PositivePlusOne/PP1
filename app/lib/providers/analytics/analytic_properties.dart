@@ -1,5 +1,7 @@
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/widgets/atoms/input/positive_text_field.dart';
 
 const String sourceKey = 'source';
 
@@ -47,6 +49,10 @@ Map<String, Object?> generatePropertiesForPostSource({
     return {};
   }
 
+  final String postContent = activity?.generalConfiguration?.content ?? '';
+  final bool containsTag = activity?.enrichmentConfiguration?.tags.any((element) => !TagHelpers.isReserved(element)) ?? false;
+  final bool containsMention = PositiveTextFieldState.findMentions(postContent).isNotEmpty;
+
   return {
     sourceKey: AnalyticSource.post.locale,
     postIdKey: postId,
@@ -56,8 +62,8 @@ Map<String, Object?> generatePropertiesForPostSource({
     viewPermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.viewMode),
     commentPermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.commentMode),
     sharePermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.shareMode),
-    containsMentionsKey: activity?.enrichmentConfiguration?.taggedUsers.isNotEmpty,
-    containsTagsKey: activity?.enrichmentConfiguration?.tags.isNotEmpty,
+    containsTagsKey: containsTag,
+    containsMentionsKey: containsMention,
   };
 }
 
