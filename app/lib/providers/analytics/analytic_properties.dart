@@ -53,9 +53,9 @@ Map<String, Object?> generatePropertiesForPostSource({
     postOriginKey: origin,
     searchTermKey: searchTerm,
     containsMediaKey: activity?.media.isNotEmpty,
-    viewPermissionsKey: activity?.securityConfiguration?.viewMode,
-    commentPermissionsKey: activity?.securityConfiguration?.commentMode,
-    sharePermissionsKey: activity?.securityConfiguration?.shareMode,
+    viewPermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.viewMode),
+    commentPermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.commentMode),
+    sharePermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.shareMode),
     containsMentionsKey: activity?.enrichmentConfiguration?.taggedUsers.isNotEmpty,
     containsTagsKey: activity?.enrichmentConfiguration?.tags.isNotEmpty,
   };

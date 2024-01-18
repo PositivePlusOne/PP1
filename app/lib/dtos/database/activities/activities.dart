@@ -136,7 +136,11 @@ class ActivitySecurityConfigurationMode with _$ActivitySecurityConfigurationMode
   const factory ActivitySecurityConfigurationMode.signedIn() = _ActivitySecurityConfigurationModeSignedIn;
   const factory ActivitySecurityConfigurationMode.disabled() = _ActivitySecurityConfigurationModeDisabled;
 
-  static String toJson(ActivitySecurityConfigurationMode mode) {
+  static String toJson(ActivitySecurityConfigurationMode? mode) {
+    if (mode == null) {
+      return '';
+    }
+
     return mode.when(
       public: () => 'public',
       followersAndConnections: () => 'followers_and_connections',
