@@ -405,9 +405,8 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       targetActivity?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
     );
     parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
-    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\nhttp:", caseSensitive: false), "\n http:");
-    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\nhttps:", caseSensitive: false), "\n https:");
-    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\nwww.", caseSensitive: false), "\n www.");
+    parsedMarkdown = parsedMarkdown.replaceAllMapped(RegExp("www.|https:|http:", caseSensitive: false), (match) => match.input.substring(match.start, match.end).toLowerCase());
+    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\n(?=www.|http:|https:)", caseSensitive: false), "\n ");
 
     if (!widget.isFullscreen) {
       int lastIndex = 0;
