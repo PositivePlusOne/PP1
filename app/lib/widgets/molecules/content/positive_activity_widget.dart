@@ -395,10 +395,19 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
   Widget buildMarkdownBodyWidget({
     required Activity? targetActivity,
   }) {
+    //? The current markdown_widget does NOT allow for the double space for newline as is standard for Markdown, instead opting to use \n, \r and oddly also \t as newline chars
+    //? Due to this the newline characters need to be temporarally stripped as the html to markdown converter will replace them with double space
+    //? in addition to this the markdown_widget also cannot identify hyperlinks unless they begin with http or www
+    //? This causes links to break if they are after a newline/carriage as they begin with for example "nhttp"
+    //? as a temporary solution we are adding a single whitespace character after newlines before hyperlinks
+
     String parsedMarkdown = html2md.convert(
       targetActivity?.generalConfiguration?.content.replaceAll("\n", ":Carriage Return:") ?? '',
     );
     parsedMarkdown = parsedMarkdown.replaceAll(":Carriage Return:", "\n");
+    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\nhttp:", caseSensitive: false), "\n http:");
+    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\nhttps:", caseSensitive: false), "\n https:");
+    parsedMarkdown = parsedMarkdown.replaceAll(RegExp("\nwww.", caseSensitive: false), "\n www.");
 
     if (!widget.isFullscreen) {
       int lastIndex = 0;
