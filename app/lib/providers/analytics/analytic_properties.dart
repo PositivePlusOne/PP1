@@ -6,7 +6,11 @@ const String sourceKey = 'source';
 const String postIdKey = 'postId';
 const String postOriginKey = 'postOrigin';
 const String searchTermKey = 'searchTerm';
+
 const String containsMediaKey = 'containsMedia';
+const String containsMentionsKey = 'containsMentions';
+const String containsTagsKey = 'containsTags';
+
 const String viewPermissionsKey = 'viewPermissions';
 const String commentPermissionsKey = 'commentPermissions';
 const String sharePermissionsKey = 'sharePermissions';
@@ -52,6 +56,8 @@ Map<String, Object?> generatePropertiesForPostSource({
     viewPermissionsKey: activity?.securityConfiguration?.viewMode,
     commentPermissionsKey: activity?.securityConfiguration?.commentMode,
     sharePermissionsKey: activity?.securityConfiguration?.shareMode,
+    containsMentionsKey: activity?.enrichmentConfiguration?.taggedUsers.isNotEmpty,
+    containsTagsKey: activity?.enrichmentConfiguration?.tags.isNotEmpty,
   };
 }
 
