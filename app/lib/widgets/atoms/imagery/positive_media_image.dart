@@ -458,12 +458,12 @@ class PositiveMediaImageState extends ConsumerState<PositiveMediaImage> {
   }
 
   FutureOr<void> onInternalTap(BuildContext context) async {
+    recordAnalytics();
+
     if (widget.onTap != null) {
       widget.onTap!();
       return;
     }
-
-    recordAnalytics();
 
     final AppRouter appRouter = providerContainer.read(appRouterProvider);
     await appRouter.push(MediaRoute(media: widget.media));
