@@ -60,6 +60,7 @@ enum AnalyticEvents {
   profileConnectionRequestCancelled, // A user has cancelled a connection request to another user
   profileDisconnected, // A user has disconnected from another user
   profileViewed, // A user has viewed another users profile
+  profileSwitched, // A user has switched to another profile
   postDisplayed, // A post has been displayed to the user
   postCreationStarted, // A user has started creating a post
   postEditStarted, // A user has started editing a post

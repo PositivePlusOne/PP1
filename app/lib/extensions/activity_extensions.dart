@@ -579,12 +579,6 @@ extension ActivityExt on Activity {
     logger.d('liking post');
     await reactionsController.likeActivity(activity: activity);
 
-    // Analytics
-    await analyticsController.trackEvent(
-      AnalyticEvents.postLiked,
-      properties: analyticProperties,
-    );
-
     // update the count to be one more
     incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
 

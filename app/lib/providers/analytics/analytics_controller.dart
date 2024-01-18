@@ -1,7 +1,10 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:ui';
 
 // Flutter imports:
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -58,6 +61,7 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
   static const String kAnalyticsEnabledKey = 'positive_analytics_enabled';
 
   ScheduledTask? updateProfilePropertiesTask;
+  StreamSubscription<ProfileSwitchedEvent>? profileSwitchedSubscription;
 
   Map<String, dynamic> get defaultProperties {
     final Map<String, dynamic> properties = {};
@@ -81,8 +85,14 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
   @override
   Future<void> registerScheduledJobs() async {
     final Cron cron = providerContainer.read(cronProvider);
+    final EventBus eventBus = providerContainer.read(eventBusProvider);
     final Logger logger = ref.read(loggerProvider);
     logger.d('registerScheduledJobs: Registering scheduled jobs');
+
+    profileSwitchedSubscription ??= eventBus.on<ProfileSwitchedEvent>().listen((ProfileSwitchedEvent event) async {
+      logger.d('registerScheduledJobs: Profile switched, updating analytics properties');
+      await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
+    });
 
     // Register a job to occur every minute to update analytics properties
     updateProfilePropertiesTask ??= cron.schedule(Schedule.parse('*/1 * * * *'), () async {
