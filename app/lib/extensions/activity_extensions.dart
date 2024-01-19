@@ -325,7 +325,7 @@ extension ActivityExt on Activity {
         targetProfileId: targetProfileId,
         currentProfileId: currentProfileId,
         activityId: flMeta?.id ?? '',
-        analyticProperties: generatePropertiesForPostSource(flMeta?.id ?? '', publisherInformation?.originFeed ?? ''),
+        analyticProperties: generatePropertiesForPostSource(activity: this),
         types: const {
           ProfileModalDialogOptionType.viewProfile,
           ProfileModalDialogOptionType.follow,
@@ -366,18 +366,13 @@ extension ActivityExt on Activity {
     required Profile? currentProfile,
   }) async {
     final ActivitiesController activityController = providerContainer.read(activitiesControllerProvider.notifier);
-    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final AppRouter router = providerContainer.read(appRouterProvider);
     final Logger logger = providerContainer.read(loggerProvider);
 
-    final String activityId = flMeta?.id ?? '';
-    final String activityOrigin = publisherInformation?.originFeed ?? '';
-
     try {
       await activityController.deleteActivity(activity: this, currentProfile: currentProfile);
-      await analyticsController.trackEvent(AnalyticEvents.postDeleted, properties: generatePropertiesForPostSource(activityId, activityOrigin));
     } catch (e) {
       logger.e("Error deleting activity: $e");
 
@@ -502,7 +497,7 @@ extension ActivityExt on Activity {
       return;
     }
 
-    await reactionsController.bookmarkActivity(activityId: activityId, activityOrigin: activityOrigin);
+    await reactionsController.bookmarkActivity(activity: this);
 
     ScaffoldMessenger.of(context).showSnackBar(
       PositiveGenericSnackBar(title: 'Post bookmarked!', icon: UniconsLine.bookmark, backgroundColour: colours.purple),
@@ -540,13 +535,14 @@ extension ActivityExt on Activity {
 
     final DesignColorsModel colours = providerContainer.read(designControllerProvider.select((value) => value.colors));
     final ReactionsController reactionsController = providerContainer.read(reactionsControllerProvider.notifier);
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
 
     final String profileId = currentProfile?.flMeta?.id ?? '';
     final String activityId = flMeta?.id ?? '';
     final String activityOrigin = publisherInformation?.originFeed ?? '';
 
-    final Map<String, Object?> analyticProperties = generatePropertiesForPostSource(activityId, activityOrigin);
+    final Map<String, Object?> analyticProperties = generatePropertiesForPostSource(activity: this);
 
     if (profileId.isEmpty || activityId.isEmpty) {
       throw Exception('Invalid activity or user');
@@ -563,6 +559,12 @@ extension ActivityExt on Activity {
         currentProfile: currentProfile,
       );
 
+      // Analytics
+      await analyticsController.trackEvent(
+        AnalyticEvents.postUnliked,
+        properties: analyticProperties,
+      );
+
       // update the count to be one fewer
       incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: -1);
 
@@ -575,7 +577,7 @@ extension ActivityExt on Activity {
     }
 
     logger.d('liking post');
-    await reactionsController.likeActivity(activityId: activityId, activityOrigin: activityOrigin);
+    await reactionsController.likeActivity(activity: activity);
 
     // update the count to be one more
     incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
@@ -616,6 +618,12 @@ extension ActivityExt on Activity {
     if (popRoute) {
       await router.pop();
     }
+
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    await analyticsController.trackEvent(
+      AnalyticEvents.postEditStarted,
+      properties: generatePropertiesForPostSource(activity: this),
+    );
 
     await router.push(
       CreatePostRoute(

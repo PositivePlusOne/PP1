@@ -40,7 +40,8 @@ enum AnalyticEvents {
   screenDisplayed, // A user has been shown a screen on the app
   accountPledgesAccepted, // A user has agreed to the pledge
   accountSignOut, // A user has signed out from the application
-  accountDelete, // A user has deleted their account
+  accountDeletionRequested, // A user has requested their account to be deleted
+  accountDeletionCancelled, // A user has cancelled their account deletion
   accountSetup, // A users account has been setup
   accountReported, // A user has reported someones accouny
   profileSetup, // A users profile has been setup
@@ -59,13 +60,17 @@ enum AnalyticEvents {
   profileConnectionRequestCancelled, // A user has cancelled a connection request to another user
   profileDisconnected, // A user has disconnected from another user
   profileViewed, // A user has viewed another users profile
+  profileSwitched, // A user has switched to another profile
   postDisplayed, // A post has been displayed to the user
   postCreationStarted, // A user has started creating a post
+  postEditStarted, // A user has started editing a post
   postCreated, // A post has been created on the platform
   postEdited, // A post has been edited
   postViewed, // A post has been viewed by the user and is no longer on the screen
   profileViewedFromPost, // A user has viewed another users profile from a post
   profileViewedFromSearch, // A user has viewed another users profile from a search
+  postDiscarded, // A user has discarded a post
+  postEditDiscarded, // A user has discarded an edit to a post
   postReported, // The user has reported a post
   postDeleted, // A user has deleted a post
   postLiked, // A user has liked a post
@@ -77,7 +82,6 @@ enum AnalyticEvents {
   postSharedExternally, // A user has shared a post externally
   postSharedOnFeed, // A user has shared a post on their feed
   postSharedThroughChat, // A user has shared a post through chat
-  mentionStarted, // A user has started a mention
   mentionSelected, // A user has selected a mention
   photoViewed, // A user has viewed a photo
   videoMuted, // A user has muted a video

@@ -262,8 +262,9 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildReactionItem(BuildContext context, Reaction item, Profile? currentProfile, int index) {
     return PositiveComment(
-      currentProfile: currentProfile,
+      activity: activity,
       comment: item,
+      currentProfile: currentProfile,
       feedOrigin: TargetFeed.toOrigin(feed),
       isFirst: index == 0,
       onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(

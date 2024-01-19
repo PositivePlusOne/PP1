@@ -46,6 +46,19 @@ class NotificationTopic with _$NotificationTopic {
         // const NotificationTopic.sharedEvent(),
       };
 
+  static String toPascalCase(NotificationTopic type) {
+    return type.when(
+      other: () => 'Other',
+      postLike: () => 'PostLike',
+      newFollower: () => 'NewFollower',
+      connectionRequest: () => 'ConnectionRequest',
+      newComment: () => 'NewComment',
+      newMessage: () => 'NewMessage',
+      postShared: () => 'PostShared',
+      sharedEvent: () => 'SharedEvent',
+    );
+  }
+
   static String toJson(NotificationTopic type) {
     return type.when(
       other: () => 'other',

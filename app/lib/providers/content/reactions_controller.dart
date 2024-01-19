@@ -2,17 +2,17 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/activities/mentions.dart';
-import 'package:app/extensions/string_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/activity_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
@@ -190,16 +190,16 @@ class ReactionsController extends _$ReactionsController {
   }
 
   Future<void> bookmarkActivity({
-    required String activityId,
-    required String activityOrigin,
+    required Activity activity,
   }) async {
     final Logger logger = ref.read(loggerProvider);
+    final String activityId = activity.flMeta?.id ?? '';
     logger.i('CommunitiesController - bookmarkActivity - Bookmarking activity: $activityId');
 
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activityId, activityOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: activity);
     await reactionApiService.postReaction(activityId: activityId, kind: 'bookmark');
     await analyticsController.trackEvent(AnalyticEvents.postBookmarked, properties: additionalProperties);
 
@@ -229,7 +229,7 @@ class ReactionsController extends _$ReactionsController {
       throw Exception('No reaction id found for activity: $activity');
     }
 
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity.flMeta?.id ?? '', activityOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: activity);
     await reactionApiService.deleteReaction(reactionId: reactionId);
     await analyticsController.trackEvent(AnalyticEvents.postUnbookmarked, properties: additionalProperties);
 
@@ -239,16 +239,16 @@ class ReactionsController extends _$ReactionsController {
   }
 
   Future<void> likeActivity({
-    required String activityId,
-    required String activityOrigin,
+    required Activity activity,
   }) async {
     final Logger logger = ref.read(loggerProvider);
-    logger.i('CommunitiesController - likeActivity - Liking activity: $activityId');
+    final String activityId = activity.flMeta?.id ?? '';
 
+    logger.i('CommunitiesController - likeActivity - Liking activity: $activityId');
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activityId, activityOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: activity);
     await reactionApiService.postReaction(activityId: activityId, kind: 'like');
     await analyticsController.trackEvent(AnalyticEvents.postLiked, properties: additionalProperties);
 
@@ -276,7 +276,7 @@ class ReactionsController extends _$ReactionsController {
       throw Exception('No reaction id found for activity: $activity');
     }
 
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity.flMeta?.id ?? '', activityOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: activity);
     await reactionApiService.deleteReaction(reactionId: reactionId);
     await analyticsController.trackEvent(AnalyticEvents.postUnliked, properties: additionalProperties);
 
@@ -286,11 +286,13 @@ class ReactionsController extends _$ReactionsController {
   }
 
   Future<void> postComment({
-    required String activityId,
-    required String activityOrigin,
+    required Activity activity,
     required String comment,
   }) async {
     final Logger logger = ref.read(loggerProvider);
+    final String activityId = activity.flMeta?.id ?? '';
+    final String activityOrigin = activity.publisherInformation?.originFeed ?? '';
+
     logger.i('Posting comment');
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
@@ -299,7 +301,7 @@ class ReactionsController extends _$ReactionsController {
     final Iterable<String> taggedUsers = comment.getHandles(includeHandle: false);
     final List<Mention> mentions = taggedUsers.map((e) => Mention.fromDisplayName(e)).toList();
 
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activityId, activityOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: activity);
     final Reaction newReaction = await reactionApiService.postReaction(
       activityId: activityId,
       kind: 'comment',
@@ -312,10 +314,9 @@ class ReactionsController extends _$ReactionsController {
 
     // Add the reaction to the reactions feed
     final CacheController cacheController = ref.read(cacheControllerProvider);
-    final Activity? activity = cacheController.get<Activity>(activityId);
     final Profile? currentProfile = cacheController.get<Profile>(profileController.currentProfileId ?? '');
-    if (activity == null || currentProfile == null) {
-      logger.e('Activity or current profile is null');
+    if (currentProfile == null) {
+      logger.e('Current profile is null');
       return;
     }
 
@@ -344,7 +345,7 @@ class ReactionsController extends _$ReactionsController {
 
   Future<void> deleteComment({
     required Reaction comment,
-    required String activityOrigin,
+    required Activity? activity,
     required Profile? currentProfile,
     required PositiveReactionsState feedState,
   }) async {
@@ -360,7 +361,7 @@ class ReactionsController extends _$ReactionsController {
       throw Exception('No reaction id found for comment: $comment');
     }
 
-    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(comment.activityId, activityOrigin);
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: activity);
 
     await reactionApiService.deleteReaction(reactionId: reactionId);
     await analyticsController.trackEvent(AnalyticEvents.postCommentDeleted, properties: additionalProperties);

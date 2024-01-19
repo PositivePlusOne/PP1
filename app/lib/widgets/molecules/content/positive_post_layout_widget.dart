@@ -331,7 +331,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               child: PositiveMediaImage(
                 fit: BoxFit.cover,
                 media: media,
-                analyticsProperties: generatePropertiesForPostSource(postContentId, postContentPublisherId),
+                analyticsProperties: generatePropertiesForPostSource(activity: postContent),
                 onTap: () => onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
@@ -379,7 +379,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(kBorderRadiusLarge),
               child: PositiveMediaImage(
-                analyticsProperties: generatePropertiesForPostSource(postContentId, postContentPublisherId),
+                analyticsProperties: generatePropertiesForPostSource(activity: postContent),
                 height: kPaddingExtraLarge,
                 fit: BoxFit.cover,
                 media: media,
@@ -458,7 +458,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       ),
       child: PositiveVideoPlayer(
         media: media,
-        analyticsProperties: generatePropertiesForPostSource(postId, origin),
+        analyticsProperties: generatePropertiesForPostSource(activity: postContent),
         borderRadius: sidePadding > 0 ? BorderRadius.circular(kBorderRadiusLarge) : BorderRadius.zero,
         visibilityDetectorKey: postIdKey,
       ),

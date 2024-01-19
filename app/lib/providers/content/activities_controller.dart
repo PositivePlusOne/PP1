@@ -17,6 +17,9 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/event/cache_key_updated_event.dart';
@@ -111,12 +114,19 @@ class ActivitiesController extends _$ActivitiesController {
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     logger.i('[Activities Service] - Posting activity');
 
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     final Activity activity = await postApiService.postActivity(
       activityData: activityData,
       reposterActivityId: activityData.reposterActivityID ?? '',
+    );
+
+    // Save any analytics
+    await analyticsController.trackEvent(
+      AnalyticEvents.postCreated,
+      properties: generatePropertiesForPostSource(activity: activity),
     );
 
     // Add the tags to the users recent tags
@@ -138,11 +148,13 @@ class ActivitiesController extends _$ActivitiesController {
   }) async {
     final Logger logger = ref.read(loggerProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final String activityId = activity.flMeta?.id ?? '';
 
     logger.i('[Activities Service] - Deleting activity: $activityId');
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     await postApiService.deleteActivity(activityId: activityId);
+    await analyticsController.trackEvent(AnalyticEvents.postDeleted, properties: generatePropertiesForPostSource(activity: activity));
 
     //* We can keep the activity in the cache for now, as this will prevent the UI from breaking
     //* cacheController.remove(activityId);
@@ -172,17 +184,24 @@ class ActivitiesController extends _$ActivitiesController {
     }
   }
 
-  Future<Activity> updateActivity({
+  Future<Activity> editActivity({
     required ActivityData activityData,
     required Profile? currentProfile,
     List<Media>? media,
   }) async {
     final Logger logger = ref.read(loggerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     logger.i('[Activities Service] - Updating activity');
 
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final PostApiService postApiService = await ref.read(postApiServiceProvider.future);
     final Activity activity = await postApiService.updateActivity(activityData: activityData);
+
+    // Save any analytics
+    await analyticsController.trackEvent(
+      AnalyticEvents.postEdited,
+      properties: generatePropertiesForPostSource(activity: activity),
+    );
 
     // Add the tags to the users recent tags
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);

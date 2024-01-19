@@ -29,6 +29,8 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/activities_controller.dart';
 import 'package:app/providers/content/dtos/gallery_entry.dart';
 import 'package:app/providers/content/gallery_controller.dart';
@@ -131,6 +133,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     final bool isHandlingVideo = state.currentCreatePostPage == CreatePostCurrentPage.camera && state.currentPostType == PostType.clip;
     final bool isRecordingVideo = isHandlingVideo && !(currentPositiveCameraState?.clipRecordingState.isInactive ?? false);
@@ -138,6 +141,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
     // Quickly back out if we're editing any post
     if (state.isEditingPost && state.currentCreatePostPage.isCreationDialog) {
+      await analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
       router.removeLast();
       return false;
     }
@@ -178,6 +182,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
       // Close the video and remove the page
       if (shouldForceClose) {
+        await analyticsController.trackEvent(AnalyticEvents.postDiscarded);
         router.removeLast();
       }
       return false;
@@ -188,6 +193,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           colors: colors,
           typography: typography,
         )) {
+          await analyticsController.trackEvent(AnalyticEvents.postDiscarded);
           router.removeLast();
         } else {
           return false;
@@ -279,6 +285,14 @@ class CreatePostViewModel extends _$CreatePostViewModel {
 
   Future<void> goBackFromCamera() async {
     final AppRouter router = ref.read(appRouterProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final bool isEditingPost = state.isEditingPost;
+    if (isEditingPost) {
+      await analyticsController.trackEvent(AnalyticEvents.postEditDiscarded);
+    } else {
+      await analyticsController.trackEvent(AnalyticEvents.postDiscarded);
+    }
+
     router.removeLast();
   }
 
@@ -968,7 +982,7 @@ class CreatePostViewModel extends _$CreatePostViewModel {
           activityData: activityData,
         );
       } else {
-        await activityController.updateActivity(
+        await activityController.editActivity(
           currentProfile: currentProfile,
           activityData: activityData,
         );

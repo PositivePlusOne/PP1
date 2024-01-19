@@ -4,7 +4,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,8 +12,10 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -28,8 +29,7 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
     required this.onCommentChanged,
     required this.onPostCommentRequested,
     required this.isBusy,
-    required this.postId,
-    required this.postOrigin,
+    required this.activity,
     this.onSwitchProfileRequested,
     this.currentProfile,
     this.canSwitchProfile = false,
@@ -41,8 +41,7 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
   final bool canSwitchProfile;
   final VoidCallback? onSwitchProfileRequested;
 
-  final String postId;
-  final String postOrigin;
+  final Activity? activity;
 
   final TextEditingController commentTextController;
   final Function(String) onCommentChanged;
@@ -116,7 +115,7 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                       labelText: 'Leave a comment',
                       allowMentions: true,
                       mentionSearchLimit: 2,
-                      analyticProperties: generatePropertiesForPostSource(widget.postId, widget.postOrigin),
+                      analyticProperties: generatePropertiesForPostSource(activity: widget.activity),
                       textEditingController: widget.commentTextController,
                       onTextChanged: widget.onCommentChanged,
                       onTextSubmitted: widget.onPostCommentRequested,

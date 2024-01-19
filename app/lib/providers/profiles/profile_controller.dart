@@ -182,6 +182,7 @@ class ProfileController extends _$ProfileController {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     if (uid == state.currentProfile?.flMeta?.id) {
       logger.i('[Profile Service] - Already on profile: $uid');
@@ -203,6 +204,7 @@ class ProfileController extends _$ProfileController {
 
     state = state.copyWith(currentProfile: profile);
     eventBus.fire(ProfileSwitchedEvent(uid));
+    analyticsController.trackEvent(AnalyticEvents.profileSwitched);
   }
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
@@ -250,6 +252,14 @@ class ProfileController extends _$ProfileController {
 
     final bool isFromPost = propertiesSourcedFromPost(analyticsProperties);
     final bool isFromSearch = propertiesSourcedFromSearch(analyticsProperties);
+
+    // Add the users ID and display name to the analytics properties
+    analyticsProperties = {
+      ...analyticsProperties,
+      ...{
+        'targetUserId': id,
+      },
+    };
 
     if (isFromPost) {
       await analyticsController.trackEvent(AnalyticEvents.profileViewedFromPost, properties: analyticsProperties);

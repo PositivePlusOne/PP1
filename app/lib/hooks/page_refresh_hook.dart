@@ -35,10 +35,7 @@ class PageRebuildHookState extends HookState<void, PageRefreshHook> {
 
   @override
   void initHook() {
-    final logger = providerContainer.read(loggerProvider);
-
     _timer = Timer.periodic(hook.refreshDuration, (_) {
-      logger.d('Page refresh hook triggered');
       setState(() {});
     });
 

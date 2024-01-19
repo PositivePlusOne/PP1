@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 // Package imports:
-import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/json_extensions.dart';

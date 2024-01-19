@@ -135,10 +135,17 @@ class PostViewModel extends _$PostViewModel with LifecycleMixin, ProfileSwitchMi
     try {
       logger.i('Posting comment');
       state = state.copyWith(isBusy: true);
+      final CacheController cacheController = ref.read(cacheControllerProvider);
       final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
+      final Activity? activity = cacheController.get<Activity>(state.activityId);
+
+      if (activity == null) {
+        logger.e('Activity is not loaded');
+        return;
+      }
+
       await reactionsController.postComment(
-        activityId: state.activityId,
-        activityOrigin: TargetFeed.toOrigin(state.targetFeed),
+        activity: activity,
         comment: trimmedString,
       );
 

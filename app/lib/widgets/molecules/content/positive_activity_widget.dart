@@ -224,7 +224,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               publisherRelationship: widget.targetRelationship,
               currentProfile: widget.currentProfile,
               origin: widget.activity?.repostConfiguration?.targetActivityOriginFeed ?? '',
-              flMetaData: widget.activity?.flMeta,
+              activity: widget.activity,
               padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium, vertical: kPaddingSuperSmall),
               isOptionsHidden: widget.isShared,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
@@ -301,7 +301,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               promotionId: widget.activityPromotion?.flMeta?.id ?? '',
             ),
             child: ActivityPostHeadingWidget(
-              flMetaData: widget.activity?.flMeta,
+              activity: widget.activity,
               padding: EdgeInsets.symmetric(horizontal: widget.isShared ? kPaddingSmall : kPaddingMedium, vertical: kPaddingSuperSmall),
               publisher: widget.targetProfile,
               publisherRelationship: widget.targetRelationship,
