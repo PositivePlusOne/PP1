@@ -231,6 +231,9 @@ _$ActivityEnrichmentConfigurationImpl
           tags: json['tags'] == null
               ? const []
               : stringListFromJson(json['tags']),
+          taggedUsers: json['taggedUsers'] == null
+              ? const []
+              : stringListFromJson(json['taggedUsers']),
           promotionKey: json['promotionKey'] as String? ?? '',
           publishLocation: json['publishLocation'] as String? ?? '',
           mentions: json['mentions'] == null
@@ -242,6 +245,7 @@ Map<String, dynamic> _$$ActivityEnrichmentConfigurationImplToJson(
         _$ActivityEnrichmentConfigurationImpl instance) =>
     <String, dynamic>{
       'tags': instance.tags,
+      'taggedUsers': instance.taggedUsers,
       'promotionKey': instance.promotionKey,
       'publishLocation': instance.publishLocation,
       'mentions': Mention.toJsonList(instance.mentions),

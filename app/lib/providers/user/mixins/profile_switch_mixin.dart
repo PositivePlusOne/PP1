@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
@@ -89,11 +90,12 @@ mixin ProfileSwitchMixin {
 
   Future<void> requestSwitchProfileDialog(BuildContext context, ActivitySecurityConfigurationMode? mode) async {
     final Logger logger = providerContainer.read(loggerProvider);
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
     logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - start');
 
     final String? newProfileId = await PositiveDialog.show(
       context: context,
-      title: 'Comment As',
+      title: localisations.generic_organisation_actions_comment_as_title,
       style: PositiveDialogStyle.fullScreen,
       hints: <Widget>[
         if (mode != null) ...<Widget>[

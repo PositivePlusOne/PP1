@@ -130,6 +130,10 @@
     "page_registration_new_number": "What is your new phone number?",
     "page_registration_change_number": "Change Phone Number",
 
+    "page_registration_accent_photo_body": "Pick a colour, this will show on your profile.",
+    "page_registration_accent_photo_change": "Change Profile Photo",
+    "page_registration_accent_photo_update": "Update Profile",
+
     "page_account_recovery_title": "Account Recovery",
     "page_account_recovery_body": "Don't worry. It happens. We'll send a recovery link to the email address linked to your account. No biggie.",
     "page_account_recovery_started_title": "Recovery Started",
@@ -268,6 +272,13 @@
     "page_profile_edit_interests": "Your Interests",
     "page_profile_edit_interests_hint": "Attend Events, Meet New People, Join A Community",
     "page_profile_edit_company_sectors": "Company Sector",
+    
+    "page_profile_view_company_sectors": "Company Sector",
+    "page_profile_view_age": "Age",
+    "page_profile_view_gender": "Gender",
+    "page_profile_view_hiv_status": "HIV Status",
+    "page_profile_view_location": "Location",
+    "page_profile_view_interests": "Interests",
 
     "page_profile_location_remove": "Remove Location",
 
@@ -310,6 +321,7 @@
     "page_account_organisation_actions_followers": "Followers",
     "page_account_organisation_actions_chat": "Company Chat",
     "page_account_organisation_actions_leave": "Leave {company}",
+    "generic_organisation_actions_comment_as_title": "Comment As",
     
     "page_account_actions_change_return_account": "Back to Account",
     "page_account_actions_change_return_profile": "Back to Profile",
@@ -565,7 +577,13 @@
     "page_create_post_repost_heading": "Repost",
     "page_create_post_processing": "Processing your {postType}...",
     "page_create_post_uploading": "Uploading your {postType}...",
+    "page_create_post_tagged_user": "Tagged {user} in your last post!",
+    "page_create_post_tagged_users": "Tagged the following users in your last post: {user}",
+    "page_create_post_failed_to_tag_user": "Failed to tag {user}",
+    "page_create_post_failed_to_tag_users": "Failed to tag the following users: {user}",
+    "page_create_post_tagged_user_mixed": "Tagged the following users: {user}\n Failed to tag the following users",
     "page_edit_post_uploading": "Editing your {postType}...",
+    "page_edit_post_no_tags_found": "No Tags found...",
     
     "page_create_post_visibility_warning": "Posts made visible to everyone will be viewable by people who do not have a Positive+1 account.",
 
@@ -575,7 +593,7 @@
     "page_create_post_post_type_clip": "clip",
     "page_create_post_post_type_event": "event",
     "page_create_post_post_type_repost": "repost",
-    "page_create_post_post_type_errpr": "error",
+    "page_create_post_post_type_error": "error",
 
     "page_create_post_clip_length_limit": "Clips can be a maximum of 3 minutes long - trim yours down to post it.",
     "page_create_post_seconds": "s",
@@ -599,7 +617,7 @@
     "post_comments_signed_in_followers_header": "You must have an account and be following to comment",
     "post_comments_signed_in_connections_header": "You must have an account and be connected to comment",
     "post_comments_private_header": "Comments have been disabled",
-    "post_comments_disabled_header": "Comments have been disabled",
+    "post_comments_disabled_header": " been disabled",
 
     "post_report_dialog_title": "Report Post",
     "post_report_dialog_body": "If you believe this post is breaking the Positive +1 rules, please complete a report and we will investigate.",
@@ -628,7 +646,7 @@
     "shared_reaction_type_generic_connections": "Connections Only",
     "shared_reaction_type_generic_followers": "Followers Only",
     "shared_reaction_type_generic_me": "Only Poster",
-    "shared_reaction_type_generic_disabled": "Disabled",
+    "shared_reaction_type_generic_disabled": "Commenting Off",
     "shared_reaction_type_generic_signed_in": "Signed In Users",
 
     "shared_promotion_type_hub": "Hub",
@@ -791,7 +809,7 @@
     "shared_errors_defaults_action": "Try Again",
     "shared_errors_not_max_length": "The value supplied is too long",
     "shared_errors_invalid_email": "Please enter a valid email address",
-    "shared_errors_invalid_phone": "The phone number you have entered is incorrect",
+    "shared_errors_invalid_phone": "Please enter a valid phone number",
     "shared_errors_user_disabled": "The user account has been disabled by an administrator",
     "shared_errors_user_not_found": "The user account was not found",
     "shared_errors_wrong_password": "The password is invalid or the user does not have a password",

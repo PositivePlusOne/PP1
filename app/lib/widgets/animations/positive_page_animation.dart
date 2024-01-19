@@ -301,15 +301,14 @@ class CircularClipTransition extends StatefulWidget {
   /// Creates  widget which reveals its [child] by expanding a circular clip
   /// from the center of [expandingRect] until the child is fully revealed.
   CircularClipTransition({
-    Key? key,
+    super.key,
     required this.animation,
     required this.expandingRect,
     required this.child,
     Animatable<double>? opacity,
     this.border = kDefaultBorder,
     this.shadow = kDefaultShadow,
-  })  : opacity = opacity ?? kDefaultOpacityAnimatable,
-        super(key: key);
+  })  : opacity = opacity ?? kDefaultOpacityAnimatable;
 
   /// The animation which controls the progress (0 to 1) of the transition.
   final Animation<double> animation;
@@ -460,10 +459,9 @@ class CircularClipTransitionState extends State<CircularClipTransition> {
 /// positioned through a [rect].
 class _AbsolutePositionedTransition extends AnimatedWidget {
   const _AbsolutePositionedTransition({
-    Key? key,
     required Animation<Rect> rect,
     required this.child,
-  }) : super(key: key, listenable: rect);
+  }) : super(listenable: rect);
 
   Animation<Rect> get rect => listenable as Animation<Rect>;
 

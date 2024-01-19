@@ -75,6 +75,7 @@ class ProfileModalDialog extends StatefulHookConsumerWidget {
     required this.targetProfileId,
     required this.currentProfileId,
     this.activityId = '',
+    this.analyticProperties = const <String, Object?>{},
     this.styleOverrides = const {},
     this.types,
     super.key,
@@ -83,6 +84,7 @@ class ProfileModalDialog extends StatefulHookConsumerWidget {
   final String currentProfileId;
   final String targetProfileId;
   final String activityId;
+  final Map<String, Object?> analyticProperties;
 
   final Map<ProfileModalDialogOptionType, ProfileModalDialogOption> styleOverrides;
   final Set<ProfileModalDialogOptionType>? types;
@@ -146,7 +148,7 @@ class ProfileModalDialogState extends ConsumerState<ProfileModalDialog> {
       switch (type) {
         case ProfileModalDialogOptionType.viewProfile:
           await appRouter.pop();
-          await ref.read(profileControllerProvider.notifier).viewProfile(targetProfile);
+          await ref.read(profileControllerProvider.notifier).viewProfile(targetProfile, widget.analyticProperties);
           break;
         case ProfileModalDialogOptionType.follow:
           var following = relationshipStates.contains(RelationshipState.sourceFollowed);

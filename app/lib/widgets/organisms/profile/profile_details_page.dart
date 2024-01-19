@@ -99,7 +99,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 if (targetProfile?.isOrganisation == true) ...[
                   PositiveFakeTextFieldButton.profile(
-                    hintText: localisations.page_profile_edit_company_sectors,
+                    hintText: localisations.page_profile_view_company_sectors,
                     labelText: targetProfile?.formattedCompanySectorsIgnoreFlags,
                   ),
                   const SizedBox(height: kPaddingMedium),
@@ -110,7 +110,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- *\\
                 if (!(targetProfile?.isOrganisation ?? false)) ...[
                   PositiveFakeTextFieldButton(
-                    hintText: localisations.page_profile_edit_age,
+                    hintText: localisations.page_profile_view_age,
                     labelText: targetProfile?.formattedAgeRespectingFlags ?? '',
                     //? empty onTap, users may not update date of birth in app
                   ),
@@ -120,16 +120,16 @@ class ProfileDetailsPage extends HookConsumerWidget {
                   //* -=-=-=-=-=- Gender -=-=-=-=-=- *\\
                   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                   PositiveFakeTextFieldButton.profile(
-                    hintText: localisations.page_profile_edit_gender,
+                    hintText: localisations.page_profile_view_gender,
                     labelText: targetProfile?.formattedGenderRespectingFlags,
                   ),
                   const SizedBox(height: kPaddingMedium),
 
                   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
-                  //* -=-=-=-=-=- HIV Status -=-=-=-=-=- *\\
+                  //* -=-=-=-=- HIV Status -=-=-=-=- *\\
                   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                   PositiveFakeTextFieldButton.profile(
-                    hintText: localisations.page_registration_hiv_status_title,
+                    hintText: localisations.page_profile_view_hiv_status,
                     labelText: targetProfile?.formattedHIVStatusRespectingFlags,
                   ),
                   const SizedBox(height: kPaddingMedium),
@@ -139,7 +139,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=- Location -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
-                  hintText: localisations.page_profile_edit_location,
+                  hintText: localisations.page_profile_view_location,
                   labelText: targetProfile?.formattedLocationRespectingFlags,
                 ),
                 const SizedBox(height: kPaddingMedium),
@@ -148,7 +148,7 @@ class ProfileDetailsPage extends HookConsumerWidget {
                 //* -=-=-=-=-=- Your Interests -=-=-=-=-=- *\\
                 //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
                 PositiveFakeTextFieldButton.profile(
-                  hintText: localisations.page_profile_edit_interests,
+                  hintText: localisations.page_profile_view_interests,
                   labelText: targetProfile?.formattedInterestsRespectingFlags,
                 ),
               ],

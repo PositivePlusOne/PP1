@@ -186,7 +186,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
         }
         // let's parse the time as a standard ISO string
         final timeAgo = payload.createdAt!.asDateDifference(context);
-        body = '$body $timeAgo.';
+        body = '$body ${timeAgo.toLowerCase()}.';
       } catch (ex) {
         logger.e('Failed to parse createdAt: ${payload.createdAt} - ex: $ex');
       }

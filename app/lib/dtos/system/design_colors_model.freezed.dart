@@ -459,7 +459,7 @@ class _$DesignColorsModelImpl implements _DesignColorsModel {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DesignColorsModelImpl &&

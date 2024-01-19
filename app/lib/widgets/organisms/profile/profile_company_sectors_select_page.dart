@@ -139,7 +139,7 @@ class ProfileCompanySectorSelectPage extends ConsumerWidget {
 }
 
 class _SelectionDropdown extends ConsumerWidget {
-  const _SelectionDropdown({Key? key}) : super(key: key);
+  const _SelectionDropdown({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

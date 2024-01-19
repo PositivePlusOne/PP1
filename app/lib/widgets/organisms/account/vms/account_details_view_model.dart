@@ -20,6 +20,8 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -208,6 +210,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       final AppRouter appRouter = ref.read(appRouterProvider);
       final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
       final Profile? profile = profileController.currentProfile;
       final String profileId = profile?.flMeta?.id ?? '';
@@ -223,6 +226,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       }
 
       await profileApiService.toggleProfileDeletion(uid: profileId);
+      await analyticsController.trackEvent(AnalyticEvents.accountDeletionCancelled);
       await appRouter.pop();
     } finally {
       state = state.copyWith(isBusy: false);

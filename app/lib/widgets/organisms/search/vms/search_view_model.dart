@@ -19,6 +19,9 @@ import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -168,6 +171,7 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
     }
 
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final CacheController cacheController = ref.read(cacheControllerProvider);
 
     updateHasSearched(true);
@@ -203,6 +207,18 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
         },
       );
 
+      switch (state.currentTab) {
+        case SearchTab.users:
+          analyticsController.trackEvent(AnalyticEvents.searchUser, properties: generatePropertiesForSearchSource(searchTerm));
+          break;
+        case SearchTab.posts:
+          analyticsController.trackEvent(AnalyticEvents.searchPost, properties: generatePropertiesForSearchSource(searchTerm));
+          break;
+        case SearchTab.tags:
+          analyticsController.trackEvent(AnalyticEvents.searchTag, properties: generatePropertiesForSearchSource(searchTerm));
+          break;
+      }
+
       updateHasSearched(true);
 
       if (response.results.isEmpty) {
@@ -219,6 +235,12 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
           final List<Profile> filteredResults = results.where((profile) {
             final bool isCurrentUser = currentProfileId.isNotEmpty && profile.flMeta?.id == currentProfileId;
             if (isCurrentUser) {
+              return false;
+            }
+
+            // Check if we already know about this profile
+            final bool hasUser = state.searchUsersResults.any((element) => element.flMeta?.id == profile.flMeta?.id);
+            if (hasUser) {
               return false;
             }
 
@@ -264,8 +286,11 @@ class SearchViewModel extends _$SearchViewModel with LifecycleMixin {
   Future<void> onTopicSelected(BuildContext context, Tag tag) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final String searchTerm = searchTextController.text.trim();
 
     logger.d('onTopicSelected() - tag: ${tag.fallback}');
+    await analyticsController.trackEvent(AnalyticEvents.tagViewedFromSearch, properties: generatePropertiesForSearchSource(searchTerm));
     await appRouter.push(TagFeedRoute(tag: tag));
   }
 }

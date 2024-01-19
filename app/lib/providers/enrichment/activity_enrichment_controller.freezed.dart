@@ -138,7 +138,7 @@ class _$ActivityEnrichmentControllerStateImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentControllerStateImpl &&
@@ -329,7 +329,7 @@ class _$ActivityEnrichmentTagActionOpenPostImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionOpenPostImpl);
@@ -497,7 +497,7 @@ class _$ActivityEnrichmentTagActionViewPostExtendedImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionViewPostExtendedImpl);
@@ -662,7 +662,7 @@ class _$ActivityEnrichmentTagActionCommentPostImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionCommentPostImpl);
@@ -827,7 +827,7 @@ class _$ActivityEnrichmentTagActionLikePostImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionLikePostImpl);
@@ -992,7 +992,7 @@ class _$ActivityEnrichmentTagActionBookmarkPostImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionBookmarkPostImpl);
@@ -1157,7 +1157,7 @@ class _$ActivityEnrichmentTagActionSharePostImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionSharePostImpl);
@@ -1323,7 +1323,7 @@ class _$ActivityEnrichmentTagActionFollowPublisherImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionFollowPublisherImpl);
@@ -1491,7 +1491,7 @@ class _$ActivityEnrichmentTagActionConnectPublisherImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ActivityEnrichmentTagActionConnectPublisherImpl);

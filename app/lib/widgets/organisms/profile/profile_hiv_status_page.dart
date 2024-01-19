@@ -136,7 +136,7 @@ class ProfileHivStatusPage extends ConsumerWidget {
 }
 
 class _SelectionList extends ConsumerWidget {
-  const _SelectionList({Key? key}) : super(key: key);
+  const _SelectionList();
 
   bool _isHivCategorySelected(ProfileFormState formState, HivStatus option) {
     if (formState.hivStatusCategory == null) {

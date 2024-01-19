@@ -144,6 +144,9 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
   @override
   Widget build(BuildContext context) {
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
     final TagsController tagsController = ref.watch(tagsControllerProvider.notifier);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -236,6 +239,14 @@ class _CreatePostTagDialogueState extends ConsumerState<CreatePostTagDialogue> {
                 onSubmitted: (string) async => onTagSearchSubmitted(string),
               ),
               const SizedBox(height: kPaddingMedium),
+              if (isSearchedTagValidForSearch && filteredTags.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(left: kPaddingSmall, bottom: kPaddingSmall),
+                  child: Text(
+                    localisations.page_edit_post_no_tags_found,
+                    style: typography.styleNotification,
+                  ),
+                ),
               Expanded(
                 child: ListView(
                   shrinkWrap: true,

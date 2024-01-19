@@ -17,6 +17,10 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/cache_hook.dart';
+import 'package:app/hooks/first_render_hook.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -40,6 +44,14 @@ class TagFeedPage extends StatefulHookConsumerWidget {
 }
 
 class _TagFeedPageState extends ConsumerState<TagFeedPage> {
+  Future<void> handleAnalyticsTracking() async {
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
+    await analyticsController.trackEvent(AnalyticEvents.tagViewed, properties: {
+      'tag_key': widget.tag.key,
+      'tag_name': widget.tag.toLocale,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -57,6 +69,7 @@ class _TagFeedPageState extends ConsumerState<TagFeedPage> {
     final PositiveFeedState feedState = cacheController.get(feedStateKey) ?? PositiveFeedState.buildNewState(feed: feed, currentProfileId: currentProfile?.flMeta?.id ?? '');
 
     useCacheHook(keys: [feedStateKey]);
+    useFirstRenderHook(callback: handleAnalyticsTracking);
 
     onWillPopScope() async {
       // If the route is the only one, we want to replace to home

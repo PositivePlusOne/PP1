@@ -20,6 +20,7 @@ import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
 import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/widgets/atoms/buttons/promotion_button.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
@@ -312,6 +313,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     final List<Widget> imageWidgetList = [];
     final Color publisherColour = publisherProfile?.accentColor.toSafeColorFromHex(defaultColor: colours.defaultUserColour) ?? colours.defaultUserColour;
 
+    final String postContentId = repostContent?.flMeta?.id ?? postContent?.flMeta?.id ?? '';
+    final String postContentPublisherId = repostContent?.publisherInformation?.publisherId ?? postContent?.publisherInformation?.publisherId ?? '';
+
     for (Media media in postContent?.media ?? []) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         imageWidgetList.add(
@@ -327,6 +331,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
               child: PositiveMediaImage(
                 fit: BoxFit.cover,
                 media: media,
+                analyticsProperties: generatePropertiesForPostSource(activity: postContent),
                 onTap: () => onImageTap?.call(media),
                 thumbnailTargetSize: PositiveThumbnailTargetSize.extraLarge,
                 placeholderBuilder: (context) => Align(
@@ -363,6 +368,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
     //? Calculations for image size are provided in the async function commented out below
     //? I (SC) am happy to do this but this will be a larger job than mvp allows
 
+    final String postContentId = repostContent?.flMeta?.id ?? postContent?.flMeta?.id ?? '';
+    final String postContentPublisherId = repostContent?.publisherInformation?.publisherId ?? postContent?.publisherInformation?.publisherId ?? '';
+
     for (Media media in postContent?.media ?? []) {
       if (media.type == MediaType.photo_link || media.type == MediaType.bucket_path) {
         listBanners.add(
@@ -371,6 +379,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(kBorderRadiusLarge),
               child: PositiveMediaImage(
+                analyticsProperties: generatePropertiesForPostSource(activity: postContent),
                 height: kPaddingExtraLarge,
                 fit: BoxFit.cover,
                 media: media,
@@ -437,6 +446,9 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    final String postId = repostContent?.flMeta?.id ?? postContent?.flMeta?.id ?? '';
+    final String origin = repostContent?.publisherInformation?.publisherId ?? postContent?.publisherInformation?.publisherId ?? '';
+
     final Key postIdKey = Key(postContent?.flMeta?.id ?? '');
     return Padding(
       padding: EdgeInsets.only(
@@ -446,6 +458,7 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
       ),
       child: PositiveVideoPlayer(
         media: media,
+        analyticsProperties: generatePropertiesForPostSource(activity: postContent),
         borderRadius: sidePadding > 0 ? BorderRadius.circular(kBorderRadiusLarge) : BorderRadius.zero,
         visibilityDetectorKey: postIdKey,
       ),

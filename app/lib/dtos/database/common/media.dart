@@ -131,6 +131,25 @@ enum MediaType {
 
   bool get isImage => this == MediaType.photo_link || this == MediaType.svg_link || this == MediaType.bucket_path;
 
+  String get toAnalyticsName {
+    switch (this) {
+      case MediaType.website_link:
+        return 'Website Link';
+      case MediaType.ticket_link:
+        return 'Ticket Link';
+      case MediaType.photo_link:
+        return 'Photo Link';
+      case MediaType.svg_link:
+        return 'SVG Link';
+      case MediaType.video_link:
+        return 'Video Link';
+      case MediaType.bucket_path:
+        return 'Bucket Path';
+      default:
+        return 'Unknown';
+    }
+  }
+
   static MediaType fromMimeType(String mimeType, {bool storedInBucket = false}) {
     if (storedInBucket) {
       return MediaType.bucket_path;

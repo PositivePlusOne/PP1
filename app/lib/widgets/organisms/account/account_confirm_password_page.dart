@@ -75,9 +75,6 @@ class AccountConfirmPasswordPage extends ConsumerWidget {
     final LoginViewModel viewModel = ref.watch(loginViewModelProvider.notifier);
     final AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final Color tintColor = getTextFieldTintColor(controller, colors);
-    final PositiveTextFieldIcon? suffixIcon = getTextFieldSuffixIcon(controller, colors);
-
     final String errorMessage = localizations.fromValidationErrorList(controller.passwordValidationResults);
     final bool shouldDisplayErrorMessage = state.password.isNotEmpty && errorMessage.isNotEmpty;
 

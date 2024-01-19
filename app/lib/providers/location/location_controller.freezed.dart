@@ -117,7 +117,7 @@ class _$LocationOptionImpl implements _LocationOption {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LocationOptionImpl &&
@@ -246,7 +246,7 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LocationControllerStateImpl &&

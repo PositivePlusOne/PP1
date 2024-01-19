@@ -66,7 +66,7 @@ class _$ReactionsControllerStateImpl implements _ReactionsControllerState {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReactionsControllerStateImpl);

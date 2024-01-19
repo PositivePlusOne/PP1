@@ -69,7 +69,7 @@ class _$RelationshipControllerStateImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RelationshipControllerStateImpl);

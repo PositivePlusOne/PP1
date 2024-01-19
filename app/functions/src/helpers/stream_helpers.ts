@@ -30,6 +30,10 @@ export namespace StreamHelpers {
     return convertTimestampToUnix(getCurrentTimestamp());
   }
 
+  export function dateToUnixTimestamp(date: Date): string {
+    return convertTimestampToUnix(getTimestampForDate(date));
+  }
+
   export function getOriginFromFeed(feed: StreamFeed): string {
     // Check if the slug is read-only such as "timeline".
     // Then we default back to the user feed.

@@ -12,8 +12,10 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
@@ -27,16 +29,19 @@ class PostCommentBox extends StatefulHookConsumerWidget implements PreferredSize
     required this.onCommentChanged,
     required this.onPostCommentRequested,
     required this.isBusy,
+    required this.activity,
     this.onSwitchProfileRequested,
     this.currentProfile,
     this.canSwitchProfile = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final MediaQueryData mediaQuery;
   final Profile? currentProfile;
   final bool canSwitchProfile;
   final VoidCallback? onSwitchProfileRequested;
+
+  final Activity? activity;
 
   final TextEditingController commentTextController;
   final Function(String) onCommentChanged;
@@ -108,14 +113,17 @@ class _PostCommentBoxState extends ConsumerState<PostCommentBox> {
                   Expanded(
                     child: PositiveTextField(
                       labelText: 'Leave a comment',
+                      allowMentions: true,
+                      mentionSearchLimit: 2,
+                      analyticProperties: generatePropertiesForPostSource(activity: widget.activity),
                       textEditingController: widget.commentTextController,
                       onTextChanged: widget.onCommentChanged,
                       onTextSubmitted: widget.onPostCommentRequested,
                       fillColor: colours.colorGray1,
+                      searchResultsBrightness: Brightness.light,
                       isEnabled: !widget.isBusy,
                       minLines: 1,
-                      //TODO(S): We need a best guess helper to make sure maxLines can fit within the provided area
-                      maxLines: 10,
+                      maxLines: 5,
                       onFocusedChanged: (focus) {
                         setState(() {
                           hasFocus = focus;

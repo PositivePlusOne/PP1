@@ -7,6 +7,7 @@ import 'package:markdown_widget/widget/all.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
@@ -26,9 +27,24 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   List<Tag> tags = const [],
   EdgeInsets lineMargin = const EdgeInsets.symmetric(vertical: kPaddingExtraSmall),
   void Function(String link)? onTapLink,
+  bool boldHandles = true,
+  List<Mention> mentions = const [],
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
+  final Map<String, String> mentionsIdMap = {};
+
+  for (final Mention mention in mentions) {
+    mentionsIdMap[mention.label] = mention.foreignKey;
+  }
+
+  //? bold all user handles
+  //! This is useful as if you attempt to mention someone who has blocked you
+  //! The mention will not be added to the list of mentions
+  //! So in this case, we want to bold the handle so the user knows it is a handle, despite no mention being persisted
+  if (boldHandles) {
+    markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
+  }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
   final StringBuffer tagBuffer = StringBuffer();
@@ -38,12 +54,12 @@ MarkdownWidget buildMarkdownWidgetFromBody(
       continue;
     }
 
-    tagBuffer.write('[#${tag.key}](${tag.feedLink}) ');
+    tagBuffer.write('[#${tag.key}](${tag.buildTagLink()}) ');
   }
 
   // Add the tags to the start of the markdown as bolded text
   if (tagBuffer.isNotEmpty) {
-    markdown = '$markdown\n${tagBuffer.toString()}';
+    markdown = '$markdown\n\n${tagBuffer.toString()}';
   }
 
   return MarkdownWidget(
@@ -73,6 +89,7 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
+      //TODO The link style is applied to all types of link including @'s, meaning we cannot do the blue underline for links only without further look into the package
       style: typography.styleBold.copyWith(color: colors.black),
       onTap: (link) {
         if (onTapLink != null) {

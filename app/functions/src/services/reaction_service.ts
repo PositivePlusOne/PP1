@@ -20,6 +20,8 @@ import { NumberHelpers } from "../helpers/number_helpers";
 import { ReactionInduividualLikedNotification } from "./builders/notifications/activities/reaction_induividual_like_notification";
 import { ReactionGroupedCommentNotification } from "./builders/notifications/activities/reaction_grouped_comment_notification";
 import { ReactionGroupedLikedNotification } from "./builders/notifications/activities/reaction_grouped_liked_notification";
+import { MentionJSON } from "../dto/mentions";
+import { ReactionMentionNotification } from "./builders/notifications/activities/reaction_mention_notification";
 
 export namespace ReactionService {
 
@@ -109,7 +111,7 @@ export namespace ReactionService {
         }
     }
 
-    export async function processNotifications(kind: string, userId: string, activity: ActivityJSON, reaction: ReactionJSON, reactionStats: ReactionStatisticsJSON): Promise<void> {
+    export async function processNotifications(kind: string, userId: string, activity: ActivityJSON, reaction: ReactionJSON, reactionStats: ReactionStatisticsJSON, mentions: MentionJSON[]): Promise<void> {
         functions.logger.info("Processing notifications", { kind, userId, activity });
 
         const publisherId = activity?.publisherInformation?.publisherId || "";
@@ -135,6 +137,22 @@ export namespace ReactionService {
         let totalReactionCountOfKind = 0;
         if (reactionStats.counts && reactionStats.counts[kind]) {
             totalReactionCountOfKind = reactionStats.counts[kind];
+        }
+
+        for (let index = 0; index < mentions.length; index++) {
+            const mention = mentions[index];
+            const foreignKey = mention.foreignKey;
+            if (!foreignKey) {
+                continue;
+            }
+
+            const mentionedProfile = await ProfileService.getProfile(foreignKey) as ProfileJSON;
+            if (!mentionedProfile) {
+                continue;
+            }
+
+            functions.logger.info(`Sending notification to mentioned user`, { mentionedProfile });
+            await ReactionMentionNotification.sendNotification(userProfile, mentionedProfile, activity, reaction);
         }
 
         const isFibbonacci = NumberHelpers.isFibbonacci(totalReactionCountOfKind);

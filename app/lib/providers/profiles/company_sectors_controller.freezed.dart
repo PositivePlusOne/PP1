@@ -126,7 +126,7 @@ class _$CompanySectorsOptionImpl extends _CompanySectorsOption {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CompanySectorsOptionImpl &&
@@ -279,7 +279,7 @@ class _$CompanySectorsControllerStateImpl
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CompanySectorsControllerStateImpl &&

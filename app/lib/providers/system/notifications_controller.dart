@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:collection/collection.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 
 // Project imports:
+import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/notification_extensions.dart';

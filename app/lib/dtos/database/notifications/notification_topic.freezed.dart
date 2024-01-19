@@ -137,7 +137,7 @@ class _$OtherImpl implements Other {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$OtherImpl);
   }
@@ -275,7 +275,7 @@ class _$PostLikeImpl implements PostLike {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostLikeImpl);
   }
@@ -413,7 +413,7 @@ class _$NewFollowerImpl implements NewFollower {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$NewFollowerImpl);
   }
@@ -551,7 +551,7 @@ class _$ConnectionRequestImpl implements ConnectionRequest {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$ConnectionRequestImpl);
   }
@@ -689,7 +689,7 @@ class _$NewCommentImpl implements NewComment {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$NewCommentImpl);
   }
@@ -827,7 +827,7 @@ class _$NewMessageImpl implements NewMessage {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$NewMessageImpl);
   }
@@ -965,7 +965,7 @@ class _$PostSharedImpl implements PostShared {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$PostSharedImpl);
   }
@@ -1103,7 +1103,7 @@ class _$SharedEventImpl implements SharedEvent {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType && other is _$SharedEventImpl);
   }

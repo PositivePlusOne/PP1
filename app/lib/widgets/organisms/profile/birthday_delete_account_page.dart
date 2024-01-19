@@ -9,6 +9,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
@@ -38,11 +40,13 @@ class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccoun
     try {
       final ProfileApiService profileApiService = await ref.read(profileApiServiceProvider.future);
       final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+      final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
       final Profile? profile = profileController.currentProfile;
       final String currentProfileId = profile?.flMeta?.id ?? '';
 
       final accountFlags = profile?.accountFlags ?? <String>{};
       if (!accountFlags.contains(kFeatureFlagPendingDeletion)) {
+        await analyticsController.trackEvent(AnalyticEvents.accountDeletionRequested);
         await profileApiService.toggleProfileDeletion(uid: currentProfileId);
       }
 

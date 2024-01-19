@@ -22,6 +22,9 @@ _$ReactionImpl _$$ReactionImplFromJson(Map<String, dynamic> json) =>
       tags:
           (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      mentions: json['mentions'] == null
+          ? const []
+          : Mention.fromJsonList(json['mentions'] as List),
     );
 
 Map<String, dynamic> _$$ReactionImplToJson(_$ReactionImpl instance) =>
@@ -34,6 +37,7 @@ Map<String, dynamic> _$$ReactionImplToJson(_$ReactionImpl instance) =>
       'kind': ReactionType.toJson(instance.kind),
       'text': instance.text,
       'tags': instance.tags,
+      'mentions': Mention.toJsonList(instance.mentions),
     };
 
 _$ReactionStatisticsImpl _$$ReactionStatisticsImplFromJson(

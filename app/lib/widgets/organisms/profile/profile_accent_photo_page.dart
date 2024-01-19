@@ -54,7 +54,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
     final ProfileFormState state = ref.watch(profileFormControllerProvider);
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     final Profile currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile ?? Profile.empty()));
     final String profileId = currentProfile.flMeta?.id ?? '';
@@ -63,7 +63,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
     final String expectedStatisticsKey = profileController.buildExpectedStatisticsCacheKey(profileId: profileId);
     final CacheController cacheController = ref.read(cacheControllerProvider);
     final ProfileStatistics? profileStatistics = cacheController.get<ProfileStatistics>(expectedStatisticsKey);
-    final Map<String, String> profileStatisticsData = ProfileStatistics.getDisplayItems(profileStatistics, localizations);
+    final Map<String, String> profileStatisticsData = ProfileStatistics.getDisplayItems(profileStatistics, localisations);
 
     final Color currentAccentColor = currentProfile.accentColor.toSafeColorFromHex(defaultColor: colors.white);
     final Color accentColor = state.accentColor.toSafeColorFromHex(defaultColor: colors.white);
@@ -100,7 +100,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                     primaryColor: colors.white,
                     onTapped: () => controller.onBackSelected(ProfileAccentPhotoRoute),
                     isDisabled: state.isBusy,
-                    label: localizations.shared_actions_back,
+                    label: localisations.shared_actions_back,
                     style: PositiveButtonStyle.text,
                     layout: PositiveButtonLayout.textOnly,
                     size: PositiveButtonSize.small,
@@ -114,7 +114,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
               ),
               const SizedBox(height: kPaddingExtraLarge),
               Text(
-                'Pick a colour, this will show on your profile',
+                localisations.page_registration_accent_photo_body,
                 style: typography.styleSubtitle.copyWith(color: colors.white),
               ),
               const SizedBox(height: kPaddingSmall),
@@ -126,10 +126,10 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                     AnimatedOpacity(
                       duration: kAnimationDurationRegular,
                       opacity: state.accentColor.isEmpty
-                          ? 1.0
+                          ? kOpacityFull
                           : state.accentColor == colorHex
-                              ? 1.0
-                              : 0.2,
+                              ? kOpacityFull
+                              : kOpacityQuarter,
                       child: PositiveTapBehaviour(
                         isEnabled: !state.isBusy,
                         onTap: (_) => controller.onAccentColorSelected(colorHex),
@@ -177,7 +177,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                             colors: colors,
                             primaryColor: colors.black,
                             isDisabled: state.isBusy,
-                            label: state.isBusy ? localizations.shared_actions_uploading : localizations.page_profile_photo_continue,
+                            label: state.isBusy ? localisations.shared_actions_uploading : localisations.page_registration_accent_photo_change,
                             onTapped: () => PositiveDialog.show(
                               title: 'Photo options',
                               context: context,
@@ -194,7 +194,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                             isDisabled: (!hasAccentColorChanged && !hasImageChanged) || state.isBusy,
                             style: PositiveButtonStyle.primary,
                             primaryColor: colors.black,
-                            label: state.isBusy ? localizations.shared_actions_updating : 'Update Profile',
+                            label: state.isBusy ? localisations.shared_actions_updating : localisations.page_registration_accent_photo_update,
                           ),
                         ],
                       ),
@@ -204,7 +204,7 @@ class ProfileAccentPhotoPage extends HookConsumerWidget {
                         isDisabled: true,
                         style: PositiveButtonStyle.primary,
                         primaryColor: colors.black,
-                        label: localizations.shared_actions_updating,
+                        label: localisations.shared_actions_updating,
                       ),
                       isExpanded: state.isBusy,
                     ),

@@ -11,6 +11,7 @@ import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
@@ -21,6 +22,7 @@ import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/helpers/profile_helpers.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
@@ -32,12 +34,13 @@ import '../../atoms/buttons/positive_button.dart';
 
 class ActivityPostHeadingWidget extends ConsumerWidget {
   const ActivityPostHeadingWidget({
-    required this.onOptions,
+    required this.activity,
     required this.currentProfile,
     required this.publisher,
     required this.publisherRelationship,
+    required this.origin,
+    required this.onOptions,
     this.padding = const EdgeInsets.symmetric(horizontal: kPaddingMedium),
-    this.flMetaData,
     this.promotion,
     this.tags = const [],
     this.isOptionsHidden = false,
@@ -47,9 +50,11 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
 
   final Profile? currentProfile;
   final Profile? publisher;
+  final String origin;
+
   final Relationship? publisherRelationship;
 
-  final FlMeta? flMetaData;
+  final Activity? activity;
   final EdgeInsets padding;
 
   final Promotion? promotion;
@@ -76,10 +81,11 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
       displayName = getSafeDisplayNameFromProfile(publisher);
     }
 
-    if (flMetaData != null && flMetaData!.createdDate != null) {
-      postDateTooltip = flMetaData!.createdDate!.asDateDifference(context);
-      if (flMetaData!.lastModifiedDate != null && flMetaData!.lastModifiedDate!.isNotEmpty && flMetaData!.createdDate! != flMetaData!.lastModifiedDate!) {
-        postDateTooltip = '${flMetaData!.createdDate!.asDateDifference(context)} ${localisations.shared_post_tooltips_edited}';
+    final FlMeta? flMetaData = activity?.flMeta;
+    if (flMetaData != null && flMetaData.createdDate != null) {
+      postDateTooltip = flMetaData.createdDate!.asDateDifference(context);
+      if (flMetaData.lastModifiedDate != null && flMetaData.lastModifiedDate!.isNotEmpty && flMetaData.createdDate! != flMetaData.lastModifiedDate!) {
+        postDateTooltip = '${flMetaData.createdDate!.asDateDifference(context)} ${localisations.shared_post_tooltips_edited}';
       }
     }
 
@@ -102,6 +108,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
           children: <Widget>[
             PositiveProfileCircularIndicator(
               profile: isBlocked ? null : publisher,
+              analyticProperties: generatePropertiesForPostSource(activity: activity),
             ),
             const SizedBox(width: kPaddingSmall),
             Flexible(

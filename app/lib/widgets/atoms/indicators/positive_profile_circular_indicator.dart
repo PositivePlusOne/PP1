@@ -37,6 +37,7 @@ class PositiveProfileCircularIndicator extends ConsumerStatefulWidget {
     this.ringColorOverride,
     this.imageOverridePath = '',
     this.fit,
+    this.analyticProperties = const <String, Object?>{},
     super.key,
   });
 
@@ -59,6 +60,8 @@ class PositiveProfileCircularIndicator extends ConsumerStatefulWidget {
   final String imageOverridePath;
 
   final BoxFit? fit;
+
+  final Map<String, Object?> analyticProperties;
 
   bool get hasOverrideImage => imageOverridePath.isNotEmpty;
 
@@ -184,7 +187,7 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
     );
   }
 
-  void _handleTap(BuildContext context, WidgetRef ref) {
+  Future<void> _handleTap(BuildContext context, WidgetRef ref) async {
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
     final AppRouter appRouter = ref.read(appRouterProvider);
 
@@ -198,6 +201,6 @@ class _PositiveProfileCircularIndicatorState extends ConsumerState<PositiveProfi
       return;
     }
 
-    profileController.viewProfile(widget.profile ?? Profile.empty());
+    await profileController.viewProfile(widget.profile ?? Profile.empty(), widget.analyticProperties);
   }
 }

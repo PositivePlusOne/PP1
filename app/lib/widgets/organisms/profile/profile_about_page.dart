@@ -30,7 +30,7 @@ import '../../../providers/profiles/profile_form_controller.dart';
 
 @RoutePage()
 class ProfileAboutPage extends ConsumerWidget {
-  const ProfileAboutPage({Key? key}) : super(key: key);
+  const ProfileAboutPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -321,7 +321,7 @@ class _$PromotionImpl implements _Promotion {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PromotionImpl &&
@@ -542,7 +542,7 @@ class _$PromotionOwnerImpl implements _PromotionOwner {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PromotionOwnerImpl &&
@@ -685,7 +685,7 @@ class _$PromotedActivityImpl implements _PromotedActivity {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PromotedActivityImpl &&

@@ -22,6 +22,9 @@ import 'package:app/extensions/widget_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -190,6 +193,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final Logger logger = ref.read(loggerProvider);
     final ShareMessage message = await getShareMessage(context, target, postOptions: postOptions);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     final String title = message.$1;
     final String text = message.$2;
@@ -197,9 +201,12 @@ class SharingController extends _$SharingController implements ISharingControlle
     logger.i('Sharing externally');
     await appRouter.pop();
 
-    Future<void>.delayed(kAnimationDurationDebounce, () {
-      Share.share(text, subject: title, sharePositionOrigin: origin);
-    });
+    await Future<void>.delayed(kAnimationDurationDebounce);
+    await Share.share(text, subject: title, sharePositionOrigin: origin);
+
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: postOptions?.activity);
+
+    await analyticsController.trackEvent(AnalyticEvents.postSharedExternally, properties: additionalProperties);
   }
 
   @override
@@ -215,9 +222,8 @@ class SharingController extends _$SharingController implements ISharingControlle
     }
 
     await appRouter.pop();
-    Future<void>.delayed(kAnimationDurationDebounce, () {
-      appRouter.push(PostShareRoute(activityId: activityID, origin: origin));
-    });
+    await Future<void>.delayed(kAnimationDurationDebounce);
+    await appRouter.push(PostShareRoute(activityId: activityID, origin: origin));
   }
 
   @override
@@ -225,6 +231,7 @@ class SharingController extends _$SharingController implements ISharingControlle
     final Logger logger = ref.read(loggerProvider);
     final ReactionApiService reactionApiService = await ref.read(reactionApiServiceProvider.future);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     logger.d('Sharing via connection chat');
     final SharePostOptions postOptions = (activity: activity, origin: origin, currentProfile: currentProfile, currentUser: firebaseAuth.currentUser);
@@ -239,12 +246,16 @@ class SharingController extends _$SharingController implements ISharingControlle
       title: title,
       description: text,
     );
+
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: postOptions.activity);
+    await analyticsController.trackEvent(AnalyticEvents.postSharedThroughChat, properties: additionalProperties);
   }
 
   @override
   Future<void> shareToFeed(BuildContext context, {SharePostOptions? postOptions}) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
 
     if (postOptions == null) {
       throw Exception('Post options must be provided');
@@ -258,5 +269,8 @@ class SharingController extends _$SharingController implements ISharingControlle
 
     await appRouter.pop();
     await postOptions.activity.onRequestPostSharedToFeed(repostActivityId: activityId);
+
+    final Map<String, Object?> additionalProperties = generatePropertiesForPostSource(activity: postOptions.activity);
+    await analyticsController.trackEvent(AnalyticEvents.postSharedOnFeed, properties: additionalProperties);
   }
 }

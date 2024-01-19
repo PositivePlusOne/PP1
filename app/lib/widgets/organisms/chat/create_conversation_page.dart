@@ -21,7 +21,7 @@ import 'package:app/widgets/organisms/chat/vms/chat_view_model.dart';
 
 @RoutePage()
 class CreateConversationPage extends HookConsumerWidget {
-  const CreateConversationPage({Key? key}) : super(key: key);
+  const CreateConversationPage({super.key});
 
   // Make it so that the community dialog can display an empty state
   // SliverPadding(

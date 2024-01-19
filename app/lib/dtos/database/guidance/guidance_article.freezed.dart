@@ -219,7 +219,7 @@ class _$GuidanceArticleImpl implements _GuidanceArticle {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GuidanceArticleImpl &&

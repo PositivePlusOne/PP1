@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
+import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -36,9 +37,22 @@ class ReactionApiService {
     );
   }
 
+  FutureOr<Reaction> getReaction({
+    required String reactionId,
+  }) async {
+    return await getHttpsCallableResult<Reaction>(
+      name: 'reaction-getReaction',
+      selector: (response) => Reaction.fromJson(json.decodeSafe(response.data)),
+      parameters: {
+        'reactionId': reactionId,
+      },
+    );
+  }
+
   FutureOr<Reaction> postReaction({
     required String activityId,
     required String kind,
+    List<Mention> mentions = const [],
     String text = '',
   }) async {
     return await getHttpsCallableResult<Reaction>(
@@ -48,6 +62,7 @@ class ReactionApiService {
         'activityId': activityId,
         'kind': kind,
         'text': text,
+        'mentions': mentions.map((e) => e.toJson()).toList(),
       },
     );
   }

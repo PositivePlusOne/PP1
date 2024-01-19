@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 
 part 'mentions.freezed.dart';
@@ -15,11 +16,19 @@ class Mention with _$Mention {
   const factory Mention({
     @Default(-1) int startIndex,
     @Default(-1) int endIndex,
+    @Default('') String label,
     @Default('') String foreignKey,
     @Default('') String schema,
   }) = _Mention;
 
   factory Mention.fromJson(Map<String, dynamic> json) => _$MentionFromJson(json);
+
+  static Mention fromDisplayName(String displayName) {
+    return Mention(
+      label: displayName.asHandle,
+      schema: 'users',
+    );
+  }
 
   static List<Mention> fromJsonList(List<dynamic> data) {
     return data.map((e) => Mention.fromJson(json.decodeSafe(e))).toList();
