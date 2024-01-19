@@ -28,6 +28,7 @@
    - Precheck of Firebase Extensions [ ]
    - Precheck of Environment Variables [ ]
    - Precheck of running local Firebase environment [ ]
+   - Flamelink CMS schemas updated [ ]
 
 2. **Deployment Job**
 
