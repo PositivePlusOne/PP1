@@ -47,7 +47,7 @@ class AnalyticsControllerState with _$AnalyticsControllerState {
 }
 
 mixin AnalyticsControllerInterface {
-  Future<void> registerScheduledJobs();
+  Future<void> setupListeners();
   Future<void> loadAnalyticsPreferences();
   Future<void> toggleAnalyticsCollection(bool attemptToEnable);
   Future<void> trackEvent(
@@ -85,14 +85,27 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     return AnalyticsControllerState.initialState();
   }
 
+  @override
   Future<void> setupListeners() async {
     final UserController userController = ref.read(userControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    final Cron cron = ref.read(cronProvider);
     final Logger logger = ref.read(loggerProvider);
 
     logger.d('setupListeners: Setting up analytics listeners');
     await _onUserChangedSubscription?.cancel();
-
     _onUserChangedSubscription = userController.userChangedController.stream.listen(onUserUpdated);
+
+    profileSwitchedSubscription ??= eventBus.on<ProfileSwitchedEvent>().listen((ProfileSwitchedEvent event) async {
+      logger.d('registerScheduledJobs: Profile switched, updating analytics properties');
+      await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
+    });
+
+    // Register a job to occur every minute to update analytics properties
+    updateProfilePropertiesTask ??= cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+      logger.d('registerScheduledJobs: Updating analytics properties');
+      await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
+    });
   }
 
   Future<void> onUserUpdated(User? user) async {
@@ -112,25 +125,6 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     log.d('Identifying new user to analytic providers');
     mixpanel.identify(user.uid);
     appsflyer.setCustomerUserId(user.uid);
-  }
-
-  @override
-  Future<void> registerScheduledJobs() async {
-    final Cron cron = providerContainer.read(cronProvider);
-    final EventBus eventBus = providerContainer.read(eventBusProvider);
-    final Logger logger = ref.read(loggerProvider);
-    logger.d('registerScheduledJobs: Registering scheduled jobs');
-
-    profileSwitchedSubscription ??= eventBus.on<ProfileSwitchedEvent>().listen((ProfileSwitchedEvent event) async {
-      logger.d('registerScheduledJobs: Profile switched, updating analytics properties');
-      await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
-    });
-
-    // Register a job to occur every minute to update analytics properties
-    updateProfilePropertiesTask ??= cron.schedule(Schedule.parse('*/1 * * * *'), () async {
-      logger.d('registerScheduledJobs: Updating analytics properties');
-      await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
-    });
   }
 
   @override
