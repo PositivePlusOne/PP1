@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Package imports:
+import 'package:event_bus/event_bus.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -11,8 +12,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 // Project imports:
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
+import 'package:app/dtos/database/geo/positive_restricted_place.dart';
+import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
+import 'package:app/extensions/place_extensions.dart';
+import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
+import 'package:app/providers/content/events/location_updated_event.dart';
+import 'package:app/providers/location/location_controller.dart';
+import 'package:app/providers/profiles/events/profile_switched_event.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/enrichment_api_service.dart';
@@ -24,13 +34,16 @@ part 'promotions_controller.g.dart';
 @freezed
 class PromotionsControllerState with _$PromotionsControllerState {
   const factory PromotionsControllerState({
+    @Default({}) Set<String> allPromotionIds,
     @Default({}) Set<String> validFeedPromotionIds,
     @Default({}) Set<String> validChatPromotionIds,
-    @Default({}) Map<String, Set<String>> profilePromotionIds,
+    @Default({}) Map<String, Set<String>> validOwnedPromotionIds,
     @Default(4) int feedPromotionFrequency,
     @Default(4) int chatPromotionFrequency,
     @Default('') String cursor,
     @Default(false) bool isExhausted,
+    @Default(false) bool canPerformLocationCheck,
+    DateTime? lastPerformedLocationCheck,
   }) = _PromotionsControllerState;
 
   factory PromotionsControllerState.initialState() => const PromotionsControllerState();
@@ -41,11 +54,38 @@ enum PromotionType {
   chat,
 }
 
+abstract class IPromotionsController {
+  Future<void> setupListeners(); // Listeners for LocationController events
+  Future<void> appendPromotions({Iterable<Promotion> promotions});
+  Future<void> refreshValidPromotions();
+}
+
 @Riverpod(keepAlive: true)
-class PromotionsController extends _$PromotionsController {
+class PromotionsController extends _$PromotionsController implements IPromotionsController {
+  StreamSubscription<ProfileSwitchedEvent>? _profileSwitchedSubscription;
+  StreamSubscription<LocationUpdatedEvent>? _locationSubscription;
+
   @override
   PromotionsControllerState build() {
     return PromotionsControllerState.initialState();
+  }
+
+  @override
+  Future<void> setupListeners() async {
+    final Logger logger = ref.read(loggerProvider);
+
+    logger.i('Setting up listeners for promotions controller');
+    final EventBus eventBus = ref.read(eventBusProvider);
+
+    _locationSubscription ??= eventBus.on<LocationUpdatedEvent>().listen((LocationUpdatedEvent event) async {
+      logger.i('Location updated, checking if promotions need to be refreshed');
+      await refreshValidPromotions();
+    });
+
+    _profileSwitchedSubscription ??= eventBus.on<ProfileSwitchedEvent>().listen((ProfileSwitchedEvent event) async {
+      logger.i('Profile switched, checking if promotions need to be refreshed');
+      await refreshValidPromotions();
+    });
   }
 
   Future<void> updatePromotionFrequenciesFromRemoteConfig() async {
@@ -70,28 +110,38 @@ class PromotionsController extends _$PromotionsController {
     logger.d('Chat promotion frequency: $chatPromotionFrequency');
   }
 
-  void addInitialPromotionWindow(List promotions) {
-    final Logger logger = ref.read(loggerProvider);
-    if (state.validFeedPromotionIds.isNotEmpty || state.validChatPromotionIds.isNotEmpty) {
-      logger.w('Promotions already loaded');
-      return;
-    }
+  @override
+  Future<void> appendPromotions({
+    Iterable<Promotion> promotions = const [],
+  }) async {
+    final Set<String> newPromotionIds = promotions.map((Promotion promotion) => promotion.flMeta?.id ?? '').where((element) => element.isNotEmpty).toSet();
+    final Set<String> allPromotionIds = {...state.allPromotionIds, ...newPromotionIds};
 
-    final Iterable<Promotion> promotionDtos = promotions.map((dynamic promotion) => Promotion.fromJson(json.decodeSafe(promotion))).where((element) => element.flMeta?.id?.isNotEmpty == true).toList();
-    if (promotionDtos.isEmpty) {
-      logger.w('No promotions found');
-      return;
-    }
+    state = state.copyWith(
+      allPromotionIds: allPromotionIds,
+      validOwnedPromotionIds: {},
+      validFeedPromotionIds: {},
+      validChatPromotionIds: {},
+    );
 
-    appendPromotionsToCorrectFeeds(promotionDtos);
+    await refreshValidPromotions();
   }
 
-  void appendPromotionsToCorrectFeeds(Iterable<Promotion> promotions) {
+  @override
+  Future<void> refreshValidPromotions() async {
     final Logger logger = ref.read(loggerProvider);
-    final List<String> newChatPromotionIds = [...state.validChatPromotionIds];
-    final List<String> newFeedPromotionIds = [...state.validFeedPromotionIds];
-    final Map<String, Set<String>> newProfilePromotions = {...state.profilePromotionIds};
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+    final LocationControllerState locationControllerState = ref.read(locationControllerProvider);
+    final CacheController cacheController = ref.read(cacheControllerProvider);
 
+    final Set<String> validFeedPromotionIds = {};
+    final Set<String> validChatPromotionIds = {};
+    final Set<String> validOwnedPromotionIds = {};
+
+    final String currentProfileId = profileController.currentProfile?.flMeta?.id ?? '';
+
+    logger.i('Refreshing valid promotions');
+    final List<Promotion> promotions = cacheController.list(state.allPromotionIds);
     for (final Promotion promotion in promotions) {
       if (promotion.flMeta?.id?.isNotEmpty != true) {
         continue;
@@ -104,32 +154,72 @@ class PromotionsController extends _$PromotionsController {
       final bool isValidFeedPromotion = activityId.isNotEmpty;
       final bool isValidChatPromotion = ownerId.isNotEmpty && hasLink;
 
+      if (ownerId.isNotEmpty && ownerId == currentProfileId) {
+        validOwnedPromotionIds.add(promotion.flMeta!.id!);
+      }
+
+      // Perform location check if required
+      final bool hasEnforcedRestrictions = promotion.locationRestrictions.isNotEmpty;
+      final Map<String, Set<String>> addressComponents = locationControllerState.lastKnownAddressComponents;
+
+      if (hasEnforcedRestrictions && addressComponents.isNotEmpty) {
+        bool hasPassedRestrictions = false;
+        for (final PositiveRestrictedPlace restrictedPlace in promotion.locationRestrictions) {
+          final bool passesCheck = await restrictedPlace.performCheck(addressComponents: addressComponents);
+          if (!hasPassedRestrictions && passesCheck) {
+            hasPassedRestrictions = true;
+          }
+        }
+
+        if (currentProfileId.isNotEmpty && ownerId.isNotEmpty) {
+          final String expectedRelationshipId = [currentProfileId, ownerId].asGUID;
+          final Relationship? relationship = cacheController.get(expectedRelationshipId);
+          final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+
+          // Check if the relationship is blocked
+          if (relationshipStates.contains(RelationshipState.targetBlocked)) {
+            hasPassedRestrictions = false;
+          }
+        }
+
+        // Continue if we failed the check
+        if (!hasPassedRestrictions) {
+          continue;
+        }
+      }
+
       if (isValidFeedPromotion) {
-        newFeedPromotionIds.add(promotion.flMeta!.id!);
+        validFeedPromotionIds.add(promotion.flMeta!.id!);
       }
 
       if (isValidChatPromotion) {
-        newChatPromotionIds.add(promotion.flMeta!.id!);
-      }
-
-      if (ownerId.isNotEmpty) {
-        final Set<String> profilePromotionIds = newProfilePromotions[ownerId] ?? {};
-        profilePromotionIds.add(promotion.flMeta!.id!);
-        newProfilePromotions[ownerId] = profilePromotionIds;
+        validChatPromotionIds.add(promotion.flMeta!.id!);
       }
     }
 
-    logger.d('Loaded ${newFeedPromotionIds.length} feed promotions');
-    logger.d('Loaded ${newChatPromotionIds.length} chat promotions');
+    logger.i('Found ${validFeedPromotionIds.length} valid feed promotions');
+    logger.i('Found ${validChatPromotionIds.length} valid chat promotions');
+    logger.i('Found ${validOwnedPromotionIds.length} valid owned promotions');
+
+    final Map<String, Set<String>> validOwnedPromotionIdsMap = {
+      ...state.validOwnedPromotionIds,
+    };
+
+    if (validOwnedPromotionIds.isNotEmpty) {
+      validOwnedPromotionIdsMap[currentProfileId] = validOwnedPromotionIds;
+    }
 
     state = state.copyWith(
-      validFeedPromotionIds: newFeedPromotionIds.toSet(),
-      validChatPromotionIds: newChatPromotionIds.toSet(),
-      profilePromotionIds: newProfilePromotions,
+      validFeedPromotionIds: validFeedPromotionIds,
+      validChatPromotionIds: validChatPromotionIds,
+      validOwnedPromotionIds: validOwnedPromotionIdsMap,
     );
   }
 
-  Promotion? getPromotionFromIndex(int index, PromotionType promotionType) {
+  Promotion? getPromotionFromIndex({
+    required int index,
+    required PromotionType promotionType,
+  }) {
     final Set<String> validPromotionIds = promotionType == PromotionType.feed ? state.validFeedPromotionIds : state.validChatPromotionIds;
     if (validPromotionIds.isEmpty) {
       return null;
@@ -175,7 +265,7 @@ class PromotionsController extends _$PromotionsController {
         final Iterable<Promotion> promotions = (response.data['promotions'] as List).map((dynamic promotion) => Promotion.fromJson(json.decodeSafe(promotion))).cast<Promotion>();
         final String cursor = response.cursor ?? '';
 
-        appendPromotionsToCorrectFeeds(promotions);
+        await appendPromotions(promotions: promotions);
         state = state.copyWith(
           cursor: cursor,
           isExhausted: promotions.length < limit || cursor.isEmpty,

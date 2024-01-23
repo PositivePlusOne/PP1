@@ -665,10 +665,10 @@ class GetStreamController extends _$GetStreamController {
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {
     switch (event.value.runtimeType) {
-      case Relationship:
+      case const (Relationship):
         onRelationshipUpdated(event.value as Relationship);
         break;
-      case Profile:
+      case const (Profile):
         onProfileUpdated(event.value as Profile);
         break;
       default:

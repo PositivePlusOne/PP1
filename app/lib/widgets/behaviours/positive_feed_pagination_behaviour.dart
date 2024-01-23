@@ -287,8 +287,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
+    // # Option 1
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final Promotion? promotion = promotionsController.getPromotionFromIndex(index, PromotionType.feed);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(
+      index: index,
+      promotionType: PromotionType.feed,
+    );
 
     final String promotedActivityId = promotion?.activityId ?? '';
     final Activity? promotedActivity = cacheController.get(promotedActivityId);

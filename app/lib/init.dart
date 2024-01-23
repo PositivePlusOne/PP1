@@ -17,6 +17,7 @@ import 'package:media_kit/media_kit.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/content/promotions_controller.dart';
+import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -53,6 +54,7 @@ Future<void> setupApplication() async {
   final TagsController tagsController = providerContainer.read(tagsControllerProvider.notifier);
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
   final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+  final LocationController locationController = providerContainer.read(locationControllerProvider.notifier);
 
   //* Initialize security bindings
   await securityController.setupTalsec();
@@ -105,6 +107,9 @@ Future<void> setupApplication() async {
   await galleryController.setupListeners();
   await tagsController.setupListeners();
   await cacheController.setupListeners();
+  await analyticsController.registerScheduledJobs();
+  await promotionsController.setupListeners();
+  await locationController.setupListeners();
 
   await systemController.preloadPackageInformation();
   await promotionsController.updatePromotionFrequenciesFromRemoteConfig();

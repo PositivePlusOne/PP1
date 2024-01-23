@@ -1,8 +1,10 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { FlMeta, FlMetaJSON } from "./meta";
+import { EnforcedPlace, EnforcedPlaceJSON } from "./enforced_place";
 
 export const promotionsSchemaKey = "promotions";
 export const promotionsStatisticsSchemaKey = "promotionsStatistics";
+
 
 export interface PromotionStatisticsJSON {
     _fl_meta_?: FlMetaJSON;
@@ -39,6 +41,7 @@ export interface PromotionJSON {
     totalViewsAllotment?: number;
     startDate?: Timestamp;
     endDate?: Timestamp;
+    locationRestrictions?: EnforcedPlaceJSON[];
 }
 
 export class Promotion {
@@ -55,6 +58,7 @@ export class Promotion {
     totalViewsAllotment?: number;
     startDate?: Timestamp;
     endDate?: Timestamp;
+    locationRestrictions?: EnforcedPlace[];
 
     constructor(json: PromotionJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -70,5 +74,6 @@ export class Promotion {
         this.totalViewsAllotment = json.totalViewsAllotment;
         this.startDate = json.startDate;
         this.endDate = json.endDate;
+        this.locationRestrictions = json.locationRestrictions && json.locationRestrictions.map((l) => new EnforcedPlace(l));
     }
 }

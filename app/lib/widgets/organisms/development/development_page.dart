@@ -14,7 +14,9 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
+import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -44,6 +46,9 @@ class DevelopmentPage extends ConsumerWidget {
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final AnalyticsControllerState analyticsControllerState = ref.watch(analyticsControllerProvider);
 
+    final LocationController locationController = ref.read(locationControllerProvider.notifier);
+    final LocationControllerState locationControllerState = ref.watch(locationControllerProvider);
+
     final NotificationsControllerState notificationsControllerState = ref.watch(notificationsControllerProvider);
 
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -53,9 +58,6 @@ class DevelopmentPage extends ConsumerWidget {
     final bool isShowingDebugMessages = systemControllerState.showingDebugMessages;
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
-    final String currentFCMToken = currentProfile?.fcmToken ?? 'No FCM token found';
-
-    final String currentAPNSToken = notificationsControllerState.apnsToken;
 
     return PositiveScaffold(
       appBar: PositiveAppBar(
@@ -94,8 +96,8 @@ class DevelopmentPage extends ConsumerWidget {
                   ],
                 ),
               ),
+              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               if (isNonProduction) ...<Widget>[
-                PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
                 CupertinoListTile(
                   title: Text(
                     'Internal',
@@ -123,179 +125,271 @@ class DevelopmentPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               ],
-              // PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-              // CupertinoListTile(
-              //   title: Text(
-              //     'Design and UI',
-              //     style: typography.styleSubtextBold.copyWith(color: colors.white),
-              //   ),
-              // ),
-              // CupertinoListTile.notched(
-              //   onTap: developmentViewModel.displayAuthClaims,
-              //   title: Text(
-              //     'Dark mode',
-              //     style: typography.styleButtonRegular.copyWith(color: colors.white),
-              //   ),
-              //   subtitle: Text(
-              //     'This is a work in progress, so please bare with us!',
-              //     style: typography.styleSubtext.copyWith(color: colors.white),
-              //   ),
-              //   additionalInfo: Transform.scale(
-              //     scale: 0.7,
-              //     child: PositiveSwitch(
-              //       activeColour: colors.green.withAlpha(210),
-              //       inactiveColour: colors.red.withAlpha(210),
-              //       ignoring: false,
-              //       value: developmentViewModelState.darkMode,
-              //       onTapped: (_) => developmentViewModel.toggleDarkMode(),
-              //     ),
-              //   ),
-              // ),
-              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-              CupertinoListTile(
-                title: Text(
-                  'General',
-                  style: typography.styleSubtextBold.copyWith(color: colors.white),
-                ),
+              ...buildGeneralSection(
+                context: context,
+                viewModel: developmentViewModel,
+                state: developmentViewModelState,
+                analyticsController: analyticsController,
+                analyticsState: analyticsControllerState,
+                systemState: systemControllerState,
               ),
-              CupertinoListTile.notched(
-                onTap: developmentViewModel.restartApp,
-                title: Text(
-                  'Restart app',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Force restart the application.',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
+              ...buildLocationSection(
+                context: context,
+                viewModel: developmentViewModel,
+                state: developmentViewModelState,
+                locationController: locationController,
+                locationState: locationControllerState,
               ),
-              CupertinoListTile.notched(
-                title: Text(
-                  'Toggle ID display',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Displays the IDs of posts and users where applicable.',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-                additionalInfo: Transform.scale(
-                  scale: 0.7,
-                  child: PositiveSwitch(
-                    activeColour: colors.green.withAlpha(210),
-                    inactiveColour: colors.red.withAlpha(210),
-                    ignoring: false,
-                    value: developmentViewModelState.displaySelectablePostIDs,
-                    onTapped: (_) => developmentViewModel.toggleSelectablePostIDs(),
-                  ),
-                ),
-              ),
-              CupertinoListTile.notched(
-                title: Text(
-                  'Activity Tracking',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Your data will be used to deliver promoted content personalized to you, and help us improve your experience.',
-                  maxLines: 2,
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-                additionalInfo: Transform.scale(
-                  scale: 0.7,
-                  child: PositiveSwitch(
-                    activeColour: colors.green.withAlpha(210),
-                    inactiveColour: colors.red.withAlpha(210),
-                    ignoring: false,
-                    value: analyticsControllerState.isCollectingData,
-                    onTapped: (_) => analyticsController.toggleAnalyticsCollection(!analyticsControllerState.isCollectingData),
-                  ),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: () => showLicensePage(
-                  context: context,
-                  applicationVersion: systemControllerState.version,
-                  applicationIcon: Padding(
-                    padding: const EdgeInsets.only(bottom: kPaddingSmall),
-                    child: SvgPicture.asset(
-                      SvgImages.logosFooter,
-                      width: kLogoMaximumWidth,
-                    ),
-                  ),
-                ),
-                title: Text(
-                  'View OSS Licenses',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Cool code we used to build Positive+1',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-              ),
-              PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
-              CupertinoListTile(
-                title: Text(
-                  'Troubleshooting and Support',
-                  style: typography.styleSubtextBold.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: developmentViewModel.displayAuthClaims,
-                title: Text(
-                  'Display auth claims',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Displays the logged in users auth claims.',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: developmentViewModel.displayNotificationSettings,
-                title: Text(
-                  'Display notification settings',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Displays the current notification settings as configured.',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                title: Text(
-                  'Current FCM Token',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: SelectableText(
-                  currentFCMToken,
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                title: Text(
-                  'Current APNS Token',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: SelectableText(
-                  currentAPNSToken,
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
-              ),
-              CupertinoListTile.notched(
-                onTap: () => developmentViewModel.sendTestNotification(),
-                title: Text(
-                  'Send Test Notification',
-                  style: typography.styleButtonRegular.copyWith(color: colors.white),
-                ),
-                subtitle: Text(
-                  'Make sure you are eligible to receive notifications by sending a test notification.',
-                  style: typography.styleSubtext.copyWith(color: colors.white),
-                ),
+              ...buildTroubleshootingAndSupport(
+                context: context,
+                viewModel: developmentViewModel,
+                state: developmentViewModelState,
+                notificationsState: notificationsControllerState,
+                currentProfile: currentProfile,
               ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  List<Widget> buildLocationSection({
+    required DevelopmentViewModel viewModel,
+    required DevelopmentViewModelState state,
+    required LocationController locationController,
+    required LocationControllerState locationState,
+    required BuildContext context,
+  }) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+    final double? currentLatitude = locationState.lastKnownLatitude;
+    final double? currentLongitude = locationState.lastKnownLongitude;
+
+    String currentLocation = 'Latitude: ${currentLatitude ?? 'Unknown'} - Longitude: ${currentLongitude ?? 'Unknown'}';
+    if (locationState.isUpdatingLocation) {
+      currentLocation = 'Updating location...';
+    }
+
+    String currentPermission = 'Unknown';
+    if (locationState.locationPermission != null) {
+      currentPermission = locationState.locationPermission?.toString() ?? 'Unknown';
+    }
+
+    return <Widget>[
+      CupertinoListTile(
+        title: Text(
+          'Location',
+          style: typography.styleSubtextBold.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        title: Text(
+          'Current location',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          currentLocation,
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        title: Text(
+          'Current location permissions',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          currentPermission,
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: () => locationController.attemptToUpdateLocation(),
+        title: Text(
+          'Force location update',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Forces a location update to be performed.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+    ];
+  }
+
+  List<Widget> buildTroubleshootingAndSupport({
+    required DevelopmentViewModel viewModel,
+    required DevelopmentViewModelState state,
+    required NotificationsControllerState notificationsState,
+    required Profile? currentProfile,
+    required BuildContext context,
+  }) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+    final String currentFCMToken = currentProfile?.fcmToken ?? 'No FCM token found';
+    final String currentAPNSToken = notificationsState.apnsToken;
+
+    return [
+      CupertinoListTile(
+        title: Text(
+          'Troubleshooting and Support',
+          style: typography.styleSubtextBold.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: viewModel.displayAuthClaims,
+        title: Text(
+          'Display auth claims',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Displays the logged in users auth claims.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: viewModel.displayNotificationSettings,
+        title: Text(
+          'Display notification settings',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Displays the current notification settings as configured.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        title: Text(
+          'Current FCM Token',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: SelectableText(
+          currentFCMToken,
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        title: Text(
+          'Current APNS Token',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: SelectableText(
+          currentAPNSToken,
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: () => viewModel.sendTestNotification(),
+        title: Text(
+          'Send Test Notification',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Make sure you are eligible to receive notifications by sending a test notification.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+    ];
+  }
+
+  List<Widget> buildGeneralSection({
+    required DevelopmentViewModel viewModel,
+    required DevelopmentViewModelState state,
+    required AnalyticsController analyticsController,
+    required AnalyticsControllerState analyticsState,
+    required SystemControllerState systemState,
+    required BuildContext context,
+  }) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+    return <Widget>[
+      CupertinoListTile(
+        title: Text(
+          'General',
+          style: typography.styleSubtextBold.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: viewModel.restartApp,
+        title: Text(
+          'Restart app',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Force restart the application.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        title: Text(
+          'Toggle ID display',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Displays the IDs of posts and users where applicable.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+        additionalInfo: Transform.scale(
+          scale: 0.7,
+          child: PositiveSwitch(
+            activeColour: colors.green.withAlpha(210),
+            inactiveColour: colors.red.withAlpha(210),
+            ignoring: false,
+            value: state.displaySelectablePostIDs,
+            onTapped: (_) => viewModel.toggleSelectablePostIDs(),
+          ),
+        ),
+      ),
+      CupertinoListTile.notched(
+        title: Text(
+          'Activity Tracking',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Your data will be used to deliver promoted content personalized to you, and help us improve your experience.',
+          maxLines: 2,
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+        additionalInfo: Transform.scale(
+          scale: 0.7,
+          child: PositiveSwitch(
+            activeColour: colors.green.withAlpha(210),
+            inactiveColour: colors.red.withAlpha(210),
+            ignoring: false,
+            value: analyticsState.isCollectingData,
+            onTapped: (_) => analyticsController.toggleAnalyticsCollection(!analyticsState.isCollectingData),
+          ),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: () => showLicensePage(
+          context: context,
+          applicationVersion: systemState.version,
+          applicationIcon: Padding(
+            padding: const EdgeInsets.only(bottom: kPaddingSmall),
+            child: SvgPicture.asset(
+              SvgImages.logosFooter,
+              width: kLogoMaximumWidth,
+            ),
+          ),
+        ),
+        title: Text(
+          'View OSS Licenses',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Cool code we used to build Positive+1',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+    ];
   }
 }

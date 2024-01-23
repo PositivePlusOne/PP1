@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 // Project imports:
 import 'package:app/dtos/converters/date_converters.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
+import 'package:app/dtos/database/geo/positive_restricted_place.dart';
 import 'package:app/extensions/json_extensions.dart';
 
 part 'promotions.freezed.dart';
@@ -27,6 +28,7 @@ class Promotion with _$Promotion {
     @Default(0) int totalViewsAllotment,
     @JsonKey(fromJson: dateFromUnknown) String? startDate,
     @JsonKey(fromJson: dateFromUnknown) String? endDate,
+    @Default([]) @JsonKey(fromJson: PositiveRestrictedPlace.fromJsonList, toJson: PositiveRestrictedPlace.toJsonList) List<PositiveRestrictedPlace> locationRestrictions,
   }) = _Promotion;
 
   factory Promotion.fromJson(Map<String, dynamic> json) => _$PromotionFromJson(json);

@@ -298,7 +298,7 @@ FutureOr<BaseDeviceInfo> deviceInfo(DeviceInfoRef ref) async {
 }
 
 @Riverpod(keepAlive: true)
-FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
+FutureOr<PermissionStatus> requestedNotificationPermissions(RequestedNotificationPermissionsRef ref) async {
   // If on iOS, then we want to use the LocalNotificationsPlugin to request permissions
   // This is due to having to request badge, sound and alert permissions separately
   if (UniversalPlatform.isIOS) {
@@ -311,8 +311,18 @@ FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef re
 }
 
 @Riverpod(keepAlive: true)
-FutureOr<PermissionStatus> locationPermissions(LocationPermissionsRef ref) async {
+FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
+  return await Permission.notification.status;
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> requestedLocationPermissions(RequestedLocationPermissionsRef ref) async {
   return Permission.location.request();
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<PermissionStatus> locationPermissions(LocationPermissionsRef ref) async {
+  return await Permission.location.status;
 }
 
 @Riverpod(keepAlive: true)

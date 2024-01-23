@@ -399,8 +399,26 @@ final deviceInfoProvider = FutureProvider<BaseDeviceInfo>.internal(
 );
 
 typedef DeviceInfoRef = FutureProviderRef<BaseDeviceInfo>;
+String _$requestedNotificationPermissionsHash() =>
+    r'ce83f02c15d855b8d0a87d679a66037e0d67ad19';
+
+/// See also [requestedNotificationPermissions].
+@ProviderFor(requestedNotificationPermissions)
+final requestedNotificationPermissionsProvider =
+    FutureProvider<PermissionStatus>.internal(
+  requestedNotificationPermissions,
+  name: r'requestedNotificationPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$requestedNotificationPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RequestedNotificationPermissionsRef
+    = FutureProviderRef<PermissionStatus>;
 String _$notificationPermissionsHash() =>
-    r'a825862b4acc0b13c449d2fe80e14f9d09245388';
+    r'7f635b3da78ea151fb2d713fade41c3a2ff497af';
 
 /// See also [notificationPermissions].
 @ProviderFor(notificationPermissions)
@@ -416,8 +434,25 @@ final notificationPermissionsProvider =
 );
 
 typedef NotificationPermissionsRef = FutureProviderRef<PermissionStatus>;
+String _$requestedLocationPermissionsHash() =>
+    r'93f60158df7e9773a9f1452c3309f9f2bdcc2174';
+
+/// See also [requestedLocationPermissions].
+@ProviderFor(requestedLocationPermissions)
+final requestedLocationPermissionsProvider =
+    FutureProvider<PermissionStatus>.internal(
+  requestedLocationPermissions,
+  name: r'requestedLocationPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$requestedLocationPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RequestedLocationPermissionsRef = FutureProviderRef<PermissionStatus>;
 String _$locationPermissionsHash() =>
-    r'612ab39777d3486a2140116ddde1a79e4ef149bd';
+    r'3641365192bd3d22edbc91001bb2a710ded043b3';
 
 /// See also [locationPermissions].
 @ProviderFor(locationPermissions)

@@ -166,7 +166,12 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
   Widget? buildSeparator(BuildContext context, int index) {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final Promotion? promotion = promotionsController.getPromotionFromIndex(index, PromotionType.chat);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(
+      index: index,
+      promotionType: PromotionType.chat,
+      // currentLocation: null,
+    );
+
     if (promotion == null) {
       return const SizedBox(height: kPaddingSmall);
     }

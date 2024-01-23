@@ -59,13 +59,10 @@ class AccountPromotedPostsPromotionPage extends HookConsumerWidget {
     final AccountFormState state = ref.watch(provider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
-    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
     final int activePromotionsCount = currentProfile?.activePromotionsCount ?? 0;
     final int availablePromotionsCount = currentProfile?.availablePromotionsCount ?? 0;
     final bool profileCanPromote = activePromotionsCount > 0 || availablePromotionsCount > 0;
-
-    final PromotionsControllerState promotionsControllerState = ref.watch(promotionsControllerProvider);
 
     if (profileCanPromote) {
       return AccountPromotedPostsFeeds(
@@ -149,7 +146,7 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
     final int remainingPromotions = (widget.availablePromotionsCount - widget.activePromotionsCount).clamp(0, widget.availablePromotionsCount);
     final int promotionKindIndex = type == AccountPromotedPostsType.hub ? 0 : 1;
 
-    final Set<String> allPromotions = promotionsControllerState.profilePromotionIds[currentProfileId] ?? {};
+    final Set<String> allPromotions = promotionsControllerState.validOwnedPromotionIds[currentProfileId] ?? {};
     final List<Promotion> allPromotionsList = allPromotions.map((e) => cacheController.get(e)).whereType<Promotion>().toList();
     final List<Promotion> chatPromotions = [];
     final List<Promotion> feedPromotions = [];

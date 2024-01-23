@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,8 @@ import 'package:universal_platform/universal_platform.dart';
 // Project imports:
 import 'package:app/constants/key_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
+import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
@@ -192,7 +195,13 @@ class SystemController extends _$SystemController {
     tagsController.updateTopicTags(topicTags);
 
     profileController.onSupportedProfilesUpdated(supportedProfiles);
-    promotionsController.addInitialPromotionWindow(promotions);
+
+    try {
+      final Iterable<Promotion> promotionDtos = promotions.map((dynamic promotion) => Promotion.fromJson(json.decodeSafe(promotion))).where((element) => element.flMeta?.id?.isNotEmpty == true).toList();
+      await promotionsController.appendPromotions(promotions: promotionDtos);
+    } catch (e) {
+      logger.e('updateSystemConfiguration: Failed to parse promotions');
+    }
 
     state = state.copyWith(hasPerformedInitialSetup: true);
     logger.i('updateSystemConfiguration: Completed');
@@ -214,8 +223,6 @@ class SystemController extends _$SystemController {
     logger.d('isDeviceAppleSimulator: $deviceInfo');
     return deviceInfo is IosDeviceInfo && deviceInfo.isPhysicalDevice == false;
   }
-
-  //* Checks if the device is an android
 
   Future<void> handleFatalException(String errorMessage) async {
     final Logger logger = ref.read(loggerProvider);
