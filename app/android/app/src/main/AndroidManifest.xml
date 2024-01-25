@@ -58,28 +58,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="positiveplusone.onelink.me"
-                    android:scheme="https" />
-                    
-            </intent-filter>
-
             <intent-filter android:autoVerify="true" android:label="ppoDeepLinks">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="pp1" />
+                <data
+                    android:scheme="https"
+                    android:host="positiveplusone.onelink.me"
+                    android:pathPrefix="2wOy" />
             </intent-filter>
         </activity>
 
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+	    </receiver>
     </application>
 
     <!-- Provide required visibility configuration for API level 30 and above -->
