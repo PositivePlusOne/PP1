@@ -11,8 +11,6 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:positiveplusone.onelink.me</string>
-		<string>https://positiveplusone.onelink.me</string>
-		<string>applinks:https://positiveplusone.onelink.me</string>
 	</array>
 </dict>
 </plist>
