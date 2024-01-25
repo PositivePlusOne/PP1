@@ -119,6 +119,7 @@ FutureOr<AppsflyerSdk> appsflyerSdk(AppsflyerSdkRef ref) async {
   await appsflyerSdk.initSdk(
     registerConversionDataCallback: true,
     registerOnAppOpenAttributionCallback: true,
+    registerOnDeepLinkingCallback: true,
   );
 
   return appsflyerSdk;
