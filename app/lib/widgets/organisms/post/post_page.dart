@@ -150,7 +150,8 @@ class PostPage extends HookConsumerWidget {
         canSwitchProfile: viewModel.canSwitchProfile,
         onSwitchProfileRequested: () => viewModel.requestSwitchProfileDialog(
           context,
-          activity?.securityConfiguration?.commentMode,
+          mode: activity?.securityConfiguration?.commentMode,
+          title: localizations.generic_organisation_actions_comment_as_title,
         ),
         commentTextController: viewModel.commentTextController,
         onCommentChanged: viewModel.onCommentTextChanged,

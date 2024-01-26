@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -111,20 +110,12 @@ class UserController extends _$UserController {
 
   Future<void> onUserUpdated(User? user) async {
     final Logger log = ref.read(loggerProvider);
-    final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
-    log.d('[UserController] onUserUpdated() user: $user');
-
-    log.d('Resetting mixpanel for new user');
-    mixpanel.reset();
 
     if (user == null) {
       log.d('[UserController] onUserUpdated() user is null');
       state = state.copyWith(currentClaims: {});
       return;
     }
-
-    log.d('Identifying mixpanel for new user');
-    mixpanel.identify(user.uid);
 
     log.d('Preloading user claims into state');
     try {
