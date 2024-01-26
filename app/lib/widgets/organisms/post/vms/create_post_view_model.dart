@@ -917,8 +917,6 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     );
   }
 
-  Future<void> requestProfileSwitcher() async {}
-
   Future<void> onPostFinished(Profile? currentProfile) async {
     final logger = ref.read(loggerProvider);
     if (state.isBusy) {
