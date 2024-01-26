@@ -17,6 +17,8 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
@@ -160,9 +162,13 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     //* Display various welcome back pages based on system state
     PageRouteInfo? nextRoute = const OnboardingWelcomeRoute();
     final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    if (profileController.currentProfileId != null && !profileController.hasSetupProfile) {
+    final Profile? currentProfile = profileController.currentProfile;
+    final bool hasProfile = currentProfile != null;
+    final bool hasSetupProfile = currentProfile?.isProfileSetup == true;
+
+    if (!hasSetupProfile) {
       nextRoute = ProfileWelcomeBackRoute(nextPage: const HomeRoute());
-    } else if (profileController.currentProfileId != null) {
+    } else if (hasProfile) {
       nextRoute = const HomeRoute();
     }
 

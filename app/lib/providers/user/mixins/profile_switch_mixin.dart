@@ -30,19 +30,19 @@ mixin ProfileSwitchMixin {
 
   /// This method is used to prepare the profile switcher.
   /// Call this from within the build method of the view model that uses this mixin.
-  void prepareProfileSwitcher() {
+  Future<void> prepareProfileSwitcher() async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final EventBus eventBus = providerContainer.read(eventBusProvider);
 
     logger.d('ProfileSwitchMixin.prepareProfileSwitcher()');
-    switchProfile(profileController.currentProfileId ?? '');
+    await switchProfile(profileController.currentProfileId ?? '');
 
     _profileSwitchedEventSubscription?.cancel();
     _profileSwitchedEventSubscription = eventBus.on<ProfileSwitchedEvent>().listen(onInternalProfileSwitched);
   }
 
-  void onInternalProfileSwitched(ProfileSwitchedEvent event) {
+  Future<void> onInternalProfileSwitched(ProfileSwitchedEvent event) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     final String targetProfileId = event.profileId;
@@ -51,7 +51,7 @@ mixin ProfileSwitchMixin {
     logger.d('ProfileSwitchMixin.onInternalProfileSwitched($event)');
     if (targetProfileId.isEmpty || !isCurrentProfileSupported) {
       logger.w('ProfileSwitchMixin.onInternalProfileSwitched($event) - targetProfileId.isEmpty || !isCurrentProfileSupported');
-      onProfileSwitched(null, null);
+      await onProfileSwitched(null, null);
       return;
     }
   }
@@ -110,13 +110,14 @@ mixin ProfileSwitchMixin {
 
     if (newProfileId != null) {
       logger.d('[ProfileSwitchMixin.requestSwitchProfileDialog] - newProfileId: $newProfileId');
-      switchProfile(newProfileId);
+      await switchProfile(newProfileId);
       return true;
     }
+    
     return false;
   }
 
-  void switchProfile(String profileId) {
+  Future<void> switchProfile(String profileId) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ProfileControllerState profileControllerState = providerContainer.read(profileControllerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -124,7 +125,7 @@ mixin ProfileSwitchMixin {
 
     logger.d('ProfileSwitchMixin.switchProfile($profileId)');
     if (profileId.isEmpty) {
-      onProfileSwitched(null, null);
+      await onProfileSwitched(null, null);
       return;
     }
 
@@ -140,7 +141,7 @@ mixin ProfileSwitchMixin {
       return;
     }
 
-    onProfileSwitched(profileId, profile);
+    await onProfileSwitched(profileId, profile);
   }
 
   Profile? getCurrentProfile() {
@@ -165,7 +166,7 @@ mixin ProfileSwitchMixin {
   }
 
   @mustCallSuper
-  void onProfileSwitched(String? id, Profile? profile) {
+  Future<void> onProfileSwitched(String? id, Profile? profile) async {
     final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
 
@@ -174,6 +175,6 @@ mixin ProfileSwitchMixin {
       return;
     }
 
-    profileController.switchProfile(id);
+    await profileController.switchProfile(id);
   }
 }

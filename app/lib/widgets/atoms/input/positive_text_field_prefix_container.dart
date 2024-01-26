@@ -44,5 +44,5 @@ class PositiveTextFieldPrefixContainer extends ConsumerWidget implements Preferr
   }
 
   @override
-  Size get preferredSize => Size(isPreviewOnly ? 69.0 : 75.0, 40.0);
+  Size get preferredSize => Size(isPreviewOnly ? 69.0 : 63.0, 40.0);
 }

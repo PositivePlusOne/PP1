@@ -41,8 +41,6 @@ class NotificationsPage extends HookConsumerWidget {
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
     ref.watch(notificationsViewModelProvider);
-
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     ref.watch(notificationsControllerProvider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
@@ -121,10 +119,7 @@ class NotificationsPage extends HookConsumerWidget {
                           mode: CommunitiesDialogMode.select,
                           canCallToAction: false,
                           selectedProfiles: [profileState.currentProfile?.flMeta?.id ?? ''],
-                          onProfileSelected: (String id) {
-                            viewModel.switchProfile(id);
-                            Navigator.of(context).pop();
-                          },
+                          onProfileSelected: viewModel.onProfileSelected,
                         ),
                       );
                     },

@@ -17,14 +17,14 @@ import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
-class BirthdayDeleteAccountPage extends ConsumerStatefulWidget {
-  const BirthdayDeleteAccountPage({super.key});
+class ProfileBirthdayDeleteAccountPage extends ConsumerStatefulWidget {
+  const ProfileBirthdayDeleteAccountPage({super.key});
 
   @override
-  ConsumerState<BirthdayDeleteAccountPage> createState() => _BirthdayDeleteAccountPageState();
+  ConsumerState<ProfileBirthdayDeleteAccountPage> createState() => _ProfileBirthdayDeleteAccountPageState();
 }
 
-class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccountPage> {
+class _ProfileBirthdayDeleteAccountPageState extends ConsumerState<ProfileBirthdayDeleteAccountPage> {
   bool _isDeleting = false;
   bool get isDeleting => _isDeleting;
   set isDeleting(bool value) {

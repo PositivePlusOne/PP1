@@ -183,19 +183,19 @@ class ProfileFormController extends _$ProfileFormController {
     logger.i('Navigating back to create page');
 
     switch (type) {
-      case ProfileNameEntryRoute:
+      case const (ProfileNameEntryRoute):
         await userController.signOut(shouldNavigate: false);
         appRouter.replaceAll([const HomeRoute()]);
         break;
-      case ProfileDisplayNameEntryRoute:
+      case const (ProfileDisplayNameEntryRoute):
         appRouter.replaceAll([const ProfileNameEntryRoute()]);
         break;
 
-      case ProfileAboutRoute:
+      case const (ProfileAboutRoute):
         // currently this
         break;
 
-      case ProfileBirthdayEntryRoute:
+      case const (ProfileBirthdayEntryRoute):
         appRouter.replaceAll([const ProfileDisplayNameEntryRoute()]);
         break;
 
@@ -203,19 +203,20 @@ class ProfileFormController extends _$ProfileFormController {
       //   appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
       //   break;
 
-      case ProfilePhotoSelectionRoute:
+      case const (ProfilePhotoSelectionRoute):
         appRouter.replaceAll([const ProfileBirthdayEntryRoute()]);
         break;
 
-      case ProfileBiographyEntryRoute:
+      case const (ProfileBiographyEntryRoute):
         appRouter.replaceAll([const ProfilePhotoSelectionRoute()]);
         break;
 
-      case ProfileHivStatusRoute:
-      case ProfileInterestsEntryRoute:
-      case ProfileGenderSelectRoute:
-      case ProfileCompanySectorSelectRoute:
-      case ProfileLocationRoute:
+      case const (OrganisationCompanySectorSelectRoute):
+      case const (OrganisationNameSetupRoute):
+      case const (ProfileHivStatusRoute):
+      case const (ProfileInterestsEntryRoute):
+      case const (ProfileGenderSelectRoute):
+      case const (ProfileLocationRoute):
       default:
         appRouter.replaceAll([const HomeRoute()]);
         break;
@@ -305,42 +306,6 @@ class ProfileFormController extends _$ProfileFormController {
     state = state.copyWith(displayName: value.trim());
   }
 
-  Future<void> onDisplayNameConfirmed(BuildContext context) async {
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final Logger logger = ref.read(loggerProvider);
-    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
-    final AppLocalizations localisations = AppLocalizations.of(context)!;
-
-    if (!isDisplayNameValid) {
-      return;
-    }
-
-    state = state.copyWith(isBusy: true);
-    logger.i('Saving display name: ${state.displayName}');
-
-    try {
-      await profileController.updateDisplayName(state.displayName);
-      logger.i('Successfully saved display name: ${state.displayName}');
-      state = state.copyWith(isBusy: false);
-
-      switch (state.formMode) {
-        case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
-          break;
-        case FormMode.edit:
-          await appRouter.replace(ProfileEditThanksRoute(
-            title: localisations.page_profile_name_entry_description_updated_title,
-            continueText: localisations.page_account_actions_change_return_account,
-            body: localisations.page_profile_name_entry_description_updated_body,
-          ));
-          break;
-      }
-    } finally {
-      state = state.copyWith(isBusy: false);
-    }
-  }
-
   void onBirthdayTextControllerCreated(TextEditingController controller) {
     final Logger logger = ref.read(loggerProvider);
     logger.i('Text controller attached to birthday field');
@@ -407,7 +372,7 @@ class ProfileFormController extends _$ProfileFormController {
 
     if (birthday.isAfter(thirteenYearsAgo)) {
       logger.e('User is not 13 years old, navigating to age requirement screen');
-      await appRouter.push(const BirthdayDeleteAccountRoute());
+      await appRouter.push(const ProfileBirthdayDeleteAccountRoute());
       return;
     }
 
@@ -1129,4 +1094,6 @@ class ProfileFormController extends _$ProfileFormController {
     appRouter.removeWhere((route) => true);
     await appRouter.push(route);
   }
+
+  onDisplayNameConfirmed(BuildContext context) {}
 }
