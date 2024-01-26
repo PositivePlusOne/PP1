@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -97,7 +98,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
 }
 
 @riverpod
-class CreatePostViewModel extends _$CreatePostViewModel {
+class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController altTextController = TextEditingController();
   final TextEditingController promotionKeyTextController = TextEditingController();
@@ -378,7 +379,22 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        await onPostFinished(profileController.currentProfile);
+        if (canSwitchProfile) {
+          bool profileID = false;
+          try {
+            profileID = await requestSwitchProfileDialog(
+              context,
+              title: localisations.generic_organisation_actions_post_as_title,
+              mode: null,
+            );
+          } finally {
+            if (profileID) {
+              await onPostFinished(profileController.currentProfile);
+            }
+          }
+        } else {
+          await onPostFinished(profileController.currentProfile);
+        }
         break;
     }
   }
@@ -900,6 +916,8 @@ class CreatePostViewModel extends _$CreatePostViewModel {
       activeButtonFlexText: localisations.shared_actions_done,
     );
   }
+
+  Future<void> requestProfileSwitcher() async {}
 
   Future<void> onPostFinished(Profile? currentProfile) async {
     final logger = ref.read(loggerProvider);
