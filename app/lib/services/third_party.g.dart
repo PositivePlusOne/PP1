@@ -114,6 +114,20 @@ final algoliaProvider = FutureProvider<Algolia>.internal(
 );
 
 typedef AlgoliaRef = FutureProviderRef<Algolia>;
+String _$appsflyerSdkHash() => r'8d21d18db44bfe0951174f389e58fa424e403fd3';
+
+/// See also [appsflyerSdk].
+@ProviderFor(appsflyerSdk)
+final appsflyerSdkProvider = FutureProvider<AppsflyerSdk>.internal(
+  appsflyerSdk,
+  name: r'appsflyerSdkProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$appsflyerSdkHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AppsflyerSdkRef = FutureProviderRef<AppsflyerSdk>;
 String _$mixpanelHash() => r'4baae3640ce777e1ec61f662bf89fae624e0a957';
 
 /// See also [mixpanel].

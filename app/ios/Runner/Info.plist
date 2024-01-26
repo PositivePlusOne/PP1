@@ -34,15 +34,6 @@
 				<string>com.googleusercontent.apps.485132120454-e5g5rfta6tvmkjg65l9s0h4d58poaedn</string>
 				<string>com.googleusercontent.apps.1058436764613-en7rig1a3nsqp2clu6c20oju6p8a5h4v</string>
 				<string>com.googleusercontent.apps.504106569524-5jmrv2lpup9jvg5njs3g6n4d51p1sgbg</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>CFBundleURLName</key>
-			<string></string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>pp1</string>
 			</array>
 		</dict>

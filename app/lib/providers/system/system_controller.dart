@@ -74,6 +74,8 @@ class SystemController extends _$SystemController {
   static const String kFirebaseRemoteConfigFeedPromotionFrequencyKey = 'feed_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
 
+  static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
+
   SystemEnvironment get environment {
     const String environmentValue = String.fromEnvironment(kEnvironmentSystemKey, defaultValue: 'develop');
     switch (environmentValue) {

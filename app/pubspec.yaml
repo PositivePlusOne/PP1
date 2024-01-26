@@ -48,6 +48,7 @@ dependencies:
   firebase_performance: ^0.9.3+3
   google_sign_in: ^6.1.4
   mixpanel_flutter: ^2.1.1
+  appsflyer_sdk: ^6.12.2
   freerasp: ^6.2.0
   stream_chat_flutter: ^8.0.0-beta.1
 

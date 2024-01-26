@@ -8,6 +8,8 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cron/cron.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -45,7 +47,7 @@ class AnalyticsControllerState with _$AnalyticsControllerState {
 }
 
 mixin AnalyticsControllerInterface {
-  Future<void> registerScheduledJobs();
+  Future<void> setupListeners();
   Future<void> loadAnalyticsPreferences();
   Future<void> toggleAnalyticsCollection(bool attemptToEnable);
   Future<void> trackEvent(
@@ -60,6 +62,7 @@ mixin AnalyticsControllerInterface {
 class AnalyticsController extends _$AnalyticsController with AnalyticsControllerInterface {
   static const String kAnalyticsEnabledKey = 'positive_analytics_enabled';
 
+  StreamSubscription<User?>? _onUserChangedSubscription;
   ScheduledTask? updateProfilePropertiesTask;
   StreamSubscription<ProfileSwitchedEvent>? profileSwitchedSubscription;
 
@@ -83,11 +86,15 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
   }
 
   @override
-  Future<void> registerScheduledJobs() async {
-    final Cron cron = providerContainer.read(cronProvider);
-    final EventBus eventBus = providerContainer.read(eventBusProvider);
+  Future<void> setupListeners() async {
+    final UserController userController = ref.read(userControllerProvider.notifier);
+    final EventBus eventBus = ref.read(eventBusProvider);
+    final Cron cron = ref.read(cronProvider);
     final Logger logger = ref.read(loggerProvider);
-    logger.d('registerScheduledJobs: Registering scheduled jobs');
+
+    logger.d('setupListeners: Setting up analytics listeners');
+    await _onUserChangedSubscription?.cancel();
+    _onUserChangedSubscription = userController.userChangedController.stream.listen(onUserUpdated);
 
     profileSwitchedSubscription ??= eventBus.on<ProfileSwitchedEvent>().listen((ProfileSwitchedEvent event) async {
       logger.d('registerScheduledJobs: Profile switched, updating analytics properties');
@@ -99,6 +106,25 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
       logger.d('registerScheduledJobs: Updating analytics properties');
       await updateUserMixpanelProperties(isCollectingData: state.isCollectingData);
     });
+  }
+
+  Future<void> onUserUpdated(User? user) async {
+    final Logger log = ref.read(loggerProvider);
+    final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
+    final AppsflyerSdk appsflyer = await ref.read(appsflyerSdkProvider.future);
+
+    log.d('Resetting analytic providers for new user');
+    mixpanel.reset();
+    appsflyer.setCustomerUserId('');
+
+    if (user == null) {
+      log.d('[UserController] onUserUpdated() user is null');
+      return;
+    }
+
+    log.d('Identifying new user to analytic providers');
+    mixpanel.identify(user.uid);
+    appsflyer.setCustomerUserId(user.uid);
   }
 
   @override
@@ -129,6 +155,7 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     final Logger logger = ref.read(loggerProvider);
     final FirebaseCrashlytics crashlytics = ref.read(firebaseCrashlyticsProvider);
     final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
+    final AppsflyerSdk appsflyer = await ref.read(appsflyerSdkProvider.future);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
 
     if (state.isCollectingData == attemptToEnable || !state.isCollectingData && !attemptToEnable) {
@@ -150,12 +177,14 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     if (isEnabled) {
       logger.d('toggleAnalyticsCollection: Enabling crashlytics');
       await crashlytics.setCrashlyticsCollectionEnabled(true);
+      appsflyer.setDisableAdvertisingIdentifiers(false); // These are backwards which confuses the hell out of me
       mixpanel.optInTracking();
     }
 
     if (!isEnabled) {
       logger.d('toggleAnalyticsCollection: Disabling crashlytics');
       await crashlytics.setCrashlyticsCollectionEnabled(false);
+      appsflyer.setDisableAdvertisingIdentifiers(true); // These are backwards which confuses the hell out of me
       mixpanel.optOutTracking();
     }
 
@@ -179,6 +208,7 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     }
 
     final Mixpanel mixpanel = await ref.read(mixpanelProvider.future);
+    final AppsflyerSdk appsflyer = await ref.read(appsflyerSdkProvider.future);
     final Map<String, dynamic> publishedProperties = {
       ...properties,
     };
@@ -188,6 +218,7 @@ class AnalyticsController extends _$AnalyticsController with AnalyticsController
     }
 
     logger.d('Tracking event: $event with properties: $publishedProperties');
+    await appsflyer.logEvent(event.friendlyName, publishedProperties);
     mixpanel.track(event.friendlyName, properties: publishedProperties);
   }
 

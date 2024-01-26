@@ -97,7 +97,7 @@ Future<void> setupApplication() async {
   await providerContainer.read(asyncSecurityControllerProvider.future);
 
   await getStreamController.setupListeners();
-  await analyticsController.flushEvents();
+  await analyticsController.setupListeners();
   await userController.setupListeners();
   await relationshipController.setupListeners();
   await notificationsController.setupListeners();
@@ -105,7 +105,6 @@ Future<void> setupApplication() async {
   await galleryController.setupListeners();
   await tagsController.setupListeners();
   await cacheController.setupListeners();
-  await analyticsController.registerScheduledJobs();
 
   await systemController.preloadPackageInformation();
   await promotionsController.updatePromotionFrequenciesFromRemoteConfig();
