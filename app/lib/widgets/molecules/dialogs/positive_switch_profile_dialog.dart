@@ -45,20 +45,25 @@ class PositiveSwitchProfileDialog extends HookConsumerWidget {
         ...profiles
             .map(
               (Profile profile) {
-                final bool isCurrentUser = profile.flMeta?.id == currentUserId;
+                final bool isCurrentAuthUser = profile.flMeta?.id == currentUserId;
                 final int index = profiles.indexOf(profile);
 
-                String label = isCurrentUser ? 'Yourself' : profile.displayName;
+                String label = isCurrentAuthUser ? 'Yourself' : profile.displayName;
                 if (label.isEmpty) {
-                  label = isCurrentUser ? 'Yourself' : 'Unknown';
+                  label = isCurrentAuthUser ? 'Yourself' : 'Unknown';
                 }
 
+                //? Right now it is no possible without a major change to find out if a company you are NOT currently logged in as is allowed
+                //? to comment on a post without cycling
+                //TODO: Find a solution greying out buttons when a company you are NOT logged in as is not allowed to post due to privacy settings
+                //! Changes would be to is Disabled and to primaryColor
+
                 return PositiveButton(
-                  icon: isCurrentUser ? UniconsLine.user_circle : UniconsLine.building,
+                  icon: isCurrentAuthUser ? UniconsLine.user_circle : UniconsLine.building,
                   label: label,
                   colors: colors,
-                  isDisabled: currentProfileId == profile.flMeta?.id,
-                  primaryColor: index % 2 == 0 ? colors.black : colors.white,
+                  isDisabled: false,
+                  primaryColor: colors.black,
                   onTapped: () => Navigator.of(context).pop(profile.flMeta?.id),
                 );
               },
