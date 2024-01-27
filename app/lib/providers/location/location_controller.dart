@@ -199,7 +199,10 @@ class LocationController extends _$LocationController implements ILocationContro
   Future<void> _updateGeocodingData() async {
     final Logger logger = ref.read(loggerProvider);
     final GoogleMapsGeocoding geocoding = ref.read(googleMapsGeocodingProvider);
-    final Location latLng = Location(lat: state.lastKnownLatitude!, lng: state.lastKnownLongitude!);
+    if (state.lastKnownLatitude == null || state.lastKnownLongitude == null) {
+      logger.w('Cannot update geocoding data, no location data available');
+      return;
+    }
 
     // If we already have geocoding data for this location, don't update it
     if (state.lastGeocodingUpdate != null) {
@@ -207,7 +210,9 @@ class LocationController extends _$LocationController implements ILocationContro
       return;
     }
 
+    final Location latLng = Location(lat: state.lastKnownLatitude!, lng: state.lastKnownLongitude!);
     logger.i('Updating geocoding data for location: $latLng');
+
     final GeocodingResponse searchResponse = await geocoding.searchByLocation(latLng, resultType: ['locality']);
     if (searchResponse.errorMessage?.isNotEmpty == true) {
       throw Exception(searchResponse.errorMessage);

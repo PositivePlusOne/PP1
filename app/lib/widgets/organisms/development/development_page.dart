@@ -141,6 +141,7 @@ class DevelopmentPage extends ConsumerWidget {
                 state: developmentViewModelState,
                 locationController: locationController,
                 locationState: locationControllerState,
+                isProduction: systemControllerState.environment == SystemEnvironment.production,
               ),
               ...buildTroubleshootingAndSupport(
                 context: context,
@@ -161,6 +162,7 @@ class DevelopmentPage extends ConsumerWidget {
     required DevelopmentViewModelState state,
     required LocationController locationController,
     required LocationControllerState locationState,
+    required bool isProduction,
     required BuildContext context,
   }) {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
@@ -217,6 +219,21 @@ class DevelopmentPage extends ConsumerWidget {
           style: typography.styleSubtext.copyWith(color: colors.white),
         ),
       ),
+      // Display address components for non-production environments
+      if (!isProduction) ...<Widget>[
+        CupertinoListTile.notched(
+          title: Text(
+            'Current address components',
+            style: typography.styleButtonRegular.copyWith(color: colors.white),
+          ),
+          subtitle: SelectableText(
+            locationState.lastKnownAddressComponents.entries.map((MapEntry<String, Set<String>> entry) {
+              return '${entry.key}: ${entry.value.join(', ')}';
+            }).join('\n'),
+            style: typography.styleSubtext.copyWith(color: colors.white),
+          ),
+        ),
+      ],
       PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
     ];
   }
