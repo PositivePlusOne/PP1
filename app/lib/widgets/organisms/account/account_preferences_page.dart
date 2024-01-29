@@ -99,6 +99,18 @@ class AccountPreferencesPage extends HookConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveGlassSheet(
+              children: <Widget>[
+                PositiveCheckboxButton(
+                  label: 'Enable Biometrics',
+                  value: state.areBiometricsEnabled,
+                  isBusy: state.isBusy,
+                  showDisabledState: state.isBusy,
+                  onTapped: (_) => viewModel.onBiometricsToggle(),
+                ),
+              ],
+            ),
             const SizedBox(height: kPaddingLarge),
             Text(
               'Notifications',

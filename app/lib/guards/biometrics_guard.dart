@@ -10,8 +10,8 @@ import 'package:app/services/third_party.dart';
 import '../providers/system/security_controller.dart';
 import '../providers/user/user_controller.dart';
 
-// import '../constants/key_constants.dart';
-// import '../gen/app_router.dart';
+import '../constants/key_constants.dart';
+import '../gen/app_router.dart';
 
 class BiometricsGuard extends AutoRouteGuard {
   @override
@@ -26,16 +26,16 @@ class BiometricsGuard extends AutoRouteGuard {
       return;
     }
 
-    // final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
-    // final bool biometricPreferencesSet = sharedPreferences.getBool(kBiometricsAcceptedKey) != null;
+    final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
+    final bool biometricPreferencesSet = sharedPreferences.getBool(kBiometricsAcceptedKey) != null;
 
     // Come back this post-launch
-    // if (!biometricPreferencesSet) {
-    //   router.removeWhere((route) => true);
-    //   router.push(const BiometricsPreferencesRoute());
-    //   resolver.next(false);
-    //   return;
-    // }
+    if (!biometricPreferencesSet) {
+      router.removeWhere((route) => true);
+      router.push(const BiometricsPreferencesRoute());
+      resolver.next(false);
+      return;
+    }
 
     resolver.next(true);
   }

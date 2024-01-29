@@ -84,6 +84,26 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     );
   }
 
+  Future<void> onBiometricsToggle() async {
+    final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
+    final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
+    final bool biometricPreferencesSet = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
+    state = state.copyWith(isBusy: true);
+
+    try {
+      if (biometricPreferencesSet) {
+        await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
+      } else {
+        await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
+      }
+    } finally {
+      state = state.copyWith(
+        areBiometricsEnabled: sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false,
+        isBusy: false,
+      );
+    }
+  }
+
   Future<void> onOpenSettingsRequested() async {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     final Logger logger = ref.read(loggerProvider);
