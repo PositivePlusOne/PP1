@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/constants/key_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -31,6 +32,8 @@ import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 
 Future<void> setupApplication() async {
@@ -101,9 +104,10 @@ Future<void> setupApplication() async {
   await providerContainer.read(asyncPledgeControllerProvider.future);
   await providerContainer.read(asyncSecurityControllerProvider.future);
 
-  final SecurityControllerState securityControllerState = await providerContainer.read(asyncSecurityControllerProvider.future);
-  final bool canUseBiometrics = securityControllerState.canCheckBiometrics;
-  if (canUseBiometrics) {
+  final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
+  final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
+  final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
+  if (biometricPreferencesAgree) {
     await auth.authenticate(localizedReason: "localizedReason");
   }
 
