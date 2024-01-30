@@ -121,6 +121,22 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     return CreatePostViewModelState.initialState();
   }
 
+  Future<void> onFirstOpen() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    if (canSwitchProfile) {
+      await requestSwitchProfileDialog(
+        context,
+        title: localisations.generic_organisation_actions_post_as_title,
+        mode: null,
+      );
+    }
+    displayCamera(PostType.image);
+    return;
+  }
+
   Future<bool> goBack({
     bool shouldForceClose = false,
   }) async {
@@ -379,22 +395,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        if (canSwitchProfile) {
-          bool profileID = false;
-          try {
-            profileID = await requestSwitchProfileDialog(
-              context,
-              title: localisations.generic_organisation_actions_post_as_title,
-              mode: null,
-            );
-          } finally {
-            if (profileID) {
-              await onPostFinished(profileController.currentProfile);
-            }
-          }
-        } else {
-          await onPostFinished(profileController.currentProfile);
-        }
+        await onPostFinished(profileController.currentProfile);
         break;
     }
   }
