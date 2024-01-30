@@ -2,7 +2,9 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:app/constants/key_constants.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
@@ -14,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
+import 'package:local_auth/local_auth.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
@@ -73,6 +76,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final LocalAuthentication localAuthentication = LocalAuthentication();
     final Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
@@ -168,6 +172,14 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
 
     // Add a delay so that the futures can complete and settle
     await Future<void>.delayed(kAnimationDurationFast);
+
+    // final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
+    // final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
+    final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
+    if (biometricPreferencesAgree) {
+      final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
+    }
+
     await router.replace(nextRoute);
   }
 }

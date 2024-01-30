@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/constants/key_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +10,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:media_kit/media_kit.dart';
 
@@ -31,9 +29,6 @@ import 'package:app/providers/user/pledge_controller.dart';
 import 'package:app/providers/user/relationship_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/third_party.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart';
 
 Future<void> setupApplication() async {
@@ -103,13 +98,6 @@ Future<void> setupApplication() async {
   //* Setup providers
   await providerContainer.read(asyncPledgeControllerProvider.future);
   await providerContainer.read(asyncSecurityControllerProvider.future);
-
-  final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
-  final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
-  final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
-  if (biometricPreferencesAgree) {
-    await auth.authenticate(localizedReason: "localizedReason");
-  }
 
   await getStreamController.setupListeners();
   await analyticsController.setupListeners();
