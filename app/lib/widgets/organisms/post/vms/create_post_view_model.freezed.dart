@@ -49,7 +49,9 @@ mixin _$CreatePostViewModelState {
       throw _privateConstructorUsedError; //? Editing
   ActivityData get previousActivity =>
       throw _privateConstructorUsedError; //? Clip delay and clip length options
-  int get delayTimerCurrentSelection => throw _privateConstructorUsedError;
+  int get delayTimerCurrentSelection =>
+      throw _privateConstructorUsedError; //? Repost
+  String get postingAsProfileID => throw _privateConstructorUsedError;
   bool get isDelayTimerEnabled => throw _privateConstructorUsedError;
   int get maximumClipDurationSelection => throw _privateConstructorUsedError;
   bool get isMaximumClipDurationEnabled => throw _privateConstructorUsedError;
@@ -102,6 +104,7 @@ abstract class $CreatePostViewModelStateCopyWith<$Res> {
       String? reposterActivityID,
       ActivityData previousActivity,
       int delayTimerCurrentSelection,
+      String postingAsProfileID,
       bool isDelayTimerEnabled,
       int maximumClipDurationSelection,
       bool isMaximumClipDurationEnabled,
@@ -151,6 +154,7 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
     Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
+    Object? postingAsProfileID = null,
     Object? isDelayTimerEnabled = null,
     Object? maximumClipDurationSelection = null,
     Object? isMaximumClipDurationEnabled = null,
@@ -249,6 +253,10 @@ class _$CreatePostViewModelStateCopyWithImpl<$Res,
           ? _value.delayTimerCurrentSelection
           : delayTimerCurrentSelection // ignore: cast_nullable_to_non_nullable
               as int,
+      postingAsProfileID: null == postingAsProfileID
+          ? _value.postingAsProfileID
+          : postingAsProfileID // ignore: cast_nullable_to_non_nullable
+              as String,
       isDelayTimerEnabled: null == isDelayTimerEnabled
           ? _value.isDelayTimerEnabled
           : isDelayTimerEnabled // ignore: cast_nullable_to_non_nullable
@@ -341,6 +349,7 @@ abstract class _$$CreatePostViewModelStateImplCopyWith<$Res>
       String? reposterActivityID,
       ActivityData previousActivity,
       int delayTimerCurrentSelection,
+      String postingAsProfileID,
       bool isDelayTimerEnabled,
       int maximumClipDurationSelection,
       bool isMaximumClipDurationEnabled,
@@ -391,6 +400,7 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
     Object? reposterActivityID = freezed,
     Object? previousActivity = null,
     Object? delayTimerCurrentSelection = null,
+    Object? postingAsProfileID = null,
     Object? isDelayTimerEnabled = null,
     Object? maximumClipDurationSelection = null,
     Object? isMaximumClipDurationEnabled = null,
@@ -489,6 +499,10 @@ class __$$CreatePostViewModelStateImplCopyWithImpl<$Res>
           ? _value.delayTimerCurrentSelection
           : delayTimerCurrentSelection // ignore: cast_nullable_to_non_nullable
               as int,
+      postingAsProfileID: null == postingAsProfileID
+          ? _value.postingAsProfileID
+          : postingAsProfileID // ignore: cast_nullable_to_non_nullable
+              as String,
       isDelayTimerEnabled: null == isDelayTimerEnabled
           ? _value.isDelayTimerEnabled
           : isDelayTimerEnabled // ignore: cast_nullable_to_non_nullable
@@ -559,6 +573,7 @@ class _$CreatePostViewModelStateImpl
       this.reposterActivityID = '',
       required this.previousActivity,
       this.delayTimerCurrentSelection = 0,
+      this.postingAsProfileID = '',
       this.isDelayTimerEnabled = false,
       this.maximumClipDurationSelection = 0,
       this.isMaximumClipDurationEnabled = false,
@@ -660,6 +675,10 @@ class _$CreatePostViewModelStateImpl
   @override
   @JsonKey()
   final int delayTimerCurrentSelection;
+//? Repost
+  @override
+  @JsonKey()
+  final String postingAsProfileID;
   @override
   @JsonKey()
   final bool isDelayTimerEnabled;
@@ -686,7 +705,7 @@ class _$CreatePostViewModelStateImpl
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, currentActivityMedia: $currentActivityMedia, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
+    return 'CreatePostViewModelState(isBusy: $isBusy, isProcessingMedia: $isProcessingMedia, isUploadingMedia: $isUploadingMedia, isCreatingPost: $isCreatingPost, isEditingPost: $isEditingPost, currentPostType: $currentPostType, currentCreatePostPage: $currentCreatePostPage, currentActivityID: $currentActivityID, currentActivityMedia: $currentActivityMedia, galleryEntries: $galleryEntries, editingGalleryEntry: $editingGalleryEntry, tags: $tags, promotionKey: $promotionKey, allowSharing: $allowSharing, visibleTo: $visibleTo, allowComments: $allowComments, activeButtonFlexText: $activeButtonFlexText, saveToGallery: $saveToGallery, currentFilter: $currentFilter, reposterActivityID: $reposterActivityID, previousActivity: $previousActivity, delayTimerCurrentSelection: $delayTimerCurrentSelection, postingAsProfileID: $postingAsProfileID, isDelayTimerEnabled: $isDelayTimerEnabled, maximumClipDurationSelection: $maximumClipDurationSelection, isMaximumClipDurationEnabled: $isMaximumClipDurationEnabled, isBottomNavigationEnabled: $isBottomNavigationEnabled, isRecordingClip: $isRecordingClip, cameraWidgetKey: $cameraWidgetKey, activeButton: $activeButton, lastActiveButton: $lastActiveButton)';
   }
 
   @override
@@ -717,6 +736,7 @@ class _$CreatePostViewModelStateImpl
       ..add(DiagnosticsProperty('previousActivity', previousActivity))
       ..add(DiagnosticsProperty(
           'delayTimerCurrentSelection', delayTimerCurrentSelection))
+      ..add(DiagnosticsProperty('postingAsProfileID', postingAsProfileID))
       ..add(DiagnosticsProperty('isDelayTimerEnabled', isDelayTimerEnabled))
       ..add(DiagnosticsProperty(
           'maximumClipDurationSelection', maximumClipDurationSelection))
@@ -778,6 +798,8 @@ class _$CreatePostViewModelStateImpl
             (identical(other.delayTimerCurrentSelection, delayTimerCurrentSelection) ||
                 other.delayTimerCurrentSelection ==
                     delayTimerCurrentSelection) &&
+            (identical(other.postingAsProfileID, postingAsProfileID) ||
+                other.postingAsProfileID == postingAsProfileID) &&
             (identical(other.isDelayTimerEnabled, isDelayTimerEnabled) ||
                 other.isDelayTimerEnabled == isDelayTimerEnabled) &&
             (identical(other.maximumClipDurationSelection,
@@ -825,6 +847,7 @@ class _$CreatePostViewModelStateImpl
         reposterActivityID,
         previousActivity,
         delayTimerCurrentSelection,
+        postingAsProfileID,
         isDelayTimerEnabled,
         maximumClipDurationSelection,
         isMaximumClipDurationEnabled,
@@ -873,6 +896,7 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
           final String? reposterActivityID,
           required final ActivityData previousActivity,
           final int delayTimerCurrentSelection,
+          final String postingAsProfileID,
           final bool isDelayTimerEnabled,
           final int maximumClipDurationSelection,
           final bool isMaximumClipDurationEnabled,
@@ -933,6 +957,8 @@ abstract class _CreatePostViewModelState implements CreatePostViewModelState {
   ActivityData get previousActivity;
   @override //? Clip delay and clip length options
   int get delayTimerCurrentSelection;
+  @override //? Repost
+  String get postingAsProfileID;
   @override
   bool get isDelayTimerEnabled;
   @override

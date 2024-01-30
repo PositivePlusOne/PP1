@@ -80,6 +80,8 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     required ActivityData previousActivity,
     //? Clip delay and clip length options
     @Default(0) int delayTimerCurrentSelection,
+    //? Repost
+    @Default('') String postingAsProfileID,
     @Default(false) bool isDelayTimerEnabled,
     @Default(0) int maximumClipDurationSelection,
     @Default(false) bool isMaximumClipDurationEnabled,
@@ -127,11 +129,16 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     final AppLocalizations localisations = AppLocalizations.of(context)!;
 
     if (canSwitchProfile) {
-      await requestSwitchProfileDialog(
-        context,
-        title: localisations.generic_organisation_actions_post_as_title,
-        mode: null,
+      state = state.copyWith(
+        postingAsProfileID: await requestSwitchProfileDialog(
+          context,
+          title: localisations.generic_organisation_actions_post_as_title,
+          requestSwitchProfile: false,
+          mode: null,
+        ),
       );
+    } else {
+      state = state.copyWith(postingAsProfileID: "");
     }
     displayCamera(PostType.image);
     return;
@@ -395,7 +402,17 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
+        final bool isAbleToSwitchProfileBack = state.postingAsProfileID.isNotEmpty && profileController.currentProfile != null && profileController.currentProfile!.flMeta != null && profileController.currentProfile!.flMeta!.id != null;
+        String? currentProfileID;
+
+        if (isAbleToSwitchProfileBack) {
+          currentProfileID = profileController.currentProfile!.flMeta!.id!;
+          switchProfile(state.postingAsProfileID);
+        }
         await onPostFinished(profileController.currentProfile);
+        if (currentProfileID != null) {
+          switchProfile(currentProfileID);
+        }
         break;
     }
   }

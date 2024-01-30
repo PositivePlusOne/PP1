@@ -114,7 +114,7 @@ final algoliaProvider = FutureProvider<Algolia>.internal(
 );
 
 typedef AlgoliaRef = FutureProviderRef<Algolia>;
-String _$appsflyerSdkHash() => r'8d21d18db44bfe0951174f389e58fa424e403fd3';
+String _$appsflyerSdkHash() => r'abb387ab741f41115309191b2afa3cb0d74ed325';
 
 /// See also [appsflyerSdk].
 @ProviderFor(appsflyerSdk)
