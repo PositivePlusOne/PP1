@@ -137,6 +137,10 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
           mode: null,
         ),
       );
+      if (state.postingAsProfileID.isEmpty) {
+        router.pop();
+        return;
+      }
     } else {
       state = state.copyWith(postingAsProfileID: "");
     }
