@@ -3,6 +3,7 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:app/main.dart';
+import 'package:app/providers/user/relationship_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:app/constants/key_constants.dart';
 
@@ -173,11 +174,19 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     // Add a delay so that the futures can complete and settle
     await Future<void>.delayed(kAnimationDurationFast);
 
-    // final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
-    // final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
     final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
+
     if (biometricPreferencesAgree) {
       final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
+      if (!hasReauthenticated) {
+        final UserController userController = ref.read(userControllerProvider.notifier);
+        final ProfileController profileController = ref.read(profileControllerProvider.notifier);
+        final RelationshipController relationshipController = ref.read(relationshipControllerProvider.notifier);
+        await userController.signOut();
+        profileController.resetState();
+        relationshipController.resetState();
+        await router.replace(LoginRoute(senderRoute: HomeRoute));
+      }
     }
 
     await router.replace(nextRoute);
