@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:math';
 
 // Package imports:
@@ -217,14 +218,28 @@ FirebasePerformance firebasePerformance(FirebasePerformanceRef ref) {
   return FirebasePerformance.instance;
 }
 
+StreamSubscription<RemoteConfigUpdate>? _remoteConfigUpdateSubscription;
+
 @Riverpod(keepAlive: true)
 Future<FirebaseRemoteConfig> firebaseRemoteConfig(FirebaseRemoteConfigRef ref) async {
   final FirebaseRemoteConfig instance = FirebaseRemoteConfig.instance;
 
-  // Add default values
+  await instance.setConfigSettings(RemoteConfigSettings(
+    fetchTimeout: const Duration(minutes: 1),
+    minimumFetchInterval: const Duration(hours: 1),
+  ));
+
   await instance.setDefaults(<String, dynamic>{
     SystemController.kFirebaseRemoteConfigFeedPromotionFrequencyKey: 4,
     SystemController.kFirebaseRemoteConfigChatPromotionFrequencyKey: 4,
+  });
+
+  await instance.fetchAndActivate();
+
+  // Listen for config updates and activate
+  await _remoteConfigUpdateSubscription?.cancel();
+  _remoteConfigUpdateSubscription = instance.onConfigUpdated.listen((event) async {
+    await instance.activate();
   });
 
   return instance;

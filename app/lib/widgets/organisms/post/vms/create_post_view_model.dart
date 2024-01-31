@@ -3,7 +3,6 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
-import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -38,6 +37,7 @@ import 'package:app/providers/content/gallery_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/user/mixins/profile_switch_mixin.dart';
 import 'package:app/services/clip_ffmpeg_service.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/post/component/positive_discard_clip_dialogue.dart';

@@ -225,18 +225,20 @@ class PromotionsController extends _$PromotionsController implements IPromotions
       return null;
     }
 
-    final CacheController cacheController = ref.read(cacheControllerProvider);
-    final int frequency = promotionType == PromotionType.feed ? state.feedPromotionFrequency : state.chatPromotionFrequency;
+    // Get the gap between adverts based on the feed type
+    final int gapBetweenAdverts = promotionType == PromotionType.feed ? state.feedPromotionFrequency : state.chatPromotionFrequency;
 
-    // Work out the real index from the modulo
-    final int realIndex = index % validPromotionIds.length;
-    final String promotionId = validPromotionIds.elementAt(realIndex);
-
-    // Check the frequency
-    if (index % frequency != 0) {
+    // Get the index of the advert
+    final bool canShowAdvert = index % gapBetweenAdverts == 0;
+    if (!canShowAdvert) {
       return null;
     }
 
+    final int totalAdverts = validPromotionIds.length;
+    final int advertIndex = index ~/ gapBetweenAdverts % totalAdverts;
+    final String promotionId = validPromotionIds.elementAt(advertIndex);
+
+    final CacheController cacheController = ref.read(cacheControllerProvider);
     final Promotion? promotion = cacheController.get(promotionId);
     if (promotion == null) {
       return null;

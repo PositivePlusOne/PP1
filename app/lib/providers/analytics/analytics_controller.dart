@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cron/cron.dart';
 import 'package:event_bus/event_bus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
@@ -21,7 +21,6 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
-import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/handlers/profile_user_property_configuration_handler.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
