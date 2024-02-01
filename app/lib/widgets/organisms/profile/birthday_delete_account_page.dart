@@ -64,9 +64,8 @@ class _BirthdayDeleteAccountPageState extends ConsumerState<BirthdayDeleteAccoun
     return PositiveGenericPage(
       title: localizations.page_profile_delete_account_title,
       body: localizations.page_profile_delete_account_body,
-      style: PositiveGenericPageStyle.decorated,
-      buttonText: localizations.shared_actions_continue_to_positive_plus_one,
-      onContinueSelected: onDeleteAccountSelected,
+      primaryActionText: localizations.shared_actions_continue_to_positive_plus_one,
+      onPrimaryActionSelected: onDeleteAccountSelected,
       isBusy: isDeleting,
       canBack: true,
       currentStepIndex: 2,

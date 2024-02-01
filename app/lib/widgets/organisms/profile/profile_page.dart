@@ -52,9 +52,8 @@ class ProfilePage extends HookConsumerWidget {
     return PositiveGenericPage(
       title: 'You are not allowed to view this page',
       body: 'You are not allowed to view this profile, if you think this is an error, please check out our app guidance.',
-      buttonText: 'Back',
-      style: PositiveGenericPageStyle.decorated,
-      onContinueSelected: () async => providerContainer.read(appRouterProvider).removeLast(),
+      primaryActionText: 'Back',
+      onPrimaryActionSelected: () async => providerContainer.read(appRouterProvider).removeLast(),
     );
   }
 

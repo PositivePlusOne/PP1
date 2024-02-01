@@ -28,10 +28,9 @@ class ProfileWelcomeBackPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: localizations.page_registration_welcome_back,
       body: localizations.page_registration_welcome_back_body,
-      buttonText: localizations.shared_actions_continue,
       isBusy: state.isBusy,
-      style: PositiveGenericPageStyle.decorated,
-      onContinueSelected: () => viewModel.onProfileSetupContinueSelected(nextPage),
+      primaryActionText: localizations.shared_actions_continue,
+      onPrimaryActionSelected: () => viewModel.onProfileSetupContinueSelected(nextPage),
     );
   }
 }

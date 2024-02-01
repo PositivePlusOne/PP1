@@ -34,11 +34,10 @@ class _RegistrationCompletePageState extends ConsumerState<RegistrationCompleteP
     return PositiveGenericPage(
       title: 'Thats it!',
       body: 'That wasn\'t too bad, was it? Now you can get access to the full Positive+1 experience. Feel free to dive in!',
-      buttonText: 'Let\'s Go!',
-      style: PositiveGenericPageStyle.decorated,
       isBusy: isBusy,
       canBack: false,
-      onContinueSelected: () => onContinueSelected(context, ref),
+      primaryActionText: 'Let\'s Go!',
+      onPrimaryActionSelected: () => onContinueSelected(context, ref),
     );
   }
 

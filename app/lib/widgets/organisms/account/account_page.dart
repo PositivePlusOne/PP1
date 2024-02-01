@@ -104,7 +104,7 @@ class AccountPage extends HookConsumerWidget {
             preferredSize: preferedAppBarSize,
             child: Column(
               children: <Widget>[
-                if (hasMultipleProfiles && viewModel.availableProfileCount <= 2)
+                if (hasMultipleProfiles && viewModel.availableProfileCount <= 2) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
                     child: PositiveProfileSegmentedSwitcher(
@@ -113,6 +113,7 @@ class AccountPage extends HookConsumerWidget {
                       onTapped: (int profileIndex) => viewModel.onProfileChange(profileIndex, viewModel),
                     ),
                   ),
+                ],
                 if (viewModel.canSwitchProfile && viewModel.availableProfileCount > 2) ...<Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: kPaddingSmall, horizontal: kPaddingMedium),
