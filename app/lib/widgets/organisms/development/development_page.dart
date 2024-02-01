@@ -61,6 +61,7 @@ class DevelopmentPage extends ConsumerWidget {
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
+    final String currentFCMToken = currentProfile?.fcmToken ?? 'No FCM token found';
     final String currentAPNSToken = notificationsControllerState.apnsToken;
 
     final UserController userController = ref.read(userControllerProvider.notifier);
