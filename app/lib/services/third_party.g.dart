@@ -305,7 +305,7 @@ final firebasePerformanceProvider = Provider<FirebasePerformance>.internal(
 
 typedef FirebasePerformanceRef = ProviderRef<FirebasePerformance>;
 String _$firebaseRemoteConfigHash() =>
-    r'4a9992cebd64786d5f859237121350f8da61dc5a';
+    r'3afc4c3284e5e7c9b8bdd2a643a68a03d2b14beb';
 
 /// See also [firebaseRemoteConfig].
 @ProviderFor(firebaseRemoteConfig)
