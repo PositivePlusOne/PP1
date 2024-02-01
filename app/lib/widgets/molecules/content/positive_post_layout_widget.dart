@@ -479,8 +479,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _promotionBanner({bool isOnCarousel = false}) {
-    final String link = promotion?.link ?? '';
-    final String linkText = promotion?.linkText ?? appLocalizations.post_promoted_link_label;
+    if (promotion == null) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: EdgeInsets.only(
         left: sidePadding,
@@ -488,8 +490,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         bottom: isOnCarousel ? kPaddingLarge : 0,
       ),
       child: PromotionButton(
-        link: link,
-        linkText: linkText,
+        promotion: promotion!,
+        activity: postContent,
         borderRadius: isOnCarousel ? 0 : kBorderRadiusLarge,
         isEnabled: true,
       ),

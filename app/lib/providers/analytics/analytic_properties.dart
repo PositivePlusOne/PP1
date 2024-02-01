@@ -1,6 +1,7 @@
 // Project imports:
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/tags.dart';
+import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';
 
 const String sourceKey = 'source';
@@ -37,6 +38,29 @@ bool propertiesSourcedFromPost(Map<String, Object?> properties) {
 
 bool propertiesSourcedFromSearch(Map<String, Object?> properties) {
   return properties.containsKey(sourceKey) && properties[sourceKey] == AnalyticSource.search.locale;
+}
+
+Map<String, Object?> generatePropertiesForPromotionSource({
+  required Promotion promotion,
+  Activity? activity,
+}) {
+  final String postId = activity?.flMeta?.id ?? '';
+  final String origin = activity?.publisherInformation?.originFeed ?? '';
+  final String postContent = activity?.generalConfiguration?.content ?? '';
+  final bool containsTag = activity?.enrichmentConfiguration?.tags.any((element) => !TagHelpers.isReserved(element)) ?? false;
+  final bool containsMention = PositiveTextFieldState.findMentions(postContent).isNotEmpty;
+
+  return {
+    sourceKey: AnalyticSource.post.locale,
+    postIdKey: postId,
+    postOriginKey: origin,
+    containsMediaKey: activity?.media.isNotEmpty,
+    viewPermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.viewMode),
+    commentPermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.commentMode),
+    sharePermissionsKey: ActivitySecurityConfigurationMode.toJson(activity?.securityConfiguration?.shareMode),
+    containsTagsKey: containsTag,
+    containsMentionsKey: containsMention,
+  };
 }
 
 Map<String, Object?> generatePropertiesForPostSource({
