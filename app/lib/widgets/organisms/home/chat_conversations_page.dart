@@ -20,6 +20,9 @@ import 'package:app/hooks/channel_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/hooks/page_refresh_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -166,7 +169,12 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
 
   Widget? buildSeparator(BuildContext context, int index) {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final Promotion? promotion = promotionsController.getPromotionFromIndex(index, PromotionType.chat);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(
+      index: index,
+      promotionType: PromotionType.chat,
+      // currentLocation: null,
+    );
+
     if (promotion == null) {
       return const SizedBox(height: kPaddingSmall);
     }
@@ -198,7 +206,15 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
   }
 
   Future<void> onPromotionTapped(BuildContext context, Promotion promotion, Activity? activity) async {
+    final AnalyticsController analyticsController = providerContainer.read(analyticsControllerProvider.notifier);
     final logger = providerContainer.read(loggerProvider);
+    logger.d('PromotionButton.onLinkTapped: $promotion');
+
+    await analyticsController.trackEvent(
+      AnalyticEvents.chatPromotionViewed,
+      properties: generatePropertiesForPromotionSource(promotion: promotion, activity: activity),
+    );
+
     final String linkUrl = promotion.link;
     if (linkUrl.isNotEmpty) {
       logger.d('Opening link: $linkUrl');

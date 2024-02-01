@@ -22,6 +22,10 @@ _$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
       totalViewsAllotment: json['totalViewsAllotment'] as int? ?? 0,
       startDate: dateFromUnknown(json['startDate']),
       endDate: dateFromUnknown(json['endDate']),
+      locationRestrictions: json['locationRestrictions'] == null
+          ? const []
+          : PositiveRestrictedPlace.fromJsonList(
+              json['locationRestrictions'] as List),
     );
 
 Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
@@ -38,6 +42,8 @@ Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
       'totalViewsAllotment': instance.totalViewsAllotment,
       'startDate': instance.startDate,
       'endDate': instance.endDate,
+      'locationRestrictions':
+          PositiveRestrictedPlace.toJsonList(instance.locationRestrictions),
     };
 
 _$PromotionOwnerImpl _$$PromotionOwnerImplFromJson(Map<String, dynamic> json) =>

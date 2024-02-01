@@ -240,7 +240,7 @@ export async function buildEndpointResponse(context: functions.https.CallableCon
                 if (promotion.ownerId && promotion.ownerId !== sender) {
                     joinedDataRecords.get(profileSchemaKey)?.add(promotion.ownerId);
 
-                    if (sender && promotion.ownerId !== sender) {
+                    if (sender) {
                         const flid = StringHelpers.generateDocumentNameFromGuids([sender, promotion.ownerId]);
                         joinedDataRecords.get(relationshipSchemaKey)?.add(flid);
                     }

@@ -22,11 +22,10 @@ export namespace PromotionsService {
         });
     }
 
-    export async function getActivePromotionWindow(cursor: string | null, limit: number): Promise<any[]> {
+    export async function getActivePromotionWindow(cursor: string | null): Promise<any[]> {
         return DataService.getDocumentWindowRaw({
             schemaKey: 'promotions',
             startAfter: cursor || undefined,    
-            limit,
             orderBy: [
                 { fieldPath: 'seed', directionStr: 'desc' },
             ],
