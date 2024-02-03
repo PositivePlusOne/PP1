@@ -209,7 +209,7 @@ class DevelopmentPage extends ConsumerWidget {
         ),
       ),
       CupertinoListTile.notched(
-        onTap: () => locationController.attemptToUpdateLocation(),
+        onTap: () => locationController.attemptToUpdateLocation(force: true),
         title: Text(
           'Force location update',
           style: typography.styleButtonRegular.copyWith(color: colors.white),

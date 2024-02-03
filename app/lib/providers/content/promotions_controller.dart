@@ -160,12 +160,12 @@ class PromotionsController extends _$PromotionsController implements IPromotions
 
       // Perform location check if required
       final bool hasEnforcedRestrictions = promotion.locationRestrictions.isNotEmpty;
-      final Map<String, Set<String>> addressComponents = locationControllerState.lastKnownAddressComponents;
+      final Map<String, Set<String>> currentLocationComponents = locationControllerState.lastKnownAddressComponents;
 
-      if (hasEnforcedRestrictions && addressComponents.isNotEmpty) {
+      if (hasEnforcedRestrictions && currentLocationComponents.isNotEmpty) {
         bool hasPassedRestrictions = false;
         for (final PositiveRestrictedPlace restrictedPlace in promotion.locationRestrictions) {
-          final bool passesCheck = await restrictedPlace.performCheck(addressComponents: addressComponents);
+          final bool passesCheck = await restrictedPlace.performCheck(addressComponents: currentLocationComponents);
           if (!hasPassedRestrictions && passesCheck) {
             hasPassedRestrictions = true;
           }

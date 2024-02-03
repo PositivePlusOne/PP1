@@ -18,7 +18,6 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/profiles/profile_controller.dart';

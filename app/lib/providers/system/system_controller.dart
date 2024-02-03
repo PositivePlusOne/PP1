@@ -19,7 +19,7 @@ import 'package:tuple/tuple.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
-import 'package:app/constants/key_constants.dart';
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/extensions/json_extensions.dart';

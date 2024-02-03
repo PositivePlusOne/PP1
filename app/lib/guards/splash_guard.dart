@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import 'package:app/constants/key_constants.dart';
+import 'package:app/constants/application_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../gen/app_router.dart';

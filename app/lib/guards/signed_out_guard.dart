@@ -3,8 +3,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/providers/user/user_controller.dart';
-import '../constants/router_constants.dart';
 import '../main.dart';
 
 class SignedOutGuard extends AutoRouteGuard {
