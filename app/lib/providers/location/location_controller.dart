@@ -15,7 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/system_constants.dart';
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/providers/content/events/location_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
@@ -43,8 +43,8 @@ class LocationControllerState with _$LocationControllerState {
     double? lastKnownLatitude,
     double? lastKnownLongitude,
     @Default({}) Map<String, Set<String>> lastKnownAddressComponents,
-    DateTime? lastGpsUpdate,
-    DateTime? lastGeocodingUpdate,
+    DateTime? lastGpsLookup,
+    DateTime? lastAddressComponentLookup,
   }) = _LocationControllerState;
   factory LocationControllerState.initialState() => const LocationControllerState();
 }
@@ -57,7 +57,7 @@ abstract class ILocationController {
   Future<PermissionStatus> requestLocationPermission();
   Future<void> setupListeners();
   Future<void> teardownListeners();
-  Future<void> attemptToUpdateLocation();
+  Future<void> attemptToUpdateLocation({bool force = false});
   Future<List<PositivePlace>> searchLocation(String query, {bool includeLocationAsRegion = false});
   Future<List<PositivePlace>> searchNearby();
   Future<List<PositivePlace>> extractPredictionsToPlaces(List<Prediction> filteredPredictions);
@@ -167,7 +167,7 @@ class LocationController extends _$LocationController implements ILocationContro
   }
 
   @override
-  Future<void> attemptToUpdateLocation() async {
+  Future<void> attemptToUpdateLocation({bool force = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
 
@@ -183,7 +183,7 @@ class LocationController extends _$LocationController implements ILocationContro
       state = state.copyWith(isUpdatingLocation: true);
 
       await _updateLatitudeAndLongitude();
-      await _updateGeocodingData();
+      await _updateGeocodingData(force: force);
 
       final EventBus eventBus = ref.read(eventBusProvider);
       eventBus.fire(LocationUpdatedEvent(
@@ -196,7 +196,7 @@ class LocationController extends _$LocationController implements ILocationContro
     }
   }
 
-  Future<void> _updateGeocodingData() async {
+  Future<void> _updateGeocodingData({bool force = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final GoogleMapsGeocoding geocoding = ref.read(googleMapsGeocodingProvider);
     if (state.lastKnownLatitude == null || state.lastKnownLongitude == null) {
@@ -205,8 +205,9 @@ class LocationController extends _$LocationController implements ILocationContro
     }
 
     // If we already have geocoding data for this location, don't update it
-    if (state.lastGeocodingUpdate != null) {
-      logger.i('Last geocoding update: ${state.lastGeocodingUpdate}');
+    final bool hasPerformedLookupRecently = state.lastAddressComponentLookup != null && DateTime.now().difference(state.lastAddressComponentLookup!) < kLocationUpdateFrequency;
+    if (!force && hasPerformedLookupRecently) {
+      logger.i('Geocoding data already up to date');
       return;
     }
 
@@ -223,7 +224,7 @@ class LocationController extends _$LocationController implements ILocationContro
       logger.w('No geocoding result found');
       state = state.copyWith(
         lastKnownAddressComponents: {},
-        lastGeocodingUpdate: DateTime.now(),
+        lastAddressComponentLookup: null,
       );
 
       return;
@@ -244,7 +245,7 @@ class LocationController extends _$LocationController implements ILocationContro
     logger.i('Found address components: $addressComponents');
     state = state.copyWith(
       lastKnownAddressComponents: addressComponents,
-      lastGeocodingUpdate: DateTime.now(),
+      lastAddressComponentLookup: addressComponents.isNotEmpty ? DateTime.now() : null,
     );
   }
 
@@ -257,7 +258,7 @@ class LocationController extends _$LocationController implements ILocationContro
     state = state.copyWith(
       lastKnownLatitude: location.lat,
       lastKnownLongitude: location.lng,
-      lastGpsUpdate: DateTime.now(),
+      lastGpsLookup: DateTime.now(),
     );
   }
 

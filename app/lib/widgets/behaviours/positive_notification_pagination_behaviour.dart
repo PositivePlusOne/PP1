@@ -12,8 +12,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
-import 'package:app/constants/pagination_constants.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
 import 'package:app/extensions/json_extensions.dart';

@@ -81,14 +81,14 @@ class PositivePostNavigationBar extends HookConsumerWidget {
       isEnabled: isEnabled,
     );
 
-    final Widget buttonEvent = PositivePostNavigationBarButton(
-      buttonStyle: activeButton == PositivePostNavigationActiveButton.event ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
-      textColour: activeButton == PositivePostNavigationActiveButton.event ? colours.black : colours.white,
-      caption: localizations.page_home_post_event,
-      onTap: activeButton == PositivePostNavigationActiveButton.event ? (_) {} : onTapEvent,
-      width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
-      isEnabled: isEnabled,
-    );
+    // final Widget buttonEvent = PositivePostNavigationBarButton(
+    //   buttonStyle: activeButton == PositivePostNavigationActiveButton.event ? PositivePostNavigationButtonStyle.filled : PositivePostNavigationButtonStyle.disabled,
+    //   textColour: activeButton == PositivePostNavigationActiveButton.event ? colours.black : colours.white,
+    //   caption: localizations.page_home_post_event,
+    //   onTap: activeButton == PositivePostNavigationActiveButton.event ? (_) {} : onTapEvent,
+    //   width: activeButton == PositivePostNavigationActiveButton.flex ? 0.0 : buttonWidth,
+    //   isEnabled: isEnabled,
+    // );
 
     final Widget animatedPadding = AnimatedSize(
       duration: kAnimationDurationRegular,

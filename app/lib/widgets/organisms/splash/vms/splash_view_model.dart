@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
@@ -28,7 +29,6 @@ import 'package:app/providers/user/user_controller.dart';
 import 'package:app/widgets/molecules/dialogs/positive_dialog.dart';
 import 'package:app/widgets/organisms/splash/dialogs/analytics_collection_dialog.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
-import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
 
 part 'splash_view_model.freezed.dart';

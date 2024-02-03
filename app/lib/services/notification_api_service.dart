@@ -2,7 +2,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/pagination_constants.dart';
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/pagination/pagination.dart';
 import '../dtos/database/common/endpoint_response.dart';
 import 'api.dart';
