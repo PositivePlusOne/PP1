@@ -32,6 +32,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// ignore: depend_on_referenced_packages, implementation_imports
 import 'package:stream_chat/src/client/retry_policy.dart';
 import 'package:stream_chat/stream_chat.dart' hide Logger, Level;
 import 'package:universal_platform/universal_platform.dart';
@@ -256,7 +257,7 @@ StreamChatClient streamChatClient(StreamChatClientRef ref) {
     maxRetryAttempts: 3,
     delayFactor: const Duration(seconds: 1),
     maxDelay: const Duration(seconds: 5),
-    shouldRetry: (client, count, error) {
+    shouldRetry: (client, _, error) {
       return false;
     },
   );
@@ -325,7 +326,7 @@ FutureOr<PermissionStatus> requestedNotificationPermissions(RequestedNotificatio
   return Permission.notification.request();
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 FutureOr<PermissionStatus> notificationPermissions(NotificationPermissionsRef ref) async {
   return await Permission.notification.status;
 }
@@ -335,27 +336,27 @@ FutureOr<PermissionStatus> requestedLocationPermissions(RequestedLocationPermiss
   return Permission.location.request();
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 FutureOr<PermissionStatus> locationPermissions(LocationPermissionsRef ref) async {
   return await Permission.location.status;
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 FutureOr<PermissionStatus> appTrackingTransparencyPermissions(AppTrackingTransparencyPermissionsRef ref) async {
   return Permission.appTrackingTransparency.request();
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 FutureOr<PackageInfo> packageInfo(PackageInfoRef ref) async {
   return await PackageInfo.fromPlatform();
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 FutureOr<PermissionStatus> cameraPermissions(CameraPermissionsRef ref) async {
   return Permission.camera.request();
 }
 
-@Riverpod(keepAlive: true)
+@Riverpod()
 FutureOr<PermissionStatus> microphonePermissions(MicrophonePermissionsRef ref) async {
   return Permission.microphone.request();
 }
