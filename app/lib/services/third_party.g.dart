@@ -400,12 +400,12 @@ final deviceInfoProvider = FutureProvider<BaseDeviceInfo>.internal(
 
 typedef DeviceInfoRef = FutureProviderRef<BaseDeviceInfo>;
 String _$requestedNotificationPermissionsHash() =>
-    r'ce83f02c15d855b8d0a87d679a66037e0d67ad19';
+    r'90e70307d1277913478ecf783f6e1e5850a10f8f';
 
 /// See also [requestedNotificationPermissions].
 @ProviderFor(requestedNotificationPermissions)
 final requestedNotificationPermissionsProvider =
-    FutureProvider<PermissionStatus>.internal(
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   requestedNotificationPermissions,
   name: r'requestedNotificationPermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -416,7 +416,7 @@ final requestedNotificationPermissionsProvider =
 );
 
 typedef RequestedNotificationPermissionsRef
-    = FutureProviderRef<PermissionStatus>;
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$notificationPermissionsHash() =>
     r'7f635b3da78ea151fb2d713fade41c3a2ff497af';
 
@@ -435,12 +435,12 @@ final notificationPermissionsProvider =
 
 typedef NotificationPermissionsRef = FutureProviderRef<PermissionStatus>;
 String _$requestedLocationPermissionsHash() =>
-    r'93f60158df7e9773a9f1452c3309f9f2bdcc2174';
+    r'74888f26e86c6e7fbbcfdb85ad7c5f94f9da1803';
 
 /// See also [requestedLocationPermissions].
 @ProviderFor(requestedLocationPermissions)
 final requestedLocationPermissionsProvider =
-    FutureProvider<PermissionStatus>.internal(
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   requestedLocationPermissions,
   name: r'requestedLocationPermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -450,7 +450,8 @@ final requestedLocationPermissionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef RequestedLocationPermissionsRef = FutureProviderRef<PermissionStatus>;
+typedef RequestedLocationPermissionsRef
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$locationPermissionsHash() =>
     r'3641365192bd3d22edbc91001bb2a710ded043b3';
 
