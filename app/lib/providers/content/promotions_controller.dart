@@ -2,10 +2,12 @@
 import 'dart:async';
 
 // Package imports:
+import 'package:app/extensions/permission_extensions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
@@ -170,39 +172,47 @@ class PromotionsController extends _$PromotionsController implements IPromotions
       final bool hasEnforcedRestrictions = promotion.locationRestrictions.isNotEmpty;
       final Map<String, Set<String>> currentLocationComponents = locationControllerState.lastKnownAddressComponents;
 
-      if (hasEnforcedRestrictions && currentLocationComponents.isNotEmpty) {
-        bool hasPassedRestrictions = false;
+      final PermissionStatus locationPermissionStatus = await ref.read(locationPermissionsProvider.future);
+      final bool canPerformLocationCheck = locationPermissionStatus.canUsePermission;
+
+      bool hasPassedRestrictions = false;
+      if (hasEnforcedRestrictions) {
         for (final PositiveRestrictedPlace restrictedPlace in promotion.locationRestrictions) {
-          final bool passesCheck = await restrictedPlace.performCheck(addressComponents: currentLocationComponents);
+          if (!canPerformLocationCheck || currentLocationComponents.isEmpty) {
+            break;
+          }
+
+          final bool passesCheck = canPerformLocationCheck && await restrictedPlace.performCheck(addressComponents: currentLocationComponents);
           if (!hasPassedRestrictions && passesCheck) {
             hasPassedRestrictions = true;
           }
-        }
 
-        if (currentProfileId.isNotEmpty && ownerId.isNotEmpty) {
-          final String expectedRelationshipId = [currentProfileId, ownerId].asGUID;
-          final Relationship? relationship = cacheController.get(expectedRelationshipId);
-          final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
-
-          // Check if the relationship is blocked
-          if (relationshipStates.contains(RelationshipState.targetBlocked)) {
-            hasPassedRestrictions = false;
+          if (hasPassedRestrictions) {
+            break;
           }
         }
+      } else {
+        hasPassedRestrictions = true;
+      }
 
-        // Continue if we failed the check
-        if (!hasPassedRestrictions) {
-          continue;
+      if (currentProfileId.isNotEmpty && ownerId.isNotEmpty) {
+        final String expectedRelationshipId = [currentProfileId, ownerId].asGUID;
+        final Relationship? relationship = cacheController.get(expectedRelationshipId);
+        final Set<RelationshipState> relationshipStates = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
+
+        // Check if the relationship is blocked
+        if (relationshipStates.contains(RelationshipState.targetBlocked)) {
+          hasPassedRestrictions = false;
         }
       }
 
-      final bool isPostEnabling = promotion.postPromotionEnabled;
-      if (isValidFeedPromotion && isPostEnabling) {
+      final bool isPostPromotionEnabled = promotion.postPromotionEnabled;
+      if (isValidFeedPromotion && hasPassedRestrictions && isPostPromotionEnabled) {
         validFeedPromotionIds.add(promotion.flMeta!.id!);
       }
 
-      final bool isChatEnabling = promotion.chatPromotionEnabled;
-      if (isValidChatPromotion && isChatEnabling) {
+      final bool isChatPromotionEnabled = promotion.chatPromotionEnabled;
+      if (isValidChatPromotion && hasPassedRestrictions && isChatPromotionEnabled) {
         validChatPromotionIds.add(promotion.flMeta!.id!);
       }
     }
