@@ -188,11 +188,13 @@ class PromotionsController extends _$PromotionsController implements IPromotions
         }
       }
 
-      if (isValidFeedPromotion) {
+      final bool isPostEnabling = promotion.postPromotionEnabled;
+      if (isValidFeedPromotion && isPostEnabling) {
         validFeedPromotionIds.add(promotion.flMeta!.id!);
       }
 
-      if (isValidChatPromotion) {
+      final bool isChatEnabling = promotion.chatPromotionEnabled;
+      if (isValidChatPromotion && isChatEnabling) {
         validChatPromotionIds.add(promotion.flMeta!.id!);
       }
     }

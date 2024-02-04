@@ -44,7 +44,7 @@ class PromotionButton extends StatelessWidget {
 
     if (link.isNotEmpty) {
       await analyticsController.trackEvent(
-        AnalyticEvents.postPromotionViewed,
+        AnalyticEvents.postPromotionClicked,
         properties: generatePropertiesForPromotionSource(promotion: promotion, activity: activity),
       );
 

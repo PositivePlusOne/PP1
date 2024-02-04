@@ -186,7 +186,10 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
-          return element.canDisplayOnFeed(currentProfile, relationship);
+          return element.canDisplayOnFeed(
+            currentProfile: currentProfile,
+            relationshipWithActivityPublisher: relationship,
+          );
         }) ??
         false;
 
@@ -284,7 +287,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       relationship: relationship,
     );
 
-    final bool hasContent = doesItemHaveContent(feed: feed, item: activity ?? const Activity());
+    final bool hasContent = doesItemHaveContent(feed: feed, item: activity ?? const Activity(), removeContentWhenValidPromotion: false);
     if (!hasContent) {
       return const SizedBox.shrink();
     }
@@ -337,7 +340,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String promotedActivityRelationshipId = [promotedActivityPublisherId, currentProfileId].asGUID;
     final Relationship? promotedActivityRelationship = cacheController.get(promotedActivityRelationshipId);
 
-    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile, promotedActivityRelationship);
+    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(
+      currentProfile: currentProfile,
+      relationshipWithActivityPublisher: promotedActivityRelationship,
+    );
+
     if (!canDisplayPromotedActivity) {
       return null;
     }
@@ -361,7 +368,17 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required TargetFeed? feed,
     required Activity item,
     Relationship? relationship,
+    bool removeContentWhenValidPromotion = true,
   }) {
+    if (removeContentWhenValidPromotion) {
+      final String activityId = item.flMeta?.id ?? '';
+      final PromotionsControllerState promotionsControllerState = providerContainer.read(promotionsControllerProvider);
+      final bool isValidPromotion = activityId.isNotEmpty && promotionsControllerState.validFeedPromotionIds.contains(activityId);
+      if (isValidPromotion) {
+        return false;
+      }
+    }
+
     final String activityId = item.flMeta?.id ?? '';
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     if (activityId.isEmpty || publisherId.isEmpty) {
@@ -416,7 +433,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String publisherId = item.publisherInformation?.publisherId ?? '';
     final String reposterId = item.repostConfiguration?.targetActivityPublisherId ?? '';
 
-    if (!doesItemHaveContent(feed: feed, item: item)) {
+    if (!doesItemHaveContent(feed: feed, item: item, removeContentWhenValidPromotion: true)) {
       return const SizedBox.shrink();
     }
 
@@ -464,7 +481,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
     final Activity? repostedActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId ?? '');
 
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
+    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
