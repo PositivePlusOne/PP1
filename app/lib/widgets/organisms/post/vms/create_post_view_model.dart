@@ -124,6 +124,17 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
   }
 
   Future<void> onFirstOpen() async {
+    final bool selectedAccount = await trySwitchProfile();
+
+    if (!selectedAccount) {
+      return;
+    }
+
+    displayCamera(PostType.image);
+    return;
+  }
+
+  Future<bool> trySwitchProfile() async {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
@@ -139,13 +150,12 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       );
       if (state.postingAsProfileID.isEmpty) {
         router.pop();
-        return;
+        return false;
       }
     } else {
       state = state.copyWith(postingAsProfileID: "");
     }
-    displayCamera(PostType.image);
-    return;
+    return true;
   }
 
   Future<bool> goBack({
@@ -442,6 +452,12 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final logger = ref.read(loggerProvider);
+
+    final bool selectedAccount = await trySwitchProfile();
+
+    if (!selectedAccount) {
+      return;
+    }
 
     state = state.copyWith(isBusy: true);
 
