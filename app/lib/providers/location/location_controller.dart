@@ -188,6 +188,14 @@ class LocationController extends _$LocationController implements ILocationContro
       logger.i('Updating location');
       state = state.copyWith(isUpdatingLocation: true);
 
+      if (force) {
+        state = state.copyWith(
+          lastGpsLookup: null,
+          lastAddressComponentLookup: null,
+          lastKnownAddressComponents: {},
+        );
+      }
+
       await _updateLatitudeAndLongitude();
       await _updateGeocodingData(force: force);
 
@@ -212,7 +220,8 @@ class LocationController extends _$LocationController implements ILocationContro
 
     // If we already have geocoding data for this location, don't update it
     final bool hasPerformedLookupRecently = state.lastAddressComponentLookup != null && DateTime.now().difference(state.lastAddressComponentLookup!) < kLocationUpdateFrequency;
-    if (!force && hasPerformedLookupRecently) {
+    final bool hasAddressComponents = state.lastKnownAddressComponents.isNotEmpty;
+    if (!force && hasPerformedLookupRecently && hasAddressComponents) {
       logger.i('Geocoding data already up to date');
       return;
     }

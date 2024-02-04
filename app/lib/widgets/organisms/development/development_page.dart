@@ -227,9 +227,7 @@ class DevelopmentPage extends ConsumerWidget {
             style: typography.styleButtonRegular.copyWith(color: colors.white),
           ),
           subtitle: SelectableText(
-            locationState.lastKnownAddressComponents.entries.map((MapEntry<String, Set<String>> entry) {
-              return '${entry.key}: ${entry.value.join(', ')}';
-            }).join('\n'),
+            locationState.lastKnownAddressComponents.toString(),
             style: typography.styleSubtext.copyWith(color: colors.white),
           ),
         ),
