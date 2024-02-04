@@ -1946,10 +1946,10 @@ packages:
     dependency: "direct main"
     description:
       name: open_settings_plus
-      sha256: "42f8a22a6ab4028284845545392041c9bd5d5100e3ef25fb70ced288ae8637f9"
+      sha256: "2283f214b88a168320ff6c230e95b1400cae49d5118883f2c2a950cc8b6c27e1"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.1.0"
   package_config:
     dependency: transitive
     description:

@@ -102,7 +102,7 @@ dependencies:
   # Other
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
-  open_settings_plus: ^0.2.0
+  open_settings_plus: 0.1.0
   package_info_plus: ^5.0.1
   profanity_filter: ^2.0.0
   very_good_infinite_list: ^0.7.0
