@@ -169,10 +169,16 @@ class LocationController extends _$LocationController implements ILocationContro
   @override
   Future<void> attemptToUpdateLocation({bool force = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    final PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
+    PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
 
     logger.i('Attempting to update location data');
-    final bool isGranted = locationPermission == PermissionStatus.granted;
+    bool isGranted = locationPermission == PermissionStatus.granted;
+
+    if (force) {
+      locationPermission = await ref.read(requestedLocationPermissionsProvider.future);
+      isGranted = locationPermission == PermissionStatus.granted;
+    }
+
     if (!isGranted) {
       logger.w('Location permission not granted, cannot update location');
       return;
