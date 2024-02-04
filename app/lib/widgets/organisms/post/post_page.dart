@@ -96,6 +96,9 @@ class PostPage extends HookConsumerWidget {
     final Relationship? reposterRelationship = cacheController.get(expectedReposterRelationshipKey);
     final Activity? reposterActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId);
 
+    final String expectedReposterPromotionKey = reposterActivity?.enrichmentConfiguration?.promotionKey ?? '';
+    final Promotion? reposterPromotion = cacheController.get(expectedReposterPromotionKey);
+
     final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
 
     final String expectedReactionActivityStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
@@ -225,6 +228,7 @@ class PostPage extends HookConsumerWidget {
               reposterProfile: reposterProfile,
               reposterRelationship: reposterRelationship,
               reposterActivity: reposterActivity,
+              reposterPromotion: reposterPromotion,
               activityReactionStatistics: reactionActivityStatistics,
               activityProfileReactions: uniqueActivityReactions,
               reposterActivityProfileReactions: uniqueRepostActivityReactions,

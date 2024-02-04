@@ -43,6 +43,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
     required this.reposterRelationship,
     required this.reposterActivity,
     required this.reposterReactionStatistics,
+    required this.reposterPromotion,
     this.index = -1,
     this.isEnabled = true,
     this.isFullscreen = false,
@@ -65,6 +66,7 @@ class PositiveActivityWidget extends StatefulHookConsumerWidget {
 
   final Profile? reposterProfile;
   final Relationship? reposterRelationship;
+  final Promotion? reposterPromotion;
 
   final Activity? reposterActivity;
   final ReactionStatistics? reposterReactionStatistics;
@@ -251,7 +253,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               targetRelationship: widget.reposterRelationship,
               activity: widget.reposterActivity,
               activityReactionStatistics: widget.reposterReactionStatistics,
-              activityPromotion: null,
+              activityPromotion: widget.reposterPromotion,
               activityProfileReactions: widget.reposterActivityProfileReactions,
               isEnabled: widget.isEnabled,
               isFullscreen: widget.isFullscreen,
@@ -259,6 +261,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               reposterRelationship: null,
               reposterActivity: null,
               reposterReactionStatistics: null,
+              reposterPromotion: null,
               reposterActivityProfileReactions: const [],
               isShared: true,
             ),

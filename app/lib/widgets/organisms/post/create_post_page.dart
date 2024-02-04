@@ -465,6 +465,7 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
             reposterRelationship: null,
             reposterActivity: null,
             reposterReactionStatistics: null,
+            reposterPromotion: null,
             reposterActivityProfileReactions: const [],
             isShared: true,
           ),

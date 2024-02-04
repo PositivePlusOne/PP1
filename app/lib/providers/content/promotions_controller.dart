@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:convert';
 
 // Package imports:
 import 'package:event_bus/event_bus.dart';
@@ -10,12 +9,9 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/geo/positive_restricted_place.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
-import 'package:app/extensions/future_extensions.dart';
-import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/place_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
@@ -25,7 +21,6 @@ import 'package:app/providers/profiles/events/profile_switched_event.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/services/enrichment_api_service.dart';
 import 'package:app/services/third_party.dart';
 
 part 'promotions_controller.freezed.dart';
@@ -38,6 +33,7 @@ class PromotionsControllerState with _$PromotionsControllerState {
     @Default({}) Set<String> validFeedPromotionIds,
     @Default({}) Set<String> validChatPromotionIds,
     @Default({}) Map<String, Set<String>> validOwnedPromotionIds,
+    @Default({}) Map<String, Set<String>> knownActivityPromotionIds,
     @Default(4) int feedPromotionFrequency,
     @Default(4) int chatPromotionFrequency,
     @Default('') String cursor,
@@ -58,6 +54,7 @@ abstract class IPromotionsController {
   Future<void> setupListeners(); // Listeners for LocationController events
   Future<void> appendPromotions({Iterable<Promotion> promotions});
   Future<void> refreshValidPromotions();
+  Promotion? getPromotionFromActivityId({required String activityId, required PromotionType promotionType});
 }
 
 @Riverpod(keepAlive: true)
@@ -116,9 +113,20 @@ class PromotionsController extends _$PromotionsController implements IPromotions
   }) async {
     final Set<String> newPromotionIds = promotions.map((Promotion promotion) => promotion.flMeta?.id ?? '').where((element) => element.isNotEmpty).toSet();
     final Set<String> allPromotionIds = {...state.allPromotionIds, ...newPromotionIds};
+    final Set<String> allActivityIds = promotions.map((Promotion promotion) => promotion.activityId).where((element) => element.isNotEmpty).toSet();
+    final Map<String, Set<String>> knownActivityPromotionIds = {
+      ...state.knownActivityPromotionIds,
+    };
+
+    for (final String activityId in allActivityIds) {
+      final Set<String> promotionIds = promotions.where((Promotion promotion) => promotion.activityId == activityId).map((Promotion promotion) => promotion.flMeta?.id ?? '').toSet();
+      final Set<String> existingPromotionIds = knownActivityPromotionIds[activityId] ?? {};
+      knownActivityPromotionIds[activityId] = {...existingPromotionIds, ...promotionIds};
+    }
 
     state = state.copyWith(
       allPromotionIds: allPromotionIds,
+      knownActivityPromotionIds: knownActivityPromotionIds,
       validOwnedPromotionIds: {},
       validFeedPromotionIds: {},
       validChatPromotionIds: {},
@@ -249,32 +257,24 @@ class PromotionsController extends _$PromotionsController implements IPromotions
     return promotion;
   }
 
-  Future<void> loadNextPromotionWindow() => runWithMutex(() async {
-        final Logger logger = ref.read(loggerProvider);
-        const int limit = 30;
+  @override
+  Promotion? getPromotionFromActivityId({
+    required String activityId,
+    required PromotionType promotionType,
+  }) {
+    final Set<String> validPromotionIds = promotionType == PromotionType.feed ? state.validFeedPromotionIds : state.validChatPromotionIds;
+    if (validPromotionIds.isEmpty) {
+      return null;
+    }
 
-        logger.i('Attempting to load next promotion window');
+    final CacheController cacheController = ref.read(cacheControllerProvider);
+    for (final String promotionId in validPromotionIds) {
+      final Promotion? promotion = cacheController.get(promotionId);
+      if (promotion?.activityId == activityId) {
+        return promotion;
+      }
+    }
 
-        if (state.isExhausted) {
-          logger.w('Promotions are exhausted');
-          return;
-        }
-
-        final EnrichmentApiService enrichmentApiService = await ref.read(enrichmentApiServiceProvider.future);
-        final EndpointResponse response = await enrichmentApiService.getPromotionWindow(
-          cursor: state.cursor,
-          limit: limit,
-        );
-
-        final Iterable<Promotion> promotions = (response.data['promotions'] as List).map((dynamic promotion) => Promotion.fromJson(json.decodeSafe(promotion))).cast<Promotion>();
-        final String cursor = response.cursor ?? '';
-
-        await appendPromotions(promotions: promotions);
-        state = state.copyWith(
-          cursor: cursor,
-          isExhausted: promotions.length < limit || cursor.isEmpty,
-        );
-
-        logger.i('Loaded ${promotions.length} promotions');
-      });
+    return null;
+  }
 }
