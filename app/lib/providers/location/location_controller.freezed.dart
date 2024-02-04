@@ -160,6 +160,7 @@ mixin _$LocationControllerState {
       throw _privateConstructorUsedError;
   Duration? get locationUpdateInterval => throw _privateConstructorUsedError;
   dynamic get isUpdatingLocation => throw _privateConstructorUsedError;
+  bool get isManualLocation => throw _privateConstructorUsedError;
   double? get lastKnownLatitude => throw _privateConstructorUsedError;
   double? get lastKnownLongitude => throw _privateConstructorUsedError;
   Map<String, Set<String>> get lastKnownAddressComponents =>
@@ -184,6 +185,7 @@ abstract class $LocationControllerStateCopyWith<$Res> {
       StreamSubscription<Position>? locationSubscription,
       Duration? locationUpdateInterval,
       dynamic isUpdatingLocation,
+      bool isManualLocation,
       double? lastKnownLatitude,
       double? lastKnownLongitude,
       Map<String, Set<String>> lastKnownAddressComponents,
@@ -209,6 +211,7 @@ class _$LocationControllerStateCopyWithImpl<$Res,
     Object? locationSubscription = freezed,
     Object? locationUpdateInterval = freezed,
     Object? isUpdatingLocation = freezed,
+    Object? isManualLocation = null,
     Object? lastKnownLatitude = freezed,
     Object? lastKnownLongitude = freezed,
     Object? lastKnownAddressComponents = null,
@@ -232,6 +235,10 @@ class _$LocationControllerStateCopyWithImpl<$Res,
           ? _value.isUpdatingLocation
           : isUpdatingLocation // ignore: cast_nullable_to_non_nullable
               as dynamic,
+      isManualLocation: null == isManualLocation
+          ? _value.isManualLocation
+          : isManualLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
       lastKnownLatitude: freezed == lastKnownLatitude
           ? _value.lastKnownLatitude
           : lastKnownLatitude // ignore: cast_nullable_to_non_nullable
@@ -270,6 +277,7 @@ abstract class _$$LocationControllerStateImplCopyWith<$Res>
       StreamSubscription<Position>? locationSubscription,
       Duration? locationUpdateInterval,
       dynamic isUpdatingLocation,
+      bool isManualLocation,
       double? lastKnownLatitude,
       double? lastKnownLongitude,
       Map<String, Set<String>> lastKnownAddressComponents,
@@ -294,6 +302,7 @@ class __$$LocationControllerStateImplCopyWithImpl<$Res>
     Object? locationSubscription = freezed,
     Object? locationUpdateInterval = freezed,
     Object? isUpdatingLocation = freezed,
+    Object? isManualLocation = null,
     Object? lastKnownLatitude = freezed,
     Object? lastKnownLongitude = freezed,
     Object? lastKnownAddressComponents = null,
@@ -316,6 +325,10 @@ class __$$LocationControllerStateImplCopyWithImpl<$Res>
       isUpdatingLocation: freezed == isUpdatingLocation
           ? _value.isUpdatingLocation!
           : isUpdatingLocation,
+      isManualLocation: null == isManualLocation
+          ? _value.isManualLocation
+          : isManualLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
       lastKnownLatitude: freezed == lastKnownLatitude
           ? _value.lastKnownLatitude
           : lastKnownLatitude // ignore: cast_nullable_to_non_nullable
@@ -348,6 +361,7 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
       this.locationSubscription,
       this.locationUpdateInterval,
       this.isUpdatingLocation = false,
+      this.isManualLocation = false,
       this.lastKnownLatitude,
       this.lastKnownLongitude,
       final Map<String, Set<String>> lastKnownAddressComponents = const {},
@@ -364,6 +378,9 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
   @override
   @JsonKey()
   final dynamic isUpdatingLocation;
+  @override
+  @JsonKey()
+  final bool isManualLocation;
   @override
   final double? lastKnownLatitude;
   @override
@@ -385,7 +402,7 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
 
   @override
   String toString() {
-    return 'LocationControllerState(locationPermission: $locationPermission, locationSubscription: $locationSubscription, locationUpdateInterval: $locationUpdateInterval, isUpdatingLocation: $isUpdatingLocation, lastKnownLatitude: $lastKnownLatitude, lastKnownLongitude: $lastKnownLongitude, lastKnownAddressComponents: $lastKnownAddressComponents, lastGpsLookup: $lastGpsLookup, lastAddressComponentLookup: $lastAddressComponentLookup)';
+    return 'LocationControllerState(locationPermission: $locationPermission, locationSubscription: $locationSubscription, locationUpdateInterval: $locationUpdateInterval, isUpdatingLocation: $isUpdatingLocation, isManualLocation: $isManualLocation, lastKnownLatitude: $lastKnownLatitude, lastKnownLongitude: $lastKnownLongitude, lastKnownAddressComponents: $lastKnownAddressComponents, lastGpsLookup: $lastGpsLookup, lastAddressComponentLookup: $lastAddressComponentLookup)';
   }
 
   @override
@@ -401,6 +418,8 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
                 other.locationUpdateInterval == locationUpdateInterval) &&
             const DeepCollectionEquality()
                 .equals(other.isUpdatingLocation, isUpdatingLocation) &&
+            (identical(other.isManualLocation, isManualLocation) ||
+                other.isManualLocation == isManualLocation) &&
             (identical(other.lastKnownLatitude, lastKnownLatitude) ||
                 other.lastKnownLatitude == lastKnownLatitude) &&
             (identical(other.lastKnownLongitude, lastKnownLongitude) ||
@@ -423,6 +442,7 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
       locationSubscription,
       locationUpdateInterval,
       const DeepCollectionEquality().hash(isUpdatingLocation),
+      isManualLocation,
       lastKnownLatitude,
       lastKnownLongitude,
       const DeepCollectionEquality().hash(_lastKnownAddressComponents),
@@ -443,6 +463,7 @@ abstract class _LocationControllerState implements LocationControllerState {
           final StreamSubscription<Position>? locationSubscription,
           final Duration? locationUpdateInterval,
           final dynamic isUpdatingLocation,
+          final bool isManualLocation,
           final double? lastKnownLatitude,
           final double? lastKnownLongitude,
           final Map<String, Set<String>> lastKnownAddressComponents,
@@ -458,6 +479,8 @@ abstract class _LocationControllerState implements LocationControllerState {
   Duration? get locationUpdateInterval;
   @override
   dynamic get isUpdatingLocation;
+  @override
+  bool get isManualLocation;
   @override
   double? get lastKnownLatitude;
   @override

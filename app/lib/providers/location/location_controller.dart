@@ -40,6 +40,7 @@ class LocationControllerState with _$LocationControllerState {
     StreamSubscription<Position>? locationSubscription,
     Duration? locationUpdateInterval,
     @Default(false) isUpdatingLocation,
+    @Default(false) bool isManualLocation,
     double? lastKnownLatitude,
     double? lastKnownLongitude,
     @Default({}) Map<String, Set<String>> lastKnownAddressComponents,
@@ -170,9 +171,13 @@ class LocationController extends _$LocationController implements ILocationContro
   @override
   Future<void> attemptToUpdateLocation({bool force = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
+    if (state.isManualLocation) {
+      logger.w('Manual location set, cannot update location');
+      return;
+    }
 
     logger.i('Attempting to update location data');
+    PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
     bool isGranted = locationPermission == PermissionStatus.granted;
 
     if (force) {
@@ -282,6 +287,7 @@ class LocationController extends _$LocationController implements ILocationContro
       lastKnownLatitude: latitude,
       lastKnownLongitude: longitude,
       lastGpsLookup: DateTime.now(),
+      isManualLocation: true,
     );
 
     _updateGeocodingData(force: true);
