@@ -58,6 +58,7 @@ abstract class ILocationController {
   Future<void> setupListeners();
   Future<void> teardownListeners();
   Future<void> attemptToUpdateLocation({bool force = false});
+  void setManualGPSLocation(double latitude, double longitude);
   Future<List<PositivePlace>> searchLocation(String query, {bool includeLocationAsRegion = false});
   Future<List<PositivePlace>> searchNearby();
   Future<List<PositivePlace>> extractPredictionsToPlaces(List<Prediction> filteredPredictions);
@@ -198,13 +199,6 @@ class LocationController extends _$LocationController implements ILocationContro
 
       await _updateLatitudeAndLongitude();
       await _updateGeocodingData(force: force);
-
-      final EventBus eventBus = ref.read(eventBusProvider);
-      eventBus.fire(LocationUpdatedEvent(
-        latitude: state.lastKnownLatitude,
-        longitude: state.lastKnownLongitude,
-        addressComponents: state.lastKnownAddressComponents,
-      ));
     } finally {
       state = state.copyWith(isUpdatingLocation: false);
     }
@@ -262,6 +256,8 @@ class LocationController extends _$LocationController implements ILocationContro
       lastKnownAddressComponents: addressComponents,
       lastAddressComponentLookup: addressComponents.isNotEmpty ? DateTime.now() : null,
     );
+
+    notifyLocationChanged();
   }
 
   Future<void> _updateLatitudeAndLongitude() async {
@@ -275,6 +271,33 @@ class LocationController extends _$LocationController implements ILocationContro
       lastKnownLongitude: location.lng,
       lastGpsLookup: DateTime.now(),
     );
+  }
+
+  @override
+  void setManualGPSLocation(double latitude, double longitude) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Setting manual GPS location: $latitude, $longitude');
+
+    state = state.copyWith(
+      lastKnownLatitude: latitude,
+      lastKnownLongitude: longitude,
+      lastGpsLookup: DateTime.now(),
+    );
+
+    _updateGeocodingData(force: true);
+    notifyLocationChanged();
+  }
+
+  void notifyLocationChanged() {
+    final EventBus eventBus = ref.read(eventBusProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Notifying location changed event bus subscribers');
+
+    eventBus.fire(LocationUpdatedEvent(
+      latitude: state.lastKnownLatitude,
+      longitude: state.lastKnownLongitude,
+      addressComponents: state.lastKnownAddressComponents,
+    ));
   }
 
   @override

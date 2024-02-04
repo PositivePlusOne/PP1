@@ -37,10 +37,8 @@ export interface PromotionJSON {
     activityId?: string;
     isActive?: boolean;
     seed?: number;
-    totalViewsSinceLastUpdate?: number;
-    totalViewsAllotment?: number;
-    startDate?: Timestamp;
-    endDate?: Timestamp;
+    chatPromotionEnabled?: boolean;
+    postPromotionEnabled?: boolean;
     locationRestrictions?: EnforcedPlaceJSON[];
 }
 
@@ -54,10 +52,8 @@ export class Promotion {
     activityId?: string;
     isActive?: boolean;
     seed?: number;
-    totalViewsSinceLastUpdate?: number;
-    totalViewsAllotment?: number;
-    startDate?: Timestamp;
-    endDate?: Timestamp;
+    chatPromotionEnabled?: boolean;
+    postPromotionEnabled?: boolean;
     locationRestrictions?: EnforcedPlace[];
 
     constructor(json: PromotionJSON) {
@@ -70,10 +66,8 @@ export class Promotion {
         this.activityId = json.activityId;
         this.isActive = json.isActive;
         this.seed = json.seed;
-        this.totalViewsSinceLastUpdate = json.totalViewsSinceLastUpdate;
-        this.totalViewsAllotment = json.totalViewsAllotment;
-        this.startDate = json.startDate;
-        this.endDate = json.endDate;
+        this.chatPromotionEnabled = json.chatPromotionEnabled;
+        this.postPromotionEnabled = json.postPromotionEnabled;
         this.locationRestrictions = json.locationRestrictions && json.locationRestrictions.map((l) => new EnforcedPlace(l));
     }
 }

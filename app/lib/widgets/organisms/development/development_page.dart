@@ -125,6 +125,17 @@ class DevelopmentPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                CupertinoListTile.notched(
+                  onTap: developmentViewModel.requestManualLocation,
+                  title: Text(
+                    'Manually set GPS location',
+                    style: typography.styleButtonRegular.copyWith(color: colors.white),
+                  ),
+                  subtitle: Text(
+                    'Manually set your lat/long to test location based features.',
+                    style: typography.styleSubtext.copyWith(color: colors.white),
+                  ),
+                ),
                 PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               ],
               ...buildGeneralSection(
