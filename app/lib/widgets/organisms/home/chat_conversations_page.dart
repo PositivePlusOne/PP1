@@ -211,7 +211,7 @@ class ChatConversationsPage extends HookConsumerWidget with StreamChatWrapper {
     logger.d('PromotionButton.onLinkTapped: $promotion');
 
     await analyticsController.trackEvent(
-      AnalyticEvents.chatPromotionViewed,
+      AnalyticEvents.chatPromotionClicked,
       properties: generatePropertiesForPromotionSource(promotion: promotion, activity: activity),
     );
 

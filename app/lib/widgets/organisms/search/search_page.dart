@@ -153,7 +153,7 @@ class SearchPage extends ConsumerWidget {
             if (currentProfileId.isNotEmpty) {
               final String expectedRelationshipId = [currentProfileId, activity.publisherInformation?.publisherId ?? ''].asGUID;
               final Relationship? relationshipWithActivityPublisher = cacheController.get(expectedRelationshipId);
-              if (!activity.canDisplayOnFeed(currentProfile, relationshipWithActivityPublisher)) {
+              if (!activity.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationshipWithActivityPublisher)) {
                 continue;
               }
             }

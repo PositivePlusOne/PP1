@@ -61,7 +61,7 @@ class _CreatePostPageState extends ConsumerState<CreatePostPage> {
     if (widget.activityData != null) {
       await ref.read(createPostViewModelProvider.notifier).loadActivityData(widget.activityData!);
     } else {
-      ref.read(createPostViewModelProvider.notifier).displayCamera(PostType.image);
+      ref.read(createPostViewModelProvider.notifier).onFirstOpen();
     }
   }
 
@@ -465,6 +465,7 @@ class CreatePostShareActivityPlaceholder extends StatelessWidget {
             reposterRelationship: null,
             reposterActivity: null,
             reposterReactionStatistics: null,
+            reposterPromotion: null,
             reposterActivityProfileReactions: const [],
             isShared: true,
           ),

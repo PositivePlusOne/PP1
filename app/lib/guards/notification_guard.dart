@@ -5,9 +5,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
-import '../constants/key_constants.dart';
 import '../gen/app_router.dart';
 import '../providers/user/user_controller.dart';
 

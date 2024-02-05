@@ -87,7 +87,12 @@ mixin ProfileSwitchMixin {
     return profileControllerState.availableProfileIds.length;
   }
 
-  Future<bool> requestSwitchProfileDialog(BuildContext context, {ActivitySecurityConfigurationMode? mode, required String title}) async {
+  Future<String> requestSwitchProfileDialog(
+    BuildContext context, {
+    required String title,
+    bool requestSwitchProfile = true,
+    ActivitySecurityConfigurationMode? mode,
+  }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.i('[ProfileSwitchMixin.requestSwitchProfileDialog] - start');
 
@@ -110,10 +115,12 @@ mixin ProfileSwitchMixin {
 
     if (newProfileId != null) {
       logger.d('[ProfileSwitchMixin.requestSwitchProfileDialog] - newProfileId: $newProfileId');
-      switchProfile(newProfileId);
-      return true;
+      if (requestSwitchProfile) {
+        switchProfile(newProfileId);
+      }
+      return newProfileId;
     }
-    return false;
+    return "";
   }
 
   void switchProfile(String profileId) {

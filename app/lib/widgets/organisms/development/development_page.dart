@@ -125,6 +125,17 @@ class DevelopmentPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+                CupertinoListTile.notched(
+                  onTap: developmentViewModel.requestManualLocation,
+                  title: Text(
+                    'Manually set GPS location',
+                    style: typography.styleButtonRegular.copyWith(color: colors.white),
+                  ),
+                  subtitle: Text(
+                    'Manually set your lat/long to test location based features.',
+                    style: typography.styleSubtext.copyWith(color: colors.white),
+                  ),
+                ),
                 PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               ],
               ...buildGeneralSection(
@@ -209,7 +220,7 @@ class DevelopmentPage extends ConsumerWidget {
         ),
       ),
       CupertinoListTile.notched(
-        onTap: () => locationController.attemptToUpdateLocation(),
+        onTap: () => locationController.attemptToUpdateLocation(force: true),
         title: Text(
           'Force location update',
           style: typography.styleButtonRegular.copyWith(color: colors.white),
@@ -227,9 +238,7 @@ class DevelopmentPage extends ConsumerWidget {
             style: typography.styleButtonRegular.copyWith(color: colors.white),
           ),
           subtitle: SelectableText(
-            locationState.lastKnownAddressComponents.entries.map((MapEntry<String, Set<String>> entry) {
-              return '${entry.key}: ${entry.value.join(', ')}';
-            }).join('\n'),
+            locationState.lastKnownAddressComponents.toString(),
             style: typography.styleSubtext.copyWith(color: colors.white),
           ),
         ),

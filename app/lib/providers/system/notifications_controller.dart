@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as scf;
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/chat/channel_extra_data.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/extensions/dart_extensions.dart';
@@ -32,7 +33,6 @@ import 'package:app/providers/system/handlers/notifications/relationship_notific
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
 import 'package:app/widgets/state/positive_notifications_state.dart';
-import '../../constants/key_constants.dart';
 import '../../dtos/database/notifications/notification_payload.dart';
 import '../../main.dart';
 import '../../services/third_party.dart';

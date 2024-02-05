@@ -51,10 +51,6 @@ extension ActivityExt on Activity {
     return (hasBodyContent || hasMedia) || isRepost;
   }
 
-  bool get isPromotion => enrichmentConfiguration?.promotionKey.isNotEmpty == true && enrichmentConfiguration?.tags.contains('promotion') == true;
-  bool get isChatPromotion => isPromotion && enrichmentConfiguration?.tags.contains('promotion_chat') == true;
-  bool get isFeedPromotion => isPromotion && enrichmentConfiguration?.tags.contains('promotion_feed') == true;
-
   String get shortDescription {
     return generalConfiguration?.content.isNotEmpty == true ? generalConfiguration!.content : '';
   }
@@ -201,7 +197,10 @@ extension ActivityExt on Activity {
 
   //* Verifies whether the activity can be included in the paged data.
   //* Not the same as whether the post should be hidden due to blocked state
-  bool canDisplayOnFeed(Profile? currentProfile, Relationship? relationshipWithActivityPublisher) {
+  bool canDisplayOnFeed({
+    required Profile? currentProfile,
+    required Relationship? relationshipWithActivityPublisher,
+  }) {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final Set<RelationshipState> states = relationshipWithActivityPublisher?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);

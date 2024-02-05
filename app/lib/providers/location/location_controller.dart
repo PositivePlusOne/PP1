@@ -15,7 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/constants/system_constants.dart';
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/geo/positive_place.dart';
 import 'package:app/providers/content/events/location_updated_event.dart';
 import 'package:app/providers/profiles/events/profile_switched_event.dart';
@@ -40,11 +40,12 @@ class LocationControllerState with _$LocationControllerState {
     StreamSubscription<Position>? locationSubscription,
     Duration? locationUpdateInterval,
     @Default(false) isUpdatingLocation,
+    @Default(false) bool isManualLocation,
     double? lastKnownLatitude,
     double? lastKnownLongitude,
     @Default({}) Map<String, Set<String>> lastKnownAddressComponents,
-    DateTime? lastGpsUpdate,
-    DateTime? lastGeocodingUpdate,
+    DateTime? lastGpsLookup,
+    DateTime? lastAddressComponentLookup,
   }) = _LocationControllerState;
   factory LocationControllerState.initialState() => const LocationControllerState();
 }
@@ -57,7 +58,8 @@ abstract class ILocationController {
   Future<PermissionStatus> requestLocationPermission();
   Future<void> setupListeners();
   Future<void> teardownListeners();
-  Future<void> attemptToUpdateLocation();
+  Future<void> attemptToUpdateLocation({bool force = false});
+  void setManualGPSLocation(double latitude, double longitude);
   Future<List<PositivePlace>> searchLocation(String query, {bool includeLocationAsRegion = false});
   Future<List<PositivePlace>> searchNearby();
   Future<List<PositivePlace>> extractPredictionsToPlaces(List<Prediction> filteredPredictions);
@@ -167,12 +169,22 @@ class LocationController extends _$LocationController implements ILocationContro
   }
 
   @override
-  Future<void> attemptToUpdateLocation() async {
+  Future<void> attemptToUpdateLocation({bool force = false}) async {
     final Logger logger = ref.read(loggerProvider);
-    final PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
+    if (state.isManualLocation) {
+      logger.w('Manual location set, cannot update location');
+      return;
+    }
 
     logger.i('Attempting to update location data');
-    final bool isGranted = locationPermission == PermissionStatus.granted;
+    PermissionStatus locationPermission = await ref.read(locationPermissionsProvider.future);
+    bool isGranted = locationPermission == PermissionStatus.granted;
+
+    if (force) {
+      locationPermission = await ref.read(requestedLocationPermissionsProvider.future);
+      isGranted = locationPermission == PermissionStatus.granted;
+    }
+
     if (!isGranted) {
       logger.w('Location permission not granted, cannot update location');
       return;
@@ -182,21 +194,22 @@ class LocationController extends _$LocationController implements ILocationContro
       logger.i('Updating location');
       state = state.copyWith(isUpdatingLocation: true);
 
-      await _updateLatitudeAndLongitude();
-      await _updateGeocodingData();
+      if (force) {
+        state = state.copyWith(
+          lastGpsLookup: null,
+          lastAddressComponentLookup: null,
+          lastKnownAddressComponents: {},
+        );
+      }
 
-      final EventBus eventBus = ref.read(eventBusProvider);
-      eventBus.fire(LocationUpdatedEvent(
-        latitude: state.lastKnownLatitude,
-        longitude: state.lastKnownLongitude,
-        addressComponents: state.lastKnownAddressComponents,
-      ));
+      await _updateLatitudeAndLongitude();
+      await _updateGeocodingData(force: force);
     } finally {
       state = state.copyWith(isUpdatingLocation: false);
     }
   }
 
-  Future<void> _updateGeocodingData() async {
+  Future<void> _updateGeocodingData({bool force = false}) async {
     final Logger logger = ref.read(loggerProvider);
     final GoogleMapsGeocoding geocoding = ref.read(googleMapsGeocodingProvider);
     if (state.lastKnownLatitude == null || state.lastKnownLongitude == null) {
@@ -205,8 +218,10 @@ class LocationController extends _$LocationController implements ILocationContro
     }
 
     // If we already have geocoding data for this location, don't update it
-    if (state.lastGeocodingUpdate != null) {
-      logger.i('Last geocoding update: ${state.lastGeocodingUpdate}');
+    final bool hasPerformedLookupRecently = state.lastAddressComponentLookup != null && DateTime.now().difference(state.lastAddressComponentLookup!) < kLocationUpdateFrequency;
+    final bool hasAddressComponents = state.lastKnownAddressComponents.isNotEmpty;
+    if (!force && hasPerformedLookupRecently && hasAddressComponents) {
+      logger.i('Geocoding data already up to date');
       return;
     }
 
@@ -223,7 +238,7 @@ class LocationController extends _$LocationController implements ILocationContro
       logger.w('No geocoding result found');
       state = state.copyWith(
         lastKnownAddressComponents: {},
-        lastGeocodingUpdate: DateTime.now(),
+        lastAddressComponentLookup: null,
       );
 
       return;
@@ -244,8 +259,10 @@ class LocationController extends _$LocationController implements ILocationContro
     logger.i('Found address components: $addressComponents');
     state = state.copyWith(
       lastKnownAddressComponents: addressComponents,
-      lastGeocodingUpdate: DateTime.now(),
+      lastAddressComponentLookup: addressComponents.isNotEmpty ? DateTime.now() : null,
     );
+
+    notifyLocationChanged();
   }
 
   Future<void> _updateLatitudeAndLongitude() async {
@@ -257,8 +274,36 @@ class LocationController extends _$LocationController implements ILocationContro
     state = state.copyWith(
       lastKnownLatitude: location.lat,
       lastKnownLongitude: location.lng,
-      lastGpsUpdate: DateTime.now(),
+      lastGpsLookup: DateTime.now(),
     );
+  }
+
+  @override
+  void setManualGPSLocation(double latitude, double longitude) {
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Setting manual GPS location: $latitude, $longitude');
+
+    state = state.copyWith(
+      lastKnownLatitude: latitude,
+      lastKnownLongitude: longitude,
+      lastGpsLookup: DateTime.now(),
+      isManualLocation: true,
+    );
+
+    _updateGeocodingData(force: true);
+    notifyLocationChanged();
+  }
+
+  void notifyLocationChanged() {
+    final EventBus eventBus = ref.read(eventBusProvider);
+    final Logger logger = ref.read(loggerProvider);
+    logger.i('Notifying location changed event bus subscribers');
+
+    eventBus.fire(LocationUpdatedEvent(
+      latitude: state.lastKnownLatitude,
+      longitude: state.lastKnownLongitude,
+      addressComponents: state.lastKnownAddressComponents,
+    ));
   }
 
   @override

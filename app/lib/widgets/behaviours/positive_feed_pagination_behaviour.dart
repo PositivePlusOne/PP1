@@ -186,7 +186,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
-          return element.canDisplayOnFeed(currentProfile, relationship);
+          return element.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship);
         }) ??
         false;
 
@@ -337,7 +337,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final String promotedActivityRelationshipId = [promotedActivityPublisherId, currentProfileId].asGUID;
     final Relationship? promotedActivityRelationship = cacheController.get(promotedActivityRelationshipId);
 
-    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile, promotedActivityRelationship);
+    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: promotedActivityRelationship);
     if (!canDisplayPromotedActivity) {
       return null;
     }
@@ -462,9 +462,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
     final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
-    final Activity? repostedActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId ?? '');
+    final Activity? reposterActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId ?? '');
+    final String reposterActivityId = reposterActivity?.flMeta?.id ?? '';
 
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final Promotion? reposterPromotion = promotionsController.getPromotionFromActivityId(activityId: reposterActivityId, promotionType: PromotionType.feed);
+
+    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
@@ -478,7 +482,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile).toList();
     final List<Reaction> activityProfileReactions = cacheController.list(expectedUniqueReactionKeys);
 
-    final List<String> expectedUniqueRepostReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: repostedActivity, currentProfile: currentProfile).toList();
+    final List<String> expectedUniqueRepostReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: reposterActivity, currentProfile: currentProfile).toList();
     final List<Reaction> activityRepostProfileReactions = cacheController.list(expectedUniqueRepostReactionKeys);
 
     return PositiveActivityWidget(
@@ -493,7 +497,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       targetRelationship: relationship,
       reposterProfile: reposterProfile,
       reposterRelationship: reposterRelationship,
-      reposterActivity: repostedActivity,
+      reposterActivity: reposterActivity,
+      reposterPromotion: reposterPromotion,
       targetFeed: feed,
       index: index,
     );

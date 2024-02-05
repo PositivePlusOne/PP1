@@ -6,9 +6,6 @@ version: 3.1.195+195
 environment:
   sdk: ">=3.0.0 <=4.0.0"
 
-dependency_overrides:
-  uuid: 4.2.1
-
 dependencies:
   flutter:
     sdk: flutter
@@ -34,7 +31,7 @@ dependencies:
   rxdart: ^0.27.7
   infinite_scroll_pagination: ^4.0.0
   flutter_secure_storage: ^9.0.0
-  cron: ^0.5.1
+  cron: ^0.6.0
 
   # Backend
   firebase_core: ^2.21.0
@@ -73,7 +70,7 @@ dependencies:
   expandable: ^5.0.1
   banner_carousel: ^1.2.1
   entry: ^0.0.8+1
-  adaptive_dialog: ^1.9.0-0
+  adaptive_dialog: ^2.0.0
   auto_size_text: ^3.0.0
   flutter_staggered_grid_view: ^0.7.0
   wheel_chooser: ^1.1.2
@@ -105,7 +102,7 @@ dependencies:
   # Other
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
-  open_settings_plus: ^0.1.0
+  open_settings_plus: 0.1.0
   package_info_plus: ^5.0.1
   profanity_filter: ^2.0.0
   very_good_infinite_list: ^0.7.0

@@ -21,6 +21,8 @@ mixin _$PromotionsControllerState {
   Set<String> get validChatPromotionIds => throw _privateConstructorUsedError;
   Map<String, Set<String>> get validOwnedPromotionIds =>
       throw _privateConstructorUsedError;
+  Map<String, Set<String>> get knownActivityPromotionIds =>
+      throw _privateConstructorUsedError;
   int get feedPromotionFrequency => throw _privateConstructorUsedError;
   int get chatPromotionFrequency => throw _privateConstructorUsedError;
   String get cursor => throw _privateConstructorUsedError;
@@ -45,6 +47,7 @@ abstract class $PromotionsControllerStateCopyWith<$Res> {
       Set<String> validFeedPromotionIds,
       Set<String> validChatPromotionIds,
       Map<String, Set<String>> validOwnedPromotionIds,
+      Map<String, Set<String>> knownActivityPromotionIds,
       int feedPromotionFrequency,
       int chatPromotionFrequency,
       String cursor,
@@ -71,6 +74,7 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
     Object? validFeedPromotionIds = null,
     Object? validChatPromotionIds = null,
     Object? validOwnedPromotionIds = null,
+    Object? knownActivityPromotionIds = null,
     Object? feedPromotionFrequency = null,
     Object? chatPromotionFrequency = null,
     Object? cursor = null,
@@ -94,6 +98,10 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
       validOwnedPromotionIds: null == validOwnedPromotionIds
           ? _value.validOwnedPromotionIds
           : validOwnedPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Set<String>>,
+      knownActivityPromotionIds: null == knownActivityPromotionIds
+          ? _value.knownActivityPromotionIds
+          : knownActivityPromotionIds // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<String>>,
       feedPromotionFrequency: null == feedPromotionFrequency
           ? _value.feedPromotionFrequency
@@ -137,6 +145,7 @@ abstract class _$$PromotionsControllerStateImplCopyWith<$Res>
       Set<String> validFeedPromotionIds,
       Set<String> validChatPromotionIds,
       Map<String, Set<String>> validOwnedPromotionIds,
+      Map<String, Set<String>> knownActivityPromotionIds,
       int feedPromotionFrequency,
       int chatPromotionFrequency,
       String cursor,
@@ -162,6 +171,7 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
     Object? validFeedPromotionIds = null,
     Object? validChatPromotionIds = null,
     Object? validOwnedPromotionIds = null,
+    Object? knownActivityPromotionIds = null,
     Object? feedPromotionFrequency = null,
     Object? chatPromotionFrequency = null,
     Object? cursor = null,
@@ -185,6 +195,10 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
       validOwnedPromotionIds: null == validOwnedPromotionIds
           ? _value._validOwnedPromotionIds
           : validOwnedPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Set<String>>,
+      knownActivityPromotionIds: null == knownActivityPromotionIds
+          ? _value._knownActivityPromotionIds
+          : knownActivityPromotionIds // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<String>>,
       feedPromotionFrequency: null == feedPromotionFrequency
           ? _value.feedPromotionFrequency
@@ -222,6 +236,7 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
       final Set<String> validFeedPromotionIds = const {},
       final Set<String> validChatPromotionIds = const {},
       final Map<String, Set<String>> validOwnedPromotionIds = const {},
+      final Map<String, Set<String>> knownActivityPromotionIds = const {},
       this.feedPromotionFrequency = 4,
       this.chatPromotionFrequency = 4,
       this.cursor = '',
@@ -231,7 +246,8 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
       : _allPromotionIds = allPromotionIds,
         _validFeedPromotionIds = validFeedPromotionIds,
         _validChatPromotionIds = validChatPromotionIds,
-        _validOwnedPromotionIds = validOwnedPromotionIds;
+        _validOwnedPromotionIds = validOwnedPromotionIds,
+        _knownActivityPromotionIds = knownActivityPromotionIds;
 
   final Set<String> _allPromotionIds;
   @override
@@ -272,6 +288,16 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
     return EqualUnmodifiableMapView(_validOwnedPromotionIds);
   }
 
+  final Map<String, Set<String>> _knownActivityPromotionIds;
+  @override
+  @JsonKey()
+  Map<String, Set<String>> get knownActivityPromotionIds {
+    if (_knownActivityPromotionIds is EqualUnmodifiableMapView)
+      return _knownActivityPromotionIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_knownActivityPromotionIds);
+  }
+
   @override
   @JsonKey()
   final int feedPromotionFrequency;
@@ -292,7 +318,7 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 
   @override
   String toString() {
-    return 'PromotionsControllerState(allPromotionIds: $allPromotionIds, validFeedPromotionIds: $validFeedPromotionIds, validChatPromotionIds: $validChatPromotionIds, validOwnedPromotionIds: $validOwnedPromotionIds, feedPromotionFrequency: $feedPromotionFrequency, chatPromotionFrequency: $chatPromotionFrequency, cursor: $cursor, isExhausted: $isExhausted, canPerformLocationCheck: $canPerformLocationCheck, lastPerformedLocationCheck: $lastPerformedLocationCheck)';
+    return 'PromotionsControllerState(allPromotionIds: $allPromotionIds, validFeedPromotionIds: $validFeedPromotionIds, validChatPromotionIds: $validChatPromotionIds, validOwnedPromotionIds: $validOwnedPromotionIds, knownActivityPromotionIds: $knownActivityPromotionIds, feedPromotionFrequency: $feedPromotionFrequency, chatPromotionFrequency: $chatPromotionFrequency, cursor: $cursor, isExhausted: $isExhausted, canPerformLocationCheck: $canPerformLocationCheck, lastPerformedLocationCheck: $lastPerformedLocationCheck)';
   }
 
   @override
@@ -308,6 +334,8 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
                 .equals(other._validChatPromotionIds, _validChatPromotionIds) &&
             const DeepCollectionEquality().equals(
                 other._validOwnedPromotionIds, _validOwnedPromotionIds) &&
+            const DeepCollectionEquality().equals(
+                other._knownActivityPromotionIds, _knownActivityPromotionIds) &&
             (identical(other.feedPromotionFrequency, feedPromotionFrequency) ||
                 other.feedPromotionFrequency == feedPromotionFrequency) &&
             (identical(other.chatPromotionFrequency, chatPromotionFrequency) ||
@@ -331,6 +359,7 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
       const DeepCollectionEquality().hash(_validFeedPromotionIds),
       const DeepCollectionEquality().hash(_validChatPromotionIds),
       const DeepCollectionEquality().hash(_validOwnedPromotionIds),
+      const DeepCollectionEquality().hash(_knownActivityPromotionIds),
       feedPromotionFrequency,
       chatPromotionFrequency,
       cursor,
@@ -352,6 +381,7 @@ abstract class _PromotionsControllerState implements PromotionsControllerState {
           final Set<String> validFeedPromotionIds,
           final Set<String> validChatPromotionIds,
           final Map<String, Set<String>> validOwnedPromotionIds,
+          final Map<String, Set<String>> knownActivityPromotionIds,
           final int feedPromotionFrequency,
           final int chatPromotionFrequency,
           final String cursor,
@@ -368,6 +398,8 @@ abstract class _PromotionsControllerState implements PromotionsControllerState {
   Set<String> get validChatPromotionIds;
   @override
   Map<String, Set<String>> get validOwnedPromotionIds;
+  @override
+  Map<String, Set<String>> get knownActivityPromotionIds;
   @override
   int get feedPromotionFrequency;
   @override

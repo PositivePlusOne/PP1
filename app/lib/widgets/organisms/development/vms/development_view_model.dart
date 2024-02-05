@@ -1,12 +1,17 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
+import 'package:app/providers/location/location_controller.dart';
 import 'package:app/services/api.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../services/third_party.dart';
@@ -118,6 +123,79 @@ class DevelopmentViewModel extends _$DevelopmentViewModel with LifecycleMixin {
     } catch (ex) {
       logger.e('Failed to send test notification. $ex');
       state = state.copyWith(status: 'Failed to send test notification');
+    }
+  }
+
+  Future<void> requestManualLocation() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    final BuildContext context = appRouter.navigatorKey.currentContext!;
+    final LocationController locationController = ref.read(locationControllerProvider.notifier);
+
+    logger.d('Requesting manual location');
+    state = state.copyWith(status: 'Requesting manual location');
+
+    try {
+      final LatLng? result = await showDialog(
+          context: context,
+          builder: (context) {
+            final TextEditingController latitudeController = TextEditingController();
+            final TextEditingController longitudeController = TextEditingController();
+
+            return AlertDialog(
+              title: const Text('Enter manual location'),
+              content: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: latitudeController,
+                    decoration: const InputDecoration(labelText: 'Latitude'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  TextFormField(
+                    controller: longitudeController,
+                    decoration: const InputDecoration(labelText: 'Longitude'),
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final double? latitude = double.tryParse(latitudeController.text);
+                    final double? longitude = double.tryParse(longitudeController.text);
+                    if (latitude != null && longitude != null) {
+                      state = state.copyWith(status: 'Manual location: $latitude, $longitude');
+                    } else {
+                      state = state.copyWith(status: 'Invalid manual location');
+                    }
+
+                    LatLng? result;
+                    if (latitude != null && longitude != null) {
+                      result = LatLng(latitude, longitude);
+                    }
+
+                    Navigator.of(context).pop(result);
+                  },
+                  child: const Text('Submit'),
+                ),
+              ],
+            );
+          });
+
+      if (result != null) {
+        locationController.setManualGPSLocation(result.latitude, result.longitude);
+      } else {
+        state = state.copyWith(status: 'Cancelled manual location');
+      }
+    } catch (ex) {
+      logger.e('Failed to request manual location. $ex');
+      state = state.copyWith(status: 'Failed to request manual location');
     }
   }
 }

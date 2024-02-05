@@ -26,6 +26,7 @@ import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
@@ -94,10 +95,14 @@ class PostPage extends HookConsumerWidget {
 
     final String expectedReposterRelationshipKey = [currentProfileId, reposterProfile?.flMeta?.id ?? ''].asGUID;
     final Relationship? reposterRelationship = cacheController.get(expectedReposterRelationshipKey);
+
     final Activity? reposterActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId);
+    final String reposterActivityId = reposterActivity?.flMeta?.id ?? '';
+
+    final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
+    final Promotion? reposterPromotion = promotionsController.getPromotionFromActivityId(activityId: reposterActivityId, promotionType: PromotionType.feed);
 
     final ReactionsController reactionsController = ref.read(reactionsControllerProvider.notifier);
-
     final String expectedReactionActivityStatisticsKey = reactionsController.buildExpectedStatisticsCacheKey(activityId: activityId);
     final ReactionStatistics? reactionActivityStatistics = cacheController.get(expectedReactionActivityStatisticsKey);
 
@@ -225,6 +230,7 @@ class PostPage extends HookConsumerWidget {
               reposterProfile: reposterProfile,
               reposterRelationship: reposterRelationship,
               reposterActivity: reposterActivity,
+              reposterPromotion: reposterPromotion,
               activityReactionStatistics: reactionActivityStatistics,
               activityProfileReactions: uniqueActivityReactions,
               reposterActivityProfileReactions: uniqueRepostActivityReactions,

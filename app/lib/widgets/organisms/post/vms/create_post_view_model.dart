@@ -80,6 +80,8 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     required ActivityData previousActivity,
     //? Clip delay and clip length options
     @Default(0) int delayTimerCurrentSelection,
+    //? Repost
+    @Default('') String postingAsProfileID,
     @Default(false) bool isDelayTimerEnabled,
     @Default(0) int maximumClipDurationSelection,
     @Default(false) bool isMaximumClipDurationEnabled,
@@ -119,6 +121,41 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
   @override
   CreatePostViewModelState build() {
     return CreatePostViewModelState.initialState();
+  }
+
+  Future<void> onFirstOpen() async {
+    final bool selectedAccount = await trySwitchProfile();
+
+    if (!selectedAccount) {
+      return;
+    }
+
+    displayCamera(PostType.image);
+    return;
+  }
+
+  Future<bool> trySwitchProfile() async {
+    final AppRouter router = ref.read(appRouterProvider);
+    final BuildContext context = router.navigatorKey.currentContext!;
+    final AppLocalizations localisations = AppLocalizations.of(context)!;
+
+    if (canSwitchProfile) {
+      state = state.copyWith(
+        postingAsProfileID: await requestSwitchProfileDialog(
+          context,
+          title: localisations.generic_organisation_actions_post_as_title,
+          requestSwitchProfile: false,
+          mode: null,
+        ),
+      );
+      if (state.postingAsProfileID.isEmpty) {
+        router.pop();
+        return false;
+      }
+    } else {
+      state = state.copyWith(postingAsProfileID: "");
+    }
+    return true;
   }
 
   Future<bool> goBack({
@@ -379,21 +416,16 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       case CreatePostCurrentPage.createPostText:
       case CreatePostCurrentPage.createPostImage:
       case CreatePostCurrentPage.createPostMultiImage:
-        if (canSwitchProfile) {
-          bool profileID = false;
-          try {
-            profileID = await requestSwitchProfileDialog(
-              context,
-              title: localisations.generic_organisation_actions_post_as_title,
-              mode: null,
-            );
-          } finally {
-            if (profileID) {
-              await onPostFinished(profileController.currentProfile);
-            }
-          }
-        } else {
-          await onPostFinished(profileController.currentProfile);
+        final bool isAbleToSwitchProfileBack = state.postingAsProfileID.isNotEmpty && profileController.currentProfile != null && profileController.currentProfile!.flMeta != null && profileController.currentProfile!.flMeta!.id != null;
+        String? currentProfileID;
+
+        if (isAbleToSwitchProfileBack) {
+          currentProfileID = profileController.currentProfile!.flMeta!.id!;
+          switchProfile(state.postingAsProfileID);
+        }
+        await onPostFinished(profileController.currentProfile);
+        if (currentProfileID != null) {
+          switchProfile(currentProfileID);
         }
         break;
     }
@@ -420,6 +452,12 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final logger = ref.read(loggerProvider);
+
+    final bool selectedAccount = await trySwitchProfile();
+
+    if (!selectedAccount) {
+      return;
+    }
 
     state = state.copyWith(isBusy: true);
 
