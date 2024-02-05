@@ -11,11 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unicons/unicons.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
-import '../../../../constants/key_constants.dart';
 import '../../../../hooks/lifecycle_hook.dart';
 import '../../../../providers/analytics/analytic_events.dart';
 import '../../../../providers/analytics/analytics_controller.dart';

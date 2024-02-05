@@ -1,8 +1,10 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { FlMeta, FlMetaJSON } from "./meta";
+import { EnforcedPlace, EnforcedPlaceJSON } from "./enforced_place";
 
 export const promotionsSchemaKey = "promotions";
 export const promotionsStatisticsSchemaKey = "promotionsStatistics";
+
 
 export interface PromotionStatisticsJSON {
     _fl_meta_?: FlMetaJSON;
@@ -35,10 +37,9 @@ export interface PromotionJSON {
     activityId?: string;
     isActive?: boolean;
     seed?: number;
-    totalViewsSinceLastUpdate?: number;
-    totalViewsAllotment?: number;
-    startDate?: Timestamp;
-    endDate?: Timestamp;
+    chatPromotionEnabled?: boolean;
+    postPromotionEnabled?: boolean;
+    locationRestrictions?: EnforcedPlaceJSON[];
 }
 
 export class Promotion {
@@ -51,10 +52,9 @@ export class Promotion {
     activityId?: string;
     isActive?: boolean;
     seed?: number;
-    totalViewsSinceLastUpdate?: number;
-    totalViewsAllotment?: number;
-    startDate?: Timestamp;
-    endDate?: Timestamp;
+    chatPromotionEnabled?: boolean;
+    postPromotionEnabled?: boolean;
+    locationRestrictions?: EnforcedPlace[];
 
     constructor(json: PromotionJSON) {
         this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
@@ -66,9 +66,8 @@ export class Promotion {
         this.activityId = json.activityId;
         this.isActive = json.isActive;
         this.seed = json.seed;
-        this.totalViewsSinceLastUpdate = json.totalViewsSinceLastUpdate;
-        this.totalViewsAllotment = json.totalViewsAllotment;
-        this.startDate = json.startDate;
-        this.endDate = json.endDate;
+        this.chatPromotionEnabled = json.chatPromotionEnabled;
+        this.postPromotionEnabled = json.postPromotionEnabled;
+        this.locationRestrictions = json.locationRestrictions && json.locationRestrictions.map((l) => new EnforcedPlace(l));
     }
 }

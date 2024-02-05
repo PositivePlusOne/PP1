@@ -186,7 +186,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
-          return element.canDisplayOnFeed(currentProfile, relationship);
+          return element.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship);
         }) ??
         false;
 
@@ -269,92 +269,98 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
   Widget buildSeparator(BuildContext context, int index) {
     final Activity? activity = feedState.pagingController.itemList?.elementAtOrNull(index);
-    final String activityId = activity?.flMeta?.id ?? '';
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final String targetProfileId = activity?.publisherInformation?.publisherId ?? '';
-
-    if (activityId.isEmpty || targetProfileId.isEmpty) {
-      return const SizedBox.shrink();
-    }
 
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
     final String relationshipId = [targetProfileId, currentProfileId].asGUID;
     final Relationship? relationship = cacheController.get(relationshipId);
 
-    // Remove the separator if we can't display the activity
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
-    if (!canDisplay) {
+    final Widget? promotedPost = getPromotedPostFromIndex(
+      index: index,
+      promotionType: PromotionType.feed,
+      context: context,
+      feed: feed,
+      relationship: relationship,
+    );
+
+    final bool hasContent = doesItemHaveContent(feed: feed, item: activity ?? const Activity());
+    if (!hasContent) {
       return const SizedBox.shrink();
     }
 
-    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
-    final Promotion? promotion = promotionsController.getPromotionFromIndex(index, PromotionType.feed);
-
-    final String promotedActivityId = promotion?.activityId ?? '';
-    final Activity? promotedActivity = cacheController.get(promotedActivityId);
-
-    // Check promotion is valid for rare feed states
-    final bool isClipFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'clip';
-    final bool isPostFeed = feed.targetSlug == 'tags' && feed.targetUserId == 'post';
-    final ActivityGeneralConfigurationType? type = activity?.generalConfiguration?.type;
-
-    // Check if is a clip and we're not on the clip feed
-    if (isClipFeed && type != const ActivityGeneralConfigurationType.clip()) {
+    final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(relationship: relationship);
+    if (!meetsRelationshipCheck) {
       return const SizedBox.shrink();
-    }
-
-    // Check if is a post and we're not on the post feed
-    if (isPostFeed && type != const ActivityGeneralConfigurationType.post()) {
-      return const SizedBox.shrink();
-    }
-
-    // Check block states
-    final Set<RelationshipState> states = relationship?.relationshipStatesForEntity(currentProfileId) ?? {};
-    final bool isBlocked = states.contains(RelationshipState.targetBlocked);
-    final bool isHidden = states.contains(RelationshipState.sourceHidden);
-    if (isBlocked || isHidden) {
-      return const SizedBox.shrink();
-    }
-
-    // We have not been able to get a promoted activity, so just use a normal separator
-    if (promotedActivity == null || promotion == null) {
-      return buildVisualSeparator(context);
-    }
-
-    // Check the relationship for the promoted activity
-    final String promotedActivityPublisherId = promotedActivity.publisherInformation?.publisherId ?? '';
-    final String promotedActivityRelationshipId = [promotedActivityPublisherId, currentProfileId].asGUID;
-    final Relationship? promotedActivityRelationship = cacheController.get(promotedActivityRelationshipId);
-
-    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile, promotedActivityRelationship);
-    if (!canDisplayPromotedActivity) {
-      return buildVisualSeparator(context);
     }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        if (doesItemHaveContent(feed: feed, item: promotedActivity))
-          // this item does have content, separate and show it
-          ...[
-          buildVisualSeparator(context),
-          buildItem(
-            currentProfile: currentProfile,
-            feed: feed,
-            context: context,
-            item: promotedActivity,
-            index: index,
-            promotion: promotion,
-          ),
-        ],
         buildVisualSeparator(context),
+        if (promotedPost != null) ...<Widget>[
+          promotedPost,
+          buildVisualSeparator(context),
+        ],
       ],
+    );
+  }
+
+  static Widget? getPromotedPostFromIndex({
+    required int index,
+    required PromotionType promotionType,
+    required BuildContext context,
+    required TargetFeed feed,
+    Relationship? relationship,
+  }) {
+    final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final Promotion? promotion = promotionsController.getPromotionFromIndex(
+      index: index,
+      promotionType: PromotionType.feed,
+    );
+
+    if (promotion == null) {
+      return null;
+    }
+
+    final Activity? promotedActivity = cacheController.get(promotion.activityId);
+    if (promotedActivity == null) {
+      return null;
+    }
+
+    // Check the relationship for the promoted activity
+    final Profile? currentProfile = profileController.currentProfile;
+    final String currentProfileId = currentProfile?.flMeta?.id ?? '';
+    final String promotedActivityPublisherId = promotedActivity.publisherInformation?.publisherId ?? '';
+    final String promotedActivityRelationshipId = [promotedActivityPublisherId, currentProfileId].asGUID;
+    final Relationship? promotedActivityRelationship = cacheController.get(promotedActivityRelationshipId);
+
+    final bool canDisplayPromotedActivity = promotedActivity.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: promotedActivityRelationship);
+    if (!canDisplayPromotedActivity) {
+      return null;
+    }
+
+    final bool meetsRelationshipCheck = meetsRelationshipCheckForDisplay(relationship: relationship);
+    if (!meetsRelationshipCheck) {
+      return null;
+    }
+
+    return buildItem(
+      currentProfile: currentProfile,
+      feed: feed,
+      context: context,
+      item: promotedActivity,
+      index: index,
+      promotion: promotion,
     );
   }
 
   static bool doesItemHaveContent({
     required TargetFeed? feed,
     required Activity item,
+    Relationship? relationship,
   }) {
     final String activityId = item.flMeta?.id ?? '';
     final String publisherId = item.publisherInformation?.publisherId ?? '';
@@ -378,6 +384,22 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     }
 
     // else there is enough content to show
+    return true;
+  }
+
+  static bool meetsRelationshipCheckForDisplay({
+    Relationship? relationship,
+  }) {
+    if (relationship != null) {
+      final String currentProfileId = providerContainer.read(profileControllerProvider.select((value) => value.currentProfile?.flMeta?.id)) ?? '';
+      final Set<RelationshipState> states = relationship.relationshipStatesForEntity(currentProfileId);
+      final bool isBlocked = states.contains(RelationshipState.targetBlocked);
+      final bool isHidden = states.contains(RelationshipState.sourceHidden);
+      if (isBlocked || isHidden) {
+        return false;
+      }
+    }
+
     return true;
   }
 
@@ -440,9 +462,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     final Profile? reposterProfile = cacheController.get(activity?.repostConfiguration?.targetActivityPublisherId ?? '');
     final Relationship? reposterRelationship = cacheController.get(reposterRelationshipId);
-    final Activity? repostedActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId ?? '');
+    final Activity? reposterActivity = cacheController.get(activity?.repostConfiguration?.targetActivityId ?? '');
+    final String reposterActivityId = reposterActivity?.flMeta?.id ?? '';
 
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile, relationship) ?? false;
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+    final Promotion? reposterPromotion = promotionsController.getPromotionFromActivityId(activityId: reposterActivityId, promotionType: PromotionType.feed);
+
+    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship) ?? false;
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
@@ -456,7 +482,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final List<String> expectedUniqueReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: activity, currentProfile: currentProfile).toList();
     final List<Reaction> activityProfileReactions = cacheController.list(expectedUniqueReactionKeys);
 
-    final List<String> expectedUniqueRepostReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: repostedActivity, currentProfile: currentProfile).toList();
+    final List<String> expectedUniqueRepostReactionKeys = reactionsController.buildExpectedUniqueReactionKeysForActivityAndProfile(activity: reposterActivity, currentProfile: currentProfile).toList();
     final List<Reaction> activityRepostProfileReactions = cacheController.list(expectedUniqueRepostReactionKeys);
 
     return PositiveActivityWidget(
@@ -471,7 +497,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       targetRelationship: relationship,
       reposterProfile: reposterProfile,
       reposterRelationship: reposterRelationship,
-      reposterActivity: repostedActivity,
+      reposterActivity: reposterActivity,
+      reposterPromotion: reposterPromotion,
       targetFeed: feed,
       index: index,
     );

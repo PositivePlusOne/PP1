@@ -17,6 +17,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
+import 'package:app/providers/location/location_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
@@ -40,6 +41,16 @@ class HomeViewModelState with _$HomeViewModelState {
   factory HomeViewModelState.initialState() => const HomeViewModelState();
 }
 
+abstract class IHomeViewModel {
+  HomeViewModelState build();
+  Future<void> onFirstRender();
+  Future<bool> onWillPopScope();
+  Future<void> onTabSelected(int index);
+  Future<void> onSignInSelected();
+  Future<void> onTopicSelected(BuildContext context, Tag tag);
+  Future<void> onSeeMoreTopicsSelected(BuildContext context);
+}
+
 @Riverpod(keepAlive: true)
 class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
   @override
@@ -58,15 +69,19 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
     systemController.resetAppBadges();
 
-    checkForRefresh();
+    try {
+      // Attempt to request location permission
+      final LocationController locationController = ref.read(locationControllerProvider.notifier);
+      locationController.requestLocationPermission();
+    } catch (e) {
+      logger.e('onFirstRender() - error requesting location permission: $e');
+    }
 
-    // Add a bit of time before performing the profile checks
-    Future.delayed(const Duration(seconds: 5)).then((_) {
-      performProfileChecks();
-    });
+    checkFeedRefreshRequired();
+    performProfileChecks();
   }
 
-  Future<void> checkForRefresh() async {
+  Future<void> checkFeedRefreshRequired() async {
     final Logger logger = ref.read(loggerProvider);
     const TargetFeed everyoneTargetFeed = TargetFeed(
       targetSlug: 'tags',
@@ -78,13 +93,13 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final PositiveFeedState? everyoneFeedState = cacheController.get(everyoneFeedStateKey);
 
     if (everyoneFeedState == null) {
-      logger.d('checkForRefresh() - everyoneFeedState is null');
+      logger.d('checkFeedRefreshRequired() - everyoneFeedState is null');
       return;
     }
 
     bool shouldRefresh = everyoneFeedState.pagingController.value.status == PagingStatus.noItemsFound;
     if (shouldRefresh) {
-      logger.d('checkForRefresh() - refreshing everyone feed');
+      logger.d('checkFeedRefreshRequired() - refreshing everyone feed');
       await everyoneFeedState.onRefresh();
     }
 
@@ -134,7 +149,7 @@ class HomeViewModel extends _$HomeViewModel with LifecycleMixin {
     final Logger logger = ref.read(loggerProvider);
     logger.d('onTabSelected() - index: $index');
 
-    checkForRefresh();
+    checkFeedRefreshRequired();
 
     state = state.copyWith(currentTabIndex: index);
   }

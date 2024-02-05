@@ -17,11 +17,12 @@ _$PromotionImpl _$$PromotionImplFromJson(Map<String, dynamic> json) =>
       linkText: json['linkText'] as String? ?? '',
       ownerId: json['ownerId'] as String? ?? '',
       activityId: json['activityId'] as String? ?? '',
-      isActive: json['isActive'] as bool? ?? false,
-      totalViewsSinceLastUpdate: json['totalViewsSinceLastUpdate'] as int? ?? 0,
-      totalViewsAllotment: json['totalViewsAllotment'] as int? ?? 0,
-      startDate: dateFromUnknown(json['startDate']),
-      endDate: dateFromUnknown(json['endDate']),
+      chatPromotionEnabled: json['chatPromotionEnabled'] as bool? ?? false,
+      postPromotionEnabled: json['postPromotionEnabled'] as bool? ?? false,
+      locationRestrictions: json['locationRestrictions'] == null
+          ? const []
+          : PositiveRestrictedPlace.fromJsonList(
+              json['locationRestrictions'] as List),
     );
 
 Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
@@ -33,11 +34,10 @@ Map<String, dynamic> _$$PromotionImplToJson(_$PromotionImpl instance) =>
       'linkText': instance.linkText,
       'ownerId': instance.ownerId,
       'activityId': instance.activityId,
-      'isActive': instance.isActive,
-      'totalViewsSinceLastUpdate': instance.totalViewsSinceLastUpdate,
-      'totalViewsAllotment': instance.totalViewsAllotment,
-      'startDate': instance.startDate,
-      'endDate': instance.endDate,
+      'chatPromotionEnabled': instance.chatPromotionEnabled,
+      'postPromotionEnabled': instance.postPromotionEnabled,
+      'locationRestrictions':
+          PositiveRestrictedPlace.toJsonList(instance.locationRestrictions),
     };
 
 _$PromotionOwnerImpl _$$PromotionOwnerImplFromJson(Map<String, dynamic> json) =>

@@ -82,6 +82,7 @@ enum AnalyticEvents {
   postSharedExternally, // A user has shared a post externally
   postSharedOnFeed, // A user has shared a post on their feed
   postSharedThroughChat, // A user has shared a post through chat
+  postPromotionClicked, // A user has viewed a post promotion
   mentionSelected, // A user has selected a mention
   photoViewed, // A user has viewed a photo
   videoMuted, // A user has muted a video
@@ -92,6 +93,7 @@ enum AnalyticEvents {
   chatStarted, // A user has started a chat with another user
   chatViewed, // A user has viewed a chat
   chatMessageSent, // A user has sent a message in a chat
+  chatPromotionClicked, // A user has viewed a chat promotion
   tagViewed, // TODO
   tagViewedFromSearch, // TODO
   searchPost, // A user has searched for a post

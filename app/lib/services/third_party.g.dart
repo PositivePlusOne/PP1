@@ -114,7 +114,7 @@ final algoliaProvider = FutureProvider<Algolia>.internal(
 );
 
 typedef AlgoliaRef = FutureProviderRef<Algolia>;
-String _$appsflyerSdkHash() => r'8d21d18db44bfe0951174f389e58fa424e403fd3';
+String _$appsflyerSdkHash() => r'abb387ab741f41115309191b2afa3cb0d74ed325';
 
 /// See also [appsflyerSdk].
 @ProviderFor(appsflyerSdk)
@@ -305,7 +305,7 @@ final firebasePerformanceProvider = Provider<FirebasePerformance>.internal(
 
 typedef FirebasePerformanceRef = ProviderRef<FirebasePerformance>;
 String _$firebaseRemoteConfigHash() =>
-    r'4a9992cebd64786d5f859237121350f8da61dc5a';
+    r'3afc4c3284e5e7c9b8bdd2a643a68a03d2b14beb';
 
 /// See also [firebaseRemoteConfig].
 @ProviderFor(firebaseRemoteConfig)
@@ -339,7 +339,7 @@ final flutterLocalNotificationsPluginProvider =
 
 typedef FlutterLocalNotificationsPluginRef
     = ProviderRef<FlutterLocalNotificationsPlugin>;
-String _$streamChatClientHash() => r'acca671130543996db8535c00fdfe3da3609f37a';
+String _$streamChatClientHash() => r'13c82dbb8346b6e6a7577cd62e94a7a5e36a91dc';
 
 /// See also [streamChatClient].
 @ProviderFor(streamChatClient)
@@ -399,13 +399,31 @@ final deviceInfoProvider = FutureProvider<BaseDeviceInfo>.internal(
 );
 
 typedef DeviceInfoRef = FutureProviderRef<BaseDeviceInfo>;
+String _$requestedNotificationPermissionsHash() =>
+    r'90e70307d1277913478ecf783f6e1e5850a10f8f';
+
+/// See also [requestedNotificationPermissions].
+@ProviderFor(requestedNotificationPermissions)
+final requestedNotificationPermissionsProvider =
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
+  requestedNotificationPermissions,
+  name: r'requestedNotificationPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$requestedNotificationPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RequestedNotificationPermissionsRef
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$notificationPermissionsHash() =>
-    r'a825862b4acc0b13c449d2fe80e14f9d09245388';
+    r'6e5658263574243554eea1bf43f88c51d2ed5e14';
 
 /// See also [notificationPermissions].
 @ProviderFor(notificationPermissions)
 final notificationPermissionsProvider =
-    FutureProvider<PermissionStatus>.internal(
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   notificationPermissions,
   name: r'notificationPermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -415,13 +433,33 @@ final notificationPermissionsProvider =
   allTransitiveDependencies: null,
 );
 
-typedef NotificationPermissionsRef = FutureProviderRef<PermissionStatus>;
+typedef NotificationPermissionsRef
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
+String _$requestedLocationPermissionsHash() =>
+    r'74888f26e86c6e7fbbcfdb85ad7c5f94f9da1803';
+
+/// See also [requestedLocationPermissions].
+@ProviderFor(requestedLocationPermissions)
+final requestedLocationPermissionsProvider =
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
+  requestedLocationPermissions,
+  name: r'requestedLocationPermissionsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$requestedLocationPermissionsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef RequestedLocationPermissionsRef
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$locationPermissionsHash() =>
-    r'612ab39777d3486a2140116ddde1a79e4ef149bd';
+    r'6e7a64b389d0bd1fe82e070552f8daeb43738557';
 
 /// See also [locationPermissions].
 @ProviderFor(locationPermissions)
-final locationPermissionsProvider = FutureProvider<PermissionStatus>.internal(
+final locationPermissionsProvider =
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   locationPermissions,
   name: r'locationPermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -431,14 +469,14 @@ final locationPermissionsProvider = FutureProvider<PermissionStatus>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef LocationPermissionsRef = FutureProviderRef<PermissionStatus>;
+typedef LocationPermissionsRef = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$appTrackingTransparencyPermissionsHash() =>
-    r'5ae7c4a8f6c8f3fc71f6aa7c46b69864bff9ca5f';
+    r'62f9ec92c347ccfb37d8e05f61a406c7f7b424ab';
 
 /// See also [appTrackingTransparencyPermissions].
 @ProviderFor(appTrackingTransparencyPermissions)
 final appTrackingTransparencyPermissionsProvider =
-    FutureProvider<PermissionStatus>.internal(
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   appTrackingTransparencyPermissions,
   name: r'appTrackingTransparencyPermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -449,12 +487,12 @@ final appTrackingTransparencyPermissionsProvider =
 );
 
 typedef AppTrackingTransparencyPermissionsRef
-    = FutureProviderRef<PermissionStatus>;
-String _$packageInfoHash() => r'9a2956f08c2e98b92dd8cce49cb331a127c78670';
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
+String _$packageInfoHash() => r'4134218e564e049f12bb99ad080ae564cc401ae8';
 
 /// See also [packageInfo].
 @ProviderFor(packageInfo)
-final packageInfoProvider = FutureProvider<PackageInfo>.internal(
+final packageInfoProvider = AutoDisposeFutureProvider<PackageInfo>.internal(
   packageInfo,
   name: r'packageInfoProvider',
   debugGetCreateSourceHash:
@@ -463,12 +501,13 @@ final packageInfoProvider = FutureProvider<PackageInfo>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef PackageInfoRef = FutureProviderRef<PackageInfo>;
-String _$cameraPermissionsHash() => r'e8e58b75c0e58c4ffb6e1c944b6112e105445966';
+typedef PackageInfoRef = AutoDisposeFutureProviderRef<PackageInfo>;
+String _$cameraPermissionsHash() => r'c9a748b4bb5a9b9f4b501f7aaa42aeb7a159f210';
 
 /// See also [cameraPermissions].
 @ProviderFor(cameraPermissions)
-final cameraPermissionsProvider = FutureProvider<PermissionStatus>.internal(
+final cameraPermissionsProvider =
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   cameraPermissions,
   name: r'cameraPermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -478,13 +517,14 @@ final cameraPermissionsProvider = FutureProvider<PermissionStatus>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef CameraPermissionsRef = FutureProviderRef<PermissionStatus>;
+typedef CameraPermissionsRef = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$microphonePermissionsHash() =>
-    r'59792d2f476f156e72c2d78bd5daaa79df73fa90';
+    r'b49e81d6fc2977aa5b7b65c46bc9f7402c963e37';
 
 /// See also [microphonePermissions].
 @ProviderFor(microphonePermissions)
-final microphonePermissionsProvider = FutureProvider<PermissionStatus>.internal(
+final microphonePermissionsProvider =
+    AutoDisposeFutureProvider<PermissionStatus>.internal(
   microphonePermissions,
   name: r'microphonePermissionsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -494,7 +534,8 @@ final microphonePermissionsProvider = FutureProvider<PermissionStatus>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef MicrophonePermissionsRef = FutureProviderRef<PermissionStatus>;
+typedef MicrophonePermissionsRef
+    = AutoDisposeFutureProviderRef<PermissionStatus>;
 String _$localAuthenticationHash() =>
     r'407bbc399b8f11d6942621606cc10a8ed80f06b7';
 

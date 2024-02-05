@@ -16,14 +16,20 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$PromotionsControllerState {
+  Set<String> get allPromotionIds => throw _privateConstructorUsedError;
   Set<String> get validFeedPromotionIds => throw _privateConstructorUsedError;
   Set<String> get validChatPromotionIds => throw _privateConstructorUsedError;
-  Map<String, Set<String>> get profilePromotionIds =>
+  Map<String, Set<String>> get validOwnedPromotionIds =>
+      throw _privateConstructorUsedError;
+  Map<String, Set<String>> get knownActivityPromotionIds =>
       throw _privateConstructorUsedError;
   int get feedPromotionFrequency => throw _privateConstructorUsedError;
   int get chatPromotionFrequency => throw _privateConstructorUsedError;
   String get cursor => throw _privateConstructorUsedError;
   bool get isExhausted => throw _privateConstructorUsedError;
+  bool get canPerformLocationCheck => throw _privateConstructorUsedError;
+  DateTime? get lastPerformedLocationCheck =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PromotionsControllerStateCopyWith<PromotionsControllerState> get copyWith =>
@@ -37,13 +43,17 @@ abstract class $PromotionsControllerStateCopyWith<$Res> {
       _$PromotionsControllerStateCopyWithImpl<$Res, PromotionsControllerState>;
   @useResult
   $Res call(
-      {Set<String> validFeedPromotionIds,
+      {Set<String> allPromotionIds,
+      Set<String> validFeedPromotionIds,
       Set<String> validChatPromotionIds,
-      Map<String, Set<String>> profilePromotionIds,
+      Map<String, Set<String>> validOwnedPromotionIds,
+      Map<String, Set<String>> knownActivityPromotionIds,
       int feedPromotionFrequency,
       int chatPromotionFrequency,
       String cursor,
-      bool isExhausted});
+      bool isExhausted,
+      bool canPerformLocationCheck,
+      DateTime? lastPerformedLocationCheck});
 }
 
 /// @nodoc
@@ -60,15 +70,23 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? allPromotionIds = null,
     Object? validFeedPromotionIds = null,
     Object? validChatPromotionIds = null,
-    Object? profilePromotionIds = null,
+    Object? validOwnedPromotionIds = null,
+    Object? knownActivityPromotionIds = null,
     Object? feedPromotionFrequency = null,
     Object? chatPromotionFrequency = null,
     Object? cursor = null,
     Object? isExhausted = null,
+    Object? canPerformLocationCheck = null,
+    Object? lastPerformedLocationCheck = freezed,
   }) {
     return _then(_value.copyWith(
+      allPromotionIds: null == allPromotionIds
+          ? _value.allPromotionIds
+          : allPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
       validFeedPromotionIds: null == validFeedPromotionIds
           ? _value.validFeedPromotionIds
           : validFeedPromotionIds // ignore: cast_nullable_to_non_nullable
@@ -77,9 +95,13 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
           ? _value.validChatPromotionIds
           : validChatPromotionIds // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      profilePromotionIds: null == profilePromotionIds
-          ? _value.profilePromotionIds
-          : profilePromotionIds // ignore: cast_nullable_to_non_nullable
+      validOwnedPromotionIds: null == validOwnedPromotionIds
+          ? _value.validOwnedPromotionIds
+          : validOwnedPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Set<String>>,
+      knownActivityPromotionIds: null == knownActivityPromotionIds
+          ? _value.knownActivityPromotionIds
+          : knownActivityPromotionIds // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<String>>,
       feedPromotionFrequency: null == feedPromotionFrequency
           ? _value.feedPromotionFrequency
@@ -97,6 +119,14 @@ class _$PromotionsControllerStateCopyWithImpl<$Res,
           ? _value.isExhausted
           : isExhausted // ignore: cast_nullable_to_non_nullable
               as bool,
+      canPerformLocationCheck: null == canPerformLocationCheck
+          ? _value.canPerformLocationCheck
+          : canPerformLocationCheck // ignore: cast_nullable_to_non_nullable
+              as bool,
+      lastPerformedLocationCheck: freezed == lastPerformedLocationCheck
+          ? _value.lastPerformedLocationCheck
+          : lastPerformedLocationCheck // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -111,13 +141,17 @@ abstract class _$$PromotionsControllerStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Set<String> validFeedPromotionIds,
+      {Set<String> allPromotionIds,
+      Set<String> validFeedPromotionIds,
       Set<String> validChatPromotionIds,
-      Map<String, Set<String>> profilePromotionIds,
+      Map<String, Set<String>> validOwnedPromotionIds,
+      Map<String, Set<String>> knownActivityPromotionIds,
       int feedPromotionFrequency,
       int chatPromotionFrequency,
       String cursor,
-      bool isExhausted});
+      bool isExhausted,
+      bool canPerformLocationCheck,
+      DateTime? lastPerformedLocationCheck});
 }
 
 /// @nodoc
@@ -133,15 +167,23 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? allPromotionIds = null,
     Object? validFeedPromotionIds = null,
     Object? validChatPromotionIds = null,
-    Object? profilePromotionIds = null,
+    Object? validOwnedPromotionIds = null,
+    Object? knownActivityPromotionIds = null,
     Object? feedPromotionFrequency = null,
     Object? chatPromotionFrequency = null,
     Object? cursor = null,
     Object? isExhausted = null,
+    Object? canPerformLocationCheck = null,
+    Object? lastPerformedLocationCheck = freezed,
   }) {
     return _then(_$PromotionsControllerStateImpl(
+      allPromotionIds: null == allPromotionIds
+          ? _value._allPromotionIds
+          : allPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Set<String>,
       validFeedPromotionIds: null == validFeedPromotionIds
           ? _value._validFeedPromotionIds
           : validFeedPromotionIds // ignore: cast_nullable_to_non_nullable
@@ -150,9 +192,13 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
           ? _value._validChatPromotionIds
           : validChatPromotionIds // ignore: cast_nullable_to_non_nullable
               as Set<String>,
-      profilePromotionIds: null == profilePromotionIds
-          ? _value._profilePromotionIds
-          : profilePromotionIds // ignore: cast_nullable_to_non_nullable
+      validOwnedPromotionIds: null == validOwnedPromotionIds
+          ? _value._validOwnedPromotionIds
+          : validOwnedPromotionIds // ignore: cast_nullable_to_non_nullable
+              as Map<String, Set<String>>,
+      knownActivityPromotionIds: null == knownActivityPromotionIds
+          ? _value._knownActivityPromotionIds
+          : knownActivityPromotionIds // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<String>>,
       feedPromotionFrequency: null == feedPromotionFrequency
           ? _value.feedPromotionFrequency
@@ -170,6 +216,14 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
           ? _value.isExhausted
           : isExhausted // ignore: cast_nullable_to_non_nullable
               as bool,
+      canPerformLocationCheck: null == canPerformLocationCheck
+          ? _value.canPerformLocationCheck
+          : canPerformLocationCheck // ignore: cast_nullable_to_non_nullable
+              as bool,
+      lastPerformedLocationCheck: freezed == lastPerformedLocationCheck
+          ? _value.lastPerformedLocationCheck
+          : lastPerformedLocationCheck // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -178,16 +232,31 @@ class __$$PromotionsControllerStateImplCopyWithImpl<$Res>
 
 class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   const _$PromotionsControllerStateImpl(
-      {final Set<String> validFeedPromotionIds = const {},
+      {final Set<String> allPromotionIds = const {},
+      final Set<String> validFeedPromotionIds = const {},
       final Set<String> validChatPromotionIds = const {},
-      final Map<String, Set<String>> profilePromotionIds = const {},
+      final Map<String, Set<String>> validOwnedPromotionIds = const {},
+      final Map<String, Set<String>> knownActivityPromotionIds = const {},
       this.feedPromotionFrequency = 4,
       this.chatPromotionFrequency = 4,
       this.cursor = '',
-      this.isExhausted = false})
-      : _validFeedPromotionIds = validFeedPromotionIds,
+      this.isExhausted = false,
+      this.canPerformLocationCheck = false,
+      this.lastPerformedLocationCheck})
+      : _allPromotionIds = allPromotionIds,
+        _validFeedPromotionIds = validFeedPromotionIds,
         _validChatPromotionIds = validChatPromotionIds,
-        _profilePromotionIds = profilePromotionIds;
+        _validOwnedPromotionIds = validOwnedPromotionIds,
+        _knownActivityPromotionIds = knownActivityPromotionIds;
+
+  final Set<String> _allPromotionIds;
+  @override
+  @JsonKey()
+  Set<String> get allPromotionIds {
+    if (_allPromotionIds is EqualUnmodifiableSetView) return _allPromotionIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_allPromotionIds);
+  }
 
   final Set<String> _validFeedPromotionIds;
   @override
@@ -209,14 +278,24 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
     return EqualUnmodifiableSetView(_validChatPromotionIds);
   }
 
-  final Map<String, Set<String>> _profilePromotionIds;
+  final Map<String, Set<String>> _validOwnedPromotionIds;
   @override
   @JsonKey()
-  Map<String, Set<String>> get profilePromotionIds {
-    if (_profilePromotionIds is EqualUnmodifiableMapView)
-      return _profilePromotionIds;
+  Map<String, Set<String>> get validOwnedPromotionIds {
+    if (_validOwnedPromotionIds is EqualUnmodifiableMapView)
+      return _validOwnedPromotionIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_profilePromotionIds);
+    return EqualUnmodifiableMapView(_validOwnedPromotionIds);
+  }
+
+  final Map<String, Set<String>> _knownActivityPromotionIds;
+  @override
+  @JsonKey()
+  Map<String, Set<String>> get knownActivityPromotionIds {
+    if (_knownActivityPromotionIds is EqualUnmodifiableMapView)
+      return _knownActivityPromotionIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_knownActivityPromotionIds);
   }
 
   @override
@@ -231,10 +310,15 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
   @override
   @JsonKey()
   final bool isExhausted;
+  @override
+  @JsonKey()
+  final bool canPerformLocationCheck;
+  @override
+  final DateTime? lastPerformedLocationCheck;
 
   @override
   String toString() {
-    return 'PromotionsControllerState(validFeedPromotionIds: $validFeedPromotionIds, validChatPromotionIds: $validChatPromotionIds, profilePromotionIds: $profilePromotionIds, feedPromotionFrequency: $feedPromotionFrequency, chatPromotionFrequency: $chatPromotionFrequency, cursor: $cursor, isExhausted: $isExhausted)';
+    return 'PromotionsControllerState(allPromotionIds: $allPromotionIds, validFeedPromotionIds: $validFeedPromotionIds, validChatPromotionIds: $validChatPromotionIds, validOwnedPromotionIds: $validOwnedPromotionIds, knownActivityPromotionIds: $knownActivityPromotionIds, feedPromotionFrequency: $feedPromotionFrequency, chatPromotionFrequency: $chatPromotionFrequency, cursor: $cursor, isExhausted: $isExhausted, canPerformLocationCheck: $canPerformLocationCheck, lastPerformedLocationCheck: $lastPerformedLocationCheck)';
   }
 
   @override
@@ -243,30 +327,45 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
         (other.runtimeType == runtimeType &&
             other is _$PromotionsControllerStateImpl &&
             const DeepCollectionEquality()
+                .equals(other._allPromotionIds, _allPromotionIds) &&
+            const DeepCollectionEquality()
                 .equals(other._validFeedPromotionIds, _validFeedPromotionIds) &&
             const DeepCollectionEquality()
                 .equals(other._validChatPromotionIds, _validChatPromotionIds) &&
-            const DeepCollectionEquality()
-                .equals(other._profilePromotionIds, _profilePromotionIds) &&
+            const DeepCollectionEquality().equals(
+                other._validOwnedPromotionIds, _validOwnedPromotionIds) &&
+            const DeepCollectionEquality().equals(
+                other._knownActivityPromotionIds, _knownActivityPromotionIds) &&
             (identical(other.feedPromotionFrequency, feedPromotionFrequency) ||
                 other.feedPromotionFrequency == feedPromotionFrequency) &&
             (identical(other.chatPromotionFrequency, chatPromotionFrequency) ||
                 other.chatPromotionFrequency == chatPromotionFrequency) &&
             (identical(other.cursor, cursor) || other.cursor == cursor) &&
             (identical(other.isExhausted, isExhausted) ||
-                other.isExhausted == isExhausted));
+                other.isExhausted == isExhausted) &&
+            (identical(
+                    other.canPerformLocationCheck, canPerformLocationCheck) ||
+                other.canPerformLocationCheck == canPerformLocationCheck) &&
+            (identical(other.lastPerformedLocationCheck,
+                    lastPerformedLocationCheck) ||
+                other.lastPerformedLocationCheck ==
+                    lastPerformedLocationCheck));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(_allPromotionIds),
       const DeepCollectionEquality().hash(_validFeedPromotionIds),
       const DeepCollectionEquality().hash(_validChatPromotionIds),
-      const DeepCollectionEquality().hash(_profilePromotionIds),
+      const DeepCollectionEquality().hash(_validOwnedPromotionIds),
+      const DeepCollectionEquality().hash(_knownActivityPromotionIds),
       feedPromotionFrequency,
       chatPromotionFrequency,
       cursor,
-      isExhausted);
+      isExhausted,
+      canPerformLocationCheck,
+      lastPerformedLocationCheck);
 
   @JsonKey(ignore: true)
   @override
@@ -278,20 +377,29 @@ class _$PromotionsControllerStateImpl implements _PromotionsControllerState {
 
 abstract class _PromotionsControllerState implements PromotionsControllerState {
   const factory _PromotionsControllerState(
-      {final Set<String> validFeedPromotionIds,
-      final Set<String> validChatPromotionIds,
-      final Map<String, Set<String>> profilePromotionIds,
-      final int feedPromotionFrequency,
-      final int chatPromotionFrequency,
-      final String cursor,
-      final bool isExhausted}) = _$PromotionsControllerStateImpl;
+          {final Set<String> allPromotionIds,
+          final Set<String> validFeedPromotionIds,
+          final Set<String> validChatPromotionIds,
+          final Map<String, Set<String>> validOwnedPromotionIds,
+          final Map<String, Set<String>> knownActivityPromotionIds,
+          final int feedPromotionFrequency,
+          final int chatPromotionFrequency,
+          final String cursor,
+          final bool isExhausted,
+          final bool canPerformLocationCheck,
+          final DateTime? lastPerformedLocationCheck}) =
+      _$PromotionsControllerStateImpl;
 
+  @override
+  Set<String> get allPromotionIds;
   @override
   Set<String> get validFeedPromotionIds;
   @override
   Set<String> get validChatPromotionIds;
   @override
-  Map<String, Set<String>> get profilePromotionIds;
+  Map<String, Set<String>> get validOwnedPromotionIds;
+  @override
+  Map<String, Set<String>> get knownActivityPromotionIds;
   @override
   int get feedPromotionFrequency;
   @override
@@ -300,6 +408,10 @@ abstract class _PromotionsControllerState implements PromotionsControllerState {
   String get cursor;
   @override
   bool get isExhausted;
+  @override
+  bool get canPerformLocationCheck;
+  @override
+  DateTime? get lastPerformedLocationCheck;
   @override
   @JsonKey(ignore: true)
   _$$PromotionsControllerStateImplCopyWith<_$PromotionsControllerStateImpl>

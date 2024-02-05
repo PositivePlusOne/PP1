@@ -18,7 +18,6 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/color_extensions.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
@@ -479,8 +478,10 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
   //* -=-=-=-=-=-                Promotion Banner               -=-=-=-=-=- *\\
   //* -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= *\\
   Widget _promotionBanner({bool isOnCarousel = false}) {
-    final String link = promotion?.link ?? '';
-    final String linkText = promotion?.linkText ?? appLocalizations.post_promoted_link_label;
+    if (promotion == null) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: EdgeInsets.only(
         left: sidePadding,
@@ -488,8 +489,8 @@ class PositivePostLayoutWidget extends HookConsumerWidget {
         bottom: isOnCarousel ? kPaddingLarge : 0,
       ),
       child: PromotionButton(
-        link: link,
-        linkText: linkText,
+        promotion: promotion!,
+        activity: postContent,
         borderRadius: isOnCarousel ? 0 : kBorderRadiusLarge,
         isEnabled: true,
       ),

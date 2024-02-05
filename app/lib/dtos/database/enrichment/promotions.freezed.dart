@@ -28,13 +28,13 @@ mixin _$Promotion {
   String get linkText => throw _privateConstructorUsedError;
   String get ownerId => throw _privateConstructorUsedError;
   String get activityId => throw _privateConstructorUsedError;
-  bool get isActive => throw _privateConstructorUsedError;
-  int get totalViewsSinceLastUpdate => throw _privateConstructorUsedError;
-  int get totalViewsAllotment => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown)
-  String? get startDate => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: dateFromUnknown)
-  String? get endDate => throw _privateConstructorUsedError;
+  bool get chatPromotionEnabled => throw _privateConstructorUsedError;
+  bool get postPromotionEnabled => throw _privateConstructorUsedError;
+  @JsonKey(
+      fromJson: PositiveRestrictedPlace.fromJsonList,
+      toJson: PositiveRestrictedPlace.toJsonList)
+  List<PositiveRestrictedPlace> get locationRestrictions =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,11 +55,12 @@ abstract class $PromotionCopyWith<$Res> {
       String linkText,
       String ownerId,
       String activityId,
-      bool isActive,
-      int totalViewsSinceLastUpdate,
-      int totalViewsAllotment,
-      @JsonKey(fromJson: dateFromUnknown) String? startDate,
-      @JsonKey(fromJson: dateFromUnknown) String? endDate});
+      bool chatPromotionEnabled,
+      bool postPromotionEnabled,
+      @JsonKey(
+          fromJson: PositiveRestrictedPlace.fromJsonList,
+          toJson: PositiveRestrictedPlace.toJsonList)
+      List<PositiveRestrictedPlace> locationRestrictions});
 
   $FlMetaCopyWith<$Res>? get flMeta;
 }
@@ -84,11 +85,9 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
     Object? linkText = null,
     Object? ownerId = null,
     Object? activityId = null,
-    Object? isActive = null,
-    Object? totalViewsSinceLastUpdate = null,
-    Object? totalViewsAllotment = null,
-    Object? startDate = freezed,
-    Object? endDate = freezed,
+    Object? chatPromotionEnabled = null,
+    Object? postPromotionEnabled = null,
+    Object? locationRestrictions = null,
   }) {
     return _then(_value.copyWith(
       flMeta: freezed == flMeta
@@ -119,26 +118,18 @@ class _$PromotionCopyWithImpl<$Res, $Val extends Promotion>
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
               as String,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
+      chatPromotionEnabled: null == chatPromotionEnabled
+          ? _value.chatPromotionEnabled
+          : chatPromotionEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      totalViewsSinceLastUpdate: null == totalViewsSinceLastUpdate
-          ? _value.totalViewsSinceLastUpdate
-          : totalViewsSinceLastUpdate // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalViewsAllotment: null == totalViewsAllotment
-          ? _value.totalViewsAllotment
-          : totalViewsAllotment // ignore: cast_nullable_to_non_nullable
-              as int,
-      startDate: freezed == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      endDate: freezed == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as String?,
+      postPromotionEnabled: null == postPromotionEnabled
+          ? _value.postPromotionEnabled
+          : postPromotionEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      locationRestrictions: null == locationRestrictions
+          ? _value.locationRestrictions
+          : locationRestrictions // ignore: cast_nullable_to_non_nullable
+              as List<PositiveRestrictedPlace>,
     ) as $Val);
   }
 
@@ -171,11 +162,12 @@ abstract class _$$PromotionImplCopyWith<$Res>
       String linkText,
       String ownerId,
       String activityId,
-      bool isActive,
-      int totalViewsSinceLastUpdate,
-      int totalViewsAllotment,
-      @JsonKey(fromJson: dateFromUnknown) String? startDate,
-      @JsonKey(fromJson: dateFromUnknown) String? endDate});
+      bool chatPromotionEnabled,
+      bool postPromotionEnabled,
+      @JsonKey(
+          fromJson: PositiveRestrictedPlace.fromJsonList,
+          toJson: PositiveRestrictedPlace.toJsonList)
+      List<PositiveRestrictedPlace> locationRestrictions});
 
   @override
   $FlMetaCopyWith<$Res>? get flMeta;
@@ -199,11 +191,9 @@ class __$$PromotionImplCopyWithImpl<$Res>
     Object? linkText = null,
     Object? ownerId = null,
     Object? activityId = null,
-    Object? isActive = null,
-    Object? totalViewsSinceLastUpdate = null,
-    Object? totalViewsAllotment = null,
-    Object? startDate = freezed,
-    Object? endDate = freezed,
+    Object? chatPromotionEnabled = null,
+    Object? postPromotionEnabled = null,
+    Object? locationRestrictions = null,
   }) {
     return _then(_$PromotionImpl(
       flMeta: freezed == flMeta
@@ -234,26 +224,18 @@ class __$$PromotionImplCopyWithImpl<$Res>
           ? _value.activityId
           : activityId // ignore: cast_nullable_to_non_nullable
               as String,
-      isActive: null == isActive
-          ? _value.isActive
-          : isActive // ignore: cast_nullable_to_non_nullable
+      chatPromotionEnabled: null == chatPromotionEnabled
+          ? _value.chatPromotionEnabled
+          : chatPromotionEnabled // ignore: cast_nullable_to_non_nullable
               as bool,
-      totalViewsSinceLastUpdate: null == totalViewsSinceLastUpdate
-          ? _value.totalViewsSinceLastUpdate
-          : totalViewsSinceLastUpdate // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalViewsAllotment: null == totalViewsAllotment
-          ? _value.totalViewsAllotment
-          : totalViewsAllotment // ignore: cast_nullable_to_non_nullable
-              as int,
-      startDate: freezed == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      endDate: freezed == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as String?,
+      postPromotionEnabled: null == postPromotionEnabled
+          ? _value.postPromotionEnabled
+          : postPromotionEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      locationRestrictions: null == locationRestrictions
+          ? _value._locationRestrictions
+          : locationRestrictions // ignore: cast_nullable_to_non_nullable
+              as List<PositiveRestrictedPlace>,
     ));
   }
 }
@@ -269,11 +251,13 @@ class _$PromotionImpl implements _Promotion {
       this.linkText = '',
       this.ownerId = '',
       this.activityId = '',
-      this.isActive = false,
-      this.totalViewsSinceLastUpdate = 0,
-      this.totalViewsAllotment = 0,
-      @JsonKey(fromJson: dateFromUnknown) this.startDate,
-      @JsonKey(fromJson: dateFromUnknown) this.endDate});
+      this.chatPromotionEnabled = false,
+      this.postPromotionEnabled = false,
+      @JsonKey(
+          fromJson: PositiveRestrictedPlace.fromJsonList,
+          toJson: PositiveRestrictedPlace.toJsonList)
+      final List<PositiveRestrictedPlace> locationRestrictions = const []})
+      : _locationRestrictions = locationRestrictions;
 
   factory _$PromotionImpl.fromJson(Map<String, dynamic> json) =>
       _$$PromotionImplFromJson(json);
@@ -301,23 +285,25 @@ class _$PromotionImpl implements _Promotion {
   final String activityId;
   @override
   @JsonKey()
-  final bool isActive;
+  final bool chatPromotionEnabled;
   @override
   @JsonKey()
-  final int totalViewsSinceLastUpdate;
+  final bool postPromotionEnabled;
+  final List<PositiveRestrictedPlace> _locationRestrictions;
   @override
-  @JsonKey()
-  final int totalViewsAllotment;
-  @override
-  @JsonKey(fromJson: dateFromUnknown)
-  final String? startDate;
-  @override
-  @JsonKey(fromJson: dateFromUnknown)
-  final String? endDate;
+  @JsonKey(
+      fromJson: PositiveRestrictedPlace.fromJsonList,
+      toJson: PositiveRestrictedPlace.toJsonList)
+  List<PositiveRestrictedPlace> get locationRestrictions {
+    if (_locationRestrictions is EqualUnmodifiableListView)
+      return _locationRestrictions;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_locationRestrictions);
+  }
 
   @override
   String toString() {
-    return 'Promotion(flMeta: $flMeta, title: $title, description: $description, link: $link, linkText: $linkText, ownerId: $ownerId, activityId: $activityId, isActive: $isActive, totalViewsSinceLastUpdate: $totalViewsSinceLastUpdate, totalViewsAllotment: $totalViewsAllotment, startDate: $startDate, endDate: $endDate)';
+    return 'Promotion(flMeta: $flMeta, title: $title, description: $description, link: $link, linkText: $linkText, ownerId: $ownerId, activityId: $activityId, chatPromotionEnabled: $chatPromotionEnabled, postPromotionEnabled: $postPromotionEnabled, locationRestrictions: $locationRestrictions)';
   }
 
   @override
@@ -335,16 +321,12 @@ class _$PromotionImpl implements _Promotion {
             (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
             (identical(other.activityId, activityId) ||
                 other.activityId == activityId) &&
-            (identical(other.isActive, isActive) ||
-                other.isActive == isActive) &&
-            (identical(other.totalViewsSinceLastUpdate,
-                    totalViewsSinceLastUpdate) ||
-                other.totalViewsSinceLastUpdate == totalViewsSinceLastUpdate) &&
-            (identical(other.totalViewsAllotment, totalViewsAllotment) ||
-                other.totalViewsAllotment == totalViewsAllotment) &&
-            (identical(other.startDate, startDate) ||
-                other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate));
+            (identical(other.chatPromotionEnabled, chatPromotionEnabled) ||
+                other.chatPromotionEnabled == chatPromotionEnabled) &&
+            (identical(other.postPromotionEnabled, postPromotionEnabled) ||
+                other.postPromotionEnabled == postPromotionEnabled) &&
+            const DeepCollectionEquality()
+                .equals(other._locationRestrictions, _locationRestrictions));
   }
 
   @JsonKey(ignore: true)
@@ -358,11 +340,9 @@ class _$PromotionImpl implements _Promotion {
       linkText,
       ownerId,
       activityId,
-      isActive,
-      totalViewsSinceLastUpdate,
-      totalViewsAllotment,
-      startDate,
-      endDate);
+      chatPromotionEnabled,
+      postPromotionEnabled,
+      const DeepCollectionEquality().hash(_locationRestrictions));
 
   @JsonKey(ignore: true)
   @override
@@ -387,11 +367,12 @@ abstract class _Promotion implements Promotion {
           final String linkText,
           final String ownerId,
           final String activityId,
-          final bool isActive,
-          final int totalViewsSinceLastUpdate,
-          final int totalViewsAllotment,
-          @JsonKey(fromJson: dateFromUnknown) final String? startDate,
-          @JsonKey(fromJson: dateFromUnknown) final String? endDate}) =
+          final bool chatPromotionEnabled,
+          final bool postPromotionEnabled,
+          @JsonKey(
+              fromJson: PositiveRestrictedPlace.fromJsonList,
+              toJson: PositiveRestrictedPlace.toJsonList)
+          final List<PositiveRestrictedPlace> locationRestrictions}) =
       _$PromotionImpl;
 
   factory _Promotion.fromJson(Map<String, dynamic> json) =
@@ -413,17 +394,14 @@ abstract class _Promotion implements Promotion {
   @override
   String get activityId;
   @override
-  bool get isActive;
+  bool get chatPromotionEnabled;
   @override
-  int get totalViewsSinceLastUpdate;
+  bool get postPromotionEnabled;
   @override
-  int get totalViewsAllotment;
-  @override
-  @JsonKey(fromJson: dateFromUnknown)
-  String? get startDate;
-  @override
-  @JsonKey(fromJson: dateFromUnknown)
-  String? get endDate;
+  @JsonKey(
+      fromJson: PositiveRestrictedPlace.fromJsonList,
+      toJson: PositiveRestrictedPlace.toJsonList)
+  List<PositiveRestrictedPlace> get locationRestrictions;
   @override
   @JsonKey(ignore: true)
   _$$PromotionImplCopyWith<_$PromotionImpl> get copyWith =>

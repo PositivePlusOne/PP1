@@ -71,14 +71,9 @@ export namespace EnrichmentEndpoints {
     functions.logger.info(`Getting a promotion window`);
 
     const cursor = request.cursor || null;
-    const limit = request.limit || 30;
     const uid = context.auth?.uid || "";
 
-    if (!limit) {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
-    }
-
-    const promotions = await PromotionsService.getActivePromotionWindow(cursor, limit) as Promotion[];
+    const promotions = await PromotionsService.getActivePromotionWindow(cursor) as Promotion[];
 
     return buildEndpointResponse(context, {
       sender: uid,

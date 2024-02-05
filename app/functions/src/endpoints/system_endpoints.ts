@@ -140,7 +140,7 @@ export namespace SystemEndpoints {
       // uid ? NotificationsService.listNotificationWindow(streamClient, uid, DEFAULT_PAGINATION_WINDOW_SIZE, "") : Promise.resolve([]),
       uid ? RelationshipService.getManagingRelationships(uid, pagination) : Promise.resolve({ data: [], pagination: {} }),
       LocalizationsService.getDefaultCompanySectors(locale),
-      PromotionsService.getActivePromotionWindow("", 30),
+      PromotionsService.getActivePromotionWindow(""),
     ]);
 
     const joinRecords = [] as string[];
@@ -197,9 +197,22 @@ export namespace SystemEndpoints {
     }
 
     const ownedPromotions = await PromotionsService.getOwnedPromotionsForManagedAccounts(supportedProfileIds);
+
+    // Add unknown owned promotions to the total list of promotions.
+    const allPromotions = [...promotions, ...ownedPromotions].filter((promotion, index, self) => {
+      const promotionId = FlamelinkHelpers.getFlamelinkIdFromObject(promotion);
+      if (!promotionId) {
+        return false;
+      }
+
+      return self.findIndex((p) => FlamelinkHelpers.getFlamelinkIdFromObject(p) === promotionId) === index;
+    });
+
+    functions.logger.info("All promotions", { allPromotions });
+
     return buildEndpointResponse(context, {
       sender: uid,
-      data: [profile, ...supportedProfiles, ...promotions, ...ownedPromotions],
+      data: [profile, ...supportedProfiles, ...allPromotions],
       joins: joinRecords,
       seedData: {
         genders,
