@@ -453,13 +453,11 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final logger = ref.read(loggerProvider);
 
-    bool hasSelectedAccount = true;
-    if (!state.isEditingPost) {
-      hasSelectedAccount = await trySwitchProfile();
-    }
-
-    if (!hasSelectedAccount) {
-      return;
+    if (activityData.postType == PostType.repost) {
+      final bool hasSelectedAccount = await trySwitchProfile();
+      if (!hasSelectedAccount) {
+        return;
+      }
     }
 
     state = state.copyWith(isBusy: true);
@@ -508,6 +506,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
           activeButtonFlexText: flexText,
           previousActivity: activityData,
         );
+
         return;
       }
 
