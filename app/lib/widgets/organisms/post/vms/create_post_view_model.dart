@@ -453,9 +453,12 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     final AppLocalizations localisations = AppLocalizations.of(context)!;
     final logger = ref.read(loggerProvider);
 
-    final bool selectedAccount = await trySwitchProfile();
+    bool hasSelectedAccount = true;
+    if (!state.isEditingPost) {
+      hasSelectedAccount = await trySwitchProfile();
+    }
 
-    if (!selectedAccount) {
+    if (!hasSelectedAccount) {
       return;
     }
 
