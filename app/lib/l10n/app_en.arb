@@ -431,6 +431,8 @@
     "page_account_verify_account_title": "Verify Account",
     "page_account_verify_account_body": "Can we confirm your password so we know that it is you!",
     "page_account_verify_account_password_forgotten": "Forgotten Password",
+    
+    "page_account_build_number": "Build Version: ",
 
     "page_chat_action_start_conversation": "Start Chat",
     "page_chat_label_user_type": "User Type",
