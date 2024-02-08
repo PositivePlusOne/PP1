@@ -211,6 +211,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: GestureDetector(
+                  onTap: ref.read(systemControllerProvider.notifier).returnToHomePage,
                   onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
                   child: Hero(
                     tag: '${PositiveAppBar.kPositiveLogoTag}_$foregroundColor',
