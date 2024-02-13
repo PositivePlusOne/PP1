@@ -55,7 +55,6 @@ Future<void> setupApplication() async {
   final CacheController cacheController = providerContainer.read(cacheControllerProvider);
   final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
   final LocationController locationController = providerContainer.read(locationControllerProvider.notifier);
-  final LocalAuthentication auth = LocalAuthentication();
 
   //* Initialize security bindings
   await securityController.setupTalsec();

@@ -2,7 +2,11 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,6 +30,8 @@ import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/biometrics/vms/biometrics_preferences_view_model.dart';
+import 'package:unicons/unicons.dart';
+import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_preferences_view_model.freezed.dart';
@@ -39,6 +45,7 @@ class AccountPreferencesViewModelState with _$AccountPreferencesViewModelState {
     @Default(false) bool isIncognitoEnabled,
     @Default(false) bool areBiometricsEnabled,
     @Default(false) bool areMarketingEmailsEnabled,
+    @Default(AvailableBiometrics.none) AvailableBiometrics availableBiometrics,
   }) = _AccountPreferencesViewModelState;
 
   factory AccountPreferencesViewModelState.initialState() {
@@ -56,6 +63,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   @override
   void onFirstRender() {
     unawaited(preload());
+    checkBiometrics();
     super.onFirstRender();
   }
 
@@ -84,7 +92,57 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     );
   }
 
+  String get biometricToggleTitle {
+    switch (state.availableBiometrics) {
+      case AvailableBiometrics.face:
+        return "Enable FaceID";
+      case AvailableBiometrics.strong:
+        return "Enable Biometrics";
+      case AvailableBiometrics.weak:
+        return "Enable Pin";
+      case AvailableBiometrics.none:
+      default:
+        return "No valid biometrics";
+    }
+  }
+
+  IconData get biometricToggleIcon {
+    switch (state.availableBiometrics) {
+      case AvailableBiometrics.face:
+        return UniconsLine.smile;
+      case AvailableBiometrics.strong:
+        return UniconsLine.eye;
+      case AvailableBiometrics.weak:
+        return UniconsLine.asterisk;
+      case AvailableBiometrics.none:
+      default:
+        return UniconsLine.crosshair;
+    }
+  }
+
+  Future<void> checkBiometrics() async {
+    final LocalAuthentication auth = LocalAuthentication();
+    final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+
+    AvailableBiometrics availableBiometricsEnum = AvailableBiometrics.none;
+
+    if (availableBiometrics.contains(BiometricType.weak)) {
+      availableBiometricsEnum = AvailableBiometrics.weak;
+    }
+    if (availableBiometrics.contains(BiometricType.strong) || availableBiometrics.contains(BiometricType.fingerprint)) {
+      availableBiometricsEnum = AvailableBiometrics.strong;
+    }
+    if (availableBiometrics.contains(BiometricType.face)) {
+      availableBiometricsEnum = AvailableBiometrics.face;
+    }
+    state = state.copyWith(availableBiometrics: availableBiometricsEnum);
+  }
+
   Future<void> onBiometricsToggle() async {
+    if (state.availableBiometrics == AvailableBiometrics.none) {
+      return;
+    }
+
     final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
     final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
     final bool biometricPreferencesSet = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
@@ -94,14 +152,71 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
       if (biometricPreferencesSet) {
         await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
       } else {
-        await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
+        await onPermitSelected();
       }
     } finally {
+      sharedPreferences.reload();
       state = state.copyWith(
         areBiometricsEnabled: sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false,
         isBusy: false,
       );
     }
+  }
+
+  Future<void> onPermitSelected() async {
+    final Logger logger = ref.read(loggerProvider);
+    // final AppRouter appRouter = ref.read(appRouterProvider);
+    final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
+    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final AppRouter router = ref.read(appRouterProvider);
+
+    logger.d('BiometricsPreferencesViewModel.onPermitSelected');
+
+    final LocalAuthentication localAuthentication = ref.read(localAuthenticationProvider);
+    final bool canAuthenticateWithBiometrics = await localAuthentication.canCheckBiometrics;
+    final bool canAuthenticate = canAuthenticateWithBiometrics || await localAuthentication.isDeviceSupported();
+
+    bool hasAuthenticated = false;
+    if (canAuthenticate) {
+      try {
+        await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+        hasAuthenticated = await localAuthentication.authenticate(
+          localizedReason: 'Please authenticate to confirm biometric usage.',
+          options: const AuthenticationOptions(
+            stickyAuth: true,
+            useErrorDialogs: true,
+          ),
+        );
+      } catch (e) {
+        late final PositiveSnackBar snackBar;
+        if (e is PlatformException && e.code == 'NotAvailable') {
+          snackBar = PositiveGenericSnackBar(
+            title: "Biometrics is not available or permission have not been granted.",
+            icon: UniconsLine.envelope_exclamation,
+            backgroundColour: colours.black,
+          );
+        } else {
+          snackBar = PositiveGenericSnackBar(
+            title: "An unknown error has occurred",
+            icon: UniconsLine.envelope_exclamation,
+            backgroundColour: colours.black,
+          );
+        }
+        if (router.navigatorKey.currentContext != null) {
+          ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+        }
+      }
+    }
+
+    if (!hasAuthenticated) {
+      logger.e('BiometricsPreferencesViewModel.onPermitSelected: hasAuthenticated: $hasAuthenticated');
+      await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
+      return;
+    }
+
+    await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesEnabled);
+    await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
   }
 
   Future<void> onOpenSettingsRequested() async {
@@ -233,4 +348,11 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
       state = state.copyWith(isBusy: false);
     }
   }
+}
+
+enum AvailableBiometrics {
+  none,
+  weak,
+  strong,
+  face,
 }
