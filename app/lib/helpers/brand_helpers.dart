@@ -13,6 +13,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/tag_extensions.dart';
+import 'package:app/helpers/markdown_truncator.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
@@ -30,7 +31,7 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   bool boldHandles = true,
   List<Mention> mentions = const [],
   bool squashParagraphs = false,
-  int maxWords = -1,
+  int maxLength = -1,
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
@@ -52,8 +53,8 @@ MarkdownWidget buildMarkdownWidgetFromBody(
     markdown = markdown.squashParagraphs();
   }
 
-  if (maxWords > 0) {
-    markdown = markdown.truncateWords(maxWords);
+  if (maxLength > 0) {
+    markdown = MarkdownTruncator.formatText(markdown, limit: maxLength, ellipsis: true);
   }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)

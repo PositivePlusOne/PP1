@@ -43,7 +43,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   final bool isEnabled;
   final FutureOr<void> Function(BuildContext context, NotificationPayload payload)? onNotificationSelected;
 
-  static const int kMaxBodyWords = 12;
+  static const int kMaxBodyLength = 42;
 
   @override
   ConsumerState<PositiveNotificationTile> createState() => PositiveNotificationTileState();
@@ -232,7 +232,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                   lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
                   onTapLink: (_) {},
                   squashParagraphs: true,
-                  maxWords: PositiveNotificationTile.kMaxBodyWords,
+                  maxLength: PositiveNotificationTile.kMaxBodyLength,
                 ),
               ),
             ),

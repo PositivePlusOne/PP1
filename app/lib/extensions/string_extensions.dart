@@ -121,30 +121,6 @@ extension StringExt on String {
   String squashParagraphs() {
     return replaceAll(RegExp(r'\n+'), ' ');
   }
-
-  String truncateWords(int maxWords, {bool addEllipsis = true}) {
-    final List<String> words = split(' ');
-    if (words.length <= maxWords) {
-      return this;
-    }
-
-    String truncatedWords = words.sublist(0, maxWords).join(' ');
-
-    if (addEllipsis) {
-      truncatedWords += '...';
-    }
-
-    // Restore any bolding that was lost
-    if (startsWith("**") && endsWith("**")) {
-      if (!truncatedWords.endsWith("**")) {
-        truncatedWords += "**";
-      }
-    }
-
-    // TODO: Find a way to be markdown safe and parse word by word so we don't cut off markdown
-
-    return truncatedWords;
-  }
 }
 
 extension StringListExt on Iterable<String> {
