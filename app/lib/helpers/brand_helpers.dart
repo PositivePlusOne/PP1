@@ -29,6 +29,8 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   void Function(String link)? onTapLink,
   bool boldHandles = true,
   List<Mention> mentions = const [],
+  bool squashParagraphs = false,
+  int maxWords = -1,
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
@@ -44,6 +46,14 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   //! So in this case, we want to bold the handle so the user knows it is a handle, despite no mention being persisted
   if (boldHandles) {
     markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
+  }
+
+  if (squashParagraphs) {
+    markdown = markdown.squashParagraphs();
+  }
+
+  if (maxWords > 0) {
+    markdown = markdown.truncateWords(maxWords);
   }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)
