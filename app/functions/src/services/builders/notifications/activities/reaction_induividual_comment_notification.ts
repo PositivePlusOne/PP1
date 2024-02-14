@@ -4,6 +4,7 @@ import { ActivityJSON } from "../../../../dto/activities";
 import { ProfileJSON } from "../../../../dto/profile";
 import { ReactionJSON } from "../../../../dto/reactions";
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
+import { StringHelpers } from "../../../../helpers/string_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
@@ -25,7 +26,7 @@ export namespace ReactionInduividualCommentNotification {
       activityContent = activityContent.substring(0, ACTIVITY_NOTIFICATION_TRUNSCATE_LENGTH) + "...";
     }
 
-    const displayName = userProfile.displayName || "";
+    const displayName = StringHelpers.asHandle(userProfile.displayName || "");
     const title = await LocalizationsService.getLocalizedString("notifications.post_comment.title");
     const body = hasActivityContent ? await LocalizationsService.getLocalizedString("notifications.post_comment.body", { displayName, shortBody: activityContent }) : await LocalizationsService.getLocalizedString("notifications.post_comment.body_empty", { displayName });
     const origin = activity.publisherInformation?.originFeed ?? "";

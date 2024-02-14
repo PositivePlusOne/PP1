@@ -2,6 +2,7 @@ import { NotificationAction } from "../../../../constants/notification_actions";
 import { NotificationTopic } from "../../../../constants/notification_topics";
 import { ProfileJSON } from "../../../../dto/profile";
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
+import { StringHelpers } from "../../../../helpers/string_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
@@ -16,7 +17,7 @@ export namespace ChatConnectionReceivedNotification {
    */
   export async function sendNotification(sender: ProfileJSON, target: ProfileJSON): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
-    const displayName = sender.displayName || "";
+    const displayName = StringHelpers.asHandle(sender.displayName || "");
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(sender);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
 

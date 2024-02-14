@@ -1,6 +1,7 @@
 import { NotificationAction } from "../../../../constants/notification_actions";
 import { NotificationTopic } from "../../../../constants/notification_topics";
 import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
+import { StringHelpers } from "../../../../helpers/string_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
@@ -15,7 +16,7 @@ export namespace ChatConnectionRejectedNotification {
    */
   export async function sendNotification(userProfile: any, target: any): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
-    const displayName = userProfile.displayName || "";
+    const displayName = StringHelpers.asHandle(userProfile.displayName || "");
 
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);
