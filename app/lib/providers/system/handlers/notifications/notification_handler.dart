@@ -58,7 +58,6 @@ abstract class NotificationHandler {
   }
 
   List<Widget> buildNotificationTrailing(PositiveNotificationTileState state) {
-    logger.d('buildNotificationTrailing()');
     return [];
   }
 
@@ -66,7 +65,6 @@ abstract class NotificationHandler {
     final NotificationPayload payload = state.widget.notification;
     final Color foregroundColor = getForegroundColor(payload);
     final Profile? senderProfile = state.presenter.senderProfile;
-    logger.d('buildNotificationLeading(), payload: $payload');
 
     if (senderProfile == null) {
       return const PositiveProfileCircularIndicator();

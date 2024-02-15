@@ -117,6 +117,10 @@ extension StringExt on String {
       return '[**${match.group(0)}**](${match.group(0)?.buildProfileStringLink(knownIdMap: knownIdMap)})';
     });
   }
+
+  String squashParagraphs() {
+    return replaceAll(RegExp(r'\n+'), ' ');
+  }
 }
 
 extension StringListExt on Iterable<String> {

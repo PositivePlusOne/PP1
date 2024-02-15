@@ -13,6 +13,7 @@ import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/extensions/tag_extensions.dart';
+import 'package:app/helpers/markdown_truncator.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
@@ -29,6 +30,8 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   void Function(String link)? onTapLink,
   bool boldHandles = true,
   List<Mention> mentions = const [],
+  bool squashParagraphs = false,
+  int maxLength = -1,
 }) {
   //! Add the tags to the start of the markdown as bolded text
   String markdown = str;
@@ -44,6 +47,14 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   //! So in this case, we want to bold the handle so the user knows it is a handle, despite no mention being persisted
   if (boldHandles) {
     markdown = markdown.boldHandlesAndLink(knownIdMap: mentionsIdMap);
+  }
+
+  if (squashParagraphs) {
+    markdown = markdown.squashParagraphs();
+  }
+
+  if (maxLength > 0) {
+    markdown = MarkdownTruncator.formatText(markdown, limit: maxLength, ellipsis: true);
   }
 
   // Add each tag as a bold markdown hashtag with a link to the tag (schema pp1://)

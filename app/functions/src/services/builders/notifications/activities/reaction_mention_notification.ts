@@ -19,7 +19,7 @@ export namespace ReactionMentionNotification {
 
     const content = reaction?.text ?? "";
 
-    const displayName = userProfile.displayName || "";
+    const displayName = StringHelpers.asHandle(userProfile.displayName || "");
     const title = await LocalizationsService.getLocalizedString("notifications.reaction_mentioned.title");
     const safeContent = StringHelpers.markdownToPlainText(content);
     const body = await LocalizationsService.getLocalizedString("notifications.reaction_mentioned.body", { displayName, shortBody: safeContent });

@@ -7,6 +7,7 @@ import { FlamelinkHelpers } from "../../../../helpers/flamelink_helpers";
 import { LocalizationsService } from "../../../localizations_service";
 import { NotificationsService } from "../../../notifications_service";
 import { NotificationPayload } from "../../../types/notification_payload";
+import { StringHelpers } from "../../../../helpers/string_helpers";
 
 export namespace ChatConnectionSentNotification {
   export const TAG = "ChatConnectionSentNotification";
@@ -18,7 +19,7 @@ export namespace ChatConnectionSentNotification {
    */
   export async function sendNotification(sender: ProfileJSON, target: ProfileJSON): Promise<void> {
     await LocalizationsService.changeLanguageToProfile(target);
-    const displayName = sender.displayName || "";
+    const displayName = StringHelpers.asHandle(sender.displayName || "");
 
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(sender);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(target);

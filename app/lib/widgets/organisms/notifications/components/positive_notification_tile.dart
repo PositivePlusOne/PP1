@@ -43,7 +43,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   final bool isEnabled;
   final FutureOr<void> Function(BuildContext context, NotificationPayload payload)? onNotificationSelected;
 
-  static const double kConstrainedHeight = 62.0;
+  static const int kMaxBodyLength = 42;
 
   @override
   ConsumerState<PositiveNotificationTile> createState() => PositiveNotificationTileState();
@@ -216,7 +216,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
         padding: const EdgeInsets.all(kPaddingSmall),
         decoration: BoxDecoration(
           color: colors.white,
-          borderRadius: BorderRadius.circular(kBorderRadiusMassive),
+          borderRadius: BorderRadius.circular(kBorderRadiusLargePlus),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -231,11 +231,13 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                   brightness: Brightness.light,
                   lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
                   onTapLink: (_) {},
+                  squashParagraphs: true,
+                  maxLength: PositiveNotificationTile.kMaxBodyLength,
                 ),
               ),
             ),
             if (trailing.isNotEmpty) ...<Widget>[
-              const SizedBox(width: kPaddingExtraSmall),
+              const SizedBox(width: kPaddingSmall),
               ...trailing.spaceWithHorizontal(kPaddingExtraSmall),
             ],
           ],

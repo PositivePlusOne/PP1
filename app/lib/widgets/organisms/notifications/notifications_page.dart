@@ -41,8 +41,6 @@ class NotificationsPage extends HookConsumerWidget {
 
     final NotificationsViewModel viewModel = ref.read(notificationsViewModelProvider.notifier);
     ref.watch(notificationsViewModelProvider);
-
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     ref.watch(notificationsControllerProvider);
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));

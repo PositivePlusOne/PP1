@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Package imports:
-import 'package:app/extensions/permission_extensions.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,6 +13,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/geo/positive_restricted_place.dart';
 import 'package:app/dtos/database/relationships/relationship.dart';
+import 'package:app/extensions/permission_extensions.dart';
 import 'package:app/extensions/place_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';

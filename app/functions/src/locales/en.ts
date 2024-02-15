@@ -121,11 +121,11 @@ export const enTranslations = {
     },
     post_mentioned: {
       title: "New Mention",
-      body: "**{{displayName}}** has mentioned you in their post: **{{shortBody}}**",
+      body: "**{{displayName}}** has mentioned you in their post: {{shortBody}}",
     },
     reaction_mentioned: {
       title: "New Mention",
-      body: "**{{displayName}}** has mentioned you in a comment: **{{shortBody}}**",
+      body: "**{{displayName}}** has mentioned you in a comment: {{shortBody}}",
     },
   },
 };
