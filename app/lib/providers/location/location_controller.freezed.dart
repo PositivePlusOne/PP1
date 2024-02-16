@@ -165,14 +165,9 @@ mixin _$LocationControllerState {
   double? get lastKnownLongitude => throw _privateConstructorUsedError;
   Map<String, Set<String>> get lastKnownAddressComponents =>
       throw _privateConstructorUsedError;
-<<<<<<< develop
   DateTime? get lastGpsLookup => throw _privateConstructorUsedError;
   DateTime? get lastAddressComponentLookup =>
       throw _privateConstructorUsedError;
-=======
-  DateTime? get lastGpsUpdate => throw _privateConstructorUsedError;
-  DateTime? get lastGeocodingUpdate => throw _privateConstructorUsedError;
->>>>>>> PP1-1477
 
   @JsonKey(ignore: true)
   $LocationControllerStateCopyWith<LocationControllerState> get copyWith =>
@@ -194,13 +189,8 @@ abstract class $LocationControllerStateCopyWith<$Res> {
       double? lastKnownLatitude,
       double? lastKnownLongitude,
       Map<String, Set<String>> lastKnownAddressComponents,
-<<<<<<< develop
       DateTime? lastGpsLookup,
       DateTime? lastAddressComponentLookup});
-=======
-      DateTime? lastGpsUpdate,
-      DateTime? lastGeocodingUpdate});
->>>>>>> PP1-1477
 }
 
 /// @nodoc
@@ -225,13 +215,8 @@ class _$LocationControllerStateCopyWithImpl<$Res,
     Object? lastKnownLatitude = freezed,
     Object? lastKnownLongitude = freezed,
     Object? lastKnownAddressComponents = null,
-<<<<<<< develop
     Object? lastGpsLookup = freezed,
     Object? lastAddressComponentLookup = freezed,
-=======
-    Object? lastGpsUpdate = freezed,
-    Object? lastGeocodingUpdate = freezed,
->>>>>>> PP1-1477
   }) {
     return _then(_value.copyWith(
       locationPermission: freezed == locationPermission
@@ -266,7 +251,6 @@ class _$LocationControllerStateCopyWithImpl<$Res,
           ? _value.lastKnownAddressComponents
           : lastKnownAddressComponents // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<String>>,
-<<<<<<< develop
       lastGpsLookup: freezed == lastGpsLookup
           ? _value.lastGpsLookup
           : lastGpsLookup // ignore: cast_nullable_to_non_nullable
@@ -274,15 +258,6 @@ class _$LocationControllerStateCopyWithImpl<$Res,
       lastAddressComponentLookup: freezed == lastAddressComponentLookup
           ? _value.lastAddressComponentLookup
           : lastAddressComponentLookup // ignore: cast_nullable_to_non_nullable
-=======
-      lastGpsUpdate: freezed == lastGpsUpdate
-          ? _value.lastGpsUpdate
-          : lastGpsUpdate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      lastGeocodingUpdate: freezed == lastGeocodingUpdate
-          ? _value.lastGeocodingUpdate
-          : lastGeocodingUpdate // ignore: cast_nullable_to_non_nullable
->>>>>>> PP1-1477
               as DateTime?,
     ) as $Val);
   }
@@ -306,13 +281,8 @@ abstract class _$$LocationControllerStateImplCopyWith<$Res>
       double? lastKnownLatitude,
       double? lastKnownLongitude,
       Map<String, Set<String>> lastKnownAddressComponents,
-<<<<<<< develop
       DateTime? lastGpsLookup,
       DateTime? lastAddressComponentLookup});
-=======
-      DateTime? lastGpsUpdate,
-      DateTime? lastGeocodingUpdate});
->>>>>>> PP1-1477
 }
 
 /// @nodoc
@@ -336,13 +306,8 @@ class __$$LocationControllerStateImplCopyWithImpl<$Res>
     Object? lastKnownLatitude = freezed,
     Object? lastKnownLongitude = freezed,
     Object? lastKnownAddressComponents = null,
-<<<<<<< develop
     Object? lastGpsLookup = freezed,
     Object? lastAddressComponentLookup = freezed,
-=======
-    Object? lastGpsUpdate = freezed,
-    Object? lastGeocodingUpdate = freezed,
->>>>>>> PP1-1477
   }) {
     return _then(_$LocationControllerStateImpl(
       locationPermission: freezed == locationPermission
@@ -376,7 +341,6 @@ class __$$LocationControllerStateImplCopyWithImpl<$Res>
           ? _value._lastKnownAddressComponents
           : lastKnownAddressComponents // ignore: cast_nullable_to_non_nullable
               as Map<String, Set<String>>,
-<<<<<<< develop
       lastGpsLookup: freezed == lastGpsLookup
           ? _value.lastGpsLookup
           : lastGpsLookup // ignore: cast_nullable_to_non_nullable
@@ -384,15 +348,6 @@ class __$$LocationControllerStateImplCopyWithImpl<$Res>
       lastAddressComponentLookup: freezed == lastAddressComponentLookup
           ? _value.lastAddressComponentLookup
           : lastAddressComponentLookup // ignore: cast_nullable_to_non_nullable
-=======
-      lastGpsUpdate: freezed == lastGpsUpdate
-          ? _value.lastGpsUpdate
-          : lastGpsUpdate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      lastGeocodingUpdate: freezed == lastGeocodingUpdate
-          ? _value.lastGeocodingUpdate
-          : lastGeocodingUpdate // ignore: cast_nullable_to_non_nullable
->>>>>>> PP1-1477
               as DateTime?,
     ));
   }
@@ -410,13 +365,8 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
       this.lastKnownLatitude,
       this.lastKnownLongitude,
       final Map<String, Set<String>> lastKnownAddressComponents = const {},
-<<<<<<< develop
       this.lastGpsLookup,
       this.lastAddressComponentLookup})
-=======
-      this.lastGpsUpdate,
-      this.lastGeocodingUpdate})
->>>>>>> PP1-1477
       : _lastKnownAddressComponents = lastKnownAddressComponents;
 
   @override
@@ -446,7 +396,6 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
   }
 
   @override
-<<<<<<< develop
   final DateTime? lastGpsLookup;
   @override
   final DateTime? lastAddressComponentLookup;
@@ -454,15 +403,6 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
   @override
   String toString() {
     return 'LocationControllerState(locationPermission: $locationPermission, locationSubscription: $locationSubscription, locationUpdateInterval: $locationUpdateInterval, isUpdatingLocation: $isUpdatingLocation, isManualLocation: $isManualLocation, lastKnownLatitude: $lastKnownLatitude, lastKnownLongitude: $lastKnownLongitude, lastKnownAddressComponents: $lastKnownAddressComponents, lastGpsLookup: $lastGpsLookup, lastAddressComponentLookup: $lastAddressComponentLookup)';
-=======
-  final DateTime? lastGpsUpdate;
-  @override
-  final DateTime? lastGeocodingUpdate;
-
-  @override
-  String toString() {
-    return 'LocationControllerState(locationPermission: $locationPermission, locationSubscription: $locationSubscription, locationUpdateInterval: $locationUpdateInterval, isUpdatingLocation: $isUpdatingLocation, lastKnownLatitude: $lastKnownLatitude, lastKnownLongitude: $lastKnownLongitude, lastKnownAddressComponents: $lastKnownAddressComponents, lastGpsUpdate: $lastGpsUpdate, lastGeocodingUpdate: $lastGeocodingUpdate)';
->>>>>>> PP1-1477
   }
 
   @override
@@ -487,19 +427,12 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
             const DeepCollectionEquality().equals(
                 other._lastKnownAddressComponents,
                 _lastKnownAddressComponents) &&
-<<<<<<< develop
             (identical(other.lastGpsLookup, lastGpsLookup) ||
                 other.lastGpsLookup == lastGpsLookup) &&
             (identical(other.lastAddressComponentLookup,
                     lastAddressComponentLookup) ||
                 other.lastAddressComponentLookup ==
                     lastAddressComponentLookup));
-=======
-            (identical(other.lastGpsUpdate, lastGpsUpdate) ||
-                other.lastGpsUpdate == lastGpsUpdate) &&
-            (identical(other.lastGeocodingUpdate, lastGeocodingUpdate) ||
-                other.lastGeocodingUpdate == lastGeocodingUpdate));
->>>>>>> PP1-1477
   }
 
   @override
@@ -513,13 +446,8 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
       lastKnownLatitude,
       lastKnownLongitude,
       const DeepCollectionEquality().hash(_lastKnownAddressComponents),
-<<<<<<< develop
       lastGpsLookup,
       lastAddressComponentLookup);
-=======
-      lastGpsUpdate,
-      lastGeocodingUpdate);
->>>>>>> PP1-1477
 
   @JsonKey(ignore: true)
   @override
@@ -531,7 +459,6 @@ class _$LocationControllerStateImpl implements _LocationControllerState {
 
 abstract class _LocationControllerState implements LocationControllerState {
   const factory _LocationControllerState(
-<<<<<<< develop
           {final PermissionStatus? locationPermission,
           final StreamSubscription<Position>? locationSubscription,
           final Duration? locationUpdateInterval,
@@ -543,17 +470,6 @@ abstract class _LocationControllerState implements LocationControllerState {
           final DateTime? lastGpsLookup,
           final DateTime? lastAddressComponentLookup}) =
       _$LocationControllerStateImpl;
-=======
-      {final PermissionStatus? locationPermission,
-      final StreamSubscription<Position>? locationSubscription,
-      final Duration? locationUpdateInterval,
-      final dynamic isUpdatingLocation,
-      final double? lastKnownLatitude,
-      final double? lastKnownLongitude,
-      final Map<String, Set<String>> lastKnownAddressComponents,
-      final DateTime? lastGpsUpdate,
-      final DateTime? lastGeocodingUpdate}) = _$LocationControllerStateImpl;
->>>>>>> PP1-1477
 
   @override
   PermissionStatus? get locationPermission;
@@ -571,19 +487,11 @@ abstract class _LocationControllerState implements LocationControllerState {
   double? get lastKnownLongitude;
   @override
   Map<String, Set<String>> get lastKnownAddressComponents;
-<<<<<<< develop
-=======
-  @override
-  DateTime? get lastGpsUpdate;
->>>>>>> PP1-1477
   @override
   DateTime? get lastGpsLookup;
   @override
-<<<<<<< develop
   DateTime? get lastAddressComponentLookup;
   @override
-=======
->>>>>>> PP1-1477
   @JsonKey(ignore: true)
   _$$LocationControllerStateImplCopyWith<_$LocationControllerStateImpl>
       get copyWith => throw _privateConstructorUsedError;

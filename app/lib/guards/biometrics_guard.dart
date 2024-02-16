@@ -1,17 +1,16 @@
 // Package imports:
-import 'package:app/gen/app_router.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import 'package:app/gen/app_router.dart';
 import 'package:app/main.dart';
 import 'package:app/services/third_party.dart';
+import '../constants/application_constants.dart';
 import '../providers/system/security_controller.dart';
 import '../providers/user/user_controller.dart';
-
-import '../constants/key_constants.dart';
 
 class BiometricsGuard extends AutoRouteGuard {
   @override

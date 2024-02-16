@@ -2,9 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/gen/app_router.dart';
-import 'package:app/providers/analytics/analytic_events.dart';
-import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,22 +13,24 @@ import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unicons/unicons.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/profile_constants.dart';
 import 'package:app/dtos/database/notifications/notification_topic.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_events.dart';
+import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/biometrics/vms/biometrics_preferences_view_model.dart';
-import 'package:unicons/unicons.dart';
-import '../../../../constants/key_constants.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_preferences_view_model.freezed.dart';
