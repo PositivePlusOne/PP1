@@ -49,8 +49,8 @@ dependencies:
   freerasp: ^6.2.0
   stream_chat_flutter: ^8.0.0-beta.1
 
-  google_mlkit_face_detection: 0.6.0
-  google_mlkit_commons: 0.3.0
+  google_mlkit_face_detection: ^0.6.0
+  google_mlkit_commons: ^0.3.0
 
   # Logging and Tracing
   logger: ^2.0.1
@@ -78,7 +78,7 @@ dependencies:
   flutter_app_badger: ^1.5.0
 
   # Mapping
-  geolocator: ^10.0.0
+  geolocator: ^11.0.0
   google_maps_flutter: ^2.3.1
   flutter_google_maps_webservices: ^1.1.1
 
@@ -102,7 +102,7 @@ dependencies:
   # Other
   path_provider: ^2.0.15
   transparent_image: ^2.0.1
-  open_settings_plus: 0.1.0
+  open_settings_plus: ^0.2.0
   package_info_plus: ^5.0.1
   profanity_filter: ^2.0.0
   very_good_infinite_list: ^0.7.0
@@ -125,7 +125,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   riverpod_lint: ^2.3.7
   import_sorter: ^4.6.0
-  custom_lint: ^0.5.2
+  custom_lint: ^0.6.0
 
   # Metaprogramming
   spider: ^4.2.1
