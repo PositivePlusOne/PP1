@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 // Package imports:
-import 'package:app/constants/compression_constants.dart';
 import 'package:camerawesome/camerawesome_plugin.dart';
 import 'package:exif/exif.dart';
 import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
@@ -18,6 +17,7 @@ import 'package:logger/logger.dart';
 import 'package:mime/mime.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/helpers/image_helpers.dart';
 import 'package:app/main.dart';
@@ -238,7 +238,7 @@ class GalleryEntry {
   }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.d('upload() mimeType.startsWith(image/)');
-    
+
     String? exifOrientation;
     final dataExif = await readExifFromBytes(data);
     if (dataExif.containsKey('Image Orientation')) {

@@ -12,9 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
-import 'package:app/constants/key_constants.dart';
-import 'package:app/extensions/user_extensions.dart';
 import 'package:app/constants/application_constants.dart';
+import 'package:app/extensions/user_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
