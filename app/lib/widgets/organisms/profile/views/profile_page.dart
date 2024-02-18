@@ -30,17 +30,17 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
+import 'package:app/widgets/molecules/lists/positive_profile_actions_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_tile.dart';
+import 'package:app/widgets/molecules/tiles/profile_biography_tile.dart';
+import 'package:app/widgets/organisms/profile/components/profile_app_bar_header.dart';
 import 'package:app/widgets/organisms/profile/vms/profile_view_model.dart';
 import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
-import '../../behaviours/positive_feed_pagination_behaviour.dart';
-import '../../molecules/lists/positive_profile_actions_list.dart';
-import '../../molecules/tiles/positive_profile_tile.dart';
-import '../../molecules/tiles/profile_biography_tile.dart';
-import 'components/profile_app_bar_header.dart';
 
 @RoutePage()
 class ProfilePage extends HookConsumerWidget {

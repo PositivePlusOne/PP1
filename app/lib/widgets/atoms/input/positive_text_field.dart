@@ -43,9 +43,10 @@ class PositiveTextField extends StatefulHookConsumerWidget {
     this.textInputAction,
     this.textInputType = TextInputType.text,
     this.textCapitalization = TextCapitalization.none,
-    this.prefixIcon,
     this.label,
+    this.prefixIcon,
     this.suffixIcon,
+    this.includePrefixContainer = true,
     this.obscureText = false,
     this.isEnabled = true,
     this.maxLines = 1,
@@ -104,6 +105,8 @@ class PositiveTextField extends StatefulHookConsumerWidget {
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+
+  final bool includePrefixContainer;
 
   final bool obscureText;
   final bool isEnabled;
@@ -437,6 +440,13 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
       );
     }
 
+    final bool hasPrefixIcon = widget.prefixIcon != null;
+
+    double prefixIconPaddingLeft = kPaddingLarge - widget.borderWidth;
+    if (hasPrefixIcon) {
+      prefixIconPaddingLeft = widget.borderWidth;
+    }
+
     final Widget child = PositiveTapBehaviour(
       onTap: (_) => textFocusNode.requestFocus(),
       child: Container(
@@ -444,17 +454,21 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
         padding: EdgeInsets.only(
           top: kPaddingExtraSmall - widget.borderWidth,
           bottom: kPaddingExtraSmall - widget.borderWidth,
-          left: (widget.prefixIcon == null) ? kPaddingLarge - widget.borderWidth : kPaddingExtraSmall - widget.borderWidth,
+          left: prefixIconPaddingLeft,
           right: kPaddingExtraSmall - widget.borderWidth,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (widget.prefixIcon != null) ...[
+            if (hasPrefixIcon && widget.includePrefixContainer) ...[
               PositiveTextFieldPrefixContainer(
                 color: hasTextIsFocused ? widget.tintColor : colours.colorGray2,
                 child: widget.prefixIcon!,
               ),
+              const SizedBox(width: kPaddingExtraSmall),
+            ],
+            if (widget.prefixIcon != null && !widget.includePrefixContainer) ...[
+              widget.prefixIcon!,
               const SizedBox(width: kPaddingExtraSmall),
             ],
             Expanded(
@@ -499,7 +513,7 @@ class PositiveTextFieldState extends ConsumerState<PositiveTextField> {
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     contentPadding: const EdgeInsets.only(
-                      top: kPaddingSmall,
+                      top: 12.5, // This is a magic number that makes the text align with the top of the text field :)
                       bottom: kPaddingNone,
                       left: kPaddingNone,
                       right: kPaddingNone,

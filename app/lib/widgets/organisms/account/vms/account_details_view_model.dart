@@ -29,7 +29,7 @@ import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
-import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../services/third_party.dart';
 

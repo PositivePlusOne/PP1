@@ -7,7 +7,11 @@ part of 'analytics_controller.dart';
 // **************************************************************************
 
 String _$analyticsControllerHash() =>
+<<<<<<< HEAD
     r'59ed18042132931dfe76f8464badfb58f7780f99';
+=======
+    r'bf3421f4f984d87f7acaa86cb442ef8a01f4ce25';
+>>>>>>> feature/organisation-name-display
 
 /// See also [AnalyticsController].
 @ProviderFor(AnalyticsController)

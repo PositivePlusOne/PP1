@@ -171,6 +171,9 @@
     "page_home_blocker_title": "Thanks for showing an interest in Positive+1",
     "page_home_blocker_body": "To be able to create content, view profiles and connect with people you'll need to sign in or register for an account.",
     
+    "page_organisation_name_title": "Organisation Name",
+    "page_organisation_name_body": "Let's start with the basics",
+
     "page_profile_name_entry_title": "Your Name",
     "page_profile_name_entry_description": "Let us know your full name",
     "page_profile_name_entry_description_update": "Going for a new moniker? Cool! What's your new name?",
@@ -179,7 +182,7 @@
     "page_profile_name_entry_input_label": "Your Name",
     "page_profile_name_error_moderation_flagged": "This name violates our community guidelines, and cannot be used. Please enter a name that does not contain profanity or at-risk terms.",
 
-    "page_profile_display_name_entry_description": "Time to shine. How would you like to be known?",
+    "page_profile_display_name_body": "Time to shine. How would you like to be known?",
 
     "page_profile_birthday_title": "Your Birthday",
     "page_profile_birthday_description": "Positive+1 aims to support everyone, however due to the nature of some of the guidance and material others may post Positive+1 can only be used by people above the age of 13.",
@@ -720,7 +723,11 @@
     "shared_profile_tagline": "Positive+1 Member",
     "shared_profile_unknown_location": "Location not shared",
     "shared_profile_display_name": "Display Name",
+    "shared_profile_name": "Name",
     "shared_profile_title" : "Profile",
+
+    "shared_organisation_name": "Organisation Name",
+    "shared_organisation_display_name": "Organisation Display Name",
 
     "shared_profile_modal_action_view_profile": "View Profile",
     "shared_profile_modal_action_follow": "Follow {displayName}",

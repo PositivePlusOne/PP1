@@ -21,17 +21,17 @@ import 'package:app/providers/profiles/profile_form_controller.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_layout.dart';
+import 'package:app/widgets/atoms/buttons/enumerations/positive_button_size.dart';
 import 'package:app/widgets/atoms/buttons/enumerations/positive_button_style.dart';
 import 'package:app/widgets/atoms/buttons/positive_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/atoms/input/positive_text_field_dropdown.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
-import '../../atoms/buttons/enumerations/positive_button_size.dart';
-import '../../molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
-class ProfileCompanySectorSelectPage extends ConsumerWidget {
-  const ProfileCompanySectorSelectPage({super.key});
+class OrganisationCompanySectorSelectPage extends ConsumerWidget {
+  const OrganisationCompanySectorSelectPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,7 +57,7 @@ class ProfileCompanySectorSelectPage extends ConsumerWidget {
     final GlobalKey selectionDropdownKey = GlobalKey();
 
     return PositiveScaffold(
-      onWillPopScope: () async => formController.onBackSelected(ProfileCompanySectorSelectRoute),
+      onWillPopScope: () async => formController.onBackSelected(OrganisationCompanySectorSelectRoute),
       controller: scrollController,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
@@ -67,7 +67,7 @@ class ProfileCompanySectorSelectPage extends ConsumerWidget {
                 PositiveButton(
                   colors: colors,
                   primaryColor: colors.black,
-                  onTapped: () => formController.onBackSelected(ProfileCompanySectorSelectRoute),
+                  onTapped: () => formController.onBackSelected(OrganisationCompanySectorSelectRoute),
                   label: localizations.shared_actions_back,
                   isDisabled: formControllerState.isBusy,
                   style: PositiveButtonStyle.text,

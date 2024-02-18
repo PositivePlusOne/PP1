@@ -7,7 +7,11 @@ part of 'create_post_view_model.dart';
 // **************************************************************************
 
 String _$createPostViewModelHash() =>
+<<<<<<< HEAD
     r'fc6422ba05d8b5fd89c16f74035e86b103d1878a';
+=======
+    r'3a901b76dcaf98a258fc138fef5e67ed29ec8640';
+>>>>>>> feature/organisation-name-display
 
 /// See also [CreatePostViewModel].
 @ProviderFor(CreatePostViewModel)
