@@ -217,6 +217,14 @@ class SystemController extends _$SystemController {
     await appRouter.push(const DevelopmentRoute());
   }
 
+  //* Travels to a page given on development which allows the users to test the app
+  Future<void> returnToHomePage() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    if (appRouter.current != const HomeRoute()) {
+      appRouter.replaceAll([const HomeRoute()]);
+    }
+  }
+
   Future<bool> isDeviceAppleSimulator() async {
     final Logger logger = ref.read(loggerProvider);
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);

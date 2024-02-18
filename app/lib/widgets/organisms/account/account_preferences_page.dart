@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/providers/system/system_controller.dart';
+import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -49,6 +51,8 @@ class AccountPreferencesPage extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
 
     final List<Widget> actions = [];
     if (profileControllerState.currentProfile != null) {
@@ -101,7 +105,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
             ),
             const SizedBox(height: kPaddingLarge),
             Text(
-              'Notifications',
+              localizations.shared_navigation_tooltips_notifications,
               style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
@@ -125,6 +129,17 @@ class AccountPreferencesPage extends HookConsumerWidget {
                   if (topic != NotificationTopic.allTopics.last) const SizedBox(height: kPaddingMedium),
                 ],
               ],
+            ),
+            const SizedBox(height: kPaddingMedium),
+            GestureDetector(
+              onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "${localizations.page_account_build_number}${systemControllerState.version}",
+                  style: typography.styleBody.copyWith(color: colors.colorGray5),
+                ),
+              ),
             ),
           ],
         ),
