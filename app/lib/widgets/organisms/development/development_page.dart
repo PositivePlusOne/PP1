@@ -41,6 +41,7 @@ class DevelopmentPage extends ConsumerWidget {
     final DevelopmentViewModel developmentViewModel = ref.watch(developmentViewModelProvider.notifier);
     final DevelopmentViewModelState developmentViewModelState = ref.watch(developmentViewModelProvider);
 
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
     final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
 
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
@@ -98,45 +99,16 @@ class DevelopmentPage extends ConsumerWidget {
               ),
               PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               if (isNonProduction) ...<Widget>[
-                CupertinoListTile(
-                  title: Text(
-                    'Internal',
-                    style: typography.styleSubtextBold.copyWith(color: colors.white),
-                  ),
+                ...buildInternalSection(
+                  context: context,
+                  viewModel: developmentViewModel,
+                  state: developmentViewModelState,
+                  analyticsController: analyticsController,
+                  analyticsState: analyticsControllerState,
+                  systemController: systemController,
+                  systemControllerState: systemControllerState,
+                  isShowingDebugMessages: isShowingDebugMessages,
                 ),
-                CupertinoListTile.notched(
-                  onTap: developmentViewModel.displayAuthClaims,
-                  title: Text(
-                    'Toggle informative debug messaging',
-                    style: typography.styleButtonRegular.copyWith(color: colors.white),
-                  ),
-                  subtitle: Text(
-                    'Where possible, popups which are a result of errors will include their stack traces.',
-                    style: typography.styleSubtext.copyWith(color: colors.white),
-                  ),
-                  additionalInfo: Transform.scale(
-                    scale: 0.7,
-                    child: PositiveSwitch(
-                      activeColour: colors.green.withAlpha(210),
-                      inactiveColour: colors.red.withAlpha(210),
-                      ignoring: false,
-                      value: isShowingDebugMessages,
-                      onTapped: (_) => ref.read(systemControllerProvider.notifier).toggleDebugMessages(),
-                    ),
-                  ),
-                ),
-                CupertinoListTile.notched(
-                  onTap: developmentViewModel.requestManualLocation,
-                  title: Text(
-                    'Manually set GPS location',
-                    style: typography.styleButtonRegular.copyWith(color: colors.white),
-                  ),
-                  subtitle: Text(
-                    'Manually set your lat/long to test location based features.',
-                    style: typography.styleSubtext.copyWith(color: colors.white),
-                  ),
-                ),
-                PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
               ],
               ...buildGeneralSection(
                 context: context,
@@ -317,6 +289,73 @@ class DevelopmentPage extends ConsumerWidget {
         ),
         subtitle: Text(
           'Make sure you are eligible to receive notifications by sending a test notification.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      PositiveFeedPaginationBehaviour.buildVisualSeparator(context),
+    ];
+  }
+
+  List<Widget> buildInternalSection({
+    required BuildContext context,
+    required DevelopmentViewModel viewModel,
+    required DevelopmentViewModelState state,
+    required AnalyticsController analyticsController,
+    required AnalyticsControllerState analyticsState,
+    required SystemController systemController,
+    required SystemControllerState systemControllerState,
+    required bool isShowingDebugMessages,
+  }) {
+    final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
+    final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
+
+    return <Widget>[
+      CupertinoListTile(
+        title: Text(
+          'Internal',
+          style: typography.styleSubtextBold.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: viewModel.displayAuthClaims,
+        title: Text(
+          'Toggle informative debug messaging',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Where possible, popups which are a result of errors will include their stack traces.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+        additionalInfo: Transform.scale(
+          scale: 0.7,
+          child: PositiveSwitch(
+            activeColour: colors.green.withAlpha(210),
+            inactiveColour: colors.red.withAlpha(210),
+            ignoring: false,
+            value: isShowingDebugMessages,
+            onTapped: (_) => systemControllerState,
+          ),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: viewModel.requestManualLocation,
+        title: Text(
+          'Manually set GPS location',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Manually set your lat/long to test location based features.',
+          style: typography.styleSubtext.copyWith(color: colors.white),
+        ),
+      ),
+      CupertinoListTile.notched(
+        onTap: () => systemController.openPermissionSettings(),
+        title: Text(
+          'Open Permission Settings',
+          style: typography.styleButtonRegular.copyWith(color: colors.white),
+        ),
+        subtitle: Text(
+          'Mimics the system API calls to open the permission settings.',
           style: typography.styleSubtext.copyWith(color: colors.white),
         ),
       ),
