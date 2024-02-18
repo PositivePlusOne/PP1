@@ -8,10 +8,14 @@ part of 'promotions_controller.dart';
 
 String _$promotionsControllerHash() =>
 <<<<<<< HEAD
+<<<<<<< HEAD
     r'4006f9acb0fb1b1ffc1bcd6a5087911df072634b';
 =======
     r'be0da68b58075037434707302527e25a4211ed34';
 >>>>>>> feature/organisation-name-display
+=======
+    r'be0da68b58075037434707302527e25a4211ed34';
+>>>>>>> feature/social-controls
 
 /// See also [PromotionsController].
 @ProviderFor(PromotionsController)

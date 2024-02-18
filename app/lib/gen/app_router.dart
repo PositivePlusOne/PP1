@@ -14,8 +14,10 @@ import 'package:app/guards/organisation_setup_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/guards/security_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
+import 'package:app/widgets/organisms/account/account_connect_email_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';
+import 'package:app/widgets/organisms/account/account_social_disconnection_page.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_update_name_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
@@ -198,6 +200,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: kCommonGuards),
         AutoRoute(page: AccountConfirmPasswordRoute.page, path: '/account/confirm/password', guards: kCommonGuards),
+        AutoRoute(page: AccountConnectEmailRoute.page, path: '/account/connect/email', guards: kCommonGuards),
+        AutoRoute(page: AccountSocialDisconnectionRoute.page, path: '/account/connect/email/social', guards: kCommonGuards),
         AutoRoute(page: AccountDeleteProfileRoute.page, path: '/account/delete', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete', guards: kCommonGuards),
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),

@@ -67,11 +67,11 @@ class _AccountDeleteProfilePageState extends ConsumerState<AccountDeleteProfileP
     return PositiveGenericPage(
       title: localizations.page_account_actions_change_delete_account_splash_title,
       body: localizations.page_account_actions_change_delete_account_splash_body,
-      buttonText: localizations.page_account_actions_change_delete_account_continue,
       isBusy: isDeleting,
       canBack: true,
       onHelpSelected: onHelpRequested,
-      onContinueSelected: onContinueSelected,
+      primaryActionText: localizations.page_account_actions_change_delete_account_continue,
+      onPrimaryActionSelected: onContinueSelected,
     );
   }
 }

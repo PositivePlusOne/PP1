@@ -32,10 +32,9 @@ class AccountUpdatedPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: title ?? 'Thanks!',
       body: body,
-      buttonText: buttonText ?? 'Back to account',
+      primaryActionText: buttonText ?? 'Back to account',
       isBusy: false,
-      style: PositiveGenericPageStyle.imaged,
-      onContinueSelected: onContinueSelected ??
+      onPrimaryActionSelected: onContinueSelected ??
           () async {
             appRouter.popUntilRoot();
             await appRouter.push(const AccountRoute());

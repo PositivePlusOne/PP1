@@ -8,10 +8,14 @@ part of 'location_controller.dart';
 
 String _$locationControllerHash() =>
 <<<<<<< HEAD
+<<<<<<< HEAD
     r'68971445d5eb1396ee58476edb7d8fc89330b449';
 =======
     r'd4493505be0e51a4b05f2d5edd5cdc6982aaf078';
 >>>>>>> feature/organisation-name-display
+=======
+    r'd4493505be0e51a4b05f2d5edd5cdc6982aaf078';
+>>>>>>> feature/social-controls
 
 /// See also [LocationController].
 @ProviderFor(LocationController)

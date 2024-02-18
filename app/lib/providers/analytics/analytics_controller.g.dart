@@ -8,10 +8,14 @@ part of 'analytics_controller.dart';
 
 String _$analyticsControllerHash() =>
 <<<<<<< HEAD
+<<<<<<< HEAD
     r'59ed18042132931dfe76f8464badfb58f7780f99';
 =======
     r'bf3421f4f984d87f7acaa86cb442ef8a01f4ce25';
 >>>>>>> feature/organisation-name-display
+=======
+    r'59ed18042132931dfe76f8464badfb58f7780f99';
+>>>>>>> feature/social-controls
 
 /// See also [AnalyticsController].
 @ProviderFor(AnalyticsController)

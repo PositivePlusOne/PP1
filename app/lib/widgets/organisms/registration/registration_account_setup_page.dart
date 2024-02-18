@@ -25,9 +25,9 @@ class RegistrationAccountSetupPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: localizations.page_registration_account_setup,
       body: localizations.page_registration_account_setup_body,
-      buttonText: localizations.page_registration_account_setup_continue,
       isBusy: state.isBusy,
-      onContinueSelected: viewModel.onCreateProfileSelected,
+      primaryActionText: localizations.page_registration_account_setup_continue,
+      onPrimaryActionSelected: viewModel.onCreateProfileSelected,
     );
   }
 }

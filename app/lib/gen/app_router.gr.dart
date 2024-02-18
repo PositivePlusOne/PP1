@@ -31,6 +31,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    AccountConnectEmailRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountConnectEmailPage(),
+      );
+    },
     AccountConnectSocialRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -77,6 +83,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const AccountPromotedPostsPromotionPage(),
+      );
+    },
+    AccountSocialDisconnectionRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountSocialDisconnectionPage(),
       );
     },
     AccountUpdateEmailAddressRoute.name: (routeData) {
@@ -613,6 +625,20 @@ class AccountConfirmPasswordRouteArgs {
 }
 
 /// generated route for
+/// [AccountConnectEmailPage]
+class AccountConnectEmailRoute extends PageRouteInfo<void> {
+  const AccountConnectEmailRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountConnectEmailRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountConnectEmailRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [AccountConnectSocialPage]
 class AccountConnectSocialRoute extends PageRouteInfo<void> {
   const AccountConnectSocialRoute({List<PageRouteInfo>? children})
@@ -720,6 +746,20 @@ class AccountPromotedPostsPromotionRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AccountPromotedPostsPromotionRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountSocialDisconnectionPage]
+class AccountSocialDisconnectionRoute extends PageRouteInfo<void> {
+  const AccountSocialDisconnectionRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountSocialDisconnectionRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountSocialDisconnectionRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
