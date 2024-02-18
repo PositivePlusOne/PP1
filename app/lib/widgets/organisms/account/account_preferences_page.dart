@@ -103,6 +103,29 @@ class AccountPreferencesPage extends HookConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'App Preferences',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveRichText(
+              body: 'Enabling biometrics adds an extra layer of security to your P+1 account. When enabled, you will need to pass your device\'s biometrics authentication to access your P+1 account after a period of inactivity.',
+              textColor: colors.colorGray7,
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveGlassSheet(
+              children: <Widget>[
+                PositiveCheckboxButton(
+                  icon: viewModel.biometricToggleIcon,
+                  label: viewModel.biometricToggleTitle,
+                  value: state.areBiometricsEnabled,
+                  isBusy: state.isBusy,
+                  showDisabledState: state.isBusy || state.availableBiometrics == AvailableBiometrics.none,
+                  onTapped: (_) => viewModel.onBiometricsToggle(),
+                ),
+              ],
+            ),
             const SizedBox(height: kPaddingLarge),
             Text(
               localizations.shared_navigation_tooltips_notifications,

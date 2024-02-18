@@ -9,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/providers/shared/enumerations/form_mode.dart';
 import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/widgets/atoms/input/positive_text_field.dart';

@@ -15,7 +15,6 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Project imports:
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/system/system_controller.dart';

@@ -55,12 +55,20 @@ class LifecycleHookState extends HookState<void, LifecycleHook> implements Widge
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      hook.handler.onResume();
-    } else if (state == AppLifecycleState.paused) {
-      hook.handler.onPause();
-    } else if (state == AppLifecycleState.detached) {
-      hook.handler.onDetached();
+    switch (state) {
+      case AppLifecycleState.resumed:
+        hook.handler.onResume();
+        break;
+
+      case AppLifecycleState.paused:
+        hook.handler.onPause();
+        break;
+
+      case AppLifecycleState.detached:
+        hook.handler.onDetached();
+        break;
+
+      default:
     }
   }
 

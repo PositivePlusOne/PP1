@@ -49,8 +49,8 @@ class BiometricsPreferencesPage extends ConsumerWidget {
           children: <Widget>[
             PositivePageIndicator(
               color: colors.black,
-              pagesNum: 4,
-              currentPage: 3,
+              pagesNum: 2,
+              currentPage: 1,
             ),
             const SizedBox(height: kPaddingLarge),
             Align(

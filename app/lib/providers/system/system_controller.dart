@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -79,6 +80,18 @@ class SystemController extends _$SystemController {
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
 
   static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
+
+  static const String kFirebaseRemoteConfigAuthTimeoutKey = 'auth_timeout';
+  static const int kDefaultAuthTimeout = 60009;
+
+  Future<int> getBiometricAuthTimeout() async {
+    final FirebaseRemoteConfig firebaseRemoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
+    final int firebseAuthTimeout = firebaseRemoteConfig.getInt(SystemController.kFirebaseRemoteConfigAuthTimeoutKey);
+    if (firebseAuthTimeout <= 0) {
+      return kDefaultAuthTimeout;
+    }
+    return firebseAuthTimeout;
+  }
 
   SystemEnvironment get environment {
     const String environmentValue = String.fromEnvironment(kEnvironmentSystemKey, defaultValue: 'develop');
