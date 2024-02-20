@@ -47,6 +47,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(kPaddingSmall),
+        constraints: const BoxConstraints(maxHeight: kIconHuge + 2 * kPaddingSmall),
         decoration: BoxDecoration(
           color: colors.white,
           borderRadius: BorderRadius.circular(40.0),
@@ -63,10 +64,12 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    promotion.title,
-                    maxLines: 1,
-                    style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                  FittedBox(
+                    child: Text(
+                      promotion.title,
+                      maxLines: 1,
+                      style: typography.styleTitle.copyWith(color: colors.colorGray7),
+                    ),
                   ),
                   if (promotedDescription.isNotEmpty) ...<Widget>[
                     Text(
