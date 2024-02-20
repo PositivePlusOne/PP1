@@ -98,18 +98,21 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await userController.signOut(shouldNavigate: false);
     }
 
+    final bool isLoggedOut = firebaseAuth.currentUser == null;
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
+
+    if (!isLoggedOut) {
+      await systemController.biometricsReverification();
+    }
+
     try {
       await systemController.updateSystemConfiguration();
     } catch (ex) {
       log.e('Failed to preload build information. Error: $ex');
-      final bool isLoggedOut = firebaseAuth.currentUser == null;
 
       if (isLoggedOut) {
         await router.replace(const HomeRoute());
         return;
-      } else {
-        systemController.biometricsReverification();
       }
 
       await router.replace(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
