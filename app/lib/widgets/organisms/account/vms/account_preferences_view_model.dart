@@ -95,11 +95,13 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     switch (state.availableBiometrics) {
       case AvailableBiometrics.face:
         return "Enable FaceID";
+      case AvailableBiometrics.iris:
+        return "Enable Iris ID";
       case AvailableBiometrics.strong:
-        return "Enable Biometrics";
       case AvailableBiometrics.weak:
-        return "Enable Pin";
+        return "Enable Biometrics";
       case AvailableBiometrics.none:
+        return "Enable Pin";
       default:
         return "No valid biometrics";
     }
@@ -109,11 +111,12 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     switch (state.availableBiometrics) {
       case AvailableBiometrics.face:
         return UniconsLine.smile;
+      case AvailableBiometrics.iris:
       case AvailableBiometrics.strong:
         return UniconsLine.eye;
       case AvailableBiometrics.weak:
-        return UniconsLine.asterisk;
       case AvailableBiometrics.none:
+        return UniconsLine.asterisk;
       default:
         return UniconsLine.crosshair;
     }
@@ -130,6 +133,9 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     }
     if (availableBiometrics.contains(BiometricType.strong) || availableBiometrics.contains(BiometricType.fingerprint)) {
       availableBiometricsEnum = AvailableBiometrics.strong;
+    }
+    if (availableBiometrics.contains(BiometricType.iris)) {
+      availableBiometricsEnum = AvailableBiometrics.iris;
     }
     if (availableBiometrics.contains(BiometricType.face)) {
       availableBiometricsEnum = AvailableBiometrics.face;
@@ -352,5 +358,6 @@ enum AvailableBiometrics {
   none,
   weak,
   strong,
+  iris,
   face,
 }
