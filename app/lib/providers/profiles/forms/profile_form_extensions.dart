@@ -36,8 +36,7 @@ extension ProfileFormExtensions on ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -83,8 +82,7 @@ extension ProfileFormExtensions on ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(

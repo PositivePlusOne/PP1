@@ -164,7 +164,6 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
   Future<void> onPermitSelected() async {
     final Logger logger = ref.read(loggerProvider);
-    // final AppRouter appRouter = ref.read(appRouterProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));

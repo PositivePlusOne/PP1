@@ -129,9 +129,4 @@ class AppLifecycleState with LifecycleMixin {
     final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
     sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
   }
-
-  // @override
-  // void onDetached() {
-  //   print("");
-  // }
 }
