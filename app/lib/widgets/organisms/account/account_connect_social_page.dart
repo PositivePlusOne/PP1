@@ -39,7 +39,7 @@ class AccountConnectSocialPage extends ConsumerWidget {
       isBusy: state.isBusy,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
-          includeAppBar: false,
+          includeAppBar: true,
           children: <Widget>[
             PositiveBackButton(isDisabled: state.isBusy),
             const SizedBox(height: kPaddingMedium),

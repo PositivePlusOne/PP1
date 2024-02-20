@@ -90,6 +90,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.0"
+  app_settings:
+    dependency: "direct main"
+    description:
+      name: app_settings
+      sha256: "09bc7fe0313a507087bec1a3baf555f0576e816a760cbb31813a88890a09d9e5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   appkit_ui_element_colors:
     dependency: transitive
     description:
@@ -642,6 +650,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  exif:
+    dependency: "direct main"
+    description:
+      name: exif
+      sha256: a7980fdb3b7ffcd0b035e5b8a5e1eef7cadfe90ea6a4e85ebb62f87b96c7a172
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   expandable:
     dependency: "direct main"
     description:
@@ -1495,13 +1511,13 @@ packages:
     source: hosted
     version: "4.0.2"
   image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image
-      sha256: "49a0d4b0c12402853d3f227fe7c315601b238d126aa4caa5dbb2dcf99421aa4a"
+      sha256: "004a2e90ce080f8627b5a04aecb4cdfac87d2c3f3b520aa291260be5a32c033d"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.6"
+    version: "4.1.4"
   image_gallery_saver:
     dependency: transitive
     description:
@@ -1942,14 +1958,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  open_settings_plus:
-    dependency: "direct main"
-    description:
-      name: open_settings_plus
-      sha256: "42f8a22a6ab4028284845545392041c9bd5d5100e3ef25fb70ced288ae8637f9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   package_config:
     dependency: transitive
     description:

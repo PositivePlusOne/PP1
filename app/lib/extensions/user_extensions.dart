@@ -17,3 +17,12 @@ extension UserExtensions on User {
     return providerName;
   }
 }
+
+extension AppleAuthProviderExtensions on AppleAuthProvider {
+  static String get providerId => 'apple.com';
+
+  void addDefaultScopes() {
+    addScope('email');
+    addScope('name');
+  }
+}

@@ -291,7 +291,7 @@ class AccountProfileEditSettingsViewModel extends _$AccountProfileEditSettingsVi
   void onCompanySectorsUpdate(BuildContext context) {
     final router = ref.read(appRouterProvider);
     ref.read(profileFormControllerProvider.notifier).resetState(FormMode.edit);
-    router.push(const ProfileCompanySectorSelectRoute());
+    router.push(const OrganisationCompanySectorSelectRoute());
   }
 
   Future<void> onProfileImageChangeSelected() async {

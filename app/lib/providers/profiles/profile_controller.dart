@@ -97,19 +97,6 @@ class ProfileController extends _$ProfileController {
     return state.currentProfile?.isOrganisation ?? false;
   }
 
-  bool get hasSetupProfile {
-    if (state.currentProfile == null) {
-      return false;
-    }
-
-    if (!isCurrentlyUserProfile) {
-      return true;
-    }
-
-    // TODO(ryan): This check should probably be better than are we missing this string
-    return state.currentProfile?.accentColor.isNotEmpty ?? false;
-  }
-
   @override
   ProfileControllerState build() {
     return ProfileControllerState.initialState();
@@ -178,7 +165,7 @@ class ProfileController extends _$ProfileController {
     providerContainer.read(eventBusProvider).fire(ProfileSwitchedEvent(currentUserUid));
   }
 
-  void switchProfile(String uid) {
+  Future<void> switchProfile(String uid) async {
     final Logger logger = ref.read(loggerProvider);
     final EventBus eventBus = ref.read(eventBusProvider);
     final CacheController cacheController = ref.read(cacheControllerProvider);
@@ -205,6 +192,12 @@ class ProfileController extends _$ProfileController {
     state = state.copyWith(currentProfile: profile);
     eventBus.fire(ProfileSwitchedEvent(uid));
     analyticsController.trackEvent(AnalyticEvents.profileSwitched);
+
+    // Check for if the user/organisation has setup their profile
+    if (profile.isProfileSetup == false) {
+      final AppRouter appRouter = ref.read(appRouterProvider);
+      await appRouter.replaceAll([const HomeRoute()]);
+    }
   }
 
   void onCacheKeyUpdated(CacheKeyUpdatedEvent event) {

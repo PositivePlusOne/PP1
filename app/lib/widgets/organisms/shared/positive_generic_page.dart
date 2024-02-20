@@ -21,41 +21,50 @@ import 'package:app/widgets/atoms/iconography/positive_stamp.dart';
 import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
 import '../../../helpers/brand_helpers.dart';
 import '../../atoms/buttons/positive_button.dart';
 
-enum PositiveGenericPageStyle {
-  imaged,
-  decorated,
-}
-
 class PositiveGenericPage extends ConsumerWidget {
   const PositiveGenericPage({
-    required this.title,
-    required this.body,
-    required this.buttonText,
-    required this.onContinueSelected,
-    this.style = PositiveGenericPageStyle.imaged,
+    this.title = '',
+    this.body = '',
+    this.primaryActionText = '',
+    this.onPrimaryActionSelected,
+    this.canPerformPrimaryAction = true,
+    this.children = const <Widget>[],
+    this.trailingWidgets = const <Widget>[],
+    this.footerWidgets = const <Widget>[],
     this.canBack = false,
     this.isBusy = false,
     this.currentStepIndex = 0,
     this.totalSteps = 0,
     this.onHelpSelected,
+    this.includeDecorations = true,
+    this.includeBadge = true,
     super.key,
   });
 
   final String title;
   final String body;
-  final String buttonText;
-  final PositiveGenericPageStyle style;
+  final bool isBusy;
+
+  final List<Widget> children;
+  final List<Widget> trailingWidgets;
+  final List<Widget> footerWidgets;
 
   final Future<void> Function()? onHelpSelected;
-  final Future<void> Function() onContinueSelected;
-  final bool isBusy;
-  final bool canBack;
 
+  final bool canPerformPrimaryAction;
+  final String primaryActionText;
+  final Future<void> Function()? onPrimaryActionSelected;
+
+  final bool canBack;
   final int currentStepIndex;
   final int totalSteps;
+
+  final bool includeDecorations;
+  final bool includeBadge;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,15 +86,24 @@ class PositiveGenericPage extends ConsumerWidget {
       visibleComponents: const {
         ...PositiveScaffoldComponent.values,
       },
-      decorations: buildType1ScaffoldDecorations(colors),
+      decorations: <PositiveScaffoldDecoration>[
+        if (includeDecorations) ...[
+          ...buildType1ScaffoldDecorations(colors),
+        ],
+      ],
+      trailingWidgets: trailingWidgets,
       footerWidgets: <Widget>[
-        if (style == PositiveGenericPageStyle.decorated || style == PositiveGenericPageStyle.imaged) ...[
+        if (footerWidgets.isNotEmpty) ...<Widget>[
+          ...footerWidgets,
+          const SizedBox(height: kPaddingLarge),
+        ],
+        if (onPrimaryActionSelected != null) ...[
           PositiveButton(
             colors: colors,
             primaryColor: colors.black,
-            label: buttonText,
-            onTapped: onContinueSelected,
-            isDisabled: isBusy,
+            label: primaryActionText,
+            onTapped: () => onPrimaryActionSelected?.call(),
+            isDisabled: isBusy || !canPerformPrimaryAction,
           ),
         ],
       ],
@@ -109,15 +127,23 @@ class PositiveGenericPage extends ConsumerWidget {
               ),
               const SizedBox(height: kPaddingMedium),
             ],
-            Text(
-              title,
-              style: typography.styleHero.copyWith(color: colors.black),
-            ),
-            const SizedBox(height: kPaddingMedium),
-            Text(
-              body,
-              style: typography.styleBody.copyWith(color: colors.black),
-            ),
+            if (title.isNotEmpty) ...<Widget>[
+              Text(
+                title,
+                style: typography.styleHero.copyWith(color: colors.black),
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
+            if (body.isNotEmpty) ...<Widget>[
+              Text(
+                body,
+                style: typography.styleBody.copyWith(color: colors.black),
+              ),
+              const SizedBox(height: kPaddingMedium),
+            ],
+            if (children.isNotEmpty) ...<Widget>[
+              ...children,
+            ],
             if (onHelpSelected != null) ...[
               const SizedBox(height: kPaddingSmall),
               Align(
@@ -134,18 +160,20 @@ class PositiveGenericPage extends ConsumerWidget {
                 ),
               ),
             ],
-            const SizedBox(height: kPaddingMassive),
-            Transform.translate(
-              offset: const Offset(kPaddingMassive, kPaddingNone),
-              child: Transform.rotate(
-                angle: 15.0.degreeToRadian,
-                child: PositiveStamp.smile(
-                  colors: colors,
-                  fillColour: colors.yellow,
-                  size: badgeRadius,
+            if (includeBadge) ...<Widget>[
+              const SizedBox(height: kPaddingMassive),
+              Transform.translate(
+                offset: const Offset(kPaddingMassive, kPaddingNone),
+                child: Transform.rotate(
+                  angle: 15.0.degreeToRadian,
+                  child: PositiveStamp.smile(
+                    colors: colors,
+                    fillColour: colors.yellow,
+                    size: badgeRadius,
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ],

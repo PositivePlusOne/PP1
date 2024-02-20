@@ -119,10 +119,7 @@ class NotificationsPage extends HookConsumerWidget {
                           mode: CommunitiesDialogMode.select,
                           canCallToAction: false,
                           selectedProfiles: [profileState.currentProfile?.flMeta?.id ?? ''],
-                          onProfileSelected: (String id) {
-                            viewModel.switchProfile(id);
-                            Navigator.of(context).pop();
-                          },
+                          onProfileSelected: viewModel.onProfileSelected,
                         ),
                       );
                     },

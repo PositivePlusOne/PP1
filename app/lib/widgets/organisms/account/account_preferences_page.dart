@@ -20,6 +20,7 @@ import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
 import 'package:app/widgets/organisms/account/vms/account_preferences_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
@@ -49,6 +50,8 @@ class AccountPreferencesPage extends HookConsumerWidget {
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
 
     final List<Widget> actions = [];
     if (profileControllerState.currentProfile != null) {
@@ -99,9 +102,32 @@ class AccountPreferencesPage extends HookConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: kPaddingMedium),
+            Text(
+              'App Preferences',
+              style: typography.styleHeroMedium.copyWith(color: colors.black),
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveRichText(
+              body: 'Enabling biometrics adds an extra layer of security to your P+1 account. When enabled, you will need to pass your device\'s biometrics authentication to access your P+1 account after a period of inactivity.',
+              textColor: colors.colorGray7,
+            ),
+            const SizedBox(height: kPaddingMedium),
+            PositiveGlassSheet(
+              children: <Widget>[
+                PositiveCheckboxButton(
+                  icon: viewModel.biometricToggleIcon,
+                  label: viewModel.biometricToggleTitle,
+                  value: state.areBiometricsEnabled,
+                  isBusy: state.isBusy,
+                  showDisabledState: state.isBusy || state.availableBiometrics == AvailableBiometrics.none,
+                  onTapped: (_) => viewModel.onBiometricsToggle(),
+                ),
+              ],
+            ),
             const SizedBox(height: kPaddingLarge),
             Text(
-              'Notifications',
+              localizations.shared_navigation_tooltips_notifications,
               style: typography.styleHeroMedium.copyWith(color: colors.black),
             ),
             const SizedBox(height: kPaddingMedium),
@@ -125,6 +151,17 @@ class AccountPreferencesPage extends HookConsumerWidget {
                   if (topic != NotificationTopic.allTopics.last) const SizedBox(height: kPaddingMedium),
                 ],
               ],
+            ),
+            const SizedBox(height: kPaddingMedium),
+            GestureDetector(
+              onLongPress: ref.read(systemControllerProvider.notifier).launchDevelopmentTooling,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "${localizations.page_account_build_number}${systemControllerState.version}",
+                  style: typography.styleBody.copyWith(color: colors.colorGray5),
+                ),
+              ),
             ),
           ],
         ),

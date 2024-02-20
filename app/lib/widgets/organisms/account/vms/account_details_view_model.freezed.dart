@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AccountDetailsViewModelState {
   bool get isBusy => throw _privateConstructorUsedError;
+  UserInfo? get emailUserInfo => throw _privateConstructorUsedError;
   UserInfo? get googleUserInfo => throw _privateConstructorUsedError;
   UserInfo? get facebookUserInfo => throw _privateConstructorUsedError;
   UserInfo? get appleUserInfo => throw _privateConstructorUsedError;
@@ -36,6 +37,7 @@ abstract class $AccountDetailsViewModelStateCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isBusy,
+      UserInfo? emailUserInfo,
       UserInfo? googleUserInfo,
       UserInfo? facebookUserInfo,
       UserInfo? appleUserInfo});
@@ -56,6 +58,7 @@ class _$AccountDetailsViewModelStateCopyWithImpl<$Res,
   @override
   $Res call({
     Object? isBusy = null,
+    Object? emailUserInfo = freezed,
     Object? googleUserInfo = freezed,
     Object? facebookUserInfo = freezed,
     Object? appleUserInfo = freezed,
@@ -65,6 +68,10 @@ class _$AccountDetailsViewModelStateCopyWithImpl<$Res,
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      emailUserInfo: freezed == emailUserInfo
+          ? _value.emailUserInfo
+          : emailUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
       googleUserInfo: freezed == googleUserInfo
           ? _value.googleUserInfo
           : googleUserInfo // ignore: cast_nullable_to_non_nullable
@@ -92,6 +99,7 @@ abstract class _$$AccountDetailsViewModelStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {bool isBusy,
+      UserInfo? emailUserInfo,
       UserInfo? googleUserInfo,
       UserInfo? facebookUserInfo,
       UserInfo? appleUserInfo});
@@ -111,6 +119,7 @@ class __$$AccountDetailsViewModelStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? isBusy = null,
+    Object? emailUserInfo = freezed,
     Object? googleUserInfo = freezed,
     Object? facebookUserInfo = freezed,
     Object? appleUserInfo = freezed,
@@ -120,6 +129,10 @@ class __$$AccountDetailsViewModelStateImplCopyWithImpl<$Res>
           ? _value.isBusy
           : isBusy // ignore: cast_nullable_to_non_nullable
               as bool,
+      emailUserInfo: freezed == emailUserInfo
+          ? _value.emailUserInfo
+          : emailUserInfo // ignore: cast_nullable_to_non_nullable
+              as UserInfo?,
       googleUserInfo: freezed == googleUserInfo
           ? _value.googleUserInfo
           : googleUserInfo // ignore: cast_nullable_to_non_nullable
@@ -142,6 +155,7 @@ class _$AccountDetailsViewModelStateImpl
     implements _AccountDetailsViewModelState {
   const _$AccountDetailsViewModelStateImpl(
       {this.isBusy = false,
+      this.emailUserInfo,
       this.googleUserInfo,
       this.facebookUserInfo,
       this.appleUserInfo});
@@ -149,6 +163,8 @@ class _$AccountDetailsViewModelStateImpl
   @override
   @JsonKey()
   final bool isBusy;
+  @override
+  final UserInfo? emailUserInfo;
   @override
   final UserInfo? googleUserInfo;
   @override
@@ -158,7 +174,7 @@ class _$AccountDetailsViewModelStateImpl
 
   @override
   String toString() {
-    return 'AccountDetailsViewModelState(isBusy: $isBusy, googleUserInfo: $googleUserInfo, facebookUserInfo: $facebookUserInfo, appleUserInfo: $appleUserInfo)';
+    return 'AccountDetailsViewModelState(isBusy: $isBusy, emailUserInfo: $emailUserInfo, googleUserInfo: $googleUserInfo, facebookUserInfo: $facebookUserInfo, appleUserInfo: $appleUserInfo)';
   }
 
   @override
@@ -167,6 +183,8 @@ class _$AccountDetailsViewModelStateImpl
         (other.runtimeType == runtimeType &&
             other is _$AccountDetailsViewModelStateImpl &&
             (identical(other.isBusy, isBusy) || other.isBusy == isBusy) &&
+            (identical(other.emailUserInfo, emailUserInfo) ||
+                other.emailUserInfo == emailUserInfo) &&
             (identical(other.googleUserInfo, googleUserInfo) ||
                 other.googleUserInfo == googleUserInfo) &&
             (identical(other.facebookUserInfo, facebookUserInfo) ||
@@ -176,8 +194,8 @@ class _$AccountDetailsViewModelStateImpl
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, isBusy, googleUserInfo, facebookUserInfo, appleUserInfo);
+  int get hashCode => Object.hash(runtimeType, isBusy, emailUserInfo,
+      googleUserInfo, facebookUserInfo, appleUserInfo);
 
   @JsonKey(ignore: true)
   @override
@@ -192,12 +210,15 @@ abstract class _AccountDetailsViewModelState
     implements AccountDetailsViewModelState {
   const factory _AccountDetailsViewModelState(
       {final bool isBusy,
+      final UserInfo? emailUserInfo,
       final UserInfo? googleUserInfo,
       final UserInfo? facebookUserInfo,
       final UserInfo? appleUserInfo}) = _$AccountDetailsViewModelStateImpl;
 
   @override
   bool get isBusy;
+  @override
+  UserInfo? get emailUserInfo;
   @override
   UserInfo? get googleUserInfo;
   @override

@@ -7,7 +7,7 @@ part of 'account_profile_edit_settings_view_model.dart';
 // **************************************************************************
 
 String _$accountProfileEditSettingsViewModelHash() =>
-    r'79c71574520013caccb709493eae31f668dad37a';
+    r'fed1d28fa22308701c9e98abea0fd5b463005a48';
 
 /// See also [AccountProfileEditSettingsViewModel].
 @ProviderFor(AccountProfileEditSettingsViewModel)

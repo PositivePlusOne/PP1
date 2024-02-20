@@ -10,11 +10,14 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/guards/biometrics_guard.dart';
+import 'package:app/guards/organisation_setup_guard.dart';
 import 'package:app/guards/profile_display_guard.dart';
 import 'package:app/guards/security_guard.dart';
 import 'package:app/widgets/organisms/account/account_communities_page.dart';
+import 'package:app/widgets/organisms/account/account_connect_email_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_page.dart';
 import 'package:app/widgets/organisms/account/account_promoted_posts_promotion_page.dart';
+import 'package:app/widgets/organisms/account/account_social_disconnection_page.dart';
 import 'package:app/widgets/organisms/account/account_update_email_address_page.dart';
 import 'package:app/widgets/organisms/account/account_update_name_page.dart';
 import 'package:app/widgets/organisms/biometrics/biometrics_preferences_page.dart';
@@ -32,16 +35,27 @@ import 'package:app/widgets/organisms/onboarding/onboarding_welcome_page.dart';
 import 'package:app/widgets/organisms/post/post_page.dart';
 import 'package:app/widgets/organisms/post/post_share_page.dart';
 import 'package:app/widgets/organisms/post/vms/create_post_data_structures.dart';
-import 'package:app/widgets/organisms/profile/birthday_delete_account_page.dart';
-import 'package:app/widgets/organisms/profile/profile_about_page.dart';
-import 'package:app/widgets/organisms/profile/profile_company_sectors_select_page.dart';
-import 'package:app/widgets/organisms/profile/profile_details_page.dart';
-import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
-import 'package:app/widgets/organisms/profile/profile_gender_select_page.dart';
-import 'package:app/widgets/organisms/profile/profile_hiv_status_page.dart';
-import 'package:app/widgets/organisms/profile/profile_location_page.dart';
-import 'package:app/widgets/organisms/profile/profile_page.dart';
-import 'package:app/widgets/organisms/profile/profile_reference_image_camera_page.dart';
+import 'package:app/widgets/organisms/profile/views/organisation_setup/organisation_company_sectors_select_page.dart';
+import 'package:app/widgets/organisms/profile/views/organisation_setup/organisation_name_setup_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_about_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_details_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_accent_photo_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_biography_entry_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_birthday_delete_account_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_birthday_entry_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_display_name_entry_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_edit_thanks_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_gender_select_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_hiv_status_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_interests_entry_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_location_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_name_entry_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_photo_selection_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_reference_image_camera_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_reference_image_success_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_reference_image_welcome_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_welcome_back_page.dart';
 import 'package:app/widgets/organisms/registration/registration_complete_page.dart';
 import 'package:app/widgets/organisms/registration/registration_email_entry_page.dart';
 import 'package:app/widgets/organisms/search/vms/search_view_model.dart';
@@ -81,16 +95,6 @@ import '../widgets/organisms/notifications/notifications_page.dart';
 import '../widgets/organisms/onboarding/onboarding_our_pledge_page.dart';
 import '../widgets/organisms/onboarding/onboarding_your_pledge_page.dart';
 import '../widgets/organisms/post/create_post_page.dart';
-import '../widgets/organisms/profile/profile_accent_photo_page.dart';
-import '../widgets/organisms/profile/profile_biography_entry_page.dart';
-import '../widgets/organisms/profile/profile_birthday_entry_page.dart';
-import '../widgets/organisms/profile/profile_display_name_entry_page.dart';
-import '../widgets/organisms/profile/profile_interests_entry_page.dart';
-import '../widgets/organisms/profile/profile_name_entry_page.dart';
-import '../widgets/organisms/profile/profile_photo_selection_page.dart';
-import '../widgets/organisms/profile/profile_reference_image_success_page.dart';
-import '../widgets/organisms/profile/profile_reference_image_welcome_page.dart';
-import '../widgets/organisms/profile/profile_welcome_back_page.dart';
 import '../widgets/organisms/registration/registration_account_page.dart';
 import '../widgets/organisms/registration/registration_account_setup_page.dart';
 import '../widgets/organisms/registration/registration_password_entry_page.dart';
@@ -99,7 +103,6 @@ import '../widgets/organisms/search/search_page.dart';
 import '../widgets/organisms/splash/splash_page.dart';
 
 part 'app_router.g.dart';
-
 part 'app_router.gr.dart';
 
 @Riverpod(keepAlive: true)
@@ -116,6 +119,7 @@ class AppRouter extends _$AppRouter {
   final NotificationGuard notificationGuard = NotificationGuard();
   final BiometricsGuard biometricsGuard = BiometricsGuard();
   final ProfileSetupGuard profileSetupGuard = ProfileSetupGuard();
+  final OrganisationSetupGuard organisationSetupGuard = OrganisationSetupGuard();
   final ProfileDisplayGuard profileDisplayGuard = ProfileDisplayGuard();
   final SplashGuard splashGuard = SplashGuard();
   final SecurityGuard securityGuard = SecurityGuard();
@@ -155,18 +159,18 @@ class AppRouter extends _$AppRouter {
         //* User Preferences Configuration
         AutoRoute(page: NotificationPreferencesRoute.page, path: '/notifications'),
         AutoRoute(page: BiometricsPreferencesRoute.page, path: '/biometrics'),
-        //* Profile and Profile Configuration
-        AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [profileDisplayGuard]),
-        AutoRoute(page: ProfileDetailsRoute.page, path: '/profile/details/view', guards: [profileDisplayGuard]),
+        //* Organisation Setup
+        AutoRoute(page: OrganisationNameSetupRoute.page, path: '/organisation/setup/name', guards: [signedInGuard]),
+        AutoRoute(page: OrganisationCompanySectorSelectRoute.page, path: '/organisation/setup/sectors', guards: [signedInGuard]),
+        //* Profile Setup
         AutoRoute(page: ProfileWelcomeBackRoute.page, path: '/profile/setup/continue', guards: [signedInGuard]),
         AutoRoute(page: ProfileNameEntryRoute.page, path: '/profile/setup/name', guards: [signedInGuard]),
         AutoRoute(page: ProfileHivStatusRoute.page, path: '/registration/profile/hiv-status', guards: [signedInGuard]),
         AutoRoute(page: ProfileDisplayNameEntryRoute.page, path: '/profile/setup/display-name', guards: [signedInGuard]),
         AutoRoute(page: ProfileBirthdayEntryRoute.page, path: '/profile/setup/birthday', guards: [signedInGuard]),
-        AutoRoute(page: BirthdayDeleteAccountRoute.page, path: '/profile/delete', guards: [signedInGuard]),
+        AutoRoute(page: ProfileBirthdayDeleteAccountRoute.page, path: '/profile/setup/delete', guards: [signedInGuard]),
         AutoRoute(page: ProfileGenderSelectRoute.page, path: '/profile/setup/gender', guards: [signedInGuard]),
         AutoRoute(page: ProfileInterestsEntryRoute.page, path: '/profile/setup/interests', guards: [signedInGuard]),
-        AutoRoute(page: ProfileCompanySectorSelectRoute.page, path: '/profile/setup/companysectors', guards: [signedInGuard]),
         AutoRoute(page: ProfileLocationRoute.page, path: '/profile/setup/map-location', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageWelcomeRoute.page, path: '/profile/setup/references/start', guards: [signedInGuard]),
         AutoRoute(page: ProfileReferenceImageCameraRoute.page, path: '/profile/setup/references/camera', guards: [signedInGuard]),
@@ -174,10 +178,13 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: ProfileAccentPhotoRoute.page, path: '/profile/setup/accent', guards: [signedInGuard]),
         AutoRoute(page: ProfilePhotoSelectionRoute.page, path: '/profile/setup/images/profile', guards: [signedInGuard]),
         AutoRoute(page: ProfileBiographyEntryRoute.page, path: '/profile/setup/biography', guards: [signedInGuard]),
+        AutoRoute(page: ProfileEditThanksRoute.page, path: '/profile/setup/thanks', guards: kCommonGuards),
+        //* Profile
+        AutoRoute(page: ProfileRoute.page, path: '/profile/view', guards: [profileDisplayGuard]),
+        AutoRoute(page: ProfileDetailsRoute.page, path: '/profile/details/view', guards: [profileDisplayGuard]),
         AutoRoute(page: ProfileAboutRoute.page, path: '/profile/about', guards: [signedInGuard]),
-        AutoRoute(page: ProfileEditThanksRoute.page, path: '/account/profile/thanks', guards: kCommonGuards),
         //* Home and direct affiliates
-        AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, notificationGuard, biometricsGuard, securityGuard]),
+        AutoRoute(page: HomeRoute.page, path: '/home', guards: [pledgeGuard, authSetupGuard, profileSetupGuard, organisationSetupGuard, notificationGuard, biometricsGuard, securityGuard]),
         AutoRoute(page: HomeLoginPromptRoute.page, path: '/home/login', guards: [...kCommonGuards]),
         AutoRoute(page: SearchRoute.page, path: '/search', guards: kCommonGuards),
         AutoRoute(page: ChatConversationsRoute.page, path: '/chat/conversations', guards: kCommonGuards),
@@ -193,6 +200,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AccountUpdatePhoneNumberRoute.page, path: '/account/update/phone', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatePasswordRoute.page, path: '/account/update/password', guards: kCommonGuards),
         AutoRoute(page: AccountConfirmPasswordRoute.page, path: '/account/confirm/password', guards: kCommonGuards),
+        AutoRoute(page: AccountConnectEmailRoute.page, path: '/account/connect/email', guards: kCommonGuards),
+        AutoRoute(page: AccountSocialDisconnectionRoute.page, path: '/account/connect/email/social', guards: kCommonGuards),
         AutoRoute(page: AccountDeleteProfileRoute.page, path: '/account/delete', guards: kCommonGuards),
         AutoRoute(page: AccountUpdatedRoute.page, path: '/account/update/complete', guards: kCommonGuards),
         AutoRoute(page: AccountProfileEditSettingsRoute.page, path: '/account/profile', guards: kCommonGuards),

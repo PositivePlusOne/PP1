@@ -10,14 +10,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/providers/system/design_controller.dart';
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/atoms/indicators/positive_page_indicator.dart';
+import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/prompts/positive_hint.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import '../../../helpers/brand_helpers.dart';
-import '../../../providers/system/design_controller.dart';
-import '../../atoms/buttons/positive_button.dart';
-import '../../atoms/indicators/positive_page_indicator.dart';
-import '../../molecules/layouts/positive_basic_sliver_list.dart';
-import 'vms/profile_reference_image_view_model.dart';
+import 'package:app/widgets/organisms/profile/vms/profile_reference_image_view_model.dart';
 
 @RoutePage()
 class ProfileReferenceImageSuccessPage extends ConsumerWidget {

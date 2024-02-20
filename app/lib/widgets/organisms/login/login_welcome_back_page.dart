@@ -36,8 +36,8 @@ class LoginWelcomeBackPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: localisations.page_welcome_back_title.toUpperCase(),
       body: welcomeBackMessages[randomIndex],
-      buttonText: localisations.shared_actions_sign_in,
-      onContinueSelected: viewModel.onWelcomeBackContinueSelected,
+      primaryActionText: localisations.shared_actions_sign_in,
+      onPrimaryActionSelected: viewModel.onWelcomeBackContinueSelected,
     );
   }
 }

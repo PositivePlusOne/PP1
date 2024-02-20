@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // Project imports:
 import 'package:app/providers/profiles/profile_form_controller.dart';
-import '../shared/positive_generic_page.dart';
+import 'package:app/widgets/organisms/shared/positive_generic_page.dart';
 
 @RoutePage()
 class ProfileWelcomeBackPage extends ConsumerWidget {
@@ -28,10 +28,9 @@ class ProfileWelcomeBackPage extends ConsumerWidget {
     return PositiveGenericPage(
       title: localizations.page_registration_welcome_back,
       body: localizations.page_registration_welcome_back_body,
-      buttonText: localizations.shared_actions_continue,
       isBusy: state.isBusy,
-      style: PositiveGenericPageStyle.decorated,
-      onContinueSelected: () => viewModel.onProfileSetupContinueSelected(nextPage),
+      primaryActionText: localizations.shared_actions_continue,
+      onPrimaryActionSelected: () => viewModel.onProfileSetupContinueSelected(nextPage),
     );
   }
 }

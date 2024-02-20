@@ -13,9 +13,12 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
+import 'package:app/extensions/user_extensions.dart';
 import 'package:app/gen/app_router.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/user/get_stream_controller.dart';
+import 'package:app/providers/user/mixins/password_auth_handler.dart';
+import 'package:app/providers/user/mixins/two_factor_handler.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/splash/splash_page.dart';
 import '../analytics/analytic_events.dart';
@@ -36,14 +39,15 @@ class UserControllerState with _$UserControllerState {
       );
 }
 
-enum PositiveSocialProvider {
+enum PositiveAuthProvider {
+  email,
   facebook,
   apple,
   google,
 }
 
 @Riverpod(keepAlive: true)
-class UserController extends _$UserController {
+class UserController extends _$UserController with TwoFactorHandler, PasswordAuthHandler {
   final StreamController<User?> userChangedController = StreamController<User?>.broadcast();
 
   StreamSubscription<User?>? userSubscription;
@@ -63,11 +67,18 @@ class UserController extends _$UserController {
   bool get hasAnyProviderLinked => isPasswordProviderLinked || isSocialProviderLinked;
   bool get isSocialProviderLinkedExclusive => isSocialProviderLinked && !isPasswordProviderLinked;
 
+  bool get isMissingEmailProvider => !isPasswordProviderLinked;
+  bool get isMissingSocialProvider => !isGoogleProviderLinked || !isFacebookProviderLinked || !isAppleProviderLinked;
+
   int get providerCount => currentUser?.providerData.length ?? 0;
 
+  UserInfo? get passwordProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'password');
+  UserInfo? get phoneProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'phone');
   UserInfo? get googleProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'google.com');
   UserInfo? get facebookProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'facebook.com');
   UserInfo? get appleProvider => currentUser?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'apple.com');
+
+  Iterable<UserInfo> get allProviders => currentUser?.providerData ?? [];
 
   String get nameFromAuthenticationScopes {
     if (googleProvider != null) {
@@ -129,131 +140,6 @@ class UserController extends _$UserController {
     userChangedController.sink.add(user);
   }
 
-  Future<UserCredential?> loginWithEmailAndPassword(String email, String password) async {
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
-
-    log.d('[UserController] loginWithEmailAndPassword()');
-    final UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-    if (userCredential.user == null) {
-      log.e('[UserController] loginWithEmailAndPassword() userCredential.user is null');
-      return null;
-    }
-
-    log.i('[UserController] loginWithEmailAndPassword() userCredential.user: ${userCredential.user}');
-    await analyticsController.trackEvent(AnalyticEvents.signInWithEmail);
-    return userCredential;
-  }
-
-  Future<void> sendPasswordResetEmail(String email) async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-
-    log.d('[UserController] sendPasswordResetEmail()');
-    await firebaseAuth.sendPasswordResetEmail(email: email);
-    await analyticsController.trackEvent(AnalyticEvents.accountPasswordForgotten);
-  }
-
-  Future<bool> confirmPassword(String password) async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-
-    log.d('[UserController] confirmPassword()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] confirmPassword() user is not logged in');
-      return false;
-    }
-
-    final User user = firebaseAuth.currentUser!;
-    final AuthCredential emailAuthCredential = EmailAuthProvider.credential(
-      email: user.email!,
-      password: password,
-    );
-
-    log.i('[UserController] confirmPassword() reauthenticateWithCredential');
-    await user.reauthenticateWithCredential(emailAuthCredential);
-    await analyticsController.trackEvent(AnalyticEvents.account2FASuccess);
-    // this throws an exception when it doesn't work - so this is good here
-    return true;
-  }
-
-  Future<void> linkEmailPasswordProvider(String email, String password) async {
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    log.d('[UserController] linkEmailPasswordProvider()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] linkEmailPasswordProvider() user is not logged in');
-      return;
-    }
-
-    final User user = firebaseAuth.currentUser!;
-    final AuthCredential emailAuthCredential = EmailAuthProvider.credential(
-      email: email,
-      password: password,
-    );
-
-    log.i('[UserController] linkEmailPasswordProvider() linkWithCredential');
-
-    await user.linkWithCredential(emailAuthCredential);
-    await analyticsController.trackEvent(AnalyticEvents.accountLinkedEmail);
-  }
-
-  Future<void> registerEmailPasswordProvider(String emailAddress, String password) async {
-    final Logger log = ref.read(loggerProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-
-    log.d('[UserController] registerEmailPasswordProvider()');
-    final UserCredential newUser = await firebaseAuth.createUserWithEmailAndPassword(
-      email: emailAddress,
-      password: password,
-    );
-
-    log.i('[UserController] registerEmailPasswordProvider() newUser: $newUser');
-    await analyticsController.trackEvent(AnalyticEvents.signUpWithEmail);
-  }
-
-  Future<void> updateEmailAddress(String email) async {
-    final Logger log = ref.read(loggerProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    log.d('[UserController] updateEmailAddress()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] updateEmailAddress() user is not logged in');
-      return;
-    }
-
-    await perform2FACheck();
-
-    await firebaseAuth.currentUser!.updateEmail(email);
-    await forceUserRefresh();
-    await analyticsController.trackEvent(AnalyticEvents.accountEmailAddressUpdated);
-  }
-
-  Future<void> updatePassword(String password) async {
-    final Logger log = ref.read(loggerProvider);
-    final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-
-    log.d('[UserController] updatePassword()');
-    if (!isUserLoggedIn) {
-      log.d('[UserController] updatePassword() user is not logged in');
-      return;
-    }
-
-    await perform2FACheck();
-
-    await firebaseAuth.currentUser!.updatePassword(password);
-    await forceUserRefresh();
-    await analyticsController.trackEvent(AnalyticEvents.accountPasswordUpdated);
-  }
-
   Future<UserCredential?> registerAppleProvider() async {
     final Logger log = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -271,15 +157,18 @@ class UserController extends _$UserController {
     // If you're logged in, then you're linking the account and require a 2FA check.
     if (isUserLoggedIn) {
       await perform2FACheck();
+
+      log.i('[UserController] registerAppleProvider() linking provider');
+      final User user = firebaseAuth.currentUser!;
+      final AppleAuthProvider appleProvider = AppleAuthProvider()..addDefaultScopes();
+      final UserCredential creds = await user.linkWithProvider(appleProvider);
+      await analyticsController.trackEvent(AnalyticEvents.accountLinkedApple);
+
+      return creds;
     }
 
     log.i('[UserController] registerAppleProvider() signInWithCredential');
-    final AppleAuthProvider appleProvider = AppleAuthProvider();
-
-    //* Apple doesn't include basic scopes so we need to define them.
-    appleProvider.addScope('email'); //* Add the email scope to the Apple auth provider
-    appleProvider.addScope('name'); //* Add the name scope to the Apple auth provider
-
+    final AppleAuthProvider appleProvider = AppleAuthProvider()..addDefaultScopes();
     late final UserCredential userCredential;
     if (UniversalPlatform.isWeb) {
       userCredential = await firebaseAuth.signInWithPopup(appleProvider);
@@ -311,11 +200,6 @@ class UserController extends _$UserController {
       await googleSignIn.disconnect();
     }
 
-    // If you're logged in, then you're linking the account and require a 2FA check.
-    if (isUserLoggedIn) {
-      await perform2FACheck();
-    }
-
     final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
     if (googleSignInAccount == null) {
       log.d('[UserController] registerGoogleProvider() googleSignInAccount is null');
@@ -327,6 +211,18 @@ class UserController extends _$UserController {
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );
+
+    // If logged in, then you're linking the account and require a 2FA check.
+    if (isUserLoggedIn) {
+      await perform2FACheck();
+
+      log.i('[UserController] registerGoogleProvider() linking provider');
+      final User user = firebaseAuth.currentUser!;
+      final UserCredential creds = await user.linkWithCredential(googleAuthCredential);
+      await analyticsController.trackEvent(AnalyticEvents.accountLinkedGoogle);
+
+      return creds;
+    }
 
     log.i('[UserController] registerGoogleProvider() signInWithCredential');
     final UserCredential userCredential = await firebaseAuth.signInWithCredential(googleAuthCredential);
@@ -347,34 +243,63 @@ class UserController extends _$UserController {
     return userCredential;
   }
 
-  Future<void> disconnectSocialProvider(UserInfo userInfo, PositiveSocialProvider socialProvider) async {
+  Future<void> disconnectAuthProvider(UserInfo userInfo, PositiveAuthProvider socialProvider) async {
     final Logger log = ref.read(loggerProvider);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
     final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
 
-    log.d('[UserController] disconnectSocialProvider() provider: ${userInfo.providerId}');
+    log.d('[UserController] disconnectProvider() provider: ${userInfo.providerId}');
     if (!isUserLoggedIn) {
-      log.d('[UserController] disconnectSocialProvider() user is not logged in');
+      log.d('[UserController] disconnectProvider() user is not logged in');
       return;
     }
 
     await perform2FACheck();
 
-    log.i('[UserController] disconnectSocialProvider() unlinking provider');
+    // If the provider is the last provider, and we are not using password auth
+    // Then we must request a email/password login before we can disconnect the provider.
+    final bool isLastProvider = providerCount == 1;
+    final bool hasPasswordProvider = isPasswordProviderLinked;
+
+    if (isLastProvider && !hasPasswordProvider) {
+      log.d('[UserController] disconnectProvider() isLastProvider && !hasPasswordProvider');
+      await requestLastProviderPasswordSignIn();
+
+      // If the user still does not have a password provider, then we cannot disconnect the provider.
+      if (!isPasswordProviderLinked) {
+        log.d('[UserController] disconnectProvider() !isPasswordProviderLinked');
+        return;
+      }
+    }
+
+    log.i('[UserController] disconnectProvider() unlinking provider');
     final User user = firebaseAuth.currentUser!;
     await user.unlink(userInfo.providerId);
 
     switch (socialProvider) {
-      case PositiveSocialProvider.facebook:
+      case PositiveAuthProvider.facebook:
         await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedFacebook);
         break;
-      case PositiveSocialProvider.apple:
+      case PositiveAuthProvider.apple:
         await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedApple);
         break;
-      case PositiveSocialProvider.google:
+      case PositiveAuthProvider.google:
         await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedGoogle);
         break;
+      case PositiveAuthProvider.email:
+        await analyticsController.trackEvent(AnalyticEvents.accountUnlinkedEmail);
+        break;
     }
+  }
+
+  //! This covers an edge case where the user has no password provider, and only a social provider.
+  //! If the user requests to remove the social provider, then we must request a password provider to be setup.
+  Future<void> requestLastProviderPasswordSignIn() async {
+    final Logger log = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    log.i('[UserController] requestLastProviderPasswordSignIn() requesting password sign in');
+    await appRouter.push(const AccountSocialDisconnectionRoute());
   }
 
   Future<void> updatePhoneNumber(String newPhoneNumber) async {
@@ -398,41 +323,10 @@ class UserController extends _$UserController {
       return;
     }
 
-    await perform2FACheck();
+    // await perform2FACheck();
 
     log.i('[UserController] updatePhoneNumber() updated users phone number');
     analyticsController.trackEvent(AnalyticEvents.accountPhoneNumberUpdated);
-  }
-
-  Future<void> perform2FACheck() async {
-    final Logger log = ref.read(loggerProvider);
-    final AppRouter appRouter = ref.read(appRouterProvider);
-    final FirebaseAuth firebaseAuth = ref.read(firebaseAuthProvider);
-    final User? user = firebaseAuth.currentUser;
-
-    final UserInfo? emailProvider = user?.providerData.firstWhereOrNull((userInfo) => userInfo.providerId == 'password');
-    if (emailProvider?.email == null) {
-      log.e('[UserController] perform2FACheck() emailProvider is null');
-      return;
-    }
-
-    log.i('[UserController] perform2FACheck()');
-    bool isVerified = false;
-    await appRouter.push(VerificationDialogRoute(
-      emailAddress: emailProvider!.email!,
-      onVerified: () async {
-        log.i('[UserController] perform2FACheck() onVerified()');
-        isVerified = true;
-      },
-    ));
-
-    log.d('isVerified: $isVerified');
-    if (!isVerified) {
-      log.d('Failed to verify phone number');
-      throw Exception('Failed to verify phone number');
-    }
-
-    state = state.copyWith(last2FACheck: DateTime.now());
   }
 
   Future<void> signOut({bool shouldNavigate = true}) async {

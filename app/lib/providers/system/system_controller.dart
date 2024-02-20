@@ -6,12 +6,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
+import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logger/logger.dart';
-import 'package:open_settings_plus/open_settings_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,6 +79,18 @@ class SystemController extends _$SystemController {
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
 
   static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
+
+  static const String kFirebaseRemoteConfigAuthTimeoutKey = 'auth_timeout';
+  static const int kDefaultAuthTimeout = 60009;
+
+  Future<int> getBiometricAuthTimeout() async {
+    final FirebaseRemoteConfig firebaseRemoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
+    final int firebseAuthTimeout = firebaseRemoteConfig.getInt(SystemController.kFirebaseRemoteConfigAuthTimeoutKey);
+    if (firebseAuthTimeout <= 0) {
+      return kDefaultAuthTimeout;
+    }
+    return firebseAuthTimeout;
+  }
 
   SystemEnvironment get environment {
     const String environmentValue = String.fromEnvironment(kEnvironmentSystemKey, defaultValue: 'develop');
@@ -216,6 +229,14 @@ class SystemController extends _$SystemController {
     await appRouter.push(const DevelopmentRoute());
   }
 
+  //* Travels to a page given on development which allows the users to test the app
+  Future<void> returnToHomePage() async {
+    final AppRouter appRouter = ref.read(appRouterProvider);
+    if (appRouter.current != const HomeRoute()) {
+      appRouter.replaceAll([const HomeRoute()]);
+    }
+  }
+
   Future<bool> isDeviceAppleSimulator() async {
     final Logger logger = ref.read(loggerProvider);
     final BaseDeviceInfo deviceInfo = await ref.read(deviceInfoProvider.future);
@@ -239,14 +260,12 @@ class SystemController extends _$SystemController {
     final bool isIOS = UniversalPlatform.isIOS;
 
     if (isAndroid) {
-      const OpenSettingsPlusAndroid openSettingsPlusAndroid = OpenSettingsPlusAndroid();
-      await openSettingsPlusAndroid.notification();
+      await AppSettings.openAppSettings(type: AppSettingsType.settings);
       return;
     }
 
     if (isIOS) {
-      const OpenSettingsPlusIOS openSettingsPlusIOS = OpenSettingsPlusIOS();
-      await openSettingsPlusIOS.settings();
+      await AppSettings.openAppSettings(type: AppSettingsType.settings);
       return;
     }
 
@@ -259,14 +278,12 @@ class SystemController extends _$SystemController {
     final bool isIOS = UniversalPlatform.isIOS;
 
     if (isAndroid) {
-      const OpenSettingsPlusAndroid openSettingsPlusAndroid = OpenSettingsPlusAndroid();
-      await openSettingsPlusAndroid.appSettings();
+      await AppSettings.openAppSettings(type: AppSettingsType.security);
       return;
     }
 
     if (isIOS) {
-      const OpenSettingsPlusIOS openSettingsPlusIOS = OpenSettingsPlusIOS();
-      await openSettingsPlusIOS.settings();
+      await AppSettings.openAppSettings(type: AppSettingsType.security);
       return;
     }
 

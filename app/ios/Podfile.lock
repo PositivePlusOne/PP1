@@ -630,6 +630,8 @@ PODS:
     - abseil/meta/type_traits
   - app_links (0.0.1):
     - Flutter
+  - app_settings (5.1.1):
+    - Flutter
   - AppAuth (1.6.2):
     - AppAuth/Core (= 1.6.2)
     - AppAuth/ExternalUserAgent (= 1.6.2)
@@ -1069,8 +1071,6 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
-  - open_settings_plus (0.0.1):
-    - Flutter
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -1118,6 +1118,7 @@ PODS:
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
+  - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - camerawesome (from `.symlinks/plugins/camerawesome/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -1153,7 +1154,6 @@ DEPENDENCIES:
   - media_kit_native_event_loop (from `.symlinks/plugins/media_kit_native_event_loop/ios`)
   - media_kit_video (from `.symlinks/plugins/media_kit_video/ios`)
   - mixpanel_flutter (from `.symlinks/plugins/mixpanel_flutter/ios`)
-  - open_settings_plus (from `.symlinks/plugins/open_settings_plus/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -1229,6 +1229,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
+  app_settings:
+    :path: ".symlinks/plugins/app_settings/ios"
   appsflyer_sdk:
     :path: ".symlinks/plugins/appsflyer_sdk/ios"
   camerawesome:
@@ -1299,8 +1301,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/media_kit_video/ios"
   mixpanel_flutter:
     :path: ".symlinks/plugins/mixpanel_flutter/ios"
-  open_settings_plus:
-    :path: ".symlinks/plugins/open_settings_plus/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -1331,6 +1331,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: 926fb7a82dc6d2b8e1f2ed7f3a718bce691d1e46
   app_links: 5ef33d0d295a89d9d16bb81b0e3b0d5f70d6c875
+  app_settings: 017320c6a680cdc94c799949d95b84cb69389ebc
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
   appsflyer_sdk: beae2edc91c51ca92cad637534b45b22ff35d287
   AppsFlyerFramework: 6eb4d89d2eb9a6632317f1055b359d9fd85fd5ff
@@ -1413,7 +1414,6 @@ SPEC CHECKSUMS:
   MLKitFaceDetection: 4981488f71ea8ed718cda692a29ab562637d9ae5
   MLKitVision: 8baa5f46ee3352614169b85250574fde38c36f49
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
-  open_settings_plus: 4bd848866fea2becc124581d868a6164cf768831
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6

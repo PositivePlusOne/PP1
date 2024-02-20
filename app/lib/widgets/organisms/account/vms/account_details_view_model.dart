@@ -29,7 +29,7 @@ import 'package:app/providers/user/account_form_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import 'package:app/widgets/organisms/post/component/positive_clip_External_shader.dart';
-import 'package:app/widgets/organisms/profile/profile_edit_thanks_page.dart';
+import 'package:app/widgets/organisms/profile/views/profile_setup/profile_edit_thanks_page.dart';
 import 'package:app/widgets/organisms/shared/positive_camera_dialog.dart';
 import '../../../../services/third_party.dart';
 
@@ -40,6 +40,7 @@ part 'account_details_view_model.g.dart';
 class AccountDetailsViewModelState with _$AccountDetailsViewModelState {
   const factory AccountDetailsViewModelState({
     @Default(false) bool isBusy,
+    UserInfo? emailUserInfo,
     UserInfo? googleUserInfo,
     UserInfo? facebookUserInfo,
     UserInfo? appleUserInfo,
@@ -176,6 +177,7 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
 
     logger.d('updateSocialProviders');
     state = state.copyWith(
+      emailUserInfo: userController.passwordProvider,
       googleUserInfo: userController.googleProvider,
       facebookUserInfo: userController.facebookProvider,
       appleUserInfo: userController.appleProvider,
@@ -260,11 +262,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       return;
     }
 
-    state = state.copyWith(isBusy: true);
-
     try {
       logger.d('onDisconnectAppleProviderPressed');
-      await userController.disconnectSocialProvider(userController.appleProvider!, PositiveSocialProvider.apple);
+      state = state.copyWith(isBusy: true);
+      await userController.disconnectAuthProvider(userController.appleProvider!, PositiveAuthProvider.apple);
       state = state.copyWith(appleUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectAppleProviderPressed: $e');
@@ -282,12 +283,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       return;
     }
 
-    logger.d('onDisconnectFacebookProviderPressed');
-    state = state.copyWith(isBusy: true);
-
     try {
       logger.d('onDisconnectFacebookProviderPressed');
-      await userController.disconnectSocialProvider(userController.facebookProvider!, PositiveSocialProvider.facebook);
+      state = state.copyWith(isBusy: true);
+      await userController.disconnectAuthProvider(userController.facebookProvider!, PositiveAuthProvider.facebook);
       state = state.copyWith(facebookUserInfo: null);
     } catch (e) {
       logger.e('onDisconnectFacebookProviderPressed: $e');
@@ -306,12 +305,10 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
       return;
     }
 
-    logger.d('onDisconnectGoogleProviderPressed');
-    state = state.copyWith(isBusy: true);
-
     try {
       logger.d('onDisconnectGoogleProviderPressed');
-      await userController.disconnectSocialProvider(userController.googleProvider!, PositiveSocialProvider.google);
+      state = state.copyWith(isBusy: true);
+      await userController.disconnectAuthProvider(userController.googleProvider!, PositiveAuthProvider.google);
       if (googleSignIn.currentUser != null) {
         await googleSignIn.signOut();
       }
@@ -324,6 +321,33 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     }
   }
 
+  Future<void> onDisconnectEmailProviderPressed() async {
+    final Logger logger = ref.read(loggerProvider);
+    final UserController userController = ref.read(userControllerProvider.notifier);
+
+    if (userController.passwordProvider == null) {
+      logger.d('onDisconnectEmailProviderPressed: Email provider is null');
+      return;
+    }
+
+    // Check to see if this is the only provider
+    // If so, first prompt the user to add an email address
+    if (userController.allProviders.length == 1) {
+      throw Exception('Cannot disconnect email provider when it is the only provider');
+    }
+
+    try {
+      logger.d('onDisconnectEmailProviderPressed');
+      state = state.copyWith(isBusy: true);
+      await userController.disconnectAuthProvider(userController.passwordProvider!, PositiveAuthProvider.email);
+      state = state.copyWith(emailUserInfo: null);
+    } catch (e) {
+      logger.e('onDisconnectEmailProviderPressed: $e');
+    } finally {
+      state = state.copyWith(isBusy: false);
+    }
+  }
+
   Future<void> onDeleteAccountButtonPressed(BuildContext context, Locale locale, AccountFormController controller) async {
     final Logger logger = ref.read(loggerProvider);
     final AppRouter appRouter = ref.read(appRouterProvider);
@@ -331,6 +355,14 @@ class AccountDetailsViewModel extends _$AccountDetailsViewModel with LifecycleMi
     logger.d('onUpdatePasswordButtonPressed');
     controller.resetState(locale, formMode: FormMode.edit, editTarget: AccountEditTarget.deleteProfile);
     await appRouter.push(const AccountDeleteProfileRoute());
+  }
+
+  Future<void> onConnectEmailUserRequested() async {
+    final Logger logger = ref.read(loggerProvider);
+    final AppRouter appRouter = ref.read(appRouterProvider);
+
+    logger.d('onConnectSocialUserRequested');
+    await appRouter.push(const AccountConnectEmailRoute());
   }
 
   Future<void> onConnectSocialUserRequested() async {

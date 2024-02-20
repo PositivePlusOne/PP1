@@ -40,6 +40,46 @@ extension ProfileStringExtensions on String {
 }
 
 extension ProfileExtensions on Profile {
+  bool get isProfileSetup {
+    return isOrganisationProfileSetup || isUserProfileSetup;
+  }
+
+  bool get isOrganisationProfileSetup {
+    if (!isOrganisation) {
+      return false;
+    }
+
+    return hasName && hasDisplayName && hasAccentColor;
+  }
+
+  bool get isUserProfileSetup {
+    if (isOrganisation) {
+      return false;
+    }
+
+    return hasName && hasBirthday && hasDisplayName && hasHivStatus && hasAccentColor;
+  }
+
+  bool get hasName {
+    return name.isNotEmpty;
+  }
+
+  bool get hasDisplayName {
+    return displayName.isNotEmpty;
+  }
+
+  bool get hasBirthday {
+    return birthday.isNotEmpty;
+  }
+
+  bool get hasHivStatus {
+    return hivStatus.isNotEmpty;
+  }
+
+  bool get hasAccentColor {
+    return accentColor.isNotEmpty;
+  }
+
   Media? get profileImage {
     return media.firstWhereOrNull((element) => element.bucketPath.contains('/profile'));
   }
@@ -136,7 +176,7 @@ extension ProfileExtensions on Profile {
     final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
     final bool isUserProfile = profileController.isCurrentlyUserProfile;
 
-    if (profileController.hasSetupProfile) {
+    if (profileController.currentProfile?.isProfileSetup == true) {
       children.addAll([
         PositiveNotificationsButton(
           color: color,

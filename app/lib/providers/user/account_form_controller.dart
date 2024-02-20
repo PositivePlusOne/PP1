@@ -285,7 +285,7 @@ class AccountFormController extends _$AccountFormController {
 
       await profileController.deleteProfile();
       if (profileController.isCurrentlyOrganisation) {
-        profileController.switchProfile(firebaseAuth.currentUser!.uid);
+        await profileController.switchProfile(firebaseAuth.currentUser!.uid);
         return;
       }
 
@@ -429,24 +429,45 @@ class AccountFormController extends _$AccountFormController {
     final Logger logger = ref.read(loggerProvider);
     final UserController userController = ref.read(userControllerProvider.notifier);
     final SystemController systemController = ref.read(systemControllerProvider.notifier);
+    final ProfileController profileController = ref.read(profileControllerProvider.notifier);
 
-    if (!isPasswordValid) {
+    if (!isPasswordValid || !isEmailValid) {
       return;
     }
 
-    logger.d('Creating new account with email provider');
-    state = state.copyWith(isBusy: true);
-
     try {
+      logger.d('Creating or linking account with email provider');
+      state = state.copyWith(isBusy: true);
+
+      final bool isNewAccount = userController.currentUser == null;
+
       if (userController.currentUser == null) {
+        logger.i('Creating new account with email provider');
         await userController.registerEmailPasswordProvider(state.emailAddress, state.password);
-      } else {
+      } else if (userController.passwordProvider == null) {
+        logger.i('Linking email provider to existing account');
         await userController.linkEmailPasswordProvider(state.emailAddress, state.password);
+      } else {
+        throw Exception('User is already registered with email provider');
+      }
+
+      if (profileController.currentProfile != null) {
+        final String currentProfileEmail = profileController.currentProfile?.email ?? '';
+        if (currentProfileEmail.isNotEmpty && currentProfileEmail != state.emailAddress) {
+          await profileController.updateEmailAddress(emailAddress: state.emailAddress);
+        }
       }
 
       await systemController.updateSystemConfiguration();
       state = state.copyWith(isBusy: false);
-      await appRouter.replaceAll([const RegistrationAccountSetupRoute()]);
+
+      if (isNewAccount) {
+        await appRouter.replaceAll([const RegistrationAccountSetupRoute()]);
+      } else if (appRouter.routes.length > 1) {
+        appRouter.removeLast();
+      } else {
+        await appRouter.push(const HomeRoute());
+      }
     } finally {
       state = state.copyWith(isBusy: false);
     }
