@@ -13,7 +13,6 @@ import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
 import 'package:app/widgets/behaviours/positive_tap_behaviour.dart';
@@ -65,7 +64,7 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    owner.getSafeDisplayName(localizations),
+                    promotion.title,
                     maxLines: 1,
                     style: typography.styleTitle.copyWith(color: colors.colorGray7),
                   ),
