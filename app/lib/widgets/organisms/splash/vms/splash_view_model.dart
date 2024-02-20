@@ -98,8 +98,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       await userController.signOut(shouldNavigate: false);
     }
 
+    final SystemController systemController = ref.read(systemControllerProvider.notifier);
     try {
-      final SystemController systemController = ref.read(systemControllerProvider.notifier);
       await systemController.updateSystemConfiguration();
     } catch (ex) {
       log.e('Failed to preload build information. Error: $ex');
@@ -108,6 +108,8 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
       if (isLoggedOut) {
         await router.replace(const HomeRoute());
         return;
+      } else {
+        systemController.biometricsReverification();
       }
 
       await router.replace(ErrorRoute(errorMessage: localizations.shared_errors_service_unavailable));
