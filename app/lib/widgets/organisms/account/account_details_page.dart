@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -95,7 +96,7 @@ class AccountDetailsPage extends HookConsumerWidget {
 
     final List<Widget> actions = [];
     if (profileState.currentProfile != null) {
-      actions.addAll(profileState.currentProfile!.buildCommonProfilePageActions(disableAccount: true));
+      actions.addAll(buildCommonProfilePageActions(disableAccount: true));
     }
 
     final (String countryCode, String formattedPhoneNumber) phoneNumberComponents = phoneNumber.formatPhoneNumberIntoComponents();

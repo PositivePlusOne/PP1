@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -123,7 +124,7 @@ class PostPage extends HookConsumerWidget {
     final List<Widget> actions = [];
 
     if (currentProfile != null) {
-      actions.addAll(currentProfile.buildCommonProfilePageActions());
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     final MediaQueryData mediaQuery = MediaQuery.of(context);

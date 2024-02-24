@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -70,7 +71,7 @@ class GuidanceDirectoryEntryPage extends HookConsumerWidget {
     final List<Widget> actions = [];
 
     if (profileControllerState.currentProfile != null) {
-      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     final String parsedMarkdown = html2md.convert(guidanceEntry.markdown);

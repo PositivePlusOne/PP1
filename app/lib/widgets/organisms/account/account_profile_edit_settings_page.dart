@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -80,7 +81,7 @@ class AccountProfileEditSettingsPage extends HookConsumerWidget {
                       onTapped: viewModel.onBackSelected,
                     ),
                     const Spacer(),
-                    ...profile.buildCommonProfilePageActions(includeSpacer: true),
+                    ...buildCommonProfilePageActions(includeSpacer: true),
                   ],
                 ),
                 const SizedBox(height: kPaddingLarge),

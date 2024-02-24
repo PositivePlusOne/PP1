@@ -59,10 +59,9 @@ class AccountPage extends HookConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String currentUserUid = auth.currentUser?.uid ?? '';
 
-    final NotificationsController notificationsController = ref.read(notificationsControllerProvider.notifier);
     ref.watch(notificationsControllerProvider);
 
-    final List<Widget> actions = currentProfile?.buildCommonProfilePageActions(
+    final List<Widget> actions = buildCommonProfilePageActions(
           color: foregroundColor,
           ringColorOverrideProfile: colors.white,
           onTapNotifications: () => onProfileNotificationsActionSelected(shouldReplace: true),

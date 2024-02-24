@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -37,7 +38,7 @@ class GuidancePage extends ConsumerWidget {
     final List<Widget> actions = [];
 
     if (profileControllerState.currentProfile != null) {
-      actions.addAll(profileControllerState.currentProfile!.buildCommonProfilePageActions());
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     return PositiveScaffold(

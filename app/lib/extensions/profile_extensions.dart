@@ -161,43 +161,6 @@ extension ProfileExtensions on Profile {
     return true;
   }
 
-  List<Widget> buildCommonProfilePageActions({
-    bool disableNotifications = false,
-    bool disableAccount = false,
-    bool includeSpacer = false,
-    Color? color,
-    Color? ringColorOverrideProfile,
-    Color? badgeColorOverride,
-    void Function()? onTapNotifications,
-    void Function()? onTapProfile,
-  }) {
-    final List<Widget> children = [];
-    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-    final NotificationsController notificationsController = providerContainer.read(notificationsControllerProvider.notifier);
-    final bool isUserProfile = profileController.isCurrentlyUserProfile;
-
-    if (profileController.currentProfile?.isProfileSetup == true) {
-      children.addAll([
-        PositiveNotificationsButton(
-          color: color,
-          isDisabled: disableNotifications,
-          includeBadge: isUserProfile && notificationsController.canDisplayNotificationFeedBadge,
-          badgeColor: badgeColorOverride,
-          onTap: onTapNotifications,
-        ),
-        if (includeSpacer) const SizedBox(width: kPaddingSmall),
-        PositiveProfileCircularIndicator(
-          profile: profileController.currentProfile,
-          isEnabled: !disableAccount,
-          onTap: onTapProfile ?? onProfileAccountActionSelected,
-          ringColorOverride: ringColorOverrideProfile,
-        ),
-      ]);
-    }
-
-    return children;
-  }
-
   Map<String, bool> buildFormVisibilityFlags({bool isLoadedProfile = false}) {
     final Map<String, bool> newVisibilityFlags = {};
     for (final String flag in visibilityFlags) {

@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,13 +53,12 @@ class HomePage extends HookConsumerWidget {
     usePageRefreshHook();
 
     final bool isLoggedOut = userController.currentUser == null;
-    final List<Widget> actions = [];
+    final List<Widget> actions = [
+      ...buildCommonProfilePageActions(),
+    ];
 
     final Profile? currentProfile = profileControllerState.currentProfile;
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
-    if (currentProfileId.isNotEmpty) {
-      actions.addAll(profileControllerState.currentProfile?.buildCommonProfilePageActions() ?? []);
-    }
 
     final TargetFeed timelineFeed = TargetFeed(
       targetSlug: 'timeline',
