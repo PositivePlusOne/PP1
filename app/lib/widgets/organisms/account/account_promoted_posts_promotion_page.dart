@@ -1,6 +1,7 @@
 // Flutter imports:
 
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -138,7 +139,7 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
 
     final String currentProfileId = widget.currentProfile?.flMeta?.id ?? '';
     if (currentProfileId.isNotEmpty) {
-      actions.addAll(widget.currentProfile?.buildCommonProfilePageActions() ?? []);
+      actions.addAll(buildCommonProfilePageActions());
     }
 
     final MediaQueryData mediaQueryData = MediaQuery.of(context);

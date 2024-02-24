@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -55,8 +56,9 @@ class NotificationsPage extends HookConsumerWidget {
 
     String notificationCacheKey = '';
     if (currentProfile?.flMeta?.id?.isNotEmpty ?? false) {
-      actions.addAll(currentProfile!.buildCommonProfilePageActions(disableNotifications: true));
-      notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile.flMeta!.id!);
+      actions.addAll(buildCommonProfilePageActions(disableNotifications: true));
+      notificationCacheKey = PositiveNotificationsPaginationBehaviourState.getExpectedCacheKey(currentProfile?.flMeta?.id ?? '');
+
       final PositiveNotificationsState? cachedFeedState = cacheController.get(notificationCacheKey);
       hasNotifications = cachedFeedState?.pagingController.itemList?.isNotEmpty ?? false;
       cacheKeys.add(notificationCacheKey);

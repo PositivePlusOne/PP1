@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -138,7 +139,7 @@ class ProfilePage extends HookConsumerWidget {
 
     final List<Widget> actions = [];
     if (controllerState.currentProfile != null) {
-      actions.addAll(controllerState.currentProfile!.buildCommonProfilePageActions(color: appBarTextColor));
+      actions.addAll(buildCommonProfilePageActions(color: appBarTextColor));
     }
 
     final bool canDisplayName = targetProfile?.visibilityFlags.contains(kVisibilityFlagName) == true;
