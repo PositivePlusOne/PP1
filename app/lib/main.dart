@@ -58,7 +58,15 @@ class App extends HookConsumerWidget {
 
         return StreamChatWrapper.wrap(context, textHeightChild);
       },
-      theme: ThemeData(useMaterial3: false),
+      theme: ThemeData(
+        useMaterial3: false,
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
+      ),
       routerDelegate: appRouter.delegate(
         navigatorObservers: () => [
           RouteAnalyticsObserver(),
@@ -129,9 +137,4 @@ class AppLifecycleState with LifecycleMixin {
     final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
     sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
   }
-
-  // @override
-  // void onDetached() {
-  //   print("");
-  // }
 }
