@@ -253,8 +253,11 @@ class ChatViewModel extends _$ChatViewModel with LifecycleMixin {
       'channel_type': channel.type,
     });
 
-    await appRouter.replaceAll([
-      const ChatConversationsRoute(),
+    final bool hasConversationsRoute = appRouter.stack.any((route) => route.name == ChatConversationsRoute.name);
+    await appRouter.pushAll([
+      if (!hasConversationsRoute) ...[
+        const ChatConversationsRoute(),
+      ],
       const ChatRoute(),
     ]);
   }

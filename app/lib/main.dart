@@ -60,6 +60,7 @@ class App extends HookConsumerWidget {
       },
       theme: ThemeData(
         useMaterial3: false,
+        platform: TargetPlatform.iOS,
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
