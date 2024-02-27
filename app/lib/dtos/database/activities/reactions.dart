@@ -104,6 +104,7 @@ class TargetFeed with _$TargetFeed {
   const factory TargetFeed({
     @Default('') String targetSlug,
     @Default('') String targetUserId,
+    @Default(false) bool userPersonalisation,
   }) = _TargetFeed;
 
   factory TargetFeed.fromJson(Map<String, dynamic> json) => _$TargetFeedFromJson(json);

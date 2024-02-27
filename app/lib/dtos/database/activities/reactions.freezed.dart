@@ -1533,6 +1533,7 @@ TargetFeed _$TargetFeedFromJson(Map<String, dynamic> json) {
 mixin _$TargetFeed {
   String get targetSlug => throw _privateConstructorUsedError;
   String get targetUserId => throw _privateConstructorUsedError;
+  bool get userPersonalisation => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1546,7 +1547,7 @@ abstract class $TargetFeedCopyWith<$Res> {
           TargetFeed value, $Res Function(TargetFeed) then) =
       _$TargetFeedCopyWithImpl<$Res, TargetFeed>;
   @useResult
-  $Res call({String targetSlug, String targetUserId});
+  $Res call({String targetSlug, String targetUserId, bool userPersonalisation});
 }
 
 /// @nodoc
@@ -1564,6 +1565,7 @@ class _$TargetFeedCopyWithImpl<$Res, $Val extends TargetFeed>
   $Res call({
     Object? targetSlug = null,
     Object? targetUserId = null,
+    Object? userPersonalisation = null,
   }) {
     return _then(_value.copyWith(
       targetSlug: null == targetSlug
@@ -1574,6 +1576,10 @@ class _$TargetFeedCopyWithImpl<$Res, $Val extends TargetFeed>
           ? _value.targetUserId
           : targetUserId // ignore: cast_nullable_to_non_nullable
               as String,
+      userPersonalisation: null == userPersonalisation
+          ? _value.userPersonalisation
+          : userPersonalisation // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -1586,7 +1592,7 @@ abstract class _$$TargetFeedImplCopyWith<$Res>
       __$$TargetFeedImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String targetSlug, String targetUserId});
+  $Res call({String targetSlug, String targetUserId, bool userPersonalisation});
 }
 
 /// @nodoc
@@ -1602,6 +1608,7 @@ class __$$TargetFeedImplCopyWithImpl<$Res>
   $Res call({
     Object? targetSlug = null,
     Object? targetUserId = null,
+    Object? userPersonalisation = null,
   }) {
     return _then(_$TargetFeedImpl(
       targetSlug: null == targetSlug
@@ -1612,6 +1619,10 @@ class __$$TargetFeedImplCopyWithImpl<$Res>
           ? _value.targetUserId
           : targetUserId // ignore: cast_nullable_to_non_nullable
               as String,
+      userPersonalisation: null == userPersonalisation
+          ? _value.userPersonalisation
+          : userPersonalisation // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1619,7 +1630,10 @@ class __$$TargetFeedImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$TargetFeedImpl implements _TargetFeed {
-  const _$TargetFeedImpl({this.targetSlug = '', this.targetUserId = ''});
+  const _$TargetFeedImpl(
+      {this.targetSlug = '',
+      this.targetUserId = '',
+      this.userPersonalisation = false});
 
   factory _$TargetFeedImpl.fromJson(Map<String, dynamic> json) =>
       _$$TargetFeedImplFromJson(json);
@@ -1630,10 +1644,13 @@ class _$TargetFeedImpl implements _TargetFeed {
   @override
   @JsonKey()
   final String targetUserId;
+  @override
+  @JsonKey()
+  final bool userPersonalisation;
 
   @override
   String toString() {
-    return 'TargetFeed(targetSlug: $targetSlug, targetUserId: $targetUserId)';
+    return 'TargetFeed(targetSlug: $targetSlug, targetUserId: $targetUserId, userPersonalisation: $userPersonalisation)';
   }
 
   @override
@@ -1644,12 +1661,15 @@ class _$TargetFeedImpl implements _TargetFeed {
             (identical(other.targetSlug, targetSlug) ||
                 other.targetSlug == targetSlug) &&
             (identical(other.targetUserId, targetUserId) ||
-                other.targetUserId == targetUserId));
+                other.targetUserId == targetUserId) &&
+            (identical(other.userPersonalisation, userPersonalisation) ||
+                other.userPersonalisation == userPersonalisation));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, targetSlug, targetUserId);
+  int get hashCode =>
+      Object.hash(runtimeType, targetSlug, targetUserId, userPersonalisation);
 
   @JsonKey(ignore: true)
   @override
@@ -1667,7 +1687,9 @@ class _$TargetFeedImpl implements _TargetFeed {
 
 abstract class _TargetFeed implements TargetFeed {
   const factory _TargetFeed(
-      {final String targetSlug, final String targetUserId}) = _$TargetFeedImpl;
+      {final String targetSlug,
+      final String targetUserId,
+      final bool userPersonalisation}) = _$TargetFeedImpl;
 
   factory _TargetFeed.fromJson(Map<String, dynamic> json) =
       _$TargetFeedImpl.fromJson;
@@ -1676,6 +1698,8 @@ abstract class _TargetFeed implements TargetFeed {
   String get targetSlug;
   @override
   String get targetUserId;
+  @override
+  bool get userPersonalisation;
   @override
   @JsonKey(ignore: true)
   _$$TargetFeedImplCopyWith<_$TargetFeedImpl> get copyWith =>

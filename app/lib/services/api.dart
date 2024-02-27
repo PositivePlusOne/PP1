@@ -255,6 +255,7 @@ class PostApiService {
   FutureOr<EndpointResponse> listActivities({
     required String targetSlug,
     required String targetUserId,
+    required bool userPersonalisation,
     Pagination? pagination,
     bool shouldPersonalize = false,
   }) async {
