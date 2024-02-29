@@ -461,8 +461,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -527,8 +526,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -593,8 +591,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -664,8 +661,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -852,8 +848,7 @@ class ProfileFormController extends _$ProfileFormController {
 
     switch (state.formMode) {
       case FormMode.create:
-        appRouter.removeUntil((route) => true);
-        await appRouter.push(const HomeRoute());
+        await appRouter.replaceAll([const HomeRoute()]);
         break;
       case FormMode.edit:
         appRouter.removeLast();
@@ -881,8 +876,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -924,8 +918,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -971,8 +964,7 @@ class ProfileFormController extends _$ProfileFormController {
 
       switch (state.formMode) {
         case FormMode.create:
-          appRouter.removeWhere((route) => true);
-          await appRouter.push(const HomeRoute());
+          await appRouter.replaceAll([const HomeRoute()]);
           break;
         case FormMode.edit:
           await appRouter.replace(ProfileEditThanksRoute(
@@ -1094,6 +1086,4 @@ class ProfileFormController extends _$ProfileFormController {
     appRouter.removeWhere((route) => true);
     await appRouter.push(route);
   }
-
-  onDisplayNameConfirmed(BuildContext context) {}
 }

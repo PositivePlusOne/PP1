@@ -30,8 +30,7 @@ class BiometricsGuard extends AutoRouteGuard {
 
     // Come back this post-launch
     if (!biometricPreferencesSet) {
-      router.removeWhere((route) => true);
-      router.push(const BiometricsPreferencesRoute());
+      router.replaceAll([const BiometricsPreferencesRoute()]);
       resolver.next(false);
       return;
     }
