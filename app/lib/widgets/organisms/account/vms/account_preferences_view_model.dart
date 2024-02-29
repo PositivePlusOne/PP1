@@ -91,22 +91,6 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     );
   }
 
-  String get biometricToggleTitle {
-    switch (state.availableBiometrics) {
-      case AvailableBiometrics.face:
-        return "Enable FaceID";
-      case AvailableBiometrics.iris:
-        return "Enable Iris ID";
-      case AvailableBiometrics.strong:
-      case AvailableBiometrics.weak:
-        return "Enable Biometrics";
-      case AvailableBiometrics.none:
-        return "Enable Pin";
-      default:
-        return "No valid biometrics";
-    }
-  }
-
   IconData get biometricToggleIcon {
     switch (state.availableBiometrics) {
       case AvailableBiometrics.face:

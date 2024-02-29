@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Flutter imports:
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,6 @@ import '../../molecules/containers/positive_glass_sheet.dart';
 import '../../molecules/layouts/positive_basic_sliver_list.dart';
 import '../../molecules/navigation/positive_app_bar.dart';
 import '../../molecules/navigation/positive_navigation_bar.dart';
-import '../../molecules/scaffolds/positive_scaffold.dart';
 
 @RoutePage()
 class AccountPreferencesPage extends HookConsumerWidget {
@@ -62,6 +62,27 @@ class AccountPreferencesPage extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
+
+    String biometricToggleTitle = localizations.page_account_actions_biometrics_na;
+    String biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_bio);
+
+    switch (state.availableBiometrics) {
+      case AvailableBiometrics.face:
+        biometricToggleTitle = localizations.page_account_actions_biometrics_face;
+        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_face);
+      case AvailableBiometrics.iris:
+        biometricToggleTitle = localizations.page_account_actions_biometrics_iris;
+        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_iris);
+      case AvailableBiometrics.strong:
+      case AvailableBiometrics.weak:
+        biometricToggleTitle = localizations.page_account_actions_biometrics_bio;
+        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_bio);
+        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_bio);
+      case AvailableBiometrics.none:
+        biometricToggleTitle = localizations.page_account_actions_biometrics_pin;
+        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_pin);
+      default:
+    }
 
     return PositiveScaffold(
       bottomNavigationBar: PositiveNavigationBar(mediaQuery: mediaQueryData),
@@ -110,7 +131,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
             ),
             const SizedBox(height: kPaddingMedium),
             PositiveRichText(
-              body: 'Enabling biometrics adds an extra layer of security to your P+1 account. When enabled, you will need to pass your device\'s biometrics authentication to access your P+1 account after a period of inactivity.',
+              body: biometricToggleBody,
               textColor: colors.colorGray7,
             ),
             const SizedBox(height: kPaddingMedium),
@@ -118,7 +139,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
               children: <Widget>[
                 PositiveCheckboxButton(
                   icon: viewModel.biometricToggleIcon,
-                  label: viewModel.biometricToggleTitle,
+                  label: biometricToggleTitle,
                   value: state.areBiometricsEnabled,
                   isBusy: state.isBusy,
                   showDisabledState: state.isBusy || state.availableBiometrics == AvailableBiometrics.none,
