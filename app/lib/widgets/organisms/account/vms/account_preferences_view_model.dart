@@ -139,9 +139,9 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
     try {
       if (biometricPreferencesSet) {
-        await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
+        await onBiometricsChange(false);
       } else {
-        await onPermitSelected();
+        await onBiometricsChange(true);
       }
     } finally {
       sharedPreferences.reload();
@@ -152,7 +152,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     }
   }
 
-  Future<void> onPermitSelected() async {
+  Future<void> onBiometricsChange(bool enableBiometrics) async {
     final Logger logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
@@ -180,7 +180,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
         late final PositiveSnackBar snackBar;
         if (e is PlatformException && e.code == 'NotAvailable') {
           snackBar = PositiveGenericSnackBar(
-            title: "Biometrics is not available or permission have not been granted.",
+            title: "Biometrics is not available or permission has not been granted.",
             icon: UniconsLine.envelope_exclamation,
             backgroundColour: colours.black,
           );
@@ -199,12 +199,11 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
     if (!hasAuthenticated) {
       logger.e('BiometricsPreferencesViewModel.onPermitSelected: hasAuthenticated: $hasAuthenticated');
-      await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
       return;
     }
 
     await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesEnabled);
-    await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
+    await sharedPreferences.setBool(kBiometricsAcceptedKey, enableBiometrics);
   }
 
   Future<void> onOpenSettingsRequested() async {
