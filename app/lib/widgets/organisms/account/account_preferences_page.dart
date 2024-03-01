@@ -68,8 +68,13 @@ class AccountPreferencesPage extends HookConsumerWidget {
 
     switch (state.availableBiometrics) {
       case AvailableBiometrics.face:
-        biometricToggleTitle = localizations.page_account_actions_biometrics_face;
-        biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_face);
+        if (viewModel.isIOS) {
+          biometricToggleTitle = localizations.page_account_actions_biometrics_face_ios;
+          biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_face_ios);
+        } else {
+          biometricToggleTitle = localizations.page_account_actions_biometrics_face_android;
+          biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_face_android);
+        }
       case AvailableBiometrics.iris:
         biometricToggleTitle = localizations.page_account_actions_biometrics_iris;
         biometricToggleBody = localizations.page_account_actions_biometrics_body(localizations.page_account_actions_biometrics_iris);

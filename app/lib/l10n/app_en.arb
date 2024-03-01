@@ -342,7 +342,8 @@
     "page_account_actions_change_undelete_account": "Cancel Account Deletion",
     "page_account_actions_change_delete_account_pending": "Your account has been flagged for deletion and will be deleted in the next 24 hours",
 
-    "page_account_actions_biometrics_face": "FaceID",
+    "page_account_actions_biometrics_face_ios": "FaceID",
+    "page_account_actions_biometrics_face_android": "Biometrics",
     "page_account_actions_biometrics_iris": "Iris",
     "page_account_actions_biometrics_bio": "Biometrics",
     "page_account_actions_biometrics_pin": "Pin",

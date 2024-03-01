@@ -31,6 +31,7 @@ import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/biometrics/vms/biometrics_preferences_view_model.dart';
+import 'package:universal_platform/universal_platform.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_preferences_view_model.freezed.dart';
@@ -54,6 +55,8 @@ class AccountPreferencesViewModelState with _$AccountPreferencesViewModelState {
 
 @riverpod
 class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with LifecycleMixin {
+  late final bool isIOS;
+
   @override
   AccountPreferencesViewModelState build() {
     return AccountPreferencesViewModelState.initialState();
@@ -63,6 +66,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   void onFirstRender() {
     unawaited(preload());
     checkBiometrics();
+    updateOS();
     super.onFirstRender();
   }
 
@@ -94,11 +98,15 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   IconData get biometricToggleIcon {
     switch (state.availableBiometrics) {
       case AvailableBiometrics.face:
-        return UniconsLine.smile;
+        if (isIOS) {
+          return UniconsLine.smile;
+        } else {
+          return UniconsLine.eye;
+        }
       case AvailableBiometrics.iris:
       case AvailableBiometrics.strong:
-        return UniconsLine.eye;
       case AvailableBiometrics.weak:
+        return UniconsLine.eye;
       case AvailableBiometrics.none:
         return UniconsLine.asterisk;
       default:
@@ -149,6 +157,14 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
         areBiometricsEnabled: sharedPreferences.getBool(kBiometricsAcceptedKey) ?? false,
         isBusy: false,
       );
+    }
+  }
+
+  void updateOS() {
+    if (UniversalPlatform.isIOS) {
+      isIOS = true;
+    } else {
+      isIOS = false;
     }
   }
 
