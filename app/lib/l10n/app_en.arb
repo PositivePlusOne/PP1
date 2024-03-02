@@ -342,6 +342,15 @@
     "page_account_actions_change_undelete_account": "Cancel Account Deletion",
     "page_account_actions_change_delete_account_pending": "Your account has been flagged for deletion and will be deleted in the next 24 hours",
 
+    "page_account_actions_biometrics_face_ios": "FaceID",
+    "page_account_actions_biometrics_face_android": "Biometrics",
+    "page_account_actions_biometrics_iris": "Iris",
+    "page_account_actions_biometrics_bio": "Biometrics",
+    "page_account_actions_biometrics_pin": "Pin",
+    "page_account_actions_biometrics_na": "No valid biometrics found",
+
+    "page_account_actions_biometrics_body": "Enabling @{biometric} adds an extra layer of security to your P+1 account. When enabled, you will need to pass your device's @{biometric} authentication to access your P+1 account after a period of inactivity.",
+
     "page_account_actions_change_delete_account_splash_title": "We are sorry to see you go",
     "page_account_actions_change_delete_account_splash_body": "We will ask that you are absolutely sure that you wish to delete your account.",
     "page_account_actions_change_delete_account_continue": "Continue",

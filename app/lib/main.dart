@@ -82,51 +82,13 @@ class App extends HookConsumerWidget {
 class AppLifecycleState with LifecycleMixin {
   @override
   void onResume() async {
-    final LocalAuthentication localAuthentication = LocalAuthentication();
-    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
-    final AppRouter router = providerContainer.read(appRouterProvider);
-    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
     final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
-
-    //? If the user has enabled biometric authentication, they will be prompted in this section otherwise skip
-    await sharedPreferences.reload();
-    final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
-    if (!biometricPreferencesAgree || firebaseAuth.currentUser == null) {
-      return;
-    }
-
-    //? Check epoch times to make sure the user is not asked for authentication too often based on app constants
-    final int? lastCheckedEpoch = sharedPreferences.getInt(kBiometricsAcceptedLastTime);
-
-    //? If we have never set epoch/something else has gone wrong, do not ask the user to authenticate
-    if (lastCheckedEpoch == null) {
-      return;
-    }
-
-    //? Check difference between last checked time and current time, do not auth if the user has authenticated recently
-    final int currentEpochTime = DateTime.now().millisecondsSinceEpoch;
-    final int timeSinceLastAuthCheck = currentEpochTime - lastCheckedEpoch;
-    if (timeSinceLastAuthCheck <= await systemController.getBiometricAuthTimeout()) {
-      return;
-    }
-
-    //? Authenticate via biometrics if the user is required to
-    final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
-    await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
-    if (!hasReauthenticated) {
-      final UserController userController = providerContainer.read(userControllerProvider.notifier);
-      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
-      final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
-      await userController.signOut();
-      profileController.resetState();
-      relationshipController.resetState();
-      await router.replace(LoginRoute(senderRoute: HomeRoute));
-    }
+    systemController.biometricsReverification();
   }
 
   @override
   void onPause() async {
-    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
-    sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+    systemController.updateBiometricsLastVerifiedTime();
   }
 }

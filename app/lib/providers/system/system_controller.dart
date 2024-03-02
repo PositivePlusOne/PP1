@@ -8,10 +8,12 @@ import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -25,6 +27,7 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
@@ -33,6 +36,8 @@ import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
@@ -90,6 +95,54 @@ class SystemController extends _$SystemController {
       return kDefaultAuthTimeout;
     }
     return firebseAuthTimeout;
+  }
+
+  Future<void> updateBiometricsLastVerifiedTime() async {
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+    sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  Future<void> biometricsReverification() async {
+    final LocalAuthentication localAuthentication = LocalAuthentication();
+    final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
+    final AppRouter router = providerContainer.read(appRouterProvider);
+    final FirebaseAuth firebaseAuth = providerContainer.read(firebaseAuthProvider);
+    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+
+    //? If the user has enabled biometric authentication, they will be prompted in this section otherwise skip
+    await sharedPreferences.reload();
+    final bool biometricPreferencesAgree = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
+    if (!biometricPreferencesAgree || firebaseAuth.currentUser == null) {
+      return;
+    }
+
+    //? Check epoch times to make sure the user is not asked for authentication too often based on app constants
+    final int? lastCheckedEpoch = sharedPreferences.getInt(kBiometricsAcceptedLastTime);
+
+    //? If we have never set epoch/something else has gone wrong, do not ask the user to authenticate
+    if (lastCheckedEpoch == null) {
+      return;
+    }
+
+    //? Check difference between last checked time and current time, do not auth if the user has authenticated recently
+    final int currentEpochTime = DateTime.now().millisecondsSinceEpoch;
+    final int timeSinceLastAuthCheck = currentEpochTime - lastCheckedEpoch;
+    if (timeSinceLastAuthCheck <= await systemController.getBiometricAuthTimeout()) {
+      return;
+    }
+
+    //? Authenticate via biometrics if the user is required to
+    final bool hasReauthenticated = await localAuthentication.authenticate(localizedReason: "Positive+1 needs to verify it's you");
+    await sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+    if (!hasReauthenticated) {
+      final UserController userController = providerContainer.read(userControllerProvider.notifier);
+      final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+      final RelationshipController relationshipController = providerContainer.read(relationshipControllerProvider.notifier);
+      await userController.signOut();
+      profileController.resetState();
+      relationshipController.resetState();
+      await router.replace(LoginRoute(senderRoute: HomeRoute));
+    }
   }
 
   SystemEnvironment get environment {

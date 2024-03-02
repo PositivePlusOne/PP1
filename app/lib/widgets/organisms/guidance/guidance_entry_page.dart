@@ -2,7 +2,6 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -15,6 +14,7 @@ import 'package:unicons/unicons.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/number_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/providers/guidance/guidance_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';

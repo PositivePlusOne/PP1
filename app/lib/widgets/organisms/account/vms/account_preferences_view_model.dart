@@ -14,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unicons/unicons.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
@@ -54,6 +55,8 @@ class AccountPreferencesViewModelState with _$AccountPreferencesViewModelState {
 
 @riverpod
 class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with LifecycleMixin {
+  late final bool isIOS;
+
   @override
   AccountPreferencesViewModelState build() {
     return AccountPreferencesViewModelState.initialState();
@@ -63,6 +66,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   void onFirstRender() {
     unawaited(preload());
     checkBiometrics();
+    updateOS();
     super.onFirstRender();
   }
 
@@ -91,29 +95,20 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     );
   }
 
-  String get biometricToggleTitle {
-    switch (state.availableBiometrics) {
-      case AvailableBiometrics.face:
-        return "Enable FaceID";
-      case AvailableBiometrics.strong:
-        return "Enable Biometrics";
-      case AvailableBiometrics.weak:
-        return "Enable Pin";
-      case AvailableBiometrics.none:
-      default:
-        return "No valid biometrics";
-    }
-  }
-
   IconData get biometricToggleIcon {
     switch (state.availableBiometrics) {
       case AvailableBiometrics.face:
-        return UniconsLine.smile;
+        if (isIOS) {
+          return UniconsLine.smile;
+        } else {
+          return UniconsLine.eye;
+        }
+      case AvailableBiometrics.iris:
       case AvailableBiometrics.strong:
-        return UniconsLine.eye;
       case AvailableBiometrics.weak:
-        return UniconsLine.asterisk;
+        return UniconsLine.eye;
       case AvailableBiometrics.none:
+        return UniconsLine.asterisk;
       default:
         return UniconsLine.crosshair;
     }
@@ -130,6 +125,9 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     }
     if (availableBiometrics.contains(BiometricType.strong) || availableBiometrics.contains(BiometricType.fingerprint)) {
       availableBiometricsEnum = AvailableBiometrics.strong;
+    }
+    if (availableBiometrics.contains(BiometricType.iris)) {
+      availableBiometricsEnum = AvailableBiometrics.iris;
     }
     if (availableBiometrics.contains(BiometricType.face)) {
       availableBiometricsEnum = AvailableBiometrics.face;
@@ -149,9 +147,9 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
     try {
       if (biometricPreferencesSet) {
-        await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
+        await onBiometricsChange(false);
       } else {
-        await onPermitSelected();
+        await onBiometricsChange(true);
       }
     } finally {
       sharedPreferences.reload();
@@ -162,7 +160,15 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
     }
   }
 
-  Future<void> onPermitSelected() async {
+  void updateOS() {
+    if (UniversalPlatform.isIOS) {
+      isIOS = true;
+    } else {
+      isIOS = false;
+    }
+  }
+
+  Future<void> onBiometricsChange(bool enableBiometrics) async {
     final Logger logger = ref.read(loggerProvider);
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
@@ -190,7 +196,7 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
         late final PositiveSnackBar snackBar;
         if (e is PlatformException && e.code == 'NotAvailable') {
           snackBar = PositiveGenericSnackBar(
-            title: "Biometrics is not available or permission have not been granted.",
+            title: "Biometrics is not available or permission has not been granted.",
             icon: UniconsLine.envelope_exclamation,
             backgroundColour: colours.black,
           );
@@ -209,12 +215,11 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
 
     if (!hasAuthenticated) {
       logger.e('BiometricsPreferencesViewModel.onPermitSelected: hasAuthenticated: $hasAuthenticated');
-      await sharedPreferences.setBool(kBiometricsAcceptedKey, false);
       return;
     }
 
     await analyticsController.trackEvent(AnalyticEvents.biometricsPreferencesEnabled);
-    await sharedPreferences.setBool(kBiometricsAcceptedKey, true);
+    await sharedPreferences.setBool(kBiometricsAcceptedKey, enableBiometrics);
   }
 
   Future<void> onOpenSettingsRequested() async {
@@ -352,5 +357,6 @@ enum AvailableBiometrics {
   none,
   weak,
   strong,
+  iris,
   face,
 }
