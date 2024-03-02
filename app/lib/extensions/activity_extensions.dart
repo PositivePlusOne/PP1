@@ -567,11 +567,6 @@ extension ActivityExt on Activity {
       // update the count to be one fewer
       incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: -1);
 
-      // and show the snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        PositiveGenericSnackBar(title: 'Post unliked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
-      );
-
       return;
     }
 
@@ -580,11 +575,6 @@ extension ActivityExt on Activity {
 
     // update the count to be one more
     incrementReactionCount(cachedState: reactionStatistics, kind: const ReactionType.like(), offset: 1);
-
-    // and show the snackbar
-    ScaffoldMessenger.of(context).showSnackBar(
-      PositiveGenericSnackBar(title: 'Post liked!', icon: UniconsLine.heart, backgroundColour: colours.purple),
-    );
   }
 
   Future<void> onRequestPostSharedToFeed({
