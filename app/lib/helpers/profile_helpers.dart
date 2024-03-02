@@ -1,17 +1,19 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
+
+// Project imports:
 import 'package:app/constants/design_constants.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';
 import 'package:app/widgets/atoms/indicators/positive_profile_circular_indicator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-
-// Project imports:
-import 'package:app/dtos/database/profile/profile.dart';
-import 'package:app/extensions/dart_extensions.dart';
 import '../gen/app_router.dart';
 import '../main.dart';
 import '../services/third_party.dart';

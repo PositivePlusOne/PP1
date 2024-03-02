@@ -1,8 +1,6 @@
 // Dart imports:
 
 // Flutter imports:
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
-import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,12 +16,14 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/molecules/input/positive_rich_text.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/account/vms/account_preferences_view_model.dart';
 import '../../atoms/buttons/positive_button.dart';
 import '../../atoms/buttons/positive_checkbox_button.dart';

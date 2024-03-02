@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,6 +12,7 @@ import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/profiles/profile_controller.dart';

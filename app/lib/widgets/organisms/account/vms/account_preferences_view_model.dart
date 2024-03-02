@@ -14,6 +14,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unicons/unicons.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
@@ -31,7 +32,6 @@ import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/indicators/positive_snackbar.dart';
 import 'package:app/widgets/organisms/biometrics/vms/biometrics_preferences_view_model.dart';
-import 'package:universal_platform/universal_platform.dart';
 import '../../../../services/third_party.dart';
 
 part 'account_preferences_view_model.freezed.dart';

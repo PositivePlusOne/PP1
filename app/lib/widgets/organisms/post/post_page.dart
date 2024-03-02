@@ -2,7 +2,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/helpers/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +24,7 @@ import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
+import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/providers/content/promotions_controller.dart';

@@ -3,15 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/main.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,6 +27,7 @@ import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/gen/app_router.dart';
+import 'package:app/main.dart';
 import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/profiles/company_sectors_controller.dart';
 import 'package:app/providers/profiles/gender_controller.dart';
@@ -38,6 +36,8 @@ import 'package:app/providers/profiles/interests_controller.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
+import 'package:app/providers/user/relationship_controller.dart';
+import 'package:app/providers/user/user_controller.dart';
 import 'package:app/services/api.dart';
 import '../../services/third_party.dart';
 
