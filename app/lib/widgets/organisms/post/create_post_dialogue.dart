@@ -217,17 +217,18 @@ class CreatePostDialogue extends HookConsumerWidget {
             ],
 
             //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
-            if ((postType == PostType.image || postType == PostType.multiImage || postType == PostType.clip) && onUpdateSaveToGallery != null) ...[
-              const SizedBox(height: kPaddingSmall),
-              CreatePostToggleContainer(
-                value: valueSaveToGallery,
-                colours: colours,
-                onTap: isBusy ? (context) {} : onUpdateSaveToGallery,
-                textStyle: textStyle,
-                text: localisations.page_create_post_save,
-              ),
-            ],
-            const SizedBox(height: kPaddingSmall),
+            //? Save to Gallery button removed until save to gallery functionallity added
+            // if ((postType == PostType.image || postType == PostType.multiImage || postType == PostType.clip) && onUpdateSaveToGallery != null) ...[
+            //   const SizedBox(height: kPaddingSmall),
+            //   CreatePostToggleContainer(
+            //     value: valueSaveToGallery,
+            //     colours: colours,
+            //     onTap: isBusy ? (context) {} : onUpdateSaveToGallery,
+            //     textStyle: textStyle,
+            //     text: localisations.page_create_post_save,
+            //   ),
+            // ],
+            // const SizedBox(height: kPaddingSmall),
 
             //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
             if (postType != PostType.repost) ...[
@@ -411,17 +412,21 @@ class CreatePostDialogue extends HookConsumerWidget {
                       minLines: 1,
                     ),
                   ],
-                  if (postType == PostType.image || postType == PostType.multiImage) ...[
-                    const SizedBox(height: kPaddingSmall),
-                    CreatePostToggleContainer(
-                      value: valueSaveToGallery,
-                      colours: colours,
-                      onTap: onUpdateSaveToGallery,
-                      textStyle: textStyle,
-                      text: localisations.page_create_post_save,
-                    ),
-                  ],
-                  const SizedBox(height: kPaddingSmall),
+
+                  //* -=-=-=-=- Save to Gallery Button -=-=-=-=- *\\
+                  //? Save to Gallery button removed until save to gallery functionallity added
+                  // if (postType == PostType.image || postType == PostType.multiImage) ...[
+                  //   const SizedBox(height: kPaddingSmall),
+                  //   CreatePostToggleContainer(
+                  //     value: valueSaveToGallery,
+                  //     colours: colours,
+                  //     onTap: onUpdateSaveToGallery,
+                  //     textStyle: textStyle,
+                  //     text: localisations.page_create_post_save,
+                  //   ),
+                  // ],
+                  // const SizedBox(height: kPaddingSmall),
+
                   //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
                   if (postType != PostType.repost) ...[
                     CreatePostToggleContainer(
