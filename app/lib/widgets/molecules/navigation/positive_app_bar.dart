@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Project imports:
 import 'package:app/dtos/database/common/media.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
-import 'package:app/extensions/dart_extensions.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import '../../../../resources/resources.dart';
@@ -26,6 +25,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveAppBar({
     this.title = '',
     this.centerTitle = false,
+    this.titleStyle,
     this.includeLogoWherePossible = true,
     this.leading,
     this.trailing = const <Widget>[],
@@ -42,6 +42,8 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   final String title;
   final bool centerTitle;
+  final TextStyle? titleStyle;
+
   final bool includeLogoWherePossible;
 
   final Color foregroundColor;
@@ -122,7 +124,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
               Expanded(
                 child: _PositiveAppBarContent(
                   title: title,
-                  titleStyle: typography.styleTitleTwo.copyWith(color: foregroundColor),
+                  titleStyle: titleStyle ?? typography.styleTitleTwo.copyWith(color: foregroundColor),
                   centerTitle: centerTitle,
                   backgroundColor: Colors.transparent,
                   applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
@@ -229,7 +231,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
                 child: Text(
-                  title.asHandle,
+                  title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: centerTitle ? TextAlign.center : TextAlign.start,

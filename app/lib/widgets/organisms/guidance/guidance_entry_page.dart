@@ -13,7 +13,6 @@ import 'package:unicons/unicons.dart';
 // Project imports:
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/extensions/number_extensions.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/providers/guidance/guidance_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';

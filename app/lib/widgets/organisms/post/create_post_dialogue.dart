@@ -232,6 +232,7 @@ class CreatePostDialogue extends HookConsumerWidget {
 
             //* -=-=-=-=- Allow Sharing -=-=-=-=- *\\
             if (postType != PostType.repost) ...[
+              const SizedBox(height: kPaddingSmall),
               CreatePostToggleContainer(
                 value: valueAllowSharing,
                 colours: colours,

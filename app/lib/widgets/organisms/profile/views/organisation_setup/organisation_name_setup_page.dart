@@ -65,7 +65,7 @@ class OrganisationNameSetupPage extends ConsumerWidget {
           )
         : PositiveTextFieldIcon.success(
             backgroundColor: colors.green,
-            onTap: (context) => controller.onDisplayNameConfirmed(context),
+            onTap: (context) => controller.onProfileDisplayNameConfirmed(context),
           );
   }
 
