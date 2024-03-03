@@ -78,7 +78,7 @@ export namespace PostEndpoints {
     // We supply this so we can support reposts and the client can filter out the nested activity
     const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
 
-    functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds, shouldPersonalize });
+    functions.logger.info(`Got activities`, { activities, paginationToken, windowIds, shouldPersonalize });
     return buildEndpointResponse(context, {
       sender: uid,
       joins: [feedStatisticsKey],
