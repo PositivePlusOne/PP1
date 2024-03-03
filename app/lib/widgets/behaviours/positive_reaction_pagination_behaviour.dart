@@ -166,15 +166,13 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
           reactionsState: reactionsState,
           feed: feed,
         );
-      case 'like':
+      default:
         return ReactionLikeList(
           loadingIndicator: loadingIndicator,
           pagingController: reactionsState.pagingController,
           activity: activity,
           currentProfile: currentProfile,
         );
-      default:
-        return const SizedBox.shrink();
     }
   }
 }

@@ -76,6 +76,13 @@ class _PostReactionsPageState extends ConsumerState<PostReactionsPage> {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [widget.activity, reactionsState, ...uniqueActivityReactions]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
+    final String title = switch (widget.reactionType) {
+      'like' => 'Liked by',
+      'comment' => 'Commented by',
+      'share' => 'Shared by',
+      (_) => '',
+    };
+
     return PositiveScaffold(
       appBar: PositiveAppBar(
         safeAreaQueryData: mediaData,
@@ -85,7 +92,7 @@ class _PostReactionsPageState extends ConsumerState<PostReactionsPage> {
           PositiveInvisibleButton(),
         ],
         centerTitle: true,
-        title: 'Liked by',
+        title: title,
         titleStyle: typography.styleHeroMedium,
       ),
       headingWidgets: <Widget>[
