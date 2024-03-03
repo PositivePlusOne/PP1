@@ -168,7 +168,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
         );
       default:
         return ReactionLikeList(
-          loadingIndicator: loadingIndicator,
           pagingController: reactionsState.pagingController,
           activity: activity,
           currentProfile: currentProfile,
@@ -182,15 +181,12 @@ class ReactionLikeList extends ConsumerWidget {
     required this.activity,
     required this.currentProfile,
     required this.pagingController,
-    required this.loadingIndicator,
     super.key,
   });
 
   final Activity? activity;
   final Profile? currentProfile;
   final PagingController<String?, Reaction> pagingController;
-
-  final Widget loadingIndicator;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -210,8 +206,8 @@ class ReactionLikeList extends ConsumerWidget {
         newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
         noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),
         noItemsFoundIndicatorBuilder: (_) => const SizedBox.shrink(),
-        firstPageProgressIndicatorBuilder: (_) => loadingIndicator,
-        newPageProgressIndicatorBuilder: (_) => loadingIndicator,
+        firstPageProgressIndicatorBuilder: (_) => const PositiveLoadingIndicator(),
+        newPageProgressIndicatorBuilder: (_) => const PositiveLoadingIndicator(),
         itemBuilder: (context, reaction, index) => buildReactionProfileItem(
           context: context,
           activity: activity,
