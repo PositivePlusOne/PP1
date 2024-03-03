@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/widgets/organisms/post/post_reactions_page.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -219,6 +221,7 @@ class AppRouter extends _$AppRouter {
         //* Content
         AutoRoute(page: MediaRoute.page, path: '/media', guards: kCommonGuards),
         AutoRoute(page: PostRoute.page, path: '/post'),
+        AutoRoute(page: PostReactionsRoute.page, path: '/post/reactions'),
         AutoRoute(page: TagFeedRoute.page, path: '/tag/:tag', guards: kCommonGuards),
         AutoRoute(page: CreatePostRoute.page, path: '/post/create', guards: [...kCommonGuards, signedInGuard]),
         AutoRoute(page: PostShareRoute.page, path: '/post/share'),

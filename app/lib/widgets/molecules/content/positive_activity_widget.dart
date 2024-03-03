@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -101,20 +102,39 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
 
   Future<void> _onInternalLikeRequested({
     required BuildContext context,
+    required AppRouter appRouter,
     bool useReposter = false,
   }) async {
-    if (isLiking) {
+    if (widget.activity == null) {
       return;
     }
 
-    isLiking = true;
-    if (useReposter) {
-      await widget.reposterActivity?.onPostLiked(context: context, currentProfile: widget.currentProfile, activity: widget.reposterActivity);
-    } else {
-      await widget.activity?.onPostLiked(context: context, currentProfile: widget.currentProfile, activity: widget.activity);
+    // Check if the post is from the current user
+    // If so, go to the post reactions page
+    final bool isPublisher = widget.activity?.publisherInformation?.publisherId == widget.currentProfile?.flMeta?.id;
+    if (isPublisher) {
+      await appRouter.push(PostReactionsRoute(
+        activity: widget.activity!,
+        reactionType: 'like',
+      ));
+
+      return;
     }
 
-    isLiking = false;
+    try {
+      if (isLiking) {
+        return;
+      }
+
+      isLiking = true;
+      if (useReposter) {
+        await widget.reposterActivity?.onPostLiked(context: context, currentProfile: widget.currentProfile, activity: widget.reposterActivity);
+      } else {
+        await widget.activity?.onPostLiked(context: context, currentProfile: widget.currentProfile, activity: widget.activity);
+      }
+    } finally {
+      isLiking = false;
+    }
   }
 
   Future<void> _onInternalBookmarkRequested({
@@ -140,8 +160,9 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     final AppLocalizations localizations = AppLocalizations.of(context)!;
     final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
     final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
-    final bool displayActivityIds = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
+    final AppRouter appRouter = ref.read(appRouterProvider);
 
+    final bool displayActivityIds = ref.watch(developmentViewModelProvider.select((value) => value.displaySelectablePostIDs));
     final bool isRepost = widget.activity?.repostConfiguration?.targetActivityPublisherId.isNotEmpty ?? false;
 
     bool isActivityLiked = false;
@@ -213,7 +234,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     );
 
     if (isRepost) {
-      final bool isPublisher = widget.activity?.publisherInformation?.publisherId == widget.currentProfile?.flMeta?.id;
+      bool isRepostPublisher = widget.reposterActivity?.publisherInformation?.publisherId == widget.currentProfile?.flMeta?.id;
       return Column(
         children: <Widget>[
           PositiveTapBehaviour(
@@ -278,13 +299,13 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
             ),
             isLiked: isParentActivityLiked,
             likes: totalParentActivityLikes,
-            likesEnabled: !isLiking && !isPublisher,
+            likesEnabled: (!isLiking && !isRepostPublisher) || (isRepostPublisher && totalParentActivityLikes > 0),
             onBookmark: (context) => _onInternalBookmarkRequested(context: context),
             onComment: (context) => widget.activity?.requestPostRoute(
               context: context,
               currentProfile: widget.currentProfile,
             ),
-            onLike: (context) => _onInternalLikeRequested(context: context),
+            onLike: (context) => _onInternalLikeRequested(context: context, appRouter: appRouter),
             shareEnabled: canActShare,
             onShare: (context) => widget.reposterActivity?.share(context, widget.currentProfile) ?? widget.activity?.share(context, widget.currentProfile),
           ),
@@ -292,6 +313,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       );
     }
 
+    final bool isActivityPublisher = widget.activity?.publisherInformation?.publisherId == widget.currentProfile?.flMeta?.id;
     return IgnorePointer(
       ignoring: !widget.isEnabled,
       child: Column(
@@ -332,15 +354,15 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               isShortformPost: !widget.isFullscreen,
               sidePadding: sidePadding,
-              onLike: (context) => _onInternalLikeRequested(context: context),
               isLiked: isActivityLiked,
+              totalLikes: totalLikes,
+              likesEnabled: (!isLiking && !isActivityPublisher) || (isActivityPublisher && totalLikes > 0),
+              onLike: (context) => _onInternalLikeRequested(context: context, appRouter: appRouter),
               onComment: (context) => widget.activity?.requestPostRoute(
                 context: context,
                 currentProfile: widget.currentProfile,
                 promotionId: widget.activityPromotion?.flMeta?.id ?? '',
               ),
-              totalLikes: totalLikes,
-              likesEnabled: !isLiking,
               totalComments: totalComments,
               isBookmarked: isBookmarked,
               onBookmark: (context) => _onInternalBookmarkRequested(context: context),
