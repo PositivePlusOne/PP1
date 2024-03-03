@@ -116,6 +116,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
       await appRouter.push(PostReactionsRoute(
         activity: widget.activity!,
         reactionType: 'like',
+        feed: widget.targetFeed,
       ));
 
       return;
