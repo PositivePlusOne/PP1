@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 
-import { DefaultGenerics, StreamClient, StreamFeed, connect } from "getstream";
+import { DefaultGenerics, PersonalizationAPIResponse, StreamClient, StreamFeed, connect } from "getstream";
 import { FeedEntry, GetFeedWindowResult } from "../dto/stream";
 import { FeedRequestJSON } from "../dto/feed_dtos";
 import { DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS } from "../constants/default_feeds";
@@ -164,6 +164,41 @@ export namespace FeedService {
       unread: response?.unread ?? 0,
       unseen: response?.unseen ?? 0,
       origin: StreamHelpers.getOriginFromFeed(feed),
+    };
+  }
+
+  /**
+   * Gets a feed window for a personalized feed.
+   * @param {PersonalizationAPIResponse<DefaultGenerics>} response the response from the personalization API.
+   * @param {number} windowSize the size of the window.
+   * @param {string} next the next token.
+   * @return {Promise<GetFeedWindowResult>} a promise that resolves to the feed window.
+   */
+  export async function getPersonalizedFeedWindow(uid: string, response: PersonalizationAPIResponse<DefaultGenerics>, windowSize: number): Promise<GetFeedWindowResult> {
+
+    const entries = [] as FeedEntry[];
+    response.results.forEach((activity: any) => {
+      entries.push({
+        id: activity?.id ?? "",
+        foreign_id: activity?.foreign_id ?? "",
+        object: activity?.object ?? "",
+        actor: activity?.actor ?? "",
+        reaction_counts: activity.reaction_counts,
+        verb: activity?.verb ?? "",
+        actorType: activity?.actor_type ?? "",
+        description: activity?.description ?? "",
+        tags: activity?.tags ?? [],
+        time: activity?.time ?? "",
+        to: activity?.to ?? [],
+      });
+    });
+
+    return {
+      results: entries,
+      next: response?.next ?? "",
+      origin: StreamHelpers.getOriginFromPersonalizedApiResponse(uid),
+      unread: 0,
+      unseen: 0,
     };
   }
 

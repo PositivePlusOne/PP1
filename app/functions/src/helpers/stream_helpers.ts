@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
+import { DefaultGenerics, PersonalizationAPIResponse, StreamClient, StreamFeed } from "getstream";
 
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
@@ -42,6 +42,10 @@ export namespace StreamHelpers {
     }
     
     return `${feed.slug}:${feed.userId}`;
+  }
+
+  export function getOriginFromPersonalizedApiResponse(uid: string): string {
+    return `personalized_feed:${uid}`;
   }
 
   export function getStreamFeedFromOrigin(origin: string, client: StreamClient<DefaultGenerics>): StreamFeed {

@@ -37,27 +37,48 @@ export namespace PostEndpoints {
     const targetSlug = request.data.targetSlug || "";
     const limit = request.limit || 25;
     const cursor = request.cursor || "";
+    const shouldPersonalize = request.data.shouldPersonalize || false;
 
     functions.logger.info(`Listing activities`, { uid, targetUserId, targetSlug, limit, cursor });
-
     if (!targetSlug || targetSlug.length === 0 || !targetUserId || targetUserId.length === 0) {
       throw new functions.https.HttpsError("invalid-argument", "Feed and slug must be provided");
     }
 
     const feedsClient = FeedService.getFeedsClient();
-    const feed = feedsClient.feed(targetSlug, targetUserId);
-    const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
+    const activities = [] as ActivityJSON[];
+    const windowIds = [] as string[];
+
+    let next = cursor;
+    let unread = 0;
+    let unseen = 0;
+
+    if (shouldPersonalize) {
+      const response = await feedsClient.personalization.get('personalized_feed', { user_id: uid, feed_slug: targetSlug, id_lt: cursor, limit: limit.toString() })
+      const window = await FeedService.getPersonalizedFeedWindow(uid, response, limit);
+      const activitiesResponse = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
+
+      activities.push(...activitiesResponse);
+      windowIds.push(...window.results.map((result) => result.id));
+      next = window.next;
+    } else {
+      const feed = feedsClient.feed(targetSlug, targetUserId);
+      const window = await FeedService.getFeedWindow(uid, feed, limit, cursor);
+      const activitiesResponse = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
+
+      activities.push(...activitiesResponse);
+      windowIds.push(...window.results.map((result) => result.id));
+      next = window.next;
+      unread = window.unread;
+      unseen = window.unseen;
+    }
 
     // Convert window results to a list of IDs
-    const activities = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
-    const paginationToken = StreamHelpers.extractPaginationToken(window.next);
+    const paginationToken = StreamHelpers.extractPaginationToken(next);
 
     // We supply this so we can support reposts and the client can filter out the nested activity
-    const windowIds = window.results.map((result) => result.id);
     const feedStatisticsKey = FeedStatisticsService.getExpectedKeyFromOptions(targetSlug, targetUserId);
 
-    functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds });
-
+    functions.logger.info(`Got activities`, { activities, paginationToken, window, windowIds, shouldPersonalize });
     return buildEndpointResponse(context, {
       sender: uid,
       joins: [feedStatisticsKey],
@@ -66,8 +87,8 @@ export namespace PostEndpoints {
       cursor: paginationToken,
       seedData: {
         next: paginationToken,
-        unread: window.unread,
-        unseen: window.unseen,
+        unread: unread,
+        unseen: unseen,
         windowIds,
       },
     });
