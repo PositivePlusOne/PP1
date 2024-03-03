@@ -53,7 +53,7 @@ export namespace PostEndpoints {
     let unseen = 0;
 
     if (shouldPersonalize) {
-      const response = await feedsClient.personalization.get('personalized_feed', { user_id: uid, feed_slug: targetSlug, id_lt: cursor, limit: limit.toString() })
+      const response = await feedsClient.personalization.get('personalized_feed', { user_id: uid, feed_slug: targetSlug, id_lt: cursor, limit: limit.toString() });
       const window = await FeedService.getPersonalizedFeedWindow(uid, response, limit);
       const activitiesResponse = await ActivitiesService.getActivityFeedWindow(window.results) as ActivityJSON[];
 

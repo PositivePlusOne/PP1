@@ -175,7 +175,6 @@ export namespace FeedService {
    * @return {Promise<GetFeedWindowResult>} a promise that resolves to the feed window.
    */
   export async function getPersonalizedFeedWindow(uid: string, response: PersonalizationAPIResponse<DefaultGenerics>, windowSize: number): Promise<GetFeedWindowResult> {
-
     const entries = [] as FeedEntry[];
     response.results.forEach((activity: any) => {
       entries.push({

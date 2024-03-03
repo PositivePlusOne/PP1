@@ -8,7 +8,6 @@ import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 import { FeedName } from "../constants/default_feeds";
-import { FeedEntry } from "../dto/stream";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
 import { ProfileJSON } from "../dto/profile";

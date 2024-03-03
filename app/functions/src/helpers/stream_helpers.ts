@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { DefaultGenerics, PersonalizationAPIResponse, StreamClient, StreamFeed } from "getstream";
+import { DefaultGenerics, StreamClient, StreamFeed } from "getstream";
 
 export namespace StreamHelpers {
   export const paginationTokenRegex = /&id_lt=(.+?)&/;
