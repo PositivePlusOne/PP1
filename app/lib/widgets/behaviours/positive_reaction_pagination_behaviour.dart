@@ -95,8 +95,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
       String? next = data.containsKey('cursor') ? data['cursor'].toString() : '';
 
-      // Check for weird backend loops (extra safety)
-      // statistics:activity:96d5fc30-623c-11ee-9782-5f6680786a6f
       if (next == reactionsState.currentPaginationKey) {
         next = null;
       }
@@ -126,47 +124,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     reactionsState.pagingController.appendPage(reactionList, next);
   }
 
-  // Currently comments are the only reaction type supported.
-  String buildCommentHeaderText(AppLocalizations localizations) {
-    final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
-    final UserController userController = providerContainer.read(userControllerProvider.notifier);
-
-    final bool loggedIn = userController.isUserLoggedIn;
-    final bool isOwn = activity?.publisherInformation?.publisherId == userController.currentUser?.uid;
-    final bool isFollowing = publisherRelationship?.following ?? false;
-    final bool isConnected = publisherRelationship?.isValidConnectedRelationship ?? false;
-    final bool isBlocked = publisherRelationship?.blocked ?? false;
-
-    if (isBlocked) {
-      return localizations.post_comments_disabled_header;
-    }
-
-    late String commentHeaderText;
-
-    commentMode.when(
-      public: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
-      signedIn: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
-      followersAndConnections: () {
-        if (loggedIn) {
-          return commentHeaderText = (isFollowing || isConnected || isOwn) ? localizations.post_comments_public_header : localizations.post_comments_followers_connections_header;
-        } else {
-          return commentHeaderText = localizations.post_comments_signed_in_followers_header;
-        }
-      },
-      connections: () {
-        if (loggedIn) {
-          return commentHeaderText = (isFollowing || isConnected || isOwn) ? localizations.post_comments_public_header : localizations.post_comments_connections_header;
-        } else {
-          return commentHeaderText = localizations.post_comments_signed_in_connections_header;
-        }
-      },
-      private: () => commentHeaderText = localizations.post_comments_private_header,
-      disabled: () => commentHeaderText = localizations.post_comments_disabled_header,
-    );
-
-    return commentHeaderText;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations localizations = AppLocalizations.of(context)!;
@@ -178,11 +135,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
       color: colours.white,
       child: const PositiveLoadingIndicator(),
     );
-
-    final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: buildCommentHeaderText(localizations));
-    final bool commentsDisabled = reactionMode == const ActivitySecurityConfigurationMode.disabled();
-
-    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
 
     // Attempt to move the highlighted reaction to the top of the list
     if (highlightedReactionId.isNotEmpty) {
@@ -200,6 +152,128 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
       controller: reactionsState.pagingController,
       listener: requestNextPage,
     );
+
+    final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));
+    switch (kind) {
+      case 'comment':
+        return ReactionCommentList(
+          currentProfile: currentProfile,
+          loadingIndicator: loadingIndicator,
+          pagingController: reactionsState.pagingController,
+          activity: activity,
+          publisherRelationship: publisherRelationship,
+          reactionsState: reactionsState,
+          feed: feed,
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+}
+
+Widget buildReactionItem({
+  required BuildContext context,
+  required Reaction item,
+  required Activity activity,
+  required PositiveReactionsState reactionsState,
+  required TargetFeed feed,
+  required Profile? currentProfile,
+  required int index,
+}) {
+  return PositiveComment(
+    activity: activity,
+    comment: item,
+    currentProfile: currentProfile,
+    feedOrigin: TargetFeed.toOrigin(feed),
+    isFirst: index == 0,
+    onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(
+      context: context,
+      targetProfile: publisherProfile,
+      currentProfile: currentProfile,
+      reactionID: comment.flMeta?.id ?? "",
+      reactionFeedState: reactionsState,
+    ),
+  );
+}
+
+String buildCommentHeaderText({
+  required AppLocalizations localizations,
+  required Activity? activity,
+  required Relationship? publisherRelationship,
+}) {
+  final ActivitySecurityConfigurationMode commentMode = activity?.securityConfiguration?.commentMode ?? const ActivitySecurityConfigurationMode.disabled();
+  final UserController userController = providerContainer.read(userControllerProvider.notifier);
+
+  final bool loggedIn = userController.isUserLoggedIn;
+  final bool isOwn = activity?.publisherInformation?.publisherId == userController.currentUser?.uid;
+  final bool isFollowing = publisherRelationship?.following ?? false;
+  final bool isConnected = publisherRelationship?.isValidConnectedRelationship ?? false;
+  final bool isBlocked = publisherRelationship?.blocked ?? false;
+
+  if (isBlocked) {
+    return localizations.post_comments_disabled_header;
+  }
+
+  late String commentHeaderText;
+
+  commentMode.when(
+    public: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
+    signedIn: () => commentHeaderText = loggedIn ? localizations.post_comments_public_header : localizations.post_comments_signed_in_header,
+    followersAndConnections: () {
+      if (loggedIn) {
+        return commentHeaderText = (isFollowing || isConnected || isOwn) ? localizations.post_comments_public_header : localizations.post_comments_followers_connections_header;
+      } else {
+        return commentHeaderText = localizations.post_comments_signed_in_followers_header;
+      }
+    },
+    connections: () {
+      if (loggedIn) {
+        return commentHeaderText = (isFollowing || isConnected || isOwn) ? localizations.post_comments_public_header : localizations.post_comments_connections_header;
+      } else {
+        return commentHeaderText = localizations.post_comments_signed_in_connections_header;
+      }
+    },
+    private: () => commentHeaderText = localizations.post_comments_private_header,
+    disabled: () => commentHeaderText = localizations.post_comments_disabled_header,
+  );
+
+  return commentHeaderText;
+}
+
+class ReactionCommentList extends ConsumerWidget {
+  const ReactionCommentList({
+    required this.activity,
+    required this.publisherRelationship,
+    required this.reactionsState,
+    required this.feed,
+    required this.currentProfile,
+    required this.loadingIndicator,
+    required this.pagingController,
+    super.key,
+  });
+
+  final Activity? activity;
+  final Relationship? publisherRelationship;
+  final PositiveReactionsState reactionsState;
+  final TargetFeed feed;
+
+  final Profile? currentProfile;
+
+  final Widget loadingIndicator;
+
+  final PagingController<String?, Reaction> pagingController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+    final ActivitySecurityConfigurationMode? reactionMode = activity?.securityConfiguration?.commentMode;
+    final String headerText = buildCommentHeaderText(localizations: localizations, activity: activity, publisherRelationship: publisherRelationship);
+
+    final Widget commentPlaceholder = ReactionPlaceholderWidget(headerText: headerText);
+    final bool areReactionsDisabled = reactionMode == const ActivitySecurityConfigurationMode.disabled();
 
     return MultiSliver(
       children: <Widget>[
@@ -229,13 +303,13 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
             ],
           ),
         ),
-        if (commentsDisabled) ...<Widget>[
+        if (areReactionsDisabled) ...<Widget>[
           SliverToBoxAdapter(child: commentPlaceholder),
         ],
-        if (!commentsDisabled) ...<Widget>[
+        if (!areReactionsDisabled) ...<Widget>[
           PagedSliverList.separated(
             shrinkWrapFirstPageIndicators: true,
-            pagingController: reactionsState.pagingController,
+            pagingController: pagingController,
             separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
               context,
               // designed to have a very thin seperator of the grey
@@ -246,7 +320,15 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
               transitionDuration: kAnimationDurationRegular,
-              itemBuilder: (context, reaction, index) => buildReactionItem(context, reaction, currentProfile, index),
+              itemBuilder: (context, reaction, index) => buildReactionItem(
+                context: context,
+                item: reaction,
+                activity: activity!,
+                reactionsState: reactionsState,
+                feed: feed,
+                currentProfile: currentProfile,
+                index: index,
+              ),
               firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
               noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),
@@ -257,23 +339,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
           ),
         ],
       ],
-    );
-  }
-
-  Widget buildReactionItem(BuildContext context, Reaction item, Profile? currentProfile, int index) {
-    return PositiveComment(
-      activity: activity,
-      comment: item,
-      currentProfile: currentProfile,
-      feedOrigin: TargetFeed.toOrigin(feed),
-      isFirst: index == 0,
-      onOptionSelected: (comment, publisherProfile) => comment.onReactionOptionsSelected(
-        context: context,
-        targetProfile: publisherProfile,
-        currentProfile: currentProfile,
-        reactionID: comment.flMeta?.id ?? "",
-        reactionFeedState: reactionsState,
-      ),
     );
   }
 }
