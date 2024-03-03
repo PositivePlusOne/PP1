@@ -11,7 +11,6 @@ import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/helpers/profile_helpers.dart';
 import 'package:app/hooks/cache_hook.dart';

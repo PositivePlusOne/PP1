@@ -9,7 +9,6 @@ import 'package:logger/logger.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/profile/profile.dart';
 import 'package:app/extensions/dart_extensions.dart';
-import 'package:app/extensions/profile_extensions.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/notifications_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_notifications_button.dart';

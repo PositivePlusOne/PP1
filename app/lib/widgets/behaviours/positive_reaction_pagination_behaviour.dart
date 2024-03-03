@@ -24,9 +24,11 @@ import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/reaction_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
+import 'package:app/extensions/string_extensions.dart';
 import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
 import 'package:app/main.dart';
+import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
@@ -35,8 +37,10 @@ import 'package:app/services/reaction_api_service.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/atoms/pills/security_mode_pill.dart';
+import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/content/positive_comment.dart';
+import 'package:app/widgets/molecules/tiles/positive_profile_list_tile.dart';
 import 'package:app/widgets/state/positive_reactions_state.dart';
 import '../../services/third_party.dart';
 
@@ -115,7 +119,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     final List<Reaction> reactionList = reactions.map((dynamic reaction) => Reaction.fromJson(reaction as Map<String, dynamic>)).toList();
 
     logger.d('appendReactionPageToState() - reactionList: $reactionList');
-
     if (next == null) {
       reactionsState.pagingController.appendLastPage(reactionList);
       return;
@@ -126,8 +129,6 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AppLocalizations localizations = AppLocalizations.of(context)!;
-    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
 
     final Widget loadingIndicator = Container(
@@ -165,13 +166,97 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
           reactionsState: reactionsState,
           feed: feed,
         );
+      case 'like':
+        return ReactionLikeList(
+          loadingIndicator: loadingIndicator,
+          pagingController: reactionsState.pagingController,
+          activity: activity,
+          currentProfile: currentProfile,
+        );
       default:
         return const SizedBox.shrink();
     }
   }
 }
 
-Widget buildReactionItem({
+class ReactionLikeList extends ConsumerWidget {
+  const ReactionLikeList({
+    required this.activity,
+    required this.currentProfile,
+    required this.pagingController,
+    required this.loadingIndicator,
+    super.key,
+  });
+
+  final Activity? activity;
+  final Profile? currentProfile;
+  final PagingController<String?, Reaction> pagingController;
+
+  final Widget loadingIndicator;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final DesignColorsModel colours = ref.read(designControllerProvider.select((value) => value.colors));
+    return PagedListView.separated(
+      shrinkWrap: true,
+      pagingController: pagingController,
+      separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
+        context,
+        color: colours.colorGray1,
+        vPadding: 0,
+      ),
+      builderDelegate: PagedChildBuilderDelegate<Reaction>(
+        animateTransitions: true,
+        transitionDuration: kAnimationDurationRegular,
+        firstPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
+        newPageErrorIndicatorBuilder: (_) => const SizedBox.shrink(),
+        noMoreItemsIndicatorBuilder: (_) => const SizedBox.shrink(),
+        noItemsFoundIndicatorBuilder: (_) => const SizedBox.shrink(),
+        firstPageProgressIndicatorBuilder: (_) => loadingIndicator,
+        newPageProgressIndicatorBuilder: (_) => loadingIndicator,
+        itemBuilder: (context, reaction, index) => buildReactionProfileItem(
+          context: context,
+          activity: activity,
+          currentProfile: currentProfile,
+          item: reaction,
+          index: index,
+        ),
+      ),
+    );
+  }
+}
+
+Widget buildReactionProfileItem({
+  required BuildContext context,
+  required Activity? activity,
+  required Reaction item,
+  required Profile? currentProfile,
+  required int index,
+}) {
+  final String targetProfileId = item.userId;
+  final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+  final Profile? targetProfile = cacheController.get(targetProfileId);
+
+  return PositiveCacheWidget(
+    currentProfile: currentProfile,
+    cacheObjects: [targetProfile],
+    onBuild: (context) {
+      final String relationshipId = [currentProfile?.flMeta?.id ?? '', targetProfile?.flMeta?.id ?? ''].asGUID;
+      final Relationship? relationship = cacheController.get(relationshipId);
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kPaddingMedium),
+        child: PositiveProfileListTile(
+          targetProfile: targetProfile,
+          senderProfile: currentProfile,
+          relationship: relationship,
+          analyticProperties: generatePropertiesForPostSource(activity: activity),
+        ),
+      );
+    },
+  );
+}
+
+Widget buildCommentItem({
   required BuildContext context,
   required Reaction item,
   required Activity activity,
@@ -295,7 +380,7 @@ class ReactionCommentList extends ConsumerWidget {
                       style: typography.styleSubtitleBold.copyWith(color: colours.colorGray3),
                     ),
                     if (reactionMode != null) ...<Widget>[
-                      SecurityModePill(reactionMode: reactionMode!),
+                      SecurityModePill(reactionMode: reactionMode),
                     ],
                   ],
                 ),
@@ -312,15 +397,13 @@ class ReactionCommentList extends ConsumerWidget {
             pagingController: pagingController,
             separatorBuilder: (_, __) => PositiveFeedPaginationBehaviour.buildVisualSeparator(
               context,
-              // designed to have a very thin seperator of the grey
               color: colours.colorGray1,
-              // without any padding
               vPadding: 0,
             ),
             builderDelegate: PagedChildBuilderDelegate<Reaction>(
               animateTransitions: true,
               transitionDuration: kAnimationDurationRegular,
-              itemBuilder: (context, reaction, index) => buildReactionItem(
+              itemBuilder: (context, reaction, index) => buildCommentItem(
                 context: context,
                 item: reaction,
                 activity: activity!,

@@ -2,26 +2,18 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:app/gen/app_router.dart';
 import 'package:app/hooks/lifecycle_hook.dart';
 import 'package:app/observers/route_analytics_observer.dart';
-import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
-import 'package:app/providers/user/relationship_controller.dart';
-import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_scroll_behaviour.dart';
 import 'package:app/widgets/organisms/home/components/stream_chat_wrapper.dart';
 import './extensions/localization_extensions.dart';
-import 'constants/application_constants.dart';
 import 'init.dart';
 
 final ProviderContainer providerContainer = ProviderContainer();
