@@ -26,6 +26,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const PositiveAppBar({
     this.title = '',
     this.centerTitle = false,
+    this.titleStyle,
     this.includeLogoWherePossible = true,
     this.leading,
     this.trailing = const <Widget>[],
@@ -42,6 +43,8 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   final String title;
   final bool centerTitle;
+  final TextStyle? titleStyle;
+
   final bool includeLogoWherePossible;
 
   final Color foregroundColor;
@@ -122,7 +125,7 @@ class PositiveAppBar extends ConsumerWidget implements PreferredSizeWidget {
               Expanded(
                 child: _PositiveAppBarContent(
                   title: title,
-                  titleStyle: typography.styleTitleTwo.copyWith(color: foregroundColor),
+                  titleStyle: titleStyle ?? typography.styleTitleTwo.copyWith(color: foregroundColor),
                   centerTitle: centerTitle,
                   backgroundColor: Colors.transparent,
                   applyLeadingandTrailingPadding: applyLeadingandTrailingPadding,
@@ -229,7 +232,7 @@ class _PositiveAppBarContent extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kPaddingSmall),
                 child: Text(
-                  title.asHandle,
+                  title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: centerTitle ? TextAlign.center : TextAlign.start,

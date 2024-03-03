@@ -1,5 +1,9 @@
 import 'package:app/dtos/database/activities/activities.dart';
+import 'package:app/dtos/system/design_colors_model.dart';
+import 'package:app/dtos/system/design_typography_model.dart';
+import 'package:app/providers/system/design_controller.dart';
 import 'package:app/widgets/atoms/buttons/positive_close_button.dart';
+import 'package:app/widgets/atoms/buttons/positive_invisible_icon_button.dart';
 import 'package:app/widgets/molecules/navigation/positive_app_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:auto_route/auto_route.dart';
@@ -24,10 +28,21 @@ class PostReactionsPage extends StatefulHookConsumerWidget {
 class _PostReactionsPageState extends ConsumerState<PostReactionsPage> {
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaData = MediaQuery.of(context);
+    final DesignTypographyModel typography = ref.read(designControllerProvider.select((value) => value.typography));
+    final DesignColorsModel colors = ref.read(designControllerProvider.select((value) => value.colors));
+
     return PositiveScaffold(
       appBar: PositiveAppBar(
-        leading: PositiveCloseButton(),
+        safeAreaQueryData: mediaData,
+        applyLeadingandTrailingPadding: true,
+        leading: const PositiveCloseButton(),
+        trailing: const <Widget>[
+          PositiveInvisibleButton(),
+        ],
+        centerTitle: true,
         title: 'Liked by',
+        titleStyle: typography.styleHeroMedium,
       ),
       headingWidgets: <Widget>[],
     );
