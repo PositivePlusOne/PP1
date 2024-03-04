@@ -107,6 +107,12 @@ export namespace FeedService {
               await userTimelineFeed.follow(expectedFeed.targetSlug, expectedFeed.targetUserId);
             }
           }
+
+          const nonExpectedFeeds = userTimelineFeedFollowing.results.filter((feed) => !expectedFeeds.some((expectedFeed) => feed.feed_id.split(":")[0] === expectedFeed.targetSlug && feed.feed_id.split(":")[1] === expectedFeed.targetUserId));
+          for (const nonExpectedFeed of nonExpectedFeeds) {
+            functions.logger.info("Unfollowing feed", { feed: nonExpectedFeed });
+            await userTimelineFeed.unfollow(nonExpectedFeed.feed_id.split(":")[0], nonExpectedFeed.feed_id.split(":")[1]);
+          }
         } catch (error) {
           // This may occur if the thing you're subscribing to doesn't exist anymore, or if the socket times out for a number of reasons.
           functions.logger.warn("Error following feed", { error });

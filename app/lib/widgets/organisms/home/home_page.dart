@@ -75,7 +75,7 @@ class HomePage extends HookConsumerWidget {
     );
 
     final TargetFeed followingFeed = TargetFeed(
-      targetSlug: 'timeline',
+      targetSlug: 'user',
       targetUserId: currentProfileId,
     );
 
