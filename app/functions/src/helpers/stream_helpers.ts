@@ -44,6 +44,10 @@ export namespace StreamHelpers {
     return `${feed.slug}:${feed.userId}`;
   }
 
+  export function getOriginFromPersonalizedApiResponse(uid: string): string {
+    return `personalized_feed:${uid}`;
+  }
+
   export function getStreamFeedFromOrigin(origin: string, client: StreamClient<DefaultGenerics>): StreamFeed {
     const parts = origin.split(":");
     if (parts.length !== 2) {

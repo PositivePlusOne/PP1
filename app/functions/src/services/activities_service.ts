@@ -8,7 +8,6 @@ import { FeedService } from "./feed_service";
 import { SystemService } from "./system_service";
 import { DataService } from "./data_service";
 import { FeedName } from "../constants/default_feeds";
-import { FeedEntry } from "../dto/stream";
 import { StreamHelpers } from "../helpers/stream_helpers";
 import { FeedStatisticsService } from "./feed_statistics_service";
 import { ProfileJSON } from "../dto/profile";
@@ -97,9 +96,9 @@ export namespace ActivitiesService {
   /**
    * Gets a list of activities from a list of feed entrys.
    * @param {FeedEntry[]} entrys the feed entrys to get the activities for.
-   * @return {Promise<ActivityJSON[]>} a promise that resolves to the activities.
+   * @return {Promise<any[]>} a promise that resolves to the activities.
    */
-  export async function getActivityFeedWindow(entrys: FeedEntry[]): Promise<any[]> {
+  export async function getActivityFeedWindow(entrys: any[]): Promise<any[]> {
     const activities = await getActivities(entrys.map((entry) => entry.object));
     return activities.filter((activity) => activity?._fl_meta_?.fl_id);
   }

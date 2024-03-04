@@ -59,53 +59,55 @@ class HomePage extends HookConsumerWidget {
     final Profile? currentProfile = profileControllerState.currentProfile;
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
-    final TargetFeed timelineFeed = TargetFeed(
-      targetSlug: 'timeline',
-      targetUserId: currentProfileId,
-    );
-
-    final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(timelineFeed);
-    final PositiveFeedState profileTimelineFeedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: timelineFeed, currentProfileId: currentProfileId);
-
-    const TargetFeed everyoneTargetFeed = TargetFeed(
+    const TargetFeed newFeed = TargetFeed(
       targetSlug: 'tags',
       targetUserId: 'everyone',
     );
 
-    final String everyoneFeedStateKey = PositiveFeedState.buildFeedCacheKey(everyoneTargetFeed);
-    final PositiveFeedState everyoneFeedState = cacheController.get(everyoneFeedStateKey) ?? PositiveFeedState.buildNewState(feed: everyoneTargetFeed, currentProfileId: currentProfileId);
-    final Widget everyoneFeedWidget = PositiveFeedPaginationBehaviour(
+    //? This is the new feed, as well as the signed out feed
+    final String newFeedStateKey = PositiveFeedState.buildFeedCacheKey(newFeed);
+    final PositiveFeedState newFeedState = cacheController.get(newFeedStateKey) ?? PositiveFeedState.buildNewState(feed: newFeed, currentProfileId: "");
+    final Widget newFeedWidget = PositiveFeedPaginationBehaviour(
       currentProfile: currentProfile,
-      feedState: everyoneFeedState,
-      feed: everyoneTargetFeed,
+      feedState: newFeedState,
+      feed: newFeed,
       isSliver: true,
     );
 
-    final TargetFeed postTargetFeed = TargetFeed.fromTag('post');
-    final String postFeedStateKey = PositiveFeedState.buildFeedCacheKey(TargetFeed.fromTag('post'));
-    final PositiveFeedState postFeedState = cacheController.get(postFeedStateKey) ?? PositiveFeedState.buildNewState(feed: TargetFeed.fromTag('post'), currentProfileId: currentProfileId);
-    final Widget postFeedWidget = PositiveFeedPaginationBehaviour(
+    final TargetFeed followingFeed = TargetFeed(
+      targetSlug: 'user',
+      targetUserId: currentProfileId,
+    );
+
+    final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(followingFeed);
+    final PositiveFeedState followingFeedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: followingFeed, currentProfileId: currentProfileId);
+    final Widget followingFeedWidget = PositiveFeedPaginationBehaviour(
       currentProfile: currentProfile,
-      feedState: postFeedState,
-      feed: postTargetFeed,
+      feedState: followingFeedState,
+      feed: followingFeed,
       isSliver: true,
     );
 
-    final TargetFeed clipTargetFeed = TargetFeed.fromTag('clip');
-    final String clipFeedStateKey = PositiveFeedState.buildFeedCacheKey(TargetFeed.fromTag('clip'));
-    final PositiveFeedState clipFeedState = cacheController.get(clipFeedStateKey) ?? PositiveFeedState.buildNewState(feed: TargetFeed.fromTag('clip'), currentProfileId: currentProfileId);
-    final Widget clipFeedWidget = PositiveFeedPaginationBehaviour(
+    final TargetFeed popularFeed = TargetFeed(
+      targetSlug: 'timeline',
+      targetUserId: currentProfileId,
+      shouldPersonalize: true,
+    );
+
+    final String expectedPopularFeedStateKey = PositiveFeedState.buildFeedCacheKey(popularFeed);
+    final PositiveFeedState popularFeedState = cacheController.get(expectedPopularFeedStateKey) ?? PositiveFeedState.buildNewState(feed: popularFeed, currentProfileId: currentProfileId);
+    final Widget popularFeedWidget = PositiveFeedPaginationBehaviour(
       currentProfile: currentProfile,
-      feedState: clipFeedState,
-      feed: clipTargetFeed,
+      feedState: popularFeedState,
+      feed: popularFeed,
       isSliver: true,
+      shouldPersonalize: true,
     );
 
     final List<TargetFeed> allTargetFeeds = <TargetFeed>[
-      timelineFeed,
-      everyoneTargetFeed,
-      postTargetFeed,
-      clipTargetFeed,
+      newFeed,
+      popularFeed,
+      followingFeed,
     ];
 
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [...allTargetFeeds]).toList();
@@ -113,28 +115,18 @@ class HomePage extends HookConsumerWidget {
 
     final ScrollController controller = useScrollController();
 
-    Widget allFeedWidget = everyoneFeedWidget;
-    final bool canUseProfileTimelineFeed = !isLoggedOut && profileTimelineFeedState.pagingController.itemList?.isNotEmpty == true;
-    if (canUseProfileTimelineFeed) {
-      allFeedWidget = PositiveFeedPaginationBehaviour(
-        currentProfile: currentProfile,
-        feedState: profileTimelineFeedState,
-        feed: timelineFeed,
-        isSliver: true,
-      );
-    }
-
-    final currentFeedWidget = switch (state.currentTabIndex) {
-      0 => allFeedWidget,
-      1 => postFeedWidget,
-      2 => clipFeedWidget,
+    final Widget currentFeedWidget = switch (state.currentTabIndex) {
+      0 => newFeedWidget,
+      1 => popularFeedWidget,
+      2 => followingFeedWidget,
       (_) => const SizedBox.shrink(),
     };
 
     final PositiveFeedState currentFeedState = switch (state.currentTabIndex) {
-      1 => postFeedState,
-      2 => clipFeedState,
-      (_) => canUseProfileTimelineFeed ? profileTimelineFeedState : everyoneFeedState,
+      0 => newFeedState,
+      1 => popularFeedState,
+      2 => followingFeedState,
+      (_) => newFeedState,
     };
 
     return PositiveScaffold(
@@ -174,9 +166,9 @@ class HomePage extends HookConsumerWidget {
                 colors.yellow,
               ],
               tabs: const <String>[
-                'All',
-                'Posts',
-                'Clips',
+                'New', //? This is the everyone feed
+                'Popular', //? Feed needs to be defined on getstream
+                'Following', //? This is the signed in feed
               ],
             ),
           ],

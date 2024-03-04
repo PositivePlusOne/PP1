@@ -69,10 +69,12 @@ _$TargetFeedImpl _$$TargetFeedImplFromJson(Map<String, dynamic> json) =>
     _$TargetFeedImpl(
       targetSlug: json['targetSlug'] as String? ?? '',
       targetUserId: json['targetUserId'] as String? ?? '',
+      shouldPersonalize: json['shouldPersonalize'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$TargetFeedImplToJson(_$TargetFeedImpl instance) =>
     <String, dynamic>{
       'targetSlug': instance.targetSlug,
       'targetUserId': instance.targetUserId,
+      'shouldPersonalize': instance.shouldPersonalize,
     };
