@@ -59,22 +59,26 @@ class HomePage extends HookConsumerWidget {
     final Profile? currentProfile = profileControllerState.currentProfile;
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
 
-    const TargetFeed newTargetFeed = TargetFeed(
+    const TargetFeed newFeed = TargetFeed(
       targetSlug: 'tags',
       targetUserId: 'everyone',
     );
 
     //? This is the new feed, as well as the signed out feed
-    final String newFeedStateKey = PositiveFeedState.buildFeedCacheKey(newTargetFeed);
-    final PositiveFeedState newFeedState = cacheController.get(newFeedStateKey) ?? PositiveFeedState.buildNewState(feed: newTargetFeed, currentProfileId: "");
+    final String newFeedStateKey = PositiveFeedState.buildFeedCacheKey(newFeed);
+    final PositiveFeedState newFeedState = cacheController.get(newFeedStateKey) ?? PositiveFeedState.buildNewState(feed: newFeed, currentProfileId: "");
     final Widget newFeedWidget = PositiveFeedPaginationBehaviour(
       currentProfile: currentProfile,
       feedState: newFeedState,
-      feed: newTargetFeed,
+      feed: newFeed,
       isSliver: true,
     );
 
-    final TargetFeed followingFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId);
+    final TargetFeed followingFeed = TargetFeed(
+      targetSlug: 'timeline',
+      targetUserId: currentProfileId,
+      userPersonalisation: true,
+    );
 
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(followingFeed);
     final PositiveFeedState followingFeedState = cacheController.get(expectedFeedStateKey) ?? PositiveFeedState.buildNewState(feed: followingFeed, currentProfileId: currentProfileId);
@@ -85,7 +89,11 @@ class HomePage extends HookConsumerWidget {
       isSliver: true,
     );
 
-    final TargetFeed popularFeed = TargetFeed(targetSlug: 'timeline', targetUserId: currentProfileId, userPersonalisation: true);
+    final TargetFeed popularFeed = TargetFeed(
+      targetSlug: 'timeline',
+      targetUserId: currentProfileId,
+      userPersonalisation: true,
+    );
 
     final String expectedPopularFeedStateKey = PositiveFeedState.buildFeedCacheKey(popularFeed);
     final PositiveFeedState popularFeedState = cacheController.get(expectedPopularFeedStateKey) ?? PositiveFeedState.buildNewState(feed: popularFeed, currentProfileId: currentProfileId);
@@ -97,8 +105,8 @@ class HomePage extends HookConsumerWidget {
     );
 
     final List<TargetFeed> allTargetFeeds = <TargetFeed>[
-      newTargetFeed,
-      // popularTargetFeed,
+      newFeed,
+      popularFeed,
       followingFeed,
     ];
 
