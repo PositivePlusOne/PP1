@@ -55,6 +55,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     required this.currentProfile,
     required this.feed,
     required this.feedState,
+    this.shouldPersonalize = false,
     this.windowSize = 20,
     this.isSliver = true,
     this.onPageLoaded,
@@ -64,6 +65,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   });
 
   final Profile? currentProfile;
+  final bool shouldPersonalize;
+
   final TargetFeed feed;
   final PositiveFeedState feedState;
   final int windowSize;
@@ -88,6 +91,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
       final EndpointResponse endpointResponse = await postApiService.listActivities(
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
+        shouldPersonalize: shouldPersonalize,
         pagination: Pagination(
           cursor: feedState.currentPaginationKey,
         ),
