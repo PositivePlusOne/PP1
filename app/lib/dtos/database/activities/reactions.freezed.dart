@@ -1533,7 +1533,7 @@ TargetFeed _$TargetFeedFromJson(Map<String, dynamic> json) {
 mixin _$TargetFeed {
   String get targetSlug => throw _privateConstructorUsedError;
   String get targetUserId => throw _privateConstructorUsedError;
-  bool get userPersonalisation => throw _privateConstructorUsedError;
+  bool get shouldPersonalize => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1547,7 +1547,7 @@ abstract class $TargetFeedCopyWith<$Res> {
           TargetFeed value, $Res Function(TargetFeed) then) =
       _$TargetFeedCopyWithImpl<$Res, TargetFeed>;
   @useResult
-  $Res call({String targetSlug, String targetUserId, bool userPersonalisation});
+  $Res call({String targetSlug, String targetUserId, bool shouldPersonalize});
 }
 
 /// @nodoc
@@ -1565,7 +1565,7 @@ class _$TargetFeedCopyWithImpl<$Res, $Val extends TargetFeed>
   $Res call({
     Object? targetSlug = null,
     Object? targetUserId = null,
-    Object? userPersonalisation = null,
+    Object? shouldPersonalize = null,
   }) {
     return _then(_value.copyWith(
       targetSlug: null == targetSlug
@@ -1576,9 +1576,9 @@ class _$TargetFeedCopyWithImpl<$Res, $Val extends TargetFeed>
           ? _value.targetUserId
           : targetUserId // ignore: cast_nullable_to_non_nullable
               as String,
-      userPersonalisation: null == userPersonalisation
-          ? _value.userPersonalisation
-          : userPersonalisation // ignore: cast_nullable_to_non_nullable
+      shouldPersonalize: null == shouldPersonalize
+          ? _value.shouldPersonalize
+          : shouldPersonalize // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -1592,7 +1592,7 @@ abstract class _$$TargetFeedImplCopyWith<$Res>
       __$$TargetFeedImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String targetSlug, String targetUserId, bool userPersonalisation});
+  $Res call({String targetSlug, String targetUserId, bool shouldPersonalize});
 }
 
 /// @nodoc
@@ -1608,7 +1608,7 @@ class __$$TargetFeedImplCopyWithImpl<$Res>
   $Res call({
     Object? targetSlug = null,
     Object? targetUserId = null,
-    Object? userPersonalisation = null,
+    Object? shouldPersonalize = null,
   }) {
     return _then(_$TargetFeedImpl(
       targetSlug: null == targetSlug
@@ -1619,9 +1619,9 @@ class __$$TargetFeedImplCopyWithImpl<$Res>
           ? _value.targetUserId
           : targetUserId // ignore: cast_nullable_to_non_nullable
               as String,
-      userPersonalisation: null == userPersonalisation
-          ? _value.userPersonalisation
-          : userPersonalisation // ignore: cast_nullable_to_non_nullable
+      shouldPersonalize: null == shouldPersonalize
+          ? _value.shouldPersonalize
+          : shouldPersonalize // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -1633,7 +1633,7 @@ class _$TargetFeedImpl implements _TargetFeed {
   const _$TargetFeedImpl(
       {this.targetSlug = '',
       this.targetUserId = '',
-      this.userPersonalisation = false});
+      this.shouldPersonalize = false});
 
   factory _$TargetFeedImpl.fromJson(Map<String, dynamic> json) =>
       _$$TargetFeedImplFromJson(json);
@@ -1646,11 +1646,11 @@ class _$TargetFeedImpl implements _TargetFeed {
   final String targetUserId;
   @override
   @JsonKey()
-  final bool userPersonalisation;
+  final bool shouldPersonalize;
 
   @override
   String toString() {
-    return 'TargetFeed(targetSlug: $targetSlug, targetUserId: $targetUserId, userPersonalisation: $userPersonalisation)';
+    return 'TargetFeed(targetSlug: $targetSlug, targetUserId: $targetUserId, shouldPersonalize: $shouldPersonalize)';
   }
 
   @override
@@ -1662,14 +1662,14 @@ class _$TargetFeedImpl implements _TargetFeed {
                 other.targetSlug == targetSlug) &&
             (identical(other.targetUserId, targetUserId) ||
                 other.targetUserId == targetUserId) &&
-            (identical(other.userPersonalisation, userPersonalisation) ||
-                other.userPersonalisation == userPersonalisation));
+            (identical(other.shouldPersonalize, shouldPersonalize) ||
+                other.shouldPersonalize == shouldPersonalize));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, targetSlug, targetUserId, userPersonalisation);
+      Object.hash(runtimeType, targetSlug, targetUserId, shouldPersonalize);
 
   @JsonKey(ignore: true)
   @override
@@ -1689,7 +1689,7 @@ abstract class _TargetFeed implements TargetFeed {
   const factory _TargetFeed(
       {final String targetSlug,
       final String targetUserId,
-      final bool userPersonalisation}) = _$TargetFeedImpl;
+      final bool shouldPersonalize}) = _$TargetFeedImpl;
 
   factory _TargetFeed.fromJson(Map<String, dynamic> json) =
       _$TargetFeedImpl.fromJson;
@@ -1699,7 +1699,7 @@ abstract class _TargetFeed implements TargetFeed {
   @override
   String get targetUserId;
   @override
-  bool get userPersonalisation;
+  bool get shouldPersonalize;
   @override
   @JsonKey(ignore: true)
   _$$TargetFeedImplCopyWith<_$TargetFeedImpl> get copyWith =>

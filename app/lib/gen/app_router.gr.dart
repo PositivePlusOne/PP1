@@ -159,7 +159,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CreatePostRoute.name: (routeData) {
-      final args = routeData.argsAs<CreatePostRouteArgs>(orElse: () => const CreatePostRouteArgs());
+      final args = routeData.argsAs<CreatePostRouteArgs>(
+          orElse: () => const CreatePostRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CreatePostPage(
@@ -542,7 +543,8 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SplashRoute.name: (routeData) {
-      final args = routeData.argsAs<SplashRouteArgs>(orElse: () => const SplashRouteArgs());
+      final args = routeData.argsAs<SplashRouteArgs>(
+          orElse: () => const SplashRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: SplashPage(
@@ -597,7 +599,8 @@ class AccountCommunitiesRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AccountConfirmPasswordPage]
-class AccountConfirmPasswordRoute extends PageRouteInfo<AccountConfirmPasswordRouteArgs> {
+class AccountConfirmPasswordRoute
+    extends PageRouteInfo<AccountConfirmPasswordRouteArgs> {
   AccountConfirmPasswordRoute({
     Key? key,
     required AccountConfirmPageType pageType,
@@ -613,7 +616,8 @@ class AccountConfirmPasswordRoute extends PageRouteInfo<AccountConfirmPasswordRo
 
   static const String name = 'AccountConfirmPasswordRoute';
 
-  static const PageInfo<AccountConfirmPasswordRouteArgs> page = PageInfo<AccountConfirmPasswordRouteArgs>(name);
+  static const PageInfo<AccountConfirmPasswordRouteArgs> page =
+      PageInfo<AccountConfirmPasswordRouteArgs>(name);
 }
 
 class AccountConfirmPasswordRouteArgs {
@@ -852,7 +856,8 @@ class AccountUpdatedRoute extends PageRouteInfo<AccountUpdatedRouteArgs> {
 
   static const String name = 'AccountUpdatedRoute';
 
-  static const PageInfo<AccountUpdatedRouteArgs> page = PageInfo<AccountUpdatedRouteArgs>(name);
+  static const PageInfo<AccountUpdatedRouteArgs> page =
+      PageInfo<AccountUpdatedRouteArgs>(name);
 }
 
 class AccountUpdatedRouteArgs {
@@ -970,7 +975,8 @@ class CreatePostRoute extends PageRouteInfo<CreatePostRouteArgs> {
 
   static const String name = 'CreatePostRoute';
 
-  static const PageInfo<CreatePostRouteArgs> page = PageInfo<CreatePostRouteArgs>(name);
+  static const PageInfo<CreatePostRouteArgs> page =
+      PageInfo<CreatePostRouteArgs>(name);
 }
 
 class CreatePostRouteArgs {
@@ -1083,7 +1089,8 @@ class ForgottenPasswordRecoveryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [GuidanceDirectoryEntryPage]
-class GuidanceDirectoryEntryRoute extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
+class GuidanceDirectoryEntryRoute
+    extends PageRouteInfo<GuidanceDirectoryEntryRouteArgs> {
   GuidanceDirectoryEntryRoute({
     required String guidanceEntryId,
     Key? key,
@@ -1099,7 +1106,8 @@ class GuidanceDirectoryEntryRoute extends PageRouteInfo<GuidanceDirectoryEntryRo
 
   static const String name = 'GuidanceDirectoryEntryRoute';
 
-  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page = PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
+  static const PageInfo<GuidanceDirectoryEntryRouteArgs> page =
+      PageInfo<GuidanceDirectoryEntryRouteArgs>(name);
 }
 
 class GuidanceDirectoryEntryRouteArgs {
@@ -1152,7 +1160,8 @@ class GuidanceEntryRoute extends PageRouteInfo<GuidanceEntryRouteArgs> {
 
   static const String name = 'GuidanceEntryRoute';
 
-  static const PageInfo<GuidanceEntryRouteArgs> page = PageInfo<GuidanceEntryRouteArgs>(name);
+  static const PageInfo<GuidanceEntryRouteArgs> page =
+      PageInfo<GuidanceEntryRouteArgs>(name);
 }
 
 class GuidanceEntryRouteArgs {
@@ -1206,7 +1215,8 @@ class HintDialogRoute extends PageRouteInfo<HintDialogRouteArgs> {
 
   static const String name = 'HintDialogRoute';
 
-  static const PageInfo<HintDialogRouteArgs> page = PageInfo<HintDialogRouteArgs>(name);
+  static const PageInfo<HintDialogRouteArgs> page =
+      PageInfo<HintDialogRouteArgs>(name);
 }
 
 class HintDialogRouteArgs {
@@ -1541,7 +1551,8 @@ class PostReactionsRoute extends PageRouteInfo<PostReactionsRouteArgs> {
 
   static const String name = 'PostReactionsRoute';
 
-  static const PageInfo<PostReactionsRouteArgs> page = PageInfo<PostReactionsRouteArgs>(name);
+  static const PageInfo<PostReactionsRouteArgs> page =
+      PageInfo<PostReactionsRouteArgs>(name);
 }
 
 class PostReactionsRouteArgs {
@@ -1586,7 +1597,8 @@ class PostShareRoute extends PageRouteInfo<PostShareRouteArgs> {
 
   static const String name = 'PostShareRoute';
 
-  static const PageInfo<PostShareRouteArgs> page = PageInfo<PostShareRouteArgs>(name);
+  static const PageInfo<PostShareRouteArgs> page =
+      PageInfo<PostShareRouteArgs>(name);
 }
 
 class PostShareRouteArgs {
@@ -1714,7 +1726,8 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
     required String title,
     required String body,
     required String continueText,
-    ProfileEditThanksReturnStyle returnStyle = ProfileEditThanksReturnStyle.popToEditSettings,
+    ProfileEditThanksReturnStyle returnStyle =
+        ProfileEditThanksReturnStyle.popToEditSettings,
     List<PageRouteInfo>? children,
   }) : super(
           ProfileEditThanksRoute.name,
@@ -1730,7 +1743,8 @@ class ProfileEditThanksRoute extends PageRouteInfo<ProfileEditThanksRouteArgs> {
 
   static const String name = 'ProfileEditThanksRoute';
 
-  static const PageInfo<ProfileEditThanksRouteArgs> page = PageInfo<ProfileEditThanksRouteArgs>(name);
+  static const PageInfo<ProfileEditThanksRouteArgs> page =
+      PageInfo<ProfileEditThanksRouteArgs>(name);
 }
 
 class ProfileEditThanksRouteArgs {
@@ -1900,7 +1914,8 @@ class ProfileReferenceImageWelcomeRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfileWelcomeBackPage]
-class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
+class ProfileWelcomeBackRoute
+    extends PageRouteInfo<ProfileWelcomeBackRouteArgs> {
   ProfileWelcomeBackRoute({
     required PageRouteInfo<dynamic> nextPage,
     Key? key,
@@ -1916,7 +1931,8 @@ class ProfileWelcomeBackRoute extends PageRouteInfo<ProfileWelcomeBackRouteArgs>
 
   static const String name = 'ProfileWelcomeBackRoute';
 
-  static const PageInfo<ProfileWelcomeBackRouteArgs> page = PageInfo<ProfileWelcomeBackRouteArgs>(name);
+  static const PageInfo<ProfileWelcomeBackRouteArgs> page =
+      PageInfo<ProfileWelcomeBackRouteArgs>(name);
 }
 
 class ProfileWelcomeBackRouteArgs {
@@ -2111,7 +2127,8 @@ class TagFeedRoute extends PageRouteInfo<TagFeedRouteArgs> {
 
   static const String name = 'TagFeedRoute';
 
-  static const PageInfo<TagFeedRouteArgs> page = PageInfo<TagFeedRouteArgs>(name);
+  static const PageInfo<TagFeedRouteArgs> page =
+      PageInfo<TagFeedRouteArgs>(name);
 }
 
 class TagFeedRouteArgs {
@@ -2146,7 +2163,8 @@ class TermsAndConditionsRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [VerificationDialogPage]
-class VerificationDialogRoute extends PageRouteInfo<VerificationDialogRouteArgs> {
+class VerificationDialogRoute
+    extends PageRouteInfo<VerificationDialogRouteArgs> {
   VerificationDialogRoute({
     required Future<void> Function() onVerified,
     required String emailAddress,
@@ -2164,7 +2182,8 @@ class VerificationDialogRoute extends PageRouteInfo<VerificationDialogRouteArgs>
 
   static const String name = 'VerificationDialogRoute';
 
-  static const PageInfo<VerificationDialogRouteArgs> page = PageInfo<VerificationDialogRouteArgs>(name);
+  static const PageInfo<VerificationDialogRouteArgs> page =
+      PageInfo<VerificationDialogRouteArgs>(name);
 }
 
 class VerificationDialogRouteArgs {

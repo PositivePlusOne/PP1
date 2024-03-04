@@ -77,7 +77,6 @@ class HomePage extends HookConsumerWidget {
     final TargetFeed followingFeed = TargetFeed(
       targetSlug: 'timeline',
       targetUserId: currentProfileId,
-      userPersonalisation: true,
     );
 
     final String expectedFeedStateKey = PositiveFeedState.buildFeedCacheKey(followingFeed);
@@ -92,7 +91,7 @@ class HomePage extends HookConsumerWidget {
     final TargetFeed popularFeed = TargetFeed(
       targetSlug: 'timeline',
       targetUserId: currentProfileId,
-      userPersonalisation: true,
+      shouldPersonalize: true,
     );
 
     final String expectedPopularFeedStateKey = PositiveFeedState.buildFeedCacheKey(popularFeed);
@@ -102,6 +101,7 @@ class HomePage extends HookConsumerWidget {
       feedState: popularFeedState,
       feed: popularFeed,
       isSliver: true,
+      shouldPersonalize: true,
     );
 
     final List<TargetFeed> allTargetFeeds = <TargetFeed>[

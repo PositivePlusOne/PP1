@@ -92,6 +92,6 @@ class PositiveFeedState with PositivePaginationControllerState {
       );
 
   static String buildFeedCacheKey(TargetFeed feed) {
-    return 'feed:paging:${feed.targetSlug}:${feed.targetUserId}:${feed.userPersonalisation}';
+    return 'feed:paging:${feed.targetSlug}:${feed.targetUserId}:${feed.shouldPersonalize}';
   }
 }
