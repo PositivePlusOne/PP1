@@ -145,7 +145,7 @@ class AccountPreferencesPage extends HookConsumerWidget {
                   label: biometricToggleTitle,
                   value: state.areBiometricsEnabled,
                   isBusy: state.isBusy,
-                  showDisabledState: state.isBusy || state.availableBiometrics == AvailableBiometrics.none,
+                  showDisabledState: state.isBusy,
                   onTapped: (_) => viewModel.onBiometricsToggle(),
                 ),
               ],
