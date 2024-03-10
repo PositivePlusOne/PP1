@@ -1,17 +1,16 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
-import 'package:sliver_tools/sliver_tools.dart';
 
 // Project imports:
 import 'package:app/constants/design_constants.dart';
@@ -26,11 +25,9 @@ import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
-import 'package:app/extensions/localization_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
 import 'package:app/extensions/string_extensions.dart';
-import 'package:app/helpers/brand_helpers.dart';
 import 'package:app/helpers/cache_helpers.dart';
 import 'package:app/hooks/event_hook.dart';
 import 'package:app/hooks/paging_controller_hook.dart';
@@ -43,7 +40,8 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/services/api.dart';
-import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
+import 'package:app/widgets/behaviours/components/no_posts_placeholder.dart';
+import 'package:app/widgets/behaviours/components/sliver_no_posts_placeholder.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -80,7 +78,34 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
   static const int kCacheExtentHeightMultiplier = 5;
 
-  Future<void> requestNextPage(String pageKey) async {
+  Future<void> checkForNextPageEntries() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
+    logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
+
+    try {
+      // TODO -> Maybe API this somehow to make it better?
+      final EndpointResponse endpointResponse = await postApiService.listActivities(
+        targetSlug: feed.targetSlug,
+        targetUserId: feed.targetUserId,
+        shouldPersonalize: shouldPersonalize,
+        pagination: const Pagination(
+          cursor: '',
+        ),
+      );
+
+      final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
+      final bool hasNewEntries = appendPotentialNewEntries(data);
+      if (hasNewEntries) {
+        logger.d('checkForNextPageEntries() - New entries found, saving state');
+        saveActivitiesState();
+      }
+    } catch (ex) {
+      logger.e('checkForNextPageEntries() - ex: $ex');
+    }
+  }
+
+  Future<void> requestPreviousPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
     final ActivitiesController activitiesController = providerContainer.read(activitiesControllerProvider.notifier);
@@ -147,6 +172,50 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     feedState.pagingController.appendSafePage(activities, next ?? '');
   }
 
+  bool appendPotentialNewEntries(Map<String, dynamic> data) {
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    final List<dynamic> activityData = data['activities'] as List<dynamic>;
+    final List<Activity> newActivities = [];
+
+    for (final dynamic activity in activityData) {
+      final Map<String, dynamic> activityMap = activity as Map<String, dynamic>;
+      final Activity activityObject = Activity.fromJson(activityMap);
+      final String activityId = activityObject.flMeta?.id ?? '';
+
+      if (activityId.isEmpty) {
+        continue;
+      }
+
+      if (feedState.knownActivities.contains(activityId)) {
+        continue;
+      }
+
+      feedState.knownActivities.add(activityId);
+      newActivities.add(activityObject);
+    }
+
+    if (newActivities.isEmpty) {
+      logger.d('appendPotentialNewEntries() - No activities to append');
+      return false;
+    }
+
+    logger.d('appendPotentialNewEntries() - activityList.length: ${newActivities.length}');
+
+    // Create a new copy of the item list, appending the new items to the start
+    final List<Activity> currentItems = feedState.pagingController.itemList ?? [];
+    final List<Activity> newItems = [...newActivities, ...currentItems];
+    feedState.pagingController.value = PagingState<String, Activity>(
+      itemList: newItems,
+      error: null,
+      nextPageKey: feedState.pagingController.nextPageKey,
+    );
+
+    // Add a flag so that the UI can let the user know that new items have been found!
+    feedState.hasNewItems = true;
+    return true;
+  }
+
   void saveActivitiesState() {
     final Logger logger = providerContainer.read(loggerProvider);
     final CacheController cacheController = providerContainer.read(cacheControllerProvider);
@@ -197,14 +266,25 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return !canDisplayAny;
   }
 
+  void onScrollOccured(ScrollController controller) {
+    if (controller.offset <= 20.0 && feedState.hasNewItems) {
+      feedState.hasNewItems = false;
+      saveActivitiesState();
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
+    final ScrollController scrollController = useScrollController();
+    scrollController.addListener(() => onScrollOccured(scrollController));
+
     usePagingController(
       controller: feedState.pagingController,
-      listener: requestNextPage,
+      onPreviousPage: requestPreviousPage,
+      onNextPage: checkForNextPageEntries,
     );
 
     useEventHook<RequestRefreshEvent>(
@@ -232,9 +312,18 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
     const Widget loadingIndicator = PositivePostLoadingIndicator();
     if (isSliver) {
-      return buildSliverFeed(context, loadingIndicator, defaultNoPostsWidget);
+      return buildSliverFeed(
+        context: context,
+        scrollController: scrollController,
+        loadingIndicator: loadingIndicator,
+        noPostsWidget: defaultNoPostsWidget,
+      );
     } else {
-      return buildFeed(context, loadingIndicator);
+      return buildFeed(
+        context: context,
+        scrollController: scrollController,
+        loadingIndicator: loadingIndicator,
+      );
     }
   }
 
@@ -533,7 +622,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return !states.contains(RelationshipState.targetBlocked) && !states.contains(RelationshipState.sourceHidden);
   }
 
-  Widget buildSliverFeed(BuildContext context, Widget loadingIndicator, Widget noPostsWidget) {
+  Widget buildSliverFeed({
+    required BuildContext context,
+    required ScrollController scrollController,
+    required Widget loadingIndicator,
+    required Widget noPostsWidget,
+  }) {
     final bool canDisplay = canDisplaySliverFeed;
     if (!canDisplay) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
@@ -560,7 +654,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
   }
 
-  Widget buildFeed(BuildContext context, Widget loadingIndicator) {
+  Widget buildFeed({
+    required BuildContext context,
+    required ScrollController scrollController,
+    required Widget loadingIndicator,
+  }) {
     final bool canDisplay = canDisplaySliverFeed;
     if (!canDisplay) {
       return const SizedBox.shrink();
@@ -569,6 +667,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return PagedListView.separated(
       pagingController: feedState.pagingController,
       separatorBuilder: buildSeparator,
+      scrollController: scrollController,
       addAutomaticKeepAlives: true,
       cacheExtent: MediaQuery.of(context).size.height * kCacheExtentHeightMultiplier,
       builderDelegate: PagedChildBuilderDelegate<Activity>(
@@ -584,112 +683,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
           feed: feed,
         ),
       ),
-    );
-  }
-}
-
-class SliverNoPostsPlaceholder extends StatelessWidget {
-  const SliverNoPostsPlaceholder({
-    super.key,
-    required this.typography,
-    required this.colors,
-    this.emptyDataWidget,
-  });
-
-  final DesignTypographyModel typography;
-  final DesignColorsModel colors;
-  final Widget? emptyDataWidget;
-
-  @override
-  Widget build(BuildContext context) {
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
-
-    return SliverStack(
-      positionedAlignment: Alignment.bottomCenter,
-      children: <Widget>[
-        SliverFillRemaining(
-          fillOverscroll: false,
-          hasScrollBody: false,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType2ScaffoldDecorations(colors)),
-            ),
-          ),
-        ),
-        SliverPositioned(
-          left: 0.0,
-          right: 0.0,
-          top: kPaddingSmall,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: emptyDataWidget ??
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 120.0),
-                  child: Text(
-                    appLocalizations.post_dialog_no_posts_to_display,
-                    textAlign: TextAlign.center,
-                    style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-                  ),
-                ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class NoPostsPlaceholder extends StatelessWidget {
-  const NoPostsPlaceholder({
-    super.key,
-    required this.typography,
-    required this.colors,
-  });
-
-  final DesignTypographyModel typography;
-  final DesignColorsModel colors;
-
-  @override
-  Widget build(BuildContext context) {
-    final MediaQueryData mediaQueryData = MediaQuery.of(context);
-    final Size screenSize = mediaQueryData.size;
-    final double decorationBoxSize = min(screenSize.height / 2, 400);
-
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: <Widget>[
-        Positioned(
-          left: 0.0,
-          right: 0.0,
-          top: kPaddingSmall,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 120.0),
-              child: Text(
-                'No Posts to Display',
-                textAlign: TextAlign.center,
-                style: typography.styleSubtitleBold.copyWith(color: colors.colorGray8, fontWeight: FontWeight.w900),
-              ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: PositiveTileEntryAnimation(
-            direction: AxisDirection.down,
-            child: SizedBox(
-              height: decorationBoxSize,
-              width: decorationBoxSize,
-              child: Stack(children: buildType2ScaffoldDecorations(colors)),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

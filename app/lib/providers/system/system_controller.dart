@@ -82,6 +82,7 @@ class SystemController extends _$SystemController {
 
   static const String kFirebaseRemoteConfigFeedPromotionFrequencyKey = 'feed_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
+  static const String kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey = 'feed_update_periodic_check_frequency';
 
   static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
 
@@ -285,7 +286,7 @@ class SystemController extends _$SystemController {
   //* Travels to a page given on development which allows the users to test the app
   Future<void> returnToHomePage() async {
     final AppRouter appRouter = ref.read(appRouterProvider);
-    if (appRouter.current != const HomeRoute()) {
+    if (appRouter.current is! HomeRoute) {
       appRouter.replaceAll([const HomeRoute()]);
     }
   }
