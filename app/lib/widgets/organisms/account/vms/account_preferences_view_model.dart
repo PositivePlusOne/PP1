@@ -136,10 +136,6 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
   }
 
   Future<void> onBiometricsToggle() async {
-    if (state.availableBiometrics == AvailableBiometrics.none) {
-      return;
-    }
-
     final AsyncValue<SharedPreferences> sharedPreferencesAsync = providerContainer.read(sharedPreferencesProvider);
     final SharedPreferences sharedPreferences = sharedPreferencesAsync.value!;
     final bool biometricPreferencesSet = sharedPreferences.getBool(kBiometricsAcceptedKey) == true;
