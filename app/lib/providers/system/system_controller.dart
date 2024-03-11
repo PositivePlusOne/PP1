@@ -23,6 +23,7 @@ import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
 import 'package:app/constants/application_constants.dart';
+import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/dtos/database/common/endpoint_response.dart';
 import 'package:app/dtos/database/enrichment/promotions.dart';
 import 'package:app/extensions/json_extensions.dart';
@@ -53,6 +54,7 @@ class SystemControllerState with _$SystemControllerState {
     required bool showingSemanticsDebugger,
     required bool showingDebugMessages,
     @Default(bool) hasPerformedInitialSetup,
+    @Default([]) List<TargetFeed> disabledFeeds,
     String? appName,
     String? packageName,
     String? version,
@@ -83,6 +85,7 @@ class SystemController extends _$SystemController {
   static const String kFirebaseRemoteConfigFeedPromotionFrequencyKey = 'feed_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey = 'feed_update_periodic_check_frequency';
+  static const String kFirebaseRemoteConfigDisabledFeedsKey = 'disabled_feeds';
 
   static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
 
@@ -101,6 +104,10 @@ class SystemController extends _$SystemController {
   Future<void> updateBiometricsLastVerifiedTime() async {
     final SharedPreferences sharedPreferences = await providerContainer.read(sharedPreferencesProvider.future);
     sharedPreferences.setInt(kBiometricsAcceptedLastTime, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  void updateDisabledFeeds(List<TargetFeed> disabledFeeds) {
+    state = state.copyWith(disabledFeeds: disabledFeeds);
   }
 
   Future<void> biometricsReverification() async {
@@ -226,6 +233,16 @@ class SystemController extends _$SystemController {
     final SystemApiService systemApiService = await ref.read(systemApiServiceProvider.future);
     final TagsController tagsController = ref.read(tagsControllerProvider.notifier);
     final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
+    final FirebaseRemoteConfig firebaseRemoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
+
+    final List<TargetFeed> remoteDisabledFeeds = firebaseRemoteConfig.getString(kFirebaseRemoteConfigDisabledFeedsKey).split(',').map((String origin) => TargetFeed.fromOrigin(origin.trim())).toList();
+
+    final String localDisabledFeedHash = state.disabledFeeds.map((TargetFeed feed) => TargetFeed.toOrigin(feed)).join(',');
+    final String remoteDisabledFeedHash = remoteDisabledFeeds.map((TargetFeed feed) => TargetFeed.toOrigin(feed)).join(',');
+    if (localDisabledFeedHash != remoteDisabledFeedHash) {
+      logger.d('updateSystemConfiguration: Disabled feeds have changed');
+      updateDisabledFeeds(remoteDisabledFeeds);
+    }
 
     //* Data is assumed to be correct, if not the app cannot be used
     final EndpointResponse endpointResponse = await systemApiService.getSystemConfiguration();

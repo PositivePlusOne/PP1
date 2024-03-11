@@ -264,16 +264,22 @@ class SearchPage extends ConsumerWidget {
                     index: currentTab.index,
                     onTapped: (index) => viewModel.onTabTapped(SearchTab.values[index]),
                     margin: EdgeInsets.zero,
-                    tabColours: <Color>[
-                      colours.purple,
-                      colours.green,
-                      colours.teal,
-                    ],
-                    tabs: <String>[
-                      localisations.page_search_tab_posts,
-                      localisations.page_search_tab_profiles,
-                      // localisations.page_search_tab_events,
-                      localisations.page_search_tab_tags,
+                    tabs: <PositiveTabEntry>[
+                      PositiveTabEntry(
+                        title: localisations.page_search_tab_posts,
+                        colour: colours.purple,
+                        isEnabled: true,
+                      ),
+                      PositiveTabEntry(
+                        title: localisations.page_search_tab_profiles,
+                        colour: colours.green,
+                        isEnabled: true,
+                      ),
+                      PositiveTabEntry(
+                        title: localisations.page_search_tab_tags,
+                        colour: colours.teal,
+                        isEnabled: true,
+                      ),
                     ],
                   ),
                 ),

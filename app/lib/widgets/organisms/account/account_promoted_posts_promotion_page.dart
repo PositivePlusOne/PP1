@@ -274,13 +274,15 @@ class _AccountPromotedPostsFeedsState extends ConsumerState<AccountPromotedPosts
                 index: promotionKindIndex,
                 onTapped: (index) => type = index == 0 ? AccountPromotedPostsType.hub : AccountPromotedPostsType.chat,
                 margin: EdgeInsets.zero,
-                tabColours: <Color>[
-                  widget.colors.green,
-                  widget.colors.yellow,
-                ],
-                tabs: <String>[
-                  widget.localisations.shared_promotion_type_hub,
-                  widget.localisations.shared_promotion_type_chat,
+                tabs: <PositiveTabEntry>[
+                  PositiveTabEntry(
+                    title: widget.localisations.shared_promotion_type_hub,
+                    colour: widget.colors.green,
+                  ),
+                  PositiveTabEntry(
+                    title: widget.localisations.shared_promotion_type_chat,
+                    colour: widget.colors.yellow,
+                  ),
                 ],
               ),
             ),

@@ -2,17 +2,17 @@
 import 'dart:async';
 
 // Flutter imports:
-import 'package:app/providers/system/system_controller.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:cron/cron.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
 import 'package:app/main.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 
 void usePagingController({

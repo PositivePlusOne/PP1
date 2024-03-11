@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -20,10 +21,13 @@ import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:app/providers/profiles/tags_controller.dart';
 import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
+import 'package:app/widgets/molecules/navigation/positive_tab_bar.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold.dart';
 import 'package:app/widgets/organisms/home/vms/home_view_model.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
@@ -129,6 +133,15 @@ class HomePage extends HookConsumerWidget {
       (_) => newFeedState,
     };
 
+    // Check enabled state of the tabs
+    final List<TargetFeed> disabledFeeds = ref.watch(systemControllerProvider.select((value) => value.disabledFeeds));
+    final TargetFeed currentTargetFeed = allTargetFeeds[state.currentTabIndex];
+    final bool isCurrentTabDisabled = disabledFeeds.contains(currentTargetFeed);
+
+    final bool isNewFeedDisabled = TargetFeed.isFeedDisabled(newFeed, disabledFeeds);
+    final bool isPopularFeedDisabled = TargetFeed.isFeedDisabled(popularFeed, disabledFeeds);
+    final bool isFollowingFeedDisabled = TargetFeed.isFeedDisabled(followingFeed, disabledFeeds);
+
     return PositiveScaffold(
       onWillPopScope: viewModel.onWillPopScope,
       onRefresh: () => currentFeedState.onRefresh(),
@@ -153,24 +166,33 @@ class HomePage extends HookConsumerWidget {
           appBarSpacing: kPaddingNone,
           horizontalPadding: kPaddingNone,
           children: <Widget>[
-            PositiveHubFloatingBar(
-              index: state.currentTabIndex,
-              currentProfile: currentProfile,
-              onTapped: viewModel.onTabSelected,
-              topics: tagsControllerState.topicTags.values.toList(),
-              onTopicSelected: viewModel.onTopicSelected,
-              onSeeMoreTopicsSelected: viewModel.onSeeMoreTopicsSelected,
-              tabColours: <Color>[
-                colors.green,
-                colors.purple,
-                colors.yellow,
-              ],
-              tabs: const <String>[
-                'New', //? This is the everyone feed
-                'Popular', //? Feed needs to be defined on getstream
-                'Following', //? This is the signed in feed
-              ],
-            ),
+            if (!isCurrentTabDisabled) ...<Widget>[
+              PositiveHubFloatingBar(
+                index: state.currentTabIndex,
+                currentProfile: currentProfile,
+                onTapped: viewModel.onTabSelected,
+                topics: tagsControllerState.topicTags.values.toList(),
+                onTopicSelected: viewModel.onTopicSelected,
+                onSeeMoreTopicsSelected: viewModel.onSeeMoreTopicsSelected,
+                tabs: <PositiveTabEntry>[
+                  PositiveTabEntry(
+                    title: 'New',
+                    colour: colors.green,
+                    isEnabled: !isNewFeedDisabled,
+                  ),
+                  PositiveTabEntry(
+                    title: 'Popular',
+                    colour: colors.purple,
+                    isEnabled: !isPopularFeedDisabled,
+                  ),
+                  PositiveTabEntry(
+                    title: 'Following',
+                    colour: colors.yellow,
+                    isEnabled: !isFollowingFeedDisabled,
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
         currentFeedWidget,
