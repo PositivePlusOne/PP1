@@ -55,7 +55,7 @@ class DesignColorsModel with _$DesignColorsModel {
   factory DesignColorsModel.empty() => DesignColorsModel(
         teal: '#2BEDE1'.toColorFromHex(),
         purple: '#8E3AE2'.toColorFromHex(),
-        green: '#29E774'.toColorFromHex(),
+        green: '#29E674'.toColorFromHex(),
         yellow: '#EDB72B'.toColorFromHex(),
         red: '#ED2B2B'.toColorFromHex(),
         pink: '#ECACD0'.toColorFromHex(),
