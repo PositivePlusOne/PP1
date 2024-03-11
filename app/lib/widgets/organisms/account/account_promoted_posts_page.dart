@@ -148,11 +148,10 @@ class AccountPromotedPostsPage extends HookConsumerWidget {
             const SizedBox(height: kPaddingMedium),
             PositiveTabBar(
               tabs: [
-                localisations.page_profile_promoted_posts_tab_hub(itemHubCount.value),
-                localisations.page_profile_promoted_posts_tab_chat(itemChatCount.value),
+                PositiveTabEntry(colour: colors.green, title: localisations.page_profile_promoted_posts_tab_hub(itemHubCount.value)),
+                PositiveTabEntry(colour: colors.green, title: localisations.page_profile_promoted_posts_tab_chat(itemChatCount.value)),
               ],
               onTapped: (index) => selectedTab.value = index,
-              tabColours: [colors.green, colors.green],
               index: selectedTab.value,
             ),
             const SizedBox(height: kPaddingMedium),

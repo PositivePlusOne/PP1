@@ -9,10 +9,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:logger/logger.dart';
+import 'package:logger/logger.dart' as logger;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:
@@ -75,7 +76,7 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     final PledgeControllerState pledgeController = await ref.read(asyncPledgeControllerProvider.future);
     final UniversalLinksController universalLinksController = ref.read(universalLinksControllerProvider.notifier);
     final AnalyticsController analyticsController = ref.read(analyticsControllerProvider.notifier);
-    final Logger log = ref.read(loggerProvider);
+    final logger.Logger log = ref.read(loggerProvider);
 
     final int newIndex = SplashStyle.values.indexOf(style) + 1;
     final bool exceedsEnumLength = newIndex >= SplashStyle.values.length;
@@ -92,6 +93,10 @@ class SplashViewModel extends _$SplashViewModel with LifecycleMixin {
     //* Store a key so that we know to skip the extended splash screen next time
     final SharedPreferences sharedPreferences = await ref.read(sharedPreferencesProvider.future);
     await sharedPreferences.setBool(kSplashOnboardedKey, true);
+
+    // Wait for the initial user state to be loaded, else the below checks will fail
+    final FirebaseAuth firebaseAuthInstance = ref.read(firebaseAuthProvider);
+    await firebaseAuthInstance.userChanges().first;
 
     // Check if the pledge has been completed or if the user has all required providers linked
     if (!userController.hasAnyProviderLinked || !pledgeController.arePledgesAccepted) {

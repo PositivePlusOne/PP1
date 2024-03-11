@@ -85,7 +85,28 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     cacheController.add(key: newCacheKey, value: reactionsState);
   }
 
-  Future<void> requestNextPage(String pageKey) async {
+  Future<void> requestNextPage() async {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
+
+    try {
+      final EndpointResponse endpointResponse = await reactionApiService.listReactionsForActivity(
+        activityId: activity?.flMeta?.id ?? '',
+        kind: kind,
+      );
+
+      final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
+
+      final bool hasNewItems = appendPotentialNewEntries(data);
+      if (hasNewItems) {
+        saveReactionsState();
+      }
+    } catch (ex) {
+      logger.e('requestPreviousPage() - ex: $ex');
+    }
+  }
+
+  Future<void> requestPreviousPage(String pageKey) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final ReactionApiService reactionApiService = await providerContainer.read(reactionApiServiceProvider.future);
 
@@ -110,6 +131,33 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
     } finally {
       saveReactionsState();
     }
+  }
+
+  bool appendPotentialNewEntries(Map<String, dynamic> data) {
+    final Logger logger = providerContainer.read(loggerProvider);
+    final List<dynamic> reactions = data['reactions'] as List<dynamic>;
+    final List<Reaction> reactionList = reactions.map((dynamic reaction) => Reaction.fromJson(reaction as Map<String, dynamic>)).toList();
+
+    logger.d('appendPotentialNewEntries() - reactionList: $reactionList');
+    if (reactionsState.pagingController.itemList == null) {
+      reactionsState.pagingController.appendLastPage(reactionList);
+      return true;
+    }
+
+    final List<Reaction> currentReactions = reactionsState.pagingController.itemList ?? <Reaction>[];
+    final List<Reaction> newReactions = reactionList.where((reaction) => !currentReactions.contains(reaction)).toList();
+    if (newReactions.isEmpty) {
+      return false;
+    }
+
+    reactionsState.pagingController.value = PagingState<String, Reaction>(
+      nextPageKey: reactionsState.pagingController.nextPageKey,
+      itemList: [...currentReactions, ...newReactions],
+    );
+
+    reactionsState.hasNewReactions = true;
+
+    return true;
   }
 
   void appendReactionPageToState(Map<String, dynamic> data, String? next) {
@@ -151,7 +199,8 @@ class PositiveReactionPaginationBehaviour extends HookConsumerWidget {
 
     usePagingController(
       controller: reactionsState.pagingController,
-      listener: requestNextPage,
+      onPreviousPage: requestPreviousPage,
+      onNextPage: requestNextPage,
     );
 
     final Profile? currentProfile = ref.watch(profileControllerProvider.select((value) => value.currentProfile));

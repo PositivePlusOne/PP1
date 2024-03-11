@@ -42,7 +42,6 @@ import 'package:app/providers/system/system_controller.dart';
 
 // ignore: depend_on_referenced_packages, implementation_imports
 
-
 // ignore: unused_import
 
 part 'third_party.g.dart';
@@ -235,6 +234,7 @@ Future<FirebaseRemoteConfig> firebaseRemoteConfig(FirebaseRemoteConfigRef ref) a
   await instance.setDefaults(<String, dynamic>{
     SystemController.kFirebaseRemoteConfigFeedPromotionFrequencyKey: 4,
     SystemController.kFirebaseRemoteConfigChatPromotionFrequencyKey: 4,
+    SystemController.kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey: 60,
   });
 
   await instance.fetchAndActivate();

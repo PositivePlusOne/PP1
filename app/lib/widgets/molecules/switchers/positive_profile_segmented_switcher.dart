@@ -61,15 +61,15 @@ class PositiveProfileSegmentedSwitcher extends ConsumerWidget {
           margin: EdgeInsets.zero,
           index: supportedProfileIds.indexOf(currentProfileId),
           onTapped: (int index) => mixin.switchProfile(supportedProfileIds[index]),
-          tabColours: profiles.map((Profile profile) => profile.accentColor.toSafeColorFromHex(defaultColor: colours.teal)).toList(),
           tabs: profiles.map((Profile profile) {
             final String profileId = profile.flMeta?.id ?? '';
             final bool isCurrentProfile = profileId == currentProfileId;
-            if (isCurrentProfile) {
-              return 'Personal';
-            }
+            final String title = isCurrentProfile ? 'Personal' : profile.displayName;
 
-            return profile.displayName;
+            return PositiveTabEntry(
+              title: title,
+              colour: profile.accentColor.toSafeColorFromHex(defaultColor: colours.teal),
+            );
           }).toList(),
         );
     }

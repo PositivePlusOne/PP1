@@ -20,6 +20,7 @@ class PositiveFeedState with PositivePaginationControllerState {
     required this.profileId,
     this.currentPaginationKey = '',
     this.hasPerformedInitialLoad = false,
+    this.hasNewItems = false,
   });
 
   @override
@@ -30,6 +31,8 @@ class PositiveFeedState with PositivePaginationControllerState {
 
   bool hasPerformedInitialLoad;
   String currentPaginationKey;
+
+  bool hasNewItems;
 
   final Set<String> knownActivities = <String>{};
 
