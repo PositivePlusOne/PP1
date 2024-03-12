@@ -235,7 +235,11 @@ class SystemController extends _$SystemController {
     final PromotionsController promotionsController = ref.read(promotionsControllerProvider.notifier);
     final FirebaseRemoteConfig firebaseRemoteConfig = await ref.read(firebaseRemoteConfigProvider.future);
 
-    final List<TargetFeed> remoteDisabledFeeds = firebaseRemoteConfig.getString(kFirebaseRemoteConfigDisabledFeedsKey).split(',').map((String origin) => TargetFeed.fromOrigin(origin.trim())).toList();
+    final String remoteDisabledFeedsStr = firebaseRemoteConfig.getString(kFirebaseRemoteConfigDisabledFeedsKey);
+    final List<TargetFeed> remoteDisabledFeeds = [];
+    if (remoteDisabledFeedsStr.isNotEmpty) {
+      remoteDisabledFeeds.addAll(remoteDisabledFeedsStr.split(',').map((String origin) => TargetFeed.fromOrigin(origin.trim())).toList());
+    }
 
     final String localDisabledFeedHash = state.disabledFeeds.map((TargetFeed feed) => TargetFeed.toOrigin(feed)).join(',');
     final String remoteDisabledFeedHash = remoteDisabledFeeds.map((TargetFeed feed) => TargetFeed.toOrigin(feed)).join(',');

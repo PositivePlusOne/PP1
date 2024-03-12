@@ -35,7 +35,6 @@ export interface PromotionJSON {
     linkText?: string;
     ownerId?: string;
     activityId?: string;
-    isActive?: boolean;
     seed?: number;
     chatPromotionEnabled?: boolean;
     postPromotionEnabled?: boolean;
@@ -50,7 +49,6 @@ export class Promotion {
     linkText?: string;
     ownerId?: string;
     activityId?: string;
-    isActive?: boolean;
     seed?: number;
     chatPromotionEnabled?: boolean;
     postPromotionEnabled?: boolean;
@@ -64,7 +62,6 @@ export class Promotion {
         this.linkText = json.linkText;
         this.ownerId = json.ownerId;
         this.activityId = json.activityId;
-        this.isActive = json.isActive;
         this.seed = json.seed;
         this.chatPromotionEnabled = json.chatPromotionEnabled;
         this.postPromotionEnabled = json.postPromotionEnabled;

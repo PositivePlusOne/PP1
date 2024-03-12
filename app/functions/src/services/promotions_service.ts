@@ -26,9 +26,6 @@ export namespace PromotionsService {
             orderBy: [
                 { fieldPath: 'seed', directionStr: 'desc' },
             ],
-            where: [
-                { fieldPath: 'isActive', op: '==', value: true },
-            ],
         });
     }
 
