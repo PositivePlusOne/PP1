@@ -23,7 +23,7 @@ export namespace ChatConnectionReceivedNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_received.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_received.body", { displayName });
-    
+
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }

@@ -10,7 +10,6 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { TagsService } from "./tags_service";
 
 export namespace FeedService {
-
   let streamClient = null as StreamClient<DefaultGenerics> | null;
 
   /**

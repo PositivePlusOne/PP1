@@ -35,7 +35,7 @@ export type ReactionEntryJSON = {
   data: any;
   tags: string[];
   time: string;
-}
+};
 
 //* This type is the response to the client when requesting batched feed data.
 export type FeedBatchedClientResponse = {

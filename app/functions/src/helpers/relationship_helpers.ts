@@ -53,7 +53,7 @@ export namespace RelationshipHelpers {
 
         // Add the other members to the followed search index except for the current user.
         // Skip if they are already in the search index.
-        // This way we 
+        // This way we
         const membersExceptCurrent = allMemberIds.filter((id: string) => id !== member.memberId);
         for (const id of membersExceptCurrent) {
           if (followersSearchIndex.indexOf(id) === -1) {

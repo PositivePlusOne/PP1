@@ -35,9 +35,9 @@ export namespace NotificationsService {
 
   /**
    * Send a payload to a user
-    * @param {string} token The FCM token of the user
-    * @param {NotificationBody} notification The notification to send
-    * @return {Promise<void>} The result of the send operation
+   * @param {string} token The FCM token of the user
+   * @param {NotificationBody} notification The notification to send
+   * @return {Promise<void>} The result of the send operation
    */
   export async function sendPayloadToUserIfTokenSet(token: string | undefined, notification: NotificationPayload): Promise<void> {
     functions.logger.info(`Attempting to send payload to user: ${notification.user_id}`);
@@ -133,7 +133,7 @@ export namespace NotificationsService {
           functions.logger.info(`Processing nested notification payload for user: ${uid}`, { nestedActivity });
           const objectStr = nestedActivity?.object;
           let object = {} as any;
-          
+
           try {
             if (typeof objectStr === "string") {
               functions.logger.info(`Attempting to parse notification as JSON for user: ${uid}`, { objectStr });

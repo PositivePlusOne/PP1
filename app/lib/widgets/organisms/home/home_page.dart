@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_route/auto_route.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -23,7 +22,6 @@ import 'package:app/providers/system/cache_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/providers/user/user_controller.dart';
-import 'package:app/services/third_party.dart';
 import 'package:app/widgets/behaviours/positive_feed_pagination_behaviour.dart';
 import 'package:app/widgets/molecules/layouts/positive_basic_sliver_list.dart';
 import 'package:app/widgets/molecules/navigation/positive_navigation_bar.dart';
