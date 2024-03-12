@@ -8,7 +8,7 @@ export class FeedRequest {
   targetUserId: string;
 
   constructor(json: FeedRequestJSON) {
-    this.targetSlug = json.targetSlug || '';
-    this.targetUserId = json.targetUserId || '';
+    this.targetSlug = json.targetSlug || "";
+    this.targetUserId = json.targetUserId || "";
   }
 }

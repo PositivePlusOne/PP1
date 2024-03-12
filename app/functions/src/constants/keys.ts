@@ -18,19 +18,5 @@ export namespace Keys {
   export const FeatureFlagManagedOrganisation = "MANAGED_ORGANISATION";
 
   // A map of all the keys
-  export const AllKeys = [
-    GoogleMapKey,
-    OccasionGeniusApiKey,
-    StreamApiKey,
-    StreamApiSecret,
-    StreamFeedsAppId,
-    AlgoliaApiKey,
-    AlgoliaAppId,
-    SlackSigningSecret,
-    PostmarkApiKey,
-    MixpanelProjectToken,
-    MixpanelApiSecret,
-    MixpanelProjectId,
-    SmtpApiSecret,
-  ];
+  export const AllKeys = [GoogleMapKey, OccasionGeniusApiKey, StreamApiKey, StreamApiSecret, StreamFeedsAppId, AlgoliaApiKey, AlgoliaAppId, SlackSigningSecret, PostmarkApiKey, MixpanelProjectToken, MixpanelApiSecret, MixpanelProjectId, SmtpApiSecret];
 }

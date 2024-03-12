@@ -2,7 +2,7 @@ import { Media, MediaJSON } from "./media";
 import { Mention, MentionJSON } from "./mentions";
 import { FlMeta, FlMetaJSON } from "./meta";
 
-export const activitySchemaKey = 'activities';
+export const activitySchemaKey = "activities";
 
 /**
  * The type of activity
@@ -79,7 +79,7 @@ export class Activity {
 
   constructor(json: ActivityJSON) {
     this._fl_meta_ = json._fl_meta_ && new FlMeta(json._fl_meta_);
-    this.searchDescription = json.searchDescription || '';
+    this.searchDescription = json.searchDescription || "";
     this.generalConfiguration = json.generalConfiguration && new ActivityGeneralConfiguration(json.generalConfiguration);
     this.securityConfiguration = json.securityConfiguration && new ActivitySecurityConfiguration(json.securityConfiguration);
     this.eventConfiguration = json.eventConfiguration && new ActivityEventConfiguration(json.eventConfiguration);
@@ -99,7 +99,7 @@ export class Activity {
  * @property {string} Event An event
  * @property {string} Clip A clip
  */
-export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip';
+export type ActivityGeneralConfigurationType = "post" | "event" | "clip";
 
 /**
  * The style of activity
@@ -108,7 +108,7 @@ export type ActivityGeneralConfigurationType = 'post' | 'event' | 'clip';
  * @property {string} Markdown Markdown
  * @property {string} Text Text
  */
-export type ActivityGeneralConfigurationStyle = 'markdown' | 'text';
+export type ActivityGeneralConfigurationStyle = "markdown" | "text";
 
 /**
  * The JSON representation of an activity general configuration
@@ -140,9 +140,9 @@ export class ActivityGeneralConfiguration {
   isSensitive: boolean;
 
   constructor(json: ActivityGeneralConfigurationJSON) {
-    this.type = json.type || 'post';
-    this.style = json.style || 'text';
-    this.content = json.content || '';
+    this.type = json.type || "post";
+    this.style = json.style || "text";
+    this.content = json.content || "";
     this.isSensitive = json.isSensitive || false;
   }
 }
@@ -176,7 +176,7 @@ export class ActivityRepostConfiguration {
  * @property {string} Private Private
  * @property {string} SignedIn signed_in
  */
-export type ActivitySecurityConfigurationMode = 'public' | 'followers_and_connections' | 'connections' | 'private' | 'signed_in' | 'disabled';
+export type ActivitySecurityConfigurationMode = "public" | "followers_and_connections" | "connections" | "private" | "signed_in" | "disabled";
 
 /**
  * The JSON representation of an activity security configuration
@@ -214,12 +214,12 @@ export class ActivitySecurityConfiguration {
   bookmarksMode?: ActivitySecurityConfigurationMode;
 
   constructor(json: ActivitySecurityConfigurationJSON) {
-    this.context = json.context || '';
-    this.viewMode = json.viewMode || 'private';
-    this.shareMode = json.shareMode || 'private';
-    this.commentMode = json.commentMode || 'signed_in';
-    this.likesMode = json.likesMode || 'public';
-    this.bookmarksMode = json.bookmarksMode || 'public';
+    this.context = json.context || "";
+    this.viewMode = json.viewMode || "private";
+    this.shareMode = json.shareMode || "private";
+    this.commentMode = json.commentMode || "signed_in";
+    this.likesMode = json.likesMode || "public";
+    this.bookmarksMode = json.bookmarksMode || "public";
   }
 }
 
@@ -251,7 +251,7 @@ export class ActivitySchedule {
   end?: Date;
 
   constructor(json: ActivityScheduleJSON) {
-    this.recurrenceRule = json.recurrenceRule || '';
+    this.recurrenceRule = json.recurrenceRule || "";
     this.start = json.start;
     this.end = json.end;
   }
@@ -298,9 +298,9 @@ export class ActivityEventConfiguration {
 
   constructor(json: ActivityEventConfigurationJSON) {
     this.venue = json.venue;
-    this.name = json.name || '';
+    this.name = json.name || "";
     this.schedule = json.schedule && new ActivitySchedule(json.schedule);
-    this.location = json.location || '';
+    this.location = json.location || "";
     this.popularityScore = json.popularityScore || 0;
     this.isCancelled = json.isCancelled || false;
   }
@@ -312,7 +312,7 @@ export class ActivityEventConfiguration {
  * @enum {number}
  * @property {string} Persons1 Persons 1 strategy (cost per person)
  */
-export type ActivityPricingExternalStoreInformationPricingStrategy = 'persons_1';
+export type ActivityPricingExternalStoreInformationPricingStrategy = "persons_1";
 
 /**
  * The JSON representation of an activity pricing external store information
@@ -346,10 +346,10 @@ export class ActivityPricingExternalStoreInformation {
   pricingStrategy: ActivityPricingExternalStoreInformationPricingStrategy;
 
   constructor(json: ActivityPricingExternalStoreInformationJSON) {
-    this.costExact = json.costExact || '';
-    this.costMinimum = json.costMinimum || '';
-    this.costMaximum = json.costMaximum || '';
-    this.pricingStrategy = json.pricingStrategy || 'persons_1';
+    this.costExact = json.costExact || "";
+    this.costMinimum = json.costMinimum || "";
+    this.costMaximum = json.costMaximum || "";
+    this.pricingStrategy = json.pricingStrategy || "persons_1";
   }
 }
 
@@ -377,7 +377,7 @@ export class ActivityPricingInformation {
   externalStoreInformation?: ActivityPricingExternalStoreInformation;
 
   constructor(json: ActivityPricingInformationJSON) {
-    this.productId = json.productId || '';
+    this.productId = json.productId || "";
     this.externalStoreInformation = json.externalStoreInformation && new ActivityPricingExternalStoreInformation(json.externalStoreInformation);
   }
 }
@@ -402,8 +402,8 @@ export class ActivityPublisherInformation {
   publisherId: string;
 
   constructor(json: ActivityPublisherInformationJSON) {
-    this.originFeed = json.originFeed || '';
-    this.publisherId = json.publisherId || '';
+    this.originFeed = json.originFeed || "";
+    this.publisherId = json.publisherId || "";
   }
 }
 
@@ -444,10 +444,10 @@ export class ActivityEnrichmentConfiguration {
 
   constructor(json: ActivityEnrichmentConfigurationJSON) {
     this.tags = json.tags || [];
-    this.publishLocation = json.publishLocation || '';
-    this.promotionKey = json.promotionKey || '';
+    this.publishLocation = json.publishLocation || "";
+    this.promotionKey = json.promotionKey || "";
     this.mentions = json.mentions ? json.mentions.map((m) => new Mention(m)) : [];
-    this.originFeed = json.originFeed || '';
+    this.originFeed = json.originFeed || "";
     this.reactionCounts = json.reactionCounts || {};
     this.uniqueUserReactions = json.uniqueUserReactions || {};
   }

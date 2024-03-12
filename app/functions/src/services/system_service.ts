@@ -12,10 +12,10 @@ export namespace SystemService {
   let flamelinkApp: flamelink.app.App;
 
   /**
- * Lazy loads a Flamelink app instance.
- *
- * @returns {Promise<flamelink.app.App>} A promise that resolves with a Flamelink app instance.
- */
+   * Lazy loads a Flamelink app instance.
+   *
+   * @returns {Promise<flamelink.app.App>} A promise that resolves with a Flamelink app instance.
+   */
   export function getFlamelinkApp(): flamelink.app.App {
     // Check if the Flamelink app instance has already been loaded.
     if (typeof flamelinkApp === "undefined") {

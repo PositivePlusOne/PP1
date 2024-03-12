@@ -10,7 +10,6 @@ import { QueryOptions, UpdateOptions } from "./types/query_options";
 import { StreamHelpers } from "../helpers/stream_helpers";
 
 export namespace DataService {
-
   export const getDocumentReference = async function (options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
     const cacheKey = CacheService.generateCacheKey(options);
     const cachedDocument = await CacheService.get(cacheKey);
@@ -147,11 +146,7 @@ export namespace DataService {
   };
 
   export const needsMigration = (document: any): boolean => {
-    return !!(document._fl_meta_ && (
-      (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) ||
-      (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) ||
-      (document._fl_meta_.schema === "users" && document.displayName && document.displayName !== (document.displayName?.toLocaleLowerCase() ?? ""))
-    ));
+    return !!(document._fl_meta_ && ((document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) || (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) || (document._fl_meta_.schema === "users" && document.displayName && document.displayName !== (document.displayName?.toLocaleLowerCase() ?? ""))));
   };
 
   export const migrateDocument = async (document: any): Promise<any> => {
@@ -179,7 +174,6 @@ export namespace DataService {
 
     return migratedDocument;
   };
-
 
   /**
    * Updates a document.
@@ -300,9 +294,13 @@ export namespace DataService {
       return cachedDocuments;
     }
 
-    const documents = await firestore.collection("fl_content").where("_fl_meta_.schema", "==", options.schemaKey).get().then((querySnapshot) => {
-      return querySnapshot.docs.map((doc) => doc.data());
-    });
+    const documents = await firestore
+      .collection("fl_content")
+      .where("_fl_meta_.schema", "==", options.schemaKey)
+      .get()
+      .then((querySnapshot) => {
+        return querySnapshot.docs.map((doc) => doc.data());
+      });
 
     if (documents) {
       // 60 x 60 needs to be tested
@@ -317,11 +315,7 @@ export namespace DataService {
     // const flamelinkApp = SystemService.getFlamelinkApp();
     // return await flamelinkApp.content.getByField(options);
     const firestore = adminApp.firestore();
-    const record = await firestore.collection('fl_content').where(
-      options.field,
-      '==',
-      options.value,
-    ).get();
+    const record = await firestore.collection("fl_content").where(options.field, "==", options.value).get();
 
     if (record.docs.length == 0) {
       return [];

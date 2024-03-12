@@ -4,7 +4,6 @@ import { adminApp } from "..";
 import { MediaJSON } from "../dto/media";
 
 export namespace StorageService {
-
   /**
    * Gets the suffix for a thumbnail type
    * @param {string} type The type of thumbnail
@@ -47,17 +46,21 @@ export namespace StorageService {
    * @return {string[]} The list of bucket paths
    */
   export function getBucketPathsFromMediaArray(mediaJSON: MediaJSON[]): string[] {
-    return mediaJSON.map((m) => {
-      if (!m.bucketPath || !m.url || !m.type) {
-        return null;
-      }
+    return (
+      (mediaJSON
+        .map((m) => {
+          if (!m.bucketPath || !m.url || !m.type) {
+            return null;
+          }
 
-      if (m.type !== "bucket_path") {
-        return null;
-      }
+          if (m.type !== "bucket_path") {
+            return null;
+          }
 
-      return m.bucketPath;
-    }).filter((m) => m !== null) as string[] || [];
+          return m.bucketPath;
+        })
+        .filter((m) => m !== null) as string[]) || []
+    );
   }
 
   /**
@@ -88,10 +91,7 @@ export namespace StorageService {
 
     for (let i = 0; i < results.length; i++) {
       if (!results[i][0]) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          `File at path ${paths[i]} does not exist`
-        );
+        throw new functions.https.HttpsError("not-found", `File at path ${paths[i]} does not exist`);
       }
     }
   }
@@ -110,10 +110,7 @@ export namespace StorageService {
 
     for (let i = 0; i < results.length; i++) {
       if (!results[i][0]) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          `File at path ${paths[i]} does not exist`
-        );
+        throw new functions.https.HttpsError("not-found", `File at path ${paths[i]} does not exist`);
       }
     }
   }
@@ -125,28 +122,28 @@ export namespace StorageService {
     if (uint8arr.length >= len) {
       const signatureArr = new Array(len);
       for (let i = 0; i < len; i++) {
-        signatureArr[i] = (new Uint8Array(arrayBuffer))[i].toString(16);
+        signatureArr[i] = new Uint8Array(arrayBuffer)[i].toString(16);
       }
-        
-      const signature = signatureArr.join('').toUpperCase();
+
+      const signature = signatureArr.join("").toUpperCase();
       switch (signature) {
-        case '89504E47':
-          return 'image/png';
-        case '47494638':
-          return 'image/gif';
-        case '25504446':
-          return 'application/pdf';
-        case 'FFD8FFDB':
-        case 'FFD8FFE0':
-          return 'image/jpeg';
-        case '504B0304':
-          return 'application/zip';
+        case "89504E47":
+          return "image/png";
+        case "47494638":
+          return "image/gif";
+        case "25504446":
+          return "application/pdf";
+        case "FFD8FFDB":
+        case "FFD8FFE0":
+          return "image/jpeg";
+        case "504B0304":
+          return "application/zip";
         default:
           break;
       }
     }
 
-    return 'application/octet-stream';
+    return "application/octet-stream";
   }
 
   export function getExtensionFromMime(mime: string): string {

@@ -1,6 +1,6 @@
 import * as crypto from "crypto";
 
-import removeMd from 'remove-markdown';
+import removeMd from "remove-markdown";
 
 export namespace StringHelpers {
   /**
@@ -44,7 +44,7 @@ export namespace StringHelpers {
     const pattern = /^[a-z0-9-_']+$/;
     return pattern.test(input);
   }
-  
+
   export function isValidRealName(input: string): boolean {
     const pattern = /^[a-zA-Z-`‘’’' .À-ÖØ-öø-ÿĀ-ſ-ƀ]+$/;
     return pattern.test(input);

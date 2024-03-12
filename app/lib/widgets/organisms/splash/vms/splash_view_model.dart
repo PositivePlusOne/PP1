@@ -13,7 +13,6 @@ import 'package:logger/logger.dart' as logger;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 // Project imports:

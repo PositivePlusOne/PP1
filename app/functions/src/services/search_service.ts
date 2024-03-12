@@ -3,7 +3,6 @@ import algoliasearch, { SearchClient, SearchIndex } from "algoliasearch";
 import { CacheService } from "./cache_service";
 
 export namespace SearchService {
-
   // 5 minutes, we might want to make this longer
   export const SEARCH_CACHE_DURATION = 60 * 5;
 
