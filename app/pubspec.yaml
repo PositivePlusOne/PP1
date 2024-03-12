@@ -47,7 +47,7 @@ dependencies:
   mixpanel_flutter: ^2.1.1
   appsflyer_sdk: ^6.12.2
   freerasp: ^6.2.0
-  stream_chat_flutter: ^8.0.0-beta.1
+  stream_chat_flutter: ^8.0.0-beta.2
 
   google_mlkit_face_detection: ^0.6.0
   google_mlkit_commons: ^0.3.0
