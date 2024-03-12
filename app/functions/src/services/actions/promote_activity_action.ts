@@ -131,7 +131,7 @@ export namespace PromoteActivityAction {
         // Update the relevent information in the promotion and mark it as active
         targetPromotionData.activityId = targetActivityActualId;
         targetPromotionData.ownerId = publisherId;
-        targetPromotionData.isActive = true;
+        targetPromotionData.postPromotionEnabled = true;
         
         AdminQuickActionService.appendOutput(action, `Activity ${targetActivityActualId} promoted with promotion ${targetPromotionActualId}`);
         await ActivitiesService.updateTagFeedsForActivity(targetActivityData);

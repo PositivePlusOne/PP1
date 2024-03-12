@@ -23,6 +23,7 @@ import { TestNotification } from "../services/builders/notifications/test/test_n
 import { DataService } from "../services/data_service";
 import { AdminQuickActionJSON, AdminScheduledActionJSON, adminQuickActionsSchemaKey, adminScheduledActionsSchemaKey } from "../dto/admin";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { DeleteMemberAction } from "../services/actions/delete_member_action";
 
 export namespace SystemEndpoints {
   export const dataChangeHandler = functions
@@ -65,57 +66,17 @@ export namespace SystemEndpoints {
    * 
    * @see https://firebase.google.com/docs/functions/schedule-functions
    */
-  export const cronHandler = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).pubsub.schedule("*/5 * * * *").onRun(async (context) => {
+  export const dailyCronHandler = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).pubsub.schedule("0 1 * * *").onRun(async (context) => {
     functions.logger.info("Cron handler executed", { context });
 
-    const scheduledActions = await DataService.getBatchDocumentsBySchema({
-      schemaKey: adminScheduledActionsSchemaKey,
-    }) as AdminScheduledActionJSON[];
+    const deleteMembersAction = {
+      action: "deletePendingMembers",
+      status: "processing",
+      output: "Processing scheduled action deletePendingMembers",
+      timestamp: new Date().toISOString(),
+    } as AdminQuickActionJSON;
 
-    functions.logger.info("Found scheduled actions", { scheduledActions });
-    if (!scheduledActions || scheduledActions.length === 0) {
-      return;
-    }
-    
-    const currentTimeEpoch = StreamHelpers.getCurrentUnixTimestamp();
-    
-    // Loop through each scheduled action and check if it should be executed.
-    for (let x = 0; x < scheduledActions.length; x++) {
-      const scheduledAction = scheduledActions[x];
-      const documentId = FlamelinkHelpers.getFlamelinkIdFromObject(scheduledAction);
-      if (!scheduledAction || !scheduledAction.cron || !scheduledAction.action || !documentId) {
-        functions.logger.warn("Invalid scheduled action", { scheduledAction });
-        continue;
-      }
-
-      const cron = scheduledAction.cron;
-      const lastRunDate = scheduledAction.lastRunDate || "";
-
-      // Check if the cron should be executed.
-      const shouldExecute = SystemService.shouldExecuteCron(cron, lastRunDate, currentTimeEpoch);
-      if (!shouldExecute) {
-        continue;
-      }
-
-      const action = {
-        action: scheduledAction.action,
-        data: {},
-      } as AdminQuickActionJSON;
-
-      const actionId = FlamelinkHelpers.generateIdentifier();
-      await DataService.getOrCreateDocument(action, {
-        schemaKey: adminQuickActionsSchemaKey,
-        entryId: actionId,
-      });
-
-      scheduledAction.lastRunDate = currentTimeEpoch;
-
-      await DataService.updateDocument({
-        schemaKey: adminScheduledActionsSchemaKey,
-        entryId: documentId,
-        data: scheduledAction,
-      });
-    }
+    await DeleteMemberAction.deletePendingMembers(deleteMembersAction);
   });
 
   export const getSystemConfiguration = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
