@@ -20,7 +20,7 @@ export namespace PostMentionNotification {
 
     const displayName = StringHelpers.asHandle(userProfile.displayName || "");
     const title = await LocalizationsService.getLocalizedString("notifications.post_mentioned.title");
-    
+
     const safeContent = StringHelpers.markdownToPlainText(content);
     const body = await LocalizationsService.getLocalizedString("notifications.post_mentioned.body", { displayName, shortBody: safeContent });
 

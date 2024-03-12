@@ -76,7 +76,7 @@ export namespace TagsService {
     return tagData;
   }
 
-  export async function getOrCreateTags(validatedTags: string[]) : Promise<TagJSON[]> {
+  export async function getOrCreateTags(validatedTags: string[]): Promise<TagJSON[]> {
     const promises = [] as Promise<TagJSON>[];
     for (const tag of validatedTags) {
       const formattedTag = isRestricted(tag) ? tag : formatTag(tag);
@@ -115,7 +115,7 @@ export namespace TagsService {
    * @returns {Promise<TagJSON[]>} the tags.
    */
   export async function getMultipleTags(keys: string[]): Promise<any[]> {
-    const formattedKeys = keys.map((key) => isRestricted(key) ? key : formatTag(key));
+    const formattedKeys = keys.map((key) => (isRestricted(key) ? key : formatTag(key)));
     functions.logger.info("Getting multiple tags", { formattedKeys });
 
     if (!formattedKeys || formattedKeys.length === 0) {
@@ -137,22 +137,17 @@ export namespace TagsService {
   export async function getPopularTags(locale: string): Promise<TagJSON[]> {
     functions.logger.info("Getting popular tags for locale", { locale });
     const latestCacheKey = `tags-${locale}-popularity`;
-    const latestCachedData = await CacheService.get(latestCacheKey) as Tag[];
+    const latestCachedData = (await CacheService.get(latestCacheKey)) as Tag[];
     if (latestCachedData) {
       return latestCachedData;
     }
-
 
     functions.logger.info("Refreshing popular tags for locale", { locale });
     const queryWindowResponse = await DataService.getDocumentWindowRaw({
       schemaKey: "tags",
       limit: TAG_WINDOW_SIZE,
-      orderBy: [
-        { fieldPath: "popularity", directionStr: "asc" },
-      ],
-      where: [
-        { fieldPath: "popularity", op: ">", value: 0 },
-      ],
+      orderBy: [{ fieldPath: "popularity", directionStr: "asc" }],
+      where: [{ fieldPath: "popularity", op: ">", value: 0 }],
     });
 
     const popularTags = [] as TagJSON[];
@@ -174,19 +169,16 @@ export namespace TagsService {
   export async function getTopicTags(locale: string): Promise<TagJSON[]> {
     functions.logger.info("Getting topics tags for locale", { locale });
     const latestCacheKey = `tags-${locale}-topics`;
-    const latestCachedData = await CacheService.get(latestCacheKey) as Tag[];
+    const latestCachedData = (await CacheService.get(latestCacheKey)) as Tag[];
     if (latestCachedData) {
       return latestCachedData;
     }
-
 
     functions.logger.info("Refreshing topic tags for locale", { locale });
     const queryWindowResponse = await DataService.getDocumentWindowRaw({
       schemaKey: "tags",
       limit: TAG_WINDOW_SIZE,
-      where: [
-        { fieldPath: "topic.isEnabled", op: "==", value: true },
-      ],
+      where: [{ fieldPath: "topic.isEnabled", op: "==", value: true }],
     });
 
     const topicTags = [] as TagJSON[];
@@ -208,7 +200,7 @@ export namespace TagsService {
 
     // Increase this number from 3 when we find a way to scale this better
     const feedWindow = await FeedService.getFeedWindow(uid, userFeed, 3, "");
-    const activities = await ActivitiesService.getActivityFeedWindow(feedWindow.results) as ActivityJSON[];
+    const activities = (await ActivitiesService.getActivityFeedWindow(feedWindow.results)) as ActivityJSON[];
 
     const tagStringValues = [] as string[];
     for (const activity of activities) {
@@ -216,7 +208,7 @@ export namespace TagsService {
         if (!tag || tagStringValues.includes(tag)) {
           continue;
         }
-        
+
         tagStringValues.push(tag);
       }
     }
@@ -262,7 +254,6 @@ export namespace TagsService {
       throw new Error(`Invalid tag key: ${formattedKey}`);
     }
 
-
     const tagData = await DataService.getDocument({
       schemaKey: "tags",
       entryId: formattedKey,
@@ -279,19 +270,21 @@ export namespace TagsService {
   /**
    * Removes restricted tags from a string array.
    * @param {string[]} tags the tags.
-    * @returns {string[]} the tags without restricted tags.
+   * @returns {string[]} the tags without restricted tags.
    */
   export function removeRestrictedTagsFromStringArray(tags: string[], isPromotion: boolean): string[] {
     const promotedTags = tags.filter((tag) => isPromotedTag(tag));
-    let returnTags = tags.filter((tag) => !isRestricted(tag)).map((tag) => {
-      return formatTag(tag);
-    });
-    
+    let returnTags = tags
+      .filter((tag) => !isRestricted(tag))
+      .map((tag) => {
+        return formatTag(tag);
+      });
+
     returnTags = returnTags.slice(0, 5);
     if (isPromotion && promotedTags.length > 1) {
       returnTags = [...promotedTags, ...returnTags];
     }
-    
+
     // and return the final list of tags that are all valid and formattted
     return returnTags;
   }

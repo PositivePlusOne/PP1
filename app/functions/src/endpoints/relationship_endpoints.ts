@@ -20,574 +20,622 @@ import { ProfileStatisticsService } from "../services/profile_statistics_service
 import { SystemService } from "../services/system_service";
 
 export namespace RelationshipEndpoints {
-  export const getRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const members = request.data.members || [];
+  export const getRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const members = request.data.members || [];
 
-    // Push UID into members array if it's not already there.
-    if (!members.includes(uid)) {
-      members.push(uid);
-    }
+      // Push UID into members array if it's not already there.
+      if (!members.includes(uid)) {
+        members.push(uid);
+      }
 
-    functions.logger.info("Getting relationship", { members });
-    const relationship = await RelationshipService.getRelationship(members);
-    if (!relationship) {
-      throw new functions.https.HttpsError("not-found", "Relationship not found");
-    }
+      functions.logger.info("Getting relationship", { members });
+      const relationship = await RelationshipService.getRelationship(members);
+      if (!relationship) {
+        throw new functions.https.HttpsError("not-found", "Relationship not found");
+      }
 
-    functions.logger.info("Relationship retrieved", {
-      members,
-      relationship,
+      functions.logger.info("Relationship retrieved", {
+        members,
+        relationship,
+      });
+
+      return JSON.stringify({
+        relationships: [relationship],
+      });
     });
 
-    return JSON.stringify({
-      relationships: [relationship],
-    });
-  });
+  export const blockRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Blocking user", { uid, targetUid });
 
-  export const blockRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Blocking user", { uid, targetUid });
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot block yourself");
+      }
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot block yourself");
-    }
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!targetProfile) {
+        throw new functions.https.HttpsError("not-found", "Target user profile not found");
+      }
 
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!targetProfile) {
-      throw new functions.https.HttpsError("not-found", "Target user profile not found");
-    }
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      // Check if we are already blocking this user
+      const isAlreadyBlocking = RelationshipHelpers.hasBlockedRelationship(uid, relationship);
+      if (isAlreadyBlocking) {
+        return buildEndpointResponse(context, {
+          sender: uid,
+          data: [relationship],
+        });
+      }
 
-    // Check if we are already blocking this user
-    const isAlreadyBlocking = RelationshipHelpers.hasBlockedRelationship(uid, relationship);
-    if (isAlreadyBlocking) {
+      const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
+      functions.logger.info("User blocked", { uid, targetUid });
+
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
       return buildEndpointResponse(context, {
         sender: uid,
-        data: [relationship],
+        data: [newRelationship],
       });
-    }
-
-    const newRelationship = await RelationshipService.blockRelationship(uid, relationship);
-    functions.logger.info("User blocked", { uid, targetUid });
-
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
     });
-  });
 
-  export const unblockRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Unblocking user", { uid, targetUid });
+  export const unblockRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Unblocking user", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot unblock yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot unblock yourself");
+      }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!targetProfile) {
-      throw new functions.https.HttpsError("not-found", "Target profile not found");
-    }
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!targetProfile) {
+        throw new functions.https.HttpsError("not-found", "Target profile not found");
+      }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const isUnblocked = RelationshipHelpers.hasNotBlockedRelationship(uid, relationship);
-    if (isUnblocked) {
-      functions.logger.info("User already unblocked", { uid, targetUid });
-      
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const isUnblocked = RelationshipHelpers.hasNotBlockedRelationship(uid, relationship);
+      if (isUnblocked) {
+        functions.logger.info("User already unblocked", { uid, targetUid });
+
+        return buildEndpointResponse(context, {
+          sender: uid,
+          data: [relationship],
+        });
+      }
+
+      const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
+      functions.logger.info("User unblocked", { uid, targetUid });
+
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
       return buildEndpointResponse(context, {
         sender: uid,
-        data: [relationship],
+        data: [newRelationship],
       });
-    }
-
-    const newRelationship = await RelationshipService.unblockRelationship(uid, relationship);
-    functions.logger.info("User unblocked", { uid, targetUid });
-
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
     });
-  });
 
-  export const muteRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Muting user", { uid, targetUid });
+  export const muteRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Muting user", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot mute yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot mute yourself");
+      }
 
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const newRelationship = await RelationshipService.muteRelationship(uid, relationship);
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const newRelationship = await RelationshipService.muteRelationship(uid, relationship);
 
-    // Send a ACTION_MUTED data payload as a notification to the target users profiles
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!targetProfile) {
-      throw new functions.https.HttpsError("not-found", "Target profile not found");
-    }
+      // Send a ACTION_MUTED data payload as a notification to the target users profiles
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!targetProfile) {
+        throw new functions.https.HttpsError("not-found", "Target profile not found");
+      }
 
-    functions.logger.info("User muted", { uid, targetUid });
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
+      functions.logger.info("User muted", { uid, targetUid });
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
-    });
-  });
-
-  export const unmuteRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Unmuting user", { uid, targetUid });
-
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot unmute yourself");
-    }
-
-    const hasCreatedProfile = await ProfileService.getProfile(uid);
-    if (!hasCreatedProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
-
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const newRelationship = await RelationshipService.unmuteRelationship(uid, relationship);
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    functions.logger.info("User unmuted", { uid, targetUid });
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
-    });
-  });
-
-  export const connectRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Connecting user", { uid, targetUid });
-
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot connect to yourself");
-    }
-
-    const userProfile = await ProfileService.getProfile(uid);
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile || !targetProfile) {
-      throw new functions.https.HttpsError("not-found", "User profiles not found");
-    }
-
-    const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const isUserAlreadyConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
-    const isTargetAlreadyConnected = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
-    const isNewRelationship = !isUserAlreadyConnected && !isTargetAlreadyConnected;
-
-    if (isUserAlreadyConnected) {
-      functions.logger.info("User already connected", { uid, targetUid });
       return buildEndpointResponse(context, {
         sender: uid,
-        data: [oldRelationship],
+        data: [newRelationship],
       });
-    }
-
-    const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, oldRelationship);
-    if (!canActionRelationship) {
-      throw new functions.https.HttpsError("permission-denied", "You cannot connect with this user");
-    }
-
-    const newRelationship = await RelationshipService.connectRelationship(uid, oldRelationship);
-    functions.logger.info("User connected, sending notifications", { uid, targetUid, isUserAlreadyConnected, isTargetAlreadyConnected });
-    
-    if (isTargetAlreadyConnected && !isUserAlreadyConnected) {
-      await ChatConnectionAcceptedNotification.sendNotification(userProfile, targetProfile);
-    } else if (isNewRelationship) {
-      await ChatConnectionSentNotification.sendNotification(targetProfile, userProfile);
-      await ChatConnectionReceivedNotification.sendNotification(userProfile, targetProfile);
-    }
-
-    const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
-    const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
-
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship, newSourceStats, newTargetStats],
     });
-  });
 
-  export const disconnectRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Disconnecting user", { uid, targetUid });
+  export const unmuteRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Unmuting user", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot disconnect yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot unmute yourself");
+      }
 
-    const userProfile = await ProfileService.getProfile(uid);
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile || !targetProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const hasCreatedProfile = await ProfileService.getProfile(uid);
+      if (!hasCreatedProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]) as RelationshipJSON;
-    const isTargetConnected = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
-    const isUserConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
-    const isConnectedOrPending = isTargetConnected || isUserConnected;
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const newRelationship = await RelationshipService.unmuteRelationship(uid, relationship);
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
 
-    if (!isConnectedOrPending) {
-      functions.logger.info("User already disconnected", { uid, targetUid });
+      functions.logger.info("User unmuted", { uid, targetUid });
+
       return buildEndpointResponse(context, {
         sender: uid,
-        data: [oldRelationship],
+        data: [newRelationship],
       });
-    }
-    
-    // const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
-    const newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
-
-    // if (canReject) {
-    //   await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
-    // }
-
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
     });
-  });
 
-  export const followRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Following relationship", { uid, targetUid });
+  export const connectRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Connecting user", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot follow yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot connect to yourself");
+      }
 
-    const userProfile = await ProfileService.getProfile(uid);
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile || !targetProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
+        throw new functions.https.HttpsError("not-found", "User profiles not found");
+      }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, relationship);
+      const oldRelationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const isUserAlreadyConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
+      const isTargetAlreadyConnected = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
+      const isNewRelationship = !isUserAlreadyConnected && !isTargetAlreadyConnected;
 
-    if (!canActionRelationship) {
-      throw new functions.https.HttpsError("permission-denied", "You cannot follow this user");
-    }
+      if (isUserAlreadyConnected) {
+        functions.logger.info("User already connected", { uid, targetUid });
+        return buildEndpointResponse(context, {
+          sender: uid,
+          data: [oldRelationship],
+        });
+      }
 
-    const isFollowing = RelationshipHelpers.isUserFollowing(uid, relationship);
-    if (isFollowing) {
-      functions.logger.info("User already following", { uid, targetUid });
+      const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, oldRelationship);
+      if (!canActionRelationship) {
+        throw new functions.https.HttpsError("permission-denied", "You cannot connect with this user");
+      }
+
+      const newRelationship = await RelationshipService.connectRelationship(uid, oldRelationship);
+      functions.logger.info("User connected, sending notifications", { uid, targetUid, isUserAlreadyConnected, isTargetAlreadyConnected });
+
+      if (isTargetAlreadyConnected && !isUserAlreadyConnected) {
+        await ChatConnectionAcceptedNotification.sendNotification(userProfile, targetProfile);
+      } else if (isNewRelationship) {
+        await ChatConnectionSentNotification.sendNotification(targetProfile, userProfile);
+        await ChatConnectionReceivedNotification.sendNotification(userProfile, targetProfile);
+      }
+
+      const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
+      const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
+
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
       return buildEndpointResponse(context, {
         sender: uid,
-        data: [relationship],
+        data: [newRelationship, newSourceStats, newTargetStats],
       });
-    }
-
-    // Create two feed requests and follow the target user
-    const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
-    const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
-    const feedClient = FeedService.getFeedsClient();
-
-    await FeedService.followFeed(feedClient, sourceFeed, targetFeed);
-
-    const newRelationship = await RelationshipService.followRelationship(uid, relationship);
-
-    const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
-    const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship, newSourceStats, newTargetStats],
     });
-  });
 
-  export const unfollowRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Unfollowing relationship", { uid, targetUid });
+  export const disconnectRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Disconnecting user", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot unfollow yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot disconnect yourself");
+      }
 
-    const userProfile = await ProfileService.getProfile(uid);
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile || !targetProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const oldRelationship = (await RelationshipService.getOrCreateRelationship([uid, targetUid])) as RelationshipJSON;
+      const isTargetConnected = RelationshipHelpers.isUserConnected(targetUid, oldRelationship);
+      const isUserConnected = RelationshipHelpers.isUserConnected(uid, oldRelationship);
+      const isConnectedOrPending = isTargetConnected || isUserConnected;
 
-    const isFollowing = RelationshipHelpers.isUserFollowing(uid, relationship);
-    if (!isFollowing) {
-      functions.logger.info("User already unfollowed", { uid, targetUid });
+      if (!isConnectedOrPending) {
+        functions.logger.info("User already disconnected", { uid, targetUid });
+        return buildEndpointResponse(context, {
+          sender: uid,
+          data: [oldRelationship],
+        });
+      }
+
+      // const canReject = RelationshipHelpers.canRejectConnectionRequest(uid, oldRelationship);
+      const newRelationship = await RelationshipService.disconnectRelationship(uid, oldRelationship);
+
+      // if (canReject) {
+      //   await ChatConnectionRejectedNotification.sendNotification(userProfile, targetProfile);
+      // }
+
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
       return buildEndpointResponse(context, {
         sender: uid,
-        data: [relationship],
+        data: [newRelationship],
       });
-    }
-
-    const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
-    const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
-    const feedClient = FeedService.getFeedsClient();
-
-    await FeedService.unfollowFeed(feedClient, sourceFeed, targetFeed);
-
-    const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
-
-    const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", -1);
-    const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", -1);
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship, newSourceStats, newTargetStats],
     });
-  });
 
-  export const hideRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Hiding relationship", { uid, targetUid });
+  export const followRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Following relationship", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot hide yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot follow yourself");
+      }
 
-    const userProfile = await ProfileService.getProfile(uid);
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile || !targetProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const newRelationship = await RelationshipService.hideRelationship(uid, relationship);
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const canActionRelationship = RelationshipHelpers.canActionRelationship(uid, relationship);
 
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
+      if (!canActionRelationship) {
+        throw new functions.https.HttpsError("permission-denied", "You cannot follow this user");
+      }
 
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
+      const isFollowing = RelationshipHelpers.isUserFollowing(uid, relationship);
+      if (isFollowing) {
+        functions.logger.info("User already following", { uid, targetUid });
+        return buildEndpointResponse(context, {
+          sender: uid,
+          data: [relationship],
+        });
+      }
+
+      // Create two feed requests and follow the target user
+      const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
+      const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
+      const feedClient = FeedService.getFeedsClient();
+
+      await FeedService.followFeed(feedClient, sourceFeed, targetFeed);
+
+      const newRelationship = await RelationshipService.followRelationship(uid, relationship);
+
+      const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
+      const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [newRelationship, newSourceStats, newTargetStats],
+      });
     });
-  });
 
-  export const unhideRelationship = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    const targetUid = request.data.target || "";
-    functions.logger.info("Unhiding relationship", { uid, targetUid });
+  export const unfollowRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Unfollowing relationship", { uid, targetUid });
 
-    if (uid === targetUid) {
-      throw new functions.https.HttpsError("invalid-argument", "You cannot unhide yourself");
-    }
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot unfollow yourself");
+      }
 
-    const userProfile = await ProfileService.getProfile(uid);
-    const targetProfile = await ProfileService.getProfile(targetUid);
-    if (!userProfile || !targetProfile) {
-      throw new functions.https.HttpsError("not-found", "User profile not found");
-    }
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
-    const newRelationship = await RelationshipService.unhideRelationship(uid, relationship);
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
 
-    await RelationshipUpdatedNotification.sendNotification(newRelationship);
+      const isFollowing = RelationshipHelpers.isUserFollowing(uid, relationship);
+      if (!isFollowing) {
+        functions.logger.info("User already unfollowed", { uid, targetUid });
+        return buildEndpointResponse(context, {
+          sender: uid,
+          data: [relationship],
+        });
+      }
 
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newRelationship],
+      const sourceFeed = { targetSlug: "timeline", targetUserId: uid } as FeedRequestJSON;
+      const targetFeed = { targetSlug: "user", targetUserId: targetUid } as FeedRequestJSON;
+      const feedClient = FeedService.getFeedsClient();
+
+      await FeedService.unfollowFeed(feedClient, sourceFeed, targetFeed);
+
+      const newRelationship = await RelationshipService.unfollowRelationship(uid, relationship);
+
+      const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", -1);
+      const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", -1);
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [newRelationship, newSourceStats, newTargetStats],
+      });
     });
-  });
 
-  export const listConnectedRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const hideRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Hiding relationship", { uid, targetUid });
 
-    const cursor = request.cursor || "";
-    const limit = request.limit || 30;
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot hide yourself");
+      }
 
-    const paginationResult = await RelationshipService.getConnectedRelationships(uid, { cursor, limit });
-    const profileIds = [] as string[];
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
 
-    for (const relationship of paginationResult.data) {
-      for (const member of relationship.members || []) {
-        if (member.memberId && member.memberId !== uid) {
-          profileIds.push(member.memberId);
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const newRelationship = await RelationshipService.hideRelationship(uid, relationship);
+
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [newRelationship],
+      });
+    });
+
+  export const unhideRelationship = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      const targetUid = request.data.target || "";
+      functions.logger.info("Unhiding relationship", { uid, targetUid });
+
+      if (uid === targetUid) {
+        throw new functions.https.HttpsError("invalid-argument", "You cannot unhide yourself");
+      }
+
+      const userProfile = await ProfileService.getProfile(uid);
+      const targetProfile = await ProfileService.getProfile(targetUid);
+      if (!userProfile || !targetProfile) {
+        throw new functions.https.HttpsError("not-found", "User profile not found");
+      }
+
+      const relationship = await RelationshipService.getOrCreateRelationship([uid, targetUid]);
+      const newRelationship = await RelationshipService.unhideRelationship(uid, relationship);
+
+      await RelationshipUpdatedNotification.sendNotification(newRelationship);
+
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [newRelationship],
+      });
+    });
+
+  export const listConnectedRelationships = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+
+      const cursor = request.cursor || "";
+      const limit = request.limit || 30;
+
+      const paginationResult = await RelationshipService.getConnectedRelationships(uid, { cursor, limit });
+      const profileIds = [] as string[];
+
+      for (const relationship of paginationResult.data) {
+        for (const member of relationship.members || []) {
+          if (member.memberId && member.memberId !== uid) {
+            profileIds.push(member.memberId);
+          }
         }
       }
-    }
 
-    const profiles = await ProfileService.getMultipleProfiles(profileIds);
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: profiles,
-      cursor: paginationResult.pagination.cursor,
-      limit: paginationResult.pagination.limit,
-      seedData: {
-        relationships: paginationResult.data,
-      },
+      const profiles = await ProfileService.getMultipleProfiles(profileIds);
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: profiles,
+        cursor: paginationResult.pagination.cursor,
+        limit: paginationResult.pagination.limit,
+        seedData: {
+          relationships: paginationResult.data,
+        },
+      });
     });
-  });
 
-  export const listFollowRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const listFollowRelationships = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const cursor = request.cursor || "";
-    const limit = request.limit || 30;
+      const cursor = request.cursor || "";
+      const limit = request.limit || 30;
 
-    const paginationResult = await RelationshipService.getFollowedRelationships(uid, { cursor, limit });
-    const profileIds = [] as string[];
+      const paginationResult = await RelationshipService.getFollowedRelationships(uid, { cursor, limit });
+      const profileIds = [] as string[];
 
-    for (const relationship of paginationResult.data) {
-      for (const member of relationship.members || []) {
-        if (member.memberId && member.memberId !== uid) {
-          profileIds.push(member.memberId);
+      for (const relationship of paginationResult.data) {
+        for (const member of relationship.members || []) {
+          if (member.memberId && member.memberId !== uid) {
+            profileIds.push(member.memberId);
+          }
         }
       }
-    }
 
-    const profiles = await ProfileService.getMultipleProfiles(profileIds);
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: profiles,
-      cursor: paginationResult.pagination.cursor,
-      limit: paginationResult.pagination.limit,
-      seedData: {
-        relationships: paginationResult.data,
-      },
+      const profiles = await ProfileService.getMultipleProfiles(profileIds);
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: profiles,
+        cursor: paginationResult.pagination.cursor,
+        limit: paginationResult.pagination.limit,
+        seedData: {
+          relationships: paginationResult.data,
+        },
+      });
     });
-  });
 
-  export const listFollowingRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const listFollowingRelationships = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const cursor = request.cursor || "";
-    const limit = request.limit || 30;
+      const cursor = request.cursor || "";
+      const limit = request.limit || 30;
 
-    const paginationResult = await RelationshipService.getFollowRelationships(uid, { cursor, limit });
-    const profileIds = [] as string[];
+      const paginationResult = await RelationshipService.getFollowRelationships(uid, { cursor, limit });
+      const profileIds = [] as string[];
 
-    for (const relationship of paginationResult.data) {
-      for (const member of relationship.members || []) {
-        if (member.memberId && member.memberId !== uid) {
-          profileIds.push(member.memberId);
+      for (const relationship of paginationResult.data) {
+        for (const member of relationship.members || []) {
+          if (member.memberId && member.memberId !== uid) {
+            profileIds.push(member.memberId);
+          }
         }
       }
-    }
 
-    const profiles = await ProfileService.getMultipleProfiles(profileIds);
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: profiles,
-      cursor: paginationResult.pagination.cursor,
-      limit: paginationResult.pagination.limit,
-      seedData: {
-        relationships: paginationResult.data,
-      },
+      const profiles = await ProfileService.getMultipleProfiles(profileIds);
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: profiles,
+        cursor: paginationResult.pagination.cursor,
+        limit: paginationResult.pagination.limit,
+        seedData: {
+          relationships: paginationResult.data,
+        },
+      });
     });
-  });
 
-  export const listBlockedRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const listBlockedRelationships = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const cursor = request.cursor || "";
-    const limit = request.limit || 30;
+      const cursor = request.cursor || "";
+      const limit = request.limit || 30;
 
-    const paginationResult = await RelationshipService.getBlockedRelationships(uid, { cursor, limit });
-    const profileIds = [] as string[];
+      const paginationResult = await RelationshipService.getBlockedRelationships(uid, { cursor, limit });
+      const profileIds = [] as string[];
 
-    for (const relationship of paginationResult.data) {
-      for (const member of relationship.members || []) {
-        if (member.memberId && member.memberId !== uid) {
-          profileIds.push(member.memberId);
+      for (const relationship of paginationResult.data) {
+        for (const member of relationship.members || []) {
+          if (member.memberId && member.memberId !== uid) {
+            profileIds.push(member.memberId);
+          }
         }
       }
-    }
 
-    const profiles = await ProfileService.getMultipleProfiles(profileIds);
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: profiles,
-      cursor: paginationResult.pagination.cursor,
-      limit: paginationResult.pagination.limit,
-      seedData: {
-        relationships: paginationResult.data,
-      },
+      const profiles = await ProfileService.getMultipleProfiles(profileIds);
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: profiles,
+        cursor: paginationResult.pagination.cursor,
+        limit: paginationResult.pagination.limit,
+        seedData: {
+          relationships: paginationResult.data,
+        },
+      });
     });
-  });
 
-  export const listManagedRelationships = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
+  export const listManagedRelationships = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
 
-    const cursor = request.cursor || "";
-    const limit = request.limit || 30;
+      const cursor = request.cursor || "";
+      const limit = request.limit || 30;
 
-    const paginationResult = await RelationshipService.getManagedRelationships(uid, { cursor, limit });
-    const profileIds = [] as string[];
+      const paginationResult = await RelationshipService.getManagedRelationships(uid, { cursor, limit });
+      const profileIds = [] as string[];
 
-    functions.logger.info("Managed relationships", { paginationResult });
+      functions.logger.info("Managed relationships", { paginationResult });
 
-    for (const relationship of paginationResult.data) {
-      for (const member of relationship.members || []) {
-        if (member.memberId && member.memberId !== uid) {
-          profileIds.push(member.memberId);
+      for (const relationship of paginationResult.data) {
+        for (const member of relationship.members || []) {
+          if (member.memberId && member.memberId !== uid) {
+            profileIds.push(member.memberId);
+          }
         }
       }
-    }
 
-    const profiles = await ProfileService.getMultipleProfiles(profileIds);
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: profiles,
-      cursor: paginationResult.pagination.cursor,
-      limit: paginationResult.pagination.limit,
-      seedData: {
-        relationships: paginationResult.data,
-      },
+      const profiles = await ProfileService.getMultipleProfiles(profileIds);
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: profiles,
+        cursor: paginationResult.pagination.cursor,
+        limit: paginationResult.pagination.limit,
+        seedData: {
+          relationships: paginationResult.data,
+        },
+      });
     });
-  });
 }

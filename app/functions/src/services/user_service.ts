@@ -21,7 +21,7 @@ export namespace UserService {
       return uid;
     }
 
-    const relationship = await RelationshipService.getRelationship([uid, requestId]) as RelationshipJSON | null;
+    const relationship = (await RelationshipService.getRelationship([uid, requestId])) as RelationshipJSON | null;
     if (!relationship) {
       functions.logger.info(`Authenticated as: ${uid}`);
       return uid;
