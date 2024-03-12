@@ -93,7 +93,7 @@ export namespace AdminQuickActionService {
 
   export function appendOutput(action: AdminQuickActionJSON, output: string): AdminQuickActionJSON {
     if (!output) {
-      functions.logger.warn(`No output specified, cannot append to action ${actionId}`);
+      functions.logger.warn(`No output specified, cannot persist output`);
       return action;
     }
 
