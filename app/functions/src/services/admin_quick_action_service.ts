@@ -92,9 +92,15 @@ export namespace AdminQuickActionService {
   }
 
   export function appendOutput(action: AdminQuickActionJSON, output: string): AdminQuickActionJSON {
+    if (!output) {
+      functions.logger.warn(`No output specified, cannot append to action ${actionId}`);
+      return action;
+    }
+
+    functions.logger.debug(output);
     const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
     if (!action || !actionId) {
-      functions.logger.error(`No action ID specified`);
+      functions.logger.warn(`No action ID specified, cannot persist output`);
       return action;
     }
 
@@ -113,7 +119,7 @@ export namespace AdminQuickActionService {
   export function updateStatus(action: AdminQuickActionJSON, status: string): AdminQuickActionJSON {
     const actionId = FlamelinkHelpers.getFlamelinkIdFromObject(action);
     if (!action || !actionId) {
-      functions.logger.error(`No action ID specified`);
+      functions.logger.warn(`No action ID specified`);
       return action;
     }
 
