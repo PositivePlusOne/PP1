@@ -67,7 +67,8 @@ export namespace SystemEndpoints {
   export const dailyCronHandler = functions
     .region("europe-west3")
     .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
-    .pubsub.schedule("0 1 * * *")
+    .pubsub.schedule("every day 01:55")
+    .timeZone("Europe/London")
     .onRun(async (context) => {
       functions.logger.info("Cron handler executed", { context });
 
