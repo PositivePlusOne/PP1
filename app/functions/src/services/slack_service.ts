@@ -11,8 +11,9 @@ import { ProfileService } from "./profile_service";
 import { adminApp } from "..";
 
 export namespace SlackService {
-    export const chatEndpoint = "https://slack.com/api/chat.postMessage";
-    export const feedbackChannel = "user-feedback";
+  export const chatEndpoint = "https://slack.com/api/chat.postMessage";
+  export const feedbackChannel = "user-feedback";
+  export const moderationChannel = "moderation";
 
     // This doesn't expire, and since the source is limited to those within PP1 and this code is serverside.
     // I am happy to leave this here for now because it's not a security risk.

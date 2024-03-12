@@ -147,7 +147,10 @@ export namespace SystemService {
       }
     }
 
-    SlackService.postToChannelAsMember(profile, SlackService.feedbackChannel, slackContent);
+    const isReport = feedbackType.endsWith("Report");
+    const expectedChannel = isReport ? SlackService.moderationChannel : SlackService.feedbackChannel;
+    
+    await SlackService.postToChannelAsMember(profile, expectedChannel, slackContent);
   }
 
   export function shouldExecuteCron(cron: string, lastRunDate: string, currentTimeEpoch: string) {
