@@ -320,6 +320,7 @@ class PositiveButtonState extends State<PositiveButton> {
 
     late Color iconColor;
     late double iconRadius;
+    double iconPadding = 10.0;
 
     final Color primaryColor = widget.primaryColor ?? widget.colors.black;
 
@@ -685,11 +686,11 @@ class PositiveButtonState extends State<PositiveButton> {
                 // Use iconRadius as the offset to ensure the badge is close to the icon.
                 offset: Offset(iconRadius * 0.60, -iconRadius * 0.85),
                 child: Container(
-                  width: kIconIndicator,
-                  height: kIconIndicator,
+                  width: iconPadding,
+                  height: iconPadding,
                   decoration: BoxDecoration(
                     color: badgeColour,
-                    borderRadius: BorderRadius.circular(kIconIndicator),
+                    borderRadius: BorderRadius.circular(iconPadding),
                   ),
                 ),
               ),
@@ -728,11 +729,11 @@ class PositiveButtonState extends State<PositiveButton> {
               // Use iconRadius as the offset to ensure the badge is close to the icon.
               offset: Offset(iconRadius * 0.55, -iconRadius * 0.55),
               child: Container(
-                width: kIconIndicator,
-                height: kIconIndicator,
+                width: iconPadding,
+                height: iconPadding,
                 decoration: BoxDecoration(
                   color: badgeColour,
-                  borderRadius: BorderRadius.circular(kIconIndicator),
+                  borderRadius: BorderRadius.circular(iconPadding),
                 ),
               ),
             ),

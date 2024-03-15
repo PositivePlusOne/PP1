@@ -91,7 +91,13 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
   final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
 
   return [
-    PreConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
+    PreConfig(
+      textStyle: typography.styleBody.copyWith(color: textColor),
+      decoration: BoxDecoration(
+        color: colors.colorGray1,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    ),
     H1Config(style: typography.styleHeroMedium.copyWith(color: textColor)),
     H2Config(style: typography.styleHeroSmall.copyWith(color: textColor)),
     H3Config(style: typography.styleTitle.copyWith(color: textColor)),
@@ -113,7 +119,18 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),
     BlockquoteConfig(sideColor: colors.purple, textColor: textColor),
     TableConfig(bodyStyle: typography.styleBody.copyWith(color: textColor)),
-    const ListConfig(marginLeft: kPaddingMedium),
+    ListConfig(
+      marginLeft: kPaddingMedium,
+      marker: (isOrdered, depth, index) {
+        return Container(
+          margin: const EdgeInsets.only(left: kPaddingSmall),
+          child: Text(
+            isOrdered ? '${index + 1}.' : '•',
+            style: TextStyle(color: textColor),
+          ),
+        );
+      },
+    ),
     ImgConfig(
       builder: (url, attributes) => PositiveMediaImage(
         media: Media.fromImageUrl(url),

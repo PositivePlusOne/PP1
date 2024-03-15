@@ -72,16 +72,18 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                     ),
                   ),
                   if (promotedDescription.isNotEmpty) ...<Widget>[
-                    Text(
-                      promotedDescription,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: typography.styleSubtext.copyWith(color: colors.colorGray4),
+                    Flexible(
+                      child: Text(
+                        promotedDescription,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: typography.styleSubtext.copyWith(color: colors.colorGray4),
+                      ),
                     ),
                   ],
                   Text(
                     promotion.linkText.isEmpty ? localizations.shared_actions_view_more : promotion.linkText,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.styleSubtext.copyWith(color: colors.linkBlue),
                   ),

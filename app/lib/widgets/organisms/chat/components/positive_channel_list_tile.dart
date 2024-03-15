@@ -107,11 +107,6 @@ class PositiveChannelListTile extends ConsumerWidget {
       }
     }
 
-    // if ((showProfileTagline || description.isEmpty) && isOneToOne && otherProfiles.isNotEmpty) {
-    //   final Profile profile = otherProfiles.first;
-    //   description = profile.getTagline(localizations);
-    // }
-
     final List<Widget> indicators = [];
     const double overlapValue = kIconHuge * 0.50;
     double indicatorWidth = kIconHuge * 0.50;
