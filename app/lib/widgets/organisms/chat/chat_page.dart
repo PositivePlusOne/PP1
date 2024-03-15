@@ -2,6 +2,7 @@
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/extensions/time_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -254,20 +255,12 @@ class ChatPage extends HookConsumerWidget with StreamChatWrapper {
                   child: Padding(
                     padding: EdgeInsets.only(bottom: mediaQuery.padding.bottom + kShadeBaseHeight),
                     child: StreamMessageListView(
-                      showFloatingDateDivider: false,
+                      showFloatingDateDivider: true,
                       showScrollToBottom: false,
                       messageFilter: !isArchived ? null : (message) => message.createdAt.isBefore(archivedCurrentMember.dateArchived!),
                       emptyBuilder: (context) => buildEmptyChatList(context, members, memberProfiles, locale),
                       systemMessageBuilder: (context, message) => buildSystemMessage(context, message, colors, typography, locale, currentStreamUser),
-                      messageBuilder: (context, details, messages, defaultMessageWidget) => buildMessage(
-                        context,
-                        viewModel,
-                        details,
-                        messages,
-                        defaultMessageWidget,
-                        colors,
-                        currentStreamUser.id,
-                      ),
+                      messageBuilder: (context, details, messages, defaultMessageWidget) => buildMessage(context, viewModel, details, messages, defaultMessageWidget, colors, currentStreamUser.id),
                     ),
                   ),
                 ),
@@ -326,6 +319,8 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
   final StreamMessageThemeData themeData = buildStreamMessageThemeData(typography, colors, isMyMessage: isMyMessage);
   final StreamMessageThemeData bottomRowThemeData = buildStreamBottomRowThemeData(typography, colors);
 
+  final bool isEdited = details.message.updatedAt.millisecondsSinceEpoch > details.message.createdAt.millisecondsSinceEpoch;
+
   return StreamMessageWidget(
     messageTheme: themeData,
     onMessageTap: (message) => message.handleMessageTapped(context),
@@ -333,7 +328,11 @@ Widget buildMessage(BuildContext context, ChatViewModel viewModel, MessageDetail
       messageTheme: bottomRowThemeData,
       showTimeStamp: false,
       usernameBuilder: (context, message) => isMyMessage
-          ? ChatSelfUsernameRow(typography: typography, colors: colors, message: message)
+          ? ChatSelfUsernameRow(
+              typography: typography,
+              colors: colors,
+              message: message,
+            )
           : ChatMemberUsernameRow(
               typography: typography,
               colors: colors,
@@ -387,10 +386,17 @@ class ChatSelfUsernameRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Text(
-          Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
+          message.createdAt.asMessageTimestamp(message),
           style: typography.styleSubtext.copyWith(color: colors.colorGray6),
         ),
         const SizedBox(width: kPaddingExtraSmall),
+        if (message.isEdited) ...<Widget>[
+          Icon(
+            UniconsLine.edit_alt,
+            color: colors.colorGray6,
+            size: kUniconIndicator,
+          ),
+        ],
       ],
     );
   }
@@ -442,20 +448,29 @@ class ChatMemberUsernameRow extends StatelessWidget {
             ),
           ),
         ],
+        if (message.isEdited) ...<Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: kPaddingExtraSmall),
+            child: Icon(
+              UniconsLine.edit_alt,
+              size: kUniconIndicator,
+              color: colors.colorGray6,
+            ),
+          ),
+        ],
         Flexible(
           child: Text(
             displayName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: typography.styleSubtext.copyWith(color: colors.colorGray6),
+            style: typography.styleSubtext.copyWith(color: colors.colorGray6, fontWeight: FontWeight.w500),
           ),
         ),
         const SizedBox(width: kPaddingExtraSmall),
         Text(
-          Jiffy.parseFromDateTime(message.createdAt.toLocal()).jm,
+          message.createdAt.asMessageTimestamp(message),
           style: typography.styleSubtext.copyWith(color: colors.colorGray6),
         ),
-        const SizedBox(width: kPaddingExtraSmall),
       ],
     );
   }
