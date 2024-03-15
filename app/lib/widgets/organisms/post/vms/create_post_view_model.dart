@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,6 +61,7 @@ class CreatePostViewModelState with _$CreatePostViewModelState {
     @Default(false) bool isUploadingMedia,
     @Default(false) bool isCreatingPost,
     @Default(false) bool isEditingPost,
+    @Default(false) bool isMediaPreCompressed,
     @Default(PostType.image) PostType currentPostType,
     @Default(CreatePostCurrentPage.entry) CreatePostCurrentPage currentCreatePostPage,
     @Default('') String currentActivityID,
@@ -834,6 +836,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       currentPostType: PostType.image,
       activeButton: PositivePostNavigationActiveButton.flex,
       activeButtonFlexText: localisations.shared_actions_next,
+      isMediaPreCompressed: false,
     );
 
     return;
@@ -879,7 +882,11 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     state = state.copyWith(isBusy: true);
 
     try {
-      final List<XFile> media = await picker.pickMultiImage();
+      final List<XFile> media = await picker.pickMultiImage(
+        maxHeight: kImageCompressMaxWidth.toDouble(),
+        maxWidth: kImageCompressMaxHeight.toDouble(),
+        imageQuality: kImageCompressMaxQuality,
+      );
       if (media.isEmpty) {
         logger.d("onMultiImagePicker: image list is empty");
         return;
@@ -907,6 +914,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
           currentPostType: PostType.multiImage,
           activeButton: PositivePostNavigationActiveButton.flex,
           activeButtonFlexText: localisations.page_create_post_create,
+          isMediaPreCompressed: true,
         );
       } else {
         state = state.copyWith(
@@ -917,6 +925,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
           currentPostType: PostType.image,
           activeButton: PositivePostNavigationActiveButton.flex,
           activeButtonFlexText: localisations.shared_actions_done,
+          isMediaPreCompressed: true,
         );
       }
     } finally {
@@ -990,6 +999,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
             filter: state.currentFilter,
             altText: altTextController.text.trim(),
             mimeType: e.mimeType ?? "",
+            forceCompression: !state.isMediaPreCompressed,
           ),
         ));
       }
