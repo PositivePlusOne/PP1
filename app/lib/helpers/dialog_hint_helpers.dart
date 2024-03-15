@@ -14,6 +14,17 @@ import '../main.dart';
 import '../providers/system/design_controller.dart';
 import '../widgets/atoms/typography/positive_bulleted_text.dart';
 
+HintDialogRoute buildTermsAndConditionsPage(BuildContext context) {
+  final AppLocalizations localizations = AppLocalizations.of(context)!;
+
+  return fromTitleAndBulletPoints(
+    localizations.page_onboarding_terms_interests_how_we_use,
+    [
+      localizations.page_onboarding_terms_interests_one,
+    ],
+  );
+}
+
 HintDialogRoute buildProfileInterestsHint(BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
 
