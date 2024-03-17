@@ -106,7 +106,6 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      //TODO The link style is applied to all types of link including @'s, meaning we cannot do the blue underline for links only without further look into the package
       style: typography.styleBold.copyWith(color: colors.black),
       onTap: (link) {
         if (onTapLink != null) {

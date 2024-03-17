@@ -454,16 +454,13 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
     final List<Tag> tags = tagsController.resolveTags(targetActivity?.enrichmentConfiguration?.tags ?? [], includePromotionTags: false);
 
     final double padding = kPaddingSmallMedium + sidePadding;
-    return PositiveTapBehaviour(
-      onTap: (context) => targetActivity?.requestPostRoute(context: context, currentProfile: widget.currentProfile),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: buildMarkdownWidgetFromBody(
-          parsedMarkdown,
-          tags: tags,
-          boldHandles: true,
-          mentions: targetActivity?.enrichmentConfiguration?.mentions ?? [],
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: padding),
+      child: buildMarkdownWidgetFromBody(
+        parsedMarkdown,
+        tags: tags,
+        boldHandles: true,
+        mentions: targetActivity?.enrichmentConfiguration?.mentions ?? [],
       ),
     );
   }
