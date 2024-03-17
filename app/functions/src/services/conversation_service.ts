@@ -40,7 +40,7 @@ export namespace ConversationService {
    * @param {string} channelId the channel's ID.
    * @return {Promise<Channel | null>} a promise that resolves to the channel or null if it doesn't exist.
    */
-  export async function getChannel(client: StreamChat<DefaultGenerics>, channelId: string) : Promise<Channel | null> {
+  export async function getChannel(client: StreamChat<DefaultGenerics>, channelId: string): Promise<Channel | null> {
     const channels = await client.queryChannels({
       id: {
         $eq: channelId,
@@ -64,17 +64,19 @@ export namespace ConversationService {
    * @return {Promise<void>} a promise that resolves when the message has been sent.
    */
   export async function sendBulkMessage(conversations: Channel<DefaultGenerics>[], uid: string, title: any, description: any) {
-    return await Promise.all(conversations.map(async (conversation) => {
-      const message = {
-        text: description,
-        user_id: uid,
-        title: title,
-        type: "system",
-        silent: true,
-      };
-      
-      await conversation.sendMessage(message);
-    }));
+    return await Promise.all(
+      conversations.map(async (conversation) => {
+        const message = {
+          text: description,
+          user_id: uid,
+          title: title,
+          type: "system",
+          silent: true,
+        };
+
+        await conversation.sendMessage(message);
+      }),
+    );
   }
 
   export async function getOneOnOneChannels(client: StreamChat<DefaultGenerics>, userId: string, targets: string[]): Promise<Channel[]> {
@@ -87,10 +89,12 @@ export namespace ConversationService {
 
     const existingChannelIds = channels.map((channel) => channel.id);
     const missingChannelIds = expectedChannelIds.filter((channelId) => !existingChannelIds.includes(channelId));
-    const missingChannels = missingChannelIds.map((channelId) => client.channel("messaging", channelId, {
-      members: [userId, channelId],
-      created_by_id: userId,
-    }));
+    const missingChannels = missingChannelIds.map((channelId) =>
+      client.channel("messaging", channelId, {
+        members: [userId, channelId],
+        created_by_id: userId,
+      }),
+    );
 
     await Promise.all(missingChannels.map((channel) => channel.create()));
 
@@ -151,7 +155,7 @@ export namespace ConversationService {
       },
       {
         skip_push: true,
-      }
+      },
     );
   }
 
@@ -201,7 +205,7 @@ export namespace ConversationService {
       },
       {
         skip_push: true,
-      }
+      },
     );
   }
 
@@ -261,7 +265,7 @@ export namespace ConversationService {
         functions.logger.info("Stream chat user does not exist, creating", {
           member,
         });
-        
+
         await client.upsertUsers([
           {
             id: member,

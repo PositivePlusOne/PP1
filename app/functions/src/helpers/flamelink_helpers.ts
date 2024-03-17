@@ -14,7 +14,7 @@ export namespace FlamelinkHelpers {
   export function generateIdentifierFromStrings(strings: string[]): string {
     return strings.join(":");
   }
-  
+
   /**
    * Determines if an object is a valid flamelink object.
    * @param {any} object the object to check.

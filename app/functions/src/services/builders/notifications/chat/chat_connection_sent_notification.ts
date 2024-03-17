@@ -26,14 +26,14 @@ export namespace ChatConnectionSentNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_sent.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_sent.body", { displayName });
-    
+
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
-    
+
     const id = FlamelinkHelpers.generateIdentifier();
     const groupId = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
-    
+
     functions.logger.log("Sending connection sent notification", { id, groupId, senderId, receiverId, title, body });
 
     const payload = new NotificationPayload({

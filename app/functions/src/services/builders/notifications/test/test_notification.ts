@@ -23,7 +23,7 @@ export namespace TestNotification {
 
     const id = FlamelinkHelpers.generateIdentifier();
     const groupId = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.OTHER, receiverId]);
-    
+
     const payload = new NotificationPayload({
       id,
       group_id: groupId,

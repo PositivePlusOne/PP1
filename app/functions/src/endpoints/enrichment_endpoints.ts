@@ -14,70 +14,76 @@ import { Promotion } from "../dto/promotions";
 import { SystemService } from "../services/system_service";
 
 export namespace EnrichmentEndpoints {
-  export const followTags = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    const uid = await UserService.verifyAuthenticated(context, request.sender);
-    functions.logger.info(`Getting notifications for current user: ${uid}`);
+  export const followTags = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      const uid = await UserService.verifyAuthenticated(context, request.sender);
+      functions.logger.info(`Getting notifications for current user: ${uid}`);
 
-    if (uid.length === 0) {
-      throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
-    }
+      if (uid.length === 0) {
+        throw new functions.https.HttpsError("permission-denied", "User is not authenticated");
+      }
 
-    const feedsClient = FeedService.getFeedsClient();
-    const requestedTags = request.data.tags as string[];
+      const feedsClient = FeedService.getFeedsClient();
+      const requestedTags = request.data.tags as string[];
 
-    if (!requestedTags || requestedTags.length === 0) {
-      throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
-    }
+      if (!requestedTags || requestedTags.length === 0) {
+        throw new functions.https.HttpsError("invalid-argument", "Invalid arguments");
+      }
 
-    const [tags, profile] = await Promise.all([TagsService.getOrCreateTags(requestedTags), ProfileService.getProfile(uid)]);
-    const newTags = tags.map((tag) => tag.key);
+      const [tags, profile] = await Promise.all([TagsService.getOrCreateTags(requestedTags), ProfileService.getProfile(uid)]);
+      const newTags = tags.map((tag) => tag.key);
 
-    const defaultTags = DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS.map((feed) => feed.targetSlug);
-    profile.tags = newTags.filter((tag) => !defaultTags.includes(tag ?? ""));
+      const defaultTags = DEFAULT_USER_TIMELINE_FEED_SUBSCRIPTION_SLUGS.map((feed) => feed.targetSlug);
+      profile.tags = newTags.filter((tag) => !defaultTags.includes(tag ?? ""));
 
-    if (!profile) {
-      throw new functions.https.HttpsError("not-found", "Profile not found");
-    }
+      if (!profile) {
+        throw new functions.https.HttpsError("not-found", "Profile not found");
+      }
 
-    // Assume FILO and take from profile.tags and add to tags to make 10 total
-    const currentTags = profile.tags || [];
-    while (newTags.length < 10 && currentTags.length > 0) {
+      // Assume FILO and take from profile.tags and add to tags to make 10 total
+      const currentTags = profile.tags || [];
+      while (newTags.length < 10 && currentTags.length > 0) {
         const tag = currentTags.pop();
         if (tag) {
-            newTags.push(tag);
+          newTags.push(tag);
         }
-    }
+      }
 
-    // Remove duplicates from the new tags
-    profile.tags = [...new Set(newTags)];
+      // Remove duplicates from the new tags
+      profile.tags = [...new Set(newTags)];
 
-    const newProfileData = await DataService.updateDocument({
+      const newProfileData = await DataService.updateDocument({
         schemaKey: "users",
         entryId: uid,
         data: profile,
+      });
+
+      await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, profile);
+
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [newProfileData],
+      });
     });
 
-    await FeedService.verifyDefaultFeedSubscriptionsForUser(feedsClient, profile);
+  export const getPromotionWindow = functions
+    .region("europe-west3")
+    .runWith(FIREBASE_FUNCTION_INSTANCE_DATA)
+    .https.onCall(async (request: EndpointRequest, context) => {
+      await SystemService.validateUsingRedisUserThrottle(context);
+      functions.logger.info(`Getting a promotion window`);
 
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [newProfileData],
+      const cursor = request.cursor || null;
+      const uid = context.auth?.uid || "";
+
+      const promotions = (await PromotionsService.getActivePromotionWindow(cursor)) as Promotion[];
+
+      return buildEndpointResponse(context, {
+        sender: uid,
+        data: [...promotions],
+      });
     });
-  });
-
-  export const getPromotionWindow = functions.region('europe-west3').runWith(FIREBASE_FUNCTION_INSTANCE_DATA).https.onCall(async (request: EndpointRequest, context) => {
-    await SystemService.validateUsingRedisUserThrottle(context);
-    functions.logger.info(`Getting a promotion window`);
-
-    const cursor = request.cursor || null;
-    const uid = context.auth?.uid || "";
-
-    const promotions = await PromotionsService.getActivePromotionWindow(cursor) as Promotion[];
-
-    return buildEndpointResponse(context, {
-      sender: uid,
-      data: [...promotions],
-    });
-  });
 }
