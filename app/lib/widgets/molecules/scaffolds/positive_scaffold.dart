@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -20,14 +22,12 @@ import 'package:app/main.dart';
 import 'package:app/providers/content/events/deep_link_handling_event.dart';
 import 'package:app/providers/content/universal_links_controller.dart';
 import 'package:app/providers/system/design_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/animations/positive_tile_entry_animation.dart';
 import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/indicators/positive_refresh_indicator.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold_floating_action_button.dart';
 import '../../../constants/design_constants.dart';
 
 enum PositiveScaffoldComponent {
@@ -208,9 +208,6 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
       );
     }
 
-    final SystemControllerState systemControllerState = ref.watch(systemControllerProvider);
-    final bool shouldSecureScreen = systemControllerState.secureScreen;
-
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (widget.onWillPopScope ?? () async => true),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -254,9 +251,6 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
                       ),
                     ),
                   ],
-                  if (shouldSecureScreen) ...<Widget>[
-                    Positioned.fill(child: ColoredBox(color: colors.white)),
-                  ],
                 ],
               ),
             ),
@@ -274,6 +268,7 @@ class _InternalScaffold extends StatelessWidget {
     required this.decorationBoxSize,
     required this.isBusy,
     required this.bottomPadding,
+    super.key,
   });
 
   final Color actualBackgroundColor;

@@ -1,11 +1,6 @@
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_hooks/flutter_hooks.dart';
-
-// Project imports:
 import 'package:app/widgets/state/positive_feed_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 bool useFeedNotifier({
   required PositiveFeedState feedState,

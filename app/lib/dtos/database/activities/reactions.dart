@@ -1,6 +1,9 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:

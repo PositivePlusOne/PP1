@@ -1,6 +1,7 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
@@ -11,7 +12,6 @@ import 'package:app/dtos/database/activities/reactions.dart';
 import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/cache_controller.dart';
-import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/state/positive_pagination_controller_state.dart';
 
@@ -80,6 +80,8 @@ class PositiveFeedState with PositivePaginationControllerState {
           // Wait until the first page is loaded
           bool isSuccessful = false;
           while (DateTime.now().isBefore(timeoutDatetime)) {
+            await Future.delayed(feedRefreshTimeoutDuration);
+
             final PositiveFeedState? feedState = cacheController.get(buildCacheKey());
             if (feedState?.pagingController.itemList?.isNotEmpty == true) {
               isSuccessful = true;
@@ -90,15 +92,11 @@ class PositiveFeedState with PositivePaginationControllerState {
             if (feedState?.pagingController.error != null) {
               throw feedState?.pagingController.error!;
             }
-
-            await Future<void>.delayed(const Duration(milliseconds: 100));
           }
 
           if (!isSuccessful) {
             throw Exception('Failed to refresh feed');
           }
-
-          logger.d('onRefresh() completed');
         },
       );
 
