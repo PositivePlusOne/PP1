@@ -52,7 +52,6 @@ export namespace ProfileService {
     });
   }
 
-
   /**
    * Gets the user profile.
    * @param {string} uid The FL ID of the user.
@@ -61,10 +60,13 @@ export namespace ProfileService {
   export async function getProfile(uid: string, skipCacheLookup = false): Promise<any> {
     functions.logger.info(`Getting user profile for user: ${uid}`);
 
-    return await DataService.getDocument({
-      schemaKey: "users",
-      entryId: uid,
-    }, skipCacheLookup) as ProfileJSON;
+    return (await DataService.getDocument(
+      {
+        schemaKey: "users",
+        entryId: uid,
+      },
+      skipCacheLookup,
+    )) as ProfileJSON;
   }
 
   // /**
@@ -117,9 +119,7 @@ export namespace ProfileService {
 
     return DataService.getDocumentWindowRaw({
       schemaKey: "users",
-      where: [
-        { fieldPath: "accountFlags", op: "array-contains", value: featureFlagPendingDeletion },
-      ],
+      where: [{ fieldPath: "accountFlags", op: "array-contains", value: featureFlagPendingDeletion }],
     }) as Promise<ProfileJSON[]>;
   }
 
@@ -188,16 +188,16 @@ export namespace ProfileService {
     if (!displayName) {
       return {};
     }
-    
+
     displayName = displayName.replace("@", "");
     displayName = displayName.trim().toLocaleLowerCase();
 
-    const profiles = await await DataService.getDocumentsByField({
+    const profiles = (await await DataService.getDocumentsByField({
       schemaKey: "users",
       field: "displayName",
       value: displayName,
-    }) as ProfileJSON[];
-    
+    })) as ProfileJSON[];
+
     functions.logger.info(`Got profiles by display name: ${displayName}`, profiles);
     if (!profiles || profiles.length === 0) {
       return {};
@@ -290,14 +290,14 @@ export namespace ProfileService {
       throw new functions.https.HttpsError("invalid-argument", "Invalid user ID");
     }
 
-    const currentAccountFlags = [...profile.accountFlags ?? []] as string[];
+    const currentAccountFlags = [...(profile.accountFlags ?? [])] as string[];
     const missingAccountFlags = accountFlags.filter((accountFlag) => !currentAccountFlags.includes(accountFlag));
     if (missingAccountFlags.length > 0) {
       return profile;
     }
 
     functions.logger.info(`Removing account flags for user: ${entryId}`);
-    const newAccountFlags = [...profile.accountFlags ?? []] as string[];
+    const newAccountFlags = [...(profile.accountFlags ?? [])] as string[];
     for (const accountFlag of accountFlags) {
       const index = newAccountFlags.indexOf(accountFlag);
       if (index > -1) {
@@ -588,15 +588,11 @@ export namespace ProfileService {
 
     await Promise.all(mediaPromises);
 
-    const newMedia = [...media ?? []] as MediaJSON[];
+    const newMedia = [...(media ?? [])] as MediaJSON[];
     for (const mediaItem of profile.media ?? []) {
       // we don't want to add the old one that this is replacing - either the name is identical
       // or they both start with 'profile' or 'reference' as they are new
-      const existingMediaItem = media.find((m) =>
-        m.name === mediaItem.name ||
-        (mediaItem.name?.startsWith('profile') && m.name?.startsWith('profile')) ||
-        (mediaItem.name?.startsWith('reference') && m.name?.startsWith('reference')) ||
-        (mediaItem.name?.startsWith('cover') && m.name?.startsWith('cover')));
+      const existingMediaItem = media.find((m) => m.name === mediaItem.name || (mediaItem.name?.startsWith("profile") && m.name?.startsWith("profile")) || (mediaItem.name?.startsWith("reference") && m.name?.startsWith("reference")) || (mediaItem.name?.startsWith("cover") && m.name?.startsWith("cover")));
 
       if (existingMediaItem) {
         continue;

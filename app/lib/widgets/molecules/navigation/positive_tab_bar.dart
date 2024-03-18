@@ -65,7 +65,7 @@ class PositiveTabBar extends ConsumerWidget implements PreferredSizeWidget {
       ),
       child: Row(
         children: <Widget>[
-          for (final tab in tabs) ...<Widget>[
+          for (final tab in tabs.where((element) => element.isEnabled)) ...<Widget>[
             Expanded(
               child: PositiveTabItem(
                 label: tab.title,

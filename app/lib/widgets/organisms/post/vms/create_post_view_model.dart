@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:io' as io;
 import 'dart:io';
 
 // Flutter imports:
@@ -108,7 +107,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
   final TextEditingController promotionKeyTextController = TextEditingController();
 
   VideoEditorController? videoEditorController;
-  io.File? uneditedVideoFile;
+  File? uneditedVideoFile;
 
   bool get isRepost => state.previousActivity.postType == PostType.repost;
 
@@ -403,7 +402,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
       case CreatePostCurrentPage.createPostEditClip:
         try {
           state = state.copyWith(isProcessingMedia: true, isBusy: true);
-          final ({io.File file, Size size}) completer = await onClipEditFinish();
+          final ({File file, Size size}) completer = await onClipEditFinish();
           await onClipExported(completer.file, completer.size);
         } finally {
           state = state.copyWith(isProcessingMedia: false, isBusy: false);
@@ -725,7 +724,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
 
   //? Create video Post here
   Future<void> onVideoEditRequest(XFile xFile) async {
-    uneditedVideoFile = io.File(xFile.path);
+    uneditedVideoFile = File(xFile.path);
     await loadUneditedVideo();
   }
 
@@ -780,7 +779,7 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
     return (file: outputFile, size: size);
   }
 
-  Future<void> onClipExported(io.File file, Size size) async {
+  Future<void> onClipExported(File file, Size size) async {
     final AppRouter router = ref.read(appRouterProvider);
     final BuildContext context = router.navigatorKey.currentContext!;
     final AppLocalizations localisations = AppLocalizations.of(context)!;

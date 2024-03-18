@@ -45,9 +45,9 @@ dependencies:
   firebase_performance: ^0.9.3+3
   google_sign_in: ^6.1.4
   mixpanel_flutter: ^2.1.1
-  appsflyer_sdk: ^6.12.2
+  appsflyer_sdk: ^6.13.0+2
   freerasp: ^6.2.0
-  stream_chat_flutter: ^8.0.0-beta.1
+  stream_chat_flutter: ^8.0.0-beta.2
 
   google_mlkit_face_detection: ^0.6.0
   google_mlkit_commons: ^0.3.0
@@ -84,7 +84,7 @@ dependencies:
 
   # Routing, Linking, and Sharing
   auto_route: ^7.8.3
-  app_links: ^3.4.3
+  app_links: ^4.0.0
   share_plus: ^7.1.0
   
   # video and image

@@ -13,7 +13,7 @@ export namespace RelationshipUpdatedNotification {
    */
   export async function sendNotification(relationship: any): Promise<void> {
     functions.logger.log("Sending relationship updated notification.", { relationship });
-    
+
     if (relationship.members && relationship.members.length > 0) {
       for (const member of relationship.members) {
         if (typeof member.memberId !== "string") {

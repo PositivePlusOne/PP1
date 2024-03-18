@@ -143,7 +143,10 @@ class OnboardingYourPledgePage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: kPaddingMedium),
-                buildMarkdownWidgetFromBody(localizations.page_onboarding_your_pledge_action_terms, onTapLink: viewModel.onLinkTapped),
+                buildMarkdownWidgetFromBody(
+                  localizations.page_onboarding_your_pledge_action_terms,
+                  onTapLink: viewModel.onLinkTapped,
+                ),
                 const SizedBox(height: kPaddingMedium),
                 PositiveCheckbox(
                   colors: colors,

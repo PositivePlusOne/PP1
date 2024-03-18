@@ -1,6 +1,7 @@
 // Package imports:
-import 'package:app/extensions/chat_extensions.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+
+// Project imports:
 
 extension DateTimeExtensions on DateTime {
   String get timeAgoFromNow {

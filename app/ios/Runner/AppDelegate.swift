@@ -5,6 +5,7 @@ import FirebaseAuth
 import GoogleMaps
 import FirebaseMessaging
 import AppsFlyerLib
+import app_links
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -26,6 +27,12 @@ import AppsFlyerLib
         }
         
         GeneratedPluginRegistrant.register(with: self)
+
+        if let url = AppLinks.shared.getLink(launchOptions: launchOptions) {
+            AppLinks.shared.handleLink(url: url)
+            return true
+        }
+        
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 

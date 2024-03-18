@@ -11,6 +11,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // Project imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/system_controller.dart';
 import 'package:app/services/third_party.dart';
@@ -90,9 +91,11 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     await hook.onPreviousPageRequest(pageKey);
   }
 
-  Future<void> onNextPageRequested() async {
-    await hook.onNextPagePageRequest?.call();
-  }
+  Future<void> onNextPageRequested() => runWithMutex(
+        () async {
+          await hook.onNextPagePageRequest?.call();
+        },
+      );
 
   @override
   void didUpdateHook(PagingControllerHook oldHook) {
@@ -101,14 +104,6 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     if (hook.controller == oldHook.controller) {
       return;
     }
-
-    disposeListeners().then((_) {
-      setupListeners().then((_) {
-        if (hook.controller.nextPageKey != null && hook.controller.value.status == PagingStatus.loadingFirstPage) {
-          requestPage();
-        }
-      });
-    });
   }
 
   @override

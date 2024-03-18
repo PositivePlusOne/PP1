@@ -23,14 +23,14 @@ export namespace ChatConnectionRejectedNotification {
 
     const title = await LocalizationsService.getLocalizedString("notifications.connection_rejected.title");
     const body = await LocalizationsService.getLocalizedString("notifications.connection_rejected.body", { displayName });
-    
+
     if (!senderId || !receiverId) {
       throw new Error("Could not get sender or receiver id");
     }
-    
+
     const id = FlamelinkHelpers.generateIdentifier();
     const groupId = FlamelinkHelpers.generateIdentifierFromStrings([TAG, NotificationTopic.CONNECTION_REQUEST, senderId, receiverId]);
-    
+
     const payload = new NotificationPayload({
       id,
       group_id: groupId,

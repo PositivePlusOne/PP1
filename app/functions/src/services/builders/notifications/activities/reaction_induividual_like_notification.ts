@@ -28,19 +28,17 @@ export namespace ReactionInduividualLikedNotification {
     const title = await LocalizationsService.getLocalizedString("notifications.post_liked.title");
     const body = hasActivityContent ? await LocalizationsService.getLocalizedString("notifications.post_liked.body", { displayName, shortBody: activityContent }) : await LocalizationsService.getLocalizedString("notifications.post_liked.body_empty", { displayName });
     const origin = activity.publisherInformation?.originFeed ?? "";
-    
+
     const senderId = FlamelinkHelpers.getFlamelinkIdFromObject(userProfile);
     const receiverId = FlamelinkHelpers.getFlamelinkIdFromObject(targetProfile);
     const activityId = FlamelinkHelpers.getFlamelinkIdFromObject(activity);
     const reactionId = FlamelinkHelpers.getFlamelinkIdFromObject(reaction) || "";
 
     if (!senderId || !receiverId || !activityId) {
-        throw new Error("Unable to generate notification payload");
+      throw new Error("Unable to generate notification payload");
     }
 
-    const identifierParts = [
-      NotificationAction.POST_LIKED_GROUP, receiverId, activityId, senderId,
-    ];
+    const identifierParts = [NotificationAction.POST_LIKED_GROUP, receiverId, activityId, senderId];
 
     const id = FlamelinkHelpers.generateIdentifier();
     const groupId = FlamelinkHelpers.generateIdentifierFromStrings(identifierParts);

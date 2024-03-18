@@ -54,6 +54,7 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final bool hasMultipleTabs = tabs.where((element) => element.isEnabled).length > 1;
     return Column(
       children: [
         const SizedBox(height: kPaddingMedium),
@@ -66,11 +67,13 @@ class PositiveHubFloatingBar extends ConsumerWidget implements PreferredSizeWidg
           ),
         },
         const SizedBox(height: kPaddingMedium),
-        PositiveTabBar(
-          index: index,
-          onTapped: onTapped,
-          tabs: tabs,
-        ),
+        if (hasMultipleTabs) ...[
+          PositiveTabBar(
+            index: index,
+            onTapped: onTapped,
+            tabs: tabs,
+          ),
+        ],
       ],
     );
   }
