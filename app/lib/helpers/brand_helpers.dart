@@ -1,5 +1,7 @@
 // Flutter imports:
+import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 // Package imports:
 import 'package:markdown_widget/config/all.dart';
@@ -84,6 +86,18 @@ MarkdownWidget buildMarkdownWidgetFromBody(
   );
 }
 
+void _onInternalLinkedTapped(void Function(String link)? onTapLink, String link) {
+  final Logger logger = providerContainer.read(loggerProvider);
+  logger.d('Link tapped: $link');
+
+  if (onTapLink != null) {
+    onTapLink(link);
+  } else {
+    logger.d('No onTapLink function provided, attempting to launch URL: $link');
+    link.attemptToLaunchURL();
+  }
+}
+
 List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapLink, Brightness brightness = Brightness.light}) {
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
@@ -106,15 +120,8 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
-      //TODO The link style is applied to all types of link including @'s, meaning we cannot do the blue underline for links only without further look into the package
       style: typography.styleBold.copyWith(color: colors.black),
-      onTap: (link) {
-        if (onTapLink != null) {
-          onTapLink(link);
-        } else {
-          link.attemptToLaunchURL();
-        }
-      },
+      onTap: (link) => _onInternalLinkedTapped(onTapLink, link),
     ),
     CodeConfig(style: typography.styleSubtitle.copyWith(color: textColor, fontFamily: 'AlbertSans')),
     BlockquoteConfig(sideColor: colors.purple, textColor: textColor),
