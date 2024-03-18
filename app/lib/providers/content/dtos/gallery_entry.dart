@@ -69,7 +69,12 @@ class GalleryEntry {
     }
   }
 
-  Future<Media> createMedia({AwesomeFilter? filter, String altText = '', String mimeType = ''}) async {
+  Future<Media> createMedia({
+    AwesomeFilter? filter,
+    String altText = '',
+    String mimeType = '',
+    required bool forceCompression,
+  }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     final List<MediaThumbnail> mediaThumbnails = <MediaThumbnail>[];
     logger.i('createMedia() checking if uploaded');
@@ -77,7 +82,10 @@ class GalleryEntry {
     final bool isUploaded = await hasBeenUploaded();
     if (!isUploaded) {
       logger.i('createMedia() uploading');
-      final UploadResult result = await upload(filter: filter);
+      final UploadResult result = await upload(
+        filter: filter,
+        forceCompression: forceCompression,
+      );
       mediaThumbnails.addAll(result.mediaThumbnails);
     }
 
@@ -94,7 +102,10 @@ class GalleryEntry {
     );
   }
 
-  Future<UploadResult> upload({AwesomeFilter? filter}) async {
+  Future<UploadResult> upload({
+    AwesomeFilter? filter,
+    required bool forceCompression,
+  }) async {
     final GalleryController galleryController = providerContainer.read(galleryControllerProvider.notifier);
     final Logger logger = providerContainer.read(loggerProvider);
     final List<MediaThumbnail> mediaThumbnails = <MediaThumbnail>[];
@@ -124,6 +135,7 @@ class GalleryEntry {
       data = await compressImageAndApplyFilter(
         data: data,
         filter: filter,
+        forceCompression: forceCompression,
       );
     }
 
@@ -235,61 +247,68 @@ class GalleryEntry {
   Future<Uint8List> compressImageAndApplyFilter({
     required Uint8List data,
     required AwesomeFilter? filter,
+    required bool forceCompression,
   }) async {
     final Logger logger = providerContainer.read(loggerProvider);
     logger.d('upload() mimeType.startsWith(image/)');
 
-    String? exifOrientation;
-    final dataExif = await readExifFromBytes(data);
-    if (dataExif.containsKey('Image Orientation')) {
-      exifOrientation = dataExif["Image Orientation"]!.printable;
-    }
-    List<String> exifOrientationList = exifOrientation!.split(" ");
+    late Image decodedToImage;
 
-    //? This image compression is increasing the size of the images and flipping them vertically on Android
-    data = await FlutterImageCompress.compressWithList(
-      data,
-      keepExif: true,
-      rotate: 0,
-      minWidth: kImageCompressMaxWidth,
-      quality: kImageCompressMaxQuality,
-      format: CompressFormat.png,
-      autoCorrectionAngle: false,
-    );
-
-    Image decodedToImage = decodeImage(data)!;
-    for (var i = 0; i < exifOrientationList.length; i++) {
-      final int useCounterClockwise = exifOrientationList.contains('CCW') ? -1 : 1;
-      switch (exifOrientationList[i].toLowerCase()) {
-        case "90":
-          decodedToImage = copyRotate(
-            decodedToImage,
-            angle: 90 * useCounterClockwise,
-          );
-          break;
-        case "180":
-          decodedToImage = copyRotate(
-            decodedToImage,
-            angle: 180 * useCounterClockwise,
-          );
-          break;
-        case "270":
-          decodedToImage = copyRotate(
-            decodedToImage,
-            angle: 270 * useCounterClockwise,
-          );
-          break;
-        case "360":
-        case "0":
-          decodedToImage = copyRotate(
-            decodedToImage,
-            angle: 0,
-          );
-          break;
-        case "horizontal":
-          decodedToImage = flipHorizontal(decodedToImage);
-        default:
+    if (forceCompression) {
+      String? exifOrientation;
+      final dataExif = await readExifFromBytes(data);
+      if (dataExif.containsKey('Image Orientation')) {
+        exifOrientation = dataExif["Image Orientation"]!.printable;
       }
+      List<String> exifOrientationList = exifOrientation!.split(" ");
+
+      //? This image compression is increasing the size of the images and flipping them vertically on Android
+      data = await FlutterImageCompress.compressWithList(
+        data,
+        keepExif: true,
+        rotate: 0,
+        minWidth: kImageCompressMaxWidth,
+        quality: kImageCompressMaxQuality,
+        format: CompressFormat.png,
+        autoCorrectionAngle: false,
+      );
+
+      decodedToImage = decodeImage(data)!;
+      for (var i = 0; i < exifOrientationList.length; i++) {
+        final int useCounterClockwise = exifOrientationList.contains('CCW') ? -1 : 1;
+        switch (exifOrientationList[i].toLowerCase()) {
+          case "90":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 90 * useCounterClockwise,
+            );
+            break;
+          case "180":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 180 * useCounterClockwise,
+            );
+            break;
+          case "270":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 270 * useCounterClockwise,
+            );
+            break;
+          case "360":
+          case "0":
+            decodedToImage = copyRotate(
+              decodedToImage,
+              angle: 0,
+            );
+            break;
+          case "horizontal":
+            decodedToImage = flipHorizontal(decodedToImage);
+          default:
+        }
+      }
+    } else {
+      decodedToImage = decodeImage(data)!;
     }
 
     data = encodeJpg(decodedToImage);

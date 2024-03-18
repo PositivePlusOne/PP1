@@ -8,6 +8,9 @@ import 'package:app/dtos/database/activities/mentions.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/database/common/fl_meta.dart';
 import 'package:app/dtos/database/notifications/notification_payload.dart';
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 
 part 'reactions.freezed.dart';
 part 'reactions.g.dart';
@@ -152,6 +155,13 @@ class TargetFeed with _$TargetFeed {
   static bool isFeedDisabled(TargetFeed feed, List<TargetFeed> disabledFeeds) {
     final bool isDisabled = disabledFeeds.contains(feed);
     if (isDisabled) {
+      return true;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Profile? profile = profileController.currentProfile;
+
+    if (profile == null && feed.targetUserId.isEmpty) {
       return true;
     }
 
