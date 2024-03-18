@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/widgets/behaviours/hooks/feed_notifier_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -69,8 +70,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   final PositiveFeedState feedState;
   final int windowSize;
   final void Function()? onPageLoaded;
-  final Widget? emptyDataWidget;
 
+  final Widget? emptyDataWidget;
   final Widget? noPostsWidget;
 
   final bool isSliver;
@@ -84,7 +85,6 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
 
     try {
-      // TODO -> Maybe API this somehow to make it better?
       final EndpointResponse endpointResponse = await postApiService.listActivities(
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
@@ -267,10 +267,18 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   void onScrollOccured(ScrollController controller) {
-    if (controller.offset <= 20.0 && feedState.hasNewItems) {
-      feedState.hasNewItems = false;
-      saveActivitiesState();
+    // Check(Ryan): Check if we need to check the below condition on rebuild as we may have swapped feeds
+    // For example on the home page, we may want to remove the new items flag if we switch to a different feed
+    notifySeenItems(controller);
+  }
+
+  void notifySeenItems(ScrollController controller) {
+    if (!feedState.hasNewItems || controller.offset > 20.0) {
+      return;
     }
+
+    feedState.hasNewItems = false;
+    saveActivitiesState();
   }
 
   @override

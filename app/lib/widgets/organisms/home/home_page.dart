@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/widgets/behaviours/hooks/feed_notifier_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -51,7 +52,6 @@ class HomePage extends HookConsumerWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
 
     useLifecycleHook(viewModel);
-    usePageRefreshHook();
 
     final bool isLoggedOut = userController.currentUser == null;
     final List<Widget> actions = [
@@ -115,7 +115,7 @@ class HomePage extends HookConsumerWidget {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [...allTargetFeeds]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
-    final ScrollController controller = useScrollController();
+    final ScrollController scrollController = useScrollController();
 
     final Widget currentFeedWidget = switch (state.currentTabIndex) {
       0 => newFeedWidget,
@@ -131,6 +131,19 @@ class HomePage extends HookConsumerWidget {
       (_) => newFeedState,
     };
 
+    void Function()? scrollToTop;
+    String fabTitle = '';
+
+    final bool hasNewItems = useFeedNotifier(feedState: currentFeedState);
+    if (hasNewItems) {
+      fabTitle = 'New Posts';
+      scrollToTop = () => scrollController.animateTo(
+            0,
+            duration: kAnimationDurationRegular,
+            curve: kAnimationCurveDefault,
+          );
+    }
+
     // Check enabled state of the tabs
     final List<TargetFeed> disabledFeeds = ref.watch(systemControllerProvider.select((value) => value.disabledFeeds));
     final TargetFeed currentTargetFeed = allTargetFeeds[state.currentTabIndex];
@@ -144,7 +157,9 @@ class HomePage extends HookConsumerWidget {
       onWillPopScope: viewModel.onWillPopScope,
       onRefresh: () => currentFeedState.onRefresh(),
       appBarColor: colors.colorGray1,
-      controller: controller,
+      scrollController: scrollController,
+      floatingActionLabel: fabTitle,
+      onFloatingActionPressed: scrollToTop,
       visibleComponents: const {
         PositiveScaffoldComponent.headingWidgets,
         PositiveScaffoldComponent.decorationWidget,
@@ -153,7 +168,7 @@ class HomePage extends HookConsumerWidget {
       bottomNavigationBar: PositiveNavigationBar(
         mediaQuery: mediaQueryData,
         index: NavigationBarIndex.hub,
-        scrollController: controller,
+        scrollController: scrollController,
       ),
       headingWidgets: <Widget>[
         PositiveBasicSliverList(

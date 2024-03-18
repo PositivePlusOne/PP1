@@ -85,7 +85,9 @@ class SystemController extends _$SystemController {
   static const String kFirebaseRemoteConfigFeedPromotionFrequencyKey = 'feed_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigChatPromotionFrequencyKey = 'chat_promotion_injection_frequency';
   static const String kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey = 'feed_update_periodic_check_frequency';
+
   static const String kFirebaseRemoteConfigDisabledFeedsKey = 'disabled_feeds';
+  static const String kFirebaseRemoteConfigFeedRefreshTimeoutKey = 'feed_refresh_timeout';
 
   static const String kFirebaseRemoteConfigAppsFlyerOneLinkKey = 'apps_flyer_one_link';
 

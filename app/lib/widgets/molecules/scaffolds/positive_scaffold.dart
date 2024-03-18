@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:app/widgets/atoms/buttons/positive_button.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -48,7 +50,7 @@ class PositiveScaffold extends StatefulHookConsumerWidget {
     this.footerWidgets = const <Widget>[],
     this.overlayWidgets = const <Widget>[],
     this.decorationWidget,
-    this.controller,
+    this.scrollController,
     this.appBar,
     this.appBarColor,
     this.bottomNavigationBar,
@@ -61,6 +63,9 @@ class PositiveScaffold extends StatefulHookConsumerWidget {
     this.onWillPopScope,
     this.onRefresh,
     this.isBusy = false,
+    this.floatingActionLabel = '',
+    this.floatingActionIcon,
+    this.onFloatingActionPressed,
     this.physics = const ClampingScrollPhysics(),
     this.visibleComponents = const <PositiveScaffoldComponent>{
       PositiveScaffoldComponent.headingWidgets,
@@ -81,7 +86,7 @@ class PositiveScaffold extends StatefulHookConsumerWidget {
 
   final Widget? decorationWidget;
 
-  final ScrollController? controller;
+  final ScrollController? scrollController;
 
   final PreferredSizeWidget? appBar;
   final Color? appBarColor;
@@ -99,6 +104,10 @@ class PositiveScaffold extends StatefulHookConsumerWidget {
 
   final bool isBusy;
 
+  final String floatingActionLabel;
+  final IconData? floatingActionIcon;
+  final VoidCallback? onFloatingActionPressed;
+
   final ScrollPhysics physics;
 
   final bool forceDecorationMaxSize;
@@ -113,7 +122,8 @@ class PositiveScaffold extends StatefulHookConsumerWidget {
 
   static MediaQueryData buildMediaQuery(MediaQueryData mediaQueryData) {
     return mediaQueryData.copyWith(
-      boldText: false, textScaler: const TextScaler.linear(1.0),
+      boldText: false,
+      textScaler: const TextScaler.linear(1.0),
     );
   }
 
@@ -183,10 +193,20 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
 
     //* Add padding for the bottom of the screens to cover the bottom navigation bar
     final double bottomPadding = !hasBottomNavigationBar ? mediaQueryData.padding.bottom + kPaddingMedium : widget.bottomNavigationBar?.preferredSize.height ?? 0;
+    final double floatingActionTopPadding = mediaQueryData.padding.top + kPaddingExtraLarge;
 
     final Color actualBackgroundColor = widget.backgroundColor ?? colors.colorGray1;
 
     final bool isBusy = this.isBusy || widget.isBusy;
+
+    Widget? floatingActionButton;
+    if (widget.floatingActionLabel.isNotEmpty || widget.floatingActionIcon != null) {
+      floatingActionButton = PositiveScaffoldFloatingActionButton(
+        label: widget.floatingActionLabel,
+        onTap: (_) => widget.onFloatingActionPressed?.call(),
+        icon: widget.floatingActionIcon,
+      );
+    }
 
     return WillPopScope(
       onWillPop: isBusy ? (() async => false) : (widget.onWillPopScope ?? () async => true),
@@ -202,37 +222,25 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
               child: Stack(
                 children: <Widget>[
                   Positioned.fill(
-                    child: Scaffold(
-                      backgroundColor: actualBackgroundColor,
-                      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
-                      extendBody: widget.extendBody,
-                      appBar: widget.appBar,
-                      bottomNavigationBar: widget.bottomNavigationBar ?? const SizedBox.shrink(),
-                      body: Stack(
-                        children: <Widget>[
-                          Positioned.fill(
-                            child: PositiveScaffoldContent(
-                              controller: widget.controller,
-                              physics: widget.physics,
-                              visibleComponents: widget.visibleComponents,
-                              headingWidgets: widget.headingWidgets,
-                              decorationColor: widget.decorationColor,
-                              decorations: widget.decorations,
-                              decorationBoxSize: decorationBoxSize,
-                              decorationWidget: widget.decorationWidget,
-                              trailingWidgets: widget.trailingWidgets,
-                              footerWidgets: widget.footerWidgets,
-                              isBusy: isBusy,
-                              bottomPadding: bottomPadding,
-                            ),
-                          ),
-                          if (widget.overlayWidgets.isNotEmpty) ...<Widget>[
-                            ...widget.overlayWidgets,
-                          ],
-                        ],
-                      ),
+                    child: _InternalScaffold(
+                      actualBackgroundColor: actualBackgroundColor,
+                      widget: widget,
+                      decorationBoxSize: decorationBoxSize,
+                      isBusy: isBusy,
+                      bottomPadding: bottomPadding,
                     ),
                   ),
+                  if (floatingActionButton != null) ...<Widget>[
+                    Positioned(
+                      top: floatingActionTopPadding,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: floatingActionButton,
+                      ),
+                    ),
+                  ],
                   if (isBusy) ...<Widget>[
                     Positioned.fill(
                       child: Container(
@@ -248,6 +256,57 @@ class _PositiveScaffoldState extends ConsumerState<PositiveScaffold> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _InternalScaffold extends StatelessWidget {
+  const _InternalScaffold({
+    required this.actualBackgroundColor,
+    required this.widget,
+    required this.decorationBoxSize,
+    required this.isBusy,
+    required this.bottomPadding,
+    super.key,
+  });
+
+  final Color actualBackgroundColor;
+  final PositiveScaffold widget;
+  final double decorationBoxSize;
+  final bool isBusy;
+  final double bottomPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: actualBackgroundColor,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      extendBody: widget.extendBody,
+      appBar: widget.appBar,
+      bottomNavigationBar: widget.bottomNavigationBar ?? const SizedBox.shrink(),
+      body: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: PositiveScaffoldContent(
+              controller: widget.scrollController,
+              physics: widget.physics,
+              visibleComponents: widget.visibleComponents,
+              headingWidgets: widget.headingWidgets,
+              decorationColor: widget.decorationColor,
+              decorations: widget.decorations,
+              decorationBoxSize: decorationBoxSize,
+              decorationWidget: widget.decorationWidget,
+              trailingWidgets: widget.trailingWidgets,
+              footerWidgets: widget.footerWidgets,
+              isBusy: isBusy,
+              bottomPadding: bottomPadding,
+            ),
+          ),
+          if (widget.overlayWidgets.isNotEmpty) ...<Widget>[
+            ...widget.overlayWidgets,
+          ],
+        ],
       ),
     );
   }

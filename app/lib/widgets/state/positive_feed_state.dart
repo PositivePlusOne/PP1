@@ -1,6 +1,8 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/providers/system/system_controller.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
@@ -66,15 +68,19 @@ class PositiveFeedState with PositivePaginationControllerState {
         () async {
           final Logger logger = providerContainer.read(loggerProvider);
           final CacheController cacheController = providerContainer.read(cacheControllerProvider);
+          final FirebaseRemoteConfig remoteConfig = await providerContainer.read(firebaseRemoteConfigProvider.future);
+
+          final int feedRefreshTimeout = remoteConfig.getInt(SystemController.kFirebaseRemoteConfigFeedRefreshTimeoutKey);
+          final Duration feedRefreshTimeoutDuration = Duration(seconds: feedRefreshTimeout);
+          final DateTime timeoutDatetime = DateTime.now().add(feedRefreshTimeoutDuration);
+
           logger.d('onRefresh()');
           cacheController.remove(buildCacheKey());
 
           // Wait until the first page is loaded
-          int counter = 0;
           bool isSuccessful = false;
-          while (counter < 10) {
-            await Future.delayed(const Duration(milliseconds: 500));
-            counter++;
+          while (DateTime.now().isBefore(timeoutDatetime)) {
+            await Future.delayed(feedRefreshTimeoutDuration);
 
             final PositiveFeedState? feedState = cacheController.get(buildCacheKey());
             if (feedState?.pagingController.itemList?.isNotEmpty == true) {

@@ -235,6 +235,7 @@ Future<FirebaseRemoteConfig> firebaseRemoteConfig(FirebaseRemoteConfigRef ref) a
     SystemController.kFirebaseRemoteConfigFeedPromotionFrequencyKey: 4,
     SystemController.kFirebaseRemoteConfigChatPromotionFrequencyKey: 4,
     SystemController.kFirebaseRemoteConfigFeedUpdateCheckFrequencyKey: 60,
+    SystemController.kFirebaseRemoteConfigFeedRefreshTimeoutKey: 1000,
   });
 
   await instance.fetchAndActivate();

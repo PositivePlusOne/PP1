@@ -1,6 +1,9 @@
 // Dart imports:
 
 // Package imports:
+import 'package:app/dtos/database/profile/profile.dart';
+import 'package:app/main.dart';
+import 'package:app/providers/profiles/profile_controller.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 // Project imports:
@@ -152,6 +155,13 @@ class TargetFeed with _$TargetFeed {
   static bool isFeedDisabled(TargetFeed feed, List<TargetFeed> disabledFeeds) {
     final bool isDisabled = disabledFeeds.contains(feed);
     if (isDisabled) {
+      return true;
+    }
+
+    final ProfileController profileController = providerContainer.read(profileControllerProvider.notifier);
+    final Profile? profile = profileController.currentProfile;
+
+    if (profile == null && feed.targetUserId.isEmpty) {
       return true;
     }
 

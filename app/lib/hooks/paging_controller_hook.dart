@@ -2,6 +2,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/extensions/future_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -90,9 +91,11 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     await hook.onPreviousPageRequest(pageKey);
   }
 
-  Future<void> onNextPageRequested() async {
-    await hook.onNextPagePageRequest?.call();
-  }
+  Future<void> onNextPageRequested() => runWithMutex(
+        () async {
+          await hook.onNextPagePageRequest?.call();
+        },
+      );
 
   @override
   void didUpdateHook(PagingControllerHook oldHook) {
@@ -101,14 +104,6 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
     if (hook.controller == oldHook.controller) {
       return;
     }
-
-    disposeListeners().then((_) {
-      setupListeners().then((_) {
-        if (hook.controller.nextPageKey != null && hook.controller.value.status == PagingStatus.loadingFirstPage) {
-          requestPage();
-        }
-      });
-    });
   }
 
   @override

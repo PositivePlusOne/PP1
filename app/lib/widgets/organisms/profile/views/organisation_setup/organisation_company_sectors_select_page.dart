@@ -58,7 +58,7 @@ class OrganisationCompanySectorSelectPage extends ConsumerWidget {
 
     return PositiveScaffold(
       onWillPopScope: () async => formController.onBackSelected(OrganisationCompanySectorSelectRoute),
-      controller: scrollController,
+      scrollController: scrollController,
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           children: [
