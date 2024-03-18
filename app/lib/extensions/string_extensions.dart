@@ -2,6 +2,9 @@
 import 'dart:math';
 
 // Package imports:
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
+import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Project imports:
@@ -55,9 +58,20 @@ extension StringExt on String {
 
   Future<void> attemptToLaunchURL() async {
     final Uri? uri = Uri.tryParse(this);
-    if (uri != null) {
-      await launchUrl(uri);
+    final Logger logger = providerContainer.read(loggerProvider);
+
+    if (uri == null) {
+      logger.e("Invalid URL: $this");
+      return;
     }
+
+    final bool canLaunch = await canLaunchUrl(uri);
+    if (!canLaunch) {
+      logger.e("Cannot launch URL: $this");
+      return;
+    }
+
+    await launchUrl(uri);
   }
 
   bool get isSvgUrl {
