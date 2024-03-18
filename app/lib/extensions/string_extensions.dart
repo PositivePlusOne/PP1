@@ -2,8 +2,6 @@
 import 'dart:math';
 
 // Package imports:
-import 'package:app/main.dart';
-import 'package:app/services/third_party.dart';
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,6 +10,8 @@ import 'package:app/constants/country_constants.dart';
 import 'package:app/dtos/database/activities/tags.dart';
 import 'package:app/dtos/localization/country.dart';
 import 'package:app/extensions/profile_extensions.dart';
+import 'package:app/main.dart';
+import 'package:app/services/third_party.dart';
 
 extension StringExt on String {
   static const int maxTagLength = 30;
