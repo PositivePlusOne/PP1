@@ -3,8 +3,6 @@ import 'dart:async';
 import 'dart:math';
 
 // Flutter imports:
-import 'package:app/widgets/atoms/buttons/positive_button.dart';
-import 'package:app/widgets/molecules/scaffolds/positive_scaffold_floating_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -28,6 +26,7 @@ import 'package:app/widgets/atoms/indicators/positive_loading_indicator.dart';
 import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:app/widgets/molecules/indicators/positive_refresh_indicator.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration.dart';
+import 'package:app/widgets/molecules/scaffolds/positive_scaffold_floating_action_button.dart';
 import '../../../constants/design_constants.dart';
 
 enum PositiveScaffoldComponent {
@@ -268,7 +267,6 @@ class _InternalScaffold extends StatelessWidget {
     required this.decorationBoxSize,
     required this.isBusy,
     required this.bottomPadding,
-    super.key,
   });
 
   final Color actualBackgroundColor;

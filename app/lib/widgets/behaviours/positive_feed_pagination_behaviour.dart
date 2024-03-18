@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/behaviours/hooks/feed_notifier_hook.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:

@@ -1,9 +1,8 @@
 // Flutter imports:
-import 'package:app/services/third_party.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 // Package imports:
+import 'package:logger/logger.dart';
 import 'package:markdown_widget/config/all.dart';
 import 'package:markdown_widget/widget/all.dart';
 
@@ -18,6 +17,7 @@ import 'package:app/extensions/tag_extensions.dart';
 import 'package:app/helpers/markdown_truncator.dart';
 import 'package:app/main.dart';
 import 'package:app/providers/system/design_controller.dart';
+import 'package:app/services/third_party.dart';
 import 'package:app/widgets/atoms/imagery/positive_media_image.dart';
 import 'package:app/widgets/molecules/scaffolds/positive_scaffold_decoration_model.dart';
 import '../dtos/system/design_colors_model.dart';
