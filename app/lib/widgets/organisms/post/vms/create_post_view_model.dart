@@ -20,6 +20,7 @@ import 'package:unicons/unicons.dart';
 import 'package:video_editor/video_editor.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/mentions.dart';

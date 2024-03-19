@@ -73,6 +73,8 @@ extension LocalizationExtensions on AppLocalizations {
         return shared_errors_profanity;
       case 'displayNameLength':
         return shared_errors_display_name_length;
+      case 'displayName':
+        return shared_errors_alphanumeric;
       case 'notMaxLength':
         return shared_errors_not_max_length;
       case 'notValidPhoneNumber':

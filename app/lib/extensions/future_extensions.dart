@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:async';
+
 // Package imports:
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -52,5 +55,19 @@ Future<T?> runWithMutex<T>(Future<T?> Function() future, {String key = '', bool 
     }
 
     return null;
+  }
+}
+
+// Debounce a function so that it can only be called once every [duration]
+Future<void> debounce(Duration duration, FutureOr<void> Function() function) async {
+  final Logger log = providerContainer.read(loggerProvider);
+
+  try {
+    await runWithMutex(() async {
+      await Future<void>.delayed(duration);
+      await function();
+    });
+  } catch (ex) {
+    log.e('Failed to execute function, $ex');
   }
 }
