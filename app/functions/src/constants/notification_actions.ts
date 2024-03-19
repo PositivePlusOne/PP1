@@ -16,6 +16,7 @@ export enum NotificationAction {
   POST_MENTIONED = "post_mentioned",
   REACTION_MENTIONED = "reaction_mentioned",
   RELATIONSHIP_UPDATED = "relationship_updated",
+  NEW_FOLLOWER = "new_follower",
 }
 
 export const ACTIVITY_NOTIFICATION_TRUNSCATE_LENGTH = 30;
