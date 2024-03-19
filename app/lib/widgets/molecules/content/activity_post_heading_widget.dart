@@ -45,6 +45,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
     this.tags = const [],
     this.isOptionsHidden = false,
     this.isRepost = false,
+    this.isShared = false,
     super.key,
   });
 
@@ -64,6 +65,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
   final bool isOptionsHidden;
 
   final bool isRepost;
+  final bool isShared;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -144,7 +146,7 @@ class ActivityPostHeadingWidget extends ConsumerWidget {
                   if (isPromotion) ...<Widget>[
                     const SizedBox(height: kPaddingExtraSmall),
                     PositivePromotedIndicator(
-                      invertColour: isRepost,
+                      invertColour: isShared,
                     ),
                   ],
                 ],
