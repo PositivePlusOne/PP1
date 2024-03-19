@@ -102,7 +102,8 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
-  final Color textColor = brightness == Brightness.light ? colors.black : colors.white;
+  final Color textColor = brightness == Brightness.light ? colors.colorGray6 : colors.white;
+  final Color textBoldColor = brightness == Brightness.light ? colors.black : colors.white;
 
   return [
     PreConfig(
@@ -116,8 +117,8 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
     H2Config(style: typography.styleHeroSmall.copyWith(color: textColor)),
     H3Config(style: typography.styleTitle.copyWith(color: textColor)),
     H4Config(style: typography.styleTitleTwo.copyWith(color: textColor)),
-    H5Config(style: typography.styleSubtitleBold.copyWith(color: textColor)),
-    H6Config(style: typography.styleSubtextBold.copyWith(color: textColor)),
+    H5Config(style: typography.styleSubtitleBold.copyWith(color: textBoldColor)),
+    H6Config(style: typography.styleSubtextBold.copyWith(color: textBoldColor)),
     PConfig(textStyle: typography.styleBody.copyWith(color: textColor)),
     LinkConfig(
       style: typography.styleBold.copyWith(color: colors.black),
