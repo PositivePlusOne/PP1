@@ -10,7 +10,7 @@ import 'package:app/services/third_party.dart';
 
 extension MessageExtensions on Message {
   bool get isEdited {
-    return createdAt.millisecondsSinceEpoch < updatedAt.millisecondsSinceEpoch;
+    return updatedAt != createdAt;
   }
 
   static const Set<String> validMessageUriSchemes = {

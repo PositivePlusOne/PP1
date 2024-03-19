@@ -449,11 +449,12 @@ class ChatMemberUsernameRow extends StatelessWidget {
         ],
         if (message.isEdited) ...<Widget>[
           Padding(
-              padding: const EdgeInsets.only(right: kPaddingExtraSmall),
-              child: Text(
-                '(Edited)',
-                style: typography.styleSubtext.copyWith(color: colors.colorGray6),
-              )),
+            padding: const EdgeInsets.only(right: kPaddingExtraSmall),
+            child: Text(
+              '(Edited)',
+              style: typography.styleSubtext.copyWith(color: colors.colorGray6),
+            ),
+          ),
         ],
         Flexible(
           child: Text(
