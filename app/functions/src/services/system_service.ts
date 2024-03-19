@@ -147,8 +147,7 @@ export namespace SystemService {
       }
     }
 
-    const isReport = feedbackType.endsWith("Report");
-    const expectedChannel = isReport ? SlackService.moderationChannel : SlackService.feedbackChannel;
+    const expectedChannel = reportType ? SlackService.moderationChannel : SlackService.feedbackChannel;
     
     await SlackService.postToChannelAsMember(profile, expectedChannel, slackContent);
   }

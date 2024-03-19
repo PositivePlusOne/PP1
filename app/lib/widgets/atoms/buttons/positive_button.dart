@@ -542,7 +542,7 @@ class PositiveButtonState extends State<PositiveButton> {
         borderColor = Colors.transparent;
         borderRadius = PositiveButton.kButtonBorderRadiusRegular;
         badgeColour = widget.badgeColour ?? widget.colors.red;
-        iconColor = widget.colors.colorGray7;
+        iconColor = widget.colors.colorGray6;
         iconRadius = PositiveButton.kButtonIconRadiusRegular;
 
         if (widget.isActive) {
