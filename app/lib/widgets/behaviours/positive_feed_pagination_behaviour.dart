@@ -13,6 +13,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
+import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
@@ -24,6 +25,7 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
+import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -266,9 +268,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   }
 
   void onScrollOccured(ScrollController controller) {
-    // Check(Ryan): Check if we need to check the below condition on rebuild as we may have swapped feeds
-    // For example on the home page, we may want to remove the new items flag if we switch to a different feed
-    notifySeenItems(controller);
+    debounce(kExtendedDebounceDuration, () => notifySeenItems(controller));
   }
 
   void notifySeenItems(ScrollController controller) {
