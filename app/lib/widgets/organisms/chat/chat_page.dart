@@ -391,10 +391,9 @@ class ChatSelfUsernameRow extends StatelessWidget {
         ),
         const SizedBox(width: kPaddingExtraSmall),
         if (message.isEdited) ...<Widget>[
-          Icon(
-            UniconsLine.edit_alt,
-            color: colors.colorGray6,
-            size: kUniconIndicator,
+          Text(
+            '(Edited)',
+            style: typography.styleSubtext.copyWith(color: colors.colorGray6),
           ),
         ],
       ],
@@ -450,13 +449,11 @@ class ChatMemberUsernameRow extends StatelessWidget {
         ],
         if (message.isEdited) ...<Widget>[
           Padding(
-            padding: const EdgeInsets.only(right: kPaddingExtraSmall),
-            child: Icon(
-              UniconsLine.edit_alt,
-              size: kUniconIndicator,
-              color: colors.colorGray6,
-            ),
-          ),
+              padding: const EdgeInsets.only(right: kPaddingExtraSmall),
+              child: Text(
+                '(Edited)',
+                style: typography.styleSubtext.copyWith(color: colors.colorGray6),
+              )),
         ],
         Flexible(
           child: Text(
