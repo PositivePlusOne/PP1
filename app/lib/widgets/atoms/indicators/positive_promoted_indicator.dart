@@ -19,6 +19,7 @@ class PositivePromotedIndicator extends ConsumerWidget {
   });
 
   final bool invertColour;
+  static const double verticalPadding = 4.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +30,7 @@ class PositivePromotedIndicator extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: kPaddingSmall,
-        vertical: kPaddingExtraSmall,
+        vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
         color: invertColour ? colours.colorGray1 : colours.white,
@@ -38,11 +39,11 @@ class PositivePromotedIndicator extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(UniconsLine.external_link_alt, size: kIconExtraSmall, color: colours.colorGray7),
+          Icon(UniconsLine.external_link_alt, size: kIconExtraSmall, color: colours.colorGray6),
           const SizedBox(width: kPaddingExtraSmall),
           Text(
             localisations.post_promoted_label,
-            style: typography.styleSubtextBold.copyWith(color: colours.colorGray7),
+            style: typography.styleSubtextBold.copyWith(color: colours.colorGray6),
           ),
         ],
       ),
