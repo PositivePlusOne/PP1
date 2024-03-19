@@ -253,6 +253,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               isOptionsHidden: widget.isShared,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
               isRepost: isRepost,
+              isShared: widget.isShared,
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
                 targetProfile: widget.targetProfile,
@@ -335,6 +336,7 @@ class PositiveActivityWidgetState extends ConsumerState<PositiveActivityWidget> 
               currentProfile: widget.currentProfile,
               promotion: widget.activityPromotion,
               tags: widget.activity?.enrichmentConfiguration?.tags ?? [],
+              isShared: widget.isShared,
               onOptions: () => widget.activity?.onPostOptionsSelected(
                 context: context,
                 targetProfile: widget.targetProfile,
