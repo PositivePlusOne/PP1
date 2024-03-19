@@ -2,6 +2,7 @@
 import 'dart:io';
 
 // Flutter imports:
+import 'package:app/providers/system/system_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -842,6 +843,9 @@ class CreatePostViewModel extends _$CreatePostViewModel with ProfileSwitchMixin 
   }
 
   void onMultiMediaPicker() async {
+    final SystemController systemController = providerContainer.read(systemControllerProvider.notifier);
+    systemController.updateBiometricsLastVerifiedTime();
+
     if (state.activeButton == PositivePostNavigationActiveButton.clip) {
       onSingleVideoPicker();
     } else {
