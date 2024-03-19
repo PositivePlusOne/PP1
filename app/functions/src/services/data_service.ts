@@ -8,6 +8,7 @@ import { FlamelinkHelpers } from "../helpers/flamelink_helpers";
 import { CacheService } from "./cache_service";
 import { QueryOptions, UpdateOptions } from "./types/query_options";
 import { StreamHelpers } from "../helpers/stream_helpers";
+import { StringHelpers } from "../helpers/string_helpers";
 
 export namespace DataService {
   export const getDocumentReference = async function (options: { schemaKey: string; entryId: string }): Promise<DocumentReference<DocumentData>> {
@@ -146,7 +147,11 @@ export namespace DataService {
   };
 
   export const needsMigration = (document: any): boolean => {
-    return !!(document._fl_meta_ && ((document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp)) || (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp)) || (document._fl_meta_.schema === "users" && document.displayName && document.displayName !== (document.displayName?.toLocaleLowerCase() ?? ""))));
+    const isValidDisplayName = StringHelpers.isValidDisplayName(document.displayName);
+    const isValidCreatedDate = (document._fl_meta_.createdDate && !(document._fl_meta_.createdDate instanceof Timestamp));
+    const isValidLastModifiedDate = (document._fl_meta_.lastModifiedDate && !(document._fl_meta_.lastModifiedDate instanceof Timestamp));
+    
+    return !isValidDisplayName || !isValidCreatedDate || !isValidLastModifiedDate;
   };
 
   export const migrateDocument = async (document: any): Promise<any> => {
@@ -164,12 +169,11 @@ export namespace DataService {
       }
     }
 
-    // All display names must be made lowercase.
-    // If the profile already exists, we need to clear the displayName and let the user update it manually.
-    const expectedDisplayName = migratedDocument.displayName?.toLocaleLowerCase() ?? "";
-    if (migratedDocument?._fl_meta_?.schema === "users" && migratedDocument.displayName && expectedDisplayName && migratedDocument.displayName !== expectedDisplayName) {
-      functions.logger.info(`Updating displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId} to ${expectedDisplayName}`);
-      migratedDocument.displayName = expectedDisplayName;
+    const expectedDisplayName = migratedDocument.displayName;
+    const isValidDisplayName = StringHelpers.isValidDisplayName(expectedDisplayName);
+    if (!isValidDisplayName) {
+      functions.logger.info(`Removing displayName for ${migratedDocument._fl_meta_.schema}: ${migratedDocument._fl_meta_.docId}`);
+      migratedDocument.displayName = "";
     }
 
     return migratedDocument;
