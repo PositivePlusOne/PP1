@@ -18,6 +18,7 @@ import { EndpointRequest, buildEndpointResponse } from "./dto/payloads";
 import { RelationshipJSON } from "../dto/relationships";
 import { ProfileStatisticsService } from "../services/profile_statistics_service";
 import { SystemService } from "../services/system_service";
+import { ProfileFollowedNotification } from "../services/builders/notifications/relationships/profile_followed_notification";
 
 export namespace RelationshipEndpoints {
   export const getRelationship = functions
@@ -357,6 +358,7 @@ export namespace RelationshipEndpoints {
       const newSourceStats = await ProfileStatisticsService.updateReactionCountForProfile(uid, "follow", 1);
       const newTargetStats = await ProfileStatisticsService.updateReactionCountForProfile(targetUid, "follower", 1);
       await RelationshipUpdatedNotification.sendNotification(newRelationship);
+      await ProfileFollowedNotification.sendNotification(userProfile, targetProfile);
 
       return buildEndpointResponse(context, {
         sender: uid,
