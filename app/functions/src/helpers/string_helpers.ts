@@ -41,7 +41,11 @@ export namespace StringHelpers {
   }
 
   export function isValidDisplayName(input: string): boolean {
-    return isLowercaseAlphanumericWithSpecialChars(input) && input.length <= 15 && input.length >= 3;
+    if (!input) {
+      return false;
+    }
+
+    return input.length <= 15 && input.length >= 3 && isLowercaseAlphanumericWithSpecialChars(input);
   }
 
   export function isLowercaseAlphanumericWithSpecialChars(input: string): boolean {
