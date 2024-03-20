@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
+import 'package:app/constants/application_constants.dart';
+import 'package:app/extensions/future_extensions.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -13,7 +15,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:logger/logger.dart';
 
 // Project imports:
-import 'package:app/constants/application_constants.dart';
 import 'package:app/constants/design_constants.dart';
 import 'package:app/dtos/database/activities/activities.dart';
 import 'package:app/dtos/database/activities/reactions.dart';
@@ -25,7 +26,6 @@ import 'package:app/dtos/database/relationships/relationship.dart';
 import 'package:app/dtos/system/design_colors_model.dart';
 import 'package:app/dtos/system/design_typography_model.dart';
 import 'package:app/extensions/activity_extensions.dart';
-import 'package:app/extensions/future_extensions.dart';
 import 'package:app/extensions/json_extensions.dart';
 import 'package:app/extensions/paging_extensions.dart';
 import 'package:app/extensions/relationship_extensions.dart';
@@ -80,8 +80,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
   static const int kCacheExtentHeightMultiplier = 5;
 
-  Future<void> checkForNextPageEntries() async {
+  Future<void> checkForNextPageEntries(bool isMounted) async {
     final Logger logger = providerContainer.read(loggerProvider);
+    if (!isMounted) {
+      logger.w('checkForNextPageEntries() - Not mounted, skipping');
+      return;
+    }
+
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
     logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
 
@@ -267,7 +272,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     return !canDisplayAny;
   }
 
-  void onScrollOccured(ScrollController controller) {
+  void onScrollOccured(ScrollController controller, bool isMounted) {
+    if (!isMounted) {
+      return;
+    }
+
     debounce(kExtendedDebounceDuration, () => notifySeenItems(controller));
   }
 
@@ -286,12 +295,12 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
 
     final ScrollController scrollController = useScrollController();
-    scrollController.addListener(() => onScrollOccured(scrollController));
+    scrollController.addListener(() => onScrollOccured(scrollController, context.mounted));
 
     usePagingController(
       controller: feedState.pagingController,
       onPreviousPage: requestPreviousPage,
-      onNextPage: checkForNextPageEntries,
+      onNextPage: () => checkForNextPageEntries(context.mounted),
     );
 
     useEventHook<RequestRefreshEvent>(
