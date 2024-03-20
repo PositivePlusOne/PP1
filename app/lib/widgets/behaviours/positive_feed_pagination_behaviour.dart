@@ -263,7 +263,11 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
 
           final String relationshipId = [publisherId, currentProfile?.flMeta?.id ?? ''].asGUID;
           final Relationship? relationship = cacheController.get(relationshipId);
-          return element.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship);
+          return element.canDisplayOnFeed(
+            currentProfile: currentProfile,
+            relationshipWithActivityPublisher: relationship,
+            hideWhenMatchesPromotionKey: true,
+          );
         }) ??
         false;
 
@@ -566,7 +570,13 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
     final Promotion? reposterPromotion = promotionsController.getPromotionFromActivityId(activityId: reposterActivityId, promotionType: PromotionType.feed);
 
-    final bool canDisplay = activity?.canDisplayOnFeed(currentProfile: currentProfile, relationshipWithActivityPublisher: relationship) ?? false;
+    final bool canDisplay = activity?.canDisplayOnFeed(
+          currentProfile: currentProfile,
+          relationshipWithActivityPublisher: relationship,
+          hideWhenMatchesPromotionKey: true,
+        ) ??
+        false;
+
     if (!canDisplay) {
       return const SizedBox.shrink();
     }
