@@ -1,4 +1,7 @@
 // Flutter imports:
+import 'package:app/services/third_party.dart';
+import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -114,8 +117,6 @@ class HomePage extends HookConsumerWidget {
     final List<String> expectedCacheKeys = buildExpectedCacheKeysFromObjects(currentProfile, [...allTargetFeeds]).toList();
     useCacheHook(keys: expectedCacheKeys);
 
-    final ScrollController scrollController = useScrollController();
-
     final Widget currentFeedWidget = switch (state.currentTabIndex) {
       0 => newFeedWidget,
       1 => popularFeedWidget,
@@ -133,14 +134,20 @@ class HomePage extends HookConsumerWidget {
     void Function()? scrollToTop;
     String fabTitle = '';
 
+    final ScrollController scrollController = useScrollController();
     final bool hasNewItems = useFeedNotifier(feedState: currentFeedState);
+    final EventBus eventBus = ref.read(eventBusProvider);
+
     if (hasNewItems) {
       fabTitle = 'New Posts';
-      scrollToTop = () => scrollController.animateTo(
-            0,
-            duration: kAnimationDurationRegular,
-            curve: kAnimationCurveDefault,
-          );
+      scrollToTop = () {
+        eventBus.fire(NotifyFeedSeedEvent());
+        scrollController.animateTo(
+          0,
+          duration: kAnimationDurationRegular,
+          curve: kAnimationCurveDefault,
+        );
+      };
     }
 
     // Check enabled state of the tabs

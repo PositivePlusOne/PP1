@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -200,14 +201,25 @@ extension ActivityExt on Activity {
   bool canDisplayOnFeed({
     required Profile? currentProfile,
     required Relationship? relationshipWithActivityPublisher,
+    bool hideWhenMatchesPromotionKey = false,
   }) {
     final String currentProfileId = currentProfile?.flMeta?.id ?? '';
     final Set<RelationshipState> states = relationshipWithActivityPublisher?.relationshipStatesForEntity(currentProfileId) ?? <RelationshipState>{};
     final bool hasFullyConnected = states.contains(RelationshipState.sourceConnected) && states.contains(RelationshipState.targetConnected);
     final bool isFollowing = states.contains(RelationshipState.sourceFollowed);
 
+    final PromotionsController promotionsController = providerContainer.read(promotionsControllerProvider.notifier);
+
     final String publisherId = publisherInformation?.publisherId ?? '';
-    if (currentProfileId == publisherId) {
+    final bool isPublisher = currentProfileId == publisherId;
+    final bool isLoggedIn = currentProfileId.isNotEmpty;
+
+    final bool shouldSkipOnPromotionKey = hideWhenMatchesPromotionKey && isLoggedIn && isPublisher && promotionsController.isActivityPromoted(activityId: flMeta?.id ?? '', promotionType: PromotionType.feed);
+    if (shouldSkipOnPromotionKey) {
+      return false;
+    }
+
+    if (isPublisher) {
       return true;
     }
 
