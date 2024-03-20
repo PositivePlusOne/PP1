@@ -86,6 +86,7 @@ class PositivePostActions extends HookConsumerWidget {
                     style: typography.styleSubtitleBold.copyWith(
                       color: colours.colorGray6,
                       fontSize: 12.0,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
@@ -112,6 +113,7 @@ class PositivePostActions extends HookConsumerWidget {
                     style: typography.styleSubtitleBold.copyWith(
                       fontSize: 12.0,
                       color: colours.colorGray6,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
