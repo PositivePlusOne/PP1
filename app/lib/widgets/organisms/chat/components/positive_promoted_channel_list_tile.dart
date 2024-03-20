@@ -103,13 +103,13 @@ class PositivePromotedChannelListTile extends ConsumerWidget {
                 children: <Widget>[
                   Icon(
                     UniconsLine.link_alt,
-                    color: colors.colorGray7,
+                    color: colors.colorGray6,
                     size: kIconExtraSmall,
                   ),
                   const SizedBox(width: kPaddingExtraSmall),
                   Text(
                     localizations.post_promoted_label,
-                    style: typography.styleSubtextBold.copyWith(color: colors.colorGray7),
+                    style: typography.styleSubtextBold.copyWith(color: colors.colorGray6),
                   ),
                 ],
               ),
