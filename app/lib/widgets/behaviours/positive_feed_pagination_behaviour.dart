@@ -78,13 +78,8 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
   static const String kWidgetKey = 'PositiveFeedPaginationBehaviour';
   static const int kCacheExtentHeightMultiplier = 5;
 
-  Future<void> checkForNextPageEntries(bool isMounted) async {
+  Future<void> checkForNextPageEntries() async {
     final Logger logger = providerContainer.read(loggerProvider);
-    if (!isMounted) {
-      logger.w('checkForNextPageEntries() - Not mounted, skipping');
-      return;
-    }
-
     final PostApiService postApiService = await providerContainer.read(postApiServiceProvider.future);
     logger.d('Checking for next page entries for feed: ${feed.targetSlug}');
 
@@ -291,7 +286,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     usePagingController(
       controller: feedState.pagingController,
       onPreviousPage: requestPreviousPage,
-      onNextPage: () => checkForNextPageEntries(context.mounted),
+      onNextPage: checkForNextPageEntries,
     );
 
     useEventHook<NotifyFeedSeedEvent>(

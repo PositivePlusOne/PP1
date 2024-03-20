@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:app/gen/app_router.dart';
 import 'package:app/services/third_party.dart';
 import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
 import 'package:event_bus/event_bus.dart';

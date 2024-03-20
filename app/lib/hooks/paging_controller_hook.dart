@@ -69,6 +69,10 @@ class PagingControllerHookState extends HookState<void, PagingControllerHook> {
 
     await Future.delayed(Duration(seconds: periodicCheckFrequency));
     periodicCheckTimer = Timer.periodic(Duration(seconds: periodicCheckFrequency), (Timer timer) {
+      if (!context.mounted) {
+        return;
+      }
+
       onNextPageRequested();
     });
   }
