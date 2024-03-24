@@ -102,7 +102,7 @@ List<WidgetConfig> buildMarkdownWidgetConfig({void Function(String link)? onTapL
   final DesignColorsModel colors = providerContainer.read(designControllerProvider.select((value) => value.colors));
   final DesignTypographyModel typography = providerContainer.read(designControllerProvider.select((value) => value.typography));
 
-  final Color textColor = brightness == Brightness.light ? colors.colorGray6 : colors.white;
+  final Color textColor = brightness == Brightness.light ? colors.colorGray7 : colors.white;
   final Color textBoldColor = brightness == Brightness.light ? colors.black : colors.white;
 
   return [
