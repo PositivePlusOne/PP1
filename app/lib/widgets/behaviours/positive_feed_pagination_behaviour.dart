@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 // Flutter imports:
-import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -44,6 +43,7 @@ import 'package:app/widgets/behaviours/components/no_posts_placeholder.dart';
 import 'package:app/widgets/behaviours/components/sliver_no_posts_placeholder.dart';
 import 'package:app/widgets/behaviours/positive_cache_widget.dart';
 import 'package:app/widgets/molecules/content/positive_activity_widget.dart';
+import 'package:app/widgets/organisms/home/events/notify_feed_seen_event.dart';
 import 'package:app/widgets/state/positive_feed_state.dart';
 import '../../services/third_party.dart';
 import '../atoms/indicators/positive_post_loading_indicator.dart';
@@ -88,9 +88,7 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
         targetSlug: feed.targetSlug,
         targetUserId: feed.targetUserId,
         shouldPersonalize: shouldPersonalize,
-        pagination: const Pagination(
-          cursor: '',
-        ),
+        pagination: const Pagination(cursor: ''),
       );
 
       final Map<String, dynamic> data = json.decodeSafe(endpointResponse.data);
@@ -290,11 +288,15 @@ class PositiveFeedPaginationBehaviour extends HookConsumerWidget {
     );
 
     useEventHook<NotifyFeedSeedEvent>(
-      onEvent: (_) => notifySeenItems(),
+      onEvent: (_) {
+        notifySeenItems();
+      },
     );
 
     useEventHook<RequestRefreshEvent>(
-      onEvent: (_) => feedState.onRefresh(),
+      onEvent: (_) {
+        feedState.onRefresh();
+      },
     );
 
     final bool shouldDisplayNoPosts = checkShouldDisplayNoPosts(currentProfile: currentProfile);

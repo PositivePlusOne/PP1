@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:app/providers/content/promotions_controller.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -23,6 +22,7 @@ import 'package:app/providers/analytics/analytic_events.dart';
 import 'package:app/providers/analytics/analytic_properties.dart';
 import 'package:app/providers/analytics/analytics_controller.dart';
 import 'package:app/providers/content/activities_controller.dart';
+import 'package:app/providers/content/promotions_controller.dart';
 import 'package:app/providers/content/reactions_controller.dart';
 import 'package:app/providers/content/sharing_controller.dart';
 import 'package:app/providers/enrichment/activity_enrichment_controller.dart';
