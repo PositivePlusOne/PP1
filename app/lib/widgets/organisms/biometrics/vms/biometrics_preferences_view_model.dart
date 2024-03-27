@@ -66,13 +66,7 @@ class BiometricsPreferencesViewModel extends _$BiometricsPreferencesViewModel wi
         late final PositiveSnackBar snackBar;
         if (e is PlatformException && e.code == 'NotAvailable') {
           snackBar = PositiveGenericSnackBar(
-            title: "Biometrics is not available or permission have not been granted.",
-            icon: UniconsLine.envelope_exclamation,
-            backgroundColour: colours.black,
-          );
-        } else {
-          snackBar = PositiveGenericSnackBar(
-            title: "An unknown error has occurred",
+            title: "Biometrics not available",
             icon: UniconsLine.envelope_exclamation,
             backgroundColour: colours.black,
           );
