@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class PositiveNotificationTile extends StatefulHookConsumerWidget {
   final bool isEnabled;
   final FutureOr<void> Function(BuildContext context, NotificationPayload payload)? onNotificationSelected;
 
-  static const int kMaxBodyLength = 42;
+  static const int kMaxBodyLength = 60;
 
   @override
   ConsumerState<PositiveNotificationTile> createState() => PositiveNotificationTileState();
@@ -178,12 +179,39 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
     // Once we're live and have more time, we need to find a nice way to localize this
     // As when we go to the African market, this might go haywire.
     String body = payload.bodyMarkdown.isEmpty ? payload.body : payload.bodyMarkdown;
+
+    //? Truncate body
+    if (body.length >= PositiveNotificationTile.kMaxBodyLength) {
+      body = body.substring(0, PositiveNotificationTile.kMaxBodyLength) + "...";
+    }
+
+    //? Repair double @'s if they occur
+    RegExp exp = RegExp(r'\@\@');
+    List<RegExpMatch> matches = exp.allMatches(body).toList();
+    for (var i = matches.length - 1; i >= 0; i--) {
+      body = body.replaceRange(matches[i].start, matches[i].end, '@');
+    }
+
+    //? Repair broken bold markings
+    exp = RegExp(r'\*\*');
+    matches = exp.allMatches(body).toList();
+    int matchesFound = matches.length;
+
+    if (matchesFound.isOdd) {
+      if (body[body.length - 1] == '*') {
+        body = "$body*";
+      } else {
+        body = "$body**";
+      }
+    }
+
     if (includeTimestamp && payload.createdAt != null) {
       try {
-        // Remove full stop from end of body if it exists
+        // Remove full stop from end of body if it exists\*\*
         if (body.endsWith('.')) {
           body = body.substring(0, body.length - 1);
         }
+
         // let's parse the time as a standard ISO string
         final timeAgo = payload.createdAt!.asDateDifference(context);
         body = '$body ${timeAgo.toLowerCase()}.';
@@ -232,7 +260,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
                   lineMargin: const EdgeInsets.symmetric(vertical: kPaddingSuperSmall),
                   onTapLink: (_) {},
                   squashParagraphs: true,
-                  maxLength: PositiveNotificationTile.kMaxBodyLength,
+                  boldHandles: false,
                 ),
               ),
             ),
