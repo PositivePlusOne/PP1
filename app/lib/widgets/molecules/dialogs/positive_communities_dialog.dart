@@ -374,7 +374,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           children: <Widget>[
             buildAppBar(context, colors, controller.searchController),
             const SizedBox(height: kPaddingMedium),
-            if (communityTypes.length >= 2) ...<Widget>[
+            if (communityTypes.length >= 2 && widget.mode != CommunitiesDialogMode.select) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
                 values: communityTypes,
                 initialValue: selectedCommunityType,
