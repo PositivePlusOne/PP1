@@ -182,7 +182,7 @@ class PositiveNotificationTileState extends ConsumerState<PositiveNotificationTi
 
     //? Truncate body
     if (body.length >= PositiveNotificationTile.kMaxBodyLength) {
-      body = body.substring(0, PositiveNotificationTile.kMaxBodyLength) + "...";
+      body = "${body.substring(0, PositiveNotificationTile.kMaxBodyLength)}...";
     }
 
     //? Repair double @'s if they occur
