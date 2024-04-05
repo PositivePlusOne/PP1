@@ -219,6 +219,6 @@ extension MessageExt on Message {
       return formattedText;
     }
 
-    return "$formattedText";
+    return formattedText;
   }
 }
