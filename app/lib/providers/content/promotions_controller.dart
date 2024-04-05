@@ -218,10 +218,6 @@ class PromotionsController extends _$PromotionsController implements IPromotions
       }
     }
 
-    logger.i('Found ${validFeedPromotionIds.length} valid feed promotions');
-    logger.i('Found ${validChatPromotionIds.length} valid chat promotions');
-    logger.i('Found ${validOwnedPromotionIds.length} valid owned promotions');
-
     final Map<String, Set<String>> validOwnedPromotionIdsMap = {
       ...state.validOwnedPromotionIds,
     };
