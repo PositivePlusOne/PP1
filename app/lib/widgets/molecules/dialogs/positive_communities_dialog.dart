@@ -4,6 +4,7 @@
 import 'dart:async';
 
 // Flutter imports:
+import 'package:app/widgets/molecules/containers/positive_glass_sheet.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -338,10 +339,33 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
       hasExceededSelectedProfileLimit = widget.selectedProfiles.length > widget.maximumSelectedProfiles;
     }
 
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final double bottomButtonPadding = mediaQueryData.padding.bottom + kPaddingMedium;
+
     return PositiveScaffold(
       decorations: buildType3ScaffoldDecorations(colors),
       physics: const AlwaysScrollableScrollPhysics(),
       onRefresh: () => requestRefresh(profile: currentProfile),
+      overlayWidgets: <Widget>[
+        if (widget.mode == CommunitiesDialogMode.select) ...<Widget>[
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: kPaddingSmall, vertical: bottomButtonPadding),
+              child: PositiveGlassSheet(
+                children: [
+                  PositiveButton.standardPrimary(
+                    colors: colors,
+                    label: widget.actionLabel ?? 'Done',
+                    onTapped: () => widget.onActionPressed?.call(),
+                    isDisabled: !widget.isEnabled || !widget.canCallToAction || hasExceededSelectedProfileLimit,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
       headingWidgets: <Widget>[
         PositiveBasicSliverList(
           includeAppBar: false,
@@ -350,7 +374,7 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
           children: <Widget>[
             buildAppBar(context, colors, controller.searchController),
             const SizedBox(height: kPaddingMedium),
-            if (communityTypes.length >= 2) ...<Widget>[
+            if (communityTypes.length >= 2 && widget.mode != CommunitiesDialogMode.select) ...<Widget>[
               PositiveTextFieldDropdown<CommunityType>(
                 values: communityTypes,
                 initialValue: selectedCommunityType,
@@ -397,16 +421,6 @@ class PositiveCommunitiesDialogState extends ConsumerState<PositiveCommunitiesDi
             child,
           ],
         ),
-      ],
-      footerWidgets: <Widget>[
-        if (widget.mode == CommunitiesDialogMode.select) ...<Widget>[
-          PositiveButton.standardPrimary(
-            colors: colors,
-            label: widget.actionLabel ?? 'Done',
-            onTapped: () => widget.onActionPressed?.call(),
-            isDisabled: !widget.isEnabled || !widget.canCallToAction || hasExceededSelectedProfileLimit,
-          ),
-        ],
       ],
     );
   }
