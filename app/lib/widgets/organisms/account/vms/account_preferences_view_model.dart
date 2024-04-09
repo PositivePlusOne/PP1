@@ -196,15 +196,9 @@ class AccountPreferencesViewModel extends _$AccountPreferencesViewModel with Lif
             icon: UniconsLine.envelope_exclamation,
             backgroundColour: colours.black,
           );
-        } else {
-          snackBar = PositiveGenericSnackBar(
-            title: "An unknown error has occurred",
-            icon: UniconsLine.envelope_exclamation,
-            backgroundColour: colours.black,
-          );
-        }
-        if (router.navigatorKey.currentContext != null) {
-          ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+          if (router.navigatorKey.currentContext != null) {
+            ScaffoldMessenger.of(router.navigatorKey.currentContext!).showSnackBar(snackBar);
+          }
         }
       }
     }
